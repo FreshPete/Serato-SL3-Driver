@@ -91,6 +91,9 @@ if(SL3_BUILD_ASIO_COMPONENT)
   add_test(NAME sl3_selection_probe_lifecycle COMMAND "${Python3_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/scripts/test-selection-host-probe.py"
     $<TARGET_FILE:sl3_host_probe> $<TARGET_FILE:sl3_host_probe_simulated> $<TARGET_FILE:sl3_device_session_fixture> $<TARGET_FILE:sl3_usbdk>)
   set_tests_properties(sl3_selection_probe_lifecycle PROPERTIES TIMEOUT 90)
+  add_test(NAME sl3_rate_probe_lifecycle COMMAND "${Python3_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/scripts/test-rate-host-probe.py"
+    $<TARGET_FILE:sl3_host_probe> $<TARGET_FILE:sl3_host_probe_simulated> $<TARGET_FILE:sl3_device_session_fixture> $<TARGET_FILE:sl3_usbdk>)
+  set_tests_properties(sl3_rate_probe_lifecycle PROPERTIES TIMEOUT 90)
   add_executable(sl3_host_session_tests tests/native/host_session_tests.cpp)
   target_link_libraries(sl3_host_session_tests PRIVATE sl3_host_session)
   add_test(NAME sl3_host_session_tests COMMAND sl3_host_session_tests "$<TARGET_FILE:sl3_session_fixture>" "$<TARGET_FILE:sl3_usbdk>")

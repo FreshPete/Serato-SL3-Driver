@@ -1,5 +1,7 @@
 # Retained rate selection: host API and native diagnostic adapter
 
+**Later checkpoint:** a [bounded host probe and offline validator](held-rate-probe.md) now exercise this API, with reviewed initial-clock refusal and separate operation/cleanup evidence. Shared tracing and positive native execution remain unverified.
+
 The host now exposes `HostSession::select_rate(target)` for an already acquired, idle retained device. The operation is separate from production `IASIO::setSampleRate`, which still accepts only its observed rate. No new hardware test has run.
 
 ## Host outcome and clock lifetime

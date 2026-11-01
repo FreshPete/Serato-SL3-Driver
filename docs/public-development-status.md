@@ -19,11 +19,13 @@ Detailed provenance and limits are in the [return report](RETURN-REPORT.md), [fi
 
 ## Latest integration work
 
+The latest [bounded held-rate probe](held-rate-probe.md) adds a reviewed initial-clock check, immutable intent and offline result/ownership validation around the host/native diagnostic. Positive process checks use simulation; native safe negatives select no rate. Shared rate tracing and a positive physical run remain unfinished. Prior prepared Scope/image plans remain permanently disarmed after these native input changes.
+
 The source snapshot includes work in progress to reduce an attended scope experiment to one administrator approval. The ordinary user runs the probe; a separate elevated collector records USB/WPP/state evidence. Plans pin tested inputs, are single use, allow one acquisition and require a post-retirement trace window. There is no persistent elevated service or automatic retry. Default launcher inspection performs no device test.
 
 The [scope launcher refusal and single-use paths](scope-trace-launcher.md) now have offline and actual non-elevating process checks, but the elevated launcher and physical experiment have not run. The separate kernel-image-version-qualified scope window is unfinished. Neither a controls-only result nor a simulated scope result qualifies as that experiment.
 
-See [publication verification](evidence/publication-verification-20261101.json) for fresh test counts and source identities. These software checks do not attest physical audio, latency, deployment or Serato compatibility. No hardware/UAC test ran for this publication.
+See [held-rate probe verification](evidence/held-rate-probe-20261101.json) for current test counts and source identities; [initial publication verification](evidence/publication-verification-20261101.json) retains its earlier checkpoint scope. These software checks do not attest physical audio, latency, deployment or Serato compatibility. No hardware/UAC test ran for this publication.
 
 ## Building and reproducing
 

@@ -1,0 +1,98 @@
+{
+  "schema": "sl3.held-rate-probe-verification.v1",
+  "createdUtc": "2026-11-01T21:20:24.428888+00:00",
+  "tests": {
+    "python": 372,
+    "focusedValidator": 7,
+    "releaseNative": 51,
+    "debugNative": 51,
+    "sdkFreeNative": 33,
+    "processEvidence": [
+      {
+        "path": "tests/results/local/rate-probe-software-hy__77sn",
+        "savedProbeRecords": 14,
+        "successfulSimulatedCases": 2,
+        "physicalCases": 0,
+        "positiveRecordsRestoredAfterCorruptionChecks": true
+      },
+      {
+        "path": "tests/results/local/rate-probe-software-ma0xjx2w",
+        "savedProbeRecords": 14,
+        "successfulSimulatedCases": 2,
+        "physicalCases": 0,
+        "positiveRecordsRestoredAfterCorruptionChecks": true
+      }
+    ]
+  },
+  "probeContract": {
+    "mode": "--select-rate",
+    "nativeRequiresReviewedInitialClock": true,
+    "maximumAcquisitions": 1,
+    "maximumSelectionCommands": 1,
+    "outerWatchdogMs": 45000,
+    "initialIntentSavedBeforeWorkerLaunch": true,
+    "initialGuardNotAtomicAcrossGetters": true,
+    "unknownAndPartialOutcomesPreserved": true,
+    "operationVerificationSeparateFromCleanup": true,
+    "audioStarts": 0,
+    "automaticRetryOrRestoration": false
+  },
+  "validatorContract": {
+    "strictRateWireAndRequestCorrelation": true,
+    "nativeObservationAndJournalCorrelated": true,
+    "nativeOperationRecordMustNotClaimRelease": true,
+    "syntheticEnvelopeNotExportedAsEvidence": true,
+    "individualRateTransfersJournalled": false,
+    "sharedTraceQualified": false,
+    "syntheticNativeUnitDataNotHardwareEvidence": true
+  },
+  "probeImageSha256": {
+    "Release": "3cb8a3ce79473bdf81bbdad21da12a0fa814e5182647a4f567a36e05f51cb317",
+    "Debug": "ff216d1308a27bee1685bd60289814d79307b9fdc05430a229d2dd703120fad8"
+  },
+  "testedRateScriptInputs": {
+    "export-usbdk-physical-checkpoint.py": "36f9afb6badb95b2566a6413ed236ab10fba1af6634e5a946f957004e52b84be",
+    "test-rate-host-probe.py": "7e61db116f025e20e1c5207967efe288bac10e4cf764f3772e2fcf200eb75003",
+    "validate-rate-host-probe.py": "7fce205f8929dbb4f55c127ca53bc0d1fe031399e753cddec1e9780d507450ad",
+    "validate-usbdk-rate.py": "3f6e5b89c40596144328a4544c23505690795547cab7c0e0f1a5092a23514ba4",
+    "validate-usbdk-capture.py": "e909291b7e7d6bc4995179477f24fe0338593f3857967e14185f0ad11d2136d4",
+    "validate-controls-host-probe.py": "6176896488250b02217e1068bb58e075e5153ddf9321e06a820bcd3b3951181f"
+  },
+  "sourceSha256": {
+    "CMakeLists.txt": "1b58f96b4c85c37338146fda58f7a99e92f1e4969919ad6a1f28b69c1b4df1a7",
+    "scripts/build-native.ps1": "ab16ba7c5edc12bd6431aa2f07afde78409c9995523da984ff5d8eb461bac447",
+    "src/windows/host_probe_main.cpp": "4ed4195936dce5a9f7b2c15b2b9fe0ae58df8299b0d8f7ab435930a9ccb333a4",
+    "scripts/test-rate-host-probe.py": "7e61db116f025e20e1c5207967efe288bac10e4cf764f3772e2fcf200eb75003",
+    "scripts/validate-rate-host-probe.py": "7fce205f8929dbb4f55c127ca53bc0d1fe031399e753cddec1e9780d507450ad",
+    "tests/test_rate_probe_evidence.py": "bc63dcd3a559072a031299f2bb6fe0ee080c6d41a0ff83b9a9979e67a26659ea"
+  },
+  "buildManifestSha256": {
+    "artifacts/build/native/native-build-Release.json": "cc1bf395b43b2e13dafff67a02c1bf3fd11167ad2f169297ee44e6d68342a01f",
+    "artifacts/build/native/native-build-Debug.json": "ae31f1a2e235c544baba8fb8181c06ad84202ef9e863f1c3c21ec1bc10c4261f",
+    "artifacts/build/native-without-sdk/native-build-Release.json": "12be096aa98f51a421e39f71205ccea40e76cfb558d3d54406ae1d7482d7f48e"
+  },
+  "privateLogSha256": {
+    "held-rate-probe-debug-20261101.log": "c3ef14cc121e2ac6e0f616cccef43210d1c71eff32005feeb7abb749a73dedac",
+    "held-rate-probe-python-suite-20261101.log": "f887c80d4acf660a9541d2b0ef4aa79670f444dca85957163d02717118a9cc4f",
+    "held-rate-probe-release-20261101.log": "20174f025b5cba3eb73e705b8d4a50ccde093c9aa6b7c04800cc78e7c4e17717",
+    "held-rate-probe-sdkfree-20261101.log": "390f5541e9cfbab543c0af7e32bcba30ae3f5c0ab7946865da281a959cfc9ec5",
+    "held-rate-probe-validator-20261101.log": "3b1b1015edd0bd647f7bf0e38977e0a58760f4cd2b6c7d353b5dd1c85fb19e19"
+  },
+  "checkpoint": {
+    "path": "artifacts/build/checkpoints/held-rate-probe-20261101",
+    "files": 286,
+    "bytes": 20909123,
+    "manifestSha256": "9fa455810ab18f97520dd3049a34fb28ca15203d7cfefc07846c5bff8bae65de"
+  },
+  "limits": {
+    "physicalAcquisition": false,
+    "physicalRateSelection": false,
+    "positiveNativeProbeRun": false,
+    "uacLaunch": false,
+    "securityTrustBindingRegistrationOrFirmwareChanges": false,
+    "sharedTracedRateLauncherImplemented": false,
+    "productionAsioRateSetterImplemented": false,
+    "currentSeratoOrDvsVerified": false,
+    "previousScopePlanStillDisarmed": true
+  }
+}

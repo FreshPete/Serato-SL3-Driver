@@ -1,5 +1,6 @@
 #include "asio/host_session.hpp"
 #include "core/control_test_target.hpp"
+#include "core/rate_test_grant.hpp"
 #include <algorithm>
 #include <array>
 #include <atomic>
@@ -424,6 +425,69 @@ int run_selection(WorkerSpec spec,const std::filesystem::path& folder,sl3::contr
     try{save_selection(path,e);}catch(...){if(!e.finished){TerminateProcess(GetCurrentProcess(),1);std::abort();}throw;}
     if(!e.finished){TerminateProcess(GetCurrentProcess(),1);std::abort();}return e.success?0:1;
 }
+struct RateEvidence {
+    std::string phase="preparing",error,worker_sha;
+    unsigned target=0,acquisitions=0,selections=0;
+    std::optional<unsigned> expected_initial;
+    bool acquired=false,pending=false,finished=false,success=false;
+    RateSelectionReport result{};
+    HostReport acquisition{},operation{},final{};
+};
+void save_rate(const std::filesystem::path& path,const RateEvidence& e){
+    std::ostringstream text;text<<std::boolalpha;
+    const bool verified=e.result.outcome && e.result.outcome->observation.error==sl3::control::DiagnosticError::none;
+    text<<"{\"schema\":\"sl3.rate-host-probe.v1\",\"phase\":"<<quoted(e.phase)<<",\"simulated\":"<<(kind==sl3::session::Kind::simulated)
+        <<",\"worker_sha256\":"<<quoted(e.worker_sha)<<",\"device_protocol_version\":"<<sl3::device_session::version
+        <<",\"target_rate_hz\":"<<e.target<<",\"expected_initial_rate_hz\":";
+    if(e.expected_initial)text<<*e.expected_initial;else text<<"null";
+    text<<",\"successful\":"<<e.success<<",\"finished\":"<<e.finished<<",\"acquisition_attempts\":"<<e.acquisitions
+        <<",\"acquisition_verified\":"<<e.acquired<<",\"selection_attempts\":"<<e.selections<<",\"publication_pending\":"<<e.pending
+        <<",\"command_attempted\":";
+    if(e.pending)text<<"null";else text<<e.result.command_attempted;
+    text<<",\"outcome_unknown\":"<<e.result.outcome_unknown<<",\"device_may_have_changed\":"<<e.result.device_may_have_changed
+        <<",\"rejected_before_operation\":"<<e.result.rejected_before_operation<<",\"operation_verified\":"<<verified<<",\"outcome_wire_hex\":";
+    if(e.result.outcome){
+        constexpr char hex[]="0123456789abcdef";const auto bytes=sl3::control::rate_wire::encode_reply(*e.result.outcome);
+        text<<'"';for(auto byte:bytes)text<<hex[byte>>4]<<hex[byte&15];text<<'"';
+    }else text<<"null";
+    text<<",\"audio_start_attempts\":0,\"audio_buffers_created\":false,\"alternate_changes_requested\":0,\"control_setters\":0"
+        <<",\"automatic_rollback\":false,\"firmware_requests\":0,\"calibration_verified\":false,\"analogue_signal_verified\":false,\"asio_com_registered\":false";
+    write_control_owner(text,"acquisition",e.acquisition);write_control_owner(text,"after_selection",e.operation);write_control_owner(text,"final",e.final);
+    text<<",\"error\":"<<quoted(e.error)<<"}\n";
+    std::ofstream output(path,std::ios::binary|std::ios::trunc);output<<text.str()<<std::flush;require(bool(output),"Write rate evidence");
+}
+int run_rate(WorkerSpec spec,const std::filesystem::path& folder,unsigned target,std::optional<unsigned> expected){
+    require(!std::filesystem::exists(folder),"Choose a fresh rate output directory");
+    require(std::filesystem::create_directory(folder),"Create rate output directory");spec.lifetime=DeviceLifetime::retained;
+    if constexpr(kind==sl3::session::Kind::native){spec.diagnostic_directory=folder;spec.diagnostic_rate_target=target;}
+    RateEvidence e;e.target=target;e.expected_initial=expected;e.worker_sha=spec.sha256;const auto path=folder/L"probe.json";
+    save_rate(folder/L"request.json",e);save_rate(path,e);Watchdog watchdog(45000);HostSession session(spec);
+    try{
+        e.phase="acquiring";e.acquisitions=1;save_rate(path,e);
+        e.acquired=session.inspect();e.acquisition=session.report();require(e.acquired,"Rate acquisition failed");
+        require(idle_controls_owner(e.acquisition) && e.acquisition.device_held,"Rate selection requires an idle healthy owner");
+        require(!expected || e.acquisition.observed_rate_hz==*expected,"Acquired clock differs from reviewed initial rate; no selection attempted");
+        e.phase="selection_pending";e.selections=1;e.pending=true;e.result.outcome_unknown=true;e.result.device_may_have_changed=true;save_rate(path,e);
+        e.result=session.select_rate(target);e.pending=false;e.operation=session.report();
+        require(e.result.command_attempted && !e.result.outcome_unknown && e.result.outcome &&
+            e.result.outcome->observation.error==sl3::control::DiagnosticError::none,"Rate selection did not return a verified outcome");
+        require(e.result.outcome->observation.initial_rate_hz==e.acquisition.observed_rate_hz,"Transaction initial getter differs from acquired clock");
+        require(idle_controls_owner(e.operation) && e.operation.device_held && e.operation.observed_rate_hz==target,"Rate selection did not preserve a verified idle owner");
+    }catch(const std::exception& error){e.error=error.what();e.operation=session.report();}
+    e.phase="closing";try{save_rate(path,e);}catch(...){if(e.error.empty())e.error="Rate progress write failed";}
+    e.final=session.close(5000);const auto& h=e.final;
+    e.finished=h.io_retired && h.device_released && !h.device_held && h.audio.retired && !h.audio.active_callbacks &&
+        (!h.process.started || (h.process.process_exited && h.process.job_empty));
+    e.success=e.error.empty() && e.acquired && e.acquisitions==1 && e.selections==1 && !e.pending &&
+        e.result.command_attempted && !e.result.outcome_unknown && !e.result.rejected_before_operation && e.result.outcome &&
+        e.result.outcome->observation.error==sl3::control::DiagnosticError::none && e.finished && !h.termination_requested &&
+        idle_controls_owner(e.acquisition) && idle_controls_owner(e.operation) && idle_controls_owner(h) &&
+        h.observed_rate_hz==target && h.device_snapshot.phase==sl3::device_session::Phase::closed;
+    if(!e.success && e.error.empty())e.error="Rate probe failed its final ownership contract";
+    e.phase=e.finished?"finished":"unretired";
+    try{save_rate(path,e);}catch(...){if(!e.finished){TerminateProcess(GetCurrentProcess(),1);std::abort();}throw;}
+    if(!e.finished){TerminateProcess(GetCurrentProcess(),1);std::abort();}return e.success?0:1;
+}
 int run_controls(WorkerSpec spec,const std::filesystem::path& folder){
     require(!std::filesystem::exists(folder),"Choose a fresh output directory");
     require(std::filesystem::create_directory(folder),"Create controls output directory");
@@ -460,13 +524,32 @@ int wmain(int argc,wchar_t** argv){
     const std::wstring mode=argc>1?argv[1]:L"";
     const unsigned single_open_rate=mode==L"--single-open-44100"?44100u:mode==L"--single-open-48000"?48000u:0u;
     const unsigned retained_rate=mode==L"--retained-44100"?44100u:mode==L"--retained-48000"?48000u:0u;
-    const bool controls=mode==L"--controls",selection=mode==L"--select-control";
-    if((argc!=10 && argc!=12 && !(selection && (argc==14 || argc==16))) || (mode!=L"--run" && mode!=L"--inspect-reopen" && !single_open_rate && !retained_rate && !controls && !selection)){std::cerr<<"Expected explicit probe mode, --worker FILE --worker-sha256 HASH --helper FILE --output NEW_DIRECTORY; selection requires --target KIND:GROUP:VALUE\n";return 2;}
+    const bool controls=mode==L"--controls",selection=mode==L"--select-control",rate_select=mode==L"--select-rate";
+    if((argc!=10 && argc!=12 && !((selection || rate_select) && (argc==14 || argc==16))) || (mode!=L"--run" && mode!=L"--inspect-reopen" && !single_open_rate && !retained_rate && !controls && !selection && !rate_select)){std::cerr<<"Expected explicit probe mode, --worker FILE --worker-sha256 HASH --helper FILE --output NEW_DIRECTORY; selection requires --target KIND:GROUP:VALUE\n";return 2;}
     unsigned intervals=default_interval_count;
     std::wstring fixture_mode=L"normal";
     std::optional<sl3::control::selection_wire::Target> target;
     std::optional<std::array<std::uint8_t,22>> reviewed;
-    if(selection){
+    std::optional<unsigned> rate_target,expected_initial;
+    if(rate_select){
+        if((argc!=12 && argc!=14 && argc!=16) || std::wstring(argv[10])!=L"--target")return 2;
+        try{rate_target=sl3::control::parse_rate_test_target(argv[11]);}catch(...){return 2;}
+        if constexpr(kind==sl3::session::Kind::simulated)fixture_mode=L"rate-normal";
+        bool fixture_given=false;
+        for(int at=12;at<argc;at+=2){
+            const std::wstring option=argv[at],value=argv[at+1];
+            if(option==L"--expected-initial" && !expected_initial){try{expected_initial=sl3::control::parse_rate_test_target(value);}catch(...){return 2;}}
+            else if(option==L"--fixture-mode" && !fixture_given){
+                if constexpr(kind!=sl3::session::Kind::simulated){return 2;}else{
+                    fixture_given=true;fixture_mode=value;
+                    if(fixture_mode!=L"rate-normal" && fixture_mode!=L"normal" && fixture_mode!=L"rate-mismatch" && fixture_mode!=L"rate-transfer"
+                       && fixture_mode!=L"rate-transfer-close" && fixture_mode!=L"rate-success-close" && fixture_mode!=L"rate-throw"
+                       && fixture_mode!=L"rate-bad" && fixture_mode!=L"rate-hang" && fixture_mode!=L"fail-acquire" && fixture_mode!=L"invalid-clock")return 2;
+                }
+            }else return 2;
+        }
+        if constexpr(kind==sl3::session::Kind::native){if(!expected_initial)return 2;}
+    }else if(selection){
         if((argc!=12 && argc!=14 && argc!=16) || std::wstring(argv[10])!=L"--target")return 2;
         try{target=sl3::control::parse_control_test_target(argv[11]);}catch(...){return 2;}
         bool fixture_given=false;
@@ -506,5 +589,5 @@ int wmain(int argc,wchar_t** argv){
     if(sha.size()!=64 || !std::all_of(sha.begin(),sha.end(),[](wchar_t c){return (c>=L'0' && c<=L'9')||(c>=L'a' && c<=L'f')||(c>=L'A' && c<=L'F');}) ||
        !local_absolute(spec.executable) || !local_absolute(spec.helper) || !local_absolute(folder))return 2;
     for(const auto ch:sha)spec.sha256.push_back(static_cast<char>(ch));
-    try{return selection?run_selection(spec,folder,*target,reviewed):controls?run_controls(spec,folder):retained_rate?run_retained(spec,folder,retained_rate):run(spec,folder,mode==L"--inspect-reopen",single_open_rate,intervals);}catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}
+    try{return rate_select?run_rate(spec,folder,*rate_target,expected_initial):selection?run_selection(spec,folder,*target,reviewed):controls?run_controls(spec,folder):retained_rate?run_retained(spec,folder,retained_rate):run(spec,folder,mode==L"--inspect-reopen",single_open_rate,intervals);}catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}
 }

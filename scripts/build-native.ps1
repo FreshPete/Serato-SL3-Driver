@@ -41,6 +41,7 @@ try {
     if($WithAsioComponent -and 'sl3_selection_probe_lifecycle' -notin $testNames){throw 'Required selection probe test is missing'}
     if($WithAsioComponent -and 'sl3_driver_facade_tests' -notin $testNames){throw 'Required ASIO facade test is missing'}
     if($WithAsioComponent){foreach($name in @('sl3_scope_probe_plan','sl3_scope_probe_lifecycle')){if($name -notin $testNames){throw "Required scope diagnostic test is missing: $name"}}}
+    if($WithAsioComponent -and 'sl3_rate_probe_lifecycle' -notin $testNames){throw 'Required held-rate probe process tests are missing'}
     if($WithAsioComponent -and 'sl3_asio_session_tests' -notin $testNames){throw 'Required actual ASIO session ABI test is missing'}
     if($WithAsioComponent -and 'sl3_driver_configuration_tests' -notin $testNames){throw 'Required production ASIO configuration test is missing'}
     $ctestLog=Join-Path $build "ctest-$Configuration.log"
@@ -116,6 +117,14 @@ try {
                           'read-startup-journal.ps1','capture-usb-startup.ps1','preflight-usbdk.ps1','collect-windows-state.ps1',
                           'export-usbdk-physical-checkpoint.py','validate-usbdk-capture.py','analyse-callback-timing.py')){
             $record.hostProbe.retained.scriptInputs[$name]=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot $name)).Hash
+        }
+    }
+    if($WithAsioComponent){
+        $record.hostProbe.rateSelection=[ordered]@{testsPassed=$true;mode='--select-rate';nativeRequiresReviewedInitialRate=$true
+            maximumAcquisitions=1;maximumSelections=1;audioStarts=0;physicalRateChangeTested=$false;sharedTraceImplemented=$false;scriptInputs=@{}}
+        foreach($name in @('test-rate-host-probe.py','validate-rate-host-probe.py','validate-usbdk-rate.py','validate-controls-host-probe.py',
+                          'export-usbdk-physical-checkpoint.py','validate-usbdk-capture.py')){
+            $record.hostProbe.rateSelection.scriptInputs[$name]=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot $name)).Hash
         }
     }
     $record.rateSelection=[ordered]@{testsPassed=$true;testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_rate_selection_tests.exe")).Hash;offlineOnly=$false;maximumRequests=3;maximumReceivedFrames=12;nativeSetterConnected=$true;nativeDiagnosticImplemented=$true;automaticStartupRateChanges=$false;physicalRateChangeTested=$false}
