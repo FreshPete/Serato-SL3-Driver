@@ -25,7 +25,9 @@ def runtime():
     for name,digest in build['inputs'].items():require(sha(ROOT/name)==digest.lower(),'Native build input changed: '+name)
     pins=build['scopeProbe']['scriptInputs'];require(len(pins)==19,'Scope runtime dependencies missing')
     for name,digest in pins.items():require(sha(ROOT/'scripts'/name)==digest.lower(),'Scope dependency changed: '+name)
-    for name,digest in build['scopeProbe']['traceLauncherInputs'].items():
+    launchers=build['scopeProbe']['traceLauncherInputs']
+    require(set(launchers)=={'prepare-scope-trace.py','start-scope-trace.ps1'},'Scope launcher dependencies missing')
+    for name,digest in launchers.items():
         require(sha(ROOT/'scripts'/name)==digest.lower(),'Scope launcher dependency changed: '+name)
     images={}
     for name,digest in (('sl3_scope_probe.exe',build['scopeProbe']['executableSha256']),('sl3_usbdk.exe',build['usbdk']['executableSha256'])):

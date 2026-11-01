@@ -1,5 +1,7 @@
 # SL3 rebuild goal — working checkpoint
 
+**Scope-launcher verification, 1 November:** [new offline refusal and single-use checks](scope-trace-launcher.md) cover fixed plan reconstruction, collector claims, unchanged failure evidence, separate scope validation and actual non-elevating process guards. The fresh native Release build passed 50/50 and the full Python suite passed 332/332. An earlier simulated-worker reply failure remains unexplained after ten passing targeted reruns; richer test diagnostics were added without changing production behavior or weakening deadlines. No elevated or physical scope experiment ran.
+
 **Public repository checkpoint, 1 November:** source, tests, findings and progress are being published at [FreshPete/Serato-SL3-Driver](https://github.com/FreshPete/Serato-SL3-Driver), retaining its GPLv3 license and the UsbDk header notices. See the [public development status](public-development-status.md) for validation and publication limits. The latest scope trace-wrapper changes are work in progress: ordinary-user Scope selection, separate schema validation, a 60-second USB/WPP collector and a fixed single-use launcher. The plan path was checked; no physical scope test or administrator launch ran for publication. The complete image-version-qualified scope window remains separate and unfinished.
 
 ## 31 October: commit-time image-source validation without persistence

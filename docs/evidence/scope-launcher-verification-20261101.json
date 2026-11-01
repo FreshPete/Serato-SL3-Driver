@@ -1,0 +1,47 @@
+{
+  "schema": "sl3.scope-launcher.verification.v1",
+  "createdUtc": "2026-11-01T19:53:10.588426+00:00",
+  "nativeRelease": {
+    "passed": 50,
+    "failed": 0
+  },
+  "python": {
+    "passed": 332,
+    "failed": 0,
+    "scopeLauncherChecks": 13,
+    "additionalScopeCompositionCheck": 1
+  },
+  "priorFailure": {
+    "nativeTest": "sl3_device_session_tests",
+    "diagnostic": "Receive retained device reply",
+    "elapsedSeconds": 0.48,
+    "causeEstablished": false,
+    "targetedConsecutivePasses": 10,
+    "productionFixClaimed": false,
+    "timeoutsRelaxed": false,
+    "staleManifestRefused": true
+  },
+  "elevatedLaunchTested": false,
+  "physicalScopeTested": false,
+  "usbAcquisitionRunForThisWork": false,
+  "sourceSha256": {
+    "scripts/prepare-scope-trace.py": "5731a7f60afa1c7169af82b51222ff39c49b7fc9146a2ee7813c0259dcc8a753",
+    "scripts/start-scope-trace.ps1": "b6fd32e2411ea91344d4ad3c94def834d11327bbdfed3529fa4f7f2fb1877210",
+    "tests/test_scope_trace_launcher.py": "2b92b5dae68c216a482e6b9fca70b96690f55828df89abe5366ab50edd255413",
+    "tests/test_controls_user_probe.py": "255a3de5c1c4c7d6a6833d41c52e54f855991ba41151abeb0b21e6b3eba10670",
+    "tests/native/device_session_tests.cpp": "8e1eb93bf5672878397dd1624d1b0c2c047bcaf88274033dda1434a319c99436"
+  },
+  "privateLogSha256": {
+    "scope-launcher-release-20261101.log": "953b3628dc93d4f2e8e2c912db2746332002ed845b21e2782b10e1ab31bbf236",
+    "scope-launcher-python-20261101.log": "2a1e5cb0cfd421d2a0220d7658e32c1927e2f51b8bf27dada642ad99de7fa23b",
+    "scope-device-session-recheck-20261101.log": "b9c241e5b140993953d6b2a9614a999dfea9f55b10d67afa48a5f49a5a25539b",
+    "scope-launcher-release-final-20261101.log": "33d8e2fa43f1711827ba2dba5b1b2f34bd68dcf3929412b0fd95efbe19ad692a",
+    "scope-launcher-python-final-20261101.log": "b8e92addca5cd3fb4411e8ab5a9c20f852f9fdd36ab3bbaa444b053bfe61f15b",
+    "scope-launcher-retirement-20261101.json": "29e6e6d3d3a72582575a3ad99a1d5b39218ba4e66ddd4006c87c0cd492b14bff"
+  },
+  "buildManifestSha256": "cafb49ddfbd9580da2f752a596882ec8993368a7e0baa7873350946ca017f681",
+  "checkpoint": "artifacts/build/checkpoints/scope-launcher-20261101",
+  "remainingSl3TestProcesses": [
+    []
+  ]
+}

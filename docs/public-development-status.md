@@ -20,7 +20,7 @@ Detailed provenance and limits are in the [return report](RETURN-REPORT.md), [fi
 
 The source snapshot includes work in progress to reduce an attended scope experiment to one administrator approval. The ordinary user runs the probe; a separate elevated collector records USB/WPP/state evidence. Plans pin tested inputs, are single use, allow one acquisition and require a post-retirement trace window. There is no persistent elevated service or automatic retry. Default launcher inspection performs no device test.
 
-The scope plan path has been exercised, but the elevated launcher and physical experiment have not. The separate kernel-image-version-qualified scope window is unfinished. Neither a controls-only result nor a simulated scope result qualifies as that experiment.
+The [scope launcher refusal and single-use paths](scope-trace-launcher.md) now have offline and actual non-elevating process checks, but the elevated launcher and physical experiment have not run. The separate kernel-image-version-qualified scope window is unfinished. Neither a controls-only result nor a simulated scope result qualifies as that experiment.
 
 See [publication verification](evidence/publication-verification-20261101.json) for fresh test counts and source identities. These software checks do not attest physical audio, latency, deployment or Serato compatibility. No hardware/UAC test ran for this publication.
 

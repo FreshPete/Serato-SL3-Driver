@@ -187,6 +187,25 @@ class UserControlsTests(unittest.TestCase):
                 self.assertTrue(v.validate(folder,worker,probe)['nonElevatedParentProbeAndWorker'])
                 underlying.assert_called_once_with(folder,worker,probe)
 
+    def test_scope_selects_its_own_image_pins_and_trace_validator(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            folder=Path(temporary);record,worker,_=self.saved_fixture(folder)
+            build=v.read(ROOT/'artifacts/build/native/native-build-Release.json')
+            image=str(ROOT/'artifacts/build/native/Release/sl3_scope_probe.exe')
+            record.update(scenario='Scope',traceSeconds=60,schema='sl3.scope-host.traced-run.v1',
+                          probeImagePath=image,runnerInputs=build['scopeProbe']['scriptInputs'])
+            record['userProcesses']['probe']['process']['imagePath']=image
+            (folder/'run.json').write_text(json.dumps(record),encoding='utf-8')
+            probe=build['scopeProbe']['executableSha256']
+            with patch.object(v.base,'traced',return_value={'valid':True,'probe':{'nativeJournal':{'workerPid':2002}}}) as underlying:
+                self.assertTrue(v.validate(folder,worker,probe,scope=True)['nonElevatedParentProbeAndWorker'])
+                underlying.assert_called_once_with(folder,worker,probe,scope=True)
+            for key,value in [('scenario','Controls'),('traceSeconds',20),('runnerInputs',build['hostProbe']['controls']['scriptInputs'])]:
+                bad=copy.deepcopy(record);bad[key]=value
+                (folder/'run.json').write_text(json.dumps(bad),encoding='utf-8')
+                with patch.object(v.base,'traced',return_value={'valid':True,'probe':{'nativeJournal':{'workerPid':2002}}}):
+                    with self.subTest(key=key),self.assertRaises(ValueError):v.validate(folder,worker,probe,scope=True)
+
     def test_final_record_mutations_fail(self):
         with tempfile.TemporaryDirectory() as temporary:
             folder = Path(temporary);record, worker, probe = self.saved_fixture(folder)

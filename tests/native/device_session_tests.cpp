@@ -63,7 +63,17 @@ struct Client {
     ~Client(){control->close();try{process.terminate_and_wait();}catch(...){}std::error_code ec;std::filesystem::remove(audit,ec);}
     Message call(protocol::Command cmd,const std::vector<std::uint8_t>& bytes={}){
         require(control->send(unsigned(cmd),bytes.data(),bytes.size()),"Publish retained device command");Message r;
-        require(control->await_reply(process.process_handle(),2000,r)==MessageResult::ok,"Receive retained device reply");return r;
+        const auto entered=GetTickCount64();
+        const auto result=control->await_reply(process.process_handle(),2000,r);
+        if(result!=MessageResult::ok){
+            const auto state=process.observe();
+            std::cerr<<"Retained reply failure: command="<<unsigned(cmd)<<" result="<<unsigned(result)
+                     <<" elapsed_ms="<<(GetTickCount64()-entered)<<" process_exited="<<state.process_exited
+                     <<" exit_code_known="<<state.exit_code_known<<" exit_code="<<state.exit_code<<" audit=";
+            for(const auto& mark:marks())std::cerr<<mark<<',';
+            std::cerr<<'\n';
+        }
+        require(result==MessageResult::ok,"Receive retained device reply");return r;
     }
     void hello(session::Kind kind=session::Kind::simulated){const auto r=call(protocol::Command::hello);require(!r.status && protocol::decode_hello(r.bytes)==kind,"Retained device handshake");}
     protocol::Snapshot state(protocol::Command cmd){const auto r=call(cmd);require(!r.status,"Successful retained device operation");return protocol::decode_snapshot(r.bytes);}
