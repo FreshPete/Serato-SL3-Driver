@@ -37,11 +37,10 @@
     "scope-device-session-recheck-20261101.log": "b9c241e5b140993953d6b2a9614a999dfea9f55b10d67afa48a5f49a5a25539b",
     "scope-launcher-release-final-20261101.log": "33d8e2fa43f1711827ba2dba5b1b2f34bd68dcf3929412b0fd95efbe19ad692a",
     "scope-launcher-python-final-20261101.log": "b8e92addca5cd3fb4411e8ab5a9c20f852f9fdd36ab3bbaa444b053bfe61f15b",
-    "scope-launcher-retirement-20261101.json": "29e6e6d3d3a72582575a3ad99a1d5b39218ba4e66ddd4006c87c0cd492b14bff"
+    "scope-launcher-retirement-20261101.json": "06b000f2142ce10daf28e20d47bd084755d9de265615f8fd7316092624fd05bd"
   },
   "buildManifestSha256": "cafb49ddfbd9580da2f752a596882ec8993368a7e0baa7873350946ca017f681",
   "checkpoint": "artifacts/build/checkpoints/scope-launcher-20261101",
-  "remainingSl3TestProcesses": [
-    []
-  ]
+  "remainingSl3TestProcesses": [],
+  "retirementObservedUtc": "2026-11-01T19:53:32.3252404Z"
 }
