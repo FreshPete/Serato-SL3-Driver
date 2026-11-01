@@ -86,9 +86,11 @@ class Runtime {
         }
         const auto command=Command(request_.opcode);protocol::Start start;
         control::selection_wire::Target selected{control::AudioControlSetting::through,0,0};
+        unsigned selected_rate=0;
         try{
             if(command==Command::start)start=protocol::decode_start(request_.bytes);
             else if(command==Command::select_control)selected=control::selection_wire::decode_request(request_.bytes.data(),request_.bytes.size());
+            else if(command==Command::select_rate)selected_rate=control::rate_wire::decode_request(request_.bytes.data(),request_.bytes.size());
             else if(!request_.bytes.empty())throw std::invalid_argument("Unexpected device command body");
         }catch(const std::exception&){reply(Status::bad_request);return;}
         if(command==Command::hello){
@@ -171,6 +173,32 @@ class Runtime {
                 heartbeat_.pulse(timeouts_.live_ms);
                 // Return valid observations before final redirect release. A later
                 // failed close cannot erase a completed operation's evidence.
+                if(!control_.respond(unsigned(success?Status::ok:Status::operation_failed),body.data(),body.size()))exit_=true;
+            }catch(const std::exception& e){
+                snapshot_.io_retired=true;snapshot_.native_error=GetLastError();
+                failure(session::Failure::control,e.what());snapshot_.phase=Phase::failed;
+                heartbeat_.pulse(timeouts_.live_ms);reply(Status::operation_failed);
+            }
+            return;
+        }
+        if(command==Command::select_rate){
+            if(snapshot_.phase!=Phase::ready || !device_ || stream_ || !snapshot_.io_retired){reply(Status::bad_state);return;}
+            if(!device_->supports_rate_selection()){reply(Status::bad_request);return;}
+            heartbeat_.pulse(std::min<DWORD>(timeouts_.startup_ms,protocol::rate_watchdog_ms));snapshot_.io_retired=false;
+            // An old stream's statistics/interval contract cannot describe a new
+            // clock epoch, and pre-write clock state is not post-write evidence.
+            snapshot_.rate_hz=0;snapshot_.intervals=0;snapshot_.stats={};snapshot_.stream_fault=StreamFault::none;
+            try{
+                const auto outcome=device_->select_rate(selected_rate);
+                const auto checked=control::rate_wire::encode_reply(outcome);
+                control::rate_wire::decode_reply(checked.data(),checked.size(),selected_rate);
+                snapshot_.io_retired=true;snapshot_.native_error=outcome.native_error;
+                const bool success=outcome.observation.error==control::DiagnosticError::none;
+                snapshot_.rate_hz=success?outcome.observation.verified_rate_hz:outcome.observation.readback_rate_hz;
+                if(!success){failure(session::Failure::control,"Rate selection did not verify");snapshot_.phase=Phase::failed;}
+                const auto body=protocol::encode_rate_selection({snapshot_,outcome});
+                heartbeat_.pulse(timeouts_.live_ms);
+                // Preserve completed observations before any later close failure.
                 if(!control_.respond(unsigned(success?Status::ok:Status::operation_failed),body.data(),body.size()))exit_=true;
             }catch(const std::exception& e){
                 snapshot_.io_retired=true;snapshot_.native_error=GetLastError();

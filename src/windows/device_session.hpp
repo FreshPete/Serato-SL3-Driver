@@ -20,6 +20,10 @@ public:
     // throwing; unproved retirement must contain the isolated worker.
     virtual bool supports_selection() const noexcept{return false;}
     virtual control::selection_wire::Reply select_control(control::selection_wire::Target){throw std::logic_error("Control selection unsupported");}
+    // Separate opt-in: supporting audio controls never authorizes a rate write.
+    // Same retired-I/O/containment contract as select_control, on this idle lease.
+    virtual bool supports_rate_selection() const noexcept{return false;}
+    virtual control::rate_wire::Reply select_rate(unsigned){throw std::logic_error("Rate selection unsupported");}
     virtual std::unique_ptr<SessionTarget> begin(StreamConfig)=0;
     virtual bool close() noexcept=0;
     virtual DWORD native_error() const noexcept=0;

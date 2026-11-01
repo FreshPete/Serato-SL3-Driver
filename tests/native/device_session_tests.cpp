@@ -86,6 +86,8 @@ static std::unique_ptr<Mailbox> run_stream(Client& c,unsigned intervals){
     const auto started=protocol::decode_snapshot(r.bytes);
     require(!r.status && started.phase==protocol::Phase::running && !started.device_released && !started.io_retired,"Start retains device and audio leases");
     require(c.call(protocol::Command::clock).status==unsigned(session::Status::bad_state),"No interrupt clock query while audio owns device");
+    const auto rate_target=control::rate_wire::encode_request(44100);
+    require(c.call(protocol::Command::select_rate,{rate_target.begin(),rate_target.end()}).status==unsigned(session::Status::bad_state),"Rate writes refused while audio owns lease");
     std::uint64_t next=0;unsigned blocks=0;const auto deadline=GetTickCount64()+1000;
     while(blocks<24 && GetTickCount64()<deadline){
         AudioBlock input;const auto got=data->try_pop_audio(AudioDirection::input,input);
@@ -303,7 +305,59 @@ static void clock_inspection(const std::filesystem::path& fixture){
     require(response.status==unsigned(session::Status::operation_failed) && state.phase==protocol::Phase::failed && state.io_retired && state.device_released,
             "Failed clock getter releases rather than presenting cached success");failed.quit(1);
 }
+static std::vector<std::uint8_t> rate_request(unsigned target){
+    const auto b=control::rate_wire::encode_request(target);return {b.begin(),b.end()};
+}
+static void rate_selection(const std::filesystem::path& fixture){
+    const auto request=rate_request(44100);
+    Client c(fixture,L"rate-normal");
+    require(c.call(protocol::Command::select_rate,request).status==unsigned(session::Status::bad_state),"Rate selection requires handshake");
+    c.hello();require(c.call(protocol::Command::select_rate,request).status==unsigned(session::Status::bad_state),"Rate selection cannot acquire implicitly");
+    c.state(protocol::Command::acquire);
+    require(c.call(protocol::Command::select_rate,{1}).status==unsigned(session::Status::bad_request),"Malformed rate target cannot dispatch");
+    const auto reply=c.call(protocol::Command::select_rate,request);
+    const auto selected=protocol::decode_rate_selection(reply.bytes,44100);
+    require(!reply.status && selected.device.rate_hz==44100 && selected.device.phase==protocol::Phase::ready &&
+        selected.device.io_retired && !selected.device.device_released && selected.outcome.observation.setter_attempts==1,
+        "Idle rate setter and fresh getter retain the same acquired device");
+    rejects([&]{protocol::decode_rate_selection(reply.bytes,48000);});
+    auto stale=selected;stale.device.rate_hz=48000;rejects([&]{protocol::encode_rate_selection(stale);});
+    stale=selected;stale.device.device_released=true;rejects([&]{protocol::encode_rate_selection(stale);});
+    stale=selected;stale.device.stats.input_submissions=1;rejects([&]{protocol::encode_rate_selection(stale);});
+    stale=selected;stale.device.stats.input_frames=1;rejects([&]{protocol::encode_rate_selection(stale);});
+    for(std::size_t n=0;n<reply.bytes.size();++n){const std::vector<std::uint8_t> truncated(reply.bytes.begin(),reply.bytes.begin()+n);rejects([&]{protocol::decode_rate_selection(truncated,44100);});}
+    const auto noop=protocol::decode_rate_selection(c.call(protocol::Command::select_rate,request).bytes,44100);
+    require(!noop.outcome.observation.setter_attempts && !noop.outcome.observation.readback_rate_hz,"Repeated same-rate request is a getter-only no-op");
+    require(c.state(protocol::Command::clock).rate_hz==44100,"Fresh clock agrees on same fixture lease");
+    const auto restored=c.call(protocol::Command::select_rate,rate_request(48000));
+    require(!restored.status && protocol::decode_rate_selection(restored.bytes,48000).device.rate_hz==48000,"Explicit reverse selection remains on the held device");
+    auto audio=run_stream(c,8);
+    const auto stopped=c.state(protocol::Command::stop);require(stopped.intervals==8,"Prior stream contract retained until new clock epoch");
+    const auto after=c.call(protocol::Command::select_rate,request);
+    require(!after.status && !protocol::decode_rate_selection(after.bytes,44100).device.intervals,"Clock transition clears prior stream interval contract");
+    c.quit();
+    const auto marks=c.marks();
+    require(std::count(marks.begin(),marks.end(),"acquire")==1 && std::count(marks.begin(),marks.end(),"release")==1 &&
+        std::count(marks.begin(),marks.end(),"rate-setter")==3,"No reacquisition, duplicate setter, hidden rollback or extra release");
+    Client unsupported(fixture,L"normal");unsupported.hello();unsupported.state(protocol::Command::acquire);
+    require(unsupported.call(protocol::Command::select_rate,request).status==unsigned(session::Status::bad_request) &&
+        unsupported.marks()==std::vector<std::string>({"acquire","rate"}),"Audio-control support alone grants no clock write");unsupported.quit();
+    for(const auto mode:{L"rate-mismatch",L"rate-transfer",L"rate-throw",L"rate-bad"}){
+        Client failed(fixture,mode);failed.hello();failed.state(protocol::Command::acquire);
+        const auto r=failed.call(protocol::Command::select_rate,request);
+        require(r.status==unsigned(session::Status::operation_failed),"Failed rate operation is never successful status");
+        protocol::Snapshot state;
+        if(std::wstring(mode)==L"rate-mismatch" || std::wstring(mode)==L"rate-transfer"){
+            const auto result=protocol::decode_rate_selection(r.bytes,44100);state=result.device;
+            require(result.outcome.observation.device_may_have_changed && !result.outcome.observation.verified_rate_hz,
+                "Possible clock effect survives failed transaction reply");
+            require(state.rate_hz==(std::wstring(mode)==L"rate-mismatch"?48000u:0u),"Only accepted post-write getter may populate failed clock snapshot");
+        }else{state=protocol::decode_snapshot(r.bytes);require(!state.rate_hz,"Thrown or malformed result cannot preserve stale pre-write clock");}
+        require(state.phase==protocol::Phase::failed && state.io_retired && !state.device_released,"Failed observation precedes final close");
+        require(failed.call(protocol::Command::select_rate,request).status==unsigned(session::Status::bad_state),"Failed rate transaction cannot retry");failed.quit(1);
+    }
+}
 int wmain(int argc,wchar_t** argv){
-    try{if(argc!=3)return 2;codecs();clock_inspection(argv[1]);lifecycle(argv[1]);admission_failures(argv[1]);admission_and_partial_start(argv[1]);control_loss(argv[1]);controls_inspection(argv[1]);selection(argv[1]);containment(argv[1]);native_negative(argv[2]);std::cout<<"Retained-device codec, control inspection/selection, lifetime, fresh queues, failure and containment tests passed\n";return 0;}
+    try{if(argc!=3)return 2;codecs();rate_selection(argv[1]);clock_inspection(argv[1]);lifecycle(argv[1]);admission_failures(argv[1]);admission_and_partial_start(argv[1]);control_loss(argv[1]);controls_inspection(argv[1]);selection(argv[1]);containment(argv[1]);native_negative(argv[2]);std::cout<<"Retained-device codec, control inspection/selection, lifetime, fresh queues, failure and containment tests passed\n";return 0;}
     catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}
 }

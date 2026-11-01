@@ -20,7 +20,8 @@ struct RateDiagnosticResult {
     unsigned initial_rate_hz=0,verified_rate_hz=0,readback_rate_hz=0,write_attempts=0,read_attempts=0,setter_attempts=0;
     bool device_may_have_changed=false,acknowledgement_received=false;
 };
-// Owner must hold a fresh idle redirect exclusively. The deadline covers the
+// Owner must hold an idle redirect exclusively, with no outstanding I/O. The
+// transaction starts with a fresh getter on that same lease. The deadline covers the
 // whole control sequence, not adapter cancellation/drain time. No audio,
 // alternate activation, automatic retry or restoration write is performed.
 RateDiagnosticResult diagnose_rate(unsigned target_hz,RateIo&,unsigned budget_ms=3000) noexcept;

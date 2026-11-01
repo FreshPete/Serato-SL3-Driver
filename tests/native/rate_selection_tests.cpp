@@ -1,5 +1,6 @@
 #include "core/rate_selection.hpp"
 #include "core/rate_diagnostic.hpp"
+#include "core/rate_selection_wire.hpp"
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
@@ -114,29 +115,95 @@ struct FakeIo final:RateIo {
         return index!=fail_at;
     }
 };
+template<class F> void rejects(F action){
+    bool refused=false;try{action();}catch(const std::invalid_argument&){refused=true;}
+    require(refused,"Malformed or inconsistent rate wire evidence must fail closed");
+}
+RateDiagnosticResult checked_diagnose(unsigned target,RateIo& io,unsigned budget=3000){
+    const auto result=diagnose_rate(target,io,budget);
+    if(target==44100 || target==48000){
+        const rate_wire::Reply original{target,result,0x87654321u};
+        const auto bytes=rate_wire::encode_reply(original);
+        const auto decoded=rate_wire::decode_reply(bytes.data(),bytes.size(),target);
+        require(rate_wire::encode_reply(decoded)==bytes && decoded.native_error==original.native_error,
+            "Actual runner success/fault history roundtrips canonically with native error");
+    }
+    return result;
+}
+void wire(){
+    using namespace rate_wire;
+    for(const auto target:{44100u,48000u}){
+        const auto request=encode_request(target);
+        require(decode_request(request.data(),request.size())==target,"Both explicit rate targets roundtrip");
+        for(std::size_t n=0;n<request_bytes;++n){
+            auto bad=request;bad[n]^=0x80;rejects([&]{decode_request(bad.data(),bad.size());});
+        }
+        rejects([&]{decode_request(nullptr,request.size());});
+        rejects([&]{decode_request(request.data(),request.size()-1);});
+        rejects([&]{decode_request(request.data(),request.size()+1);});
+        FakeIo io;io.current=target==44100?48000:44100;
+        const auto result=checked_diagnose(target,io);
+        const Reply good{target,result,0};const auto bytes=encode_reply(good);
+        rejects([&]{decode_reply(bytes.data(),bytes.size(),target==44100?48000:44100);});
+        rejects([&]{decode_reply(nullptr,bytes.size(),target);});
+        rejects([&]{decode_reply(bytes.data(),bytes.size()-1,target);});
+        rejects([&]{decode_reply(bytes.data(),bytes.size()+1,target);});
+        // Native error is an unrestricted Windows status; every other word is
+        // constrained by format, bounds, target or observation consistency.
+        for(std::size_t word=0;word<16;++word){
+            if(word==13)continue;
+            auto bad=bytes;rate_wire::detail::put(bad,word,0xffffffffu);
+            rejects([&]{decode_reply(bad.data(),bad.size(),target);});
+        }
+        for(unsigned fault=0;fault<10;++fault){
+            auto bad=good;auto& v=bad.observation;
+            if(fault==0)v.setter_attempts=0;
+            if(fault==1)v.acknowledgement_received=false;
+            if(fault==2)v.readback_rate_hz=0;
+            if(fault==3)v.initial_rate_hz=target;
+            if(fault==4)v.device_may_have_changed=false;
+            if(fault==5)v.write_attempts=2;
+            if(fault==6)v.read_attempts=2;
+            if(fault==7)v.verified_rate_hz=0;
+            if(fault==8)v.transaction_error=RateError::readback_mismatch;
+            if(fault==9)v.error=DiagnosticError::transfer;
+            rejects([&]{encode_reply(bad);});
+        }
+        FakeIo unchanged;unchanged.current=target;
+        const auto noop=checked_diagnose(target,unchanged);
+        require(!noop.setter_attempts && !noop.readback_rate_hz,"No-op wire has no fabricated second getter");
+        FakeIo mismatch;mismatch.current=target==44100?48000:44100;mismatch.mismatch=true;
+        const auto failed=checked_diagnose(target,mismatch);
+        const auto failed_bytes=encode_reply({target,failed,0});
+        const auto retained=decode_reply(failed_bytes.data(),failed_bytes.size(),target);
+        require(retained.observation.readback_rate_hz==mismatch.current && !retained.observation.verified_rate_hz,
+            "Wrong supported readback remains a failed observation across IPC serialization");
+    }
+    for(const auto target:{0u,96000u,0xffffffffu})rejects([&]{encode_request(target);});
+}
 void diagnostics(){
-    {FakeIo io;const auto result=diagnose_rate(48000,io);require(result.error==DiagnosticError::none && result.verified_rate_hz==48000 && result.initial_rate_hz==44100 && result.device_may_have_changed && result.write_attempts==3 && result.read_attempts==12 && io.operations==15 && io.setters==1,"Full bounded runner uses twelve frames and one setter");}
-    {FakeIo io;const auto result=diagnose_rate(48000,io);require(result.readback_rate_hz==48000 && result.acknowledgement_received && result.setter_attempts==1,"Runner exports accepted readback, acknowledgement and one setter attempt");}
-    {FakeIo io;io.current=48000;const auto result=diagnose_rate(48000,io);require(result.error==DiagnosticError::none && result.verified_rate_hz==48000 && !result.device_may_have_changed && result.write_attempts==1 && io.setters==0,"Runner no-op path never changes rate");}
+    {FakeIo io;const auto result=checked_diagnose(48000,io);require(result.error==DiagnosticError::none && result.verified_rate_hz==48000 && result.initial_rate_hz==44100 && result.device_may_have_changed && result.write_attempts==3 && result.read_attempts==12 && io.operations==15 && io.setters==1,"Full bounded runner uses twelve frames and one setter");}
+    {FakeIo io;const auto result=checked_diagnose(48000,io);require(result.readback_rate_hz==48000 && result.acknowledgement_received && result.setter_attempts==1,"Runner exports accepted readback, acknowledgement and one setter attempt");}
+    {FakeIo io;io.current=48000;const auto result=checked_diagnose(48000,io);require(result.error==DiagnosticError::none && result.verified_rate_hz==48000 && !result.device_may_have_changed && result.write_attempts==1 && io.setters==0,"Runner no-op path never changes rate");}
     for(unsigned op=0;op<15;++op){
         for(unsigned fault=0;fault<3;++fault){
             FakeIo io;if(fault==0)io.fail_at=op;if(fault==1)io.short_at=op;if(fault==2)io.cancel_at=op;
-            const auto result=diagnose_rate(48000,io);
+            const auto result=checked_diagnose(48000,io);
             require(result.error==(fault==2?DiagnosticError::cancelled:DiagnosticError::transfer) && !result.verified_rate_hz && result.device_may_have_changed==(fault==2?op>=6:op>=5),"Failure/cancellation at every operation preserves possible effects");
             require(io.setters<=1 && io.operations<=15,"Runner never retries a setter or extends receive bounds");
             require(result.setter_attempts==unsigned(result.device_may_have_changed) && !result.readback_rate_hz,"Failed runner retains possible setter but no unaccepted late getter");
         }
     }
-    {FakeIo io;io.elapsed=10;const auto result=diagnose_rate(48000,io,150);require(result.error==DiagnosticError::deadline && !result.verified_rate_hz && result.device_may_have_changed && io.last_timeout==10,"Late final reply cannot escape total deadline");}
-    {FakeIo io;io.elapsed=10;const auto result=diagnose_rate(48000,io,151);require(result.error==DiagnosticError::none && result.verified_rate_hz==48000 && io.last_timeout==11,"Remaining deadline clamps individual waits");}
-    {FakeIo io;const auto result=diagnose_rate(48000,io,0);require(result.error==DiagnosticError::deadline && !io.operations && !result.device_may_have_changed,"Expired budget starts no I/O");}
-    {FakeIo io;io.rollback_clock=true;const auto result=diagnose_rate(48000,io);require(result.error==DiagnosticError::deadline && io.operations==1 && !result.device_may_have_changed,"Clock rollback fails without further requests");}
-    {FakeIo io;io.malformed_ack=true;const auto result=diagnose_rate(48000,io);require(result.error==DiagnosticError::transaction && result.transaction_error==RateError::exchange && result.device_may_have_changed && result.write_attempts==2,"Bad acknowledgement stops before readback submission");}
-    {FakeIo io;io.mismatch=true;const auto result=diagnose_rate(48000,io);require(result.error==DiagnosticError::transaction && result.transaction_error==RateError::readback_mismatch && !result.verified_rate_hz && result.device_may_have_changed,"Runner distinguishes reply framing from transaction success");}
-    {FakeIo io;io.mismatch=true;const auto result=diagnose_rate(48000,io);require(result.readback_rate_hz==44100 && result.initial_rate_hz==44100 && result.acknowledgement_received && result.setter_attempts==1,"Mismatching getter survives runner failure");}
-    {FakeIo io;io.notifications_per_reply=4;const auto result=diagnose_rate(48000,io);require(result.error==DiagnosticError::transaction && result.exchange_error==Error::frame_limit && io.setters==0,"Notification flood cannot cause a setter");}
-    {FakeIo io;const auto result=diagnose_rate(96000,io);require(result.error==DiagnosticError::invalid_target && !io.operations,"Invalid diagnostic target performs no I/O");}
+    {FakeIo io;io.elapsed=10;const auto result=checked_diagnose(48000,io,150);require(result.error==DiagnosticError::deadline && !result.verified_rate_hz && result.device_may_have_changed && io.last_timeout==10,"Late final reply cannot escape total deadline");}
+    {FakeIo io;io.elapsed=10;const auto result=checked_diagnose(48000,io,151);require(result.error==DiagnosticError::none && result.verified_rate_hz==48000 && io.last_timeout==11,"Remaining deadline clamps individual waits");}
+    {FakeIo io;const auto result=checked_diagnose(48000,io,0);require(result.error==DiagnosticError::deadline && !io.operations && !result.device_may_have_changed,"Expired budget starts no I/O");}
+    {FakeIo io;io.rollback_clock=true;const auto result=checked_diagnose(48000,io);require(result.error==DiagnosticError::deadline && io.operations==1 && !result.device_may_have_changed,"Clock rollback fails without further requests");}
+    {FakeIo io;io.malformed_ack=true;const auto result=checked_diagnose(48000,io);require(result.error==DiagnosticError::transaction && result.transaction_error==RateError::exchange && result.device_may_have_changed && result.write_attempts==2,"Bad acknowledgement stops before readback submission");}
+    {FakeIo io;io.mismatch=true;const auto result=checked_diagnose(48000,io);require(result.error==DiagnosticError::transaction && result.transaction_error==RateError::readback_mismatch && !result.verified_rate_hz && result.device_may_have_changed,"Runner distinguishes reply framing from transaction success");}
+    {FakeIo io;io.mismatch=true;const auto result=checked_diagnose(48000,io);require(result.readback_rate_hz==44100 && result.initial_rate_hz==44100 && result.acknowledgement_received && result.setter_attempts==1,"Mismatching getter survives runner failure");}
+    {FakeIo io;io.notifications_per_reply=4;const auto result=checked_diagnose(48000,io);require(result.error==DiagnosticError::transaction && result.exchange_error==Error::frame_limit && io.setters==0,"Notification flood cannot cause a setter");}
+    {FakeIo io;const auto result=checked_diagnose(96000,io);require(result.error==DiagnosticError::invalid_target && !io.operations,"Invalid diagnostic target performs no I/O");}
 }
 }
-int main(){try{success();failures();diagnostics();std::cout<<"Bounded rate-selection transaction and injected diagnostic runner passed; no physical device operations\n";}
+int main(){try{success();failures();diagnostics();wire();std::cout<<"Bounded rate-selection transaction and injected diagnostic runner passed; no physical device operations\n";}
 catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}}

@@ -38,6 +38,7 @@ class Device final:public SessionDevice {
     control::AudioControlsSnapshot controls_{};
     bool observed_controls_=false,selected_control_=false;
     unsigned rate_reads_=0;
+    unsigned selected_rate_=48000;
 public:
     Device(std::wstring mode,Audit& audit):mode_(std::move(mode)),audit_(audit){
         audit_.mark("acquire");for(unsigned i=0;i<controls_.raw.size();++i)controls_.raw[i]=std::uint8_t(i+17);
@@ -50,7 +51,7 @@ public:
         audit_.mark("rate");
         if(++rate_reads_>1 && mode_==L"fail-rate-refresh")throw std::runtime_error("Fixture fresh rate failed after retirement");
         if(mode_.rfind(L"clock:",0)==0){unsigned rate=0;std::ifstream in{std::filesystem::path(mode_.substr(6))};in>>rate;return rate;}
-        return mode_==L"invalid-clock"?96000u:48000u;
+        return mode_==L"invalid-clock"?96000u:selected_rate_;
     }
     device_session::ControlSample read_controls() override{
         if(active_ || closed_)throw std::runtime_error("Fixture controls queried outside idle lease");
@@ -95,6 +96,37 @@ public:
         if(mode_==L"slow-selection")Sleep(5500); // Dispatch delay, not simulated native I/O timing.
         if(mode_==L"bad-selection" && result.verified)result.verified->raw[0]^=1;
         return {target,result,io.failed?31u:1168u};
+    }
+    bool supports_rate_selection() const noexcept override{return mode_.rfind(L"rate-",0)==0;}
+    control::rate_wire::Reply select_rate(unsigned target) override{
+        if(active_ || closed_)throw std::runtime_error("Fixture rate selection outside idle lease");
+        audit_.mark("select-rate");
+        if(mode_==L"rate-throw")throw std::runtime_error("Fixture rate operation failed after retired I/O");
+        struct Io final:control::RateIo {
+            Device& device;std::uint64_t tick=100;unsigned command=0;
+            explicit Io(Device& d):device(d){}
+            std::uint64_t now_ms() noexcept override{return tick;}
+            bool cancelled() noexcept override{return false;}
+            bool transfer(bool output,control::Frame& frame,unsigned,std::size_t& bytes) noexcept override{
+                ++tick;bytes=control::frame_bytes;
+                if(output){
+                    command=frame[0];
+                    if(command==0x31){
+                        device.audit_.mark("rate-setter");
+                        if(device.mode_!=L"rate-mismatch")device.selected_rate_=(unsigned(frame[5])<<8)|frame[6];
+                        if(device.mode_==L"rate-transfer")return false;
+                    }
+                }else{
+                    frame.fill(0);frame[0]=std::uint8_t(command);frame[1]=0x1c;frame[2]=0xc5;frame[4]=1;
+                    const auto value=command==0x31?0xe7a1u:device.selected_rate_;
+                    frame[5]=std::uint8_t(value>>8);frame[6]=std::uint8_t(value);
+                }
+                return true;
+            }
+        } io(*this);
+        auto result=control::diagnose_rate(target,io);
+        if(mode_==L"rate-bad")result.verified_rate_hz=96000;
+        return {target,result,0};
     }
     std::unique_ptr<SessionTarget> begin(StreamConfig) override{
         if(active_ || closed_)throw std::runtime_error("Fixture double activation");

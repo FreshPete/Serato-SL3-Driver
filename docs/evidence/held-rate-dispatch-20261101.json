@@ -1,0 +1,96 @@
+{
+  "schema": "sl3.held-rate-dispatch-verification.v1",
+  "createdUtc": "2026-11-01T21:01:04.320003+00:00",
+  "tests": {
+    "python": 365,
+    "releaseNative": 50,
+    "debugNative": 50,
+    "sdkFreeNative": 33,
+    "malformedRateDiagnosticCli": [
+      {
+        "configuration": "Release",
+        "executableSha256": "d64f2e3252a72525d8bb7e6db1bb6ed62a00f1cf5f0470083e6378e89a8e8a98",
+        "invalidCasesRejected": 13,
+        "absentServiceTested": false
+      },
+      {
+        "configuration": "Debug",
+        "executableSha256": "c71ebe2b23aabdc1d12f2192a7eb695ac69e28ae794366731901e35a33ef5979",
+        "invalidCasesRejected": 13,
+        "absentServiceTested": false
+      }
+    ]
+  },
+  "implementation": {
+    "sessionVersionUnchanged": 3,
+    "optionalCommand": "0x308",
+    "requestBytes": 16,
+    "observationReplyBytes": 64,
+    "transactionBudgetMs": 3000,
+    "workerWatchdogMs": 5500,
+    "futureHostReplyMs": 6000,
+    "explicitAdapterOptInRequired": true,
+    "unknownClockOnUnobservedFailure": true,
+    "streamStatisticsClearedAndValidated": true
+  },
+  "simulatedProcessChecks": [
+    "single acquisition and release",
+    "both rate directions",
+    "getter-only no-op",
+    "fresh getter on retained lease",
+    "stream start after selection",
+    "refusal during active stream",
+    "clock change after stream stop",
+    "unsupported adapter makes no rate operation",
+    "mismatch retains supported readback",
+    "transfer uncertainty preserves possible setter",
+    "throw or malformed result has unknown clock",
+    "failure prevents retry"
+  ],
+  "firstDispatchReleaseRunFailed": true,
+  "failureReason": "New test checked active-stream refusal after a helper had already stopped the stream; assertion moved into active-stream helper",
+  "sourceSha256": {
+    "src/core/device_session_protocol.cpp": "6434057d8d6e8eaa378a4920984df1dafba5a3ed313c4b2bb1f8c41ed95a7f1d",
+    "src/core/device_session_protocol.hpp": "427fa749803ece57ec4596766a141b67be7646a52c84daf285e69f2ddd5155f4",
+    "src/core/rate_diagnostic.hpp": "86d728ab71ec8718348fdc3a66b757af2515dcde3a2363b34e40c144a16ad286",
+    "src/windows/device_session.cpp": "30b88d2cccca3e2810b0045ef786932b2f1dcda7ab31c00fd8328f86d18e435d",
+    "src/windows/device_session.hpp": "331567305154af84f450180e7b6af6fe8b4c93ea5890cb17472dc14bf8a7d17f",
+    "tests/native/device_session_fixture.cpp": "e1a6b7d2709aa745d84817ecc9b3c93574d741952f6508619722ff9823d5ea71",
+    "tests/native/device_session_tests.cpp": "0c00a76a19d28d1de2999e7e7465186da504aed01de83ffccedfb9c98ca75e1f",
+    "tests/native/rate_selection_tests.cpp": "ae3ef49f4e1ac8b90df881121b268c240dd74251781fe391039a85b1630f28b8",
+    "src/core/rate_selection_wire.hpp": "8ba179e60600eb44078875ba8372702191cb2e6348287988d5f76b06bee025cd"
+  },
+  "buildManifestSha256": {
+    "artifacts/build/native/native-build-Release.json": "f061ac73cb94132024a8d83906c260f2c5060252565911fa5de63b777b9b9b3a",
+    "artifacts/build/native/native-build-Debug.json": "3105c487e65726c542d70793a6e4c46133d50f4718de051f5874493a0551e531",
+    "artifacts/build/native-without-sdk/native-build-Release.json": "59dd9fff585778c2c18f8e4a5064c4c2fd278e25799d65483adfabd87f541c3e"
+  },
+  "privateLogSha256": {
+    "held-rate-dispatch-cli-20261101.log": "07913c423c24bb72bae421971c418fc23627e307fa7e5516b3acb80ff0890733",
+    "held-rate-dispatch-debug-20261101.log": "d704c10651be04ce18a5c151ee237446b1a2d987a81a0c5716498486aa232a8b",
+    "held-rate-dispatch-python-suite-20261101.log": "a84795b25bc4e6509090850cfb43b34666a916abf94772398c5b51f2ae678327",
+    "held-rate-dispatch-release-20261101.log": "dee0b251b79cfbcd30fca90702b4172d6d3cca6114b01a673ec71f50f7aba19b",
+    "held-rate-dispatch-release-checked-20261101.log": "1fa70126a8de2f77c46cae4608ef3584cf8d33be74e552d3d038d7c790105c52",
+    "held-rate-dispatch-release-final-20261101.log": "c1dc956a5aa4f3451c4d08d748157620904ce226396ea0bcfedbed11d9379c8d",
+    "held-rate-dispatch-sdkfree-20261101.log": "74857d94269447208db2f3ab3442ea08cb04f413b4fe37c67541d5f187d69067",
+    "rate-wire-release-20261101.log": "8f7811f43c3ea6160154bfdd6cbc76275fe2f011e2a3fbddbe106967dcf13849"
+  },
+  "checkpoint": {
+    "path": "artifacts/build/checkpoints/held-rate-dispatch-20261101",
+    "files": 220,
+    "bytes": 20299167,
+    "manifestSha256": "33a61d8c0e85a4b06cd2fb3b09174b096c033fc01b3aee77942f3ab113d77425"
+  },
+  "limits": {
+    "physicalAdapterRateSelectionEnabled": false,
+    "hostRateSelectionApiImplemented": false,
+    "productionAsioRateSetterImplemented": false,
+    "hardwareAcquisition": false,
+    "physicalRateChange": false,
+    "uacLaunch": false,
+    "securityOrBindingChanges": false,
+    "analogueAudioOrDvsVerified": false,
+    "currentSeratoIntegrationVerified": false,
+    "previousScopePlanStillDisarmed": true
+  }
+}

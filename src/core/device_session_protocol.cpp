@@ -101,4 +101,24 @@ SelectionReply decode_selection(const std::vector<std::uint8_t>& body,control::s
         control::selection_wire::decode_reply(body.data()+owner_bytes,control::selection_wire::reply_bytes,expected)};
     require(encode_selection(value)==body);return value;
 }
+std::vector<std::uint8_t> encode_rate_selection(const RateReply& value){
+    const auto& d=value.device;const auto& s=value.outcome.observation;
+    require(d.io_retired && !d.device_released && d.stream_fault==StreamFault::none && !d.intervals &&
+        d.native_error==value.outcome.native_error);
+    require(!d.stats.input_submissions && !d.stats.output_submissions && !d.stats.input_blocks && !d.stats.input_frames &&
+        !d.stats.output_frames_submitted && !d.stats.output_completions && !d.stats.pending_mask &&
+        !d.stats.retained_mask && !d.stats.expected_outputs);
+    const bool success=s.error==control::DiagnosticError::none;
+    require(success?(d.phase==Phase::ready && d.failure==session::Failure::none && d.rate_hz==s.verified_rate_hz):
+        (d.phase==Phase::failed && d.failure==session::Failure::control && d.rate_hz==s.readback_rate_hz));
+    auto body=encode_snapshot(d);const auto rate=control::rate_wire::encode_reply(value.outcome);
+    body.insert(body.end(),rate.begin(),rate.end());return body;
+}
+RateReply decode_rate_selection(const std::vector<std::uint8_t>& body,unsigned expected){
+    require(body.size()>=128+control::rate_wire::reply_bytes && body.size()<=640+control::rate_wire::reply_bytes);
+    const auto owner_bytes=body.size()-control::rate_wire::reply_bytes;
+    RateReply value{decode_snapshot(std::vector<std::uint8_t>(body.begin(),body.begin()+owner_bytes)),
+        control::rate_wire::decode_reply(body.data()+owner_bytes,control::rate_wire::reply_bytes,expected)};
+    require(encode_rate_selection(value)==body);return value;
+}
 }
