@@ -277,27 +277,30 @@ struct Transfer {
 };
 struct NativeRateIo final:sl3::control::RateIo {
     Device& device;std::ofstream& report;const std::filesystem::path& output;unsigned target;
-    bool possible=false,retired=true;unsigned transfers=0;std::array<char,512> error{};
+    bool possible=false,retired=true;unsigned transfers=0,setter_attempts=0;std::array<char,512> error{};
     NativeRateIo(Device& d,std::ofstream& r,const std::filesystem::path& p,unsigned hz):device(d),report(r),output(p),target(hz){}
     std::uint64_t now_ms() noexcept override{return GetTickCount64();}
     bool cancelled() noexcept override{return false;} // Parent watchdog contains the entire process.
     void save(const char* phase,const sl3::control::RateDiagnosticResult* result=nullptr,bool closed=false){
+        if(result && result->setter_attempts!=setter_attempts)throw std::runtime_error("Rate setter attempt accounting differs");
         report.close();report.open(output/L"rate.json",std::ios::trunc);
-        report<<"{\"schema\":\"sl3.rate-diagnostic.v1\",\"phase\":"<<quote(phase)<<",\"utc\":"<<quote(utc_now())
+        report<<"{\"schema\":\"sl3.rate-diagnostic.v2\",\"phase\":"<<quote(phase)<<",\"utc\":"<<quote(utc_now())
               <<",\"target_rate_hz\":"<<target<<",\"device_may_have_changed\":"<<(possible?"true":"false")
               <<",\"last_io_retired\":"<<(retired?"true":"false")<<",\"control_transfer_attempts\":"<<transfers
-              <<",\"redirect_closed\":"<<(closed?"true":"false")<<",\"audio_submissions\":0,\"alternate_changes\":0,\"automatic_rollback\":false";
+              <<",\"redirect_closed\":"<<(closed?"true":"false")<<",\"audio_submissions\":0,\"alternate_changes\":0,\"automatic_rollback\":false"
+              <<",\"setter_attempts\":"<<setter_attempts;
         if(result)report<<",\"diagnostic_error\":"<<unsigned(result->error)<<",\"transaction_error\":"<<unsigned(result->transaction_error)
                         <<",\"exchange_error\":"<<unsigned(result->exchange_error)<<",\"initial_rate_hz\":"<<result->initial_rate_hz
                         <<",\"verified_rate_hz\":"<<result->verified_rate_hz<<",\"write_attempts\":"<<result->write_attempts
-                        <<",\"read_attempts\":"<<result->read_attempts;
+                        <<",\"read_attempts\":"<<result->read_attempts<<",\"readback_rate_hz\":"<<result->readback_rate_hz
+                        <<",\"acknowledgement_received\":"<<(result->acknowledgement_received?"true":"false");
         report<<",\"error\":"<<quote(error.data())<<"}\n"<<std::flush;
         if(!report)throw std::runtime_error("Cannot persist rate-test state");
     }
     bool transfer(bool output_frame,sl3::control::Frame& frame,unsigned timeout,std::size_t& bytes) noexcept override{
         try{
             const auto started=GetTickCount64();
-            if(output_frame && frame[0]==0x31)possible=true;
+            if(output_frame && frame[0]==0x31){possible=true;++setter_attempts;}
             ++transfers;retired=false;save(output_frame?"before control write":"before control read");
             Transfer request(device);request.prepare(output_frame?0x01:0x81,64,false);
             if(output_frame)std::copy(frame.begin(),frame.end(),request.buffer.begin());

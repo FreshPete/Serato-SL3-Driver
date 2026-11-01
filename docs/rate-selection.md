@@ -1,5 +1,7 @@
 # Bounded rate-selection transaction
 
+**1 November update:** [version-two rate observations](rate-observations.md) preserve an actual mismatching readback, accepted acknowledgement state and setter attempts while retaining failure and cleanup distinctions. No held-session IPC or ASIO rate setter is added. The development sections below describe earlier checkpoints; the subsequent [physical 48 kHz trial](first-physical-usbdk-tests.md) used its separately archived worker and does not validate today's rebuilt binary.
+
 An original, transport-independent C++ transaction engine now prepares the SL3's known rate-change sequence. An injected runner and an explicit native diagnostic mode now connect it to bounded interrupt transfers. The production ASIO facade remains observed-rate-only; IPC/startup do not select rates. No physical rate write or other new device command has been executed.
 
 ## Original evidence

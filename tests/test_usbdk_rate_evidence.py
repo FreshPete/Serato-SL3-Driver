@@ -213,5 +213,73 @@ class RateWrapperPlanTests(unittest.TestCase):
                 self.assertFalse(destination.exists())
 
 
+class RateObservationTests(unittest.TestCase):
+    def setUp(self):
+        temporary=tempfile.TemporaryDirectory();self.addCleanup(temporary.cleanup)
+        self.path=Path(temporary.name)/'rate.json'
+        self.record={'schema':'sl3.rate-diagnostic.v2','phase':'finished','utc':'2026-11-01T20:00:00Z',
+                     'target_rate_hz':48000,'initial_rate_hz':44100,'verified_rate_hz':48000,'readback_rate_hz':48000,
+                     'write_attempts':3,'read_attempts':3,'setter_attempts':1,'control_transfer_attempts':6,
+                     'diagnostic_error':0,'transaction_error':0,'exchange_error':0,'error':'',
+                     'acknowledgement_received':True,'device_may_have_changed':True,
+                     'last_io_retired':True,'redirect_closed':True,'automatic_rollback':False,
+                     'audio_submissions':0,'alternate_changes':0}
+
+    def save(self,record=None):self.path.write_text(json.dumps(record or self.record),encoding='utf-8')
+
+    def test_verified_change_and_noop_keep_distinct_observations(self):
+        self.save();self.assertEqual(module.native_result(self.path)['readback_rate_hz'],48000)
+        self.record.update(initial_rate_hz=48000,readback_rate_hz=0,write_attempts=1,read_attempts=1,
+                           setter_attempts=0,control_transfer_attempts=2,acknowledgement_received=False,device_may_have_changed=False)
+        self.save();self.assertEqual(module.native_result(self.path)['readback_rate_hz'],0)
+
+    def test_mismatch_is_consistent_observation_but_never_success(self):
+        self.record.update(verified_rate_hz=0,readback_rate_hz=44100,diagnostic_error=5,transaction_error=3)
+        self.save();observed=module.observation_result(self.path)
+        self.assertEqual(observed['readback_rate_hz'],44100)
+        with self.assertRaises(ValueError):module.native_result(self.path)
+        child=subprocess.run([str(Path(__file__).parents[1]/'.venv/Scripts/python.exe'),
+                              str(Path(__file__).parents[1]/'scripts/validate-usbdk-rate.py'),
+                              '--observation-record',str(self.path)],capture_output=True,text=True,timeout=15)
+        self.assertEqual(child.returncode,0,child.stderr);saved=json.loads(child.stdout)
+        self.assertTrue(saved['validObservation']);self.assertFalse(saved['operationVerified'])
+        self.assertNotIn('valid',saved);self.assertFalse(saved['rateRestorationVerified'])
+
+    def test_acknowledgement_without_accepted_getter_remains_uncertain(self):
+        self.record.update(verified_rate_hz=0,readback_rate_hz=0,write_attempts=2,read_attempts=2,
+                           control_transfer_attempts=4,diagnostic_error=2,transaction_error=4)
+        self.save();self.assertTrue(module.observation_result(self.path)['acknowledgement_received'])
+        for rate in (44100,48000):
+            bad=copy.deepcopy(self.record);bad['readback_rate_hz']=rate;self.save(bad)
+            with self.subTest(rate=rate),self.assertRaises(ValueError):module.observation_result(self.path)
+
+    def test_bad_acknowledgement_does_not_invent_verification(self):
+        self.record.update(verified_rate_hz=0,readback_rate_hz=0,write_attempts=2,read_attempts=2,
+                           control_transfer_attempts=4,diagnostic_error=5,transaction_error=2,
+                           exchange_error=3,acknowledgement_received=False)
+        self.save();module.observation_result(self.path)
+        self.record['acknowledgement_received']=True;self.save()
+        with self.assertRaises(ValueError):module.observation_result(self.path)
+
+    def test_cleanup_failure_preserves_verified_operation_without_pass(self):
+        self.record['redirect_closed']=False;self.save()
+        self.assertEqual(module.observation_result(self.path)['verified_rate_hz'],48000)
+        with self.assertRaises(ValueError):module.native_result(self.path)
+
+    def test_inconsistent_counts_types_and_missing_fields_refused(self):
+        for key,value in [('setter_attempts',2),('setter_attempts',True),('acknowledgement_received',False),
+                          ('initial_rate_hz',0),('read_attempts',13),('diagnostic_error',99),
+                          ('control_transfer_attempts',7),('readback_rate_hz',96000),('error','unexplained')]:
+            bad=copy.deepcopy(self.record);bad[key]=value;self.save(bad)
+            with self.subTest(key=key),self.assertRaises(ValueError):module.observation_result(self.path)
+        for key in ('readback_rate_hz','setter_attempts','acknowledgement_received'):
+            bad=copy.deepcopy(self.record);del bad[key];self.save(bad)
+            with self.subTest(missing=key),self.assertRaises((ValueError,KeyError)):module.observation_result(self.path)
+
+    def test_old_schema_cannot_claim_new_observation_fields(self):
+        self.record['schema']='sl3.rate-diagnostic.v1';self.save()
+        with self.assertRaises(ValueError):module.native_result(self.path)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -32,3 +32,5 @@ Actual normal-token checks prepared the 120-second PLA configuration, inspected 
 The native C++/ASIO build inputs and reviewed scope probe dependencies are unchanged. No archived physical result is promoted to this collector revision. The full Python suite result and exact hashes are recorded in [verification evidence](evidence/scope-image-integration-20261101.json). The live elevated Scope launcher, real image/USB window, physical scope reuse, current-build analogue audio/latency, deployed ASIO and current Serato/DVS remain unverified. No driver, binding, trust, registration, firmware or security-policy change ran.
 
 See [metadata probe](metadata-scope-probe.md), [USB-only scope launcher](scope-trace-launcher.md) and [original combined Controls capture](combined-controls-image-capture.md).
+
+The subsequent [rate observation update](rate-observations.md) changes native worker inputs. The original prepared `logging-batch-scope-image-ready-20261101` plan was explicitly disarmed without execution and must not be rearmed. Its passing preparation checks remain historical; prepare a new plan against the rebuilt worker for any future attended test.

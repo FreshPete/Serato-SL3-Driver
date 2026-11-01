@@ -37,9 +37,10 @@ Event RateSelection::accept(const std::uint8_t* data,std::size_t bytes) noexcept
             exchange_=Exchange(setter);phase_=RatePhase::set_ready;
         }
         break;
-    case RatePhase::set_wait:exchange_=Exchange(rate_query());phase_=RatePhase::verify_ready;break;
+    case RatePhase::set_wait:acknowledged_=true;exchange_=Exchange(rate_query());phase_=RatePhase::verify_ready;break;
     case RatePhase::verify_wait:
-        if(exchange_.rate_hz()!=target_)fail(RateError::readback_mismatch);
+        readback_=exchange_.rate_hz();
+        if(readback_!=target_)fail(RateError::readback_mismatch);
         else{verified_=target_;phase_=RatePhase::complete;}
         break;
     default:break;

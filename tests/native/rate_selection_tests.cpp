@@ -33,23 +33,28 @@ void request(RateSelection& change,unsigned command,unsigned payload){
 void terminal(RateSelection& change){
     const auto phase=change.phase();const auto error=change.error();
     const auto verified=change.verified_rate_hz();const auto possible=change.device_may_have_changed();
+    const auto readback=change.readback_rate_hz();const auto ack=change.acknowledgement_received();
     const auto frame=reply(0x30,48000);Frame output{};
     require(!change.take_request(output) && change.accept(frame.data(),frame.size()).error==Error::terminal_state,"No terminal request or reply revival");
     change.abort();require(change.phase()==phase && change.error()==error && change.verified_rate_hz()==verified && change.device_may_have_changed()==possible,"Terminal status immutable");
+    require(change.readback_rate_hz()==readback && change.acknowledgement_received()==ack,"Terminal observation history immutable");
 }
 void success(){
     static_assert(!std::is_copy_constructible<RateSelection>::value && !std::is_move_constructible<RateSelection>::value,"Transaction cannot be cloned into duplicate writes");
     for(const auto target:{44100u,48000u}){
         {RateSelection same(target);request(same,0x30,0);feed(same,0x30,target);
-         require(same.phase()==RatePhase::complete && same.initial_rate_hz()==target && same.verified_rate_hz()==target && !same.device_may_have_changed(),"Already selected rate submits no setter");terminal(same);}
+         require(same.phase()==RatePhase::complete && same.initial_rate_hz()==target && same.verified_rate_hz()==target && !same.device_may_have_changed(),"Already selected rate submits no setter");
+         require(!same.readback_rate_hz() && !same.acknowledgement_received(),"No-op initial getter does not fabricate setter acknowledgement or second getter");terminal(same);}
         RateSelection change(target);const auto initial=target==44100?48000u:44100u;
         request(change,0x30,0);feed(change,0x30,initial);
         require(change.phase()==RatePhase::set_ready && change.initial_rate_hz()==initial && !change.device_may_have_changed(),"Prepare change after independent inspection");
         request(change,0x31,target);require(change.device_may_have_changed(),"Uncertain effect begins when setter leaves owner");
         feed(change,0x31,0xffff); // Original consumes opaque bytes, not an echoed rate.
         require(change.phase()==RatePhase::verify_ready && !change.verified_rate_hz(),"Acknowledgement alone never proves selected rate");
+        require(change.acknowledgement_received() && !change.readback_rate_hz(),"Accepted opaque acknowledgement is separate from verification getter");
         request(change,0x30,0);feed(change,0x30,target);
-        require(change.phase()==RatePhase::complete && change.verified_rate_hz()==target && change.device_may_have_changed(),"Fresh readback verifies target without erasing write history");terminal(change);
+        require(change.phase()==RatePhase::complete && change.verified_rate_hz()==target && change.device_may_have_changed(),"Fresh readback verifies target without erasing write history");
+        require(change.readback_rate_hz()==target,"Successful verification preserves actual getter");terminal(change);
     }
 }
 void failures(){
@@ -64,6 +69,7 @@ void failures(){
         if(stop>=4)feed(change,0x31,0);
         if(stop>=5)request(change,0x30,0);
         change.abort();require(change.error()==RateError::aborted && !change.verified_rate_hz() && change.device_may_have_changed()==(stop>=3),"Cancellation preserves uncertainty at every boundary");terminal(change);
+        require(change.acknowledgement_received()==(stop>=4) && !change.readback_rate_hz(),"Cancellation preserves only already accepted observations");
     }
     for(unsigned stage=0;stage<3;++stage){
         for(unsigned fault=0;fault<5;++fault){
@@ -86,7 +92,8 @@ void failures(){
         }
     }
     {RateSelection mismatch(48000);request(mismatch,0x30,0);feed(mismatch,0x30,44100);request(mismatch,0x31,48000);feed(mismatch,0x31,48000);request(mismatch,0x30,0);feed(mismatch,0x30,44100);
-     require(mismatch.error()==RateError::readback_mismatch && !mismatch.verified_rate_hz() && mismatch.device_may_have_changed(),"Acknowledged setter with different supported readback fails");terminal(mismatch);}
+     require(mismatch.error()==RateError::readback_mismatch && !mismatch.verified_rate_hz() && mismatch.device_may_have_changed(),"Acknowledged setter with different supported readback fails");
+     require(mismatch.readback_rate_hz()==44100 && mismatch.acknowledgement_received(),"Mismatch retains actual returned clock without verification");terminal(mismatch);}
     {RateSelection unordered(48000);const auto frame=reply(0x30,48000);unordered.accept(frame.data(),frame.size());require(unordered.phase()==RatePhase::failed && !unordered.device_may_have_changed(),"No reply accepted before request ownership");terminal(unordered);}
 }
 struct FakeIo final:RateIo {
@@ -109,6 +116,7 @@ struct FakeIo final:RateIo {
 };
 void diagnostics(){
     {FakeIo io;const auto result=diagnose_rate(48000,io);require(result.error==DiagnosticError::none && result.verified_rate_hz==48000 && result.initial_rate_hz==44100 && result.device_may_have_changed && result.write_attempts==3 && result.read_attempts==12 && io.operations==15 && io.setters==1,"Full bounded runner uses twelve frames and one setter");}
+    {FakeIo io;const auto result=diagnose_rate(48000,io);require(result.readback_rate_hz==48000 && result.acknowledgement_received && result.setter_attempts==1,"Runner exports accepted readback, acknowledgement and one setter attempt");}
     {FakeIo io;io.current=48000;const auto result=diagnose_rate(48000,io);require(result.error==DiagnosticError::none && result.verified_rate_hz==48000 && !result.device_may_have_changed && result.write_attempts==1 && io.setters==0,"Runner no-op path never changes rate");}
     for(unsigned op=0;op<15;++op){
         for(unsigned fault=0;fault<3;++fault){
@@ -116,6 +124,7 @@ void diagnostics(){
             const auto result=diagnose_rate(48000,io);
             require(result.error==(fault==2?DiagnosticError::cancelled:DiagnosticError::transfer) && !result.verified_rate_hz && result.device_may_have_changed==(fault==2?op>=6:op>=5),"Failure/cancellation at every operation preserves possible effects");
             require(io.setters<=1 && io.operations<=15,"Runner never retries a setter or extends receive bounds");
+            require(result.setter_attempts==unsigned(result.device_may_have_changed) && !result.readback_rate_hz,"Failed runner retains possible setter but no unaccepted late getter");
         }
     }
     {FakeIo io;io.elapsed=10;const auto result=diagnose_rate(48000,io,150);require(result.error==DiagnosticError::deadline && !result.verified_rate_hz && result.device_may_have_changed && io.last_timeout==10,"Late final reply cannot escape total deadline");}
@@ -124,6 +133,7 @@ void diagnostics(){
     {FakeIo io;io.rollback_clock=true;const auto result=diagnose_rate(48000,io);require(result.error==DiagnosticError::deadline && io.operations==1 && !result.device_may_have_changed,"Clock rollback fails without further requests");}
     {FakeIo io;io.malformed_ack=true;const auto result=diagnose_rate(48000,io);require(result.error==DiagnosticError::transaction && result.transaction_error==RateError::exchange && result.device_may_have_changed && result.write_attempts==2,"Bad acknowledgement stops before readback submission");}
     {FakeIo io;io.mismatch=true;const auto result=diagnose_rate(48000,io);require(result.error==DiagnosticError::transaction && result.transaction_error==RateError::readback_mismatch && !result.verified_rate_hz && result.device_may_have_changed,"Runner distinguishes reply framing from transaction success");}
+    {FakeIo io;io.mismatch=true;const auto result=diagnose_rate(48000,io);require(result.readback_rate_hz==44100 && result.initial_rate_hz==44100 && result.acknowledgement_received && result.setter_attempts==1,"Mismatching getter survives runner failure");}
     {FakeIo io;io.notifications_per_reply=4;const auto result=diagnose_rate(48000,io);require(result.error==DiagnosticError::transaction && result.exchange_error==Error::frame_limit && io.setters==0,"Notification flood cannot cause a setter");}
     {FakeIo io;const auto result=diagnose_rate(96000,io);require(result.error==DiagnosticError::invalid_target && !io.operations,"Invalid diagnostic target performs no I/O");}
 }

@@ -1,0 +1,79 @@
+{
+  "schema": "sl3.rate-observation-verification.v1",
+  "createdUtc": "2026-11-01T20:51:19.442560+00:00",
+  "tests": {
+    "python": 365,
+    "targetedPython": 16,
+    "releaseNative": 50,
+    "debugNative": 50,
+    "sdkFreeNative": 33,
+    "malformedCli": [
+      {
+        "configuration": "Release",
+        "executableSha256": "29a54265d80ce9ff406b06662f3cbf2ff750b17e7f494a95e0c94a40f83a442f",
+        "invalidCasesRejected": 13,
+        "absentServiceTested": false
+      },
+      {
+        "configuration": "Debug",
+        "executableSha256": "1ad0fa449974be30acae271d0e12702ee6bf9e599738bfc14bb86076fca36b05",
+        "invalidCasesRejected": 13,
+        "absentServiceTested": false
+      }
+    ]
+  },
+  "historicalV1": {
+    "recordSha256": "80c7b5a17b0aa66b9063302b61f14e188abfdf57e91a78a05bf0cc1db111564b",
+    "validation": {
+      "valid": true,
+      "scope": "Native result consistency only",
+      "verifiedRateHz": 48000
+    },
+    "currentWorkerPhysicalPass": false
+  },
+  "sourceSha256": {
+    "scripts/validate-usbdk-rate.py": "3f6e5b89c40596144328a4544c23505690795547cab7c0e0f1a5092a23514ba4",
+    "src/core/rate_diagnostic.cpp": "1c5cf8a93d1635ddb63fcb9e993bbd84f3ca33920fc315cb7c06d9a9a32df4b8",
+    "src/core/rate_diagnostic.hpp": "4dac21451daaebec5be2d4bba66c9c89e9c4135b8af4c46ccdebe4003818ef8c",
+    "src/core/rate_selection.cpp": "93448884ed841c19a2fd48dda41d2fea36c144e65443349ff3de31872cb11802",
+    "src/core/rate_selection.hpp": "d87c9c8e0ababe724f523f917f3f4d64cf90dbbc44725ac063aa5ff5080925bd",
+    "src/windows/usbdk_main.cpp": "64b2dfdbcb3c3c80b13c5b14665c51cfee32ea0b5d13588ed382003af6d50f49",
+    "tests/native/rate_selection_tests.cpp": "463ff49b9d32c335aea5500d2c8521e92249c9139c3edd466e1ca72823412ec9",
+    "tests/test_usbdk_rate_evidence.py": "1538b14620af3e993d033b0cd94bae8f0913850ee01d423f59c7d533bdb392cf"
+  },
+  "buildManifestSha256": {
+    "artifacts/build/native/native-build-Release.json": "5e4cb877d9ba1b2086e33e0b51675e71760056c4e432650736b05c16fe21fecd",
+    "artifacts/build/native/native-build-Debug.json": "d185748b37e47c68a24227531f924b04d4cb6396163bd119754dc7f5841b9c40",
+    "artifacts/build/native-without-sdk/native-build-Release.json": "6bce878aa0fd4a6fa24abb0c21b226e957654efd80acdf222ace0c37e7bc87ee"
+  },
+  "privateLogSha256": {
+    "rate-observation-cli-20261101.log": "ac806e82e8c8b09d46e86fb0689e8a7e0fa091b5a75125d1453332a3429775b1",
+    "rate-observation-cli-final-20261101.log": "e617e2aaddb4f27ede221746b6647035a3c1a7a7f1a7b734de38ad13502121bb",
+    "rate-observation-debug-20261101.log": "e72915f95132bef92febb7e8e42fe2f9d068ff9fa701099f9d649c0172db0f61",
+    "rate-observation-python-suite-20261101.log": "4ec533dc20f1ab21c4a32450abdd1ced182356e7a404ce6b30e30cc857cf5e0f",
+    "rate-observation-python-targeted-20261101.log": "0f656dd0f452f138eccce413459e45b2ab31c2e8b1d34c6990099434f9bd5e41",
+    "rate-observation-release-20261101.log": "f7c4cc81fa3b03280d7b499bc4e3229630127bb1cb3db524826cfa21a0924a43",
+    "rate-observation-release-final-20261101.log": "73202d96a0ff8095c18026da47b19aec36e299fca71cd5ba18ad6df202e84515",
+    "rate-observation-sdkfree-20261101.log": "b10076bb19cd844f37251c184b6052ac499602f6a606b70576e0fddc8ac7bab0"
+  },
+  "firstReleaseCompileFailed": true,
+  "compileFailureReason": "New test called a result field as a method; corrected before successful builds",
+  "oldPlanDisarmedWithoutExecution": true,
+  "disarmEvidenceSha256": "bcec7c2255c809c160db364e36d175343040072317c755e5f693f3f918262871",
+  "checkpoint": {
+    "path": "artifacts/build/checkpoints/rate-observations-20261101",
+    "files": 223,
+    "bytes": 20113815,
+    "manifestSha256": "9d5a9996ba3874bbfd189e759721ef2d1d1e0539cb916aa2e3db3bebc8e8c0af"
+  },
+  "limits": {
+    "hardwareAccess": false,
+    "uacLaunch": false,
+    "securityChanges": false,
+    "physicalV2RecordCollected": false,
+    "heldSessionRateSetterImplemented": false,
+    "productionAsioObservedRateOnly": true,
+    "currentSeratoIntegrationVerified": false,
+    "analogueAudioOrDvsVerified": false
+  }
+}

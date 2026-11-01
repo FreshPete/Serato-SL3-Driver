@@ -13,7 +13,8 @@ RateDiagnosticResult diagnose_rate(unsigned target_hz,RateIo& io,unsigned budget
         Frame frame{};const auto output=selection.take_request(frame);
         const auto timeout=std::min(output?100u:300u,budget_ms-unsigned(now-start));
         std::size_t bytes=0;
-        if(output)++result.write_attempts;else ++result.read_attempts;
+        if(output){++result.write_attempts;if(frame[0]==0x31)++result.setter_attempts;}
+        else ++result.read_attempts;
         const auto transferred=io.transfer(output,frame,timeout,bytes);
         const auto completed=io.now_ms();
         if(io.cancelled()){result.error=DiagnosticError::cancelled;break;}
@@ -28,6 +29,7 @@ RateDiagnosticResult diagnose_rate(unsigned target_hz,RateIo& io,unsigned budget
     }
     result.transaction_error=selection.error();result.exchange_error=selection.exchange_error();
     result.initial_rate_hz=selection.initial_rate_hz();result.verified_rate_hz=selection.verified_rate_hz();
+    result.readback_rate_hz=selection.readback_rate_hz();result.acknowledgement_received=selection.acknowledgement_received();
     result.device_may_have_changed=selection.device_may_have_changed();return result;
 }
 }

@@ -17,8 +17,8 @@ struct RateDiagnosticResult {
     DiagnosticError error=DiagnosticError::none;
     RateError transaction_error=RateError::none;
     Error exchange_error=Error::none;
-    unsigned initial_rate_hz=0,verified_rate_hz=0,write_attempts=0,read_attempts=0;
-    bool device_may_have_changed=false;
+    unsigned initial_rate_hz=0,verified_rate_hz=0,readback_rate_hz=0,write_attempts=0,read_attempts=0,setter_attempts=0;
+    bool device_may_have_changed=false,acknowledgement_received=false;
 };
 // Owner must hold a fresh idle redirect exclusively. The deadline covers the
 // whole control sequence, not adapter cancellation/drain time. No audio,

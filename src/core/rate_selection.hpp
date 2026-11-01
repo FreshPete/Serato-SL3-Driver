@@ -8,11 +8,11 @@ namespace sl3::control {
 enum class RatePhase {inspect_ready,inspect_wait,set_ready,set_wait,verify_ready,verify_wait,complete,failed};
 enum class RateError {none,invalid_target,exchange,readback_mismatch,aborted};
 class RateSelection final {
-    unsigned target_=0,initial_=0,verified_=0;
+    unsigned target_=0,initial_=0,verified_=0,readback_=0;
     RatePhase phase_=RatePhase::inspect_ready;
     RateError error_=RateError::none;
     Error exchange_error_=Error::none;
-    bool write_possible_=false;
+    bool write_possible_=false,acknowledged_=false;
     Exchange exchange_{rate_query()};
     void fail(RateError,Error=Error::none) noexcept;
 public:
@@ -32,6 +32,10 @@ public:
     Error exchange_error() const noexcept{return exchange_error_;}
     unsigned initial_rate_hz() const noexcept{return initial_;}
     unsigned verified_rate_hz() const noexcept{return verified_;}
+    // Zero means no accepted verification getter. A failed mismatching
+    // readback remains observable; it is never promoted to verified target.
+    unsigned readback_rate_hz() const noexcept{return readback_;}
+    bool acknowledgement_received() const noexcept{return acknowledged_;}
     bool device_may_have_changed() const noexcept{return write_possible_;}
 };
 }
