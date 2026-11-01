@@ -1,0 +1,544 @@
+{
+  "scope": "Historical declared-app name match, default AppConfig getter, descriptor byte copy and getter only",
+  "versions": [
+    {
+      "version": "2.5.5",
+      "binarySha256": "ba8641d0329fe0c955147d2b45f247eeea82ac0f812fe30a339834dbe0c0a503",
+      "sl3XmlSha256": "314e81ffb5d052e53280903d543107c8223e99ff1f4e200311a2b3d90e49154c",
+      "declaredApps": [
+        "Serato DJ"
+      ],
+      "constructedAppConfig": {
+        "table": "0x14475aac8",
+        "locator": "0x1447f99f0",
+        "type": ".?AVAppConfig@@",
+        "receiverOffset": "0x0"
+      },
+      "nameGetter": "0x1402c7d60",
+      "appConfigReference": "0x144ebc2f8",
+      "constructedName": "Serato DJ",
+      "copyImport": {
+        "thunk": "0x1408d4c4e",
+        "iat": "0x140b054c0",
+        "module": "VCRUNTIME140.dll",
+        "name": "memmove"
+      },
+      "comparisonImport": {
+        "thunk": "0x1408d4c60",
+        "iat": "0x140b054d8",
+        "module": "VCRUNTIME140.dll",
+        "name": "memcmp"
+      },
+      "descriptorInterface": {
+        "table": "0x1447420d0",
+        "locator": "0x1447e4468",
+        "type": ".?AVControllerDescriptor@@",
+        "receiverOffset": "0x10"
+      },
+      "supportGetter": "0x1400e9810",
+      "supportGetterSlot": "0x20",
+      "completeObjectSupportOffset": "0x4d8",
+      "leafBytes": "0fb681c8040000c3",
+      "conditionalStaticAppNameMatch": true,
+      "runtimeSingletonOrDescriptorObserved": false,
+      "facts": [
+        {
+          "va": "0x1402c4921",
+          "bytes": "488d05a0614904",
+          "assembly": "lea rax, [rip + 0x44961a0]"
+        },
+        {
+          "va": "0x1402c4928",
+          "bytes": "488901",
+          "assembly": "mov qword ptr [rcx], rax"
+        },
+        {
+          "va": "0x1402c48a0",
+          "bytes": "488d05517abf04",
+          "assembly": "lea rax, [rip + 0x4bf7a51]"
+        },
+        {
+          "va": "0x1402c48ac",
+          "bytes": "48890d457abf04",
+          "assembly": "mov qword ptr [rip + 0x4bf7a45], rcx"
+        },
+        {
+          "va": "0x1402c7d79",
+          "bytes": "41b809000000",
+          "assembly": "mov r8d, 9"
+        },
+        {
+          "va": "0x1402c7d85",
+          "bytes": "48c7421009000000",
+          "assembly": "mov qword ptr [rdx + 0x10], 9"
+        },
+        {
+          "va": "0x1402c7d8d",
+          "bytes": "488d157cb44704",
+          "assembly": "lea rdx, [rip + 0x447b47c]"
+        },
+        {
+          "va": "0x1402c7d94",
+          "bytes": "e8b5ce6000",
+          "assembly": "call 0x1408d4c4e"
+        },
+        {
+          "va": "0x1402c7d99",
+          "bytes": "488bc3",
+          "assembly": "mov rax, rbx"
+        },
+        {
+          "va": "0x1402c7d9c",
+          "bytes": "c6430900",
+          "assembly": "mov byte ptr [rbx + 9], 0"
+        },
+        {
+          "va": "0x140356e37",
+          "bytes": "488d151a824104",
+          "assembly": "lea rdx, [rip + 0x441821a]"
+        },
+        {
+          "va": "0x140356e55",
+          "bytes": "488d15f4814104",
+          "assembly": "lea rdx, [rip + 0x44181f4]"
+        },
+        {
+          "va": "0x140356e73",
+          "bytes": "488d156ebf3e04",
+          "assembly": "lea rdx, [rip + 0x43ebf6e]"
+        },
+        {
+          "va": "0x140356f68",
+          "bytes": "488d15e1804104",
+          "assembly": "lea rdx, [rip + 0x44180e1]"
+        },
+        {
+          "va": "0x140356e30",
+          "bytes": "4532ff",
+          "assembly": "xor r15b, r15b"
+        },
+        {
+          "va": "0x140356e33",
+          "bytes": "44897d1c",
+          "assembly": "mov dword ptr [rbp + 0x1c], r15d"
+        },
+        {
+          "va": "0x140356e46",
+          "bytes": "41bd01000000",
+          "assembly": "mov r13d, 1"
+        },
+        {
+          "va": "0x140356ebc",
+          "bytes": "e8bfd9f6ff",
+          "assembly": "call 0x1402c4880"
+        },
+        {
+          "va": "0x140356ece",
+          "bytes": "ff9098000000",
+          "assembly": "call qword ptr [rax + 0x98]"
+        },
+        {
+          "va": "0x140356f05",
+          "bytes": "4c3b4010",
+          "assembly": "cmp r8, qword ptr [rax + 0x10]"
+        },
+        {
+          "va": "0x140356efe",
+          "bytes": "4c8b8548050000",
+          "assembly": "mov r8, qword ptr [rbp + 0x548]"
+        },
+        {
+          "va": "0x140356f09",
+          "bytes": "750e",
+          "assembly": "jne 0x140356f19"
+        },
+        {
+          "va": "0x140356f0b",
+          "bytes": "e850dd5700",
+          "assembly": "call 0x1408d4c60"
+        },
+        {
+          "va": "0x140356f10",
+          "bytes": "85c0",
+          "assembly": "test eax, eax"
+        },
+        {
+          "va": "0x140356f12",
+          "bytes": "7505",
+          "assembly": "jne 0x140356f19"
+        },
+        {
+          "va": "0x140356f14",
+          "bytes": "41b601",
+          "assembly": "mov r14b, 1"
+        },
+        {
+          "va": "0x140356f17",
+          "bytes": "eb03",
+          "assembly": "jmp 0x140356f1c"
+        },
+        {
+          "va": "0x140356f19",
+          "bytes": "4532f6",
+          "assembly": "xor r14b, r14b"
+        },
+        {
+          "va": "0x140356f59",
+          "bytes": "450fb6ff",
+          "assembly": "movzx r15d, r15b"
+        },
+        {
+          "va": "0x140356f5d",
+          "bytes": "4584f6",
+          "assembly": "test r14b, r14b"
+        },
+        {
+          "va": "0x140356f60",
+          "bytes": "450f45fd",
+          "assembly": "cmovne r15d, r13d"
+        },
+        {
+          "va": "0x140356f64",
+          "bytes": "44897d1c",
+          "assembly": "mov dword ptr [rbp + 0x1c], r15d"
+        },
+        {
+          "va": "0x140356fb7",
+          "bytes": "e9aefeffff",
+          "assembly": "jmp 0x140356e6a"
+        },
+        {
+          "va": "0x14035b840",
+          "bytes": "8b451c",
+          "assembly": "mov eax, dword ptr [rbp + 0x1c]"
+        },
+        {
+          "va": "0x14035b843",
+          "bytes": "8885d80b0000",
+          "assembly": "mov byte ptr [rbp + 0xbd8], al"
+        },
+        {
+          "va": "0x14035b998",
+          "bytes": "488d9500070000",
+          "assembly": "lea rdx, [rbp + 0x700]"
+        },
+        {
+          "va": "0x14035b99f",
+          "bytes": "e8cc110000",
+          "assembly": "call 0x14035cb70"
+        },
+        {
+          "va": "0x14035cb8d",
+          "bytes": "e89e36d9ff",
+          "assembly": "call 0x1400f0230"
+        },
+        {
+          "va": "0x1400f0249",
+          "bytes": "488bea",
+          "assembly": "mov rbp, rdx"
+        },
+        {
+          "va": "0x1400f024c",
+          "bytes": "488bf1",
+          "assembly": "mov rsi, rcx"
+        },
+        {
+          "va": "0x1400f0be6",
+          "bytes": "0fb685d8040000",
+          "assembly": "movzx eax, byte ptr [rbp + 0x4d8]"
+        },
+        {
+          "va": "0x1400f0bed",
+          "bytes": "8886d8040000",
+          "assembly": "mov byte ptr [rsi + 0x4d8], al"
+        },
+        {
+          "va": "0x1400f02c8",
+          "bytes": "488d05011e6504",
+          "assembly": "lea rax, [rip + 0x4651e01]"
+        },
+        {
+          "va": "0x1400f02cf",
+          "bytes": "48894610",
+          "assembly": "mov qword ptr [rsi + 0x10], rax"
+        }
+      ]
+    },
+    {
+      "version": "2.5.6",
+      "binarySha256": "3b04472cd5597fd56266e1c2c86dc298431b0026001aefe4b43aa3b909ee35c5",
+      "sl3XmlSha256": "314e81ffb5d052e53280903d543107c8223e99ff1f4e200311a2b3d90e49154c",
+      "declaredApps": [
+        "Serato DJ"
+      ],
+      "constructedAppConfig": {
+        "table": "0x14496eaf8",
+        "locator": "0x144a0df20",
+        "type": ".?AVAppConfig@@",
+        "receiverOffset": "0x0"
+      },
+      "nameGetter": "0x1402c8bd0",
+      "appConfigReference": "0x1450d1748",
+      "constructedName": "Serato DJ",
+      "copyImport": {
+        "thunk": "0x1408d81de",
+        "iat": "0x140b084c0",
+        "module": "VCRUNTIME140.dll",
+        "name": "memmove"
+      },
+      "comparisonImport": {
+        "thunk": "0x1408d81f0",
+        "iat": "0x140b084d8",
+        "module": "VCRUNTIME140.dll",
+        "name": "memcmp"
+      },
+      "descriptorInterface": {
+        "table": "0x144956120",
+        "locator": "0x1449f89e8",
+        "type": ".?AVControllerDescriptor@@",
+        "receiverOffset": "0x10"
+      },
+      "supportGetter": "0x1400ea220",
+      "supportGetterSlot": "0x20",
+      "completeObjectSupportOffset": "0x4f0",
+      "leafBytes": "0fb681e0040000c3",
+      "conditionalStaticAppNameMatch": true,
+      "runtimeSingletonOrDescriptorObserved": false,
+      "facts": [
+        {
+          "va": "0x1402c5791",
+          "bytes": "488d0560936a04",
+          "assembly": "lea rax, [rip + 0x46a9360]"
+        },
+        {
+          "va": "0x1402c5798",
+          "bytes": "488901",
+          "assembly": "mov qword ptr [rcx], rax"
+        },
+        {
+          "va": "0x1402c5710",
+          "bytes": "488d0531c0e004",
+          "assembly": "lea rax, [rip + 0x4e0c031]"
+        },
+        {
+          "va": "0x1402c571c",
+          "bytes": "48890d25c0e004",
+          "assembly": "mov qword ptr [rip + 0x4e0c025], rcx"
+        },
+        {
+          "va": "0x1402c8be9",
+          "bytes": "41b809000000",
+          "assembly": "mov r8d, 9"
+        },
+        {
+          "va": "0x1402c8bf5",
+          "bytes": "48c7421009000000",
+          "assembly": "mov qword ptr [rdx + 0x10], 9"
+        },
+        {
+          "va": "0x1402c8bfd",
+          "bytes": "488d15bce66804",
+          "assembly": "lea rdx, [rip + 0x468e6bc]"
+        },
+        {
+          "va": "0x1402c8c04",
+          "bytes": "e8d5f56000",
+          "assembly": "call 0x1408d81de"
+        },
+        {
+          "va": "0x1402c8c09",
+          "bytes": "488bc3",
+          "assembly": "mov rax, rbx"
+        },
+        {
+          "va": "0x1402c8c0c",
+          "bytes": "c6430900",
+          "assembly": "mov byte ptr [rbx + 9], 0"
+        },
+        {
+          "va": "0x140357ca8",
+          "bytes": "488d1569b46204",
+          "assembly": "lea rdx, [rip + 0x462b469]"
+        },
+        {
+          "va": "0x140357cc6",
+          "bytes": "488d1543b46204",
+          "assembly": "lea rdx, [rip + 0x462b443]"
+        },
+        {
+          "va": "0x140357ce4",
+          "bytes": "488d1561f15f04",
+          "assembly": "lea rdx, [rip + 0x45ff161]"
+        },
+        {
+          "va": "0x140357dd9",
+          "bytes": "488d1530b36204",
+          "assembly": "lea rdx, [rip + 0x462b330]"
+        },
+        {
+          "va": "0x140357ca1",
+          "bytes": "4532ff",
+          "assembly": "xor r15b, r15b"
+        },
+        {
+          "va": "0x140357ca4",
+          "bytes": "44897d14",
+          "assembly": "mov dword ptr [rbp + 0x14], r15d"
+        },
+        {
+          "va": "0x140357cb7",
+          "bytes": "41bc01000000",
+          "assembly": "mov r12d, 1"
+        },
+        {
+          "va": "0x140357d2d",
+          "bytes": "e8bed9f6ff",
+          "assembly": "call 0x1402c56f0"
+        },
+        {
+          "va": "0x140357d3f",
+          "bytes": "ff9098000000",
+          "assembly": "call qword ptr [rax + 0x98]"
+        },
+        {
+          "va": "0x140357d76",
+          "bytes": "4c3b4010",
+          "assembly": "cmp r8, qword ptr [rax + 0x10]"
+        },
+        {
+          "va": "0x140357d6f",
+          "bytes": "4c8b8560050000",
+          "assembly": "mov r8, qword ptr [rbp + 0x560]"
+        },
+        {
+          "va": "0x140357d7a",
+          "bytes": "750e",
+          "assembly": "jne 0x140357d8a"
+        },
+        {
+          "va": "0x140357d7c",
+          "bytes": "e86f045800",
+          "assembly": "call 0x1408d81f0"
+        },
+        {
+          "va": "0x140357d81",
+          "bytes": "85c0",
+          "assembly": "test eax, eax"
+        },
+        {
+          "va": "0x140357d83",
+          "bytes": "7505",
+          "assembly": "jne 0x140357d8a"
+        },
+        {
+          "va": "0x140357d85",
+          "bytes": "41b601",
+          "assembly": "mov r14b, 1"
+        },
+        {
+          "va": "0x140357d88",
+          "bytes": "eb03",
+          "assembly": "jmp 0x140357d8d"
+        },
+        {
+          "va": "0x140357d8a",
+          "bytes": "4532f6",
+          "assembly": "xor r14b, r14b"
+        },
+        {
+          "va": "0x140357dca",
+          "bytes": "450fb6ff",
+          "assembly": "movzx r15d, r15b"
+        },
+        {
+          "va": "0x140357dce",
+          "bytes": "4584f6",
+          "assembly": "test r14b, r14b"
+        },
+        {
+          "va": "0x140357dd1",
+          "bytes": "450f45fc",
+          "assembly": "cmovne r15d, r12d"
+        },
+        {
+          "va": "0x140357dd5",
+          "bytes": "44897d14",
+          "assembly": "mov dword ptr [rbp + 0x14], r15d"
+        },
+        {
+          "va": "0x140357e28",
+          "bytes": "e9aefeffff",
+          "assembly": "jmp 0x140357cdb"
+        },
+        {
+          "va": "0x14035c811",
+          "bytes": "8b4514",
+          "assembly": "mov eax, dword ptr [rbp + 0x14]"
+        },
+        {
+          "va": "0x14035c814",
+          "bytes": "8885100c0000",
+          "assembly": "mov byte ptr [rbp + 0xc10], al"
+        },
+        {
+          "va": "0x14035c9b6",
+          "bytes": "488d9520070000",
+          "assembly": "lea rdx, [rbp + 0x720]"
+        },
+        {
+          "va": "0x14035c9bd",
+          "bytes": "e82e120000",
+          "assembly": "call 0x14035dbf0"
+        },
+        {
+          "va": "0x14035dc0d",
+          "bytes": "e82e30d9ff",
+          "assembly": "call 0x1400f0c40"
+        },
+        {
+          "va": "0x1400f0c59",
+          "bytes": "488bea",
+          "assembly": "mov rbp, rdx"
+        },
+        {
+          "va": "0x1400f0c5c",
+          "bytes": "488bf1",
+          "assembly": "mov rsi, rcx"
+        },
+        {
+          "va": "0x1400f1695",
+          "bytes": "0fb685f0040000",
+          "assembly": "movzx eax, byte ptr [rbp + 0x4f0]"
+        },
+        {
+          "va": "0x1400f169c",
+          "bytes": "8886f0040000",
+          "assembly": "mov byte ptr [rsi + 0x4f0], al"
+        },
+        {
+          "va": "0x1400f0cd8",
+          "bytes": "488d0541548604",
+          "assembly": "lea rax, [rip + 0x4865441]"
+        },
+        {
+          "va": "0x1400f0cdf",
+          "bytes": "48894610",
+          "assembly": "mov qword ptr [rsi + 0x10], rax"
+        }
+      ]
+    }
+  ],
+  "runtimeEligibilityVerified": false,
+  "currentSeratoIntegrationVerified": false,
+  "vendorCodeExecuted": false,
+  "exporterSha256": "be0bee97c5dee204033215d43ee9079c307b9a088fe4497f3137f9d0adf4e89e",
+  "dependencySha256": {
+    "export-serato-legacy-descriptors.py": "d3b32374a8dc880bd0aafb78ac85a28d037a3ccedfa90a0d3d8f29d538231be3",
+    "export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20"
+  },
+  "limits": [
+    "The default constructed AppConfig table/name is checked; runtime singleton mutation/replacement is not excluded",
+    "Conditional static matching is not executed parser acceptance, connection eligibility or audio/DVS support",
+    "The descriptor getter is identified; complete runtime consumer/dispatch coverage is not established"
+  ]
+}
