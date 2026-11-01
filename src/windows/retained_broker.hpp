@@ -33,6 +33,7 @@ public:
     // launches a worker. No retry, reconnect, rate/control writes or elevation.
     bool open() noexcept;
     session::Kind kind() const noexcept {return spec_.kind;}
+    const std::string& worker_sha256() const noexcept {return spec_.sha256;}
     // One exclusive live client, bound to a duplicated process object. Fresh
     // clock query precedes admission. Lease numbers are local stale-call guards.
     std::uint64_t attach(HANDLE client_process);

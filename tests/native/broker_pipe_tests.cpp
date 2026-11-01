@@ -67,12 +67,14 @@ static void malformed_client(const std::wstring& endpoint,const std::wstring& mo
 static int client(int argc,wchar_t** argv){
     require(argc==7,"Client fixture arguments");const std::wstring endpoint=argv[2],mode=argv[4];
     Handle server;server.value=OpenProcess(SYNCHRONIZE|PROCESS_QUERY_LIMITED_INFORMATION,FALSE,DWORD(std::stoul(argv[3])));require(server.value!=nullptr,"Fixture parent process reference");
+    std::string worker_hash;for(wchar_t c:std::wstring(argv[6])){require(c<=127,"ASCII worker hash");worker_hash+=static_cast<char>(c);}
     if(mode==L"wrong-server"){rejects([&]{BrokerClient wrong(endpoint,GetCurrentProcess(),session::Kind::simulated);});return 0;}
     if(mode==L"bad-magic" || mode==L"oversized" || mode==L"bad-proof" || mode==L"bad-sequence" || mode==L"worker-op" || mode==L"wrong-mapping" || mode==L"disconnect-idle" || mode==L"delayed-detach"){
         malformed_client(endpoint,mode);return 0;
     }
-    if(mode==L"wrong-kind"){rejects([&]{BrokerClient wrong(endpoint,server.value,session::Kind::native);});return 0;}
-    BrokerClient broker(endpoint,server.value,session::Kind::simulated);
+    if(mode==L"wrong-kind"){rejects([&]{BrokerClient wrong(endpoint,server.value,session::Kind::native,worker_hash);});return 0;}
+    if(mode==L"wrong-worker"){rejects([&]{BrokerClient wrong(endpoint,server.value,session::Kind::simulated,std::string(64,'0'));});return 0;}
+    BrokerClient broker(endpoint,server.value,session::Kind::simulated,worker_hash);
     if(mode==L"die-idle")ExitProcess(0);
     require(broker.clock()==48000,"Pipe fresh clock");auto audio=Mailbox::create();const auto name=audio->name();
     require(broker.start(*audio,{48000,8,1000,200}).phase==ds::Phase::running,"Pipe starts stream");
@@ -90,8 +92,9 @@ struct Harness {
     BrokerListener listener;Handle stop;std::thread thread;std::mutex mutex;std::condition_variable condition;
     bool ready=false;unsigned completed=0;std::exception_ptr failure;BrokerReport final;
     std::vector<std::string> diagnostics;
+    std::string worker_hash;
     std::filesystem::path audit=std::filesystem::temp_directory_path()/(listener.name().substr(listener.name().size()-32)+L"-pipe-audit.txt");
-    explicit Harness(const std::filesystem::path& worker){
+    explicit Harness(const std::filesystem::path& worker):worker_hash(Process::executable_sha256(worker)){
         require(!std::filesystem::exists(audit),"Fresh pipe audit");stop.value=CreateEventW(nullptr,TRUE,FALSE,nullptr);require(stop.value!=nullptr,"Controller stop event");
         thread=std::thread([this,worker]{
             try{
@@ -121,7 +124,7 @@ struct Harness {
 };
 static std::vector<std::string> run_client(Harness& h,const std::filesystem::path& self,const std::wstring& mode,unsigned ordinal){
     const auto out=h.audit.native()+L"-"+std::to_wstring(ordinal);require(!std::filesystem::exists(out),"Fresh client report");
-    Process process;process.launch(self,Process::executable_sha256(self),{L"--client",h.listener.name(),std::to_wstring(GetCurrentProcessId()),mode,out,L"fixture"});
+    Process process;process.launch(self,Process::executable_sha256(self),{L"--client",h.listener.name(),std::to_wstring(GetCurrentProcessId()),mode,out,std::wstring(h.worker_hash.begin(),h.worker_hash.end())});
     const auto deadline=GetTickCount64()+12000;
     while(!process.observe().process_exited){
         const auto now=GetTickCount64();if(now>=deadline){process.terminate_and_wait(2000);throw std::runtime_error("Pipe child deadline");}
@@ -140,7 +143,7 @@ static void positive(const std::filesystem::path& worker,const std::filesystem::
 }
 static void negatives(const std::filesystem::path& worker,const std::filesystem::path& self){
     {Harness h(worker);run_client(h,self,L"delayed-detach",1);h.served(1);run_client(h,self,L"normal",2);h.served(2);h.finish();require(!h.final.failed,"Delayed detach reply/ack retires connection before replacement");}
-    for(const auto mode:{L"bad-magic",L"oversized",L"bad-proof",L"wrong-kind"}){
+    for(const auto mode:{L"bad-magic",L"oversized",L"bad-proof",L"wrong-kind",L"wrong-worker"}){
         Harness h(worker);run_client(h,self,mode,1);h.served(1);h.finish();const auto rows=h.lines();
         require(!h.final.failed && std::count(rows.begin(),rows.end(),"rate")==1 && std::count(rows.begin(),rows.end(),"begin")==0,"Unauthenticated request reaches no client/device operation");
     }

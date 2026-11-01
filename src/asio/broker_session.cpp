@@ -38,7 +38,7 @@ public:
         if(on_audio_thread() || closed_ || state_.running || state_.failure!=HostFailure::none)return false;
         if(client_)return idle();
         try{
-            client_=std::make_unique<worker::BrokerClient>(spec_.endpoint,spec_.server->handle(),spec_.kind);
+            client_=std::make_unique<worker::BrokerClient>(spec_.endpoint,spec_.server->handle(),spec_.kind,spec_.worker_sha256);
             state_.broker.attached=state_.broker.ever_attached=true;
             worker_=worker::ProcessWait::duplicate(client_->worker_process_handle());
             state_.broker.worker_pid=GetProcessId(worker_->handle());accept(client_->observation());usable_=true;

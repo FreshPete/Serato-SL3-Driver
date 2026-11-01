@@ -1,0 +1,141 @@
+{
+  "schema": "sl3.broker-binding-verification.v1",
+  "createdUtc": "2026-11-01T23:38:40.886967+00:00",
+  "tests": {
+    "native": [
+      {
+        "build": "native",
+        "configuration": "Release",
+        "tests": 55,
+        "manifestSha256": "b04192cca5c9c98d870d317c02a7c08aafac0eef14b12df701cd1c8be56098d5",
+        "recordTestSha256": "27b781decdb47a900cee177f21785ea4ded53feef2685c65f0c0afba50a3f059",
+        "productionDllSha256": "2f047b50d60b5bc7f47bc081b49411af8fd06bfdae7a689f74f013170a8aa601",
+        "configurationTestSha256": "f57d5abff105049dc653bdfc43859b7548c4bc08912d1f578528b0c380894e1f"
+      },
+      {
+        "build": "native",
+        "configuration": "Debug",
+        "tests": 55,
+        "manifestSha256": "87f09a34667b567b17b045d8c7ee7143528501e441bda945ab753e523f23dffb",
+        "recordTestSha256": "dcb4db04ea27f32e317d844b399c22792bc20030739cdb6fc7911ee805edece5",
+        "productionDllSha256": "d21e7183587fc9588c3a5ed8647b90bd92f3726f04963226d6095adb24afe12c",
+        "configurationTestSha256": "c9f54cc9a37a0691a9b6738b5323c666122c8e7f113c3d90f5958e754ab96dcb"
+      },
+      {
+        "build": "native-without-sdk",
+        "configuration": "Release",
+        "tests": 36,
+        "manifestSha256": "fd8dbaa2a70e120c9ead0c8b226dbcba08ae1745472a9d11bc49cd5ae3401d64",
+        "recordTestSha256": "6f95b08cf0cc150a0887701e233c536987f0b9d0d49b5ab883ad25439664d4c1"
+      }
+    ],
+    "python": 392,
+    "focusedNativeCases": 3
+  },
+  "implemented": {
+    "productionConfigHeader": "SL3-ASIO-BROKER-CONFIG-1",
+    "sessionRecordHeader": "SL3-BROKER-SESSION-1",
+    "recordAndBrokerImageHashPins": true,
+    "exactLiveProcessCreationIdentity": true,
+    "queriedAndConfiguredImageFileIdentityCompared": true,
+    "finalLocalFixedDriveFilePaths": true,
+    "recordImageLocksRetainedByServerReference": true,
+    "runtimeWorkerShaRequiredByProductionConfig": true,
+    "workerContractRefusedBeforeClientClock": true,
+    "nativeKindOnlyInProductionConfig": true,
+    "existingTimingAndMeasurementGatesRetained": true,
+    "fallbackToPrivateWorkerOnBrokerFailure": false
+  },
+  "productionPathTest": {
+    "actualProductionDll": true,
+    "isolatedTemporaryConfig": true,
+    "syntheticTimingOnly": true,
+    "truthfulSimulatedBrokerRefused": true,
+    "simulatedControllerAcquisitions": 1,
+    "simulatedInitialClockReads": 1,
+    "clientClockReads": 0,
+    "audioStarts": 0,
+    "finalSimulatedReleases": 1,
+    "helperLoadedInHost": false
+  },
+  "scope": {
+    "recordPublicationImplemented": false,
+    "controllerInstalled": false,
+    "productionConfigInstalled": false,
+    "nativePositiveBrokerRun": false,
+    "physicalTimingMeasured": false,
+    "physicalAudioTested": false,
+    "currentSeratoTested": false,
+    "uacLaunched": false,
+    "securityChanged": false,
+    "driverBindingChanged": false,
+    "inMemoryCodeAttestation": false,
+    "crossAccountAttackTested": false,
+    "forcedPidReuseTested": false
+  },
+  "disarmedUnitPlans": [
+    {
+      "path": "analysis/rate-trace-unit-50abac114dd34fd4b5a3e507252d514f",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-54c2a761584d42ceab50a003783972f4",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-563f1186aa6b4dcaa40e8927511f8361",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-5800b13038a54a2faedbcecf8507c5f9",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-6053828dc5544db382e650777082fda7",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-71306d4ea8b24de38c1574b3b16402a9",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-9d4afeb51c624e8580a345116462cb10",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-b2ae77261c934f54aa7246b0dbf75d86",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-c163f214f8be49588a7726609c1c1353",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-e22299b204f7462eacb2fe31d5d82d7f",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    }
+  ],
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/broker-binding-20261101",
+    "files": 446,
+    "manifestSha256": "a32ac2df1a84bacc613f01d059ddfc1906f7b7355aa632f088fa36f4102852fe"
+  },
+  "logs": {
+    "broker-binding-release-20261101.log": "bbe9f241229aa8d6c0e173c9136b16e06935122cea258327d4ebe8180db81df5",
+    "broker-binding-debug-20261101.log": "2f51f29f6de8c526146966a75b6f92061b68f98a965cdc97ff024c4a02f193fe",
+    "broker-binding-sdkfree-20261101.log": "5f0692d99628701196825ae12f2521aa24505b3489e9811ca659800f895b4c8f",
+    "broker-binding-python-20261101.log": "a3135a5997304043f5e5213ab8f90aa223b82e732164925c188ffe5b1195ec8c",
+    "broker-binding-focused-20261101.log": "874eadebfb09cb7291ee66a9b480a3abcaa872f8009c646b3189643feea12abd",
+    "broker-record-targeted-20261101.log": "f066a5f513aa55bba80844ec3b7ca163c5eda5d3fa96aaee2d69225d30933c0b"
+  }
+}

@@ -106,6 +106,8 @@ counts, hashes and private checkpoint location are in
 
 ## Remaining boundary
 
+**Later checkpoint:** [reviewed broker record binding](broker-configuration.md) now supplies the separate production configuration format and native-only runtime contract. Controller publication and installation remain unfinished. The paragraphs below preserve this ASIO component checkpoint's earlier boundary.
+
 Production configuration still selects its existing private-worker path and
 requires its reviewed measured timing profile. There is no installed broker
 controller, reviewed rendezvous record or production broker configuration yet.

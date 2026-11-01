@@ -19,6 +19,8 @@ Detailed provenance and limits are in the [return report](RETURN-REPORT.md), [fi
 
 ## Latest integration work
 
+The [reviewed broker configuration](broker-configuration.md) now binds session-record/image hashes, exact live process creation identity and the runtime worker hash, retaining the timing/measurement gates. Actual production-DLL refusal of simulated kind passes. Explicit controller publication, deployment and native validation remain unfinished.
+
 The [broker-backed ASIO session](broker-asio.md) now supports ordinary COM object recreation and real SDK callbacks through the test DLL, with one simulated worker across metadata and audio objects. Callback resources and client/physical ownership remain distinct. Production rendezvous/configuration, deployment, measured latency, native audio and current Serato/DVS are still unfinished.
 
 The [broker pipe frontend](broker-pipe.md) now supports process-authenticated ordinary-user client connections and exact mapping-reference checks, with direct synthetic audio between separate clients and one retained worker. Discovery, production ASIO attachment and physical validation remain unfinished.

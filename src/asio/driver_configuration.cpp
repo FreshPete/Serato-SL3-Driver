@@ -3,6 +3,7 @@
 #include <charconv>
 #include <limits>
 #include <stdexcept>
+#include "windows/broker_record.hpp"
 
 namespace sl3::asio {
 namespace {
@@ -33,7 +34,7 @@ struct File {
         return bytes;
     }
 };
-struct Files {std::vector<std::unique_ptr<File>> retained;};
+struct Files {std::vector<std::unique_ptr<File>> retained;std::vector<std::shared_ptr<const void>> external;};
 std::string locked_text(Files& files,const std::filesystem::path& path){
     auto file=std::make_unique<File>(path,65536);auto text=file->text();files.retained.push_back(std::move(file));return text;
 }
@@ -75,7 +76,11 @@ std::vector<std::string> record(const std::string& bytes,const std::vector<std::
 }
 DriverConfiguration load_driver_configuration(const std::filesystem::path& location){
     auto files=std::make_shared<Files>();
-    const auto config=record(locked_text(*files,location),{"SL3-ASIO-CONFIG-1","worker=","worker_sha256=","helper=","timing_record=","timing_record_sha256="});
+    const auto bytes=locked_text(*files,location);
+    const std::string broker_prefix="SL3-ASIO-BROKER-CONFIG-";
+    const bool broker=bytes.compare(0,broker_prefix.size(),broker_prefix)==0;
+    const auto config=broker?record(bytes,{"SL3-ASIO-BROKER-CONFIG-1","worker=","worker_sha256=","helper=","timing_record=","timing_record_sha256=","broker=","broker_sha256=","session_record=","session_record_sha256="}):
+        record(bytes,{"SL3-ASIO-CONFIG-1","worker=","worker_sha256=","helper=","timing_record=","timing_record_sha256="});
     if(!config[0].empty())throw std::invalid_argument("Unknown ASIO configuration version");
     DriverConfiguration result;result.worker.executable=path(config[1]);result.worker.sha256=hash(config[2]);result.worker.helper=path(config[3]);
     result.worker.lifetime=DeviceLifetime::retained;
@@ -93,6 +98,11 @@ DriverConfiguration load_driver_configuration(const std::filesystem::path& locat
     pin_hash(*files,path(timing[10]),hash(timing[11]),1024*1024);
     pin_hash(*files,result.worker.executable,result.worker.sha256,256*1024*1024);
     pin_hash(*files,result.worker.helper,reviewed_helper_sha256,256*1024*1024);
+    if(broker){
+        auto binding=worker::bind_broker_record(path(config[8]),hash(config[9]),path(config[6]),hash(config[7]),result.worker.sha256);
+        result.broker=BrokerAttachment{binding.endpoint,std::move(binding.server),session::Kind::native,result.worker.sha256};
+        files->external.push_back(std::move(binding.files));
+    }
     result.files=std::move(files);return result;
 }
 std::filesystem::path production_configuration_path(){
@@ -105,10 +115,12 @@ std::filesystem::path production_configuration_path(){
 }
 std::unique_ptr<DriverFacade> make_native_asio_facade(){
     auto config=load_driver_configuration(production_configuration_path());
+    if(config.broker)return std::make_unique<DriverFacade>(*config.broker,config.latency,config.files);
     return std::make_unique<DriverFacade>(config.worker,config.latency,config.files);
 }
 std::shared_ptr<DriverScope> make_native_asio_scope(){
     auto config=load_driver_configuration(production_configuration_path());
+    if(config.broker)return std::make_shared<DriverScope>(DriverScope{std::make_shared<DriverOwner>(*config.broker,config.files),config.latency});
     return std::make_shared<DriverScope>(DriverScope{std::make_shared<DriverOwner>(config.worker,config.files),config.latency});
 }
 }

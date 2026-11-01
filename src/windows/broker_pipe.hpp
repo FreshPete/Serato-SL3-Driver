@@ -26,7 +26,7 @@ public:
     // Exact already-held server process object, not a PID supplied over IPC.
     // No retries or implicit process/device launch. Native/simulated kind is
     // verified explicitly before any stream can start.
-    BrokerClient(const std::wstring& endpoint,HANDLE expected_server,session::Kind);
+    BrokerClient(const std::wstring& endpoint,HANDLE expected_server,session::Kind,std::string expected_worker_sha256={});
     ~BrokerClient();
     BrokerClient(const BrokerClient&)=delete;
     BrokerClient& operator=(const BrokerClient&)=delete;

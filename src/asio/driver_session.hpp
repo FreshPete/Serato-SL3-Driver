@@ -6,6 +6,7 @@ struct BrokerAttachment {
     std::wstring endpoint;
     std::shared_ptr<worker::ProcessWait> server;
     session::Kind kind=session::Kind::native;
+    std::string worker_sha256{}; // Required by reviewed broker configuration.
 };
 // Common ASIO control surface; ownership domain stays explicit in every report.
 class DriverSession {

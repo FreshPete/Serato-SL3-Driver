@@ -5,6 +5,7 @@ namespace sl3::asio {
 inline constexpr char reviewed_helper_sha256[]="66bbfe6f99b417f97c7a9e97816e24af7dde0e01b8e535c41e91e1c6c19cfeda";
 struct DriverConfiguration {
     WorkerSpec worker;
+    std::optional<BrokerAttachment> broker;
     LatencyProfile latency;
     std::shared_ptr<const void> files;
 };

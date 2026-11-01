@@ -1,5 +1,7 @@
 # Explicit ASIO factory scope controller
 
+**Later broker configuration:** with [reviewed broker records](broker-configuration.md), this factory scope denotes a client attachment to an external owner. First initialization attaches to that already-held session; successful EndScope certifies the client scope's callback/I/O/connection retirement and does not certify physical release or exit of the external worker. The private-worker format retains the physical/job semantics described below.
+
 The production COM factory now exposes the project-owned optional `DeviceScope` interface, IID `0CF4A2E1-6610-4A5E-A751-E96431D08C92`. An in-process control host can keep one acquired device across enumeration and successive IASIO objects by retaining **the same factory**. This bounds the [shared owner's](facade-owner-scope.md) lifetime with ordinary COM references and explicit shutdown. It does not create a service, global cache or background driver session.
 
 The controller queries the factory for this interface and calls `BeginScope` before its first `CreateInstance`. Begin pins the existing reviewed native configuration, helper/worker hashes and timing-file leases, but launches no worker and opens no USB device. First successful IASIO init acquires. All objects created through this factory receive that fixed scope/configuration; competing active borrows remain rejected. A factory already used for ordinary creation cannot be switched into scoped mode.

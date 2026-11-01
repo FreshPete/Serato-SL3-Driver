@@ -55,6 +55,7 @@ bool endpoint(const std::wstring& name){
         std::all_of(name.begin()+std::ptrdiff_t(prefix.size()),name.end(),[](wchar_t c){return (c>=L'0' && c<=L'9') || (c>=L'a' && c<=L'f');});
 }
 constexpr unsigned magic=0x42334c53,version=1,maximum=2048;
+bool sha256(const std::string& s){return s.size()==64 && std::all_of(s.begin(),s.end(),[](char c){return (c>='0' && c<='9') || (c>='a' && c<='f');});}
 enum class Op:unsigned {hello=1,proof=2,clock=3,start=4,stop=5,detach=6};
 struct Frame {unsigned sequence=0,opcode=0,status=0;std::vector<std::uint8_t> bytes;};
 void put32(std::vector<std::uint8_t>& out,unsigned value){for(unsigned n=0;n<4;++n)out.push_back(std::uint8_t(value>>(8*n)));}
@@ -141,8 +142,14 @@ public:
         if(!finish(pipe_,operation,immediate!=FALSE,error,100,nullptr,ignored))return BrokerServeResult::no_client;accepted_=true;
         try{
             const auto hello=read(pipe_,5000,nullptr);if(!hello)throw std::runtime_error("Broker greeting deadline");
-            if(hello->sequence!=1 || hello->opcode!=unsigned(Op::hello) || hello->status || device_session::decode_hello(hello->bytes)!=owner_.kind())
+            if(hello->sequence!=1 || hello->opcode!=unsigned(Op::hello) || hello->status ||
+               (hello->bytes.size()!=40 && hello->bytes.size()!=104) ||
+               device_session::decode_hello({hello->bytes.begin(),hello->bytes.begin()+40})!=owner_.kind())
                 throw std::runtime_error("Broker greeting/worker kind mismatch");
+            if(hello->bytes.size()==104){
+                const std::string expected(hello->bytes.begin()+40,hello->bytes.end());
+                if(!sha256(expected) || expected!=owner_.worker_sha256())throw std::runtime_error("Broker worker hash contract mismatch");
+            }
             DWORD pid=0;if(!GetNamedPipeClientProcessId(pipe_,&pid) || !pid || pid==GetCurrentProcessId())throw std::runtime_error("Invalid broker client PID");
             client_.value=OpenProcess(SYNCHRONIZE|PROCESS_QUERY_LIMITED_INFORMATION|PROCESS_DUP_HANDLE,FALSE,pid);
             if(!client_.value || WaitForSingleObject(client_.value,0)!=WAIT_TIMEOUT)throw std::runtime_error("Broker client not live");
@@ -241,8 +248,9 @@ struct BrokerClient::State {
         catch(...){attached=false;throw;}
     }
 };
-BrokerClient::BrokerClient(const std::wstring& name,HANDLE expected,session::Kind expected_kind):state_(std::make_unique<State>()){
+BrokerClient::BrokerClient(const std::wstring& name,HANDLE expected,session::Kind expected_kind,std::string expected_worker):state_(std::make_unique<State>()){
     if(!endpoint(name) || (expected_kind!=session::Kind::native && expected_kind!=session::Kind::simulated))throw std::invalid_argument("Invalid explicit broker endpoint/kind");
+    if(!expected_worker.empty() && !sha256(expected_worker))throw std::invalid_argument("Broker worker contract must be lowercase SHA256");
     if(!DuplicateHandle(GetCurrentProcess(),expected,GetCurrentProcess(),&state_->server.value,SYNCHRONIZE|PROCESS_QUERY_LIMITED_INFORMATION,FALSE,0))fail("Retain exact broker process reference");
     if(WaitForSingleObject(state_->server.value,0)!=WAIT_TIMEOUT || !same(process_identity(GetCurrentProcess()),process_identity(state_->server.value)))throw std::runtime_error("Broker server is not a live ordinary-user peer");
     // Wait for this explicit pipe instance to accept a client, not for USB
@@ -255,7 +263,8 @@ BrokerClient::BrokerClient(const std::wstring& name,HANDLE expected,session::Kin
     DWORD mode=PIPE_READMODE_MESSAGE;if(!SetNamedPipeHandleState(state_->pipe.value,&mode,nullptr,nullptr))fail("Set broker message mode");
     ULONG pid=0;if(!GetNamedPipeServerProcessId(state_->pipe.value,&pid) || pid!=GetProcessId(state_->server.value) || WaitForSingleObject(state_->server.value,0)!=WAIT_TIMEOUT)
         throw std::runtime_error("Broker endpoint does not belong to expected process");
-    write(state_->pipe.value,{1,unsigned(Op::hello),0,device_session::encode_hello(expected_kind)},state_->server.value);
+    auto greeting=device_session::encode_hello(expected_kind);greeting.insert(greeting.end(),expected_worker.begin(),expected_worker.end());
+    write(state_->pipe.value,{1,unsigned(Op::hello),0,greeting},state_->server.value);
     const auto challenge=read(state_->pipe.value,7000,state_->server.value);
     if(!challenge || challenge->sequence!=1 || challenge->opcode!=unsigned(Op::hello) || challenge->status || challenge->bytes.size()!=8)throw std::runtime_error("Invalid broker challenge");
     {Handle event;event.value=get_handle(challenge->bytes);if(!SetEvent(event.value))fail("Answer broker process challenge");}
