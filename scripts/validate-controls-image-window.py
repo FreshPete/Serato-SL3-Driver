@@ -66,10 +66,16 @@ def qualify(report,trace,run):
 def validate(plan_path,output):
     combined=module('collect-controls-with-images.py')
     plan=read(plan_path);directory=plan_path.parent
-    require(plan['schema']=='sl3.controls-image-collector.v1' and plan['runtime']==combined.runtime(),
+    require(plan['schema'] in ('sl3.controls-image-collector.v1','sl3.scope-image-collector.v1'),'Unknown collector schema')
+    scope=plan['schema']=='sl3.scope-image-collector.v1'
+    require(plan['traceSeconds']==(60 if scope else 20) and
+            (plan.get('scenario')=='Scope' if scope else 'scenario' not in plan),'Collector scenario/duration differs')
+    require(plan['runtime']==(combined.runtime(scope=True) if scope else combined.runtime()),
             'Collector plan/runtime changed')
     started=read(directory/'controls-image-started.json')
     result=read(directory/'controls-image-result.json')
+    require(result['schema']==('sl3.scope-image-collection.v1' if scope else 'sl3.controls-image-collection.v1'),
+            'Collection result scenario differs')
     require(started['planSha256']==result['planSha256']==sha(plan_path) and
             result['collectionCompleted'] is True and result['error'] is None and
             not result.get('imageCleanupError') and result['imageControllerExitCode']==result['usbCollectorExitCode']==0,
@@ -77,7 +83,10 @@ def validate(plan_path,output):
     batch_path=Path(plan['imageBatch'])
     require(batch_path==directory/'batch.json' and sha(batch_path)==plan['imageBatchSha256'],'Image batch binding differs')
     batch=read(batch_path);require(len(batch['jobs'])==1,'Unexpected image job count')
-    job=batch['jobs'][0];source_path=Path(job['contextDirectory'])/'run.json'
+    job=batch['jobs'][0]
+    require(job['durationSeconds']==(120 if scope else 60) and batch['nativeIdentityPolicy']=='observed-rechecked',
+            'Image source scenario/window differs')
+    source_path=Path(job['contextDirectory'])/'run.json'
     source=read(source_path);batch_result=read(directory/'batch-result.json')
     require(batch_result['successful'] is True and len(batch_result['jobs'])==1 and
             batch_result['planSha256']==sha(batch_path) and batch_result['jobs'][0]['sourceRunSha256']==sha(source_path),
@@ -90,7 +99,8 @@ def validate(plan_path,output):
     require(Path(artifact['path'])==etl and sha(etl)==artifact['sha256'] and etl.stat().st_size==artifact['bytes'],
             'Image ETL binding differs')
     context=Path(plan['contextDirectory']);build=read(ROOT/'artifacts/build/native/native-build-Release.json')
-    validated=controls.validate(context,build['usbdk']['executableSha256'],build['hostProbe']['executableSha256'])
+    validated=controls.validate(context,build['usbdk']['executableSha256'],build['scopeProbe']['executableSha256'],scope=True) if scope else \
+        controls.validate(context,build['usbdk']['executableSha256'],build['hostProbe']['executableSha256'])
     require(validated['valid'] is True,'Normal-user controls/trace/recovery validation failed')
     require(not output.exists() and output.parent.is_dir(),'Choose a fresh output file')
     rundown=output.with_name(output.stem+'-rundown.json')
@@ -104,6 +114,7 @@ def validate(plan_path,output):
             report['comparison']['expected']==images.image_metadata(image,r'\SystemRoot\System32\drivers\UsbHub3.sys'),
             'Recomputed image provenance differs')
     qualified=qualify(report,read(context/'trace/capture.json'),read(context/'run.json'))
+    if scope:qualified['scenario']='Scope'
     qualified.update(planSha256=sha(plan_path),controlsRunSha256=sha(context/'run.json'),
                      sourceRunSha256=sha(source_path),rundownSha256=sha(rundown),
                      decoderWarningPresent='Warning:' in report.get('decoderOutput',''),

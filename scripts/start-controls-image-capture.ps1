@@ -57,13 +57,14 @@ $launchPath=Join-Path $directory 'controls-image-launch.json'
 Write-NewJson $launchPath $record
 try{
     $normalArgs=@('-NoProfile','-File',('"'+(Join-Path $PSScriptRoot 'test-controls-user-probe.ps1')+'"'),
-                  '-Run','-TraceSeconds','20','-ContextDirectory',('"'+$settings.contextDirectory+'"'))
-    $normal=Start-Process -FilePath (Get-Command pwsh).Source -ArgumentList $normalArgs -WindowStyle Hidden -PassThru -ErrorAction Stop `
+                  '-Run','-TraceSeconds',([string]$settings.traceSeconds),'-ContextDirectory',('"'+$settings.contextDirectory+'"'))
+    if($settings.schema -ceq 'sl3.scope-image-collector.v1'){$normalArgs+=@('-Scenario','Scope')}
+    $normal=Start-Process -FilePath $settings.runtime.loggingRuntime.powershell -ArgumentList $normalArgs -WindowStyle Hidden -PassThru -ErrorAction Stop `
         -RedirectStandardOutput (Join-Path $directory ('controls-normal-'+$id+'.out')) `
         -RedirectStandardError (Join-Path $directory ('controls-normal-'+$id+'.err'))
     $record.normalProbePid=$normal.Id
     $arguments=@('-NoProfile','-File',('"'+$PSCommandPath+'"'),'-Plan',('"'+$Plan+'"'),'-Execute','-ExpectedSha256',$hash,'-LaunchId',$id)
-    $admin=Start-Process -FilePath (Get-Command pwsh).Source -Verb RunAs -WindowStyle Hidden -PassThru -ErrorAction Stop -ArgumentList $arguments
+    $admin=Start-Process -FilePath $settings.runtime.loggingRuntime.powershell -Verb RunAs -WindowStyle Hidden -PassThru -ErrorAction Stop -ArgumentList $arguments
     $record.collectorWrapperPid=$admin.Id;$record.status='launched'
 }catch{
     $record.error=$_.Exception.Message;$failure=$_.Exception

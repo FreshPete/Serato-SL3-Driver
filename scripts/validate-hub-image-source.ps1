@@ -26,7 +26,7 @@ $expectedRoot = [IO.Path]::GetFullPath((Join-Path (Split-Path -Parent $PSScriptR
 if (@($root.TraceDataCollector).Count -ne 1 -or @($trace.TraceDataProvider).Count -ne 1 -or
     [guid]$trace.Guid -ne [guid]$record.sessionGuid -or [guid]$trace.Guid -in @([guid]::Empty,[guid]'9e814aad-3204-11d2-9a82-006008a86939') -or
     $trace.SessionName -cne $record.sessionName -or [int]$root.Duration -ne $record.durationSeconds -or
-    [int]$root.Duration -lt 1 -or [int]$root.Duration -gt 60 -or
+    [int]$root.Duration -lt 1 -or ([int]$root.Duration -gt 60 -and [int]$root.Duration -ne 120) -or
     [IO.Path]::GetFullPath([string]$root.RootPath).TrimEnd('\') -ne $expectedRoot -or
     [int]$root.SchedulesEnabled -ne 0 -or [int]$root.Segment -ne 0 -or
     [int]$root.SegmentMaxDuration -ne 0 -or -not [string]::IsNullOrEmpty([string]$root.Subdirectory) -or

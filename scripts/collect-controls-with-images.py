@@ -37,55 +37,67 @@ def utc(value):
     return result
 
 
-def runtime():
+def runtime(scope=False):
     build_path = ROOT/'artifacts/build/native/native-build-Release.json'
     build = read(build_path)
-    pins = build['hostProbe']['controls']['scriptInputs']
-    require(len(pins) == 18, 'Expected reviewed controls runtime')
+    pins = build['scopeProbe']['scriptInputs'] if scope else build['hostProbe']['controls']['scriptInputs']
+    require(len(pins) == (19 if scope else 18), 'Expected reviewed probe runtime')
     for name, expected in pins.items():
         require(sha(ROOT/'scripts'/name) == expected.lower(), 'Controls dependency changed: '+name)
     natives = {}
-    for name, expected in (('sl3_host_probe.exe', build['hostProbe']['executableSha256']),
+    probe=('sl3_scope_probe.exe',build['scopeProbe']['executableSha256']) if scope else ('sl3_host_probe.exe',build['hostProbe']['executableSha256'])
+    for name, expected in (probe,
                            ('sl3_usbdk.exe', build['usbdk']['executableSha256'])):
         path = ROOT/'artifacts/build/native/Release'/name
         require(sha(path) == expected.lower(), 'Native executable changed: '+name)
         natives[name] = sha(path)
-    return {'collectorSha256': sha(Path(__file__)), 'buildManifestSha256': sha(build_path),
+    value = {'collectorSha256': sha(Path(__file__)), 'buildManifestSha256': sha(build_path),
             'launcherSha256': sha(ROOT/'scripts/start-controls-image-capture.ps1'),
             'windowValidatorSha256': sha(ROOT/'scripts/validate-controls-image-window.py'),
             'imageInspectorSha256': sha(ROOT/'scripts/inspect-kernel-image-rundown.py'),
             'controlsInputs': pins, 'nativeImages': natives, 'loggingRuntime': batch.runtime()}
+    if scope:
+        value['scopeRuntime']=module('prepare-scope-trace.py').runtime()
+    return value
 
 
-def plan_value(batch_path, image_batch):
+def plan_value(batch_path, image_batch, scope=False):
     name = batch_path.parent.name
-    context = ROOT/'tests/results/local'/(name+'-controls')
-    require(len(image_batch['jobs']) == 1 and image_batch['jobs'][0]['durationSeconds'] == 60 and
-            image_batch['nativeIdentityPolicy'] == 'observed-rechecked', 'Expected one sixty-second image job')
+    context = ROOT/'tests/results/local'/(name+('-scope' if scope else '-controls'))
+    image_seconds,trace_seconds=(120,60) if scope else (60,20)
+    require(len(image_batch['jobs']) == 1 and image_batch['jobs'][0]['durationSeconds'] == image_seconds and
+            image_batch['nativeIdentityPolicy'] == 'observed-rechecked', 'Expected the fixed scenario image window')
     require(not context.exists(), 'Controls context must be fresh')
-    return {'schema': 'sl3.controls-image-collector.v1', 'imageBatch': str(batch_path.resolve()),
+    value = {'schema': 'sl3.scope-image-collector.v1' if scope else 'sl3.controls-image-collector.v1', 'imageBatch': str(batch_path.resolve()),
             'imageBatchSha256': sha(batch_path), 'contextDirectory': str(context.resolve()),
-            'runtime': runtime(), 'traceSeconds': 20, 'withStateObserver': True,
+            'runtime': runtime(scope=True) if scope else runtime(), 'traceSeconds': trace_seconds, 'withStateObserver': True,
             'launchesProbe': False, 'requiresNormalUserProbe': True,
             'deviceAccess': False, 'securityChanges': False, 'readinessAdmission': False,
-            'scope': 'Image and USB/WPP collectors only; separate normal-user control probe may open SL3',
+            'scope': 'Image and USB/WPP collectors only; separate normal-user '+('scope' if scope else 'control')+' probe may open SL3',
             'normalUserCommand': [image_batch['runtime']['powershell'], '-NoProfile', '-File',
                                   str(ROOT/'scripts/test-controls-user-probe.ps1'), '-Run',
-                                  '-TraceSeconds', '20', '-ContextDirectory', str(context.resolve())]}
+                                  '-TraceSeconds', str(trace_seconds), '-ContextDirectory', str(context.resolve())]}
+    if scope:
+        value['scenario']='Scope'
+        value['normalUserCommand']+=['-Scenario','Scope']
+    return value
 
 
-def prepare(directory):
-    image_batch = batch.prepare(directory, [60], 'observed-rechecked')
-    result = plan_value(directory/'batch.json', image_batch)
+def prepare(directory,scope=False):
+    image_batch = batch.prepare(directory, [120 if scope else 60], 'observed-rechecked')
+    result = plan_value(directory/'batch.json', image_batch,scope=scope)
     write_new(directory/'controls-image.json', result)
     return result
 
 
 def validate(path):
     require(path.name == 'controls-image.json', 'Unexpected combined plan filename')
+    saved=read(path)
+    require(saved['schema'] in ('sl3.controls-image-collector.v1','sl3.scope-image-collector.v1'),'Unknown collector scenario')
+    scope=saved['schema']=='sl3.scope-image-collector.v1'
     image_batch = batch.validate(path.parent/'batch.json')
-    expected = plan_value(path.parent/'batch.json', image_batch)
-    require(read(path) == expected, 'Collector plan or reviewed inputs changed')
+    expected = plan_value(path.parent/'batch.json', image_batch,scope=scope)
+    require(saved == expected, 'Collector plan or reviewed inputs changed')
     require(not (path.parent/'controls-image-started.json').exists(), 'Collector plan already attempted')
     return expected, image_batch
 
@@ -163,11 +175,12 @@ def wait_owned(child, seconds, label):
 def execute(path, expected_sha):
     require(sha(path) == expected_sha, 'Plan changed after administrator launch')
     plan, image_batch = validate(path)
+    scope=plan.get('schema')=='sl3.scope-image-collector.v1'
     token = batch.source_runner().own_token()
     require(token['queried'] is True and token['elevated'] is True, 'Collector requires an already elevated token')
     directory = path.parent
     write_new(directory/'controls-image-started.json', {'planSha256': expected_sha, 'startedUtc': now(), 'token': token})
-    result = {'schema': 'sl3.controls-image-collection.v1', 'planSha256': expected_sha,
+    result = {'schema': 'sl3.scope-image-collection.v1' if scope else 'sl3.controls-image-collection.v1', 'planSha256': expected_sha,
               'startedUtc': now(), 'collectionCompleted': False, 'launchesProbe': False,
               'readinessAdmission': False, 'sameWindowVerified': False, 'error': None,
               'imageControllerPid': None, 'usbCollectorPid': None}
@@ -189,12 +202,12 @@ def execute(path, expected_sha):
                            check=True, capture_output=True, timeout=3, creationflags=subprocess.CREATE_NO_WINDOW)
             require(live_query(read(query), job, now()) == native, 'Image GUID changed before USB collector')
             result['preUsbImageQuerySha256'] = sha(query)
-            require(plan['runtime'] == runtime() and sha(Path(plan['imageBatch'])) == plan['imageBatchSha256'],
+            require(plan['runtime'] == (runtime(scope=True) if scope else runtime()) and sha(Path(plan['imageBatch'])) == plan['imageBatchSha256'],
                     'Runtime changed before USB collector')
             require(source.poll() is None, 'Image controller ended before USB collector')
             command = [image_batch['runtime']['powershell'], '-NoProfile', '-File',
                        str(ROOT/'scripts/capture-controls-user-context.ps1'), '-Run', '-WithStateObserver',
-                       '-TraceSeconds', '20', '-ContextDirectory', plan['contextDirectory']]
+                       '-TraceSeconds', str(plan.get('traceSeconds',20)), '-ContextDirectory', plan['contextDirectory']]
             with (directory/'combined-usb-collector.log').open('xb') as usb_log:
                 collector = subprocess.Popen(command, stdout=usb_log, stderr=subprocess.STDOUT,
                                              cwd=ROOT, creationflags=subprocess.CREATE_NO_WINDOW)
@@ -207,7 +220,7 @@ def execute(path, expected_sha):
     finally:
         if source is not None:
             try:
-                result['imageControllerExitCode'] = wait_owned(source, 130, 'Image controller')
+                result['imageControllerExitCode'] = wait_owned(source, 190 if scope else 130, 'Image controller')
                 require(result['imageControllerExitCode'] == 0, 'Image controller failed')
             except Exception as error:
                 result['imageCleanupError'] = str(error)
@@ -223,11 +236,13 @@ def main():
     group.add_argument('--plan', type=Path)
     parser.add_argument('--execute', action='store_true')
     parser.add_argument('--expected-sha256')
+    parser.add_argument('--scenario',choices=('Controls','Scope'),default=None,help='Preparation only; execution uses the frozen plan')
     args = parser.parse_args()
     require(not args.execute or (args.plan and args.expected_sha256), 'Execution needs a frozen plan hash')
+    require(args.scenario is None or args.prepare is not None,'Scenario selection is preparation-only')
     if args.prepare:
         require(not args.execute, 'Preparation never executes')
-        result = prepare(args.prepare.resolve())
+        result = prepare(args.prepare.resolve(),scope=args.scenario=='Scope')
     elif args.execute:
         result = execute(args.plan.resolve(), args.expected_sha256)
     else:

@@ -1,0 +1,64 @@
+{
+  "schema": "sl3.scope-image.integration.v1",
+  "createdUtc": "2026-11-01T20:34:14.023066+00:00",
+  "pythonSuite": {
+    "testsPassed": 358,
+    "failures": 0
+  },
+  "focusedCollectorAndWindowTests": 19,
+  "additionalActualValidationOnlyCases": 16,
+  "fixedScenario": {
+    "scenario": "Scope",
+    "imageSeconds": 120,
+    "usbSeconds": 60,
+    "acquisitionsRequested": 1,
+    "facadeObjects": 3,
+    "audioStartsRequested": 0,
+    "rateSettersRequested": 0
+  },
+  "actualChecks": {
+    "planPrepared": true,
+    "defaultLauncherInspected": true,
+    "sourceValidationOnlyPassed": true,
+    "validationCommitMode": 4096,
+    "producerElevated": false,
+    "sourceStarted": false,
+    "captureDirectoryCreated": false
+  },
+  "limits": {
+    "collectorExecutionTestsMocked": true,
+    "qualificationDataSynthetic": true,
+    "nativeValidationAndEtlDecoderMockedInCompositionTests": true,
+    "elevatedScopeLaunchRun": false,
+    "physicalScopeTested": false,
+    "samePhysicalImageUsbWindowVerified": false,
+    "nativeBuildInputsAndScopeRuntimePinsUnchanged": true
+  },
+  "sourceSha256": {
+    "scripts/collect-controls-with-images.py": "e8ea6ca87475899ff4bba4163ab828b3c8ce8473043a4bc3307b547d5efb63be",
+    "scripts/logging-batch.py": "9b41d46eb6a572364d36887ef1566aede93714af710bddd94a7bf87d5481e8fe",
+    "scripts/prepare-hub-image-source.ps1": "c20e089d9781a104b4a331da50ef17fb698cd2f70829bbceb6cb2c97492681bf",
+    "scripts/start-controls-image-capture.ps1": "4e03703b8426e2ea812d0b01da0aafcaf967af6b103f2ca394d3e98a0cff6296",
+    "scripts/test-hub-image-source.py": "6ac213bede6eaf1035ea95c34b0943c152c37a766c4a7bf78216212b7127663a",
+    "scripts/validate-controls-image-window.py": "7bfa7d5f5378d73cf9431527dca198b53a80b5b057a511594c42a3d84043c0f7",
+    "scripts/validate-hub-image-source.ps1": "87801114bf0498e25e631e8b33df9f19d2d6c07de311ea7af00d61cb7d8accc2",
+    "tests/test_controls_image_window.py": "1219ae9faad9d1739a9ce6b3c45f190a41cc16cc33c6cbb67626927650a708d5",
+    "tests/test_scope_image_collection.py": "2f411d1578bafb679814dd32434e357561aca6e897c131fb73a20c46fd5db39c"
+  },
+  "privateLogSha256": {
+    "scope-image-python-suite-20261101.log": "b4829e3a709e5459b33d140f5c94ebac4849d8f442d7c7076f3bef603afc7a40",
+    "scope-image-tests-final-20261101.log": "c0b73e5e3df4a20a5fb69f934c9396724b270eabf8b4b20edc77f24c2270549c",
+    "scope-image-validation-tests-20261101.log": "a5ba1358e0138c1c7d041b874b524b46680e7d55e63a8707bdf115491eaaf506",
+    "scope-image-retirement-20261101.json": "3c1d79aa84c1453a677aec6432f3f160c95dc08a4e641044b33e31b516cf45cc"
+  },
+  "readyPlan": {
+    "privatePath": "analysis\\logging-batch-scope-image-ready-20261101",
+    "planSha256": "4cc6b731b62a1f9c1a7c6b1d6c873e9a486a51ed1337ce0c1f4eb60219f1eb7c",
+    "batchSha256": "0f981e99681a6d8c8c23ed10f9256d7fd67c257a91bdc3ef5f32fc0598f138cb",
+    "validationOnlySha256": "e5c0ba3ad29bb943360519e2d1d77a1df27f3aa72a51b01a9c2dbbb60fc7e254"
+  },
+  "remainingSl3TestProcesses": [],
+  "retirementObservedUtc": "2026-11-01T20:34:13.6207476Z",
+  "checkpoint": "artifacts/build/checkpoints/scope-image-integration-20261101",
+  "nativeBuildManifestSha256": "cafb49ddfbd9580da2f752a596882ec8993368a7e0baa7873350946ca017f681"
+}

@@ -31,6 +31,17 @@ class ImageWindowTests(unittest.TestCase):
         for key in ('readinessAdmission','physicalDeviceIdentityVerified','loadedMemoryIdentityVerified'):
             self.assertFalse(result[key])
 
+    def test_scope_sixty_second_usb_window_needs_the_longer_image_window(self):
+        self.trace['stoppedUtc']='2026-11-01T14:01:05Z'
+        self.run['probeCompletedUtc']='2026-11-01T14:00:35Z'
+        self.report['headers'][0]['EndTime']=v.clock.filetime('2026-11-01T14:02:00Z')
+        self.rows[1]['time']='2026-11-01T14:02:00Z'
+        result=v.qualify(self.report,self.trace,self.run)
+        self.assertTrue(result['imageMetadataCoversUsbWindow'])
+        self.assertEqual(result['postReleaseTicks'],'300000000')
+        self.rows[1]['time']='2026-11-01T14:01:00Z'
+        with self.assertRaisesRegex(ValueError,'encompass'):v.qualify(self.report,self.trace,self.run)
+
     def test_earlier_trace_and_only_partial_overlap_rejected(self):
         for key,at in [('startedUtc','2026-10-31T14:00:05Z'),('stoppedUtc','2026-11-01T14:01:00.0000001Z')]:
             trace=copy.deepcopy(self.trace);trace[key]=at

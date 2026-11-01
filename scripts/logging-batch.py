@@ -63,8 +63,11 @@ def prepare(directory, durations, native_identity_policy='configured'):
     directory = directory.resolve()
     require(directory.parent == (ROOT/'analysis').resolve() and not directory.exists()
             and re.fullmatch(r'logging-batch-[a-zA-Z0-9-]{1,64}', directory.name), 'Expected a fresh direct analysis/logging-batch-* folder')
-    require(1 <= len(durations) <= 3 and all(type(d) is int and 1 <= d <= 60 for d in durations),
-            'Expected one to three durations of 1..60 seconds')
+    require(1 <= len(durations) <= 3 and all(type(d) is int and (1 <= d <= 60 or d == 120) for d in durations),
+            'Expected durations of 1..60 seconds or the fixed 120-second scope window')
+    if 120 in durations:
+        require(durations == [120] and native_identity_policy == 'observed-rechecked',
+                'Scope image window requires one observed-rechecked 120-second job')
     pinned = runtime()
     directory.mkdir()
     runner = source_runner()
@@ -98,6 +101,9 @@ def validate(plan_path):
     require(not (plan_path.parent/'execution-started.json').exists(), 'Batch execution was already attempted')
     runner = source_runner()
     policy = batch.get('nativeIdentityPolicy', 'configured')
+    if any(job.get('durationSeconds') == 120 for job in batch['jobs']):
+        require(len(batch['jobs']) == 1 and policy == 'observed-rechecked',
+                'Scope image window requires one observed-rechecked job')
     for number, job in enumerate(batch['jobs'], 1):
         preparation = plan_path.parent/f'preparation-{number}.json'
         context = ROOT/'tests/results/local'/f'{plan_path.parent.name}-{number}'

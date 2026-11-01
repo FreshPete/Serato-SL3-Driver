@@ -69,7 +69,7 @@ def plan(preparation, context, native_identity_policy='configured'):
     helper.validate_identity(record['sessionName'], record['sessionGuid'])
     require(record['configurationValidated'] is True and record['sourceStarted'] is False
             and record['sourceCommitted'] is False and type(record['durationSeconds']) is int
-            and 1 <= record['durationSeconds'] <= 60, 'Invalid preparation role or duration')
+            and (1 <= record['durationSeconds'] <= 60 or record['durationSeconds'] == 120), 'Invalid preparation role or duration')
     require(record['sourceSha256'] == sha(ROOT/'scripts/prepare-hub-image-source.ps1'), 'Preparation source changed')
     expected = ROOT/'tests/results/local'/record['sessionName']
     require(Path(record['prospectiveRootPath']).resolve() == expected.resolve() and not expected.exists(),

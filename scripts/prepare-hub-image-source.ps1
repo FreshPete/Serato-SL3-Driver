@@ -1,10 +1,11 @@
 <# Validate an uncommitted PLA image-source configuration. Never starts tracing. #>
 [CmdletBinding()]
 param(
-    [ValidateRange(1,60)][int]$DurationSeconds = 5,
+    [ValidateRange(1,120)][int]$DurationSeconds = 5,
     [string]$Output
 )
 $ErrorActionPreference = 'Stop'
+if($DurationSeconds -gt 60 -and $DurationSeconds -ne 120){throw 'Duration must be 1..60 seconds or the fixed 120-second scope window.'}
 if ($Output) {
     $Output = [IO.Path]::GetFullPath($Output)
     if ((Test-Path -LiteralPath $Output) -or -not (Test-Path -LiteralPath ([IO.Path]::GetDirectoryName($Output)) -PathType Container)) {
