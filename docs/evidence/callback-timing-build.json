@@ -1,0 +1,25 @@
+{
+  "scope": "Software callback timing instrumentation and analysis; no new physical device run",
+  "releaseTests": 32,
+  "debugTests": 32,
+  "sdkFreeTests": 22,
+  "pythonTests": 48,
+  "workerSha256": "0051D6F004C49A6F3776EDC70404D80F76BCEA702241A014FE9E460CBAD93CE1",
+  "probeSha256": "FB79D56AC0938E8EBD5CB9948354BFA83EEA0A9A6D957EE3E406612DF9F45603",
+  "simulatedProbeSha256": "183AED7D7252F8C99908AB988C571BA87EED3916C053DF0FEF384F8E106D73CC",
+  "sourceHashes": {
+    "src/windows/host_probe_main.cpp": "6545039624F13658DBA0C1D0DF4EC7F5B7D1EC0B4390FB83046299F5400D6D60",
+    "scripts/test-host-probe.py": "194234EFC9C01FA9FE743B9444C561F6A60CD02E6BEE9AE654420B6FE2384DDE",
+    "scripts/analyse-callback-timing.py": "CDB7AE47CC6DE9690669F89C722B07693BA9F33951A3D9570059DFE047F1FCC4",
+    "tests/test_callback_timing.py": "B980275BD392800349B5ED804FEA9BE7BD7E95381E100C299EE727FFE26893B6"
+  },
+  "logHashes": {
+    "analysis/callback-timing-build-release.log": "A784B861088B4C58E47A9D9B79A5F1F2745D8ADCAFA2177E589AF5EE2500997C",
+    "analysis/callback-timing-build-debug.log": "8CC3BC19B077ED44B7EEEA2A78DC2FA518A2145CD1B5D8D6A275181FA387D761",
+    "analysis/callback-timing-python-tests.log": "23AA78C5FD721B69C2354B28890BD1C62BFADC8FF885BD4B43BE3199C4883BF0",
+    "analysis/readiness-sdkfree-tests.log": "8848C152099786315A63E56D4A79025E2BF49B6D264ECE29E4D1CB9D65648114"
+  },
+  "physicalStreamingVerified": false,
+  "latencyMeasured": false,
+  "timingProfileCreated": false
+}

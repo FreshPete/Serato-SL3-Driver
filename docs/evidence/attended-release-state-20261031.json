@@ -1,0 +1,88 @@
+{
+  "scope": "Saved live-only candidate state correlation; labels conditional on inspected image; no readiness admission",
+  "probeCompletedUtc": "2026-10-31T12:05:24.7978268Z",
+  "initialWorkerEnteredContextRows": 158,
+  "postReleaseCandidateRows": 97,
+  "candidateFirstStoppedEnumerated": {
+    "timeUtc": "2026-10-31T12:05:24.8477241Z",
+    "timestampFileTime": "134379219248477241",
+    "stateForInspectedImage": "DsmStateEtwStoppedEnumerated",
+    "eventForInspectedImage": "DsmEventOperationSuccess",
+    "depth": 0
+  },
+  "candidateLastObservedSuccessfulEntry": {
+    "timeUtc": "2026-10-31T12:05:24.8516539Z",
+    "timestampFileTime": "134379219248516539",
+    "stateForInspectedImage": "DsmStateEtwStoppedEnumerated",
+    "eventForInspectedImage": "DsmEventOperationSuccess",
+    "depth": 0
+  },
+  "candidateTimeoutTail": [
+    {
+      "timeUtc": "2026-10-31T12:05:34.8520901Z",
+      "timestampFileTime": "134379219348520901",
+      "stateForInspectedImage": "DsmStateEtwCheckIfDeviceCanBeDisabledOnDriverNotFound",
+      "eventForInspectedImage": "DsmEventTimerFired",
+      "depth": 0
+    },
+    {
+      "timeUtc": "2026-10-31T12:05:34.8520912Z",
+      "timestampFileTime": "134379219348520912",
+      "stateForInspectedImage": "DsmStateEtwDisablingDeviceInControllerOnStartTimeout",
+      "eventForInspectedImage": "DsmEventYes",
+      "depth": 0
+    },
+    {
+      "timeUtc": "2026-10-31T12:05:34.8521292Z",
+      "timestampFileTime": "134379219348521292",
+      "stateForInspectedImage": "DsmStateEtwDisablingPortOnStartTimeout",
+      "eventForInspectedImage": "DsmEventUCXIoctlSuccess",
+      "depth": 0
+    },
+    {
+      "timeUtc": "2026-10-31T12:05:34.8521459Z",
+      "timestampFileTime": "134379219348521459",
+      "stateForInspectedImage": "DsmStateEtwStopped",
+      "eventForInspectedImage": "DsmEventPortDisabled",
+      "depth": 0
+    }
+  ],
+  "observedEntryToTimerSeconds": 10.0004362,
+  "candidateFirstStoppedEnumeratedAfterProbeMilliseconds": 49.8973,
+  "candidateStoppedAfterProbeSeconds": 10.0543191,
+  "namespaces": {
+    "3000": 124,
+    "4000": 330,
+    "6000": 24,
+    "2000": 36
+  },
+  "inspectedImageSha256": "f93fa3a32037c597fd19ca9d65f59e53a1e337123582ed2479d5c16a4848df16",
+  "symbolsGuid": "179F1445B718DC8543144991DC161F09",
+  "liveStreamCompletenessVerified": false,
+  "candidateVidPidPortIdentityVerified": false,
+  "sourceXmlCorroboratesCandidate": false,
+  "loadedImageUsbWindowAttested": false,
+  "readinessAdmission": false,
+  "limits": [
+    "The candidate shares a worker-associated opaque tracking value before identity assignment; no retained VID/PID/port record proves its physical identity.",
+    "A different DSM context on the same hub can be unrelated; opaque values are grouped without asserting a physical port.",
+    "These early rows were overwritten in the file and survive only in the pinned live-consumer output.",
+    "Later image metadata and unchanged disk snapshots are supporting version evidence, not a USB-window loaded-image attestation.",
+    "The observed timer interval is not a production delay or proof that another cycle would succeed."
+  ],
+  "sources": {
+    "scripts/export-attended-release-state.py": "aa0360ff954bf8fda6a5c6a53c5d5852f07928beecc5505987bd5390c6903407",
+    "analysis/attended-state-symbols.json": "aec5bcc3254c582cbb6e71771e69a08cbc6af1b2dd88bd42dd63f2ee1c9ef55d",
+    "scripts/export-usbhub3-state-symbols.py": "2bd49ec3ae16caa86ac6331bf9fc2593c6d580dfc342c090d178d08da741a2ad",
+    "scripts/validate-usb-state-capture.py": "ae0023a0ae2ce1e3e0d1d5340a0ffdc4894c5df575d5b57439a77de6f3c9a472",
+    "tests/results/local/user-controls-attended-20261031-120514/run.json": "bd39f540be3ecbc3c38dd2069d481ec8ab5fc58629069102429e8f28fa90e3b8",
+    "tests/results/local/user-controls-attended-20261031-120514/probe/probe.json": "cd4c07ffc97ac08612e15fd0741c6c47b57f56a6306360239470595089ebf4a0",
+    "tests/results/local/user-controls-attended-20261031-120514/probe/worker-1.tsv": "0cc00bdf5980787af61ec237a2627f385f1301363f60aea6b3006e88be1a947f",
+    "tests/results/local/user-controls-attended-20261031-120514/trace/capture.json": "db2adaef2bec2f68270dd12f86a26f04acb8f5f706ca0a648ac6390b2485fe09",
+    "tests/results/local/user-controls-attended-20261031-120514/trace/state-observer.ndjson": "166c4156ed9eb5b66042b15ac007e974cce85299ad15b7110a7abfa0a6df9edd",
+    "docs/evidence/attended-controls-components-20261031.json": "d62771f1d19ee4dc762f309bb7412c060d53e02c72f7a02a1996ab2f97202aab",
+    "docs/evidence/attended-hub-image-20261031.json": "d483d00c9571cd733386e23ff3fe52826a396f92963754385f93504821629ac3",
+    "scripts/export-reopen-usb-timeline.py": "0521e58f7d70ad68c3982d257c480cd91d84c5aaa8b2337de266a5dd9520df28",
+    "tests/results/local/user-controls-attended-20261031-120514/events.xml": "aec4d97e81c3c436f1ffcfd660e922f4796d61f4ff3d8aad5774c3e721c300b3"
+  }
+}

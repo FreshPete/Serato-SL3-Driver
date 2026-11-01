@@ -1,0 +1,252 @@
+{
+  "utc": "2026-10-27T02:57:25.821793+00:00",
+  "scope": "Transport-v3 active interval counts through shared queues and SDK callbacks; synthetic tests only",
+  "builds": [
+    {
+      "configuration": "Release",
+      "utc": "2026-10-27T02:54:10.7259925Z",
+      "manifestSha256": "7ECC8FA36A648F1D880BA3D7E22AEEF1F795394886111E106A7ED9B3FA343359",
+      "ctestLogSha256": "95AE3A00751988724DCA6460A562E010F32E7DE9C04C8143A639D4D55AFBB0EE",
+      "ctestTests": [
+        "sl3_core_tests",
+        "sl3_playback_tests",
+        "sl3_audio_bridge_tests",
+        "sl3_duplex_tests",
+        "sl3_asio_queue_tests",
+        "sl3_asio_buffer_tests",
+        "sl3_asio_com_tests",
+        "sl3_mailbox_tests",
+        "sl3_audio_ring_tests",
+        "sl3_worker_process_tests",
+        "sl3_worker_protocol_tests",
+        "sl3_usbdk_rejects_worker_capture",
+        "sl3_usbdk_plan",
+        "sl3_usbdk_rejects_modes",
+        "sl3_usbdk_rejects_duplex_capture",
+        "sl3_capture_plan",
+        "sl3_capture_rejects_modes"
+      ],
+      "queuePump": {
+        "testsPassed": true,
+        "librarySha256": "A50C2DDDDBDE3FDCCF8AD0A7C9655D296A01D1520C938D782A70ED9A526C3EBF",
+        "testExecutableSha256": "D35353C4268A1EE3112DACD97FF77A7CD33A8C341748C8ACD148BB3F056C125E",
+        "syntheticProcessBlocksTested": 7200,
+        "physicalAudioTested": false,
+        "continuousUsbSessionImplemented": false,
+        "comDllConnected": false
+      },
+      "audioRings": {
+        "testsPassed": true,
+        "testExecutableSha256": "F10213A0A469214BA565512B32514F3ACE6BF779FAA076A3D1B7140284947699",
+        "slotsPerDirection": 8,
+        "maximumPcmBytesPerBlock": 8064,
+        "mappingBytes": 196800,
+        "physicalAudioTested": false,
+        "asioConnected": false,
+        "allowedPacketCounts": [
+          8,
+          16,
+          24,
+          32,
+          40,
+          48,
+          56,
+          64
+        ]
+      },
+      "mailboxLibrarySha256": "F38DEA49258743183045DBF3266C8B26B95ED547A2C8E7F61FC973349210A158",
+      "fixtureSha256": "3F5FD5359ED326F521ACB240F338A8994E6BA362EFF82525807264077B74608B",
+      "nativeUsbDkSha256": "6D6D74F879A59EA7CCE8E0F32CCA3D1F86C711EF8DBB265D96CA487FBA77B685"
+    },
+    {
+      "configuration": "Debug",
+      "utc": "2026-10-27T02:54:43.7294632Z",
+      "manifestSha256": "3F99E9FCC11AAF194A16E08F44F0C74EF35FBDACA7F02656EC6CBDF782FA21C2",
+      "ctestLogSha256": "6BF21EADB212D9C449000E1A70F6FBE5602441EEDC350F88CFB9D4E887CDE133",
+      "ctestTests": [
+        "sl3_core_tests",
+        "sl3_playback_tests",
+        "sl3_audio_bridge_tests",
+        "sl3_duplex_tests",
+        "sl3_asio_queue_tests",
+        "sl3_asio_buffer_tests",
+        "sl3_asio_com_tests",
+        "sl3_mailbox_tests",
+        "sl3_audio_ring_tests",
+        "sl3_worker_process_tests",
+        "sl3_worker_protocol_tests",
+        "sl3_usbdk_rejects_worker_capture",
+        "sl3_usbdk_plan",
+        "sl3_usbdk_rejects_modes",
+        "sl3_usbdk_rejects_duplex_capture",
+        "sl3_capture_plan",
+        "sl3_capture_rejects_modes"
+      ],
+      "queuePump": {
+        "testsPassed": true,
+        "librarySha256": "0FB7D953DFC67E6A4F3FC3388BA2EA43EE0D2B3F0E4225F39D1F34F82BEB44BC",
+        "testExecutableSha256": "26D6951E6BC298E21701BA4126FA4C2AA8F4D21BDBBA6975E889F40C1BB321F7",
+        "syntheticProcessBlocksTested": 7200,
+        "physicalAudioTested": false,
+        "continuousUsbSessionImplemented": false,
+        "comDllConnected": false
+      },
+      "audioRings": {
+        "testsPassed": true,
+        "testExecutableSha256": "BDC4CC4609630E903551FC7319166F4E5F987EA805A5B94E3870681916F04603",
+        "slotsPerDirection": 8,
+        "maximumPcmBytesPerBlock": 8064,
+        "mappingBytes": 196800,
+        "physicalAudioTested": false,
+        "asioConnected": false,
+        "allowedPacketCounts": [
+          8,
+          16,
+          24,
+          32,
+          40,
+          48,
+          56,
+          64
+        ]
+      },
+      "mailboxLibrarySha256": "176EA4474C693BAB24568C79666CE5F0AF2383FAA3436106D97BF7BA8F9B7666",
+      "fixtureSha256": "0A80C1775A6799569403DE74252E9060314490D0B7A9A9B5B797A7B8FFFC12F4",
+      "nativeUsbDkSha256": "9DBBEF16FFCE858448D2D6890DBEEDAA5480CDCAEB73C08240B55F30327E92E0"
+    }
+  ],
+  "testedInputSha256": {
+    "src/asio/com_identity.hpp": "358F892E11F17308D37FDCB8C82CEEA0171A3421D8472AC675F9E012783904AC",
+    "src/asio/sl3_asio.def": "5E364B9442615E09244CB1B261FFA63AFE3C0CFF6DFCB8FFB12BFA0C3101807D",
+    "artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/asiosys.h": "F44A1ED0FD7C056FF047AEEBC4C05A8C185F0585A24D8DEBC55C70107777DBEF",
+    "tests/native/audio_ring_tests.cpp": "6FAA2363178F43236A21BA2C9C0400FB6EF1A0B18A243C728CC297B79165546E",
+    "tests/native/asio_buffer_tests.cpp": "836427BDD4F97C52A2E61932066F1D7EC0DABD3813B60E8AE1C21C6A7800E371",
+    "src/windows/worker_process.cpp": "4191F7614D8DF20C47A317C2B30942874919AD125D6DA0297C4F0137233BE0E5",
+    "src/core/audio_bridge.hpp": "B43C7407F13CE72A9D10EF75B1023248876A3177DD23AC7D4E7D6BD2B98C2C5D",
+    "tests/native/asio_queue_tests.cpp": "7BB83FF02F442E231616B6FB462190C8BF85CB486CC6F8ABAA2EA9CB3190CC6A",
+    "src/asio/queue_pump.cpp": "D992A00414DDF48473E8BE3379CBFF22A16EFE0AD6FDF7E80FB8209B0E008169",
+    "src/windows/mailbox_layout.hpp": "EFD59EB3CDF03641A0B60AE820B04A8A476E432734A959EA72136612B065470B",
+    "CMakeLists.txt": "0515B7C5A359679F31E24C0F1B94CAB692DB2AFFA19D53A02ED7B3CA1832B2CE",
+    "src/windows/worker_process.hpp": "EC8E92629BA73694FFF28B661288177EB20B96CEF4C07595190CD34BB2A76E05",
+    "tests/native/duplex_tests.cpp": "0C200FDEC05A5C25069A0D3A2F66948F318A8A5EA3B8E22231E5CE90CF1A72E5",
+    "artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/iasiodrv.h": "86AD4788452C74823653CF57D4BD557C48BB6542D7E6EB7FFF80102C705A066D",
+    "src/windows/mailbox.hpp": "D95B841B8911A62E61AEE642ACDE18D09B9083047D61AD873DCA12BEB0C1411B",
+    "src/core/worker_protocol.cpp": "97584C60519909039BEA1A94FA56D67F789D1D0754F90A007BFC48FEDC398803",
+    "tests/native/mailbox_tests.cpp": "6DEE276721CB3DE4F56FD7D009E00C5997A3FA12E2BB5630BAD075DBD03925DF",
+    "tests/native/capture_tests.cpp": "CF54D91F245EA476FC704361483D53836861B4786F96839F9BF5E280F5935428",
+    "src/core/worker_protocol.hpp": "96A7E20FFBDF789DFB85255A8A66028E07EB040DC7D6F0ECBD4475BBAE0509C4",
+    "src/asio/buffer_set.cpp": "3B38534B2E014CE8D66B13053DA96BEDFC7C6850A21800182D4271D6B791C491",
+    "src/windows/diagnostic.hpp": "5659A28562D9B06D6D0B5C08EB94F5542BD32E319A6A27F71C1B8F4090F9CC71",
+    "src/core/capture.hpp": "B6215776FE4F5B88678E69970D7B9B0E4C810FA2DCF8549D1F2FA045B23073E3",
+    "src/core/capture.cpp": "F16B23870B216A581FB21425F58586FC46DE13A9AF520953C870BFAAE5420CD3",
+    "src/windows/mailbox.cpp": "E05AEC68FCD2F75D57F332000C2869F46D96167B979C31E9504AA7358F1682C5",
+    "src/core/audio_bridge.cpp": "6289660D879DFAB69AF7EDB6166F3A7C7AB45371C6766BCF3E1169255AB71435",
+    "artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/asio.h": "93D2F80D49B4AC9C963514E7C1307AB5111D8104246192233745BEB058534EA1",
+    "src/windows/usbdk_main.cpp": "408AB7D6CDD2425C9ECFB8F709C6F7945F5B1F4608520A767049ECA83DF0D82D",
+    "src/asio/queue_pump.hpp": "D23676CEA12545E17ACE1037DEAA529061A2D1CA6C83F8E9557AF1DE6906CB3F",
+    "third_party/usbdk/LICENSE": "09E8A9BCEC8067104652C168685AB0931E7868F9C8284B66F5AE6EDAE5F1130B",
+    "tests/native/audio_bridge_tests.cpp": "1A5AF82C40885B247AE95741F486D62951179D0AA21E7E288918331CF5C9E57B",
+    "src/windows/capture_main.cpp": "E8DF087CACD40F500E6A89FE4EB85ACB1ED2FD79D81034D7FF26BD37A0C52BEA",
+    "src/windows/audio_ring.hpp": "1648C9C81C5AC8D9C071AF7864F727A125FBAF4D061460E4686C284811D7DFB8",
+    "third_party/usbdk/README.md": "605C7FAA50A802736C21AC03D362C8962445168CDCDB9EDCE54C3D82E62B3B9D",
+    "src/windows/sl3_fixture.hpp": "F926D9EE87F0D9F02124D9514D50584F47235150180155D3A97DD3ACC73BC9F1",
+    "third_party/usbdk/UsbDkHelper.h": "09CAD2056278CD9DD5D74E66EC0115569662B6643EBC28660EEAB3F089A0020C",
+    "src/core/duplex.cpp": "D15A169E365DE5897F7168369969E765F8D7D01227B3461EC8F4917077D3BF2D",
+    "tests/native/worker_protocol_tests.cpp": "5D600E2FF7CC8EE493D5D319FE06335DE6497B985683C374E68F8BAC77781792",
+    "src/core/playback.cpp": "E8006A992A70BA9226E74D5E6CE49CA1D54F6214410FBD12A0C994A1CA32119B",
+    "third_party/usbdk/UsbDkData.h": "8F0A0F4F10D2D6FB371E48C7C9E82AF890CA75601EC4E5143949A42402D8CB83",
+    "src/asio/com_server.cpp": "A3EB822F4605670442C813792BDBB878DDEE710E5F1AB0E76D46D5CF48D666B4",
+    "tests/native/playback_tests.cpp": "90A8D63D3CAB5795D3199B1D7E5DD2EF22FA9978F85C37937606F4BF32E36B18",
+    "src/asio/buffer_set.hpp": "03F097B32D942E551283E005D2206A57D8B0D8ED2FE740B524435DFACCD1CA72",
+    "tests/native/worker_fixture.cpp": "60571F46CD35A04766DC7DAC8459662911257FB8DA520975CD877321BAFDB2D9",
+    "tests/native/worker_process_tests.cpp": "C643732877470F115443C27AFFF9659A71ADBB342690E20920BA51C87659B66F",
+    "src/core/playback.hpp": "B56A303B0259C57B5999B2E80BCF260FE53575C158D224EEC4EA01ED8E56454B",
+    "tests/native/asio_com_tests.cpp": "1183E9585F1F9A4E5A32F940B8239FDA50140CF7299D7F32CB106DBF8E789040",
+    "tests/native/audio_pattern.hpp": "80F47CD01D32A8A73635BBF8ED3D7B55ED9ECB1F2745289881C9A879972D41CB",
+    "src/core/duplex.hpp": "20E32A03C471A0751CCB3EE90DBD49252BFA87E387C45A9BE03FF185011819DC"
+  },
+  "buildScriptSha256": "0E50F9E8BAD04866DD6974F20D1A6A2C2D118CB700345AAFD0109702140479DA",
+  "sdkFree": {
+    "testsPassed": 14,
+    "sdkPathAbsent": true,
+    "testLogSha256": "22289F940C07E60140CE8ED39F9E42A35D24B1FD5E28DF90BC61CEB36792B01F"
+  },
+  "readOnlyPreflight": {
+    "path": "tests/results/local/usbdk-preflight-10.json",
+    "sha256": "C7A7A649B7E6E949711BD12D8A0D742121E4DB83082ACAFB87FEFDF9D73B4DFF",
+    "utc": "2026-10-27T02:54:48.8180755Z",
+    "service": [],
+    "helperLoaded": false,
+    "audioSubmissions": 0,
+    "secureBoot": {
+      "known": false,
+      "reason": "Unable to set proper privileges. Access was denied."
+    }
+  },
+  "workerCheck": {
+    "utc": "2026-10-27T02:56:54.1101185Z",
+    "sha256": "8FE1AB71D563391358BF49BB38D0D5776CDDB69C13C144E66540A1E1EBB65421",
+    "workersAlive": 0
+  },
+  "wire": {
+    "version": 3,
+    "slotBytes": 8192,
+    "mappingBytes": 196800,
+    "activeCountOffset": 24,
+    "allowedActiveCounts": [
+      8,
+      16,
+      24,
+      32,
+      40,
+      48,
+      56,
+      64
+    ],
+    "inactiveCountsMustBeZero": true,
+    "packetFrames": "1..7 actual six-channel frames",
+    "priorVersion2Rejected": true,
+    "diagnosticCommandProtocolVersion": 1
+  },
+  "testedContract": {
+    "fullSdkPathProcessBlocksPerConfiguration": 7200,
+    "queueProcessRoundTripsPerConfiguration": 2000,
+    "metadataRatesHz": [
+      44100,
+      48000
+    ],
+    "hostBanksFrames": [
+      64,
+      128,
+      1024
+    ],
+    "batchScenarios": [
+      "mixed 8..64",
+      "fixed 8",
+      "fixed 64"
+    ],
+    "allActualPcmChecked": true,
+    "allLogicalChannelsAndSigned24ExtremaChecked": true,
+    "framesAndPositionsConserved": true,
+    "maximumCallbacksPerFixedEightStep": 1,
+    "badLocalAndWireCountsRejected": true,
+    "nonzeroInactiveMetadataRejected": true,
+    "callerOutputUnchangedOnRejection": true,
+    "fullQueueExactRetryAndExplicitDiscardChecked": true,
+    "localSuccessfulMixedBlocksMeasuredForCppNew": 1000,
+    "observedCppNewAllocations": 0,
+    "childJobsRetired": true
+  },
+  "limits": {
+    "nativeWorkerStillFiniteOnly": true,
+    "continuousUsbSessionImplemented": false,
+    "asioDeviceInitializationAvailable": false,
+    "callbackPacingOrPhysicalTimingMeasured": false,
+    "physicalAudioOrSeratoDvsTested": false,
+    "macValidated": false,
+    "realTimeGuarantee": false,
+    "successiveStepsCanStillBunchCallbacks": true,
+    "shortBatchBusDurationIsPlanningOnly": true
+  },
+  "primarySource": "https://learn.microsoft.com/en-us/windows-hardware/drivers/usbcon/transfer-data-to-isochronous-endpoints"
+}

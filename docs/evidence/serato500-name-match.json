@@ -1,0 +1,34 @@
+{
+  "scope": "Static name normalization and matcher call boundary; no runtime matching or integration test",
+  "binarySha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "installedIdentityMatches": true,
+  "focusedReports": {
+    "serato500-name-match-01.json": "493d197c0ebb9f9c327f7e5318bef952d6385fb613f193ee0d1bcda51f094394",
+    "serato500-name-match-02.json": "40508fe4a7b96d5431f29fbf8bbd775acb0665d9cd6b96e5d9becdeec1d40402",
+    "serato500-name-match-03.json": "b8ab3cc83ae09023d858b543f0649aa78b28524dbe4372a0773cb62366b221ec"
+  },
+  "normalizationExpression": "(\\d+\\s*-\\s+)?(.+)",
+  "normalizationResult": "Focused code selects capture group 2 after a successful match, otherwise copies original input",
+  "descriptorPatternSyntaxArgument": 1,
+  "matcherAddedFlags": 16,
+  "matcherFinalBooleanArgument": true,
+  "assembly": [
+    "140b21cb2: call 0x140b220c0",
+    "140b21d0e: mov dword ptr [rsp + 0x20], 1",
+    "140b21d23: call 0x140b1c2c0",
+    "140b21d9b: xor r8d, r8d",
+    "140b21da7: call 0x140b1bc50",
+    "140b21dac: movzx esi, al",
+    "140b21e65: movzx eax, sil",
+    "140b1bc54: or r8d, 0x10",
+    "140b1bc71: mov byte ptr [rsp + 0x28], 1",
+    "140b1bc7e: call 0x140b1b170"
+  ],
+  "limits": [
+    "Regex-library interpretation is static, not execution of the vendor matcher",
+    "Exact engine semantics and exceptional/locale behavior not exhaustively recovered",
+    "No descriptor/provider installation route or physical Serato connection established"
+  ],
+  "vendorCodeExecuted": false,
+  "applicationChanges": false
+}

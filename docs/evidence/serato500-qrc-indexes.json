@@ -1,0 +1,385 @@
+{
+  "scope": "Nine registered external Qt bundles and eleven explicit embedded registration call sites; indexes only",
+  "binarySha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "installedMatches": true,
+  "dynamicRegistrationCallVas": [
+    "0x140b0ac25",
+    "0x140b0acd8",
+    "0x140b0ad81",
+    "0x140b0ae29",
+    "0x140b0aed1",
+    "0x140b0af7a",
+    "0x140b0b02f",
+    "0x140b0b0ce",
+    "0x140b0b14d"
+  ],
+  "bundles": {
+    "sdj_variant_resources.bin": {
+      "encryptedSha256": "bd43ee3a6d9cb5de28b6c3a60183b1fda346cedc6c12482013f01117269b963e",
+      "decodedSha256": "0dfba5fd59f7be30ebedf230db4d746ea1ab5987303ab8e4a27a7caeb103c113",
+      "nodes": 51,
+      "files": 46,
+      "rootCounts": {
+        "modules": 46
+      },
+      "compressionFlagCounts": {
+        "0": 34,
+        "1": 12
+      },
+      "indexSha256": "0933f98c003456152ae4c6b6b698458039eec9075c8cb9247fe393fccad28e40",
+      "deviceFolderPaths": [],
+      "userioNamedPaths": [],
+      "sl3NamedPaths": []
+    },
+    "dj_resources_common.bin": {
+      "encryptedSha256": "e0bb18ccbf03202eb2ffde89457aa8a5fe8b4b8984c950c1282ec96e6ae47a81",
+      "decodedSha256": "bd295cc5c16eff6276f0b3b691b7837ed6e87264dde053ca869a133dc0d4d15b",
+      "nodes": 2971,
+      "files": 2964,
+      "rootCounts": {
+        "modules": 2964
+      },
+      "compressionFlagCounts": {
+        "0": 2516,
+        "1": 448
+      },
+      "indexSha256": "2cec139b422a5178e1d104909024c80a1d44329f7c1adc1fdec8f8f29c1f654c",
+      "deviceFolderPaths": [],
+      "userioNamedPaths": [
+        "/modules/Common/UserIO.qml"
+      ],
+      "sl3NamedPaths": []
+    },
+    "dj_resources_fonts.bin": {
+      "encryptedSha256": "05f34a95cd3e7e6f44be9dd40f41c46d3b489ddd84c90acf05f798f73816b489",
+      "decodedSha256": "dfab4b9c03606912736212d9c10f333149b2072af42e237f5d633cd158973f85",
+      "nodes": 12,
+      "files": 10,
+      "rootCounts": {
+        "fonts": 10
+      },
+      "compressionFlagCounts": {
+        "0": 10
+      },
+      "indexSha256": "68d3f9d20dc8f979f98b8557d6ef31dbeb761771555b11faee4e0aab3118e0f0",
+      "deviceFolderPaths": [],
+      "userioNamedPaths": [],
+      "sl3NamedPaths": []
+    },
+    "dj_resources_html.bin": {
+      "encryptedSha256": "b4e2a787572ee2db9bd38e62db0642169d71dcd92464115645e8a8ec66196043",
+      "decodedSha256": "11c93d4c83eeb64ccddd4ab5fb802362a7a789dface279d0b6c90bdae52f8e3d",
+      "nodes": 3,
+      "files": 1,
+      "rootCounts": {
+        "html": 1
+      },
+      "compressionFlagCounts": {
+        "0": 1
+      },
+      "indexSha256": "6e019e6340731c502a48e53c2e577525529352299ea4ceea96ffd1e90a807533",
+      "deviceFolderPaths": [],
+      "userioNamedPaths": [],
+      "sl3NamedPaths": []
+    },
+    "dj_resources_dark.bin": {
+      "encryptedSha256": "00b525e16f0d30c87453f4f8964630ca11b04e5ac6795d50f3602eff9757b4f3",
+      "decodedSha256": "2082d708f5053a9c31d59afa2502c2f229655d10118f11c126446131bde09993",
+      "nodes": 3269,
+      "files": 3266,
+      "rootCounts": {
+        "legacy_gui_resource": 3266
+      },
+      "compressionFlagCounts": {
+        "0": 3261,
+        "1": 5
+      },
+      "indexSha256": "c9ad8f947e294f663a42c33ef76fb3e03472730e610ac5395a513021344e895b",
+      "deviceFolderPaths": [],
+      "userioNamedPaths": [],
+      "sl3NamedPaths": []
+    },
+    "dj_resources_light.bin": {
+      "encryptedSha256": "20e21ac4666b6123f180e847a4c7f372fd72e756ed8ffcaae33d28211f04dc6e",
+      "decodedSha256": "c0027de9c4807bbf4bf93c17dd1d340c8ee470c58a2223882c7b30cf15eebd16",
+      "nodes": 1473,
+      "files": 1470,
+      "rootCounts": {
+        "legacy_gui_resource": 1470
+      },
+      "compressionFlagCounts": {
+        "0": 584,
+        "1": 886
+      },
+      "indexSha256": "2663427fdd9f13aa2c24ea2b06b50c5c985170c9d6a07b5b0fe1bcfd98685906",
+      "deviceFolderPaths": [],
+      "userioNamedPaths": [],
+      "sl3NamedPaths": []
+    },
+    "dj_resources_scratch_live.bin": {
+      "encryptedSha256": "8224eacf44a384fa50fad483173bca184e3e2995dd02413963739e35e20b124a",
+      "decodedSha256": "5ad43c798658b17cceae8165de36afa8b4c20035a766873aed5d0e5cedc96fdd",
+      "nodes": 68,
+      "files": 65,
+      "rootCounts": {
+        "legacy_gui_resource": 65
+      },
+      "compressionFlagCounts": {
+        "0": 65
+      },
+      "indexSha256": "689e77678f2dac7657e5dba4eacabdf379d63b16fb269adee1b72314d99ab334",
+      "deviceFolderPaths": [],
+      "userioNamedPaths": [],
+      "sl3NamedPaths": []
+    },
+    "dj_resources_shaders.bin": {
+      "encryptedSha256": "a9e7fad8a8386b469cb4f18fc493d7ca98b23c00b85f09fb4b13b0bee13233ba",
+      "decodedSha256": "3d125ac53aa20b6862665ec5dc5694d3a77b74f99227c7e4397f6d7a2ac38f4a",
+      "nodes": 10,
+      "files": 8,
+      "rootCounts": {
+        "Metal_Shaders": 8
+      },
+      "compressionFlagCounts": {
+        "0": 8
+      },
+      "indexSha256": "15d401e3f387fc2d5738e986281bf1f06a90ce519fe58e12f7e9768c770788e1",
+      "deviceFolderPaths": [],
+      "userioNamedPaths": [],
+      "sl3NamedPaths": []
+    },
+    "dj_resources_localization.bin": {
+      "encryptedSha256": "fb7649b458b15ea7de0dc65579c92bfa69e683795aff1368e11717f28eafcd4c",
+      "decodedSha256": "d15c79e47c776075529de1418c427141b316b9d09b857a079d45279969e06a23",
+      "nodes": 16,
+      "files": 14,
+      "rootCounts": {
+        "localization": 14
+      },
+      "compressionFlagCounts": {
+        "0": 2,
+        "1": 12
+      },
+      "indexSha256": "b226f5a9669c1fab41efcc016e609b836177bba10889b8cca95b2dc1c931a60a",
+      "deviceFolderPaths": [],
+      "userioNamedPaths": [],
+      "sl3NamedPaths": []
+    }
+  },
+  "embedded": [
+    {
+      "callVa": "0x1407641ae",
+      "treeVa": "0x142857b00",
+      "namesVa": "0x1428578c0",
+      "payloadVa": "0x142853690",
+      "nodes": 12,
+      "files": 10,
+      "rootCounts": {
+        "shaders": 10
+      },
+      "compressionFlagCounts": {
+        "0": 10
+      },
+      "indexSha256": "0c2c81995e838bc93f1eeee94c65c4c8628a869108bf367a08cf248334c46943",
+      "deviceFolderPaths": [],
+      "userioNamedPaths": [],
+      "sl3NamedPaths": []
+    },
+    {
+      "callVa": "0x1408d70fe",
+      "treeVa": "0x1428a6230",
+      "namesVa": "0x1428a61c0",
+      "payloadVa": "0x1428a0ea0",
+      "nodes": 4,
+      "files": 2,
+      "rootCounts": {
+        "shaders": 2
+      },
+      "compressionFlagCounts": {
+        "0": 2
+      },
+      "indexSha256": "4167ee7910fbcbc651ab69dd9afc92f09781cc096971016355cf61ccff5d2359",
+      "deviceFolderPaths": [],
+      "userioNamedPaths": [],
+      "sl3NamedPaths": []
+    },
+    {
+      "callVa": "0x1408d716e",
+      "treeVa": "0x1428fa5c0",
+      "namesVa": "0x1428fa410",
+      "payloadVa": "0x1428a6290",
+      "nodes": 11,
+      "files": 9,
+      "rootCounts": {
+        "emoji_data": 9
+      },
+      "compressionFlagCounts": {
+        "1": 9
+      },
+      "indexSha256": "5c83fb978a81d0b20d5d2a77abc34e28c4270e394e3cb8011a6d296d4493fc87",
+      "deviceFolderPaths": [],
+      "userioNamedPaths": [],
+      "sl3NamedPaths": []
+    },
+    {
+      "callVa": "0x14093aa2e",
+      "treeVa": "0x14290b7c0",
+      "namesVa": "0x14290b770",
+      "payloadVa": "0x14290b230",
+      "nodes": 6,
+      "files": 1,
+      "rootCounts": {
+        "qt": 1
+      },
+      "compressionFlagCounts": {
+        "0": 1
+      },
+      "indexSha256": "97af823a89cdc3fef46f0293fc006c2b440d9287d3113e16d3072c3a8d4c8b79",
+      "deviceFolderPaths": [],
+      "userioNamedPaths": [],
+      "sl3NamedPaths": []
+    },
+    {
+      "callVa": "0x14093aa9e",
+      "treeVa": "0x142ab7f50",
+      "namesVa": "0x142ab6130",
+      "payloadVa": "0x14290b850",
+      "nodes": 172,
+      "files": 166,
+      "rootCounts": {
+        "qt": 166
+      },
+      "compressionFlagCounts": {
+        "0": 165,
+        "1": 1
+      },
+      "indexSha256": "2896ee8be3ef558d1e6e880bb0a9da6de15478cec9f8cc8553dc2d1e714b752b",
+      "deviceFolderPaths": [],
+      "userioNamedPaths": [],
+      "sl3NamedPaths": []
+    },
+    {
+      "callVa": "0x1409c89ae",
+      "treeVa": "0x142b83410",
+      "namesVa": "0x142b833c0",
+      "payloadVa": "0x142b82a50",
+      "nodes": 6,
+      "files": 1,
+      "rootCounts": {
+        "qt": 1
+      },
+      "compressionFlagCounts": {
+        "0": 1
+      },
+      "indexSha256": "d94c8751857eb2268c37aa316f76adb7d133ebfe1fa5f2b0fb2564d9e9d92a3a",
+      "deviceFolderPaths": [],
+      "userioNamedPaths": [],
+      "sl3NamedPaths": []
+    },
+    {
+      "callVa": "0x1409c8a1e",
+      "treeVa": "0x142c8c150",
+      "namesVa": "0x142c8b1b0",
+      "payloadVa": "0x142b834a0",
+      "nodes": 100,
+      "files": 93,
+      "rootCounts": {
+        "qt": 93
+      },
+      "compressionFlagCounts": {
+        "0": 91,
+        "1": 2
+      },
+      "indexSha256": "d30c6719621372ed0764b09602435746af4de9221a3a06f9f780f3fff6d36aa1",
+      "deviceFolderPaths": [],
+      "userioNamedPaths": [],
+      "sl3NamedPaths": []
+    },
+    {
+      "callVa": "0x140abefbe",
+      "treeVa": "0x142db4f40",
+      "namesVa": "0x142db4ed0",
+      "payloadVa": "0x142db4900",
+      "nodes": 7,
+      "files": 1,
+      "rootCounts": {
+        "qt": 1
+      },
+      "compressionFlagCounts": {
+        "0": 1
+      },
+      "indexSha256": "114a108f13047864b0b4065c7c414ec8cd877827ee72fdcf84d71519bdc16ea1",
+      "deviceFolderPaths": [],
+      "userioNamedPaths": [],
+      "sl3NamedPaths": []
+    },
+    {
+      "callVa": "0x140abf01e",
+      "treeVa": "0x142db55d0",
+      "namesVa": "0x142db5060",
+      "payloadVa": "0x142db4fe0",
+      "nodes": 37,
+      "files": 31,
+      "rootCounts": {
+        "qt": 31
+      },
+      "compressionFlagCounts": {
+        "0": 31
+      },
+      "indexSha256": "fba626d9f2dab1dbd50f191b65a0c695716203eda1b88db2a3fce15740c9b2e6",
+      "deviceFolderPaths": [],
+      "userioNamedPaths": [],
+      "sl3NamedPaths": []
+    },
+    {
+      "callVa": "0x140addd6e",
+      "treeVa": "0x142de6b50",
+      "namesVa": "0x142de6af0",
+      "payloadVa": "0x142de68e0",
+      "nodes": 6,
+      "files": 1,
+      "rootCounts": {
+        "qt": 1
+      },
+      "compressionFlagCounts": {
+        "0": 1
+      },
+      "indexSha256": "3879908b06b2baf38d38198d6491569266c0d9e2d16e8a974361e318c426c880",
+      "deviceFolderPaths": [],
+      "userioNamedPaths": [],
+      "sl3NamedPaths": []
+    },
+    {
+      "callVa": "0x140adddce",
+      "treeVa": "0x142e4b440",
+      "namesVa": "0x142e4b150",
+      "payloadVa": "0x142de6be0",
+      "nodes": 23,
+      "files": 17,
+      "rootCounts": {
+        "qt": 17
+      },
+      "compressionFlagCounts": {
+        "0": 17
+      },
+      "indexSha256": "2ce0d8b70c8e36808ddd889d3ee75ac310b029e6314376150456562adae97ebe",
+      "deviceFolderPaths": [],
+      "userioNamedPaths": [],
+      "sl3NamedPaths": []
+    }
+  ],
+  "vendorCodeExecuted": false,
+  "payloadsExported": false,
+  "limits": [
+    "No file payload interpretation, XML scalar-identity search, locale selection emulation or runtime provider trace",
+    "Embedded inspection covers the listed direct calls and their reachable nodes, not every possible indirect registration",
+    "No loose descriptor route, modified resource, accepted device, audio or DVS result is established"
+  ],
+  "parserChecks": {
+    "testsPassed": 6,
+    "logSha256": "9814197b85224a15a99fde7ce16397bce43008a3579091d2d4ff8688b59de3b3",
+    "testSourceSha256": "eaa57388379db786853834bcc57823ee87f1bdd1b73cb113dd210d24fe1aa695",
+    "inspectorSha256": "ed5f3f13db5e398d1ad83240b81eab3f5b697d98db074b96cfed90b2ac82f945"
+  },
+  "finding": "No indexed member under userio/userio_partner/userio_hidden_from_partners and no SL3-named file within these checked inputs"
+}

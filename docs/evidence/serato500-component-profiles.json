@@ -1,0 +1,422 @@
+{
+  "scope": "Allowlisted descriptor data plus original MIDI getter/component-count branch; no device or application execution",
+  "binarySha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "archiveSha256": "872fc4fdad2eab2ddd34387d2d3c04dd9731c84798d9fdc7bd05ca54e1567db8",
+  "allMemberCrcsVerified": true,
+  "recognizedProfiles": 197,
+  "kindCounts": {
+    "native_pro_device": 65,
+    "osa_device": 56,
+    "native_intro_device": 76
+  },
+  "midiDeclarationHistogram": {
+    "value:none": 15,
+    "<absent>": 179,
+    "value:duplex": 1,
+    "value:in": 2
+  },
+  "allProfilesMetadataSha256": "8e91cd8a98c0675d4c64fc15da4d9978447c165f4457416e63c893a2dbdeb655",
+  "selectedProfiles": [
+    {
+      "resource": "audio/serato_virtual_audio.xml",
+      "kind": "native_pro_device",
+      "fields": {
+        "vendor_id": "0xFFFF",
+        "product_id": "0xFFFF",
+        "midi_direction": "none",
+        "requires_usb": "false",
+        "handshake_type": "HANDSHAKE_TYPE_NONE",
+        "win_audio_api": "WDMKS",
+        "num_decks": "2"
+      },
+      "xmlSha256": "ca748822228aaae9eb1b6064a5d5ac166ed4f34fdc31694386c22ee7c520d36d",
+      "zipCrc32": 1902309208,
+      "controllerDescriptorMidiGetterProjection": 0,
+      "midiContributionIfThisGetterAndBranchUsed": 0
+    },
+    {
+      "resource": "hid/hid_mwm_phase.xml",
+      "kind": "osa_device",
+      "fields": {
+        "vendor_id": "0x00f1",
+        "product_id": "0x01f1",
+        "midi_direction": "none",
+        "has_hid": "true",
+        "handshake_type": "HANDSHAKE_TYPE_SERATO_DJ_HID"
+      },
+      "xmlSha256": "693edf04fdae38cb95e129880f0a2fe6c7726128422f785454e95607e13763e0",
+      "zipCrc32": 2332168342,
+      "controllerDescriptorMidiGetterProjection": 0,
+      "midiContributionIfThisGetterAndBranchUsed": 0
+    },
+    {
+      "resource": "hid/hid_traktor_kontrol_z2.xml",
+      "kind": "native_intro_device",
+      "fields": {
+        "vendor_id": "0x17CC",
+        "product_id": "0x1130",
+        "midi_direction": "none",
+        "has_hid": "true",
+        "win_audio_api": "ASIO",
+        "win_audio_device_name": "Traktor Kontrol Z2",
+        "num_decks": "2",
+        "dvs_device": "DVS_DEVICE_REQUIRES_AUTH",
+        "dvs_only_device": "true"
+      },
+      "xmlSha256": "92e83c0abcc677632473adcb6a19c3c463f38ba783c1de9efa200b771c6ecdd9",
+      "zipCrc32": 3527149272,
+      "controllerDescriptorMidiGetterProjection": 0,
+      "midiContributionIfThisGetterAndBranchUsed": 0
+    },
+    {
+      "resource": "midi/midi_denon_ds1.xml",
+      "kind": "native_pro_device",
+      "fields": {
+        "vendor_id": "0x15E4",
+        "product_id": "0x8003",
+        "requires_usb": "true",
+        "handshake_type": "HANDSHAKE_TYPE_SERATO_DJ",
+        "win_audio_api": "ASIO",
+        "win_audio_device_name": "Denon DJ DS1 ASIO",
+        "num_decks": "2",
+        "dvs_device": "DVS_DEVICE_YES",
+        "dvs_only_device": "true"
+      },
+      "xmlSha256": "483139190398ef93c246e80d40f69459212db891debcc50f19a20181b3ea02c0",
+      "zipCrc32": 44587739,
+      "controllerDescriptorMidiGetterProjection": 3,
+      "midiContributionIfThisGetterAndBranchUsed": 1
+    },
+    {
+      "resource": "midi/midi_reloop_flux.xml",
+      "kind": "native_pro_device",
+      "fields": {
+        "vendor_id": "0x26AD",
+        "product_id": "0xB14D",
+        "has_hid": "false",
+        "handshake_type": "HANDSHAKE_TYPE_SERATO_DJ",
+        "win_audio_api": "ASIO",
+        "win_audio_device_name": "Reloop",
+        "num_decks": "3",
+        "dvs_device": "DVS_DEVICE_YES",
+        "dvs_only_device": "true"
+      },
+      "xmlSha256": "4a69ac9434211e003939c701fe8cfbcd903b5094f825b0f6bdb00cf72abe80eb",
+      "zipCrc32": 4124127772,
+      "controllerDescriptorMidiGetterProjection": 3,
+      "midiContributionIfThisGetterAndBranchUsed": 1
+    },
+    {
+      "resource": "midi/midi_reloop_flux_go.xml",
+      "kind": "native_pro_device",
+      "fields": {
+        "vendor_id": "0x26AD",
+        "product_id": "0xBEF8",
+        "handshake_type": "HANDSHAKE_TYPE_SERATO_DJ",
+        "win_audio_api": "ASIO",
+        "win_audio_device_name": "Reloop",
+        "num_decks": "2",
+        "dvs_device": "DVS_DEVICE_YES",
+        "dvs_only_device": "true"
+      },
+      "xmlSha256": "e193cfc8e1536e0f0051e93cdfb02eaeffa8e9f14190ba71623311520795b7fd",
+      "zipCrc32": 893957959,
+      "controllerDescriptorMidiGetterProjection": 3,
+      "midiContributionIfThisGetterAndBranchUsed": 1
+    }
+  ],
+  "explicitNoMidiResources": [
+    "audio/serato_virtual_audio.xml",
+    "hid/hid_atc_cdj_1500x.xml",
+    "hid/hid_atc_cdj_3000x.xml",
+    "hid/hid_mwm_phase.xml",
+    "hid/hid_pioneer_cdj_2000.xml",
+    "hid/hid_pioneer_cdj_2000_NXS2.xml",
+    "hid/hid_pioneer_cdj_2000_nexus.xml",
+    "hid/hid_pioneer_cdj_3000.xml",
+    "hid/hid_pioneer_cdj_850.xml",
+    "hid/hid_pioneer_cdj_900.xml",
+    "hid/hid_pioneer_cdj_900_nexus.xml",
+    "hid/hid_pioneer_xdj_1000.xml",
+    "hid/hid_traktor_kontrol_s2_mk3.xml",
+    "hid/hid_traktor_kontrol_s3.xml",
+    "hid/hid_traktor_kontrol_z2.xml"
+  ],
+  "explicitNoMidiKindCounts": {
+    "native_pro_device": 1,
+    "osa_device": 11,
+    "native_intro_device": 3
+  },
+  "explicitNoMidiWithHasHidTrue": 14,
+  "explicitNoMidiNativeProDeclaringDvsYes": 0,
+  "descriptorInterface": {
+    "vtable": "0x14281caf0",
+    "locator": "0x143261ea0",
+    "completeOffset": 16
+  },
+  "checkedInstructions": [
+    {
+      "va": "0x1405c90f6",
+      "bytes": "488d15e3452502",
+      "instruction": "lea rdx, [rip + 0x22545e3]"
+    },
+    {
+      "va": "0x1405c9100",
+      "bytes": "e89bec5401",
+      "instruction": "call 0x141b17da0"
+    },
+    {
+      "va": "0x1405c9105",
+      "bytes": "4885c0",
+      "instruction": "test rax, rax"
+    },
+    {
+      "va": "0x1405c9108",
+      "bytes": "7421",
+      "instruction": "je 0x1405c912b"
+    },
+    {
+      "va": "0x1405c911f",
+      "bytes": "488d8ee0030000",
+      "instruction": "lea rcx, [rsi + 0x3e0]"
+    },
+    {
+      "va": "0x1405c9126",
+      "bytes": "e855efedff",
+      "instruction": "call 0x1404a8080"
+    },
+    {
+      "va": "0x1405c6f0a",
+      "bytes": "488d99d0030000",
+      "instruction": "lea rbx, [rcx + 0x3d0]"
+    },
+    {
+      "va": "0x1405c6f19",
+      "bytes": "bf03000000",
+      "instruction": "mov edi, 3"
+    },
+    {
+      "va": "0x1405c6f2a",
+      "bytes": "41bf02000000",
+      "instruction": "mov r15d, 2"
+    },
+    {
+      "va": "0x1405c6f30",
+      "bytes": "488d1521642502",
+      "instruction": "lea rdx, [rip + 0x2256421]"
+    },
+    {
+      "va": "0x1405c6f41",
+      "bytes": "e8aa92b501",
+      "instruction": "call 0x1421201f0"
+    },
+    {
+      "va": "0x1405c6f4a",
+      "bytes": "493bf7",
+      "instruction": "cmp rsi, r15"
+    },
+    {
+      "va": "0x1405c6f46",
+      "bytes": "85c0",
+      "instruction": "test eax, eax"
+    },
+    {
+      "va": "0x1405c6f48",
+      "bytes": "750c",
+      "instruction": "jne 0x1405c6f56"
+    },
+    {
+      "va": "0x1405c6f4d",
+      "bytes": "7507",
+      "instruction": "jne 0x1405c6f56"
+    },
+    {
+      "va": "0x1405c6f54",
+      "bytes": "eb6e",
+      "instruction": "jmp 0x1405c6fc4"
+    },
+    {
+      "va": "0x1405c6f4f",
+      "bytes": "b801000000",
+      "instruction": "mov eax, 1"
+    },
+    {
+      "va": "0x1405c6f60",
+      "bytes": "483bf7",
+      "instruction": "cmp rsi, rdi"
+    },
+    {
+      "va": "0x1405c6f63",
+      "bytes": "488d15f2632502",
+      "instruction": "lea rdx, [rip + 0x22563f2]"
+    },
+    {
+      "va": "0x1405c6f74",
+      "bytes": "e87792b501",
+      "instruction": "call 0x1421201f0"
+    },
+    {
+      "va": "0x1405c6f7d",
+      "bytes": "483bf7",
+      "instruction": "cmp rsi, rdi"
+    },
+    {
+      "va": "0x1405c6f82",
+      "bytes": "418bc7",
+      "instruction": "mov eax, r15d"
+    },
+    {
+      "va": "0x1405c6f79",
+      "bytes": "85c0",
+      "instruction": "test eax, eax"
+    },
+    {
+      "va": "0x1405c6f7b",
+      "bytes": "750a",
+      "instruction": "jne 0x1405c6f87"
+    },
+    {
+      "va": "0x1405c6f80",
+      "bytes": "7505",
+      "instruction": "jne 0x1405c6f87"
+    },
+    {
+      "va": "0x1405c6f85",
+      "bytes": "eb3d",
+      "instruction": "jmp 0x1405c6fc4"
+    },
+    {
+      "va": "0x1405c6f9c",
+      "bytes": "b804000000",
+      "instruction": "mov eax, 4"
+    },
+    {
+      "va": "0x1405c6fa1",
+      "bytes": "488d1538f12302",
+      "instruction": "lea rdx, [rip + 0x223f138]"
+    },
+    {
+      "va": "0x1405c6fb2",
+      "bytes": "e83992b501",
+      "instruction": "call 0x1421201f0"
+    },
+    {
+      "va": "0x1405c6fb7",
+      "bytes": "85c0",
+      "instruction": "test eax, eax"
+    },
+    {
+      "va": "0x1405c6fb9",
+      "bytes": "7507",
+      "instruction": "jne 0x1405c6fc2"
+    },
+    {
+      "va": "0x1405c6fbb",
+      "bytes": "4883fb04",
+      "instruction": "cmp rbx, 4"
+    },
+    {
+      "va": "0x1405c6fbf",
+      "bytes": "0f44f8",
+      "instruction": "cmove edi, eax"
+    },
+    {
+      "va": "0x1405c6fc2",
+      "bytes": "8bc7",
+      "instruction": "mov eax, edi"
+    },
+    {
+      "va": "0x1421db993",
+      "bytes": "4533f6",
+      "instruction": "xor r14d, r14d"
+    },
+    {
+      "va": "0x1421db9dc",
+      "bytes": "e88f4ba2fe",
+      "instruction": "call 0x140c00570"
+    },
+    {
+      "va": "0x1421db9e8",
+      "bytes": "ff5010",
+      "instruction": "call qword ptr [rax + 0x10]"
+    },
+    {
+      "va": "0x1421db9eb",
+      "bytes": "418bfe",
+      "instruction": "mov edi, r14d"
+    },
+    {
+      "va": "0x1421db9ee",
+      "bytes": "85c0",
+      "instruction": "test eax, eax"
+    },
+    {
+      "va": "0x1421db9f0",
+      "bytes": "400f95c7",
+      "instruction": "setne dil"
+    },
+    {
+      "va": "0x1421dba37",
+      "bytes": "e8344ba2fe",
+      "instruction": "call 0x140c00570"
+    },
+    {
+      "va": "0x1421dba43",
+      "bytes": "ff5018",
+      "instruction": "call qword ptr [rax + 0x18]"
+    },
+    {
+      "va": "0x1421dba46",
+      "bytes": "0fb6f0",
+      "instruction": "movzx esi, al"
+    },
+    {
+      "va": "0x1421dba8c",
+      "bytes": "e8df4aa2fe",
+      "instruction": "call 0x140c00570"
+    },
+    {
+      "va": "0x1421dba98",
+      "bytes": "ff5028",
+      "instruction": "call qword ptr [rax + 0x28]"
+    },
+    {
+      "va": "0x1421dba9b",
+      "bytes": "0fb6c8",
+      "instruction": "movzx ecx, al"
+    },
+    {
+      "va": "0x1421dba9e",
+      "bytes": "03cf",
+      "instruction": "add ecx, edi"
+    },
+    {
+      "va": "0x1421dbaa0",
+      "bytes": "03ce",
+      "instruction": "add ecx, esi"
+    },
+    {
+      "va": "0x1421dbaa2",
+      "bytes": "898c2498000000",
+      "instruction": "mov dword ptr [rsp + 0x98], ecx"
+    }
+  ],
+  "comparisonImport": "VCRUNTIME140.dll!memcmp",
+  "midiGetter": {
+    "exactStrings": {
+      "in": 1,
+      "out": 2,
+      "none": 0
+    },
+    "emptyOrOther": 3,
+    "caseSensitive": true
+  },
+  "limits": [
+    "Missing fields remain absent in the report, not invented false/none values",
+    "Projection through the checked ControllerDescriptor getter does not prove each resource uses that concrete getter/constructor at runtime",
+    "Getter projections assume construction/parser state with no later mutation; no runtime support/connection prediction",
+    "Component sum applies only to the identified descriptor branch, not every device/connection path",
+    "Handshake/DVS labels do not expose authentication material or establish account entitlement",
+    "No resource writer, identity substitution, application/account change or admitted SL3 integration introduced"
+  ]
+}

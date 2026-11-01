@@ -1,0 +1,18 @@
+{
+  "scope": "Process supervision and synthetic record validation only; no actual libusb load or USB observation",
+  "supervisorImplemented": true,
+  "controlsTraceIntegrated": false,
+  "fullPythonTests": 100,
+  "supervisorTests": 11,
+  "actualHarmlessChildProcessesTested": true,
+  "actualUsbObserverTested": false,
+  "nativeRuntimeChanged": false,
+  "files": {
+    "scripts/supervise-usb-identity.py": "d36c13b7063fec9bc482e61ec1131f53b9f1e5d224656abda1ee356e4144b8a4",
+    "scripts/observe-sl3-usb-identity.py": "238aa772ef466832a6d63b020eab357b014a2eb998a1fb2662dd1a988c6e43ea",
+    "tests/test_usb_identity_supervisor.py": "365bc05215b9e3cfab7ed4507f7ea2f3e278794945c26ee7f85490495ce7f378",
+    "analysis/usb-identity-supervisor-tests.log": "c94bff7b1213610a36a6c909b931a2f9f7359d57ba7a25a5187961a09c8b6b52",
+    "analysis/usb-identity-supervisor-python-tests.log": "2e066a526f5755d96d97423cbb5e069fd722fe6aa0837ee0e28056eda685e033",
+    "analysis/usb-identity-supervisor-plan.json": "4eeb5bef8eef72ff4306fc8113cb95fd82f195f094475391472d824e64160119"
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "utc": "2026-10-27T02:33:12.452381+00:00",
+  "scope": "Fixed shared input/output queues and synthetic real-process tests only",
+  "builds": [
+    {
+      "configuration": "Release",
+      "utc": "2026-10-27T02:28:16.3370648Z",
+      "ctestTests": [
+        "sl3_core_tests",
+        "sl3_playback_tests",
+        "sl3_audio_bridge_tests",
+        "sl3_duplex_tests",
+        "sl3_asio_buffer_tests",
+        "sl3_asio_com_tests",
+        "sl3_mailbox_tests",
+        "sl3_audio_ring_tests",
+        "sl3_worker_process_tests",
+        "sl3_worker_protocol_tests",
+        "sl3_usbdk_rejects_worker_capture",
+        "sl3_usbdk_plan",
+        "sl3_usbdk_rejects_modes",
+        "sl3_usbdk_rejects_duplex_capture",
+        "sl3_capture_plan",
+        "sl3_capture_rejects_modes"
+      ],
+      "audioRings": {
+        "testsPassed": true,
+        "testExecutableSha256": "A032CF4872BD4E1BA91F12E1D011C248BA6B89D99525FB70C351D80DE194C646",
+        "slotsPerDirection": 8,
+        "maximumPcmBytesPerBlock": 8064,
+        "mappingBytes": 196800,
+        "physicalAudioTested": false,
+        "asioConnected": false
+      },
+      "mailbox": {
+        "testsPassed": true,
+        "librarySha256": "EA6319F1979A46D85BDA4AED81D409F0CA2B6C29840BDDD176EEC26356376F60",
+        "testExecutableSha256": "C1052180AD94D7A74403731F3B6D1EFA6348FC076E2407E108743C709E285FDE",
+        "maximumPayloadBytes": 32768,
+        "crossProcessFramingImplemented": true,
+        "continuousAudioImplemented": false,
+        "asioConnected": false,
+        "transportVersion": 2
+      },
+      "buildScriptSha256": "461DEBB7A6ECB928234A15323021487E2F98D5B4E637EC61D667BBBC6D128A7B"
+    },
+    {
+      "configuration": "Debug",
+      "utc": "2026-10-27T02:28:29.9442576Z",
+      "ctestTests": [
+        "sl3_core_tests",
+        "sl3_playback_tests",
+        "sl3_audio_bridge_tests",
+        "sl3_duplex_tests",
+        "sl3_asio_buffer_tests",
+        "sl3_asio_com_tests",
+        "sl3_mailbox_tests",
+        "sl3_audio_ring_tests",
+        "sl3_worker_process_tests",
+        "sl3_worker_protocol_tests",
+        "sl3_usbdk_rejects_worker_capture",
+        "sl3_usbdk_plan",
+        "sl3_usbdk_rejects_modes",
+        "sl3_usbdk_rejects_duplex_capture",
+        "sl3_capture_plan",
+        "sl3_capture_rejects_modes"
+      ],
+      "audioRings": {
+        "testsPassed": true,
+        "testExecutableSha256": "2DA0F3ED6E891C94B8AEC5C51B0479EC43555D034420C9A9D1EAAC5DEB45C12F",
+        "slotsPerDirection": 8,
+        "maximumPcmBytesPerBlock": 8064,
+        "mappingBytes": 196800,
+        "physicalAudioTested": false,
+        "asioConnected": false
+      },
+      "mailbox": {
+        "testsPassed": true,
+        "librarySha256": "825CBB5377CC98FAA46C054C7C669B972849A67A417CF190455E18818350FEA9",
+        "testExecutableSha256": "D8BB7DFFCD20E2B8B494F82D6CA63510B5288D51B16B9D4BB6D86271DBF7B7EA",
+        "maximumPayloadBytes": 32768,
+        "crossProcessFramingImplemented": true,
+        "continuousAudioImplemented": false,
+        "asioConnected": false,
+        "transportVersion": 2
+      },
+      "buildScriptSha256": "461DEBB7A6ECB928234A15323021487E2F98D5B4E637EC61D667BBBC6D128A7B"
+    }
+  ],
+  "sourceSha256": {
+    "src/windows/audio_ring.hpp": "ccf89ef0e74035c231e439098faa4e752818e64a8477333281074a1cebafb7c1",
+    "src/windows/mailbox.hpp": "d95b841b8911a62e61aee642acde18d09b9083047d61ad873dca12beb0c1411b",
+    "src/windows/mailbox_layout.hpp": "f6c578460cc62da7eb8e6fba9118a68f8d6eefded1808cb0a0b94bc60a28050a",
+    "src/windows/mailbox.cpp": "fb89ad7b1513d6cd222b9d78e61feb80c5cbc427e23a4de5e6a961dc54f15611",
+    "tests/native/audio_ring_tests.cpp": "457b649c24d3a0990e8886088d212c55d7f28f23e5ce8d63efb5e65db29f01ee",
+    "tests/native/worker_fixture.cpp": "a97ecf83921c851dd559e335060fa15d5ae0677cb957341feb659dde1ff5a64e",
+    "CMakeLists.txt": "d7aadd8512a372ca59ef82842b9475a27576fef8451683ccf7eec498bb8d4f77",
+    "scripts/build-native.ps1": "461debb7a6ecb928234a15323021487e2f98d5b4e637ec61d667bbbc6d128a7b"
+  },
+  "additionalChecks": {
+    "sdkFreeTestsPassed": 14,
+    "sdkFreePathDeliberatelyAbsent": true,
+    "crossProcessBlockRoundTripsPerTest": 2000,
+    "reportedRatesInSyntheticTests": [
+      44100,
+      48000
+    ],
+    "variablePacketLengthsAndEveryActualPcmByteChecked": true,
+    "successfulLocalPushPopPairsMeasuredForAllocations": 1000,
+    "observedCppNewAllocationsDuringMeasuredPairs": 0,
+    "fullQueueRetryCounterWrapAndFaultsChecked": true,
+    "dataWakeAndCloseWaitsChecked": true,
+    "noWorkersRemainAlive": true
+  },
+  "readOnlyPreflight": {
+    "recordSha256": "9d98d01477c76698ee74ac7609642c01b95cecd25aeffebfb15d41bd330618b5",
+    "nativeSha256": "810B9A382B1CC98F5C942C2101C84D7DADFCEE9678B60E0B68AD55405242C2B5",
+    "installedDriver": [],
+    "helperLoaded": false,
+    "secureBoot": {
+      "known": false,
+      "reason": "Unable to set proper privileges. Access was denied."
+    }
+  },
+  "transportVersion": 2,
+  "typedDiagnosticProtocolVersion": 1,
+  "continuousUsbSessionImplemented": false,
+  "asioConnected": false,
+  "physicalAudioTested": false,
+  "audioOutputSubmissions": 0,
+  "limits": [
+    "Synthetic packet times/rates are not physical clock/continuity/latency evidence",
+    "Zero observed C++ allocations does not prove hard real-time execution or page residency",
+    "Caller must retire all data/control threads before endpoint disposal",
+    "Concurrent close/fault may overlap an operation already in flight",
+    "The real diagnostic still advertises finite-input capabilities only"
+  ]
+}

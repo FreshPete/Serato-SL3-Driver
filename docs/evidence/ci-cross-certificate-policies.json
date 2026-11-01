@@ -1,0 +1,37 @@
+[
+  {
+    "PolicyID": "784c4414-79f4-4c32-a6a5-f0fb42a51d0d",
+    "BasePolicyID": "784c4414-79f4-4c32-a6a5-f0fb42a51d0d",
+    "FriendlyName": "Microsoft Windows Cross Certificates for Code Integrity Exceptions Audit Policy",
+    "Version": 2941928043708416,
+    "VersionString": "10.29611.0.0",
+    "IsSystemPolicy": true,
+    "IsSignedPolicy": true,
+    "IsOnDisk": true,
+    "IsEnforced": true,
+    "IsAuthorized": true,
+    "PolicyOptions": [
+      "Enabled:Audit Mode",
+      "Enabled:Inherit Default Policy",
+      "Enabled:Advanced Boot Options Menu",
+      "Enabled:Update Policy No Reboot"
+    ]
+  },
+  {
+    "PolicyID": "8f9cb695-5d48-48d6-a329-7202b44607e3",
+    "BasePolicyID": "8f9cb695-5d48-48d6-a329-7202b44607e3",
+    "FriendlyName": "Microsoft Windows Cross Certificates for Code Integrity Exceptions Policy",
+    "Version": 2941928043708416,
+    "VersionString": "10.29611.0.0",
+    "IsSystemPolicy": true,
+    "IsSignedPolicy": true,
+    "IsOnDisk": true,
+    "IsEnforced": true,
+    "IsAuthorized": true,
+    "PolicyOptions": [
+      "Enabled:Inherit Default Policy",
+      "Enabled:Advanced Boot Options Menu",
+      "Enabled:Update Policy No Reboot"
+    ]
+  }
+]

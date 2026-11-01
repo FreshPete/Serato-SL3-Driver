@@ -1,0 +1,10 @@
+[
+  {
+    "store": "Cert:\\CurrentUser\\My",
+    "currentlyValidCodeSigningCertificatesWithPrivateKey": 0
+  },
+  {
+    "store": "Cert:\\LocalMachine\\My",
+    "currentlyValidCodeSigningCertificatesWithPrivateKey": 0
+  }
+]

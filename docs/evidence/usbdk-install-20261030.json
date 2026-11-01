@@ -1,0 +1,46 @@
+{
+  "schema": "sl3.usbdk.install-review.v1",
+  "reviewedUtc": "2026-10-30T14:29:05.1145427Z",
+  "installRecordSha256": "598886743B5192D868A7B4BCCD67B91E6E127A049D5EDB189D0B5BA9C1B472A1",
+  "beforeStateSha256": "220D5F81BB9B1FF39EEF706B34EAD42B901811FDE9C4BB53C39590D7989AA652",
+  "afterStateSha256": "346517FA4F6C65081B16E4FF8CDC46243105FB78CAF071D35DD649644F2EB922",
+  "msiLogSha256": "5EF71700F1739CDF4CE1B64225CD951D060D55615D99F9DDAD07CC47D8FBB2E9",
+  "launchedScriptSha256": "3F57EFFA59316A39B3928CA6AD89C74A466C88F92BC3CF196102103A30E0E5D0",
+  "msiExitCode": 0,
+  "installerComplete": true,
+  "secureBootBefore": true,
+  "secureBootAfter": true,
+  "installedDriverSha256": "C92B6C15BD550023312AE4CFE49A39757952A3C2EBDC7D1D143AC5E695F69A63",
+  "installedHelperSha256": "66BBFE6F99B417F97C7A9E97816E24AF7DDE0E01B8E535C41E91E1C6C19CFEDA",
+  "driver": [
+    {
+      "Name": "UsbDk",
+      "State": "Running",
+      "StartMode": "Manual",
+      "PathName": "\\??\\C:\\WINDOWS\\System32\\Drivers\\UsbDk.sys"
+    }
+  ],
+  "usbDkCiRejectionEvents": [],
+  "restartRequired": true,
+  "restartRequirementSource": "Observed installer helper notice; acknowledged by owner",
+  "msiOnlyRestartFlag": false,
+  "msiFlagDoesNotOverrideNotice": true,
+  "fullInstallWithinTrace": false,
+  "traceStats": {
+    "eventsLost": 0,
+    "buffersLost": 0,
+    "eventCount": 15822,
+    "session": "SL3Startup-851bfdc1bb7347bbb8c776882f1c0a52",
+    "xmlSha256": "e1224f2bed96270cdea0ad3d412a86bc627d9d958ac457e894cd518ca60f5114"
+  },
+  "rawEtls": [
+    {
+      "name": "usb-startup_000001.etl",
+      "bytes": 6946816,
+      "sha256": "4F374B42F5BB06D7DE5E7C8B81BC99144474591EF55E352DD94DE6F08A35CF62"
+    }
+  ],
+  "physicalUsbTestRun": false,
+  "audioSubmissions": 0,
+  "nextStep": "Owner-performed Windows restart, then fresh preflight and traced descriptor-only List"
+}

@@ -1,0 +1,250 @@
+{
+  "currentBinarySha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "historicalBinarySha256": "ba8641d0329fe0c955147d2b45f247eeea82ac0f812fe30a339834dbe0c0a503",
+  "raneAsioSha256": "e3d88039547b70915b1a9bc9e3e3f7dba32aaa9bc3ce8fd51616565ea1734141",
+  "scope": "Static enum, parser, optional-rate accessor, alignment arithmetic and original buffer-size reporting; no runtime or physical operations",
+  "focusedReportSha256": {
+    "serato500-clock-enums-03.json": "f6f8518a61d549caa3789a1339a43f7eebcb9b4f8e49087f015d5e6d57ac7f5f",
+    "serato500-clock-accessor-02.json": "53d332fda9b9ca04e01980d8dd8443affc210c83d4cc85b23f5fdb8222a8d61a",
+    "serato500-audio-clock-setup-04.json": "b41b9257b4bbe2464f31869f7cbb1bd009b96171a11802f1f85dce133a701480",
+    "serato255-handshake-enum-12.json": "4866b8005596e31cb279fb783de2e548c42038c387d6df79e35b763a0c9e86cf",
+    "rane-asio-buffer-sizes-01.json": "61f80ba6a9cf3e5fdf8877d5e6d77850e13332dfaf52db7c59717d0673d1756f"
+  },
+  "currentHandshakeEnum": [
+    {
+      "name": "HANDSHAKE_TYPE_NONE",
+      "value": 0,
+      "labelReferenceVA": "0x1405c17df",
+      "integerStoreVA": "0x1405c1802"
+    },
+    {
+      "name": "HANDSHAKE_TYPE_SERATO_DJ",
+      "value": 1,
+      "labelReferenceVA": "0x1405c190b",
+      "integerStoreVA": "0x1405c1926"
+    },
+    {
+      "name": "HANDSHAKE_TYPE_NUMARK",
+      "value": 2,
+      "labelReferenceVA": "0x1405c1a29",
+      "integerStoreVA": "0x1405c1a4a"
+    },
+    {
+      "name": "HANDSHAKE_TYPE_VESTAX",
+      "value": 3,
+      "labelReferenceVA": "0x1405c1b5f",
+      "integerStoreVA": "0x1405c1b80"
+    },
+    {
+      "name": "HANDSHAKE_TYPE_NOVATION",
+      "value": 4,
+      "labelReferenceVA": "0x1405c1c5f",
+      "integerStoreVA": "0x1405c1c8b"
+    },
+    {
+      "name": "HANDSHAKE_TYPE_AKAI",
+      "value": 5,
+      "labelReferenceVA": "0x1405c1ccf",
+      "integerStoreVA": "0x1405c1cdf"
+    },
+    {
+      "name": "HANDSHAKE_TYPE_SERATO_DJ_HID",
+      "value": 6,
+      "labelReferenceVA": "0x1405c1d23",
+      "integerStoreVA": "0x1405c1d33"
+    },
+    {
+      "name": "HANDSHAKE_TYPE_ATC_HID_PIR",
+      "value": 7,
+      "labelReferenceVA": "0x1405c1d77",
+      "integerStoreVA": "0x1405c1d87"
+    }
+  ],
+  "historicalDriverApiValue": 5,
+  "currentUnknownHandshakeDefault": {
+    "completeObjectOffset": "0x154",
+    "value": 0,
+    "meaning": "HANDSHAKE_TYPE_NONE",
+    "assembly": [
+      "1405c8531: lea rcx, [rip + 0x38f6560]",
+      "1405c8538: call 0x1404ec7f0",
+      "1405c853d: mov rax, qword ptr [rbp + 0x2c8]",
+      "1405c8544: cmp rax, qword ptr [rip + 0x38f654d]",
+      "1405c854b: je 0x1405c8556",
+      "1405c854d: mov ecx, dword ptr [rax + 0x40]",
+      "1405c8550: mov dword ptr [rsi + 0x154], ecx",
+      "1405c8556: lea rcx, [rbp + 0x320]",
+      "1405c855d: call 0x1404a6a10",
+      "1405c8562: lea rcx, [rsi + 0x160]",
+      "1405c8569: call 0x1405cd970",
+      "1405c856e: lea rcx, [rbp + 0x400]",
+      "1405c8575: call 0x1404a67b0"
+    ]
+  },
+  "handshakeConsequence": "Old DRIVER_API XML is not recognized by this current map; copying old numeric 5 would select AKAI. Neither fallback nor a substituted kind is an implemented SL3 handshake.",
+  "optionalRate": {
+    "completeObjectOffset": "0x400",
+    "interfaceOffset": "0x10",
+    "slot": "0xA0",
+    "recognizedHz": [
+      44100.0,
+      48000.0,
+      96000.0
+    ],
+    "assembly": [
+      "1405c7180: mov eax, dword ptr [rcx + 0x3f0]",
+      "1405c7186: test eax, eax",
+      "1405c7188: je 0x1405c71de",
+      "1405c718a: cmp eax, 0xac44",
+      "1405c718f: je 0x1405c71c9",
+      "1405c7191: cmp eax, 0xbb80",
+      "1405c7196: je 0x1405c71b4",
+      "1405c7198: cmp eax, 0x17700",
+      "1405c719d: jne 0x1405c71de",
+      "1405c719f: movabs rax, 0x40f7700000000000",
+      "1405c71a9: mov byte ptr [rdx + 8], 1",
+      "1405c71ad: mov qword ptr [rdx], rax",
+      "1405c71b0: mov rax, rdx",
+      "1405c71b3: ret ",
+      "1405c71b4: movabs rax, 0x40e7700000000000",
+      "1405c71be: mov byte ptr [rdx + 8], 1",
+      "1405c71c2: mov qword ptr [rdx], rax",
+      "1405c71c5: mov rax, rdx",
+      "1405c71c8: ret ",
+      "1405c71c9: movabs rax, 0x40e5888000000000",
+      "1405c71d3: mov byte ptr [rdx + 8], 1",
+      "1405c71d7: mov qword ptr [rdx], rax",
+      "1405c71da: mov rax, rdx",
+      "1405c71dd: ret ",
+      "1405c71de: mov byte ptr [rdx + 8], 0",
+      "1405c71e2: mov rax, rdx",
+      "1405c71e5: ret "
+    ]
+  },
+  "alignment": {
+    "slot": "0xA8",
+    "function": "0x1405c6670",
+    "inputAbi": "RCX descriptor interface, XMM1 latency milliseconds, XMM2 rate Hz",
+    "legacyFlagCompleteOffset": "0x35C",
+    "alignmentMapCompleteOffset": "0x408",
+    "latencyOverheadCompleteOffset": "0x438",
+    "latencyOverheadDefault": true,
+    "formulaBeforeAlignment": "trunc(((latencyMs + (latencyMs < 5 && overhead ? 1 : 0)) / 1000) * rateHz + 0.5)",
+    "maximumFrames": 4096,
+    "assembly": [
+      "1405c6684: movaps xmm7, xmm2",
+      "1405c6687: movaps xmm6, xmm1",
+      "1405c668a: mov rbx, rcx",
+      "1405c668d: movsd xmm0, qword ptr [rip + 0x223ea0b]",
+      "1405c6695: comisd xmm0, xmm1",
+      "1405c6699: jbe 0x1405c66b0",
+      "1405c669b: mov rax, qword ptr [rcx]",
+      "1405c669e: call qword ptr [rax + 0xb0]",
+      "1405c66a4: test al, al",
+      "1405c66a6: je 0x1405c66b0",
+      "1405c66a8: addsd xmm6, qword ptr [rip + 0x223e9e8]",
+      "1405c66b0: divsd xmm6, qword ptr [rip + 0x223f3a8]",
+      "1405c66b8: mulsd xmm6, xmm7",
+      "1405c66bc: addsd xmm6, qword ptr [rip + 0x2243d4c]",
+      "1405c66c4: cvttsd2si edi, xmm6",
+      "1405c66c8: lea rcx, [rbx - 0x10]",
+      "1405c66cc: cmp byte ptr [rcx + 0x35c], 0",
+      "1405c66d3: je 0x1405c6770",
+      "1405c66d9: movaps xmm2, xmm7",
+      "1405c66dc: lea rdx, [rsp + 0x30]",
+      "1405c66e1: call 0x1405c6540",
+      "1405c66e6: xor ecx, ecx",
+      "1405c66e8: mov r10, qword ptr [rsp + 0x38]",
+      "1405c66ed: mov r8, qword ptr [rsp + 0x30]",
+      "1405c66f2: mov r9d, dword ptr [r8 + rcx*4]",
+      "1405c66f6: mov eax, edi",
+      "1405c66f8: cdq ",
+      "1405c66f9: idiv r9d",
+      "1405c66fc: inc rcx",
+      "1405c66ff: test edx, edx",
+      "1405c6701: je 0x1405c671c",
+      "1405c6703: mov rax, r10",
+      "1405c6706: sub rax, r8",
+      "1405c6709: sar rax, 2",
+      "1405c670d: cmp rcx, rax",
+      "1405c6710: jb 0x1405c66f2",
+      "1405c6712: test edx, edx",
+      "1405c6714: jle 0x1405c671c",
+      "1405c6716: sub r9d, edx",
+      "1405c6719: add edi, r9d",
+      "1405c671c: test r8, r8",
+      "1405c671f: je 0x1405c6770",
+      "1405c6721: mov rdx, qword ptr [rsp + 0x40]",
+      "1405c6726: sub rdx, r8",
+      "1405c6729: and rdx, 0xfffffffffffffffc"
+    ],
+    "examples": [
+      {
+        "latencyInputMs": 1,
+        "adjustedMs": 2,
+        "computedFrames": 96
+      },
+      {
+        "latencyInputMs": 2,
+        "adjustedMs": 3,
+        "computedFrames": 144
+      },
+      {
+        "latencyInputMs": 4,
+        "adjustedMs": 5,
+        "computedFrames": 240
+      },
+      {
+        "latencyInputMs": 5,
+        "adjustedMs": 5,
+        "computedFrames": 240
+      },
+      {
+        "latencyInputMs": 10,
+        "adjustedMs": 10,
+        "computedFrames": 480
+      }
+    ],
+    "exampleAssumptions": "Synthetic arithmetic only: rate 48000, overhead true, legacy true, single alignment 48, no earlier device-latency adjustment",
+    "asioHostBankEquivalenceProven": false
+  },
+  "originalAsioBuffers": {
+    "function": "0x180010080",
+    "contract": "min=max=preferred=computed configured value, granularity=1",
+    "assembly": [
+      "18001009e: mov rdi, r9",
+      "1800100a1: mov rsi, r8",
+      "1800100a4: mov r14, rdx",
+      "1800100a7: mov rbx, rcx",
+      "1800100aa: call 0x180016614",
+      "1800100af: mov rdx, rax",
+      "1800100b2: lea rcx, [rsp + 0x40]",
+      "1800100b7: call 0x1800194c0",
+      "1800100bc: nop ",
+      "1800100bd: mov rcx, qword ptr [rbx + 0x1c0]",
+      "1800100c4: call 0x180006aa0",
+      "1800100c9: mov ebx, eax",
+      "1800100cb: call 0x180013070",
+      "1800100d0: mov ecx, eax",
+      "1800100d2: mov edx, ebx",
+      "1800100d4: call 0x18000af70",
+      "1800100d9: mov dword ptr [rdi], eax",
+      "1800100db: mov dword ptr [rsi], eax",
+      "1800100dd: mov dword ptr [r14], eax",
+      "1800100e0: mov rax, qword ptr [rsp + 0x60]",
+      "1800100e5: mov dword ptr [rax], 1",
+      "1800100eb: lea rcx, [rsp + 0x40]",
+      "1800100f0: call 0x1800496d0",
+      "1800100f5: xor eax, eax",
+      "1800100f7: mov rbx, qword ptr [rsp + 0x48]",
+      "1800100fc: mov rsi, qword ptr [rsp + 0x50]"
+    ],
+    "physicalOrConfiguredValueMeasured": false
+  },
+  "remaining": [
+    "Legitimate current driver-API/connection adaptation",
+    "PortAudio application-buffer versus ASIO host-bank adaptation",
+    "Hardware rate-selection sequencing and recovery",
+    "Physical PCM, latency, routing and two-deck DVS"
+  ]
+}

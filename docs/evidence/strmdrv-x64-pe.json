@@ -1,0 +1,128 @@
+{
+  "path": "artifacts/extracted/rane-windows/x64/strmdrv.sys",
+  "sha256": "e8e992a8ece1a57eab337d815a406b9f815954176c03db545fcf6d951ec615f5",
+  "bytes": 36240,
+  "machine": "0x8664",
+  "image_base": "0x10000",
+  "sections": [
+    {
+      "name": ".text",
+      "rva": "0x1000",
+      "raw_offset": "0x400",
+      "characteristics": "0x68000020"
+    },
+    {
+      "name": ".rdata",
+      "rva": "0x5000",
+      "raw_offset": "0x3e00",
+      "characteristics": "0x48000040"
+    },
+    {
+      "name": ".data",
+      "rva": "0x6000",
+      "raw_offset": "0x4400",
+      "characteristics": "0xc8000040"
+    },
+    {
+      "name": ".pdata",
+      "rva": "0x8000",
+      "raw_offset": "0x4800",
+      "characteristics": "0x48000040"
+    },
+    {
+      "name": "PAGE",
+      "rva": "0x9000",
+      "raw_offset": "0x4c00",
+      "characteristics": "0x60000020"
+    },
+    {
+      "name": "INIT",
+      "rva": "0xb000",
+      "raw_offset": "0x6800",
+      "characteristics": "0xe2000020"
+    },
+    {
+      "name": ".rsrc",
+      "rva": "0xc000",
+      "raw_offset": "0x6c00",
+      "characteristics": "0x42000040"
+    },
+    {
+      "name": ".reloc",
+      "rva": "0xd000",
+      "raw_offset": "0x7000",
+      "characteristics": "0x42000040"
+    }
+  ],
+  "imports": {
+    "ntoskrnl.exe": [
+      "MmAllocatePagesForMdl",
+      "IoFreeMdl",
+      "KeInitializeTimer",
+      "MmMapLockedPagesSpecifyCache",
+      "KeWaitForSingleObject",
+      "KeSetTimer",
+      "MmFreePagesFromMdl",
+      "ExSetTimerResolution",
+      "KeInitializeEvent",
+      "KeClearEvent",
+      "KeSetEvent",
+      "ObfDereferenceObject",
+      "ExEventObjectType",
+      "ObReferenceObjectByHandle",
+      "KeQueryPriorityThread",
+      "KeBugCheckEx",
+      "RtlCopyUnicodeString",
+      "ExFreePoolWithTag",
+      "MmUnmapLockedPages",
+      "ExAllocatePoolWithTag"
+    ],
+    "WDFLDR.SYS": [
+      "WdfVersionUnbind",
+      "WdfVersionBind"
+    ]
+  },
+  "exports": [],
+  "strings": [
+    {
+      "text": "c:\\aldev\\rane\\sl3\\trunk\\windows\\driver\\strmdrv\\objfre_wlh_amd64\\amd64\\strmdrv.pdb",
+      "encoding": "ascii",
+      "offset": "0x3f80",
+      "va": "0x15180"
+    },
+    {
+      "text": "WdfVersionUnbind",
+      "encoding": "ascii",
+      "offset": "0x6b88",
+      "va": "0x1b388"
+    },
+    {
+      "text": "WdfVersionBind",
+      "encoding": "ascii",
+      "offset": "0x6b9c",
+      "va": "0x1b39c"
+    },
+    {
+      "text": "WDFLDR.SYS",
+      "encoding": "ascii",
+      "offset": "0x6bac",
+      "va": "0x1b3ac"
+    },
+    {
+      "text": "SL 3 USB ASIO Audio Driver",
+      "encoding": "utf-16le",
+      "offset": "0x6d64",
+      "va": "0x1c164"
+    },
+    {
+      "text": "SL 3 USB ASIO Audio Driver",
+      "encoding": "utf-16le",
+      "offset": "0x6ef4",
+      "va": "0x1c2f4"
+    }
+  ],
+  "rip_references": [],
+  "limitation": "MOV/LEA byte candidates require instruction-boundary review; absence is not proof of absent functionality.",
+  "section_alignment": "0x1000",
+  "subsystem": 1
+}

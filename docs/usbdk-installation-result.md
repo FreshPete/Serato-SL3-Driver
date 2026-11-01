@@ -1,0 +1,13 @@
+# Signed transport installation — 30 October 2026
+
+The reviewed unchanged UsbDk package completed installation with MSI exit **0** at **14:27 UTC**. The elevated before/after snapshots both report **Secure Boot enabled**. Windows reports the UsbDk kernel service running, and the installed SYS/helper SHA-256 values exactly match the reviewed package streams. No UsbDk code-integrity rejection event was found in the queried installation window. This establishes an installation/load milestone, not functioning SL3 redirection or audio.
+
+The helper explicitly displayed a notice requiring a restart. The owner acknowledged it and reports that the PC has **not restarted**. That observed requirement takes precedence over the MSI-only restart flag, which was false because the MSI returned zero. The original raw record is preserved; the separate final review records `restartRequired: true` and its notice-based source. The installation script has subsequently been corrected to leave restart status unknown after a plain MSI success rather than incorrectly implying that no restart is required.
+
+The runner and installation helper have finished. The post-install SL3 snapshot still shows the original `strmdrv` / `oem136.inf` binding with code **39**. The system USB filter does not itself replace that original binding. No redirection, command-37 exchange, audio capture, audio output, ASIO application test or Serato DVS session ran.
+
+The bounded initial USB trace contains **15,822 events**, with zero reported event/buffer loss. Its 60-second window ended while the helper notice was waiting for acknowledgement, so it does **not** cover the complete MSI transaction. Trace cleanup completed; the stop attempt reported that the auto-bounded session was already stopped, and deletion succeeded. Raw USB events remain local. The [sanitized installation review](evidence/usbdk-install-20261030.json) binds the final record, before/after snapshots, MSI log, installed binaries and decoded trace metadata by hash.
+
+The next step is an owner-performed Windows restart. Afterward, collect a fresh preflight and run the prepared traced **List** mode to verify exact-SL3 descriptors before a separate bounded capture. The List plan has been checked without loading the helper or accessing USB. No automatic restart is requested or scheduled.
+
+Local installation evidence is preserved at `tests/results/local/usbdk-install-20261030-02/`. The old cancelled attempt and subsequent acknowledgement waits in earlier status entries are historical. Windows compatibility remains incomplete, and signing enforcement has not been disabled.

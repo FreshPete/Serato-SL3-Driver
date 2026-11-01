@@ -1,0 +1,144 @@
+{
+  "utc": "2026-10-26T23:43:53.245330+00:00",
+  "scope": "Offline source, extraction, signature and native layout tests only",
+  "driverPackagesInstalled": false,
+  "deviceRedirectionAttempted": false,
+  "audioOutputSubmissions": 0,
+  "usbdk": {
+    "release": "v1.00-22",
+    "releasePublishedUtc": "2020-03-17T06:37:36Z",
+    "sourceCommit": "84752c30037956149d53b498005b5368616f9257",
+    "package": {
+      "path": "artifacts/packages/UsbDk_1.0.22_x64.msi",
+      "bytes": 6348800,
+      "sha256": "91f6f695e1e13c656024e6d3b55620bf08d8835ef05ee0496935ba6bb62466a5"
+    },
+    "driver": {
+      "path": "artifacts/extracted/usbdk-msi/UsbDk.sys10",
+      "bytes": 103128,
+      "sha256": "c92b6c15bd550023312ae4cfe49a39757952a3c2ebdc7d1d143ac5e695f69a63"
+    },
+    "fileVersion": "1.0.22.0",
+    "authenticodePrimaryStatus": "Valid",
+    "kernelVerification": {
+      "tool": "Windows SDK 10.0.19041.0 x64 signtool.exe",
+      "allSignatures": {
+        "arguments": "verify /all /kp /v",
+        "exitCode": 1,
+        "signaturesVerified": 1,
+        "errors": 1
+      },
+      "microsoftSignature": {
+        "arguments": "verify /ds 1 /kp /v",
+        "index": 1,
+        "exitCode": 0,
+        "filesVerified": 1,
+        "errors": 0,
+        "publisher": "Microsoft Windows Hardware Compatibility Publisher",
+        "issuer": "Microsoft Windows Third Party Component CA 2014",
+        "certificateSha1": "87D211E3FD93E25CF5DAE60B9089772E86A310EB",
+        "timestampUtc": "2020-03-12T09:23:19Z"
+      }
+    },
+    "logs": [
+      {
+        "path": "analysis/usbdk-sys10-kernel-signature-all.txt",
+        "bytes": 4328,
+        "sha256": "c254ac54975c7c38b99fb4490af36117825c3ded41cf9b8b913dc7a2be47a318"
+      },
+      {
+        "path": "analysis/usbdk-sys10-microsoft-signature.txt",
+        "bytes": 2638,
+        "sha256": "6a23eef44f36b2ab09ebabbbae35a7785571da52c9c0d98e0788002399e938ce"
+      }
+    ],
+    "contract": "Per-packet sizes become cumulative URB offsets; ASAP scheduling, not explicit caller start-frame control",
+    "sourceFiles": [
+      {
+        "path": "artifacts/references/usbdk-1.0.22/UsbDkHelper.h",
+        "bytes": 6725,
+        "sha256": "09cad2056278cd9dd5d74e66ec0115569662b6643ebc28660eeab3f089a0020c"
+      },
+      {
+        "path": "artifacts/references/usbdk-1.0.22/UsbDkData.h",
+        "bytes": 2879,
+        "sha256": "8f0a0f4f10d2d6fb371e48c7c9e82af890ca75601ec4e5143949a42402d8cb83"
+      },
+      {
+        "path": "artifacts/references/usbdk-1.0.22/UsbTarget.cpp",
+        "bytes": 18137,
+        "sha256": "2454dda62359908db8560a533934744e3af3caaf40e7e105cc01b3ca2497276e"
+      },
+      {
+        "path": "artifacts/references/usbdk-1.0.22/Urb.cpp",
+        "bytes": 3260,
+        "sha256": "ee36b36973a30909c867b9f51a086c99ecae05026f74387e54a97f3d8220e627"
+      }
+    ]
+  },
+  "libusbk": {
+    "release": "V3.1.0.0",
+    "package": {
+      "path": "artifacts/packages/libusbK-3.1.0.0-bin.7z",
+      "bytes": 6533139,
+      "sha256": "38605d8d5a86f408a4b7bec60f6d4a096050eee72f89a63a8d5be125252d3fe7"
+    },
+    "sourceArchive": {
+      "path": "artifacts/packages/libusbK-3.1.0.0-src.7z",
+      "bytes": 1418530,
+      "sha256": "e10210802d234d2ba3ad233089bb4e94a3b9e1ec5d38fc887868d3c7a6e7d477"
+    },
+    "driver": {
+      "path": "artifacts/extracted/libusbk-3.1.0.0/libusbK-3.1.0.0-bin/bin/sys/amd64/libusbK.sys",
+      "bytes": 47928,
+      "sha256": "1df66ff22e2eaec27180756d90926ca5b07e8bcf6b0e4e3c56471e63a3a05fa6"
+    },
+    "fileVersion": "3.0.7.0 built by: WinDDK",
+    "authenticodePrimaryStatus": "Valid",
+    "publisher": "Travis Lee Robinson",
+    "signatureTimestamp": "2014-04-27T16:25:59Z",
+    "kernelVerification": {
+      "arguments": "verify /all /kp /v",
+      "exitCode": 0,
+      "signaturesVerified": 1,
+      "errors": 0
+    },
+    "log": {
+      "path": "analysis/libusbk-amd64-kernel-signature.txt",
+      "bytes": 2789,
+      "sha256": "3a5dc00d060392daaefe6d89ba05a2bece5883f14d93a466d65f156c7cea3434"
+    },
+    "runtimePolicyAcceptance": "Not tested; offline cross-signature verification is insufficient"
+  },
+  "libusbReview": {
+    "commit": "6a1aff0b39c724657fd92b2d2bf82eb532344570",
+    "source": {
+      "path": "artifacts/references/libusb-6a1aff0b39c724657fd92b2d2bf82eb532344570-windows_winusb.c",
+      "bytes": 223308,
+      "sha256": "09602ab6ebf126049331243c65686d381ee79ab92c1b9a71bd2078e911768e30"
+    },
+    "winusbOutValidationLines": [
+      4110,
+      4123
+    ],
+    "libusbkOutOffsetLines": [
+      4000,
+      4040
+    ]
+  },
+  "nativeLayout": {
+    "implementation": [
+      "src/core/playback.hpp",
+      "src/core/playback.cpp"
+    ],
+    "test": "tests/native/playback_tests.cpp",
+    "releaseCTestPassed": 4,
+    "debugCTestPassed": 4,
+    "syntheticRateFixturesHz": [
+      44100,
+      48000
+    ],
+    "physicalPacketPatternObserved": false
+  },
+  "hostLoadAcceptance": "No claim: must verify under this host enforced CI policy in a separate test"
+}

@@ -1,0 +1,72 @@
+{
+  "generatedUtc": "2026-10-27T07:31:02.704369+00:00",
+  "binarySha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "installedMatches": true,
+  "focusedReportsSha256": {
+    "serato500-qrc-root-07.json": "033fc532818763c1883adb59cc6925c287cfbf779b33b07a805ad36354aafc55",
+    "serato500-qrc-path-06.json": "1ccd8aaefee3c327726377b2b8c5a14855f5b3ac50dc0efd09b79ec1f4560295",
+    "serato500-resource-path-state-03.json": "f76712e8d32e4475c19ce590396052888b8fe453aa68ff45ba4bf790a3ee9d2a"
+  },
+  "checkedInstructions": [
+    "14083e032: mov rdx, rbx",
+    "14083e035: mov rcx, rbx",
+    "14083e038: call 0x1420fc4b0",
+    "1420fc4e7: call 0x1420fc5b0",
+    "1420fc4ec: mov r8d, 0x104",
+    "1420fc5cb: mov ecx, 4",
+    "141cb4c72: call 0x14083dfe0",
+    "141cb4c7a: mov rdx, rax",
+    "141cb4c81: call 0x141cb4400",
+    "141cb4c87: lea rdx, [rbx + 0x20]",
+    "141cb4c8f: call 0x1404a3300",
+    "141cb4d0c: call 0x141cb6c00",
+    "141cb4dae: call 0x141cb1230",
+    "141cb445a: call 0x14210a070",
+    "14210a0d6: cmp dx, 0x2f",
+    "14210a0dc: cmp dx, 0x5c"
+  ],
+  "pathStateVA": "0x143fe8860",
+  "componentDefaults": [
+    {
+      "storeVA": "0x14083e058",
+      "targetVA": "0x143fe8880",
+      "bytes": "2e00"
+    },
+    {
+      "storeVA": "0x14083e070",
+      "targetVA": "0x143fe88a0",
+      "bytes": "2e00"
+    },
+    {
+      "storeVA": "0x14083e088",
+      "targetVA": "0x143fe88c0",
+      "bytes": "2e00"
+    }
+  ],
+  "moduleFilename": {
+    "helper": "0x1420fc4b0",
+    "api": "GetModuleFileNameW",
+    "capacityWchars": 260,
+    "handleHelper": "0x1420fc5b0",
+    "handleApi": "GetModuleHandleExW",
+    "flags": 4,
+    "fromAddressVA": "0x1404a67c0"
+  },
+  "root": {
+    "builder": "0x141cb4c40",
+    "directoryPartHelper": "0x141cb4400",
+    "storedComponentOffset": "0x20",
+    "defaultComponent": ".",
+    "joinHelper": "0x141cb6c00",
+    "filesystemValidationHelper": "0x141cb1230"
+  },
+  "interpretation": "Under the verified default initialization and successful module/path queries, root derives from the containing executable directory plus dot; no Data default is established.",
+  "vendorCodeExecuted": false,
+  "overrideInstalled": false,
+  "limits": [
+    "No runtime path/provider instrumentation or exhaustive later-write analysis",
+    "Filesystem-validation helper is not promoted to a proved directory-only predicate",
+    "Archive precedence and QRC resource-only listing still constrain loose descriptor discovery",
+    "No user-editable supported override, current integration, audio or DVS result"
+  ]
+}

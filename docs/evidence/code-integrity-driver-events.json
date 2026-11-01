@@ -1,0 +1,27 @@
+[
+  {
+    "Id": 3089,
+    "TimeCreated": "2026-10-26T21:12:59.0431451+00:00",
+    "Message": "Signature information for another event. Match using the Correlation Id."
+  },
+  {
+    "Id": 3077,
+    "TimeCreated": "2026-10-26T21:12:59.043128+00:00",
+    "Message": "Code Integrity determined that a process (System) attempted to load \\Device\\HarddiskVolume3\\Windows\\System32\\drivers\\strmdrv.sys that did not meet the Authenticode signing level requirements or violated code integrity policy (Policy ID:{8f9cb695-5d48-48d6-a329-7202b44607e3})."
+  },
+  {
+    "Id": 3076,
+    "TimeCreated": "2026-10-26T21:12:59.0430193+00:00",
+    "Message": "Code Integrity determined that a process (System) attempted to load \\Device\\HarddiskVolume3\\Windows\\System32\\drivers\\strmdrv.sys that did not meet the Authenticode signing level requirements or violated code integrity policy (Policy ID:{784c4414-79f4-4c32-a6a5-f0fb42a51d0d}). However, due to code integrity auditing policy, the image was allowed to load."
+  },
+  {
+    "Id": 3089,
+    "TimeCreated": "2026-10-26T21:12:59.0425702+00:00",
+    "Message": "Signature information for another event. Match using the Correlation Id."
+  },
+  {
+    "Id": 3004,
+    "TimeCreated": "2026-10-26T21:12:59.0425671+00:00",
+    "Message": "Windows is unable to verify the image integrity of the file \\Device\\HarddiskVolume3\\Windows\\System32\\drivers\\strmdrv.sys because file hash could not be found on the system. A recent hardware or software change might have installed a file that is signed incorrectly or damaged, or that might be malicious software from an unknown source."
+  }
+]

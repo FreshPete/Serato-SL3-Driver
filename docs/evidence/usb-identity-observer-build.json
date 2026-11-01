@@ -1,0 +1,15 @@
+{
+  "scope": "Offline observer implementation and synthetic tests; no libusb load or physical observation",
+  "fullPythonTests": 89,
+  "observerTests": 9,
+  "planExecuted": true,
+  "nativeRuntimeChanged": false,
+  "physicalObservationExecuted": false,
+  "supervisorImplemented": false,
+  "files": {
+    "scripts/observe-sl3-usb-identity.py": "238aa772ef466832a6d63b020eab357b014a2eb998a1fb2662dd1a988c6e43ea",
+    "tests/test_usb_identity_observer.py": "19d2eca71f5dc30cb9c5fd415dab81cca89c82ef8d29fcc27aa40f988b4004ec",
+    "analysis/usb-identity-python-tests.log": "f6d28c7eeddff3b343ea51941a5ac5250f29e84789f3f2309d6d88cc0add4ec5",
+    "analysis/usb-identity-observer-plan.json": "7d1e137adde6734e11484db6a2949f8f6e2a9f55034eddd3371520d40eb35a73"
+  }
+}

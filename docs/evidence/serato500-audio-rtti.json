@@ -1,0 +1,572 @@
+{
+  "binary_sha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "coverage": "Recover selected MSVC x64 RTTI complete-object locators and vtable candidates.\n\nValidates locator signature, self RVA and type-descriptor RVA. Tables end at the\nfirst non-executable pointer, capped at 64 slots. This does not recover all C++\ntypes, inheritance semantics, function ABI or runtime dispatch targets.\n",
+  "classes": [
+    {
+      "decorated_type": ".?AVAudioDeviceType@device@serato@@",
+      "type_descriptor_va": "0x143e7b0f0",
+      "locators": [
+        {
+          "va": "0x1433edf18",
+          "object_offset": "0x0",
+          "constructor_displacement": 0,
+          "tables": [
+            {
+              "va": "0x1431d7868",
+              "slots": [
+                {
+                  "offset": "0x0",
+                  "target": "0x1421e84f0",
+                  "unwind_range": [
+                    "0x1421e84f0",
+                    "0x1421e8524"
+                  ]
+                },
+                {
+                  "offset": "0x8",
+                  "target": "0x1421e8530",
+                  "unwind_range": [
+                    "0x1421e8530",
+                    "0x1421e8551"
+                  ]
+                },
+                {
+                  "offset": "0x10",
+                  "target": "0x1421e8710",
+                  "unwind_range": [
+                    "0x1421e8710",
+                    "0x1421e87c5"
+                  ]
+                },
+                {
+                  "offset": "0x18",
+                  "target": "0x1404f8f90",
+                  "unwind_range": [
+                    "0x1404f8f90",
+                    "0x1404f8fae"
+                  ]
+                },
+                {
+                  "offset": "0x20",
+                  "target": "0x142120240",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x28",
+                  "target": "0x142120240",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x30",
+                  "target": "0x142120240",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x38",
+                  "target": "0x142120240",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x40",
+                  "target": "0x1421e86d0",
+                  "unwind_range": [
+                    "0x1421e86d0",
+                    "0x1421e8703"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "decorated_type": ".?AVAudioDeviceManager@device@serato@@",
+      "type_descriptor_va": "0x143e7b168",
+      "locators": [
+        {
+          "va": "0x1433edfe0",
+          "object_offset": "0x0",
+          "constructor_displacement": 0,
+          "tables": [
+            {
+              "va": "0x1431d78b8",
+              "slots": [
+                {
+                  "offset": "0x0",
+                  "target": "0x141372370",
+                  "unwind_range": [
+                    "0x141372370",
+                    "0x1413723a4"
+                  ]
+                },
+                {
+                  "offset": "0x8",
+                  "target": "0x1421e97e0",
+                  "unwind_range": [
+                    "0x1421e97e0",
+                    "0x1421e9818"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "decorated_type": ".?AVJuceAudioDevice@device@serato@@",
+      "type_descriptor_va": "0x143e7b488",
+      "locators": [
+        {
+          "va": "0x1433ee678",
+          "object_offset": "0x0",
+          "constructor_displacement": 0,
+          "tables": [
+            {
+              "va": "0x1431d8280",
+              "slots": [
+                {
+                  "offset": "0x0",
+                  "target": "0x1421f21f0",
+                  "unwind_range": [
+                    "0x1421f21f0",
+                    "0x1421f2224"
+                  ]
+                },
+                {
+                  "offset": "0x8",
+                  "target": "0x1421f4120",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x10",
+                  "target": "0x1421f4350",
+                  "unwind_range": [
+                    "0x1421f4350",
+                    "0x1421f464d"
+                  ]
+                },
+                {
+                  "offset": "0x18",
+                  "target": "0x1421f2260",
+                  "unwind_range": [
+                    "0x1421f2260",
+                    "0x1421f2f26"
+                  ]
+                },
+                {
+                  "offset": "0x20",
+                  "target": "0x1421f2f30",
+                  "unwind_range": [
+                    "0x1421f2f30",
+                    "0x1421f305d"
+                  ]
+                },
+                {
+                  "offset": "0x28",
+                  "target": "0x1421f4060",
+                  "unwind_range": [
+                    "0x1421f4060",
+                    "0x1421f4116"
+                  ]
+                },
+                {
+                  "offset": "0x30",
+                  "target": "0x1421f34b0",
+                  "unwind_range": [
+                    "0x1421f34b0",
+                    "0x1421f34da"
+                  ]
+                },
+                {
+                  "offset": "0x38",
+                  "target": "0x1421f35d0",
+                  "unwind_range": [
+                    "0x1421f35d0",
+                    "0x1421f35fa"
+                  ]
+                },
+                {
+                  "offset": "0x40",
+                  "target": "0x1421f3570",
+                  "unwind_range": [
+                    "0x1421f3570",
+                    "0x1421f35a8"
+                  ]
+                },
+                {
+                  "offset": "0x48",
+                  "target": "0x1421f3600",
+                  "unwind_range": [
+                    "0x1421f3600",
+                    "0x1421f3638"
+                  ]
+                },
+                {
+                  "offset": "0x50",
+                  "target": "0x140803800",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x58",
+                  "target": "0x14068c6d0",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x60",
+                  "target": "0x140790030",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x68",
+                  "target": "0x1421f3660",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x70",
+                  "target": "0x1421f3250",
+                  "unwind_range": [
+                    "0x1421f3250",
+                    "0x1421f3352"
+                  ]
+                },
+                {
+                  "offset": "0x78",
+                  "target": "0x1421f3220",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x80",
+                  "target": "0x1421f3240",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x88",
+                  "target": "0x1421f3360",
+                  "unwind_range": [
+                    "0x1421f3360",
+                    "0x1421f34a2"
+                  ]
+                },
+                {
+                  "offset": "0x90",
+                  "target": "0x1421f35b0",
+                  "unwind_range": [
+                    "0x1421f35b0",
+                    "0x1421f35c8"
+                  ]
+                },
+                {
+                  "offset": "0x98",
+                  "target": "0x1421f3640",
+                  "unwind_range": [
+                    "0x1421f3640",
+                    "0x1421f3658"
+                  ]
+                },
+                {
+                  "offset": "0xa0",
+                  "target": "0x1421f37b0",
+                  "unwind_range": [
+                    "0x1421f37b0",
+                    "0x1421f38d5"
+                  ]
+                },
+                {
+                  "offset": "0xa8",
+                  "target": "0x1421f34e0",
+                  "unwind_range": [
+                    "0x1421f34e0",
+                    "0x1421f356a"
+                  ]
+                },
+                {
+                  "offset": "0xb0",
+                  "target": "0x1421ed310",
+                  "unwind_range": [
+                    "0x1421ed310",
+                    "0x1421ed329"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "decorated_type": ".?AVASIOAudioIODevice@juce@@",
+      "type_descriptor_va": "0x143e7bc48",
+      "locators": [
+        {
+          "va": "0x1433ef760",
+          "object_offset": "0x0",
+          "constructor_displacement": 0,
+          "tables": [
+            {
+              "va": "0x1431dd708",
+              "slots": [
+                {
+                  "offset": "0x0",
+                  "target": "0x142209310",
+                  "unwind_range": [
+                    "0x142209310",
+                    "0x142209344"
+                  ]
+                },
+                {
+                  "offset": "0x8",
+                  "target": "0x14220e490",
+                  "unwind_range": [
+                    "0x14220e490",
+                    "0x14220e4b1"
+                  ]
+                },
+                {
+                  "offset": "0x10",
+                  "target": "0x14220e360",
+                  "unwind_range": [
+                    "0x14220e360",
+                    "0x14220e381"
+                  ]
+                },
+                {
+                  "offset": "0x18",
+                  "target": "0x14220dfb0",
+                  "unwind_range": [
+                    "0x14220dfb0",
+                    "0x14220dfd1"
+                  ]
+                },
+                {
+                  "offset": "0x20",
+                  "target": "0x14220df50",
+                  "unwind_range": [
+                    "0x14220df50",
+                    "0x14220df71"
+                  ]
+                },
+                {
+                  "offset": "0x28",
+                  "target": "0x14136e970",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x30",
+                  "target": "0x14220f230",
+                  "unwind_range": [
+                    "0x14220f230",
+                    "0x14220ff79"
+                  ]
+                },
+                {
+                  "offset": "0x38",
+                  "target": "0x14220b7d0",
+                  "unwind_range": [
+                    "0x14220b7d0",
+                    "0x14220b896"
+                  ]
+                },
+                {
+                  "offset": "0x40",
+                  "target": "0x14220f180",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x48",
+                  "target": "0x142212aa0",
+                  "unwind_range": [
+                    "0x142212aa0",
+                    "0x142212ab8"
+                  ]
+                },
+                {
+                  "offset": "0x50",
+                  "target": "0x142212b90",
+                  "unwind_range": [
+                    "0x142212b90",
+                    "0x142212bea"
+                  ]
+                },
+                {
+                  "offset": "0x58",
+                  "target": "0x14220f1d0",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x60",
+                  "target": "0x14220e440",
+                  "unwind_range": [
+                    "0x14220e440",
+                    "0x14220e45e"
+                  ]
+                },
+                {
+                  "offset": "0x68",
+                  "target": "0x14220e010",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x70",
+                  "target": "0x14220e020",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x78",
+                  "target": "0x141aadea0",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x80",
+                  "target": "0x14220de60",
+                  "unwind_range": [
+                    "0x14220de60",
+                    "0x14220de81"
+                  ]
+                },
+                {
+                  "offset": "0x88",
+                  "target": "0x14220dd70",
+                  "unwind_range": [
+                    "0x14220dd70",
+                    "0x14220dd91"
+                  ]
+                },
+                {
+                  "offset": "0x90",
+                  "target": "0x14067d110",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x98",
+                  "target": "0x14170fc10",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0xa0",
+                  "target": "0x1404a4540",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0xa8",
+                  "target": "0x142212a30",
+                  "unwind_range": [
+                    "0x142212a30",
+                    "0x142212a94"
+                  ]
+                },
+                {
+                  "offset": "0xb0",
+                  "target": "0x1404a4550",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0xb8",
+                  "target": "0x14220e590",
+                  "unwind_range": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "va": "0x1433ef810",
+          "object_offset": "0x18",
+          "constructor_displacement": 0,
+          "tables": [
+            {
+              "va": "0x1431dd7d0",
+              "slots": [
+                {
+                  "offset": "0x0",
+                  "target": "0x1422092d0",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x8",
+                  "target": "0x142212da0",
+                  "unwind_range": [
+                    "0x142212da0",
+                    "0x142212f0f"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "decorated_type": ".?AVASIOAudioIODeviceType@juce@@",
+      "type_descriptor_va": "0x143e7bc78",
+      "locators": [
+        {
+          "va": "0x1433ef838",
+          "object_offset": "0x0",
+          "constructor_displacement": 0,
+          "tables": [
+            {
+              "va": "0x1431dd8d0",
+              "slots": [
+                {
+                  "offset": "0x0",
+                  "target": "0x142212470",
+                  "unwind_range": [
+                    "0x142212470",
+                    "0x1422125f9"
+                  ]
+                },
+                {
+                  "offset": "0x8",
+                  "target": "0x14220e220",
+                  "unwind_range": [
+                    "0x14220e220",
+                    "0x14220e23e"
+                  ]
+                },
+                {
+                  "offset": "0x10",
+                  "target": "0x14220e050",
+                  "unwind_range": [
+                    "0x14220e050",
+                    "0x14220e0c6"
+                  ]
+                },
+                {
+                  "offset": "0x18",
+                  "target": "0x14220e270",
+                  "unwind_range": [
+                    "0x14220e270",
+                    "0x14220e2af"
+                  ]
+                },
+                {
+                  "offset": "0x20",
+                  "target": "0x1404a4550",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x28",
+                  "target": "0x14220d200",
+                  "unwind_range": [
+                    "0x14220d200",
+                    "0x14220d2d4"
+                  ]
+                },
+                {
+                  "offset": "0x30",
+                  "target": "0x142209350",
+                  "unwind_range": [
+                    "0x142209350",
+                    "0x1422093f1"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

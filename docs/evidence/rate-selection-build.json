@@ -1,0 +1,122 @@
+{
+  "generatedUtc": "2026-10-27T07:34:23.626619+00:00",
+  "scope": "Original kernel rate-change contract, injected diagnostic runner and explicit native rate-test mode; no physical rate change",
+  "kernelSha256": "e8e992a8ece1a57eab337d815a406b9f815954176c03db545fcf6d951ec615f5",
+  "checkedInstructions": [
+    "11aa2: movzx edi, word ptr [rcx + 0x2d180]",
+    "11ab2: cmp di, 0xac44",
+    "11ab9: cmp di, 0xbb80",
+    "11acb: mov dl, 0x31",
+    "11acd: rol r8w, 8",
+    "11ad2: call 0x1184c",
+    "11adf: lea r9d, [r13 + 2]",
+    "11ae3: mov dl, 0x31",
+    "11af7: call 0x118c4",
+    "11afc: xor r8d, r8d",
+    "11aff: mov dl, 0x30",
+    "11b0d: call 0x1184c",
+    "11b12: lea r9d, [r13 + 2]",
+    "11b1b: mov dl, 0x30",
+    "11b29: call 0x118c4",
+    "11b38: movzx ecx, word ptr [rsp + 0x50]",
+    "11b54: cmp ecx, edx",
+    "11b56: cmovne eax, r13d",
+    "11b5f: mov dword ptr [rbx + 0x2c4b0], r8d"
+  ],
+  "sourceSha256": {
+    "CMakeLists.txt": "c3382ee22dce5284e44abf25a1030455dab202bac06e424dcb035180181d3437",
+    "scripts/build-native.ps1": "7c79ced6b21356bb1120c0670445c345b8c062b2b1dc51b08bbb67d1c2edf9a1",
+    "src/core/control_frames.hpp": "4ff3015f37adc66f29a41d4a73e94c928a7f3d0a7e1eb537554f7f727380affa",
+    "src/core/control_frames.cpp": "e7b7fa17fcdd7027adde67b96cf46385049d4cca989b53c13ac32756270b53e3",
+    "src/core/rate_selection.hpp": "00392456aa5b0442bb43d015e39083e97ee2557673971c12035f70fc9965265d",
+    "src/core/rate_selection.cpp": "b09fd9fc120c1b8be45b86ef5961883b06815ed600e094fa8efd52b8ae9905a1",
+    "tests/native/rate_selection_tests.cpp": "1e561589315b0bf03db4bdec0b390bd593a36d45d0e43ec6109713f1cc6cbe57",
+    "src/core/rate_diagnostic.hpp": "873888d1cb6b09b689698e5717f393e8463c5ccbb8dcf14505c60bb133fefee7",
+    "src/core/rate_diagnostic.cpp": "a4eab48ebbabf4aec2a08dd6c1ca4ab5a1cc569a9ce1c35042adb908637d4f9b",
+    "src/windows/usbdk_main.cpp": "1be46c32412c0d38c9add76dd69e68354b122ca97c358eccccc35b082b4bbf8a"
+  },
+  "cli": {
+    "reportSha256": "92588bdf703f56815258dfe66d4fbf339b3bbc14cd134548e75dddaef7724884",
+    "runnerSha256": "73d70b2d6a98c246228fd39a6917fa5b75ac0ff12ec124409c38c643124af6d7",
+    "builds": [
+      {
+        "configuration": "Release",
+        "executableSha256": "ef9f175a7c60225703624d0cc2bddf2f9ded42a96d13ba91e0436874c6afeae4",
+        "invalidCasesRejected": 13,
+        "absentServiceTested": true,
+        "serviceError": 1060,
+        "helperLoaded": false,
+        "deviceRedirected": false,
+        "rateWrites": 0,
+        "progress": {
+          "phase": "before service query or helper load",
+          "audio_output_submissions": 0
+        }
+      },
+      {
+        "configuration": "Debug",
+        "executableSha256": "b66c9951405823b869264c145df4df14cb5c05b0a41b26e180c391c1de26e8a0",
+        "invalidCasesRejected": 13,
+        "absentServiceTested": true,
+        "serviceError": 1060,
+        "helperLoaded": false,
+        "deviceRedirected": false,
+        "rateWrites": 0,
+        "progress": {
+          "phase": "before service query or helper load",
+          "audio_output_submissions": 0
+        }
+      }
+    ]
+  },
+  "sourceCallers": [
+    "src/core/rate_diagnostic.cpp",
+    "src/core/rate_selection.cpp",
+    "tests/native/rate_selection_tests.cpp"
+  ],
+  "builds": [
+    {
+      "configuration": "Release",
+      "testsPassed": 28,
+      "manifestSha256": "daf2979e5fd0b0c9745851f8101f3eb1a854b158a58c14978f5c7f2d96f0a52d",
+      "ctestLogSha256": "cbaa206da8e7e49712375d31f8ad43546b496c90d76673c3ecf2fb815ac2907d",
+      "rateTestSha256": "902a905d4ad8a46a58dc15899ae8d7100e87768a7fa4d2c544acf4efd7f768fe"
+    },
+    {
+      "configuration": "Debug",
+      "testsPassed": 28,
+      "manifestSha256": "ccbfccd9d8a9aadfa39b8dd547f15ee0308d1c048410395b7e1ad4bb2ed14e11",
+      "ctestLogSha256": "8bcdbb1b5cdf93cb95d3962b485e4a592eee98b4b249ec3ebcbda6db01935efd",
+      "rateTestSha256": "a22cef9ad70c55a1ad1b3390c9670f9649aa7ea074b7bf1a524139a5089e72a3"
+    }
+  ],
+  "sdkFree": {
+    "testsPassed": 20,
+    "ctestLogSha256": "4acb3eeddda3e29e52681aea89a27c51f92b1fef99ab242fbcc62e162bd8a8ab",
+    "cacheSha256": "f4afe795a4d594c33c9589a6963b866f1f954f4767cad5deef9351b59735173e",
+    "rateTestSha256": "5bf84902ee6718a3c86a315cddb6d65279dae634199010244f27f107dacf3668"
+  },
+  "transaction": {
+    "targetsHz": [
+      44100,
+      48000
+    ],
+    "maximumRequests": 3,
+    "maximumReceivedFrames": 12,
+    "setterReplyBytesOpaque": 2,
+    "freshReadbackRequired": true,
+    "automaticRetry": false,
+    "automaticRollbackWrite": false,
+    "noncopyable": true
+  },
+  "nativeSetterConnected": true,
+  "automaticStartupRateChanges": false,
+  "physicalRateChangeTested": false,
+  "limits": [
+    "Native diagnostic requires an exclusive fresh redirect, keeps audio alts inactive, uses a 3000 ms control budget and bounded cancellation/drain",
+    "Post-set failure preserves possible device change; it cannot prove restoration",
+    "Matched readback is device reporting, not oscillator measurement or stream validity",
+    "Injected runner tests do not execute actual native pending transfers or prove driver admission",
+    "Current ASIO facade remains observed-rate-only; no physical/application/DVS result"
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "path": "artifacts\\extracted\\Serato DJ Pro 2.5.5\\tree\\Serato\\Serato DJ Pro\\Serato DJ Pro.exe",
+  "sha256": "ba8641d0329fe0c955147d2b45f247eeea82ac0f812fe30a339834dbe0c0a503",
+  "matches": [
+    {
+      "offset": "0xb3c810",
+      "encoding": "ascii",
+      "text": "CALG_SSL3_SHAMD5"
+    },
+    {
+      "offset": "0xb3c828",
+      "encoding": "ascii",
+      "text": "CALG_SSL3_MASTER"
+    },
+    {
+      "offset": "0x4790028",
+      "encoding": "ascii",
+      "text": "unsupported_device"
+    },
+    {
+      "offset": "0x47a6440",
+      "encoding": "ascii",
+      "text": "failed cast for kUnsupportedDevice"
+    },
+    {
+      "offset": "0x47ba470",
+      "encoding": "ascii",
+      "text": "sl3_open"
+    },
+    {
+      "offset": "0x47ba480",
+      "encoding": "ascii",
+      "text": "sl3_close"
+    },
+    {
+      "offset": "0x47ba4c0",
+      "encoding": "ascii",
+      "text": "Rane SL3 driver API initialization failed!"
+    },
+    {
+      "offset": "0x47ba4f0",
+      "encoding": "ascii",
+      "text": "sl3_get_audio_controls"
+    },
+    {
+      "offset": "0x47ba508",
+      "encoding": "ascii",
+      "text": "sl3_set_audio_controls"
+    },
+    {
+      "offset": "0x47ba520",
+      "encoding": "ascii",
+      "text": "sl3_driver_timer"
+    },
+    {
+      "offset": "0x47ba538",
+      "encoding": "ascii",
+      "text": "sl3_get_usb_port_status"
+    },
+    {
+      "offset": "0x47ba550",
+      "encoding": "ascii",
+      "text": "sl3_set_thrustate_callback"
+    },
+    {
+      "offset": "0x4cf71f0",
+      "encoding": "ascii",
+      "text": ".?AV?$sp_counted_impl_p@VRaneSL3API@driver@device@serato@@@detail@boost@@"
+    },
+    {
+      "offset": "0x4cf86d0",
+      "encoding": "ascii",
+      "text": ".?AVRaneSL3API@driver@device@serato@@"
+    },
+    {
+      "offset": "0x47b6de0",
+      "encoding": "utf-16le",
+      "text": "\\Rane\\Seventy-Two\\DeviceSettings.exe"
+    },
+    {
+      "offset": "0x47b6e30",
+      "encoding": "utf-16le",
+      "text": "\\Rane\\Seventy\\DeviceSettings.exe"
+    },
+    {
+      "offset": "0x47b6ec0",
+      "encoding": "utf-16le",
+      "text": "\\Rane\\ONE\\Panel.exe"
+    },
+    {
+      "offset": "0x47b9f30",
+      "encoding": "utf-16le",
+      "text": "RaneAsioSixtyFour.dll"
+    },
+    {
+      "offset": "0x47b9fa6",
+      "encoding": "utf-16le",
+      "text": "nRaneAsioSixtyEight.dll"
+    },
+    {
+      "offset": "0x47ba0b0",
+      "encoding": "utf-16le",
+      "text": "\\Rane\\Sixty-Two\\ControlPanel.exe"
+    },
+    {
+      "offset": "0x47ba0f8",
+      "encoding": "utf-16le",
+      "text": "RaneAsioSixtyTwo.dll"
+    },
+    {
+      "offset": "0x47ba1c0",
+      "encoding": "utf-16le",
+      "text": "\\Rane\\Sixty-One\\ControlPanel.exe"
+    },
+    {
+      "offset": "0x47ba21e",
+      "encoding": "utf-16le",
+      "text": "nRaneAsioSixtyOne.dll"
+    },
+    {
+      "offset": "0x47ba2e8",
+      "encoding": "utf-16le",
+      "text": "\\RaneControlPanel.exe"
+    },
+    {
+      "offset": "0x47ba360",
+      "encoding": "utf-16le",
+      "text": "RaneAsioSL2.dll"
+    },
+    {
+      "offset": "0x47ba450",
+      "encoding": "utf-16le",
+      "text": "RaneAsioSL3.dll"
+    },
+    {
+      "offset": "0x47ba490",
+      "encoding": "utf-16le",
+      "text": "software\\asio\\Rane SL 3"
+    },
+    {
+      "offset": "0x47ba6a0",
+      "encoding": "utf-16le",
+      "text": "RaneAsioSL4.dll"
+    }
+  ]
+}

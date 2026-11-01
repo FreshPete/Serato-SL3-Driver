@@ -1,0 +1,218 @@
+{
+  "schema": "sl3.attended-port-controls-failure.v1",
+  "overallPassed": false,
+  "originalRunCompleted": false,
+  "originalRunError": "Native sample/ownership validation failed",
+  "originalProbeValidation": {
+    "valid": false,
+    "error": "Malformed journal"
+  },
+  "offlineNativeProbeReassessment": {
+    "valid": true,
+    "scope": "Recorded controls/ownership consistency only; not calibration, analogue or Serato readiness",
+    "simulated": false,
+    "workerSha256": "1c99bbdd4ebf2e320d8eaf9f3577c3f980f38b988f8b66293a166147cb95f8e7",
+    "rateHz": 44100,
+    "receivedFrames": 1,
+    "rawControls": [
+      0,
+      1,
+      1,
+      5,
+      96,
+      0,
+      96,
+      0,
+      1,
+      5,
+      96,
+      0,
+      96,
+      0,
+      0,
+      5,
+      96,
+      0,
+      96,
+      0,
+      0,
+      1
+    ],
+    "inputs": [
+      {
+        "group": 0,
+        "phono_raw": 0,
+        "phono_nonzero": false,
+        "sensitivity_code": 5,
+        "original_ui_sensitivity_tenths_mv": 50,
+        "through_raw": 1,
+        "through_nonzero": true
+      },
+      {
+        "group": 1,
+        "phono_raw": 1,
+        "phono_nonzero": true,
+        "sensitivity_code": 5,
+        "original_ui_sensitivity_tenths_mv": 50,
+        "through_raw": 0,
+        "through_nonzero": false
+      },
+      {
+        "group": 2,
+        "phono_raw": 1,
+        "phono_nonzero": true,
+        "sensitivity_code": 5,
+        "original_ui_sensitivity_tenths_mv": 50,
+        "through_raw": 0,
+        "through_nonzero": false
+      }
+    ],
+    "probeRecordSha256": "0ec0d0873e0719f0da92776f2a3c1837fdc737d515625d1545cdcda3550340a4",
+    "nativeJournal": {
+      "name": "worker-1.tsv",
+      "sha256": "489556aae706f6be32a7731b4bf09effdeae061ecac860d37c52ad408946778f",
+      "records": 25,
+      "workerPid": 2324,
+      "redirects": 1,
+      "rateGetters": 1,
+      "controlsWrites": 1,
+      "controlsReads": 1,
+      "redirectCloses": 1,
+      "redirectOwnerAcquireMarkers": [
+        "redirect_owner.acquire.enter",
+        "redirect_owner.acquire.return"
+      ]
+    }
+  },
+  "selectedRecoveryKeysEqual": [
+    "secureBoot",
+    "deviceGuard",
+    "hvciRegistry",
+    "devices",
+    "asio",
+    "application"
+  ],
+  "secureBootBeforeAndAfter": true,
+  "portSampleCount": 20,
+  "lastPortSample": {
+    "record": "sample",
+    "sequence": 20,
+    "entryUtc": "2026-11-01T16:41:34.147380+00:00",
+    "completedUtc": "2026-11-01T16:41:34.148496+00:00",
+    "elapsedSeconds": 4.787382599984994,
+    "query": {
+      "schema": "sl3.hub-port-query.v1",
+      "hubInstance": "USB\\ROOT_HUB30\\7&124f193f&0&0",
+      "port": 4,
+      "queryIoctl": "0x220448",
+      "createFileDesiredAccess": 0,
+      "hubOpensRequested": 1,
+      "connectionQueriesRequested": 1,
+      "sl3OpensRequested": 0,
+      "usbResetRequests": 0,
+      "audioStarts": 0,
+      "requestsElevation": false,
+      "readinessAdmission": false,
+      "scope": "One cached hub connection observation; no child-device operation",
+      "sourceSha256": "b12a96f0d56aca90cc67cc837088120d1b1af342aed5aaf9a5d7ca0801c141ae",
+      "producerToken": {
+        "queried": true,
+        "elevated": false,
+        "elevationType": 3,
+        "pid": 36552
+      },
+      "startedUtc": "2026-11-01T16:41:34.148290+00:00",
+      "successful": false,
+      "hubOpenSucceeded": true,
+      "queryStarted": true,
+      "queryFinished": true,
+      "handleClosed": true,
+      "error": "Inconsistent hub response",
+      "hubInterface": "\\\\?\\USB#ROOT_HUB30#7&124f193f&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8}",
+      "queryStartedUtc": "2026-11-01T16:41:34.148453+00:00",
+      "queryElapsedNanoseconds": "11600",
+      "queryFinishedUtc": "2026-11-01T16:41:34.148474+00:00",
+      "bytesReturned": 35,
+      "completedUtc": "2026-11-01T16:41:34.148491+00:00"
+    },
+    "devnode": null
+  },
+  "imageError": "Command '['C:\\\\Users\\\\peter\\\\source\\\\repos\\\\Serato-SL3\\\\.venv\\\\Scripts\\\\python.exe', 'C:\\\\Users\\\\peter\\\\source\\\\repos\\\\Serato-SL3\\\\scripts\\\\inspect-image-source-session.py', '--session-name', 'SL3Image-33b0db1fcc68411d835239a7cdbd04f0', '--session-guid', '1f4c1823-2406-4b15-8bfe-f4791cf5697a', '--output', 'C:\\\\Users\\\\peter\\\\source\\\\repos\\\\Serato-SL3\\\\tests\\\\results\\\\local\\\\logging-batch-port-attended-20261101-1640-1\\\\sample-10.json']' timed out after 3 seconds",
+  "imageCleanup": {
+    "action": "Cleanup",
+    "producer": {
+      "pid": 39488,
+      "creationFileTimeUtc": "134380248988632694",
+      "imagePath": "C:\\Users\\peter\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+      "alive": true,
+      "tokenQueried": true,
+      "elevated": true,
+      "elevationType": 2
+    },
+    "collectorName": "[Service]SL3Image-33b0db1fcc68411d835239a7cdbd04f0",
+    "sourceCommitted": false,
+    "startRequested": false,
+    "stopRequested": true,
+    "collectorDeleted": true,
+    "collectorAlreadyAbsent": false,
+    "successful": true,
+    "error": null,
+    "preparationSha256": "fbca01ed061f02bae45bfe4e398aaa186448f85eaa5c8e773ca279d089bdc946",
+    "sourceSha256": "97cc244d416a7ad8d4f3a52b68f4a804b8edd8241f815779deda3ce6918fd2a4"
+  },
+  "retirementRecheck": {
+    "checkedUtc": "2026-11-01T18:38:58.3980688Z",
+    "attemptCompletedUtc": "2026-11-01T16:41:52.771Z",
+    "knownPids": [
+      18024,
+      26080,
+      24288,
+      19632,
+      26136,
+      2324,
+      36552,
+      41756,
+      38796,
+      12792,
+      6388,
+      3820,
+      39488
+    ],
+    "currentMatches": [],
+    "scope": "PID alone is not process identity. Compare image and creation time against this completed attempt. No processes are terminated."
+  },
+  "capsule": {
+    "path": "artifacts/build/checkpoints/attended-port-controls-20261101",
+    "files": 396,
+    "allFileHashesVerified": true,
+    "manifestSha256": "9becf9bce9a54931d52e1b5616b72061568ddc1a6c394c71b22591b7bbb96661"
+  },
+  "bindings": {
+    "tests/results/local/logging-batch-port-attended-20261101-1640-controls/run.json": "d93b0ee6d79e6957fd8b4398f86f4802852c2cf3a491a7d77ac63f88365cc632",
+    "tests/results/local/logging-batch-port-attended-20261101-1640-controls/probe-validation.json": "82c2f5b1b25af81e18c03e361a5fa72348497ae956f67487823151ebf1b0a242",
+    "tests/results/local/logging-batch-port-attended-20261101-1640-controls/probe/probe.json": "0ec0d0873e0719f0da92776f2a3c1837fdc737d515625d1545cdcda3550340a4",
+    "tests/results/local/logging-batch-port-attended-20261101-1640-controls/probe/worker-1.tsv": "489556aae706f6be32a7731b4bf09effdeae061ecac860d37c52ad408946778f",
+    "tests/results/local/logging-batch-port-attended-20261101-1640-controls/before-state.json": "280d4f2e0df2047d837f6653c67353f58f2fa43f1b36168c41f411c9e6687dc2",
+    "tests/results/local/logging-batch-port-attended-20261101-1640-controls/after-state.json": "f13b8ae7fb0ec9f5778df869a281a13db90c3c015ea1537720237f6bdfbc5aad",
+    "analysis/hub-port-observer-attended-20261101-1640/observations.ndjson": "a7c40833aa2bda04827d09760e8680ab40f7c93817af22cafbc56c7c538fac38",
+    "analysis/hub-port-observer-attended-20261101-1640/supervision.json": "49d6b9f2ca0bb0ac23cfc76655ee8746c47b7fce1b6baf748aca2ca535015967",
+    "tests/results/local/logging-batch-port-attended-20261101-1640-1/run.json": "9c7f55dc8384bff13b08e198407955c1c701f7c3d2cbc9a9b65e98f389cc9d67",
+    "analysis/logging-batch-port-attended-20261101-1640/controls-image-result.json": "e94750171ef3888c9b478eb0e1a4ae7450f9859de81f88b9319ec9f54f309117",
+    "analysis/attended-port-controls-20261101-probe-reassessment.json": "2ec21136e8f73e59c290fb1b57e28d9d2fa6ea26870e3fbc89fcf1ed672ae0a2",
+    "analysis/attended-port-controls-20261101-retirement-recheck.json": "308b8f7b643a307e22812dbe876408862d23f24e50aeb9c0ea08b3e1bfdeb3ef",
+    "artifacts/build/native/native-build-Release.json": "12b96a0585f213eb4bca9437f408b021c2f575b8fd8460977d8a8197d089c41a",
+    "artifacts/build/native/ctest-Release.log": "e835921ca437f04a745263aa042cfeeda57e8856d8379b1ea27c842f60622e2f",
+    "analysis/attended-port-controls-fixed-preflight-20261101.json": "cbe7a399717fb256402e178a7c1005db12abc4b1c5a35ecfce80046efcf2907f"
+  },
+  "readinessAdmission": false,
+  "audioOrSuccessiveAcquisitionVerified": false,
+  "softwareVerification": {
+    "focusedJournalControlsHubTests": 22,
+    "imageControllerSessionTests": 51,
+    "collectionLauncherWindowTests": 34,
+    "nativeReleaseTestsPassed": 48,
+    "nativeReleaseTestsFailed": 0,
+    "readOnlyPreflightPassed": true,
+    "physicalRetestPerformed": false
+  }
+}

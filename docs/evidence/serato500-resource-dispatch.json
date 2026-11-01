@@ -1,0 +1,176 @@
+{
+  "binarySha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "installedBinarySha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "scope": "Static resource dispatch only; no application/config/archive mutation or execution, device action or runtime override validation",
+  "focusedReportSha256": {
+    "serato500-resource-providers-03.json": "234ce006e8196aa7a4297facd7faa878a21b16416f888e60501b7bc52931819a",
+    "serato500-descriptor-loader-01.json": "2fec7e7983da66b44260e23130cf8dca8d0d2b32fa617073f5550b93c6a4082a",
+    "serato500-qrc-configuration-05.json": "24fab29778e970ec2680ed1a14b59430e6479737ef96e1cb27f26ce20698d4cc",
+    "serato500-qrc-root-07.json": "033fc532818763c1883adb59cc6925c287cfbf779b33b07a805ad36354aafc55",
+    "serato500-resource-order-08.json": "d821d92d86535c06fe2e1e966404081b36ee215441eeeaeb6de26acda7f229e1",
+    "serato500-qrc-path-06.json": "1ccd8aaefee3c327726377b2b8c5a14855f5b3ac50dc0efd09b79ec1f4560295",
+    "serato500-descriptor-resource-02.json": "2229f8ee4e1e3cd1df6f1bc4131060840798ffd72eb3545928ac72067cfeb64d",
+    "serato500-archive-map-10.json": "6502f26832d25ff78721025c97f7fce65dccfa62f2e914323bdd9cab2a5bcb8d",
+    "serato500-archive-read-09.json": "a5bdfc3c78dfa2fb397b6818bef111baee374f92b5f206fa2791841bf7ab4374",
+    "serato500-qrc-provider-04.json": "803a03178106bf64700326738ec47d58a2c050b739a4692728baf61cc9d62cbe"
+  },
+  "readers": [
+    {
+      "vtable": "0x142fabb98",
+      "locator": "0x1433bb748",
+      "type": ".?AVArchiveResourceReader@resources@serato@@",
+      "slots": {
+        "0x8": "0x141776aa0",
+        "0x20": "0x141775360",
+        "0x28": "0x1417738d0"
+      }
+    },
+    {
+      "vtable": "0x142e74538",
+      "locator": "0x143302b08",
+      "type": ".?AVQRCResources@qt@ui@serato@@",
+      "slots": {
+        "0x8": "0x140b0e5a0",
+        "0x20": "0x140b0d760",
+        "0x28": "0x140b0d280"
+      }
+    }
+  ],
+  "registrationFolders": [
+    "userio/midi",
+    "userio/audio",
+    "userio/hid",
+    "userio_partner/midi",
+    "userio_partner/audio",
+    "userio_partner/hid",
+    "userio_hidden_from_partners/midi",
+    "userio_hidden_from_partners/audio",
+    "userio_hidden_from_partners/hid"
+  ],
+  "descriptorFlow": [
+    "0x140503a40 registration",
+    "0x1405037d0 resource folder listing",
+    "0x141771e50 first-reader enumeration",
+    "0x1405ce9d0 descriptor factory",
+    "0x1405c7330 type/product-ID pre-parser",
+    "0x141772090 first-reader text read"
+  ],
+  "userioArchive": {
+    "prefix": "userio",
+    "file": "userio_resources.bin",
+    "sha256": "872fc4fdad2eab2ddd34387d2d3c04dd9731c84798d9fdc7bd05ca54e1567db8",
+    "bytes": 2291764,
+    "registrationAssembly": [
+      "14139bb18: movups xmm0, xmmword ptr [rip + 0x1b922b9]",
+      "14139bb1f: movups xmmword ptr [rax], xmm0",
+      "14139bb22: mov eax, dword ptr [rip + 0x1b922c0]",
+      "14139bb28: mov dword ptr [rcx + 0x10], eax",
+      "14139bb2b: mov byte ptr [rcx + 0x14], 0",
+      "14139bb2f: xorps xmm0, xmm0",
+      "14139bb32: movups xmmword ptr [rbp - 0x80], xmm0",
+      "14139bb36: movdqa xmm1, xmmword ptr [rip + 0x1464e02]",
+      "14139bb3e: movdqu xmmword ptr [rbp - 0x70], xmm1",
+      "14139bb43: mov eax, dword ptr [rip + 0x14dc31f]",
+      "14139bb49: mov dword ptr [rbp - 0x80], eax",
+      "14139bb4c: movzx eax, word ptr [rip + 0x14dc319]",
+      "14139bb53: mov word ptr [rbp - 0x7c], ax",
+      "14139bb57: mov byte ptr [rbp - 0x7a], 0",
+      "14139bb5b: lea r8, [rbp - 0x60]",
+      "14139bb5f: lea rdx, [rbp - 0x80]",
+      "14139bb63: mov rbx, qword ptr [rsp + 0x50]",
+      "14139bb68: mov rcx, rbx",
+      "14139bb6b: call 0x1417763c0",
+      "14139bb70: nop "
+    ]
+  },
+  "providerOrder": {
+    "archiveAppend": "0x14139c0c9",
+    "qrcAppend": "0x140b0b18a",
+    "interpretation": "QRC factory constructs the base manager first, then appends QRC. The base manager appends the userio archive reader before return."
+  },
+  "firstMatchTextAssembly": [
+    "1417720e2: mov rbx, qword ptr [rcx + 8]",
+    "1417720e6: mov rsi, qword ptr [rcx + 0x10]",
+    "1417720ea: cmp rbx, rsi",
+    "1417720ed: je 0x14177211a",
+    "1417720ef: nop ",
+    "1417720f0: mov rcx, qword ptr [rbx]",
+    "1417720f3: mov rax, qword ptr [rcx]",
+    "1417720f6: mov rdx, rbp",
+    "1417720f9: call qword ptr [rax + 8]",
+    "1417720fc: test al, al",
+    "1417720fe: jne 0x14177210b",
+    "141772100: add rbx, 0x10",
+    "141772104: cmp rbx, rsi",
+    "141772107: jne 0x1417720f0",
+    "141772109: jmp 0x14177211a",
+    "14177210b: mov rcx, qword ptr [rbx]",
+    "14177210e: mov rax, qword ptr [rcx]",
+    "141772111: mov r8, rdi",
+    "141772114: mov rdx, rbp",
+    "141772117: call qword ptr [rax + 0x20]",
+    "14177211a: cmp qword ptr [rdi + 0x10], 0",
+    "14177211f: jne 0x14177222c"
+  ],
+  "firstMatchEnumerationAssembly": [
+    "141771e6a: mov rbx, qword ptr [rcx + 8]",
+    "141771e6e: xor r14d, r14d",
+    "141771e71: mov rsi, qword ptr [rcx + 0x10]",
+    "141771e75: mov rbp, r8",
+    "141771e78: mov rdi, rdx",
+    "141771e7b: cmp rbx, rsi",
+    "141771e7e: je 0x141771e99",
+    "141771e80: mov rcx, qword ptr [rbx]",
+    "141771e83: mov rdx, rbp",
+    "141771e86: mov rax, qword ptr [rcx]",
+    "141771e89: call qword ptr [rax + 8]",
+    "141771e8c: test al, al",
+    "141771e8e: jne 0x141771ec2",
+    "141771e90: add rbx, 0x10",
+    "141771e94: cmp rbx, rsi",
+    "141771e97: jne 0x141771e80",
+    "141771e99: mov qword ptr [rdi], r14",
+    "141771e9c: mov qword ptr [rdi + 8], r14",
+    "141771ea0: mov qword ptr [rdi + 0x10], r14",
+    "141771ea4: mov rbx, qword ptr [rsp + 0x40]",
+    "141771ea9: mov rax, rdi",
+    "141771eac: mov rdi, qword ptr [rsp + 0x58]",
+    "141771eb1: mov rbp, qword ptr [rsp + 0x48]",
+    "141771eb6: mov rsi, qword ptr [rsp + 0x50]",
+    "141771ebb: add rsp, 0x30",
+    "141771ebf: pop r14",
+    "141771ec1: ret ",
+    "141771ec2: mov rcx, qword ptr [rbx]",
+    "141771ec5: mov r8, rbp",
+    "141771ec8: mov rdx, rdi",
+    "141771ecb: mov rax, qword ptr [rcx]",
+    "141771ece: call qword ptr [rax + 0x28]",
+    "141771ed1: jmp 0x141771ea4"
+  ],
+  "qrcFallback": {
+    "fileReader": "0x140b0bf50",
+    "qtResourceReader": "0x140b0bd40",
+    "listReader": "0x140b0d280",
+    "listingPrefix": ":",
+    "assembly": [
+      "140b0dc53: cmp qword ptr [rsi + 0x10], 0",
+      "140b0dc58: jne 0x140b0d9e1",
+      "140b0dc5e: lea r8, [rbp - 0x21]",
+      "140b0dc62: lea rdx, [rbp - 1]",
+      "140b0dc66: lea rcx, [rbp - 0x69]",
+      "140b0dc6a: call 0x140b0bd40",
+      "140b0dc6f: mov rdx, rax",
+      "140b0dc72: mov rcx, rsi"
+    ],
+    "interpretation": "Optional instance root affects text reads; an empty file result falls back to QResource. Directory listing uses colon-prefixed URI path, not instance root."
+  },
+  "conclusion": "A loose Data/userio XML file is not established as a device-registration route. The mapped userio archive is selected before QRC, and manager dispatch does not merge readers or retry after an empty result.",
+  "unresolved": [
+    "Runtime provider construction and any later registration changes",
+    "Full configured resource-root initialization",
+    "Verified original SL3 descriptor content and duplicate identity precedence",
+    "A supported external integration boundary preserving product/account checks"
+  ],
+  "physicalAudioVerified": false,
+  "currentSeratoIntegrationVerified": false
+}

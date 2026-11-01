@@ -1,0 +1,647 @@
+{
+  "binary_sha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "coverage": "Static focused decompilation and boundary-checked PE excerpts. No modified application or debugger/runtime call trace.",
+  "driverApiFactory": {
+    "function": "0x140bfa030",
+    "raneVendor": "0x1cc5",
+    "explicitRaneProducts": [
+      "0x18",
+      "0x1b",
+      "0x20",
+      "0x21",
+      "0x22",
+      "0x25",
+      "0x26"
+    ],
+    "sl3Product": "0x1",
+    "sl3SpecificMatchInThisFactory": false,
+    "fallbackConstructor": "0x140bff9d0",
+    "rtti": {
+      "vtable": "0x142e86360",
+      "locator": "0x143310b30",
+      "object_offset": 0,
+      "decorated_type": ".?AVDriverAPI@driver@device@serato@@",
+      "slots": [
+        {
+          "offset": "0x0",
+          "target": "0x140bf97f0"
+        },
+        {
+          "offset": "0x8",
+          "target": "0x1404a4540"
+        },
+        {
+          "offset": "0x10",
+          "target": "0x140bffb30"
+        },
+        {
+          "offset": "0x18",
+          "target": "0x140bfffc0"
+        },
+        {
+          "offset": "0x20",
+          "target": "0x140bfff40"
+        },
+        {
+          "offset": "0x28",
+          "target": "0x140c00360"
+        },
+        {
+          "offset": "0x30",
+          "target": "0x140c00260"
+        },
+        {
+          "offset": "0x38",
+          "target": "0x1404a4550"
+        },
+        {
+          "offset": "0x40",
+          "target": "0x1405da5d0"
+        },
+        {
+          "offset": "0x48",
+          "target": "0x140c00230"
+        },
+        {
+          "offset": "0x50",
+          "target": "0x140c00240"
+        },
+        {
+          "offset": "0x58",
+          "target": "0x140c00230"
+        },
+        {
+          "offset": "0x60",
+          "target": "0x1404a4980"
+        },
+        {
+          "offset": "0x68",
+          "target": "0x140bfffb0"
+        },
+        {
+          "offset": "0x70",
+          "target": "0x1404a67c0"
+        },
+        {
+          "offset": "0x78",
+          "target": "0x1404a67c0"
+        },
+        {
+          "offset": "0x80",
+          "target": "0x140c00310"
+        },
+        {
+          "offset": "0x88",
+          "target": "0x140be4810"
+        },
+        {
+          "offset": "0x90",
+          "target": "0x1404a4550"
+        },
+        {
+          "offset": "0x98",
+          "target": "0x1404a5de0"
+        },
+        {
+          "offset": "0xa0",
+          "target": "0x1404a4540"
+        },
+        {
+          "offset": "0xa8",
+          "target": "0x1404a5de0"
+        },
+        {
+          "offset": "0xb0",
+          "target": "0x140bfe1b0"
+        },
+        {
+          "offset": "0xb8",
+          "target": "0x140bfe1b0"
+        }
+      ]
+    }
+  },
+  "readinessProjection": {
+    "source": "0x1421dad00",
+    "pseudocode": "  cVar3 = (**(code **)(*plStack_a8 + 0x50))();\n  cVar4 = (**(code **)(*plStack_a8 + 0x48))();\n  cVar5 = (**(code **)(*plStack_a8 + 0x58))();\n  cVar6 = (**(code **)(*plStack_a8 + 0x90))();\n  plStack_78 = plStack_a8;\n  plStack_70 = plStack_a0;\n  if (plStack_a0 != (longlong *)0x0) {\n    piVar8 = (int *)FUN_1404a2ee0(plStack_a0 + 1);\n    LOCK();\n    *piVar8 = *piVar8 + 1;\n    UNLOCK();\n  }\n  FUN_1421ddac0(&plStack_78);\n  if (cVar6 == '\\0') {\n    uStackX_8 = CONCAT44(uStackX_8._4_4_,7);\n    if (cVar3 != '\\0') {\n      uStackX_8 = CONCAT44(uStackX_8._4_4_,6);\n    }\nLAB_1421daf3d:\n    uStackX_8._0_5_ = CONCAT14(1,(undefined4)uStackX_8);\n  }\n  else {\n    if (cVar3 == '\\0') {\n      uStackX_8 = CONCAT44(uStackX_8._4_4_,5);\n      goto LAB_1421daf3d;\n    }\n    if (cVar5 == '\\0') {\n      uStackX_8 = CONCAT44(uStackX_8._4_4_,4);\n      goto LAB_1421daf3d;\n    }\n    uStackX_8 = CONCAT35(uStackX_8._5_3_,0x100000000);\n    if (cVar4 == '\\0') {\n      uStackX_8 = CONCAT44(uStackX_8._4_4_,3);\n    }\n    else {\n      uStackX_8 = CONCAT44(uStackX_8._4_4_,6);\n    }\n  }\n",
+    "limit": "These virtual calls target DriverAPI, not ControllerDescriptor; action names are not inferred."
+  },
+  "stubStaticPrediction": {
+    "descriptorInterfaceOffset": "0x10",
+    "hasHid": false,
+    "requiresUsb": false,
+    "midiDirectionString": "",
+    "midiDirectionGetterReturn": 3,
+    "expectedMidiComponentCount": 1,
+    "useLegacyPortaudio": true,
+    "windowsAudioApiString": "",
+    "windowsAudioDeviceName": "",
+    "limit": "Derived from zeroing, constructor, identity-only helper and getters; not a runtime patch experiment."
+  },
+  "asioBackend": {
+    "rttiVtable": "0x1431dd8d0",
+    "scanFunction": "0x142212470",
+    "registryRoot": "HKEY_LOCAL_MACHINE",
+    "registrySubkey": "software\\asio",
+    "createFunction": "0x14220d200",
+    "deviceConstructor": "0x142208150",
+    "registryInfoFunction": "0x142209dd0",
+    "registryFieldLiterals": {
+      "0x1431dd938": "clsid",
+      "0x1431dd948": "InprocServer32",
+      "0x1431dd9a0": "description"
+    },
+    "warmupFunction": "0x142210950",
+    "warmupProjection": "          FUN_142213180(param_1);\n          *(undefined8 *)(param_1 + 0xc0) = 0;\n          (**(code **)(**(longlong **)(param_1 + 0x38) + 0x50))\n                    (*(longlong **)(param_1 + 0x38),param_1 + 0xc0,param_1 + 0xc4);\n          FUN_14220d6f0(param_1,*(undefined4 *)(param_1 + 0xd0));\n          *(undefined8 *)(param_1 + 0xc0) = 0;\n          (**(code **)(**(longlong **)(param_1 + 0x38) + 0x50))\n                    (*(longlong **)(param_1 + 0x38),param_1 + 0xc0,param_1 + 0xc4);\n          (**(code **)(**(longlong **)(param_1 + 0x38) + 0x38))();\n          FUN_142205170(0x50);\n          (**(code **)(**(longlong **)(param_1 + 0x38) + 0x40))();\n",
+    "limit": "Backend exists; no proof of routing the SL3 descriptor into it or opening rebuilt audio."
+  },
+  "excerpts": [
+    {
+      "purpose": "Hoisted Rane vendor constant",
+      "start": "0x140bfb2d4",
+      "end_exclusive": "0x140bfb2de",
+      "instructions": [
+        "140bfb2d4: mov r12d, 0x1cc5",
+        "140bfb2da: cmp ax, r12w"
+      ]
+    },
+    {
+      "purpose": "Rane-specific DriverAPI selection",
+      "start": "0x140bfb2ce",
+      "end_exclusive": "0x140bfb30a",
+      "instructions": [
+        "140bfb2ce: mov rcx, rdi",
+        "140bfb2d1: call qword ptr [rax + 0x18]",
+        "140bfb2d4: mov r12d, 0x1cc5",
+        "140bfb2da: cmp ax, r12w",
+        "140bfb2de: jne 0x140bfb3da",
+        "140bfb2e4: mov rax, qword ptr [rdi]",
+        "140bfb2e7: mov rcx, rdi",
+        "140bfb2ea: call qword ptr [rax + 0x20]",
+        "140bfb2ed: cmp ax, 0x1b",
+        "140bfb2f1: jne 0x140bfb3da",
+        "140bfb2f7: cmp qword ptr [rip + 0x33fdd39], 0",
+        "140bfb2ff: jne 0x140bfb3c6",
+        "140bfb305: mov ecx, 0x80"
+      ]
+    },
+    {
+      "purpose": "Rane-specific DriverAPI selection",
+      "start": "0x140bfb3da",
+      "end_exclusive": "0x140bfb413",
+      "instructions": [
+        "140bfb3da: mov rax, qword ptr [rdi]",
+        "140bfb3dd: mov rcx, rdi",
+        "140bfb3e0: call qword ptr [rax + 0x18]",
+        "140bfb3e3: cmp ax, r12w",
+        "140bfb3e7: jne 0x140bfb4e3",
+        "140bfb3ed: mov rax, qword ptr [rdi]",
+        "140bfb3f0: mov rcx, rdi",
+        "140bfb3f3: call qword ptr [rax + 0x20]",
+        "140bfb3f6: cmp ax, 0x20",
+        "140bfb3fa: jne 0x140bfb4e3",
+        "140bfb400: cmp qword ptr [rip + 0x33fdc40], 0",
+        "140bfb408: jne 0x140bfb4cf",
+        "140bfb40e: mov ecx, 0x80"
+      ]
+    },
+    {
+      "purpose": "Rane-specific DriverAPI selection",
+      "start": "0x140bfb4e3",
+      "end_exclusive": "0x140bfb51c",
+      "instructions": [
+        "140bfb4e3: mov rax, qword ptr [rdi]",
+        "140bfb4e6: mov rcx, rdi",
+        "140bfb4e9: call qword ptr [rax + 0x18]",
+        "140bfb4ec: cmp ax, r12w",
+        "140bfb4f0: jne 0x140bfb5ec",
+        "140bfb4f6: mov rax, qword ptr [rdi]",
+        "140bfb4f9: mov rcx, rdi",
+        "140bfb4fc: call qword ptr [rax + 0x20]",
+        "140bfb4ff: cmp ax, 0x21",
+        "140bfb503: jne 0x140bfb5ec",
+        "140bfb509: cmp qword ptr [rip + 0x33fdb47], 0",
+        "140bfb511: jne 0x140bfb5d8",
+        "140bfb517: mov ecx, 0x80"
+      ]
+    },
+    {
+      "purpose": "Rane-specific DriverAPI selection",
+      "start": "0x140bfb5ec",
+      "end_exclusive": "0x140bfb621",
+      "instructions": [
+        "140bfb5ec: mov rax, qword ptr [rdi]",
+        "140bfb5ef: mov rcx, rdi",
+        "140bfb5f2: call qword ptr [rax + 0x18]",
+        "140bfb5f5: cmp ax, r12w",
+        "140bfb5f9: jne 0x140bfb6aa",
+        "140bfb5ff: mov rax, qword ptr [rdi]",
+        "140bfb602: mov rcx, rdi",
+        "140bfb605: call qword ptr [rax + 0x20]",
+        "140bfb608: cmp ax, 0x18",
+        "140bfb60c: jne 0x140bfb6aa",
+        "140bfb612: cmp qword ptr [rip + 0x33fda4e], 0",
+        "140bfb61a: jne 0x140bfb696",
+        "140bfb61c: mov ecx, 0x80"
+      ]
+    },
+    {
+      "purpose": "Rane-specific DriverAPI selection",
+      "start": "0x140bfb6aa",
+      "end_exclusive": "0x140bfb6e3",
+      "instructions": [
+        "140bfb6aa: mov rax, qword ptr [rdi]",
+        "140bfb6ad: mov rcx, rdi",
+        "140bfb6b0: call qword ptr [rax + 0x18]",
+        "140bfb6b3: cmp ax, r12w",
+        "140bfb6b7: jne 0x140bfb7b3",
+        "140bfb6bd: mov rax, qword ptr [rdi]",
+        "140bfb6c0: mov rcx, rdi",
+        "140bfb6c3: call qword ptr [rax + 0x20]",
+        "140bfb6c6: cmp ax, 0x22",
+        "140bfb6ca: jne 0x140bfb7b3",
+        "140bfb6d0: cmp qword ptr [rip + 0x33fd9a0], 0",
+        "140bfb6d8: jne 0x140bfb79f",
+        "140bfb6de: mov ecx, 0x80"
+      ]
+    },
+    {
+      "purpose": "Rane-specific DriverAPI selection",
+      "start": "0x140bfb7b3",
+      "end_exclusive": "0x140bfb7ec",
+      "instructions": [
+        "140bfb7b3: mov rax, qword ptr [rdi]",
+        "140bfb7b6: mov rcx, rdi",
+        "140bfb7b9: call qword ptr [rax + 0x18]",
+        "140bfb7bc: cmp ax, r12w",
+        "140bfb7c0: jne 0x140bfb8bc",
+        "140bfb7c6: mov rax, qword ptr [rdi]",
+        "140bfb7c9: mov rcx, rdi",
+        "140bfb7cc: call qword ptr [rax + 0x20]",
+        "140bfb7cf: cmp ax, 0x26",
+        "140bfb7d3: jne 0x140bfb8bc",
+        "140bfb7d9: cmp qword ptr [rip + 0x33fd8a7], 0",
+        "140bfb7e1: jne 0x140bfb8a8",
+        "140bfb7e7: mov ecx, 0x80"
+      ]
+    },
+    {
+      "purpose": "Rane-specific DriverAPI selection",
+      "start": "0x140bfbae2",
+      "end_exclusive": "0x140bfbb1b",
+      "instructions": [
+        "140bfbae2: mov rax, qword ptr [rdi]",
+        "140bfbae5: mov rcx, rdi",
+        "140bfbae8: call qword ptr [rax + 0x18]",
+        "140bfbaeb: cmp ax, r12w",
+        "140bfbaef: jne 0x140bfbbae",
+        "140bfbaf5: mov rax, qword ptr [rdi]",
+        "140bfbaf8: mov rcx, rdi",
+        "140bfbafb: call qword ptr [rax + 0x20]",
+        "140bfbafe: cmp ax, 0x25",
+        "140bfbb02: jne 0x140bfbbae",
+        "140bfbb08: cmp qword ptr [rip + 0x33fd598], 0",
+        "140bfbb10: jne 0x140bfbb9a",
+        "140bfbb16: mov ecx, 0x80"
+      ]
+    },
+    {
+      "purpose": "Final generic DriverAPI fallback",
+      "start": "0x140bfe096",
+      "end_exclusive": "0x140bfe0c9",
+      "instructions": [
+        "140bfe096: mov rbx, rax",
+        "140bfe099: mov qword ptr [rbp - 0x69], rax",
+        "140bfe09d: test rax, rax",
+        "140bfe0a0: je 0x140bfe0bd",
+        "140bfe0a2: mov rax, qword ptr [rdi]",
+        "140bfe0a5: lea rdx, [rbp - 0x49]",
+        "140bfe0a9: mov rcx, rdi",
+        "140bfe0ac: call qword ptr [rax + 0x48]",
+        "140bfe0af: mov rdx, rax",
+        "140bfe0b2: mov rcx, rbx",
+        "140bfe0b5: call 0x140bff9d0",
+        "140bfe0ba: mov rsi, rax",
+        "140bfe0bd: mov rdx, rsi",
+        "140bfe0c0: lea rcx, [rbp - 9]",
+        "140bfe0c4: call 0x140bf86b0"
+      ]
+    },
+    {
+      "purpose": "Zero 0x740-byte descriptor object before its constructor",
+      "start": "0x1405ce77c",
+      "end_exclusive": "0x1405ce79b",
+      "instructions": [
+        "1405ce77c: xor edx, edx",
+        "1405ce77e: mov r8d, 0x740",
+        "1405ce784: lea rcx, [rdi + 0x10]",
+        "1405ce788: call 0x142120220",
+        "1405ce78d: mov edx, 1",
+        "1405ce792: lea rcx, [rdi + 0x10]",
+        "1405ce796: call 0x1405bead0"
+      ]
+    },
+    {
+      "purpose": "Legacy audio flag getter: interface +0x34C / complete +0x35C",
+      "start": "0x1405cd180",
+      "end_exclusive": "0x1405cd188",
+      "instructions": [
+        "1405cd180: movzx eax, byte ptr [rcx + 0x34c]",
+        "1405cd187: ret "
+      ]
+    },
+    {
+      "purpose": "HID getter: interface +0xC4 / complete +0xD4",
+      "start": "0x1405c7da0",
+      "end_exclusive": "0x1405c7da8",
+      "instructions": [
+        "1405c7da0: movzx eax, byte ptr [rcx + 0xc4]",
+        "1405c7da7: ret "
+      ]
+    },
+    {
+      "purpose": "Raw USB getter: interface +0x10C / complete +0x11C",
+      "start": "0x1405c7e30",
+      "end_exclusive": "0x1405c7e38",
+      "instructions": [
+        "1405c7e30: movzx eax, byte ptr [rcx + 0x10c]",
+        "1405c7e37: ret "
+      ]
+    },
+    {
+      "purpose": "Audio API/name and MIDI-direction parser references; WDMKS literal comparison",
+      "start": "0x1405c8f86",
+      "end_exclusive": "0x1405c9143",
+      "instructions": [
+        "1405c8f86: lea rdx, [rip + 0x2254773]",
+        "1405c8f8d: mov rcx, r12",
+        "1405c8f90: call 0x141b17da0",
+        "1405c8f95: test rax, rax",
+        "1405c8f98: je 0x1405c8fb2",
+        "1405c8f9a: xor r8d, r8d",
+        "1405c8f9d: lea rdx, [rip + 0x225445c]",
+        "1405c8fa4: mov rcx, rax",
+        "1405c8fa7: call 0x141b17690",
+        "1405c8fac: mov byte ptr [rsi + 0x35c], al",
+        "1405c8fb2: lea rcx, [rsi + 0x360]",
+        "1405c8fb9: call 0x1405b3650",
+        "1405c8fbe: lea rdx, [rip + 0x22546cb]",
+        "1405c8fc5: mov rcx, r12",
+        "1405c8fc8: call 0x141b17da0",
+        "1405c8fcd: test rax, rax",
+        "1405c8fd0: je 0x1405c8ff3",
+        "1405c8fd2: xor r8d, r8d",
+        "1405c8fd5: lea rdx, [rip + 0x2254424]",
+        "1405c8fdc: mov rcx, rax",
+        "1405c8fdf: call 0x141b17620",
+        "1405c8fe4: mov rdx, rax",
+        "1405c8fe7: lea rcx, [rsi + 0x360]",
+        "1405c8fee: call 0x1404a8080",
+        "1405c8ff3: lea rcx, [rsi + 0x380]",
+        "1405c8ffa: call 0x1405b3650",
+        "1405c8fff: lea rdx, [rip + 0x225469a]",
+        "1405c9006: mov rcx, r12",
+        "1405c9009: call 0x141b17da0",
+        "1405c900e: test rax, rax",
+        "1405c9011: je 0x1405c9034",
+        "1405c9013: xor r8d, r8d",
+        "1405c9016: lea rdx, [rip + 0x22543e3]",
+        "1405c901d: mov rcx, rax",
+        "1405c9020: call 0x141b17620",
+        "1405c9025: mov rdx, rax",
+        "1405c9028: lea rcx, [rsi + 0x380]",
+        "1405c902f: call 0x1404a8080",
+        "1405c9034: lea rcx, [rsi + 0x3a0]",
+        "1405c903b: call 0x1405b3650",
+        "1405c9040: lea rdx, [rip + 0x2254669]",
+        "1405c9047: mov rcx, r12",
+        "1405c904a: call 0x141b17da0",
+        "1405c904f: test rax, rax",
+        "1405c9052: je 0x1405c90a2",
+        "1405c9054: xor r8d, r8d",
+        "1405c9057: lea rdx, [rip + 0x22543a2]",
+        "1405c905e: mov rcx, rax",
+        "1405c9061: call 0x141b17620",
+        "1405c9066: mov rdx, rax",
+        "1405c9069: lea rcx, [rsi + 0x3a0]",
+        "1405c9070: call 0x1404a8080",
+        "1405c9075: cmp qword ptr [rsi + 0x3b0], 0",
+        "1405c907d: je 0x1405c90a2",
+        "1405c907f: lea rdx, [rip + 0x224b7e6]",
+        "1405c9086: lea rcx, [rsi + 0x360]",
+        "1405c908d: call 0x1404c8c90",
+        "1405c9092: test eax, eax",
+        "1405c9094: jne 0x1405c90a2",
+        "1405c9096: lea rcx, [rsi + 0x3a0]",
+        "1405c909d: call 0x1405b3650",
+        "1405c90a2: lea rcx, [rsi + 0x3c0]",
+        "1405c90a9: call 0x1405b3650",
+        "1405c90ae: lea rdx, [rip + 0x2254613]",
+        "1405c90b5: mov rcx, r12",
+        "1405c90b8: call 0x141b17da0",
+        "1405c90bd: test rax, rax",
+        "1405c90c0: je 0x1405c90e3",
+        "1405c90c2: xor r8d, r8d",
+        "1405c90c5: lea rdx, [rip + 0x2254334]",
+        "1405c90cc: mov rcx, rax",
+        "1405c90cf: call 0x141b17620",
+        "1405c90d4: mov rdx, rax",
+        "1405c90d7: lea rcx, [rsi + 0x3c0]",
+        "1405c90de: call 0x1404a8080",
+        "1405c90e3: lea rdx, [rip + 0x2255172]",
+        "1405c90ea: lea rcx, [rsi + 0x3e0]",
+        "1405c90f1: call 0x1404a8080",
+        "1405c90f6: lea rdx, [rip + 0x22545e3]",
+        "1405c90fd: mov rcx, r12",
+        "1405c9100: call 0x141b17da0",
+        "1405c9105: test rax, rax",
+        "1405c9108: je 0x1405c912b",
+        "1405c910a: xor r8d, r8d",
+        "1405c910d: lea rdx, [rip + 0x22542ec]",
+        "1405c9114: mov rcx, rax",
+        "1405c9117: call 0x141b17620",
+        "1405c911c: mov rdx, rax",
+        "1405c911f: lea rcx, [rsi + 0x3e0]",
+        "1405c9126: call 0x1404a8080",
+        "1405c912b: mov dword ptr [rsi + 0x348], r15d",
+        "1405c9132: mov dword ptr [rsi + 0x34c], 1",
+        "1405c913c: lea rdx, [rip + 0x2254a65]"
+      ]
+    },
+    {
+      "purpose": "has_hid and requires_usb parser field writes",
+      "start": "0x1405c9f23",
+      "end_exclusive": "0x1405ca042",
+      "instructions": [
+        "1405c9f23: call 0x1404a6970",
+        "1405c9f28: nop ",
+        "1405c9f29: lea rcx, [rbp + 0x2f8]",
+        "1405c9f30: call 0x1404a6a10",
+        "1405c9f35: mov byte ptr [rsi + 0xd4], 0",
+        "1405c9f3c: lea rdx, [rip + 0x2253b6d]",
+        "1405c9f43: mov rcx, r12",
+        "1405c9f46: call 0x141b17da0",
+        "1405c9f4b: cmp byte ptr [r13 + 0x11], 0",
+        "1405c9f50: je 0x1405c9f6f",
+        "1405c9f52: test rax, rax",
+        "1405c9f55: je 0x1405c9f6f",
+        "1405c9f57: xor r8d, r8d",
+        "1405c9f5a: lea rdx, [rip + 0x225349f]",
+        "1405c9f61: mov rcx, rax",
+        "1405c9f64: call 0x141b17690",
+        "1405c9f69: mov byte ptr [rsi + 0xd4], al",
+        "1405c9f6f: lea rcx, [rsi + 0x130]",
+        "1405c9f76: call 0x1405b3650",
+        "1405c9f7b: lea rdx, [rip + 0x2253d86]",
+        "1405c9f82: mov rcx, r12",
+        "1405c9f85: call 0x141b17da0",
+        "1405c9f8a: test rax, rax",
+        "1405c9f8d: je 0x1405c9fb0",
+        "1405c9f8f: xor r8d, r8d",
+        "1405c9f92: lea rdx, [rip + 0x223bae7]",
+        "1405c9f99: mov rcx, rax",
+        "1405c9f9c: call 0x141b17620",
+        "1405c9fa1: mov rdx, rax",
+        "1405c9fa4: lea rcx, [rsi + 0x130]",
+        "1405c9fab: call 0x1404a8080",
+        "1405c9fb0: mov dword ptr [rsi + 0x118], 0x19",
+        "1405c9fba: lea rdx, [rip + 0x2253b8f]",
+        "1405c9fc1: mov rcx, r12",
+        "1405c9fc4: call 0x141b17da0",
+        "1405c9fc9: test rax, rax",
+        "1405c9fcc: je 0x1405c9fef",
+        "1405c9fce: xor r8d, r8d",
+        "1405c9fd1: lea rdx, [rip + 0x2253428]",
+        "1405c9fd8: mov rcx, rax",
+        "1405c9fdb: call 0x141b17620",
+        "1405c9fe0: mov rcx, rax",
+        "1405c9fe3: call qword ptr [rip + 0x216c9ef]",
+        "1405c9fe9: mov dword ptr [rsi + 0x118], eax",
+        "1405c9fef: mov byte ptr [rsi + 0x11c], 0",
+        "1405c9ff6: lea rdx, [rip + 0x2253b7b]",
+        "1405c9ffd: mov rcx, r12",
+        "1405ca000: call 0x141b17da0",
+        "1405ca005: cmp byte ptr [r13 + 0x10], 0",
+        "1405ca00a: je 0x1405ca029",
+        "1405ca00c: test rax, rax",
+        "1405ca00f: je 0x1405ca029",
+        "1405ca011: xor r8d, r8d",
+        "1405ca014: lea rdx, [rip + 0x22533e5]",
+        "1405ca01b: mov rcx, rax",
+        "1405ca01e: call 0x141b17690",
+        "1405ca023: mov byte ptr [rsi + 0x11c], al",
+        "1405ca029: mov byte ptr [rsi + 0x11d], 0",
+        "1405ca030: lea rdx, [rip + 0x2253b51]",
+        "1405ca037: mov rcx, r12",
+        "1405ca03a: call 0x141b17da0",
+        "1405ca03f: test rax, rax"
+      ]
+    },
+    {
+      "purpose": "Empty driver-detection key returns AL=1, not failure",
+      "start": "0x140c00000",
+      "end_exclusive": "0x140c00011",
+      "instructions": [
+        "140c00000: jne 0x140c00011",
+        "140c00002: mov rcx, rdi",
+        "140c00005: call 0x1404a6a10",
+        "140c0000a: mov al, 1",
+        "140c0000c: jmp 0x140c001fa"
+      ]
+    },
+    {
+      "purpose": "Nonempty key uses HKLM RegOpenKeyExW KEY_READ and tests success",
+      "start": "0x140c00152",
+      "end_exclusive": "0x140c00187",
+      "instructions": [
+        "140c00152: lea rax, [rsp + 0x30]",
+        "140c00157: mov qword ptr [rsp + 0x20], rax",
+        "140c0015c: mov r9d, 0x20019",
+        "140c00162: xor r8d, r8d",
+        "140c00165: mov rcx, 0xffffffff80000002",
+        "140c0016c: call qword ptr [rip + 0x1b31eee]",
+        "140c00172: test eax, eax",
+        "140c00174: sete bl",
+        "140c00177: mov rcx, qword ptr [rsp + 0x30]",
+        "140c0017c: test rcx, rcx",
+        "140c0017f: je 0x140c00187",
+        "140c00181: call qword ptr [rip + 0x1b31ed1]"
+      ]
+    },
+    {
+      "purpose": "Preserve nonempty-key Boolean return after cleanup",
+      "start": "0x140c001ef",
+      "end_exclusive": "0x140c0020c",
+      "instructions": [
+        "140c001ef: mov rcx, rdi",
+        "140c001f2: call 0x1404a6a10",
+        "140c001f7: movzx eax, bl",
+        "140c001fa: mov rcx, qword ptr [rsp + 0x60]",
+        "140c001ff: xor rcx, rsp",
+        "140c00202: call 0x142118190",
+        "140c00207: lea r11, [rsp + 0x70]"
+      ]
+    },
+    {
+      "purpose": "DriverAPI slots +0x48/+0x58 delegate to slot +0x50",
+      "start": "0x140c00230",
+      "end_exclusive": "0x140c00237",
+      "instructions": [
+        "140c00230: mov rax, qword ptr [rcx]",
+        "140c00233: jmp qword ptr [rax + 0x50]"
+      ]
+    },
+    {
+      "purpose": "DriverAPI slot +0x50 copies registry-key string at +0x60 then checks it",
+      "start": "0x140c00240",
+      "end_exclusive": "0x140c0025f",
+      "instructions": [
+        "140c00240: sub rsp, 0x48",
+        "140c00244: lea rdx, [rcx + 0x60]",
+        "140c00248: lea rcx, [rsp + 0x20]",
+        "140c0024d: call 0x1404a3300",
+        "140c00252: mov rcx, rax",
+        "140c00255: call 0x140bfffd0",
+        "140c0025a: add rsp, 0x48",
+        "140c0025e: ret "
+      ]
+    },
+    {
+      "purpose": "Generic DriverAPI slot +0x90 returns false",
+      "start": "0x1404a4550",
+      "end_exclusive": "0x1404a4553",
+      "instructions": [
+        "1404a4550: xor al, al",
+        "1404a4552: ret "
+      ]
+    },
+    {
+      "purpose": "Initial buffer helper invokes IASIO slot +0x98 (createBuffers)",
+      "start": "0x14220d817",
+      "end_exclusive": "0x14220d832",
+      "instructions": [
+        "14220d817: mov r9d, r14d",
+        "14220d81a: mov rdx, qword ptr [rbx + 0x778]",
+        "14220d821: mov r8d, edi",
+        "14220d824: mov qword ptr [rsp + 0x20], rsi",
+        "14220d829: mov rax, qword ptr [rcx]",
+        "14220d82c: call qword ptr [rax + 0x98]"
+      ]
+    },
+    {
+      "purpose": "Constructor defaults use_legacy_portaudio to true",
+      "start": "0x1405bed08",
+      "end_exclusive": "0x1405bed18",
+      "instructions": [
+        "1405bed08: call 0x1420f38d0",
+        "1405bed0d: nop ",
+        "1405bed0e: mov byte ptr [rdi + 0x35c], 1",
+        "1405bed15: xorps xmm0, xmm0"
+      ]
+    }
+  ],
+  "decompilerCautions": [
+    "140bfffd0/140c00240 are inferred void by Ghidra; AL return is visible in machine code.",
+    "DriverAPI factory is not an audio stream initializer or a licensing check."
+  ]
+}

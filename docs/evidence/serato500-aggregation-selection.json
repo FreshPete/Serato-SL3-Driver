@@ -1,0 +1,62 @@
+{
+  "scope": "Static DeviceAggregator registration and USB-side numeric selection; no runtime integration",
+  "binarySha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "installedIdentityMatches": true,
+  "focusedReports": {
+    "serato500-usb-connection-01.json": "64bf1da495385e10c75ef38e439d8b02138616d85312533d99748e7fbf5d8b50",
+    "serato500-usb-connection-02.json": "c2d6363099aa948c023ab20c67b32f85231b5d6676dc315e580320115ce89623",
+    "serato500-usb-connection-03.json": "b26daa31a230567fc50f09d256f0074ddd5bb7191e79323e56328596731c9fa3",
+    "serato500-usb-connection-04.json": "5e07ad8fa0445cf105e8afb81e55cfea40d1bc7a32259f5e6c29247309943536"
+  },
+  "types": [
+    {
+      "table": "0x1431d4560",
+      "locator": "0x1433ec7f8",
+      "type": ".?AVDeviceAggregator@composite@device@serato@@"
+    },
+    {
+      "table": "0x1431c3ed8",
+      "locator": "0x1433e2ee8",
+      "type": ".?AVDeviceManager@@"
+    }
+  ],
+  "primaryVectorGetterCall": "0x14213c62c",
+  "leafBytes": {
+    "0x140505470": "488d81d8000000c3",
+    "0x140c01c30": "0fb74104c3",
+    "0x140c01c40": "0fb74102c3",
+    "0x140c01c50": "0fb701c3"
+  },
+  "assembly": [
+    "14213c695: call 0x1421bc060",
+    "1421bc1f1: call qword ptr [rax + 0x30]",
+    "1421bc1f4: mov rdi, qword ptr [rax + 0x10]",
+    "1421bc238: test rdi, rdi",
+    "1421bc23b: je 0x1421bc2ca",
+    "1421bc2ac: add qword ptr [r12 + 8], 0x10",
+    "1421bf074: call 0x140c01c30",
+    "1421bf08f: mov word ptr [rsp + 0x20], si",
+    "1421bf0a4: call 0x1421bffa0",
+    "1421c0020: mov r13, qword ptr [rdi + 0x48]",
+    "1421c00ca: cmp ax, word ptr [rsp + 0x100]",
+    "1421c00d2: je 0x1421c0256",
+    "1421c00f5: jae 0x1421c01b4",
+    "1421c0155: cmp bx, ax",
+    "1421c0158: cmovbe r15, rcx",
+    "1421bf59c: je 0x1421bf5b5",
+    "1421bf5b0: jle 0x1421bf5c6",
+    "1421bf5c0: call 0x140b1a3c0",
+    "140b1a3dd: mov dword ptr [rax + 0x10], ebx",
+    "140b1a3f3: mov dword ptr [rax + 0x10], ebx"
+  ],
+  "registration": "Ordered primary descriptors are supplied as +0x10 interfaces; an existing same VID/PID/revision entry with an empty name suppresses later insertion",
+  "numericSelection": "First exact revision; otherwise highest strictly older revision, later ties win, within the separately populated aggregation vector",
+  "revisionReconciliation": "For matching VID/PID, replace zero or a larger composite revision with the USB-side revision; writes application memory only",
+  "limits": [
+    "No provider injection/configuration established",
+    "Conditional insertion consequences are not an observed SL3 connection",
+    "USB identity-record construction and live revision values remain unverified",
+    "No application, USB identity, driver, account or firmware changes"
+  ],
+  "vendorCodeExecuted": false
+}

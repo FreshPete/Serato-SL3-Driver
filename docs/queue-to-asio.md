@@ -1,0 +1,31 @@
+# Host queue to SDK buffer path
+
+`sl3_asio_queue` now connects a host-side shared audio channel to the actual SDK-facing `BufferSet` component. A synthetic worker supplies interleaved signed 24-bit input; the adapter decodes it into fixed storage, invokes selected logical-channel callbacks and publishes interleaved output with the original input packet schedule. **The ASIO COM DLL still returns unavailable at initialization. No continuous USB transport, physical audio or Serato/DVS result is claimed.**
+
+## Ownership and processing
+
+`QueuePump` has one audio-thread owner. Its mailbox and prepared buffer component must outlive it. Configuration, stepping, ending and destruction are serialized by that owner; this adapter creates no thread or callback-retirement barrier. Configuration needs a fresh host-side channel and exclusively owned prepared buffers. `begin` validates the declared 44.1/48 kHz metadata rate and starts internal buffer flow; it performs no device clock programming or readiness check.
+
+Each `step` consumes at most one input block, processes its actual six-channel frames, renders output and attempts one output publication. Empty input returns `idle` with no fabricated samples or host callback. Current transport version 3 accepts [8–64 active observed packet lengths in multiples of eight](audio-transfer-granularity.md), each containing 1–7 frames, with zero inactive entries. Every signed 24-bit value is decoded explicitly; unused storage never becomes audio. The output carries the same packet count/schedule, logical stream position and host observation time. Those fields do not identify source-sample age, USB launch time or measured latency.
+
+The existing double-buffer engine supplies two host blocks of startup silence and consumes host-written output at the next switch. Tests check that exact software delay and reverse all six logical channels to verify direction/mapping. This says nothing about physical RCA jack assignments or analogue propagation delay.
+
+If the output queue is full, the rendered block remains in private fixed storage. Later calls retry that exact block before consuming any more input, rendering more output or invoking more callbacks. No block is silently dropped or retagged. The session owner must impose a real stream deadline and choose fault/stop when backpressure lasts too long; this component cannot wait forever on a real device without consequences.
+
+Queue errors, a metadata rate different from the configured rate, or a buffer/callback error latch the first local failure. Subsequent steps report `faulted`; they cannot silently resume. Callback reentry into `step`, `begin` or `end` is rejected. The control mailbox remains owned separately: a future supervisor must notice this local failure, command worker stop, observe its retained process handle and retire all callers. This adapter does not itself send a stop command or prove that worker I/O has retired.
+
+`end` stops internal buffer flow and is idempotent. It explicitly counts an unpublished pending block as discarded; it does not claim that already-published output reached hardware. Buffered startup/tail samples are cleared by the underlying component and are not included in that pending-block discard count. The adapter cannot restart after end/fault; a new channel/session identity is required. Its destructor calls `end`, so its referenced objects must still be alive. Destruction from inside a callback is forbidden by the ownership contract.
+
+## Validation performed
+
+All **17 native tests pass in Release and Debug**. The SDK-free build passes fourteen tests with an intentionally absent SDK path. The original full-path checkpoint performed **2,400 blocks across real processes** per configuration: 400 blocks for each combination of metadata rate 44.1/48 kHz and host bank size 64/128/1,024. The [current shorter-batch checkpoint](audio-transfer-granularity.md) expands that to **7,200**, covering mixed active counts and fixed-eight/fixed-64 blocks. A worker generates variable 1–7-frame packets, including minimum/maximum blocks, and independently checks each returned actual PCM byte, packet count, position and observation field against the synthetic contract. Host callbacks separately verify every input channel/sample, including both signed 24-bit extrema, -1, zero and +1.
+
+Local tests additionally check 1,000 complete successful blocks with **zero observed C++ `new` allocations**, full-queue retention/retry without input/callback replay, explicit pending discard, empty input, duplicate/unstarted/restarted flow, unsupported rate, wrong channel role, closed channel, changed metadata rate, throwing host callback and reentrant lifecycle calls. All child jobs retire. Fixed storage and no observed C++ allocation are not page-residency, scheduler, kernel-allocation or real-time guarantees. [Build/source evidence](evidence/queue-to-asio-build.json).
+
+## Next continuous-session work
+
+The finite USB diagnostic's 64-interval batch shape spans eight planned milliseconds at high speed. With small host banks it can bunch multiple callbacks into one processing call. The software data path now supports eight-interval batches, but the real worker still needs a continuous short-transfer loop. The synthetic test proves byte/ownership correctness, not acceptable callback pacing. Before a working ASIO driver is exposed, implement request rearming and input/output pipeline scheduling, and measure completion/callback timing under load. Do not label repeated finite captures a continuous stream.
+
+The remaining owner must coordinate the real worker, input/output deadlines, start/stop/fault commands and callback/buffer leases. It must prove all overlapped requests terminal before releasing native storage, or contain the isolated worker without destroying the audio host. Physical input first, then traced silent output and controlled analogue tests retain their existing gates. The COM DLL must remain unavailable until that live-session contract exists; registration of the current placeholder would not restore audio.
+
+[Shared queues](shared-audio-queues.md), [SDK buffers](asio-buffer-component.md), [bounded duplex](bounded-duplex.md), [ASIO COM interface](asio-com-server.md), [current Serato routing](serato-audio-routing.md).

@@ -1,0 +1,555 @@
+{
+  "scope": "One traced binding and audio-alternate activation/restoration. No audio data, interrupt transfers, vendor controls, resets or firmware operations.",
+  "local_results": "tests\\results\\local\\winusb-audio-alternates-01",
+  "experiment": {
+    "scope": "One bounded SL3 audio-alternate activation and restoration experiment.\n\nSelects alternate 1 on interfaces 1 then 2, queries active settings/pipes, holds\nfor two seconds, then restores attempted interfaces in reverse order. No audio,\ninterrupt transfers, vendor controls, resets or firmware operations. The parent\nrunner enforces a process deadline and restores the original driver/trust.\n",
+    "started_utc": "2026-10-26T22:59:31.105063+00:00",
+    "activation_succeeded": true,
+    "restoration_succeeded": true,
+    "operations": [
+      {
+        "phase": "activate",
+        "interface": 1,
+        "alternate": 1,
+        "started_utc": "2026-10-26T22:59:31.109086+00:00",
+        "completed_utc": "2026-10-26T22:59:31.112521+00:00",
+        "succeeded": true,
+        "win32_error": 0
+      },
+      {
+        "phase": "activate",
+        "interface": 2,
+        "alternate": 1,
+        "started_utc": "2026-10-26T22:59:31.113265+00:00",
+        "completed_utc": "2026-10-26T22:59:31.116508+00:00",
+        "succeeded": true,
+        "win32_error": 0
+      },
+      {
+        "phase": "restore",
+        "interface": 2,
+        "alternate": 0,
+        "started_utc": "2026-10-26T22:59:33.117947+00:00",
+        "completed_utc": "2026-10-26T22:59:33.120473+00:00",
+        "succeeded": true,
+        "win32_error": 0
+      },
+      {
+        "phase": "restore",
+        "interface": 1,
+        "alternate": 0,
+        "started_utc": "2026-10-26T22:59:33.120872+00:00",
+        "completed_utc": "2026-10-26T22:59:33.124475+00:00",
+        "succeeded": true,
+        "win32_error": 0
+      }
+    ],
+    "error": null,
+    "before": {
+      "utc": "2026-10-26T22:59:31.108626+00:00",
+      "interface_guid": "45dfc124-470c-4c58-ba2b-bff7614a64bc",
+      "initialized": true,
+      "active_settings": [
+        {
+          "number": 0,
+          "alternate": 0
+        },
+        {
+          "number": 1,
+          "alternate": 0
+        },
+        {
+          "number": 2,
+          "alternate": 0
+        },
+        {
+          "number": 3,
+          "alternate": 0
+        }
+      ],
+      "interfaces": [
+        {
+          "number": 0,
+          "alternate": 0,
+          "class": 255,
+          "pipes": []
+        },
+        {
+          "number": 1,
+          "alternate": 0,
+          "class": 255,
+          "pipes": []
+        },
+        {
+          "number": 1,
+          "alternate": 1,
+          "class": 255,
+          "pipes": [
+            {
+              "id": "0x6",
+              "type": 1,
+              "max_packet": 126,
+              "interval": 1,
+              "max_bytes_per_interval": 126
+            }
+          ]
+        },
+        {
+          "number": 2,
+          "alternate": 0,
+          "class": 255,
+          "pipes": []
+        },
+        {
+          "number": 2,
+          "alternate": 1,
+          "class": 255,
+          "pipes": [
+            {
+              "id": "0x82",
+              "type": 1,
+              "max_packet": 126,
+              "interval": 1,
+              "max_bytes_per_interval": 126
+            }
+          ]
+        },
+        {
+          "number": 3,
+          "alternate": 0,
+          "class": 255,
+          "pipes": [
+            {
+              "id": "0x81",
+              "type": 3,
+              "max_packet": 64,
+              "interval": 1,
+              "max_bytes_per_interval": 64
+            },
+            {
+              "id": "0x1",
+              "type": 3,
+              "max_packet": 64,
+              "interval": 1,
+              "max_bytes_per_interval": 64
+            }
+          ]
+        }
+      ]
+    },
+    "after_interface_1": [
+      {
+        "number": 0,
+        "alternate": 0,
+        "pipes": []
+      },
+      {
+        "number": 1,
+        "alternate": 1,
+        "pipes": [
+          {
+            "id": "0x6",
+            "type": 1,
+            "max_packet": 126,
+            "interval": 1,
+            "max_bytes_per_interval": 126
+          }
+        ]
+      },
+      {
+        "number": 2,
+        "alternate": 0,
+        "pipes": []
+      },
+      {
+        "number": 3,
+        "alternate": 0,
+        "pipes": [
+          {
+            "id": "0x81",
+            "type": 3,
+            "max_packet": 64,
+            "interval": 1,
+            "max_bytes_per_interval": 64
+          },
+          {
+            "id": "0x1",
+            "type": 3,
+            "max_packet": 64,
+            "interval": 1,
+            "max_bytes_per_interval": 64
+          }
+        ]
+      }
+    ],
+    "after_interface_2": [
+      {
+        "number": 0,
+        "alternate": 0,
+        "pipes": []
+      },
+      {
+        "number": 1,
+        "alternate": 1,
+        "pipes": [
+          {
+            "id": "0x6",
+            "type": 1,
+            "max_packet": 126,
+            "interval": 1,
+            "max_bytes_per_interval": 126
+          }
+        ]
+      },
+      {
+        "number": 2,
+        "alternate": 1,
+        "pipes": [
+          {
+            "id": "0x82",
+            "type": 1,
+            "max_packet": 126,
+            "interval": 1,
+            "max_bytes_per_interval": 126
+          }
+        ]
+      },
+      {
+        "number": 3,
+        "alternate": 0,
+        "pipes": [
+          {
+            "id": "0x81",
+            "type": 3,
+            "max_packet": 64,
+            "interval": 1,
+            "max_bytes_per_interval": 64
+          },
+          {
+            "id": "0x1",
+            "type": 3,
+            "max_packet": 64,
+            "interval": 1,
+            "max_bytes_per_interval": 64
+          }
+        ]
+      }
+    ],
+    "active_hold_started_utc": "2026-10-26T22:59:31.117371+00:00",
+    "restoration_errors": [],
+    "after_restore": [
+      {
+        "number": 0,
+        "alternate": 0,
+        "pipes": []
+      },
+      {
+        "number": 1,
+        "alternate": 0,
+        "pipes": []
+      },
+      {
+        "number": 2,
+        "alternate": 0,
+        "pipes": []
+      },
+      {
+        "number": 3,
+        "alternate": 0,
+        "pipes": [
+          {
+            "id": "0x81",
+            "type": 3,
+            "max_packet": 64,
+            "interval": 1,
+            "max_bytes_per_interval": 64
+          },
+          {
+            "id": "0x1",
+            "type": 3,
+            "max_packet": 64,
+            "interval": 1,
+            "max_bytes_per_interval": 64
+          }
+        ]
+      }
+    ],
+    "completed_utc": "2026-10-26T22:59:33.125428+00:00"
+  },
+  "installation": {
+    "startedUtc": "2026-10-26T22:59:21.5475576Z",
+    "plan": {
+      "certificateSubject": "CN=SL3 WinUSB Local Development Only",
+      "thumbprint": "11538DF7C55A5BB2DBFE7160C45ECC804F3BB077",
+      "expiresUtc": "2026-11-02T22:14:32.0000000Z",
+      "stores": [
+        "LocalMachine/Root",
+        "LocalMachine/TrustedPublisher"
+      ],
+      "deviceInstanceId": "USB\\VID_1CC5&PID_0001\\SL3.01.00",
+      "originalInf": "oem136.inf",
+      "originalInfSha256": "7191F7C6FD5FDA7503EB9EABEE2522868A9D1F2DDD766FE6DC9145D6C69E8F76",
+      "action": "Stage and bind only the SL3-specific WinUSB INF; no boot-policy change, firmware request or automatic reboot."
+    },
+    "addedStores": [
+      "Cert:\\LocalMachine\\Root",
+      "Cert:\\LocalMachine\\TrustedPublisher"
+    ],
+    "phase": "started; endpoint probing is a separate test",
+    "publishedInf": "oem152.inf",
+    "needReboot": false,
+    "secureBootBefore": true,
+    "traceSession": "SL3Startup-eac054de395146f89720a383e1adba3d",
+    "traceCheckedUtc": "2026-10-26T22:59:24.8411352Z",
+    "bindingRequestedUtc": "2026-10-26T22:59:24.8428753Z",
+    "service": "WINUSB",
+    "devicePresent": true,
+    "problemCode": 0,
+    "pnpStatus": "OK",
+    "startSucceeded": true,
+    "secureBootAfter": true
+  },
+  "trace": {
+    "file": {
+      "name": "usb-startup_000001.etl",
+      "bytes": 13369344,
+      "sha256": "7D34C2E440C245A9CADCB3D594D47793F22DB0CC906797E405B7E71222051B98"
+    },
+    "xml_sha256": "61f72c4394419c828281a02c0b644cd0e79bcd86a04b37196c2854c9ac68c0df",
+    "events": 37990,
+    "events_lost": 0,
+    "buffers_lost": 0,
+    "target_events": 302,
+    "correlation": "VID/PID identity -> fid_UsbDevice; pointer/path/payload omitted",
+    "target_status_counts": [
+      {
+        "field": "fid_IRP_NtStatus",
+        "value": "0x0",
+        "count": 25
+      },
+      {
+        "field": "fid_NtStatus",
+        "value": "0x0",
+        "count": 10
+      },
+      {
+        "field": "fid_UsbdStatus",
+        "value": "0x0",
+        "count": 6
+      }
+    ],
+    "target_bulk_interrupt_dispatch_events": 0,
+    "target_isochronous_dispatch_events": 0,
+    "selected_events": [
+      {
+        "xml_event_index": 5732,
+        "utc": "2026-10-26T22:59:25.372451400+00:00",
+        "provider": "USBXHCI",
+        "event_id": 48,
+        "data": {
+          "fid_ConfigurationValue": "0x1",
+          "fid_InterfaceNumber": "0x0",
+          "fid_AlternateSetting": "0x0",
+          "fid_LastConfigureEndpointStatus": "0x0"
+        }
+      },
+      {
+        "xml_event_index": 5746,
+        "utc": "2026-10-26T22:59:25.372462700+00:00",
+        "provider": "USBHUB3",
+        "event_id": 93,
+        "data": {
+          "fid_UrbFunction": "0x0",
+          "fid_UsbdStatus": "0x0"
+        }
+      },
+      {
+        "xml_event_index": 5783,
+        "utc": "2026-10-26T22:59:25.376449400+00:00",
+        "provider": "USBXHCI",
+        "event_id": 48,
+        "data": {
+          "fid_ConfigurationValue": "0x1",
+          "fid_InterfaceNumber": "0x0",
+          "fid_AlternateSetting": "0x0",
+          "fid_LastConfigureEndpointStatus": "0x0"
+        }
+      },
+      {
+        "xml_event_index": 5818,
+        "utc": "2026-10-26T22:59:25.376775300+00:00",
+        "provider": "USBHUB3",
+        "event_id": 93,
+        "data": {
+          "fid_UrbFunction": "0x1",
+          "fid_UsbdStatus": "0x0"
+        }
+      },
+      {
+        "xml_event_index": 8469,
+        "utc": "2026-10-26T22:59:31.112350700+00:00",
+        "provider": "USBXHCI",
+        "event_id": 48,
+        "data": {
+          "fid_ConfigurationValue": "0x1",
+          "fid_InterfaceNumber": "0x1",
+          "fid_AlternateSetting": "0x1",
+          "fid_LastConfigureEndpointStatus": "0x0"
+        }
+      },
+      {
+        "xml_event_index": 8483,
+        "utc": "2026-10-26T22:59:31.112495100+00:00",
+        "provider": "USBHUB3",
+        "event_id": 93,
+        "data": {
+          "fid_UrbFunction": "0x1",
+          "fid_UsbdStatus": "0x0"
+        }
+      },
+      {
+        "xml_event_index": 8509,
+        "utc": "2026-10-26T22:59:31.116347900+00:00",
+        "provider": "USBXHCI",
+        "event_id": 48,
+        "data": {
+          "fid_ConfigurationValue": "0x1",
+          "fid_InterfaceNumber": "0x2",
+          "fid_AlternateSetting": "0x1",
+          "fid_LastConfigureEndpointStatus": "0x0"
+        }
+      },
+      {
+        "xml_event_index": 8523,
+        "utc": "2026-10-26T22:59:31.116484300+00:00",
+        "provider": "USBHUB3",
+        "event_id": 93,
+        "data": {
+          "fid_UrbFunction": "0x1",
+          "fid_UsbdStatus": "0x0"
+        }
+      },
+      {
+        "xml_event_index": 9957,
+        "utc": "2026-10-26T22:59:33.120318000+00:00",
+        "provider": "USBXHCI",
+        "event_id": 48,
+        "data": {
+          "fid_ConfigurationValue": "0x1",
+          "fid_InterfaceNumber": "0x2",
+          "fid_AlternateSetting": "0x0",
+          "fid_LastConfigureEndpointStatus": "0x0"
+        }
+      },
+      {
+        "xml_event_index": 9970,
+        "utc": "2026-10-26T22:59:33.120456200+00:00",
+        "provider": "USBHUB3",
+        "event_id": 93,
+        "data": {
+          "fid_UrbFunction": "0x1",
+          "fid_UsbdStatus": "0x0"
+        }
+      },
+      {
+        "xml_event_index": 9990,
+        "utc": "2026-10-26T22:59:33.124319100+00:00",
+        "provider": "USBXHCI",
+        "event_id": 48,
+        "data": {
+          "fid_ConfigurationValue": "0x1",
+          "fid_InterfaceNumber": "0x1",
+          "fid_AlternateSetting": "0x0",
+          "fid_LastConfigureEndpointStatus": "0x0"
+        }
+      },
+      {
+        "xml_event_index": 10003,
+        "utc": "2026-10-26T22:59:33.124455000+00:00",
+        "provider": "USBHUB3",
+        "event_id": 93,
+        "data": {
+          "fid_UrbFunction": "0x1",
+          "fid_UsbdStatus": "0x0"
+        }
+      }
+    ]
+  },
+  "cleanup": {
+    "originalInf": "oem136.inf",
+    "removePackage": [
+      "oem152.inf"
+    ],
+    "removeCertificate": "11538DF7C55A5BB2DBFE7160C45ECC804F3BB077",
+    "onlyStoresAddedByTest": [
+      "Cert:\\LocalMachine\\Root",
+      "Cert:\\LocalMachine\\TrustedPublisher"
+    ],
+    "signingIdentityPresent": false,
+    "note": "Original Rane driver was blocked before this experiment; restoring it is expected to restore code 39. No reboot is automated. This script does not delete a My-store signing key; identity retention is checked separately.",
+    "needReboot": false,
+    "projectInterfaceGuidRemoved": true,
+    "completedUtc": "2026-10-26T23:00:23.9900790Z"
+  },
+  "final_state": {
+    "utc": "2026-10-26T23:00:58.4587519Z",
+    "device": {
+      "FriendlyName": "Rane SL3",
+      "Status": "Error",
+      "Problem": 39
+    },
+    "properties": [
+      {
+        "KeyName": "DEVPKEY_Device_DriverInfPath",
+        "Data": "oem136.inf"
+      },
+      {
+        "KeyName": "DEVPKEY_Device_Service",
+        "Data": "strmdrv"
+      }
+    ],
+    "certificates": [
+      {
+        "store": "Cert:\\LocalMachine\\Root",
+        "present": false
+      },
+      {
+        "store": "Cert:\\LocalMachine\\TrustedPublisher",
+        "present": false
+      },
+      {
+        "store": "Cert:\\CurrentUser\\My",
+        "present": false
+      }
+    ],
+    "projectInterfaceGuidPresent": false,
+    "experimentalInfPresent": false,
+    "originalInfPresent": true
+  },
+  "secure_boot_before": true,
+  "secure_boot_after_cleanup": true,
+  "descriptors_match_baseline_after_cleanup": true,
+  "pnp_events": [
+    {
+      "utc": "2026-10-26T23:00:23.3378681Z",
+      "Id": 411,
+      "Message": "Device USB\\VID_1CC5&PID_0001\\SL3.01.00 had a problem starting.\r\n\r\nDriver Name: oem136.inf\r\nClass GUID: {4d36e96c-e325-11ce-bfc1-08002be10318}\r\nService: strmdrv\r\nLower Filters: \r\nUpper Filters: \r\nProblem: 0x27\r\nProblem Status: 0xC0E90002"
+    },
+    {
+      "utc": "2026-10-26T23:00:23.1452734Z",
+      "Id": 400,
+      "Message": "Device USB\\VID_1CC5&PID_0001\\SL3.01.00 was configured.\r\n\r\nDriver Name: oem136.inf\r\nDriver Package ID: strmdrv.inf_amd64_c37ac2b8c68c103e\r\nClass GUID: {4d36e96c-e325-11ce-bfc1-08002be10318}\r\nDriver Date: 06/11/2014\r\nDriver Version: 6.0.6001.18000\r\nDriver Provider: Rane SL 3\r\nDriver Section: strmdrv.Dev.NT\r\nDriver Rank: 0xFF0001\r\nMatching Device ID: USB\\VID_1CC5&PID_0001\r\nOutranked Drivers: oem152.inf:USB\\VID_1CC5&PID_0001:00FF0001\r\nDevice Updated: true\r\nParent Device: USB\\ROOT_HUB30\\7&124f193f&0&0"
+    },
+    {
+      "utc": "2026-10-26T22:59:25.3776481Z",
+      "Id": 410,
+      "Message": "Device USB\\VID_1CC5&PID_0001\\SL3.01.00 was started.\r\n\r\nDriver Name: oem152.inf\r\nClass GUID: {88bae032-5a81-49f0-bc3d-a4ff138216d6}\r\nService: WINUSB\r\nLower Filters: \r\nUpper Filters: "
+    },
+    {
+      "utc": "2026-10-26T22:59:25.1758398Z",
+      "Id": 400,
+      "Message": "Device USB\\VID_1CC5&PID_0001\\SL3.01.00 was configured.\r\n\r\nDriver Name: oem152.inf\r\nDriver Package ID: sl3winusb.inf_amd64_3091160257b90090\r\nClass GUID: {88bae032-5a81-49f0-bc3d-a4ff138216d6}\r\nDriver Date: 10/26/2026\r\nDriver Version: 0.1.0.0\r\nDriver Provider: SL3 Compatibility Research\r\nDriver Section: SL3_WinUSB.NT\r\nDriver Rank: 0xFF0001\r\nMatching Device ID: USB\\VID_1CC5&PID_0001\r\nOutranked Drivers: oem136.inf:USB\\VID_1CC5&PID_0001:00FF0001\r\nDevice Updated: true\r\nParent Device: USB\\ROOT_HUB30\\7&124f193f&0&0"
+    }
+  ],
+  "interpretation": "WinUSB selected the original driver audio alternate topology and restored it successfully. This does not establish audio clocking, sample format, packet scheduling, control semantics, ASIO, Serato support or stability."
+}

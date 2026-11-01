@@ -1,0 +1,320 @@
+{
+  "binarySha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "scope": "Static backend-selection evidence; no application/driver execution",
+  "explicitAudioPredicate": {
+    "function": "0x1405c7e00",
+    "interfaceSlot": "0xc0",
+    "completeObjectStringOffsets": {
+      "win_audio_api": "0x360",
+      "mac_audio_api": "0x380",
+      "win_audio_device_name": "0x3a0",
+      "mac_audio_device_name": "0x3c0"
+    },
+    "result": "True if any of four string lengths is nonzero; all start empty"
+  },
+  "parserFieldVerification": [
+    {
+      "name": "win_audio_api",
+      "completeObjectOffset": "0x360",
+      "parserKeyReference": "0x1405c8fbe",
+      "parserDestination": "0x1405c8fe7"
+    },
+    {
+      "name": "mac_audio_api",
+      "completeObjectOffset": "0x380",
+      "parserKeyReference": "0x1405c8fff",
+      "parserDestination": "0x1405c9028"
+    },
+    {
+      "name": "win_audio_device_name",
+      "completeObjectOffset": "0x3a0",
+      "parserKeyReference": "0x1405c9040",
+      "parserDestination": "0x1405c9069"
+    },
+    {
+      "name": "mac_audio_device_name",
+      "completeObjectOffset": "0x3c0",
+      "parserKeyReference": "0x1405c90ae",
+      "parserDestination": "0x1405c90d7"
+    }
+  ],
+  "legacyApiMap": {
+    "initializer": "0x1421e5810",
+    "ASIO": 3,
+    "upstreamEnumReference": "https://github.com/PortAudio/portaudio/blob/master/include/portaudio.h",
+    "limit": "Enum correspondence does not establish the exact bundled PortAudio fork/version"
+  },
+  "selector": {
+    "function": "0x1421b8b80",
+    "caller": "0x141379a70",
+    "emptyAudioFields": "Default OS connection via 0x1421b8030; legacy flag not queried in that branch",
+    "explicitFieldsEmptyWindowsName": "VID/PID route 0x1421b80c0",
+    "explicitFieldsNonemptyWindowsName": "Name route 0x1421b8580",
+    "legacyTrue": "Embedded PortAudioConnectionFactory, matched by IDs or case-sensitive name substring",
+    "legacyFalse": "AudioDeviceManager refresh and generic AudioConnection wrapper",
+    "duplicateMatches": "Legacy selectors retain the last matching entry; enumeration order is unverified"
+  },
+  "factory": {
+    "vtable": "0x1431d48f8",
+    "objectOffset": "0x0",
+    "type": ".?AVPortAudioConnectionFactory@audio@device@serato@@"
+  },
+  "descriptorInterfaces": [
+    {
+      "vtable": "0x14281caf0",
+      "objectOffset": "0x10",
+      "type": ".?AVControllerDescriptor@dj@serato@@"
+    },
+    {
+      "vtable": "0x14281cbe8",
+      "objectOffset": "0x738",
+      "type": ".?AVControllerDescriptor@dj@serato@@"
+    }
+  ],
+  "substringMatcherImport": {
+    "dll": "VCRUNTIME140.dll",
+    "name": "strstr",
+    "iat": "0x142735ef0"
+  },
+  "abiWarning": "The three-parameter decompilation of 0x1421c2f80 omits forwarded API R9 and name stack argument; do not infer API is ignored",
+  "retainedFocusedReportSha256": {
+    "serato500-audio-backend-choice.json": "243b39e5b576670343c9fb9e9f71e2f157ea4e26fd7d519cd652e1949710a31b",
+    "serato500-audio-backend-factories.json": "0460691deb27ef0d80fa1b57cfc32724991a0abc5e84b9d4649e226ceed2e42e",
+    "serato500-audio-legacy-factories.json": "497b75064c8ccc95c458020c41fa91d5028561c70616e289273e8bf572cdd2a0",
+    "serato500-audio-legacy-id-factory.json": "f4048b496f481a283b4e8f260bf3d681f9681a051356fcdd7dd5b7f1f7a30191",
+    "serato500-portaudio-enumerator.json": "60e0d7bcf03d6cbbb59ad3e353882db7fb0236299ee9e43002111dd1830da83f"
+  },
+  "assembly": [
+    {
+      "purpose": "Four audio-string length gate",
+      "start": "0x1405c7e00",
+      "endExclusive": "0x1405c7e2e",
+      "instructions": [
+        "1405c7e00: cmp qword ptr [rcx + 0x360], 0",
+        "1405c7e08: jne 0x1405c7e2b",
+        "1405c7e0a: cmp qword ptr [rcx + 0x380], 0",
+        "1405c7e12: jne 0x1405c7e2b",
+        "1405c7e14: cmp qword ptr [rcx + 0x3a0], 0",
+        "1405c7e1c: jne 0x1405c7e2b",
+        "1405c7e1e: cmp qword ptr [rcx + 0x3c0], 0",
+        "1405c7e26: jne 0x1405c7e2b",
+        "1405c7e28: xor al, al",
+        "1405c7e2a: ret ",
+        "1405c7e2b: mov al, 1",
+        "1405c7e2d: ret "
+      ]
+    },
+    {
+      "purpose": "Four strings initialized empty",
+      "start": "0x1405bed15",
+      "endExclusive": "0x1405bed98",
+      "instructions": [
+        "1405bed15: xorps xmm0, xmm0",
+        "1405bed18: movups xmmword ptr [rdi + 0x360], xmm0",
+        "1405bed1f: mov qword ptr [rdi + 0x370], rsi",
+        "1405bed26: mov qword ptr [rdi + 0x378], 0xf",
+        "1405bed31: mov byte ptr [rdi + 0x360], 0",
+        "1405bed38: movups xmmword ptr [rdi + 0x380], xmm0",
+        "1405bed3f: mov qword ptr [rdi + 0x390], rsi",
+        "1405bed46: mov qword ptr [rdi + 0x398], 0xf",
+        "1405bed51: mov byte ptr [rdi + 0x380], 0",
+        "1405bed58: movups xmmword ptr [rdi + 0x3a0], xmm0",
+        "1405bed5f: mov qword ptr [rdi + 0x3b0], rsi",
+        "1405bed66: mov qword ptr [rdi + 0x3b8], 0xf",
+        "1405bed71: mov byte ptr [rdi + 0x3a0], 0",
+        "1405bed78: movups xmmword ptr [rdi + 0x3c0], xmm0",
+        "1405bed7f: mov qword ptr [rdi + 0x3d0], rsi",
+        "1405bed86: mov qword ptr [rdi + 0x3d8], 0xf",
+        "1405bed91: mov byte ptr [rdi + 0x3c0], 0"
+      ]
+    },
+    {
+      "purpose": "Windows device-name getter through shared virtual base",
+      "start": "0x1405c6500",
+      "endExclusive": "0x1405c6521",
+      "instructions": [
+        "1405c6500: push rbx",
+        "1405c6502: sub rsp, 0x30",
+        "1405c6506: mov rbx, rdx",
+        "1405c6509: lea rdx, [rcx - 0x398]",
+        "1405c6510: mov rcx, rbx",
+        "1405c6513: call 0x1404a3300",
+        "1405c6518: mov rax, rbx",
+        "1405c651b: add rsp, 0x30",
+        "1405c651f: pop rbx",
+        "1405c6520: ret "
+      ]
+    },
+    {
+      "purpose": "Empty audio fields select default path",
+      "start": "0x1421b8cbe",
+      "endExclusive": "0x1421b8ce4",
+      "instructions": [
+        "1421b8cbe: mov qword ptr [r14], r12",
+        "1421b8cc1: mov dword ptr [rbp - 0x79], 1",
+        "1421b8cc8: mov rax, qword ptr [rsi]",
+        "1421b8ccb: mov rcx, rsi",
+        "1421b8cce: call qword ptr [rax + 0xc0]",
+        "1421b8cd4: test al, al",
+        "1421b8cd6: jne 0x1421b8e7f",
+        "1421b8cdc: mov rcx, r15",
+        "1421b8cdf: call 0x1421b94b0"
+      ]
+    },
+    {
+      "purpose": "Explicit name-length query",
+      "start": "0x1421b8e7f",
+      "endExclusive": "0x1421b8e9c",
+      "instructions": [
+        "1421b8e7f: mov rax, qword ptr [rsi + 8]",
+        "1421b8e83: movsxd rcx, dword ptr [rax + 4]",
+        "1421b8e87: add rcx, 8",
+        "1421b8e8b: add rcx, rsi",
+        "1421b8e8e: mov rax, qword ptr [rcx]",
+        "1421b8e91: lea rdx, [rbp - 0x51]",
+        "1421b8e95: call qword ptr [rax + 0x38]",
+        "1421b8e98: mov rbx, qword ptr [rax + 0x10]"
+      ]
+    },
+    {
+      "purpose": "Legacy flag forwarded to VID/PID selector",
+      "start": "0x1421b8ff7",
+      "endExclusive": "0x1421b9023",
+      "instructions": [
+        "1421b8ff7: mov rax, qword ptr [rsi]",
+        "1421b8ffa: mov rcx, rsi",
+        "1421b8ffd: call qword ptr [rax + 8]",
+        "1421b9000: mov qword ptr [rsp + 0x28], rbx",
+        "1421b9005: lea rcx, [rbp - 0x75]",
+        "1421b9009: mov qword ptr [rsp + 0x20], rcx",
+        "1421b900e: lea r9, [rbp - 0x71]",
+        "1421b9012: movzx r8d, al",
+        "1421b9016: lea rdx, [rsp + 0x30]",
+        "1421b901b: mov rcx, r15",
+        "1421b901e: call 0x1421b80c0"
+      ]
+    },
+    {
+      "purpose": "Legacy flag forwarded to named selector",
+      "start": "0x1421b9195",
+      "endExclusive": "0x1421b91c4",
+      "instructions": [
+        "1421b9195: mov rax, qword ptr [rcx]",
+        "1421b9198: lea rdx, [rbp - 0x51]",
+        "1421b919c: call qword ptr [rax + 0x38]",
+        "1421b919f: mov rbx, rax",
+        "1421b91a2: mov rax, qword ptr [rsi]",
+        "1421b91a5: mov rcx, rsi",
+        "1421b91a8: call qword ptr [rax + 8]",
+        "1421b91ab: mov qword ptr [rsp + 0x20], rdi",
+        "1421b91b0: mov r9, rbx",
+        "1421b91b3: movzx r8d, al",
+        "1421b91b7: lea rdx, [rsp + 0x30]",
+        "1421b91bc: mov rcx, r15",
+        "1421b91bf: call 0x1421b8580"
+      ]
+    },
+    {
+      "purpose": "Named selector switches to legacy factory",
+      "start": "0x1421b85c2",
+      "endExclusive": "0x1421b85f2",
+      "instructions": [
+        "1421b85c2: cmp qword ptr [r9 + 0x10], r14",
+        "1421b85c6: jne 0x1421b85d0",
+        "1421b85c8: mov qword ptr [rdx], r14",
+        "1421b85cb: jmp 0x1421b89f3",
+        "1421b85d0: test r8b, r8b",
+        "1421b85d3: je 0x1421b85e9",
+        "1421b85d5: add rcx, 8",
+        "1421b85d9: mov r9, r15",
+        "1421b85dc: mov r8, r12",
+        "1421b85df: call 0x1421c2f80",
+        "1421b85e4: jmp 0x1421b89f3",
+        "1421b85e9: mov rcx, qword ptr [rcx + 0x18]",
+        "1421b85ed: call 0x1421eb160"
+      ]
+    },
+    {
+      "purpose": "VID/PID selector switches to legacy factory",
+      "start": "0x1421b810b",
+      "endExclusive": "0x1421b813d",
+      "instructions": [
+        "1421b810b: xor ecx, ecx",
+        "1421b810d: cmp dword ptr [r9], ecx",
+        "1421b8110: je 0x1421b8549",
+        "1421b8116: cmp dword ptr [rax], ecx",
+        "1421b8118: je 0x1421b8549",
+        "1421b811e: test r8b, r8b",
+        "1421b8121: je 0x1421b813d",
+        "1421b8123: lea rcx, [r12 + 8]",
+        "1421b8128: mov qword ptr [rsp + 0x20], r15",
+        "1421b812d: mov r9, rax",
+        "1421b8130: mov r8, r10",
+        "1421b8133: call 0x1421c2df0",
+        "1421b8138: jmp 0x1421b854c"
+      ]
+    },
+    {
+      "purpose": "Embedded factory construction",
+      "start": "0x1421b7e65",
+      "endExclusive": "0x1421b7e7d",
+      "instructions": [
+        "1421b7e65: lea rax, [rip + 0x101c3c4]",
+        "1421b7e6c: mov qword ptr [rcx], rax",
+        "1421b7e6f: add rcx, 8",
+        "1421b7e73: call 0x1421c27a0",
+        "1421b7e78: nop ",
+        "1421b7e79: mov qword ptr [rdi + 0x18], rbx"
+      ]
+    },
+    {
+      "purpose": "Concrete PortAudio factory constructor",
+      "start": "0x1421c27a0",
+      "endExclusive": "0x1421c27b6",
+      "instructions": [
+        "1421c27a0: lea rax, [rip + 0x1012151]",
+        "1421c27a7: mov qword ptr [rcx + 8], 0",
+        "1421c27af: mov qword ptr [rcx], rax",
+        "1421c27b2: mov rax, rcx",
+        "1421c27b5: ret "
+      ]
+    },
+    {
+      "purpose": "ABI forwarding omitted by decompiler",
+      "start": "0x1421c2fbb",
+      "endExclusive": "0x1421c2fd5",
+      "instructions": [
+        "1421c2fbb: mov rbx, r15",
+        "1421c2fbe: mov qword ptr [rsp + 0x30], rbx",
+        "1421c2fc3: mov rax, qword ptr [rcx]",
+        "1421c2fc6: mov qword ptr [rsp + 0x20], rsi",
+        "1421c2fcb: mov r8b, 1",
+        "1421c2fce: lea rdx, [rsp + 0x38]",
+        "1421c2fd3: call qword ptr [rax]"
+      ]
+    },
+    {
+      "purpose": "Actual imported substring matcher",
+      "start": "0x1421c301f",
+      "endExclusive": "0x1421c3047",
+      "instructions": [
+        "1421c301f: mov rdx, rsi",
+        "1421c3022: cmp qword ptr [rsi + 0x18], 0xf",
+        "1421c3027: jbe 0x1421c302c",
+        "1421c3029: mov rdx, qword ptr [rsi]",
+        "1421c302c: lea rcx, [rsp + 0x58]",
+        "1421c3031: cmp qword ptr [rsp + 0x70], 0xf",
+        "1421c3037: cmova rcx, qword ptr [rsp + 0x58]",
+        "1421c303d: call 0x1421202b0",
+        "1421c3042: test rax, rax",
+        "1421c3045: je 0x1421c3084"
+      ]
+    }
+  ],
+  "limits": [
+    "SL3 support-2 branch still selects discontinued handling",
+    "Default-path prediction assumes the stub reaches this selector; aggregation prerequisites remain",
+    "No external descriptor override, patch, driver registration or runtime route test",
+    "Matching a device is not proof of successful init, streaming, licensing or DVS mapping"
+  ]
+}

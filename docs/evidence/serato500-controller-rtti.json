@@ -1,0 +1,481 @@
+{
+  "binary_sha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "coverage": "Recover selected MSVC x64 RTTI complete-object locators and vtable candidates.\n\nValidates locator signature, self RVA and type-descriptor RVA. Tables end at the\nfirst non-executable pointer, capped at 64 slots. This does not recover all C++\ntypes, inheritance semantics, function ABI or runtime dispatch targets.\n",
+  "classes": [
+    {
+      "decorated_type": ".?AVControllerDescriptor@dj@serato@@",
+      "type_descriptor_va": "0x143a8c7d0",
+      "locators": [
+        {
+          "va": "0x143261de0",
+          "object_offset": "0x0",
+          "constructor_displacement": 0,
+          "tables": [
+            {
+              "va": "0x14281caa8",
+              "slots": [
+                {
+                  "offset": "0x0",
+                  "target": "0x1405c6b90",
+                  "unwind_range": [
+                    "0x1405c6b90",
+                    "0x1405c6d12"
+                  ]
+                },
+                {
+                  "offset": "0x8",
+                  "target": "0x1405c7f90",
+                  "unwind_range": [
+                    "0x1405c7f90",
+                    "0x1405cd08e"
+                  ]
+                },
+                {
+                  "offset": "0x10",
+                  "target": "0x1405c64f0",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x18",
+                  "target": "0x1405c64e0",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x20",
+                  "target": "0x1405c6840",
+                  "unwind_range": [
+                    "0x1405c6840",
+                    "0x1405c6850"
+                  ]
+                },
+                {
+                  "offset": "0x28",
+                  "target": "0x1404a4980",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x30",
+                  "target": "0x1404a4980",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x38",
+                  "target": "0x1404a4980",
+                  "unwind_range": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "va": "0x143261ea0",
+          "object_offset": "0x10",
+          "constructor_displacement": 0,
+          "tables": [
+            {
+              "va": "0x14281caf0",
+              "slots": [
+                {
+                  "offset": "0x0",
+                  "target": "0x1405c64b0",
+                  "unwind_range": [
+                    "0x1405c64b0",
+                    "0x1405c64d1"
+                  ]
+                },
+                {
+                  "offset": "0x8",
+                  "target": "0x1405cd180",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x10",
+                  "target": "0x1405c6ef0",
+                  "unwind_range": [
+                    "0x1405c6ef0",
+                    "0x1405c6fdf"
+                  ]
+                },
+                {
+                  "offset": "0x18",
+                  "target": "0x1405c7da0",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x20",
+                  "target": "0x1405c6a80",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x28",
+                  "target": "0x1405c7e30",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x30",
+                  "target": "0x1405c64a0",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x38",
+                  "target": "0x1405c6a60",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x40",
+                  "target": "0x1405c7f80",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x48",
+                  "target": "0x1405c05c0",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x50",
+                  "target": "0x1405c6ff0",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x58",
+                  "target": "0x1405c7e40",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x60",
+                  "target": "0x1405c6fe0",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x68",
+                  "target": "0x1405c7140",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x70",
+                  "target": "0x1405c6d20",
+                  "unwind_range": [
+                    "0x1405c6d20",
+                    "0x1405c6d41"
+                  ]
+                },
+                {
+                  "offset": "0x78",
+                  "target": "0x1405c7100",
+                  "unwind_range": [
+                    "0x1405c7100",
+                    "0x1405c7121"
+                  ]
+                },
+                {
+                  "offset": "0x80",
+                  "target": "0x1405c7f50",
+                  "unwind_range": [
+                    "0x1405c7f50",
+                    "0x1405c7f7a"
+                  ]
+                },
+                {
+                  "offset": "0x88",
+                  "target": "0x1405c70f0",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x90",
+                  "target": "0x1405c7f30",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x98",
+                  "target": "0x1405cd170",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0xa0",
+                  "target": "0x1405c7180",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0xa8",
+                  "target": "0x1405c6670",
+                  "unwind_range": [
+                    "0x1405c6670",
+                    "0x1405c6831"
+                  ]
+                },
+                {
+                  "offset": "0xb0",
+                  "target": "0x1405c7db0",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0xb8",
+                  "target": "0x1405c05d0",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0xc0",
+                  "target": "0x1405c7e00",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0xc8",
+                  "target": "0x1405c7f20",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0xd0",
+                  "target": "0x1405c7d90",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0xd8",
+                  "target": "0x1405c6db0",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0xe0",
+                  "target": "0x1405c7070",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0xe8",
+                  "target": "0x1405c7dc0",
+                  "unwind_range": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "va": "0x143261ec8",
+          "object_offset": "0x738",
+          "constructor_displacement": 0,
+          "tables": [
+            {
+              "va": "0x14281cbe8",
+              "slots": [
+                {
+                  "offset": "0x0",
+                  "target": "0x1405c0480",
+                  "unwind_range": [
+                    "0x1405c0480",
+                    "0x1405c04cf"
+                  ]
+                },
+                {
+                  "offset": "0x8",
+                  "target": "0x1405c6a30",
+                  "unwind_range": [
+                    "0x1405c6a30",
+                    "0x1405c6a51"
+                  ]
+                },
+                {
+                  "offset": "0x10",
+                  "target": "0x1405c6a90",
+                  "unwind_range": [
+                    "0x1405c6a90",
+                    "0x1405c6ab1"
+                  ]
+                },
+                {
+                  "offset": "0x18",
+                  "target": "0x1405c7d80",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x20",
+                  "target": "0x1405c7130",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x28",
+                  "target": "0x1405c6530",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x30",
+                  "target": "0x1405c6ec0",
+                  "unwind_range": [
+                    "0x1405c6ec0",
+                    "0x1405c6ee1"
+                  ]
+                },
+                {
+                  "offset": "0x38",
+                  "target": "0x1405c6500",
+                  "unwind_range": [
+                    "0x1405c6500",
+                    "0x1405c6521"
+                  ]
+                },
+                {
+                  "offset": "0x40",
+                  "target": "0x1405c6a70",
+                  "unwind_range": null
+                },
+                {
+                  "offset": "0x48",
+                  "target": "0x1405c6ac0",
+                  "unwind_range": [
+                    "0x1405c6ac0",
+                    "0x1405c6b8d"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "decorated_type": ".?AVUserIOFacadeImpl@?A0x476a5e38@@",
+      "type_descriptor_va": "0x143bdd360",
+      "locators": [
+        {
+          "va": "0x14324ffa0",
+          "object_offset": "0x0",
+          "constructor_displacement": 0,
+          "tables": [
+            {
+              "va": "0x1428010e0",
+              "slots": [
+                {
+                  "offset": "0x0",
+                  "target": "0x1404aafc0",
+                  "unwind_range": [
+                    "0x1404aafc0",
+                    "0x1404aafe1"
+                  ]
+                },
+                {
+                  "offset": "0x8",
+                  "target": "0x1404aa250",
+                  "unwind_range": [
+                    "0x1404aa250",
+                    "0x1404aa2c5"
+                  ]
+                },
+                {
+                  "offset": "0x10",
+                  "target": "0x1404aa2d0",
+                  "unwind_range": [
+                    "0x1404aa2d0",
+                    "0x1404aa35d"
+                  ]
+                },
+                {
+                  "offset": "0x18",
+                  "target": "0x1404aa360",
+                  "unwind_range": [
+                    "0x1404aa360",
+                    "0x1404aa41a"
+                  ]
+                },
+                {
+                  "offset": "0x20",
+                  "target": "0x1404aa420",
+                  "unwind_range": [
+                    "0x1404aa420",
+                    "0x1404aa6e4"
+                  ]
+                },
+                {
+                  "offset": "0x28",
+                  "target": "0x1404aa8b0",
+                  "unwind_range": [
+                    "0x1404aa8b0",
+                    "0x1404aaa77"
+                  ]
+                },
+                {
+                  "offset": "0x30",
+                  "target": "0x1404aa6f0",
+                  "unwind_range": [
+                    "0x1404aa6f0",
+                    "0x1404aa8ad"
+                  ]
+                },
+                {
+                  "offset": "0x38",
+                  "target": "0x1404aaa80",
+                  "unwind_range": [
+                    "0x1404aaa80",
+                    "0x1404aac47"
+                  ]
+                },
+                {
+                  "offset": "0x40",
+                  "target": "0x1404aad70",
+                  "unwind_range": [
+                    "0x1404aad70",
+                    "0x1404aae94"
+                  ]
+                },
+                {
+                  "offset": "0x48",
+                  "target": "0x1404aac50",
+                  "unwind_range": [
+                    "0x1404aac50",
+                    "0x1404aad68"
+                  ]
+                },
+                {
+                  "offset": "0x50",
+                  "target": "0x1404aaf30",
+                  "unwind_range": [
+                    "0x1404aaf30",
+                    "0x1404aafba"
+                  ]
+                },
+                {
+                  "offset": "0x58",
+                  "target": "0x1404aaea0",
+                  "unwind_range": [
+                    "0x1404aaea0",
+                    "0x1404aaf23"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "decorated_type": ".?AVDispatchDeviceDeferredAction@composite@device@serato@@",
+      "type_descriptor_va": "0x143e7abe0",
+      "locators": [
+        {
+          "va": "0x1433ed7b0",
+          "object_offset": "0x0",
+          "constructor_displacement": 0,
+          "tables": [
+            {
+              "va": "0x1431d6940",
+              "slots": [
+                {
+                  "offset": "0x0",
+                  "target": "0x1421de850",
+                  "unwind_range": [
+                    "0x1421de850",
+                    "0x1421de884"
+                  ]
+                },
+                {
+                  "offset": "0x8",
+                  "target": "0x1421de890",
+                  "unwind_range": [
+                    "0x1421de890",
+                    "0x1421dec20"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

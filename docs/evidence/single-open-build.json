@@ -1,0 +1,30 @@
+{
+  "scope": "Software single-open host/probe path; no physical success inferred",
+  "tests": {
+    "release": 33,
+    "debug": 33,
+    "sdkFree": 23,
+    "python": 51
+  },
+  "workerSha256": "F29720369D443F7EC9B6EE4BF9C20A766F174EA02879B0727E28576A2077AB66",
+  "probeSha256": "ABE85E2A0978C68CD643611E7DD1B6636896BF413A6C85526A0762F5B2F48498",
+  "nativeWorkerUnchangedFromStagedInspection": true,
+  "files": {
+    "src/asio/host_session.hpp": "4257FC31B7C3608FABBA10899C988EB1B52A9A33F22009AA5BD2B0DA779AAAFC",
+    "src/asio/host_session.cpp": "BB991107EE48B114E6F7799176D612D5CF8259D188E180DE295698C29654B353",
+    "src/windows/host_probe_main.cpp": "EBB1A40428D20325449C7C2417DA5926A274C33120FC11C9A7442442F227E141",
+    "src/windows/usbdk_main.cpp": "09FB997039899F7A9F6E28EBF82D6A0631632CF4C77F32323CDBA29FE1587F6F",
+    "tests/native/host_session_tests.cpp": "FBCA159FDC2CFE05283B080A847A694174D3C9A1BB9E58045B5BBEEDA698628F",
+    "tests/native/session_fixture.cpp": "32B742B9F5DD7620B9C60E2A9423C155035C0F94FE802C8312115ACA93E3D967",
+    "scripts/test-host-probe.py": "1A993BBF95B771CE39FDFDCA0608C5E4254DB5B434DF06B01396DD83DDC2D8BB",
+    "scripts/test-host-probe-traced.ps1": "3F44AD6D2BD095EF6276B7845CF216101B509B1BAB9560191F9D1CCC418AE483",
+    "analysis/single-open-build-release.log": "E91CD01016AB00CFEEB07CF2EFA6F0B39707EADF88964D446AF3E2F482BF4E45",
+    "analysis/single-open-build-debug.log": "600B44E983C49E35FC13509D1076383CD415A7F286CAFCED944997C34EF9A2DA",
+    "analysis/single-open-sdkfree-tests.log": "679D28C3F98173CC78B8C222BF3D8A4CF22A29FBE61C1FDA321D720C331F7C90",
+    "analysis/single-open-python-tests.log": "AF5D765411723A3BCE893597A682ACD32C4E28D39AFFCDAA7327AD527CBBED92"
+  },
+  "clockGetterRemainsMandatoryBeforeNativeActivation": true,
+  "productionFacadeUsesNewEntry": false,
+  "physicalSingleOpenBridgeVerified": false,
+  "latencyMeasured": false
+}

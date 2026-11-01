@@ -1,0 +1,4 @@
+LIBRARY sl3_asio
+EXPORTS
+    DllGetClassObject PRIVATE
+    DllCanUnloadNow PRIVATE

@@ -1,0 +1,37 @@
+{
+  "utc": "2026-10-27T01:11:45.127942+00:00",
+  "scope": "Offline traced-run preparation and recorded-evidence validation only",
+  "checks": {
+    "pythonTestsPassed": 20,
+    "newEvidenceTestsPassed": 8,
+    "powershellParserPassed": true,
+    "planModesPassed": [
+      "List",
+      "Capture",
+      "DuplexSilence"
+    ],
+    "planDirectoriesCreated": false
+  },
+  "priorRealTraceReadOnly": {
+    "events": 21382,
+    "eventsLost": 0,
+    "buffersLost": 0,
+    "xmlSha256": "1381b6edce832edb0622698c0290674a245dcda6396ada7e769d4e20d8576d8e"
+  },
+  "currentNativeExecutableSha256": "A9F44C72F1FF136A91AE59F274666F5E35C7ADB7489F8F035819ADB773991277",
+  "files": {
+    "scripts/test-usbdk-traced.ps1": "3bf4750550750cbf342215ef7f2d53e2ab715550dde6389abd1f291c460e40e6",
+    "scripts/validate-usbdk-capture.py": "44c76600c13a9d0f5a5ed4127dbfd4621a9b2a2a80db8088f0a6651beb3c14a0",
+    "tests/test_usbdk_capture_evidence.py": "5d39c998e2f5ac345ffe9299bbbc7c48d3f681459c5007c0a654d1967196cb49"
+  },
+  "liveWrapperTested": false,
+  "usbDkInstalledByThisWork": false,
+  "helperLoaded": false,
+  "hardwareAudioTested": false,
+  "audioOutputSubmissions": 0,
+  "limits": [
+    "Evidence consistency is not hardware attestation",
+    "Full live orchestration, emergency recovery and native USB capture/output remain untested",
+    "Physical channel mapping, sample clock, continuity, latency and Serato integration remain unverified"
+  ]
+}

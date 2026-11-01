@@ -1,0 +1,152 @@
+{
+  "generatedUtc": "2026-10-27T06:31:36.506589+00:00",
+  "scope": "Static original hardware-challenge path plus compiled bounded control codec and existing native rate-query integration; no new USB query, original binary execution or application handshake success",
+  "sourceSha256": {
+    "CMakeLists.txt": "95dd1a81651b8410a2976d4ab8ee12c477fa8358439e7fd79254520cc076eb8c",
+    "scripts/build-native.ps1": "251eed49ba53ce495d39b0bc31f030bdda1e8b68303e568dff6e7a272a0572e4",
+    "src/core/control_frames.hpp": "aed8c8b77f22ba6fb1458f52dbe1e94b702b110218cc02367674e11bf0f793f1",
+    "src/core/control_frames.cpp": "e7b7fa17fcdd7027adde67b96cf46385049d4cca989b53c13ac32756270b53e3",
+    "tests/native/control_frames_tests.cpp": "80ef26fce41c9d1b9c5a427b221e2be08026719b229e488d9362e72e97d86851",
+    "src/windows/usbdk_main.cpp": "598701f4d787f8c986ac9237e5181a4b527e89a110827f8ecc34d3ea1c852d80",
+    "scripts/export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20"
+  },
+  "focusedReportSha256": {
+    "serato255-sl3-api-loader-15.json": "758a1871ebf43c1633ebb7980c0ddb406a5f4d12cf048a7e8d33b49171ac0208",
+    "serato255-sl3-api-state-14.json": "473aead6fb77749ea8ed3e184a9d3188e211ade0c275a701a888cb12a4a47aec",
+    "rane-driver-timer-03.json": "dd506057bc473d0b1baf06342682562e2c7f7d9d090f98c45dbbe10b313baf0b",
+    "rane-control-command-04.json": "ad3bdf41307ce7b32c607e5f1258e001ddaf71ba1446ef9ae99f8a037e140009",
+    "rane-control-ioctl-dispatch-05.json": "0844552c2919c9395d934221dc3878e798aec88350e49a73b506b64b38aa99fb"
+  },
+  "originalImages": {
+    "serato255": "ba8641d0329fe0c955147d2b45f247eeea82ac0f812fe30a339834dbe0c0a503",
+    "raneAsio": "e3d88039547b70915b1a9bc9e3e3f7dba32aaa9bc3ce8fd51616565ea1734141",
+    "raneKernel": "e8e992a8ece1a57eab337d815a406b9f815954176c03db545fcf6d951ec615f5"
+  },
+  "originalExchange": {
+    "apiFunction": "0x140691980",
+    "dllExport": "sl3_driver_timer",
+    "ioctl": "0x220010",
+    "getSelector": "0x44",
+    "usbInterruptCommand": "0x37",
+    "challengeBytes": 8,
+    "replyBytes": 8,
+    "replyComparedWithTransformedChallenge": true,
+    "liveVerified": false,
+    "kernelAssembly": [
+      "1205a: sub eax, 0x41",
+      "1205d: je 0x12101",
+      "12063: mov edi, 1",
+      "12068: sub eax, edi",
+      "1206a: je 0x120f5",
+      "12070: sub eax, edi",
+      "12072: je 0x120e5",
+      "12074: sub eax, edi",
+      "12076: je 0x12099",
+      "12078: sub eax, edi",
+      "1207a: jne 0x120cb",
+      "1207c: cmp byte ptr [rcx + 0x40], bpl",
+      "12080: jne 0x1208e",
+      "12082: lea r8, [rdx + 8]",
+      "12086: mov dl, dil",
+      "12089: call 0x116a0",
+      "1208e: mov r9d, 6",
+      "12094: mov dl, dil",
+      "12097: jmp 0x120b2",
+      "12099: cmp byte ptr [rcx + 0x40], bpl",
+      "1209d: jne 0x120aa",
+      "1209f: lea r8, [rdx + 8]",
+      "120a3: mov dl, 0x37",
+      "120a5: call 0x116a0",
+      "120aa: mov r9d, 8",
+      "120b0: mov dl, 0x37",
+      "120b2: mov r8, r12",
+      "120b5: mov rcx, rsi",
+      "120b8: mov dword ptr [rsp + 0x28], r14d",
+      "120bd: mov dword ptr [rsp + 0x20], ebp",
+      "120c1: call 0x118c4",
+      "120c6: cmp al, bpl",
+      "120c9: jne 0x120fc",
+      "120cb: xor al, al",
+      "120cd: mov rbx, qword ptr [rsp + 0x90]"
+    ],
+    "comparisonAssembly": [
+      "140691a95: mov rcx, qword ptr [rsp + 0x80]",
+      "140691a9d: mov edx, 1",
+      "140691aa2: cmp rcx, qword ptr [rsp + 0x88]",
+      "140691aaa: movzx eax, dil",
+      "140691aae: mov rdi, qword ptr [rsp + 0xb8]",
+      "140691ab6: cmove eax, edx"
+    ]
+  },
+  "codecQueries": [
+    {
+      "command": "0x30",
+      "replyBytes": 2,
+      "purpose": "reported rate"
+    },
+    {
+      "command": "0x32",
+      "replyBytes": 22,
+      "purpose": "opaque audio-control table"
+    },
+    {
+      "command": "0x35",
+      "replyBytes": 6,
+      "purpose": "overload bytes"
+    },
+    {
+      "command": "0x37",
+      "replyBytes": 8,
+      "purpose": "real device challenge response; no verifier or emulated reply"
+    }
+  ],
+  "maximumReceivedFrames": 4,
+  "nativeRuntimeQueriesConnected": [
+    "0x30"
+  ],
+  "historicalControlSlices": {
+    "apiChannelIndexToTableIndex": {
+      "0": 14,
+      "1": 20,
+      "2": 8
+    },
+    "readFunction": "0x140691c10",
+    "writeFunction": "0x140691cb0",
+    "writeByteExpression": "incoming byte XOR 1",
+    "sliceBytes": 1,
+    "physicalJackOrEnableMeaningVerified": false,
+    "nativeWritesImplemented": false
+  },
+  "additionalQueriesSubmitted": false,
+  "hardwareResponseVerified": false,
+  "builds": [
+    {
+      "configuration": "Release",
+      "manifestSha256": "a594d88c1e585a385a5caa6109562f56922e389220d0622a4b7bb83983d84985",
+      "ctestLogSha256": "499a1b7e14cf18d9738257c159fff6caafa981b3d037b709f3ca8a3d45689abd",
+      "testCount": 27,
+      "controlTestSha256": "63c387d21559567589c65a54504ea91665e1953928ef0e8f498a9e2456ff4db6",
+      "nativeWorkerSha256": "bde9d11bdbd738bd5d1fbc331ea5d8e3e74fbf0fdf350d65d8a38f88e5a4fc52"
+    },
+    {
+      "configuration": "Debug",
+      "manifestSha256": "dd315f75274dfba89a5f3ac04531b7198a94f34c9ca73f0aed13c93b4cb8c513",
+      "ctestLogSha256": "0f1431dea86ec52fd471db1c6547c00dd78ee770a05e8b178f126454d4f6df7d",
+      "testCount": 27,
+      "controlTestSha256": "ec2912ba750b6efa5fb84d521ad56ab10e246719e09485050437b0fa643be0e3",
+      "nativeWorkerSha256": "20274c5818f607f1d00bce8205246e89d37900c046374c074f0de368d9a26e66"
+    }
+  ],
+  "sdkFree": {
+    "testCount": 19,
+    "ctestLogSha256": "bf72b5b34c1972a3dc85d3c173764816d6ae32b65a8ac046bd4ba9b22193f3cc",
+    "cacheSha256": "793744a657e7041e69cd21b7de481b8ddabb0178c58033cd9767cc0550d43e9c",
+    "controlTestSha256": "4978833c0b9ad781ea17870c980efd231e73f9ca93315fd53398bcd77f094790"
+  },
+  "limits": [
+    "Codec byte tests do not prove device acceptance, command effects or timing",
+    "No rate setter, route/status enable, reset or firmware operation is implemented by this codec",
+    "No driver-timer exchange is exposed through IPC or run on hardware",
+    "Current Serato integration, legitimate product/account requirements and physical DVS remain unresolved"
+  ]
+}

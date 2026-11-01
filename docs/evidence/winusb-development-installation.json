@@ -1,0 +1,26 @@
+{
+  "startedUtc": "2026-10-26T22:18:30.5740852Z",
+  "plan": {
+    "certificateSubject": "CN=SL3 WinUSB Local Development Only",
+    "thumbprint": "11538DF7C55A5BB2DBFE7160C45ECC804F3BB077",
+    "expiresUtc": "2026-11-02T22:14:32.0000000Z",
+    "stores": [
+      "LocalMachine/Root",
+      "LocalMachine/TrustedPublisher"
+    ],
+    "originalInf": "oem136.inf",
+    "originalInfSha256": "7191F7C6FD5FDA7503EB9EABEE2522868A9D1F2DDD766FE6DC9145D6C69E8F76",
+    "action": "Stage and bind only the SL3-specific WinUSB INF; no boot-policy change, firmware request or automatic reboot."
+  },
+  "addedStores": [
+    "Cert:\\LocalMachine\\Root",
+    "Cert:\\LocalMachine\\TrustedPublisher"
+  ],
+  "phase": "binding captured",
+  "publishedInf": "oem152.inf",
+  "needReboot": false,
+  "secureBootBefore": true,
+  "service": "WINUSB",
+  "problem": null,
+  "secureBootAfter": true
+}

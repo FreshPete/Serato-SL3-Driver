@@ -1,0 +1,26 @@
+[
+  {
+    "name": "strmdrv.cat",
+    "bytes": 8502,
+    "sha256": "3169df3e2fcd8041a089f432d2cd04f05f93eb20bced840dfc5e68ee844e7986",
+    "matches_original": true
+  },
+  {
+    "name": "strmdrv.inf",
+    "bytes": 2857,
+    "sha256": "7191f7c6fd5fda7503eb9eabee2522868a9d1f2ddd766fe6dc9145d6c69e8f76",
+    "matches_original": true
+  },
+  {
+    "name": "strmdrv.sys",
+    "bytes": 36240,
+    "sha256": "e8e992a8ece1a57eab337d815a406b9f815954176c03db545fcf6d951ec615f5",
+    "matches_original": true
+  },
+  {
+    "name": "WdfCoInstaller01007.dll",
+    "bytes": 1490656,
+    "sha256": "749cc009f1cae5c633083897e906b381aa685829fee2d7cd5e07bae543848ff7",
+    "matches_original": true
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "utc": "2026-10-26T21:57:19.3744002Z",
+  "previousInf": "oem136.inf",
+  "winusbSha256": "3893C030728F73B429DCDAFB791563623FDCF87678232A8DC373420DD6C6AEF7",
+  "result": {
+    "Description": "WinUsb Device",
+    "ProviderName": "Microsoft",
+    "InfFileName": "C:\\WINDOWS\\INF\\winusb.inf",
+    "SectionName": "WINUSB",
+    "bound": false
+  }
+}

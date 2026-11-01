@@ -1,0 +1,788 @@
+{
+  "scope": "Offline USBHUB3 timeline of one historical failed second redirect; no new hardware operation",
+  "runRecordSha256": "96f42b0e07b6b50f737769106a6dcd83b18557996d07b8089a036ecf8146d92b",
+  "xmlSha256": "8d3f834be39c188be2625cd2cbf568e30f95caa5378f9567e4d37d632cffaccc",
+  "etlSha256": "f8f5b31c79988232ad3f1a9ce4d1f2b7e7ddfeeaf7accea43350adbbf7ad6a41",
+  "traceStats": {
+    "eventsLost": 0,
+    "buffersLost": 0,
+    "eventCount": 14368,
+    "session": "SL3Startup-9c0f3e725e4840c1a74a1182bbfe0033",
+    "xmlSha256": "8d3f834be39c188be2625cd2cbf568e30f95caa5378f9567e4d37d632cffaccc"
+  },
+  "traceStoppedUtc": "2026-10-30T17:24:20.5866067Z",
+  "provider": "Microsoft-Windows-USB-USBHUB3",
+  "providerGuid": "{ac52ad17-cc01-4f85-8df5-4dce4333c99b}",
+  "cycleIoctl": "0x22001f",
+  "hubObject": "0x3AF096E062D8",
+  "port": 3,
+  "childObjects": [
+    "0x3AF0683553B8",
+    "0x3AF06C00C6F8",
+    "0x3AF08FD02428"
+  ],
+  "journalPrefixes": [
+    {
+      "pid": 25532,
+      "snapshotSha256": "F8409A04B4CE5F5862DB9EC685EFF9777C594B82506C53E1B3771C322E04D29B",
+      "markers": [
+        "worker.enter",
+        "helper_load.enter",
+        "helper_load.return",
+        "enumerate.enter",
+        "enumerate.return",
+        "configuration.enter",
+        "configuration.return",
+        "redirect_start.enter",
+        "redirect_start.return",
+        "system_handle.enter",
+        "system_handle.return",
+        "clock_getter.enter",
+        "clock_getter.return",
+        "redirect_close.enter",
+        "redirect_close.return",
+        "helper_unload.enter",
+        "helper_unload.return"
+      ]
+    },
+    {
+      "pid": 32156,
+      "snapshotSha256": "8B7FC789A78C472A6894B127DD325876C99FA10F81DF1124A5D37A5ABBC18728",
+      "markers": [
+        "worker.enter",
+        "helper_load.enter",
+        "helper_load.return",
+        "enumerate.enter",
+        "enumerate.return",
+        "enumerate.enter",
+        "enumerate.return",
+        "enumerate.enter",
+        "enumerate.return",
+        "configuration.enter",
+        "configuration.return",
+        "redirect_start.enter"
+      ]
+    }
+  ],
+  "secondCycleObservedUtc": "2026-10-30T17:23:21.243604400+00:00",
+  "secondCycleDispatchCompletion": {
+    "time": "2026-10-30T17:23:21.243608300+00:00",
+    "pid": 32156,
+    "eventId": 91,
+    "task": 11,
+    "message": "Completion of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+    "data": {
+      "fid_UsbDevice": "0x3AF06C00C6F8",
+      "fid_IoctlCode": "0x22001F",
+      "fid_NtStatus": "0x0"
+    }
+  },
+  "targetNonStateEventCountsAfterSecondCycle": {
+    "90": 1,
+    "91": 1,
+    "111": 1,
+    "179": 1
+  },
+  "timeline": [
+    {
+      "time": "2026-10-30T17:23:20.983674800+00:00",
+      "pid": 25532,
+      "eventId": 179,
+      "task": 11,
+      "message": "Client Initiated Recovery Action",
+      "data": {
+        "fid_UsbDevice": "0x3AF096E062D8",
+        "fid_IoctlCode": "0x22001F",
+        "fid_UrbFunction": "0x0",
+        "fid_idVendor": "0x1CC5",
+        "fid_idProduct": "0x1",
+        "fid_bcdDevice": "0x0",
+        "fid_EventCount": "0x1"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:20.983695200+00:00",
+      "pid": 25532,
+      "eventId": 60,
+      "task": 9,
+      "message": "Start of USB Device Enumeration",
+      "data": {
+        "fid_UsbDevice": "0x3AF096E062D8",
+        "fid_PortNumber": "3"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:20.983732600+00:00",
+      "pid": 25532,
+      "eventId": 90,
+      "task": 11,
+      "message": "Start of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF0683553B8",
+        "fid_IoctlCode": "0x22001F"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:20.983732900+00:00",
+      "pid": 25532,
+      "eventId": 91,
+      "task": 11,
+      "message": "Completion of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF0683553B8",
+        "fid_IoctlCode": "0x22001F",
+        "fid_NtStatus": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:20.984954600+00:00",
+      "pid": 4,
+      "eventId": 57,
+      "task": 8,
+      "message": "Start of EvtDeviceCleanup for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF0683553B8"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:20.985214100+00:00",
+      "pid": 4,
+      "eventId": 58,
+      "task": 8,
+      "message": "Complete EvtDeviceCleanup for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF0683553B8"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.034042000+00:00",
+      "pid": 0,
+      "eventId": 100,
+      "task": 12,
+      "message": "Port Status for 2.0 Port",
+      "data": {
+        "fid_UsbDevice": "0x3AF096E062D8",
+        "fid_PortNumber": "3",
+        "fid_PortStatus": "0x503",
+        "fid_PortChange": "0x10"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.034056100+00:00",
+      "pid": 0,
+      "eventId": 100,
+      "task": 12,
+      "message": "Port Status for 2.0 Port",
+      "data": {
+        "fid_UsbDevice": "0x3AF096E062D8",
+        "fid_PortNumber": "3",
+        "fid_PortStatus": "0x503",
+        "fid_PortChange": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.082864800+00:00",
+      "pid": 4,
+      "eventId": 61,
+      "task": 9,
+      "message": "Completion of USB Device Enumeration",
+      "data": {
+        "fid_HubDevice": "0x3AF096E062D8",
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_PortNumber": "3",
+        "fid_NtStatus": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.084273700+00:00",
+      "pid": 4,
+      "eventId": 90,
+      "task": 11,
+      "message": "Start of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_IoctlCode": "0x49104B"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.084274100+00:00",
+      "pid": 4,
+      "eventId": 180,
+      "task": 11,
+      "message": "Query USB capability for device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_Capability": "{8a2f776c-9bd0-4f29-9771-c7a38846d4c7}",
+        "fid_NtStatus": "0xC00000BB"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.084274400+00:00",
+      "pid": 4,
+      "eventId": 91,
+      "task": 11,
+      "message": "Completion of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_IoctlCode": "0x49104B",
+        "fid_NtStatus": "0xC00000BB"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.084275300+00:00",
+      "pid": 4,
+      "eventId": 90,
+      "task": 11,
+      "message": "Start of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_IoctlCode": "0x49104B"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.084275400+00:00",
+      "pid": 4,
+      "eventId": 180,
+      "task": 11,
+      "message": "Query USB capability for device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_Capability": "{81a885a6-f239-42a2-8397-a5d95bea6953}",
+        "fid_NtStatus": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.084275600+00:00",
+      "pid": 4,
+      "eventId": 91,
+      "task": 11,
+      "message": "Completion of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_IoctlCode": "0x49104B",
+        "fid_NtStatus": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.086967100+00:00",
+      "pid": 4,
+      "eventId": 41,
+      "task": 2,
+      "message": "Start of EvtDevicePrepareHardware for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.087130000+00:00",
+      "pid": 4,
+      "eventId": 43,
+      "task": 2,
+      "message": "New USB Device Information",
+      "data": {
+        "fid_HubDevice": "0x3AF096E062D8",
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_PortNumber": "3",
+        "fid_DeviceDescription": "UsbDk device",
+        "fid_DeviceInterfacePath": "\\??\\USB#Vid_2B23&Pid_CAFE&Rev_0001#UsbDk0#{a5dcbf10-6530-11d2-901f-00c04fb951ed}",
+        "fid_ConfigurationDescriptorLength": "0xEB",
+        "fid_ConfigurationDescriptor": "0x1",
+        "fid_PdoName": "\\Device\\USBPDO-4",
+        "fid_Suspended": "0x1",
+        "fid_PortPathDepth": "1",
+        "fid_PortPath": "0",
+        "fid_PciBus": "0x2A",
+        "fid_PciDevice": "0x0",
+        "fid_PciFunction": "0x3",
+        "fid_PciVendorId": "0x1022",
+        "fid_PciDeviceId": "0x149C",
+        "fid_PciRevisionId": "0x0",
+        "fid_CurrentWdfPowerDeviceState": "0x5",
+        "fid_Usb20LpmStatus": "0x6",
+        "fid_ControllerParentBusType": "1",
+        "fid_AcpiVendorId": "NULL",
+        "fid_AcpiDeviceId": "NULL",
+        "fid_AcpiRevisionId": "NULL",
+        "fid_PortFlagAcpiUpcValid": "0x1",
+        "fid_PortConnectorType": "0x3",
+        "fid_UcmConnectorId": "0x202",
+        "fid_GetFirmwareImageHashSupport": "false",
+        "fid_DisallowFirmwareUpdateSupport": "false",
+        "fid_GetFirmwareHashNtStatus": "0x103",
+        "fid_GetFirmwareHashUsbdStatus": "0x40000000"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.087184400+00:00",
+      "pid": 4,
+      "eventId": 42,
+      "task": 2,
+      "message": "Complete EvtDevicePrepareHardware for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_NtStatus": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.087187800+00:00",
+      "pid": 4,
+      "eventId": 51,
+      "task": 5,
+      "message": "Start of EvtDeviceD0Entry for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_TargetState": "0x1",
+        "fid_PowerAction": "0x0",
+        "fid_WaitWakePending": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.087191300+00:00",
+      "pid": 4,
+      "eventId": 52,
+      "task": 5,
+      "message": "Complete EvtDeviceD0Entry for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_NtStatus": "0x0",
+        "fid_PowerAction": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.087282100+00:00",
+      "pid": 4,
+      "eventId": 90,
+      "task": 11,
+      "message": "Start of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_IoctlCode": "0x49104B"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.087282400+00:00",
+      "pid": 4,
+      "eventId": 180,
+      "task": 11,
+      "message": "Query USB capability for device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_Capability": "{59819125-33a3-421a-a5dd-37639f30b93e}",
+        "fid_NtStatus": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.087282700+00:00",
+      "pid": 4,
+      "eventId": 91,
+      "task": 11,
+      "message": "Completion of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_IoctlCode": "0x49104B",
+        "fid_NtStatus": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.088609300+00:00",
+      "pid": 4,
+      "eventId": 90,
+      "task": 11,
+      "message": "Start of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_IoctlCode": "0x220003"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.088609700+00:00",
+      "pid": 4,
+      "eventId": 92,
+      "task": 11,
+      "message": "Start URB Client Request for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_UrbFunction": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.093602800+00:00",
+      "pid": 0,
+      "eventId": 93,
+      "task": 11,
+      "message": "Completion of URB Client Request for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_UrbFunction": "0x0",
+        "fid_UsbdStatus": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.093603200+00:00",
+      "pid": 0,
+      "eventId": 91,
+      "task": 11,
+      "message": "Completion of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_IoctlCode": "0x220003",
+        "fid_NtStatus": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.093611900+00:00",
+      "pid": 4,
+      "eventId": 90,
+      "task": 11,
+      "message": "Start of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_IoctlCode": "0x220003"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.093612300+00:00",
+      "pid": 4,
+      "eventId": 92,
+      "task": 11,
+      "message": "Start URB Client Request for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_UrbFunction": "0x1"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.097608200+00:00",
+      "pid": 4,
+      "eventId": 93,
+      "task": 11,
+      "message": "Completion of URB Client Request for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_UrbFunction": "0x1",
+        "fid_UsbdStatus": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.097608400+00:00",
+      "pid": 4,
+      "eventId": 91,
+      "task": 11,
+      "message": "Completion of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_IoctlCode": "0x220003",
+        "fid_NtStatus": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.135087100+00:00",
+      "pid": 25532,
+      "eventId": 179,
+      "task": 11,
+      "message": "Client Initiated Recovery Action",
+      "data": {
+        "fid_UsbDevice": "0x3AF096E062D8",
+        "fid_IoctlCode": "0x22001F",
+        "fid_UrbFunction": "0x0",
+        "fid_idVendor": "0x1CC5",
+        "fid_idProduct": "0x1",
+        "fid_bcdDevice": "0x0",
+        "fid_EventCount": "0x1"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.135125100+00:00",
+      "pid": 25532,
+      "eventId": 90,
+      "task": 11,
+      "message": "Start of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_IoctlCode": "0x22001F"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.135125400+00:00",
+      "pid": 25532,
+      "eventId": 91,
+      "task": 11,
+      "message": "Completion of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_IoctlCode": "0x22001F",
+        "fid_NtStatus": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.136396400+00:00",
+      "pid": 4,
+      "eventId": 55,
+      "task": 7,
+      "message": "Start of EvtDeviceReleaseHardware for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.136397300+00:00",
+      "pid": 4,
+      "eventId": 56,
+      "task": 7,
+      "message": "Complete EvtDeviceReleaseHardware for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.136399400+00:00",
+      "pid": 4,
+      "eventId": 53,
+      "task": 6,
+      "message": "Start of EvtDeviceD0Exit for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_TargetState": "0x5",
+        "fid_PowerAction": "0x0",
+        "fid_WaitWakePending": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.136438500+00:00",
+      "pid": 4,
+      "eventId": 54,
+      "task": 6,
+      "message": "Complete EvtDeviceD0Exit for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_NtStatus": "0x0",
+        "fid_PowerAction": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.136446900+00:00",
+      "pid": 4,
+      "eventId": 49,
+      "task": 4,
+      "message": "Start of EvtDeviceReleaseHardware for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.137644300+00:00",
+      "pid": 4,
+      "eventId": 50,
+      "task": 4,
+      "message": "Complete EvtDeviceReleaseHardware for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428",
+        "fid_NtStatus": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.137650300+00:00",
+      "pid": 0,
+      "eventId": 60,
+      "task": 9,
+      "message": "Start of USB Device Enumeration",
+      "data": {
+        "fid_UsbDevice": "0x3AF096E062D8",
+        "fid_PortNumber": "3"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.138103600+00:00",
+      "pid": 4,
+      "eventId": 57,
+      "task": 8,
+      "message": "Start of EvtDeviceCleanup for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.139152300+00:00",
+      "pid": 4,
+      "eventId": 58,
+      "task": 8,
+      "message": "Complete EvtDeviceCleanup for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF08FD02428"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.187965300+00:00",
+      "pid": 0,
+      "eventId": 100,
+      "task": 12,
+      "message": "Port Status for 2.0 Port",
+      "data": {
+        "fid_UsbDevice": "0x3AF096E062D8",
+        "fid_PortNumber": "3",
+        "fid_PortStatus": "0x503",
+        "fid_PortChange": "0x10"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.187979000+00:00",
+      "pid": 0,
+      "eventId": 100,
+      "task": 12,
+      "message": "Port Status for 2.0 Port",
+      "data": {
+        "fid_UsbDevice": "0x3AF096E062D8",
+        "fid_PortNumber": "3",
+        "fid_PortStatus": "0x503",
+        "fid_PortChange": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.237081500+00:00",
+      "pid": 4,
+      "eventId": 61,
+      "task": 9,
+      "message": "Completion of USB Device Enumeration",
+      "data": {
+        "fid_HubDevice": "0x3AF096E062D8",
+        "fid_UsbDevice": "0x3AF06C00C6F8",
+        "fid_PortNumber": "3",
+        "fid_NtStatus": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.238390000+00:00",
+      "pid": 4,
+      "eventId": 90,
+      "task": 11,
+      "message": "Start of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF06C00C6F8",
+        "fid_IoctlCode": "0x49104B"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.238390200+00:00",
+      "pid": 4,
+      "eventId": 180,
+      "task": 11,
+      "message": "Query USB capability for device",
+      "data": {
+        "fid_UsbDevice": "0x3AF06C00C6F8",
+        "fid_Capability": "{8a2f776c-9bd0-4f29-9771-c7a38846d4c7}",
+        "fid_NtStatus": "0xC00000BB"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.238390500+00:00",
+      "pid": 4,
+      "eventId": 91,
+      "task": 11,
+      "message": "Completion of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF06C00C6F8",
+        "fid_IoctlCode": "0x49104B",
+        "fid_NtStatus": "0xC00000BB"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.238391500+00:00",
+      "pid": 4,
+      "eventId": 90,
+      "task": 11,
+      "message": "Start of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF06C00C6F8",
+        "fid_IoctlCode": "0x49104B"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.238391600+00:00",
+      "pid": 4,
+      "eventId": 180,
+      "task": 11,
+      "message": "Query USB capability for device",
+      "data": {
+        "fid_UsbDevice": "0x3AF06C00C6F8",
+        "fid_Capability": "{81a885a6-f239-42a2-8397-a5d95bea6953}",
+        "fid_NtStatus": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.238391700+00:00",
+      "pid": 4,
+      "eventId": 91,
+      "task": 11,
+      "message": "Completion of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF06C00C6F8",
+        "fid_IoctlCode": "0x49104B",
+        "fid_NtStatus": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.243604400+00:00",
+      "pid": 32156,
+      "eventId": 179,
+      "task": 11,
+      "message": "Client Initiated Recovery Action",
+      "data": {
+        "fid_UsbDevice": "0x3AF096E062D8",
+        "fid_IoctlCode": "0x22001F",
+        "fid_UrbFunction": "0x0",
+        "fid_idVendor": "0x1CC5",
+        "fid_idProduct": "0x1",
+        "fid_bcdDevice": "0x0",
+        "fid_EventCount": "0x1"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.243607000+00:00",
+      "pid": 32156,
+      "eventId": 111,
+      "task": 13,
+      "message": "Unhandled State Machine Event",
+      "data": {
+        "fid_UsbDevice": "0x3AF06C00C6F8",
+        "fid_Context": "0xFFFFC50F96CEF0D0",
+        "fid_StartIndex": "0xFA0",
+        "fid_State": "0x1080",
+        "fid_Event": "0xFAB",
+        "fid_Depth": "0x0"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.243607800+00:00",
+      "pid": 32156,
+      "eventId": 90,
+      "task": 11,
+      "message": "Start of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF06C00C6F8",
+        "fid_IoctlCode": "0x22001F"
+      }
+    },
+    {
+      "time": "2026-10-30T17:23:21.243608300+00:00",
+      "pid": 32156,
+      "eventId": 91,
+      "task": 11,
+      "message": "Completion of IRP_MJ_INTERNAL_DEVICE_CONTROL for USB Device",
+      "data": {
+        "fid_UsbDevice": "0x3AF06C00C6F8",
+        "fid_IoctlCode": "0x22001F",
+        "fid_NtStatus": "0x0"
+      }
+    }
+  ],
+  "limits": [
+    "Object addresses are trace-local identities, not stable device identifiers.",
+    "fid_UsbDevice denotes a hub in some schemas and a child in others; arbitrary pointer equality is insufficient.",
+    "USBHUB3 reports successful cycle dispatch completion; this is not UsbDk StartRedirect completion or successful PnP reattachment.",
+    "No further target-port enumeration is recorded in this trace; zero reported loss does not prove all internal execution was observable.",
+    "Unhandled state numeric fields are preserved without assigning undocumented state-machine meanings.",
+    "Cycle receipt shows this attempt progressed beyond a preceding startup power wait; the exact subsequent UsbDk wait remains unidentified.",
+    "The old journal prefix stops at second redirect entry; later appended journal data is outside its bound evidence.",
+    "No UsbDk WPP lifecycle messages were captured; no kernel timeout, arbitrary delay or cancellation fix is established."
+  ]
+}

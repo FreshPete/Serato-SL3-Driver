@@ -1,0 +1,495 @@
+{
+  "scope": "Static installed Serato ASIO object lifecycle; no vendor execution or physical application test",
+  "binarySha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "installedImageMatches": true,
+  "focusedReports": {
+    "serato500-pa-asio-initialize-03.json": "2c65b347bda583fcdd90e95070ae3f17ae1cd26abdf65367afd693549b7ac53a",
+    "serato500-pa-asio-open-04.json": "7336d9b7de6c1974ae2364094eca5849eba74586901efd30085c0e2080397b90",
+    "serato500-asio-construction.json": "d2356340d55f0d283ead248f006f498c18fac21c615d6a2eb9b9f3c482062097",
+    "serato500-asio-registry.json": "2d1c09c7ac3ca673f0af37ef28164b53178df989e10cb9c548b89fdb5e1945d0",
+    "serato500-asio-type.json": "6d3c0f1ac71c9767b0acf165378667bdb9502d0818031f74ffbbb0ea17fbf716",
+    "serato500-asio-object-lifetime-01.json": "fff7ae7fe7b63cc1862d55d86be5b0394a730158a71fbdd561ccaaa39d24d783",
+    "serato500-asio-object-lifetime-02.json": "76f14b850788f1c3516cb19c5c1ec80d1b6e3de0f0f5f0f59068642380ea8614",
+    "serato500-asio-object-lifetime-03.json": "a1bf0da8111f3cecb65a8bc023c5f561c40d4f006b73430450327f5292d207e1"
+  },
+  "boundaryCheckedInstructions": [
+    {
+      "va": "0x142218a91",
+      "bytes": "e8aae5ffff",
+      "opcode": "call",
+      "operands": "0x142217040"
+    },
+    {
+      "va": "0x142218a98",
+      "bytes": "0f8555030000",
+      "opcode": "jne",
+      "operands": "0x142218df3"
+    },
+    {
+      "va": "0x142218ce9",
+      "bytes": "e892910000",
+      "opcode": "call",
+      "operands": "0x142221e80"
+    },
+    {
+      "va": "0x142218cee",
+      "bytes": "eb77",
+      "opcode": "jmp",
+      "operands": "0x142218d67"
+    },
+    {
+      "va": "0x142217361",
+      "bytes": "e8dafcffff",
+      "opcode": "call",
+      "operands": "0x142217040"
+    },
+    {
+      "va": "0x142217050",
+      "bytes": "e82bb90000",
+      "opcode": "call",
+      "operands": "0x142222980"
+    },
+    {
+      "va": "0x14221709b",
+      "bytes": "e880af0000",
+      "opcode": "call",
+      "operands": "0x142222020"
+    },
+    {
+      "va": "0x14222207e",
+      "bytes": "ff5018",
+      "opcode": "call",
+      "operands": "qword ptr [rax + 0x18]"
+    },
+    {
+      "va": "0x142222a6f",
+      "bytes": "e87c000000",
+      "opcode": "call",
+      "operands": "0x142222af0"
+    },
+    {
+      "va": "0x142222a80",
+      "bytes": "e83bf9ffff",
+      "opcode": "call",
+      "operands": "0x1422223c0"
+    },
+    {
+      "va": "0x1422223f2",
+      "bytes": "4883b89802000000",
+      "opcode": "cmp",
+      "operands": "qword ptr [rax + 0x298], 0"
+    },
+    {
+      "va": "0x1422223fc",
+      "bytes": "488d4804",
+      "opcode": "lea",
+      "operands": "rcx, [rax + 4]"
+    },
+    {
+      "va": "0x142222400",
+      "bytes": "48897c2420",
+      "opcode": "mov",
+      "operands": "qword ptr [rsp + 0x20], rdi"
+    },
+    {
+      "va": "0x142222405",
+      "bytes": "4c8bc9",
+      "opcode": "mov",
+      "operands": "r9, rcx"
+    },
+    {
+      "va": "0x142222408",
+      "bytes": "33d2",
+      "opcode": "xor",
+      "operands": "edx, edx"
+    },
+    {
+      "va": "0x14222240a",
+      "bytes": "41b801000000",
+      "opcode": "mov",
+      "operands": "r8d, 1"
+    },
+    {
+      "va": "0x14222241d",
+      "bytes": "48898398020000",
+      "opcode": "mov",
+      "operands": "qword ptr [rbx + 0x298], rax"
+    },
+    {
+      "va": "0x142221e95",
+      "bytes": "e8560c0000",
+      "opcode": "call",
+      "operands": "0x142222af0"
+    },
+    {
+      "va": "0x142222af6",
+      "bytes": "8b5114",
+      "opcode": "mov",
+      "operands": "edx, dword ptr [rcx + 0x14]"
+    },
+    {
+      "va": "0x142222b01",
+      "bytes": "e8caf7ffff",
+      "opcode": "call",
+      "operands": "0x1422222d0"
+    },
+    {
+      "va": "0x1422222ea",
+      "bytes": "488b8898020000",
+      "opcode": "mov",
+      "operands": "rcx, qword ptr [rax + 0x298]"
+    },
+    {
+      "va": "0x1422222f9",
+      "bytes": "ff5210",
+      "opcode": "call",
+      "operands": "qword ptr [rdx + 0x10]"
+    },
+    {
+      "va": "0x1422222fc",
+      "bytes": "48c7839802000000000000",
+      "opcode": "mov",
+      "operands": "qword ptr [rbx + 0x298], 0"
+    },
+    {
+      "va": "0x142216ce4",
+      "bytes": "e877b10000",
+      "opcode": "call",
+      "operands": "0x142221e60"
+    },
+    {
+      "va": "0x142216ce9",
+      "bytes": "e892b10000",
+      "opcode": "call",
+      "operands": "0x142221e80"
+    },
+    {
+      "va": "0x142221e75",
+      "bytes": "48ffa0a0000000",
+      "opcode": "jmp",
+      "operands": "qword ptr [rax + 0xa0]"
+    },
+    {
+      "va": "0x1422181fe",
+      "bytes": "e85d9f0000",
+      "opcode": "call",
+      "operands": "0x142222160"
+    },
+    {
+      "va": "0x1422182b1",
+      "bytes": "e8ca9e0000",
+      "opcode": "call",
+      "operands": "0x142222180"
+    },
+    {
+      "va": "0x142222175",
+      "bytes": "48ff6038",
+      "opcode": "jmp",
+      "operands": "qword ptr [rax + 0x38]"
+    },
+    {
+      "va": "0x142222195",
+      "bytes": "48ff6040",
+      "opcode": "jmp",
+      "operands": "qword ptr [rax + 0x40]"
+    },
+    {
+      "va": "0x1422083d1",
+      "bytes": "e87a850000",
+      "opcode": "call",
+      "operands": "0x142210950"
+    },
+    {
+      "va": "0x142210a1d",
+      "bytes": "e81e090000",
+      "opcode": "call",
+      "operands": "0x142211340"
+    },
+    {
+      "va": "0x142210a2a",
+      "bytes": "e801250000",
+      "opcode": "call",
+      "operands": "0x142212f30"
+    },
+    {
+      "va": "0x14220e91a",
+      "bytes": "ff5018",
+      "opcode": "call",
+      "operands": "qword ptr [rax + 0x18]"
+    },
+    {
+      "va": "0x14220d82c",
+      "bytes": "ff9098000000",
+      "opcode": "call",
+      "operands": "qword ptr [rax + 0x98]"
+    },
+    {
+      "va": "0x142210bc3",
+      "bytes": "e828cbffff",
+      "opcode": "call",
+      "operands": "0x14220d6f0"
+    },
+    {
+      "va": "0x142210bee",
+      "bytes": "ff5038",
+      "opcode": "call",
+      "operands": "qword ptr [rax + 0x38]"
+    },
+    {
+      "va": "0x142210bf1",
+      "bytes": "b950000000",
+      "opcode": "mov",
+      "operands": "ecx, 0x50"
+    },
+    {
+      "va": "0x142210bf6",
+      "bytes": "e87545ffff",
+      "opcode": "call",
+      "operands": "0x142205170"
+    },
+    {
+      "va": "0x142210c02",
+      "bytes": "ff5040",
+      "opcode": "call",
+      "operands": "qword ptr [rax + 0x40]"
+    },
+    {
+      "va": "0x142205170",
+      "bytes": "8bc1",
+      "opcode": "mov",
+      "operands": "eax, ecx"
+    },
+    {
+      "va": "0x142205172",
+      "bytes": "83f90a",
+      "opcode": "cmp",
+      "operands": "ecx, 0xa"
+    },
+    {
+      "va": "0x142205175",
+      "bytes": "7d15",
+      "opcode": "jge",
+      "operands": "0x14220518c"
+    },
+    {
+      "va": "0x14220518c",
+      "bytes": "8bc8",
+      "opcode": "mov",
+      "operands": "ecx, eax"
+    },
+    {
+      "va": "0x142212f3c",
+      "bytes": "4883c160",
+      "opcode": "add",
+      "operands": "rcx, 0x60"
+    },
+    {
+      "va": "0x142212f40",
+      "bytes": "4883c038",
+      "opcode": "add",
+      "operands": "rax, 0x38"
+    },
+    {
+      "va": "0x142212f44",
+      "bytes": "4889442420",
+      "opcode": "mov",
+      "operands": "qword ptr [rsp + 0x20], rax"
+    },
+    {
+      "va": "0x142212f49",
+      "bytes": "4c8bc9",
+      "opcode": "mov",
+      "operands": "r9, rcx"
+    },
+    {
+      "va": "0x142212f4c",
+      "bytes": "33d2",
+      "opcode": "xor",
+      "operands": "edx, edx"
+    },
+    {
+      "va": "0x142212f4e",
+      "bytes": "41b801000000",
+      "opcode": "mov",
+      "operands": "r8d, 1"
+    },
+    {
+      "va": "0x142211361",
+      "bytes": "ff5010",
+      "opcode": "call",
+      "operands": "qword ptr [rax + 0x10]"
+    },
+    {
+      "va": "0x14221136e",
+      "bytes": "48c70300000000",
+      "opcode": "mov",
+      "operands": "qword ptr [rbx], 0"
+    },
+    {
+      "va": "0x142208ea3",
+      "bytes": "e898840000",
+      "opcode": "call",
+      "operands": "0x142211340"
+    },
+    {
+      "va": "0x14220f2a5",
+      "bytes": "4c397738",
+      "opcode": "cmp",
+      "operands": "qword ptr [rdi + 0x38], r14"
+    },
+    {
+      "va": "0x14220f2a9",
+      "bytes": "753c",
+      "opcode": "jne",
+      "operands": "0x14220f2e7"
+    },
+    {
+      "va": "0x14220f2b3",
+      "bytes": "e898160000",
+      "opcode": "call",
+      "operands": "0x142210950"
+    },
+    {
+      "va": "0x14220f663",
+      "bytes": "80bfb507000000",
+      "opcode": "cmp",
+      "operands": "byte ptr [rdi + 0x7b5], 0"
+    },
+    {
+      "va": "0x14220f66a",
+      "bytes": "0f84c4000000",
+      "opcode": "je",
+      "operands": "0x14220f734"
+    },
+    {
+      "va": "0x14220f673",
+      "bytes": "e8c81c0000",
+      "opcode": "call",
+      "operands": "0x142211340"
+    },
+    {
+      "va": "0x14220f67b",
+      "bytes": "e8c01c0000",
+      "opcode": "call",
+      "operands": "0x142211340"
+    },
+    {
+      "va": "0x14220f688",
+      "bytes": "e8a3380000",
+      "opcode": "call",
+      "operands": "0x142212f30"
+    },
+    {
+      "va": "0x14220f695",
+      "bytes": "e826f2ffff",
+      "opcode": "call",
+      "operands": "0x14220e8c0"
+    }
+  ],
+  "actualImports": [
+    {
+      "va": "0x142222410",
+      "iat": "0x1427363b0",
+      "module": "api-ms-win-core-com-l1-1-0.dll",
+      "name": "CoCreateInstance"
+    },
+    {
+      "va": "0x142212f54",
+      "iat": "0x1427363b0",
+      "module": "api-ms-win-core-com-l1-1-0.dll",
+      "name": "CoCreateInstance"
+    },
+    {
+      "va": "0x14220518e",
+      "iat": "0x1427368a0",
+      "module": "api-ms-win-core-synch-l1-2-0.dll",
+      "name": "Sleep"
+    }
+  ],
+  "explicitLeafRanges": [
+    [
+      "0x142205170",
+      "0x142205195"
+    ],
+    [
+      "0x142221e60",
+      "0x142221e7c"
+    ],
+    [
+      "0x142222160",
+      "0x142222179"
+    ],
+    [
+      "0x142222180",
+      "0x142222199"
+    ]
+  ],
+  "juceType": {
+    "vtable": "0x1431dd708",
+    "locator": "0x1433ef760",
+    "name": ".?AVASIOAudioIODevice@juce@@",
+    "openVirtualSlot": "0x30"
+  },
+  "sdk": {
+    "iasioHeaderSha256": "86ad4788452c74823653cf57d4bd557c48bb6542d7e6eb7fff80102c705a066d",
+    "iunknownHeaderSha256": "16921298a302b47b99395db32be7fdc7e40926a2729e9428b059f69cf92f1d98",
+    "slots": {
+      "init": 24,
+      "getDriverName": 32,
+      "getDriverVersion": 40,
+      "getErrorMessage": 48,
+      "start": 56,
+      "stop": 64,
+      "getChannels": 72,
+      "getLatencies": 80,
+      "getBufferSize": 88,
+      "canSampleRate": 96,
+      "getSampleRate": 104,
+      "setSampleRate": 112,
+      "getClockSources": 120,
+      "setClockSource": 128,
+      "getSamplePosition": 136,
+      "getChannelInfo": 144,
+      "createBuffers": 152,
+      "disposeBuffers": 160,
+      "controlPanel": 168,
+      "future": 176,
+      "outputReady": 184
+    },
+    "releaseSlot": "0x10"
+  },
+  "rebuiltOwner": {
+    "sourceHashes": {
+      "src/asio/com_server.cpp": "b5d26fae42b20c5830d0f832f63183978eba16426f5550d813dda8223e2ce237",
+      "src/asio/driver_facade.hpp": "eb4e82dbc123551edb1a1a30d1e72475538281135ae714a05413ff6410ad120d",
+      "src/asio/host_session.cpp": "bc47974544a904434e144f1a788fb27df89dde9400b40f1dafa3c00f75116029",
+      "src/asio/driver_configuration.cpp": "90bb55c70d48f1fc3b7aa282ad7ee449d0d3230af351cc96571dc5cb03359e5a"
+    },
+    "dllSha256": "06e8d90be3b940ee7ef97ea14183d368eb853c6aa1a0c71d1d44aae45b35b40f",
+    "scope": "One HostSession per successfully configured COM Device/DriverFacade; final destruction releases its device"
+  },
+  "transportHandleOwnership": {
+    "reviewedCommit": "84752c30037956149d53b498005b5368616f9257",
+    "referenceHashes": {
+      "DriverFile.h": "079dcf53753e4fac7629585ca6d5dc6ac2498748c83bf5dd6f41f604fe0f31b6",
+      "RedirectorAccess.h": "5ebfc813cd984bfd1eb29a5c97780c7412e660a692b33daf0831191b9ada0b84",
+      "UsbDkHelper.cpp": "6790c5a9a67c7f64164198511cd855c1c7054d80850a86d7713831f5ed4b5350"
+    },
+    "systemHandleBorrowed": true,
+    "closeOwner": "UsbDkRedirectorAccess/UsbDkDriverFile destroyed by UsbDk_StopRedirect",
+    "limits": "Source ownership check only; does not establish completed kernel/USB re-enumeration when StopRedirect returns"
+  },
+  "findings": [
+    "Successful legacy enumeration initializes then releases the selected IASIO object; actual stream open loads/initializes again",
+    "Legacy stream close disposes buffers and releases its IASIO object; ordinary stream stop uses the separate stop slot",
+    "JUCE ASIO device setup creates/initializes an IASIO object, creates dummy buffers and starts/stops it with an 80-ms Sleep between",
+    "JUCE open initializes a missing object and has a conditional +0x7b5 branch that releases/recreates it; this is not unconditional every open",
+    "Our per-object retention does not establish safe successive object release/recreation on hardware"
+  ],
+  "limits": [
+    "Preferred image VAs and selected unwind/leaf ranges; no complete control-flow recovery or runtime reachability claim",
+    "Exact bundled PortAudio/JUCE versions and active SL3 backend selection remain unverified",
+    "Reset flag source is separately verified by export-serato-asio-reset-evidence.py; real application object timings remain unestablished",
+    "No broker/service, descriptor override, account/product bypass, registration or native device operation was introduced"
+  ]
+}

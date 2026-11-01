@@ -1,0 +1,32 @@
+{
+  "scope": "Five-second passive recording only. No driver binding, USB command replay, trust import or device restart.",
+  "captureAcknowledgedUtc": "2026-10-26T22:42:32.9216218Z",
+  "captureFinishedUtc": "2026-10-26T22:42:38.0194105Z",
+  "status": "window completed",
+  "eventsProcessed": 5215,
+  "eventsLost": 0,
+  "buffersLost": 0,
+  "providerEventCounts": {
+    "{9e814aad-3204-11d2-9a82-006008a86939}": 2,
+    "{ac52ad17-cc01-4f85-8df5-4dce4333c99b}": 111,
+    "{36da592d-e43a-4e28-af6f-4bc57c5a11e8}": 5050,
+    "{30e1d284-5d88-459c-83fd-6345b39b19ec}": 52
+  },
+  "strictXmlProcessingErrors": {
+    "{9e814aad-3204-11d2-9a82-006008a86939}": 1
+  },
+  "decodingNote": "Strict tracerpt XML reported one schema mismatch in a system trace metadata event; no USB-provider processing errors. tracerpt -lr completed successfully. No SL3 startup failure was induced.",
+  "originalBindingProblemBefore": 39,
+  "originalBindingProblemAfter": 39,
+  "ownedCollectorDeleted": true,
+  "autoStopNote": "The five-second -rf timeout stopped recording before explicit stop; logman reported not running. Deletion succeeded.",
+  "rawFiles": [
+    {
+      "name": "usb-startup_000001.etl",
+      "bytes": 3014656,
+      "sha256": "4A55B357643880E1AF77BC14C119AB088AE619849231299A00A8B9603D21405F"
+    }
+  ],
+  "localEvidence": "tests\\results\\local\\usb-trace-smoke-01",
+  "xmlSha256": "7d856d1058f1dfa0980dac386696d196f4151f787a105f3eaf0e5855ef9f3805"
+}

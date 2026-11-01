@@ -1,0 +1,257 @@
+{
+  "scope": "Actual bounded retained-device silent audio; not analogue, deployed ASIO, successive COM objects or Serato/DVS readiness",
+  "localResultDirectory": "tests\\results\\local\\retained-sequence-20261030-200120",
+  "sequenceSha256": "b120a996595e504e9bb7ef8e641ffde58237f420c03acb94e1a0f273fee8a89e",
+  "sequence": {
+    "schema": "sl3.retained-sequence.v1",
+    "startedUtc": "2026-10-30T20:01:22.7447677Z",
+    "completed": true,
+    "error": null,
+    "phase": "finished",
+    "workerSha256": "578AE92C5E77D76F0BC2D6815C1A1C41F86D133813DE348A93F37D143F01A880",
+    "probeSha256": "ACD89D42E214945E6201C175666C2551214404E00838E35079D5A75BF31EC89D",
+    "capturePassed": true,
+    "duplexPassed": true,
+    "retainedPassed": true,
+    "expectedRateHz": 44100,
+    "suppliedCapture": false,
+    "captureRunRecordSha256": "F7FA009E90111756DC10CF27C860344275E560B266B6BCC0E335F9FC83C0B39A",
+    "rateChanges": false,
+    "driverChanges": false,
+    "securityChanges": false,
+    "asioRegistration": false,
+    "retries": 0,
+    "scriptHashes": {
+      "test-retained-sequence.ps1": "8B57CCEEF37A2F38E719866D5E14CC31CF87D2CE2DFFBCF675161A6B545A730F",
+      "test-usbdk-traced.ps1": "8F3A408FDE74056A8F0F9E1A0C06E06D805310956406CB5F78E38D7EB068A5FF",
+      "test-retained-host-traced.ps1": "F6A7F9D1279FFF64D67F933EB2EB9B972544C0134AF3E2C81CD73C4EF01B0A08",
+      "validate-retained-host-probe.py": "C74F952D813FDC68F6D3D47E841E16493FE01E7503D42A37633C5E81E78AA50F",
+      "read-startup-journal.ps1": "33DAD42650A140CAC93A0D0537464209B7CABC2E1D7912EDF01F897538D3B318"
+    },
+    "completedUtc": "2026-10-30T20:05:18.1872951Z"
+  },
+  "retainedRun": {
+    "schema": "sl3.retained-host.traced-run.v1",
+    "startedUtc": "2026-10-30T20:04:04.7105810Z",
+    "completed": true,
+    "error": null,
+    "probeExitCode": 0,
+    "traceExitCode": 0,
+    "traceCleanupConfirmed": true,
+    "secureBootBefore": true,
+    "secureBootAfter": true,
+    "workerSha256": "578AE92C5E77D76F0BC2D6815C1A1C41F86D133813DE348A93F37D143F01A880",
+    "probeSha256": "ACD89D42E214945E6201C175666C2551214404E00838E35079D5A75BF31EC89D",
+    "expectedRateHz": 44100,
+    "priorCaptureRunSha256": "F7FA009E90111756DC10CF27C860344275E560B266B6BCC0E335F9FC83C0B39A",
+    "priorDuplexRunSha256": "72C0DB946C363CBCEC153D5FE9F94915713679674B2643F7A577045771ABBA5D",
+    "prerequisiteValidationSha256": "64F498B3289824156683C2C307E91546ED7F0459170C6710FB93A9EF82A2E102",
+    "driverChanges": false,
+    "asioRegistration": false,
+    "latencyMeasured": false,
+    "automaticRetry": false,
+    "runnerInputs": {
+      "test-retained-host-traced.ps1": "F6A7F9D1279FFF64D67F933EB2EB9B972544C0134AF3E2C81CD73C4EF01B0A08",
+      "validate-retained-host-probe.py": "C74F952D813FDC68F6D3D47E841E16493FE01E7503D42A37633C5E81E78AA50F",
+      "test-retained-host-probe.py": "26AFDFA0782E47D5B8689456FE561F3E76C664AC36B687DD211C17E22EE63B77",
+      "read-startup-journal.ps1": "33DAD42650A140CAC93A0D0537464209B7CABC2E1D7912EDF01F897538D3B318",
+      "capture-usb-startup.ps1": "E659DF83B51879862F9AB0EDCE390A4C70A2EF118A92054DAF86373FE69845E4",
+      "preflight-usbdk.ps1": "92A83517B40DB12535C7B233A4F728498D37F77DAE708DDCA35A6BD567818887",
+      "collect-windows-state.ps1": "4028449556933A6C3CA970DFCB4F143A330847266A8E7DD58668F9B590EB1F66",
+      "export-usbdk-physical-checkpoint.py": "36F9AFB6BADB95B2566A6413ED236AB10FBA1AF6634E5A946F957004E52B84BE",
+      "validate-usbdk-capture.py": "44C76600C13A9D0F5A5ED4127DBFD4621A9B2A2A80DB8088F0A6651BEB3C14A0",
+      "analyse-callback-timing.py": "CDB7AE47CC6DE9690669F89C722B07693BA9F33951A3D9570059DFE047F1FCC4"
+    },
+    "probeStartedUtc": "2026-10-30T20:04:09.6639176Z",
+    "probeCompletedUtc": "2026-10-30T20:04:11.9227664Z",
+    "probeRecordSha256": "DD61D794E7031C7A6BE98FFE123A012A2DCE150E6A20E594C02B4C958309B710",
+    "probeValidationSha256": "EC7335C1EEA8FFDBB94E37FF49387F02CB6D602260D93376772D7C79CAEED49E",
+    "startupJournals": [
+      {
+        "name": "worker-1.tsv",
+        "snapshotBytes": 724,
+        "snapshotSha256": "6B96875587D0CBCD442C5C244C4F0BF7291F4E24B48AFBEB61E5C2C4AC7E429E",
+        "completeRecords": 21,
+        "endsWithCompleteRecord": true,
+        "lastCompleteMarker": "16817125\t19372\thelper_unload.return",
+        "scope": "Exact observed prefix only; a live writer may append later records"
+      }
+    ],
+    "traceStartedUtc": "2026-10-30T20:04:09.3404264Z",
+    "traceStoppedUtc": "2026-10-30T20:05:09.4350412Z",
+    "etlSha256": "C1D7B838CD2F2D4FA5E155C3962397CD8A0DA8B1D14347E3A2E340755437181D",
+    "traceStats": {
+      "eventsLost": 0,
+      "buffersLost": 0,
+      "eventCount": 58075,
+      "session": "SL3Startup-535f026567a34e7f89e750bc7c6dd9ef",
+      "xmlSha256": "9a27a769753a47887def2e06e49613ededfde59f29eb08c97c4a2469e35bdb99"
+    },
+    "recoveryConfirmed": true,
+    "beforeStateSha256": "C6C858C88ED69DDBC097785D62932DE409BF45257C31E6CA185EB6989CC6F98F",
+    "afterStateSha256": "A56EDB327BC59BCBC02FE536A0F547EEC39C904EEAC421C3FD9B89B1A95AF671",
+    "completedUtc": "2026-10-30T20:05:18.1801777Z"
+  },
+  "retainedRunSha256": "486e2287c3a2da98b7adb2501832ad89293417c4fa5106ea436e708838e33cb0",
+  "probeValidation": {
+    "valid": true,
+    "scope": "Recorded retained lifecycle consistency only; not hardware attestation or latency approval",
+    "simulated": false,
+    "workerSha256": "578ae92c5e77d76f0bc2d6815c1a1c41f86d133813de348a93f37d143f01a880",
+    "rateHz": 44100,
+    "probeRecordSha256": "dd61d794e7031c7a6be98ffe123a012a2dce150e6a20e594c02b4c958309b710",
+    "streams": [
+      {
+        "file": "stream-1.json",
+        "sha256": "6d57d8d1adeb5d349b1219a463d7ba1da15cb637cfc46f3cc89aa385369fc228",
+        "callbacks": 339,
+        "inputFrames": 43479,
+        "outputSubmissions": 984,
+        "outputCompletions": 980,
+        "nativeError": 1168,
+        "callbackTiming": {
+          "schema": "sl3.callback-timing-analysis.v1",
+          "simulated": false,
+          "probeSuccessful": true,
+          "rateHz": 44100,
+          "bankFrames": 128,
+          "observations": 339,
+          "recordsDropped": 0,
+          "completeCallbackCoverage": true,
+          "nominalBankPeriodNs": 2902494.3310657595,
+          "callbackSpacingNs": {
+            "minimum": 1956300,
+            "median": 2997900,
+            "p95": 3025700,
+            "p99": 3040500,
+            "maximum": 3102600
+          },
+          "publicationSpacingNs": {
+            "minimum": 1957900,
+            "median": 2997900,
+            "p95": 3026000,
+            "p99": 3045900,
+            "maximum": 3100100
+          },
+          "repeatedPublicationTimestamps": 0,
+          "observationWindowFrames": 43264,
+          "callbackSpanNs": 981980000,
+          "softwareDeliveryFramesPerSecond": 44057.92378663517,
+          "latencyMeasured": false,
+          "physicalClockVerified": false,
+          "usbContinuityVerified": false,
+          "limits": [
+            "Callback entry times and backend publication observations are software timing only",
+            "Multiple banks may share one publication observation; neither clock is a DAC or ADC playhead",
+            "Logical frame increments do not prove that USB packets or analogue samples were gap-free",
+            "No ASIO timing profile or approval is generated"
+          ]
+        }
+      },
+      {
+        "file": "stream-2.json",
+        "sha256": "1a8415514799d54526418c985edc2f4e252d038b5077761dd47284aa86fd7e1d",
+        "callbacks": 344,
+        "inputFrames": 44096,
+        "outputSubmissions": 998,
+        "outputCompletions": 994,
+        "nativeError": 1168,
+        "callbackTiming": {
+          "schema": "sl3.callback-timing-analysis.v1",
+          "simulated": false,
+          "probeSuccessful": true,
+          "rateHz": 44100,
+          "bankFrames": 128,
+          "observations": 344,
+          "recordsDropped": 0,
+          "completeCallbackCoverage": true,
+          "nominalBankPeriodNs": 2902494.3310657595,
+          "callbackSpacingNs": {
+            "minimum": 1928400,
+            "median": 2998300,
+            "p95": 3018100,
+            "p99": 3061500,
+            "maximum": 3087100
+          },
+          "publicationSpacingNs": {
+            "minimum": 1954600,
+            "median": 2998900,
+            "p95": 3012600,
+            "p99": 3053700,
+            "maximum": 3084800
+          },
+          "repeatedPublicationTimestamps": 0,
+          "observationWindowFrames": 43904,
+          "callbackSpanNs": 995992100,
+          "softwareDeliveryFramesPerSecond": 44080.670920984216,
+          "latencyMeasured": false,
+          "physicalClockVerified": false,
+          "usbContinuityVerified": false,
+          "limits": [
+            "Callback entry times and backend publication observations are software timing only",
+            "Multiple banks may share one publication observation; neither clock is a DAC or ADC playhead",
+            "Logical frame increments do not prove that USB packets or analogue samples were gap-free",
+            "No ASIO timing profile or approval is generated"
+          ]
+        }
+      }
+    ],
+    "journal": {
+      "name": "worker-1.tsv",
+      "sha256": "6b96875587d0cbcd442c5c244c4f0bf7291f4e24b48afbeb61e5c2c4ac7e429e",
+      "records": 21,
+      "workerPid": 19372,
+      "redirects": 1,
+      "clockGetters": 3,
+      "redirectCloses": 1
+    },
+    "limits": [
+      "Submission/completion differences at stop are preserved",
+      "No analogue audio, physical clock/continuity, production ASIO or Serato/DVS result"
+    ]
+  },
+  "prerequisiteValidation": {
+    "valid": true,
+    "scope": "Same-worker capture/zero-duplex prerequisites only",
+    "workerSha256": "578ae92c5e77d76f0bc2d6815c1a1c41f86d133813de348a93f37d143f01a880",
+    "rateHz": 44100,
+    "capture": {
+      "runRecordSha256": "f7fa009e90111756dc10cf27c860344275e560b266b6bcc0e335f9fc83c0b39a",
+      "beforeStateSha256": "356fc678238fcb51be80ed241732244af02101c254576a195eb140469c212095",
+      "afterStateSha256": "568e15721e673f29b593df03b11ad639314fcfc35cfe6946f037e31e420ee330",
+      "traceStats": {
+        "eventsLost": 0,
+        "buffersLost": 0,
+        "eventCount": 40774,
+        "session": "SL3Startup-c72934a622e74efe94a2ffe13c0456fd",
+        "xmlSha256": "d1a7d60a973abab51a86e30c6654a799015b796ac5ee82065106cf5b7f46a80f"
+      },
+      "etlSha256": "37a28b63f9a37a43391fc36bfcbd6ee642d4dff62033ac14bdcaa009a9b47f58",
+      "secureBootBeforeAndAfter": true,
+      "recoveryConfirmed": true
+    },
+    "duplex": {
+      "runRecordSha256": "72c0db946c363cbcec153d5fe9f94915713679674b2643f7a577045771abba5d",
+      "beforeStateSha256": "d868686b63718d2d1bf07470c790915abe3e4d10afb858318a262f689880d873",
+      "afterStateSha256": "1d9a21a7d0a386cee7f1df45cff3926920dcb55eebd7a8774508a17f73e91b97",
+      "traceStats": {
+        "eventsLost": 0,
+        "buffersLost": 0,
+        "eventCount": 45890,
+        "session": "SL3Startup-40d05eb3e24042f09aef4b304340178d",
+        "xmlSha256": "cad60884afd6ed1aca4cdb67f9ca26dee014dea239076c25486de3733cd1ca13"
+      },
+      "etlSha256": "a89d9d747aa0e2a328a0f96110aed8e580a4cf23db494bf5751e3bc86ef4f909",
+      "secureBootBeforeAndAfter": true,
+      "recoveryConfirmed": true
+    }
+  },
+  "nativeInputCommit": "8ebe1dd",
+  "limits": [
+    "Two one-second zero-output sessions only",
+    "Native error 1168 and unequal submission/completion counts preserved",
+    "No registration, configuration, rate change or security change",
+    "Ordinary-user streaming and successive COM-object reacquisition remain untested"
+  ],
+  "analysisCommitDuringRun": "c6bae55"
+}

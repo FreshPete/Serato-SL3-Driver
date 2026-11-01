@@ -1,0 +1,189 @@
+{
+  "utc": "2026-10-26T23:54:43.121372+00:00",
+  "scope": "Build, offline core/plan tests, read-only preflight and missing-service rejection only",
+  "release": {
+    "utc": "2026-10-26T23:53:48.0213709Z",
+    "configuration": "Release",
+    "architecture": "x64",
+    "generator": "Visual Studio 16 2019",
+    "windowsSdk": "10.0.19041.0",
+    "coreTestsPassed": true,
+    "planOnlyPassed": true,
+    "physicalCaptureTested": false,
+    "inputs": {
+      "src/core/playback.cpp": "E8006A992A70BA9226E74D5E6CE49CA1D54F6214410FBD12A0C994A1CA32119B",
+      "src/windows/capture_main.cpp": "E8DF087CACD40F500E6A89FE4EB85ACB1ED2FD79D81034D7FF26BD37A0C52BEA",
+      "tests/native/capture_tests.cpp": "CF54D91F245EA476FC704361483D53836861B4786F96839F9BF5E280F5935428",
+      "third_party/usbdk/UsbDkData.h": "8F0A0F4F10D2D6FB371E48C7C9E82AF890CA75601EC4E5143949A42402D8CB83",
+      "tests/native/playback_tests.cpp": "90A8D63D3CAB5795D3199B1D7E5DD2EF22FA9978F85C37937606F4BF32E36B18",
+      "src/core/playback.hpp": "B56A303B0259C57B5999B2E80BCF260FE53575C158D224EEC4EA01ED8E56454B",
+      "src/core/capture.cpp": "F16B23870B216A581FB21425F58586FC46DE13A9AF520953C870BFAAE5420CD3",
+      "CMakeLists.txt": "BFD751EC9FDCD3F9C29F64390CEB03F715BCF85D290A0B721BEF8661F55AF028",
+      "third_party/usbdk/LICENSE": "09E8A9BCEC8067104652C168685AB0931E7868F9C8284B66F5AE6EDAE5F1130B",
+      "third_party/usbdk/UsbDkHelper.h": "09CAD2056278CD9DD5D74E66EC0115569662B6643EBC28660EEAB3F089A0020C",
+      "src/windows/sl3_fixture.hpp": "F926D9EE87F0D9F02124D9514D50584F47235150180155D3A97DD3ACC73BC9F1",
+      "third_party/usbdk/README.md": "605C7FAA50A802736C21AC03D362C8962445168CDCDB9EDCE54C3D82E62B3B9D",
+      "src/windows/diagnostic.hpp": "5659A28562D9B06D6D0B5C08EB94F5542BD32E319A6A27F71C1B8F4090F9CC71",
+      "src/core/capture.hpp": "B6215776FE4F5B88678E69970D7B9B0E4C810FA2DCF8549D1F2FA045B23073E3",
+      "src/windows/usbdk_main.cpp": "0B01A22ABF4066359C6F265D7A6A7A2FAFC6EC683C1C769C2382F1BAB8F714F9"
+    },
+    "executableSha256": "651E1E5F1089B9F597E5411F691473CE10532BB5479D4C8AAC3233F01D957FBA",
+    "executableBytes": 94720,
+    "usbdk": {
+      "executableSha256": "E349631EB633EBE422C560C8FA645547F5B3F2730848A283014560A5C72910F0",
+      "executableBytes": 105984,
+      "planOnlyPassed": true,
+      "physicalCaptureTested": false,
+      "helperLoadedDuringPlan": false
+    }
+  },
+  "debug": {
+    "utc": "2026-10-26T23:53:51.6385081Z",
+    "configuration": "Debug",
+    "architecture": "x64",
+    "generator": "Visual Studio 16 2019",
+    "windowsSdk": "10.0.19041.0",
+    "coreTestsPassed": true,
+    "planOnlyPassed": true,
+    "physicalCaptureTested": false,
+    "inputs": {
+      "src/core/playback.cpp": "E8006A992A70BA9226E74D5E6CE49CA1D54F6214410FBD12A0C994A1CA32119B",
+      "src/windows/capture_main.cpp": "E8DF087CACD40F500E6A89FE4EB85ACB1ED2FD79D81034D7FF26BD37A0C52BEA",
+      "tests/native/capture_tests.cpp": "CF54D91F245EA476FC704361483D53836861B4786F96839F9BF5E280F5935428",
+      "third_party/usbdk/UsbDkData.h": "8F0A0F4F10D2D6FB371E48C7C9E82AF890CA75601EC4E5143949A42402D8CB83",
+      "tests/native/playback_tests.cpp": "90A8D63D3CAB5795D3199B1D7E5DD2EF22FA9978F85C37937606F4BF32E36B18",
+      "src/core/playback.hpp": "B56A303B0259C57B5999B2E80BCF260FE53575C158D224EEC4EA01ED8E56454B",
+      "src/core/capture.cpp": "F16B23870B216A581FB21425F58586FC46DE13A9AF520953C870BFAAE5420CD3",
+      "CMakeLists.txt": "BFD751EC9FDCD3F9C29F64390CEB03F715BCF85D290A0B721BEF8661F55AF028",
+      "third_party/usbdk/LICENSE": "09E8A9BCEC8067104652C168685AB0931E7868F9C8284B66F5AE6EDAE5F1130B",
+      "third_party/usbdk/UsbDkHelper.h": "09CAD2056278CD9DD5D74E66EC0115569662B6643EBC28660EEAB3F089A0020C",
+      "src/windows/sl3_fixture.hpp": "F926D9EE87F0D9F02124D9514D50584F47235150180155D3A97DD3ACC73BC9F1",
+      "third_party/usbdk/README.md": "605C7FAA50A802736C21AC03D362C8962445168CDCDB9EDCE54C3D82E62B3B9D",
+      "src/windows/diagnostic.hpp": "5659A28562D9B06D6D0B5C08EB94F5542BD32E319A6A27F71C1B8F4090F9CC71",
+      "src/core/capture.hpp": "B6215776FE4F5B88678E69970D7B9B0E4C810FA2DCF8549D1F2FA045B23073E3",
+      "src/windows/usbdk_main.cpp": "0B01A22ABF4066359C6F265D7A6A7A2FAFC6EC683C1C769C2382F1BAB8F714F9"
+    },
+    "executableSha256": "0611EADCC2A6459505D958F58C0FDA67F5CEFE7EE7C927059E7FD6767816528D",
+    "executableBytes": 422400,
+    "usbdk": {
+      "executableSha256": "D61EC51A1AF04F86DE3FFAF898ABDC557031E8B85422282398327DB7F0C06B06",
+      "executableBytes": 416768,
+      "planOnlyPassed": true,
+      "physicalCaptureTested": false,
+      "helperLoadedDuringPlan": false
+    }
+  },
+  "ctestEntriesPerConfiguration": 6,
+  "preflight": {
+    "utc": "2026-10-26T23:53:52.8449068Z",
+    "scope": "Read-only dependency, source, signature and service checks",
+    "files": [
+      {
+        "path": "artifacts/packages/UsbDk_1.0.22_x64.msi",
+        "sha256": "91F6F695E1E13C656024E6D3B55620BF08D8835EF05EE0496935BA6BB62466A5",
+        "bytes": 6348800
+      },
+      {
+        "path": "artifacts/extracted/usbdk-msi/UsbDk.sys10",
+        "sha256": "C92B6C15BD550023312AE4CFE49A39757952A3C2EBDC7D1D143AC5E695F69A63",
+        "bytes": 103128
+      },
+      {
+        "path": "artifacts/extracted/usbdk-msi/UsbDkHelper.dll10",
+        "sha256": "66BBFE6F99B417F97C7A9E97816E24AF7DDE0E01B8E535C41E91E1C6C19CFEDA",
+        "bytes": 336072
+      }
+    ],
+    "configuration": "Release",
+    "nativeSha256": "E349631EB633EBE422C560C8FA645547F5B3F2730848A283014560A5C72910F0",
+    "signature": {
+      "index": 1,
+      "kernelVerificationExitCode": 0
+    },
+    "nativePlan": {
+      "plan_only": true,
+      "helper_loaded": false,
+      "driver_changes": false,
+      "scheduled_ms": 32,
+      "audio_output_submissions": 0,
+      "scheduling": "UsbDk ASAP; continuity not verified"
+    },
+    "installedDriver": [],
+    "sl3": [
+      {
+        "Status": "Error",
+        "Class": "MEDIA",
+        "FriendlyName": "Rane SL3",
+        "InstanceId": "USB\\VID_1CC5&PID_0001\\SL3.01.00"
+      }
+    ],
+    "secureBoot": {
+      "known": false,
+      "reason": "Unable to set proper privileges. Access was denied."
+    },
+    "helperLoaded": false,
+    "driverInstalled": false,
+    "deviceRedirected": false,
+    "audioSubmissions": 0,
+    "nextGate": "Owner-present traced driver load test, exact-SL3 descriptor-only enumeration, then separate bounded capture; no audio OUT"
+  },
+  "negativeServiceGate": {
+    "expectedExitCode": 1,
+    "record": {
+      "capture_succeeded": false,
+      "device_redirected": false,
+      "submitted_requests": 0,
+      "completed_requests": 0,
+      "error": "UsbDk must already be installed and running; this program does not install it failed, Win32=1060",
+      "audio_output_submissions": 0
+    },
+    "executableSha256": "E349631EB633EBE422C560C8FA645547F5B3F2730848A283014560A5C72910F0"
+  },
+  "helperStaticPe": {
+    "machine": "0x8664",
+    "importDlls": [
+      "SETUPAPI.dll",
+      "RPCRT4.dll",
+      "KERNEL32.dll",
+      "ADVAPI32.dll"
+    ],
+    "exports": [
+      "UsbDk_AbortPipe",
+      "UsbDk_AddExtendedHideRule",
+      "UsbDk_AddExtendedPersistentHideRule",
+      "UsbDk_AddHideRule",
+      "UsbDk_AddPersistentHideRule",
+      "UsbDk_ClearHideRules",
+      "UsbDk_CloseHiderHandle",
+      "UsbDk_CreateHiderHandle",
+      "UsbDk_DeleteAllPersistentRules",
+      "UsbDk_DeleteExtendedPersistentHideRule",
+      "UsbDk_DeletePersistentHideRule",
+      "UsbDk_GetConfigurationDescriptor",
+      "UsbDk_GetDevicesList",
+      "UsbDk_GetRedirectorSystemHandle",
+      "UsbDk_InstallDriver",
+      "UsbDk_ReadPipe",
+      "UsbDk_ReleaseConfigurationDescriptor",
+      "UsbDk_ReleaseDevicesList",
+      "UsbDk_ResetDevice",
+      "UsbDk_ResetPipe",
+      "UsbDk_SetAltsetting",
+      "UsbDk_StartRedirect",
+      "UsbDk_StopRedirect",
+      "UsbDk_UninstallDriver",
+      "UsbDk_WritePipe"
+    ]
+  },
+  "externalHelperLoaded": false,
+  "driverInstalled": false,
+  "deviceRedirected": false,
+  "physicalCaptureTested": false,
+  "physicalPlaybackTested": false,
+  "limits": [
+    "No live helper/backend completion or cancellation exercised",
+    "No alternate readback API",
+    "ASAP continuity unverified",
+    "On-disk service image hash is not loaded-image policy proof"
+  ]
+}

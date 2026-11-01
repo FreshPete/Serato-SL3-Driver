@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.20)
+project(sl3_usb_state_observer LANGUAGES CXX)
+add_executable(sl3_usb_state_observer main.cpp)
+target_compile_features(sl3_usb_state_observer PRIVATE cxx_std_17)
+target_compile_definitions(sl3_usb_state_observer PRIVATE UNICODE _UNICODE WIN32_LEAN_AND_MEAN NOMINMAX)
+target_compile_options(sl3_usb_state_observer PRIVATE /W4 /WX /EHsc)
+target_link_libraries(sl3_usb_state_observer PRIVATE advapi32 tdh)

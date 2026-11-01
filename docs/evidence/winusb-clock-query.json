@@ -1,0 +1,103 @@
+{
+  "scope": "One rate getter only; no rate setter/status-enable/routing/audio/firmware/reset operations.",
+  "query_started_utc": "2026-10-26T23:13:04.911044+00:00",
+  "query_hex": "301cc500010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "query_written_bytes": 64,
+  "reply_prefix_hex": "301cc50001ac44",
+  "raw_reply_sha256": "e03228a60a8706625fbf7698a94f06273d87a5c1bc4cc5a6214b76345cd18231",
+  "decoded_reply": {
+    "kind": "reply",
+    "command": 48,
+    "payload": [
+      172,
+      68
+    ],
+    "ignored_tail_bytes": 57,
+    "rate_hz": 44100
+  },
+  "uninterpreted_tail_bytes": 57,
+  "pipe_timeout_restore_errors": [],
+  "trace": {
+    "file": {
+      "name": "usb-startup_000001.etl",
+      "bytes": 8126464,
+      "sha256": "F492D4B29CC8F21691E529A93BD6C5D70598CC46D55ABEF0D2E16962912DF77C"
+    },
+    "events": 21382,
+    "events_lost": 0,
+    "buffers_lost": 0,
+    "sl3_events": 220,
+    "sl3_status_counts": [
+      {
+        "field": "fid_IRP_NtStatus",
+        "value": "0x0",
+        "count": 23
+      },
+      {
+        "field": "fid_NtStatus",
+        "value": "0x0",
+        "count": 6
+      },
+      {
+        "field": "fid_UsbdStatus",
+        "value": "0x0",
+        "count": 2
+      }
+    ],
+    "sl3_iso_dispatch_count": 0,
+    "sl3_interrupt_dispatch_count": 2
+  },
+  "secure_boot_before": true,
+  "secure_boot_after_cleanup": true,
+  "final_state": {
+    "utc": "2026-10-26T23:15:16.6896586Z",
+    "device": {
+      "FriendlyName": "Rane SL3",
+      "Status": "Error",
+      "Problem": 39
+    },
+    "properties": [
+      {
+        "KeyName": "DEVPKEY_Device_Service",
+        "Data": "strmdrv"
+      },
+      {
+        "KeyName": "DEVPKEY_Device_DriverInfPath",
+        "Data": "oem136.inf"
+      }
+    ],
+    "certificates": [
+      {
+        "store": "Cert:\\LocalMachine\\Root",
+        "present": false
+      },
+      {
+        "store": "Cert:\\LocalMachine\\TrustedPublisher",
+        "present": false
+      },
+      {
+        "store": "Cert:\\CurrentUser\\My",
+        "present": false
+      }
+    ],
+    "projectGuidPresent": false,
+    "experimentalInfPresent": false,
+    "originalInfPresent": true
+  },
+  "cleanup": {
+    "originalInf": "oem136.inf",
+    "removePackage": [
+      "oem152.inf"
+    ],
+    "removeCertificate": "11538DF7C55A5BB2DBFE7160C45ECC804F3BB077",
+    "onlyStoresAddedByTest": [
+      "Cert:\\LocalMachine\\Root",
+      "Cert:\\LocalMachine\\TrustedPublisher"
+    ],
+    "signingIdentityPresent": false,
+    "note": "Original Rane driver was blocked before this experiment; restoring it is expected to restore code 39. No reboot is automated. This script does not delete a My-store signing key; identity retention is checked separately.",
+    "needReboot": false,
+    "projectInterfaceGuidRemoved": true,
+    "completedUtc": "2026-10-26T23:13:57.3687778Z"
+  }
+}

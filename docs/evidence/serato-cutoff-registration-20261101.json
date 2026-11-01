@@ -1,0 +1,172 @@
+{
+  "scope": "All listed startup resources and scalar declared vendor_id/product_id fields only",
+  "versions": [
+    {
+      "version": "2.5.5",
+      "binarySha256": "ba8641d0329fe0c955147d2b45f247eeea82ac0f812fe30a339834dbe0c0a503",
+      "registeredResources": 156,
+      "allRegisteredResourcesParsed": true,
+      "cipherBytes": 55519352,
+      "sl3Matches": [
+        {
+          "registrationIndex": 132,
+          "resourceId": 203,
+          "cipherSha256": "66c4424b0f0e60a56bdce9cb973a30b1fcf77fcec96ccce639d317e9ef4b7a46",
+          "decodedSha256": "93e6539fcf6867f71b30528eb6e655d04c393d461c4905f0050a3b67de1e569c",
+          "xmlSha256": "314e81ffb5d052e53280903d543107c8223e99ff1f4e200311a2b3d90e49154c",
+          "xmlBytes": 2966,
+          "bounds": "zero-padded XML",
+          "identities": [
+            {
+              "type": "native_pro_device",
+              "name": "Rane SL3",
+              "vendor": 7365,
+              "product": 1
+            }
+          ],
+          "supportedApps": [
+            "Serato DJ"
+          ]
+        }
+      ],
+      "xmlBoundsCounts": {
+        "zero-padded XML": 142,
+        "whole-block XML": 14
+      },
+      "startupReportSha256": "4d42f19418ab75e2379c48f5958f71f8b1aea28984cce7ce99f776c2aeff1788",
+      "startupRange": [
+        "0x1402afb50",
+        "0x1402b28b4"
+      ]
+    },
+    {
+      "version": "2.5.6",
+      "binarySha256": "3b04472cd5597fd56266e1c2c86dc298431b0026001aefe4b43aa3b909ee35c5",
+      "registeredResources": 157,
+      "allRegisteredResourcesParsed": true,
+      "cipherBytes": 55950088,
+      "sl3Matches": [
+        {
+          "registrationIndex": 133,
+          "resourceId": 207,
+          "cipherSha256": "66c4424b0f0e60a56bdce9cb973a30b1fcf77fcec96ccce639d317e9ef4b7a46",
+          "decodedSha256": "93e6539fcf6867f71b30528eb6e655d04c393d461c4905f0050a3b67de1e569c",
+          "xmlSha256": "314e81ffb5d052e53280903d543107c8223e99ff1f4e200311a2b3d90e49154c",
+          "xmlBytes": 2966,
+          "bounds": "zero-padded XML",
+          "identities": [
+            {
+              "type": "native_pro_device",
+              "name": "Rane SL3",
+              "vendor": 7365,
+              "product": 1
+            }
+          ],
+          "supportedApps": [
+            "Serato DJ"
+          ]
+        }
+      ],
+      "xmlBoundsCounts": {
+        "zero-padded XML": 142,
+        "whole-block XML": 15
+      },
+      "startupReportSha256": "8ed407123523a6ae16fb5ace3054fc68959de921e2ec77b19362b37a48c63d58",
+      "startupRange": [
+        "0x1402b0990",
+        "0x1402b3724"
+      ]
+    }
+  ],
+  "unchangedXmlHashes": 136,
+  "oldOnlyXmlHashes": 20,
+  "newOnlyXmlHashes": 21,
+  "sl3XmlUnchanged": true,
+  "selectedRaneProductBranches": [
+    {
+      "version": "2.5.5",
+      "selectedInstructions": [
+        {
+          "va": "0x1400fa7a8",
+          "assembly": "mov ecx, 0x1cc5"
+        },
+        {
+          "va": "0x1400fa7ad",
+          "assembly": "mov rax, qword ptr [rsp + 0x48]"
+        },
+        {
+          "va": "0x1400fa7b2",
+          "assembly": "cmp word ptr [rax + 0xa8], cx"
+        },
+        {
+          "va": "0x1400fa7bf",
+          "assembly": "movzx eax, word ptr [rax + 0xaa]"
+        },
+        {
+          "va": "0x1400fa7c6",
+          "assembly": "sub ax, 0x18"
+        },
+        {
+          "va": "0x1400fa7ca",
+          "assembly": "cmp ax, 1"
+        }
+      ],
+      "rangeSkipVA": "0x1400fa7ce",
+      "selectedProductRange": [
+        24,
+        25
+      ],
+      "sl3ProductOneEntersRangeBody": false,
+      "limit": "This one literal predicate only; not an exhaustive eligibility search or runtime branch observation"
+    },
+    {
+      "version": "2.5.6",
+      "selectedInstructions": [
+        {
+          "va": "0x1400fb258",
+          "assembly": "mov ecx, 0x1cc5"
+        },
+        {
+          "va": "0x1400fb25d",
+          "assembly": "mov rax, qword ptr [rsp + 0x48]"
+        },
+        {
+          "va": "0x1400fb262",
+          "assembly": "cmp word ptr [rax + 0xa8], cx"
+        },
+        {
+          "va": "0x1400fb26f",
+          "assembly": "movzx eax, word ptr [rax + 0xaa]"
+        },
+        {
+          "va": "0x1400fb276",
+          "assembly": "sub ax, 0x18"
+        },
+        {
+          "va": "0x1400fb27a",
+          "assembly": "cmp ax, 1"
+        }
+      ],
+      "rangeSkipVA": "0x1400fb27e",
+      "selectedProductRange": [
+        24,
+        25
+      ],
+      "sl3ProductOneEntersRangeBody": false,
+      "limit": "This one literal predicate only; not an exhaustive eligibility search or runtime branch observation"
+    }
+  ],
+  "inventoryPath": "analysis/serato-cutoff-registration-checked-20261101.json",
+  "inventorySha256": "7355d80081fb7578328f944834e6137d61cea6d7bf5d57607eaf198c321971b8",
+  "exporterSha256": "4f472475dffeb01c8fec389c628cca842c15c11114ae1a91a84323f5ae0bafb0",
+  "legacyReaderSha256": "d3b32374a8dc880bd0aafb78ac85a28d037a3ccedfa90a0d3d8f29d538231be3",
+  "vendorCodeExecuted": false,
+  "runtimeAdmissionVerified": false,
+  "currentSeratoIntegrationVerified": false,
+  "limits": [
+    "No second scalar SL3 identity in these registered resource XMLs; external/later/runtime registration is outside scope",
+    "Retained declarations do not prove startup parser acceptance or any supported runtime session",
+    "The inspected Rane range body selects products 24/25 and does not explain an SL3 support cutoff",
+    "No descriptor, executable, registration, account, driver or USB identity was modified"
+  ]
+}

@@ -1,0 +1,378 @@
+{
+  "scope": "Original 2.5.5 SL3 descriptor initial remapping; static successful-parse consequence, not captured runtime state",
+  "seratoSha256": "ba8641d0329fe0c955147d2b45f247eeea82ac0f812fe30a339834dbe0c0a503",
+  "exporterSha256": "9ec63953383028255e5c252b235508fbcb151ca9c7fc812bc0d3965a4b920bff",
+  "sourceHelpers": {
+    "scripts/export-serato-sl3-through-contract.py": "b06e2b0608e1c45b355d85e0b8b025df9302499266d6965a3b6cb955ed648f88",
+    "scripts/export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+    "scripts/export-serato-legacy-descriptors.py": "d3b32374a8dc880bd0aafb78ac85a28d037a3ccedfa90a0d3d8f29d538231be3"
+  },
+  "descriptorXmlSha256": "314e81ffb5d052e53280903d543107c8223e99ff1f4e200311a2b3d90e49154c",
+  "descriptorDecks": 3,
+  "allowChannelSetupPresent": false,
+  "allowChannelSetupDefault": false,
+  "initialInverseVector": [
+    0,
+    1,
+    2
+  ],
+  "initialApiSlotToControlGroup": [
+    1,
+    2,
+    0
+  ],
+  "descriptorOffsets": {
+    "map": "0x378",
+    "inverseVector": "0x398",
+    "allowChannelSetup": "0x3f8"
+  },
+  "alternateLayouts": [
+    {
+      "kind": 0,
+      "mapEntries": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "inverseVector": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "kind": 1,
+      "mapEntries": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "inverseVector": [
+        1,
+        2,
+        0,
+        3
+      ]
+    },
+    {
+      "kind": 2,
+      "mapEntries": [
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          5,
+          3
+        ]
+      ],
+      "inverseVector": [
+        0,
+        2,
+        3,
+        5
+      ]
+    },
+    {
+      "kind": 3,
+      "mapEntries": [
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          5,
+          3
+        ]
+      ],
+      "inverseVector": [
+        2,
+        3,
+        0,
+        5
+      ]
+    }
+  ],
+  "instructionChecks": [
+    {
+      "va": "0x1403590dc",
+      "instruction": "mov ebx, eax"
+    },
+    {
+      "va": "0x1403590de",
+      "instruction": "mov dword ptr [rbp - 0x30], eax"
+    },
+    {
+      "va": "0x1403590c4",
+      "instruction": "lea rdx, [rip + 0x43e9d1d]"
+    },
+    {
+      "va": "0x1403590ce",
+      "instruction": "call 0x1408bdee0"
+    },
+    {
+      "va": "0x1403590d3",
+      "instruction": "mov rcx, rax"
+    },
+    {
+      "va": "0x14035b480",
+      "instruction": "mov r13d, dword ptr [rbp - 0x30]"
+    },
+    {
+      "va": "0x14035b1fe",
+      "instruction": "lea rcx, [rbp + 0x700]"
+    },
+    {
+      "va": "0x14035b205",
+      "instruction": "call 0x14035bc30"
+    },
+    {
+      "va": "0x14035b868",
+      "instruction": "xor r15d, r15d"
+    },
+    {
+      "va": "0x14035b8ad",
+      "instruction": "cmp r13d, 4"
+    },
+    {
+      "va": "0x14035b8b1",
+      "instruction": "jne 0x14035b8cc"
+    },
+    {
+      "va": "0x14035b8cc",
+      "instruction": "mov rbx, r15"
+    },
+    {
+      "va": "0x14035b8cf",
+      "instruction": "test r13d, r13d"
+    },
+    {
+      "va": "0x14035b8d2",
+      "instruction": "je 0x14035b8fd"
+    },
+    {
+      "va": "0x14035b8e0",
+      "instruction": "mov dword ptr [rbp - 0x80], ebx"
+    },
+    {
+      "va": "0x14035b8e3",
+      "instruction": "lea rdx, [rbp - 0x80]"
+    },
+    {
+      "va": "0x14035b8e7",
+      "instruction": "lea rcx, [rbp + 0xa78]"
+    },
+    {
+      "va": "0x14035b8ee",
+      "instruction": "call 0x1400b42b0"
+    },
+    {
+      "va": "0x14035b8f3",
+      "instruction": "mov dword ptr [rax], ebx"
+    },
+    {
+      "va": "0x14035b8f5",
+      "instruction": "inc rbx"
+    },
+    {
+      "va": "0x14035b8f8",
+      "instruction": "cmp rbx, r13"
+    },
+    {
+      "va": "0x14035b8fb",
+      "instruction": "jb 0x14035b8e0"
+    },
+    {
+      "va": "0x14035b914",
+      "instruction": "lea r8, [rbp - 0x80]"
+    },
+    {
+      "va": "0x14035b918",
+      "instruction": "mov rdx, r13"
+    },
+    {
+      "va": "0x14035b91b",
+      "instruction": "lea rcx, [rbp + 0xa98]"
+    },
+    {
+      "va": "0x14035b922",
+      "instruction": "call 0x14035d7b0"
+    },
+    {
+      "va": "0x14035b952",
+      "instruction": "movsxd r8, dword ptr [rax + 0x20]"
+    },
+    {
+      "va": "0x14035b956",
+      "instruction": "mov rdx, qword ptr [rbp + 0xa98]"
+    },
+    {
+      "va": "0x14035b95d",
+      "instruction": "mov ecx, dword ptr [rax + 0x1c]"
+    },
+    {
+      "va": "0x14035b960",
+      "instruction": "mov dword ptr [rdx + r8*4], ecx"
+    },
+    {
+      "va": "0x14035aef2",
+      "instruction": "mov byte ptr [rsp + 0x5f], 0"
+    },
+    {
+      "va": "0x14035af17",
+      "instruction": "test rax, rax"
+    },
+    {
+      "va": "0x14035af1a",
+      "instruction": "je 0x14035b00e"
+    },
+    {
+      "va": "0x14035af2f",
+      "instruction": "mov byte ptr [rsp + 0x5f], al"
+    },
+    {
+      "va": "0x14035b7da",
+      "instruction": "movzx eax, byte ptr [rsp + 0x5f]"
+    },
+    {
+      "va": "0x14035b7df",
+      "instruction": "mov byte ptr [rbp + 0xaf8], al"
+    },
+    {
+      "va": "0x1400f7134",
+      "instruction": "cmp byte ptr [rbx + 0x3f8], 0"
+    },
+    {
+      "va": "0x1400f713b",
+      "instruction": "je 0x1400f71a3"
+    },
+    {
+      "va": "0x1400f7143",
+      "instruction": "mov edx, eax"
+    },
+    {
+      "va": "0x1400f7145",
+      "instruction": "mov rcx, rbx"
+    },
+    {
+      "va": "0x1400f7148",
+      "instruction": "call 0x140356850"
+    },
+    {
+      "va": "0x140356873",
+      "instruction": "test edx, edx"
+    },
+    {
+      "va": "0x140356875",
+      "instruction": "je 0x1403568c0"
+    },
+    {
+      "va": "0x140356877",
+      "instruction": "sub edx, 1"
+    },
+    {
+      "va": "0x14035687a",
+      "instruction": "je 0x1403568ae"
+    },
+    {
+      "va": "0x14035687c",
+      "instruction": "sub edx, 1"
+    },
+    {
+      "va": "0x14035687f",
+      "instruction": "je 0x14035689c"
+    },
+    {
+      "va": "0x140356881",
+      "instruction": "cmp edx, 1"
+    },
+    {
+      "va": "0x140356884",
+      "instruction": "jne 0x140356984"
+    },
+    {
+      "va": "0x140356910",
+      "instruction": "mov ecx, dword ptr [rax + 0x1c]"
+    },
+    {
+      "va": "0x140356913",
+      "instruction": "movsxd r8, dword ptr [rax + 0x20]"
+    },
+    {
+      "va": "0x140356917",
+      "instruction": "mov rdx, qword ptr [rdi + 0x398]"
+    },
+    {
+      "va": "0x14035691e",
+      "instruction": "mov dword ptr [rdx + r8*4], ecx"
+    }
+  ],
+  "focusedReports": [
+    {
+      "path": "analysis/serato255-descriptor-parser-08.json",
+      "sha256": "c5642686f7c32a7645a599a6ab889bc04400165dccb08e6fae5f9b0865cc9e9b"
+    },
+    {
+      "path": "analysis/serato255-remap-fields.json",
+      "sha256": "00e93a12a482ec24d9584b80c458db323330b9817582e6598f4af3e75dfbdba8"
+    },
+    {
+      "path": "analysis/serato255-remap-events.json",
+      "sha256": "f724cc26d92a0d920fe63469de259e5f1b16916ca1927037c7eb16124ce72f90"
+    }
+  ],
+  "throughContractSha256": "e548df266810e6bd2e73b1cdb6cccb28072a582de050200b50012ff14fc7fe02",
+  "runtimeVectorCaptured": false,
+  "physicalMappingVerified": false,
+  "currentSeratoAdmissionVerified": false,
+  "limits": [
+    "Initial vector follows the original three-deck descriptor and successful parser/allocation path.",
+    "The inspected layout event cannot call its builder with a zero allow-channel-setup flag; other writers are not exhaustively excluded.",
+    "Alternate layout constants are not configurations to apply to the SL3.",
+    "No application execution, USB request, setting, resource patch, registration, account or firmware operation occurred.",
+    "API slot order does not establish physical jack order or an actual current Serato session."
+  ]
+}

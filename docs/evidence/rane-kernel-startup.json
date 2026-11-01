@@ -1,0 +1,1116 @@
+{
+  "binary_sha256": "e8e992a8ece1a57eab337d815a406b9f815954176c03db545fcf6d951ec615f5",
+  "coverage": "Selected unwind ranges only; no whole-program auto-analysis. Types, callers and ABI may be incomplete.",
+  "bind_info": {
+    "va": "0x16110",
+    "component": "KmdfLibrary",
+    "major": 1,
+    "minor": 7,
+    "build": 6001,
+    "function_count": 387,
+    "function_table_va": "0x16220"
+  },
+  "header_checks": [
+    {
+      "version": "1.15",
+      "sha256": "5e3b8cacff893d2aaa99ece776d881fd2129e58da0219c85996acc654124fc63"
+    },
+    {
+      "version": "1.35",
+      "sha256": "a6033fad264f73e5ce1f8b21562a1791d28c2ceacf094a6b0d1000322712b811"
+    }
+  ],
+  "matching_index_prefix": 387,
+  "callbacks": [
+    {
+      "name": "EvtDevicePrepareHardware",
+      "function_va": "0x19880",
+      "field_offset": "0x28",
+      "registration_assembly": [
+        "19041: lea rax, [rip + 0x838]",
+        "19048: mov qword ptr [rsp + 0x1f8], rax"
+      ]
+    },
+    {
+      "name": "EvtDeviceReleaseHardware",
+      "function_va": "0x19990",
+      "field_offset": "0x30",
+      "registration_assembly": [
+        "19050: lea rax, [rip + 0x939]",
+        "1905f: mov qword ptr [rsp + 0x200], rax"
+      ]
+    },
+    {
+      "name": "EvtDeviceD0Entry",
+      "function_va": "0x1968c",
+      "field_offset": "0x8",
+      "registration_assembly": [
+        "19067: lea rax, [rip + 0x61e]",
+        "19071: mov qword ptr [rsp + 0x1d8], rax"
+      ]
+    },
+    {
+      "name": "EvtDeviceD0Exit",
+      "function_va": "0x197e0",
+      "field_offset": "0x18",
+      "registration_assembly": [
+        "19079: lea rax, [rip + 0x760]",
+        "19087: mov qword ptr [rsp + 0x1e8], rax"
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "start": "00019008",
+      "end_exclusive": "0001954b",
+      "complete": true,
+      "diagnostic": "",
+      "pseudocode": "/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */\nulonglong FUN_00019008(undefined8 param_1,undefined8 param_2)\n{\n  ulonglong uVar1;\n  undefined8 *puVar2;\n  longlong lVar3;\n  undefined8 uVar4;\n  undefined8 uStackX_10;\n  undefined8 uStackX_18;\n  undefined8 uStackX_20;\n  undefined8 *puVar5;\n  undefined8 uStack_258;\n  code *pcStack_250;\n  undefined8 uStack_248;\n  undefined4 uStack_240;\n  undefined4 uStack_23c;\n  undefined4 uStack_238;\n  undefined4 uStack_234;\n  undefined4 uStack_230;\n  undefined4 uStack_22c;\n  undefined4 uStack_228;\n  undefined4 uStack_224;\n  undefined4 uStack_220;\n  undefined4 uStack_21c;\n  undefined4 uStack_218;\n  undefined4 uStack_214;\n  undefined4 auStack_210 [6];\n  undefined4 uStack_1f8;\n  undefined4 uStack_1f4;\n  undefined8 uStack_1f0;\n  undefined4 auStack_1d8 [2];\n  code *pcStack_1d0;\n  undefined8 uStack_1c8;\n  code *pcStack_1c0;\n  undefined4 uStack_1b8;\n  undefined4 uStack_1b4;\n  undefined4 auStack_1b0 [4];\n  code *pcStack_1a0;\n  undefined4 uStack_198;\n  undefined4 uStack_194;\n  undefined8 uStack_180;\n  undefined4 uStack_178;\n  undefined4 uStack_174;\n  undefined4 uStack_170;\n  undefined1 uStack_16b;\n  undefined8 uStack_160;\n  undefined8 uStack_158;\n  code *pcStack_150;\n  undefined4 auStack_128 [6];\n  undefined4 uStack_110;\n  undefined4 uStack_10c;\n  undefined8 uStack_108;\n  undefined4 auStack_f0 [6];\n  undefined4 uStack_d8;\n  undefined4 uStack_d4;\n  undefined8 uStack_c0;\n  undefined4 auStack_b8 [2];\n  code *pcStack_b0;\n  code *pcStack_a0;\n  code *pcStack_90;\n  code *pcStack_88;\n  uStackX_10 = param_2;\n  FUN_000143b0(auStack_b8,0,0x88);\n  pcStack_90 = FUN_00019880;\n  pcStack_88 = FUN_00019990;\n  pcStack_b0 = FUN_0001968c;\n  auStack_b8[0] = 0x88;\n  pcStack_a0 = FUN_000197e0;\n  (*_DAT_000163d8)(_DAT_00016e60,param_2,auStack_b8);\n  (*_DAT_00016470)(_DAT_00016e60,uStackX_10,FUN_00014014);\n  pcStack_1d0 = FUN_0001a0ac;\n  pcStack_1c0 = FUN_00013fa8;\n  auStack_1d8[0] = 0x28;\n  uStack_1c8 = 0;\n  uStack_1b4 = 4;\n  uStack_1b8 = 2;\n  FUN_000143b0(auStack_f0,0,0x38);\n  uStack_c0 = _DAT_000161a8;\n  auStack_f0[0] = 0x38;\n  uStack_d8 = 1;\n  uStack_d4 = 1;\n  (*_DAT_00016458)(_DAT_00016e60,uStackX_10,auStack_1d8,auStack_f0);\n  (*_DAT_00016408)(_DAT_00016e60,uStackX_10,3);\n  FUN_000143b0(auStack_1b0,0,0x38);\n  uStack_180 = _DAT_000161d0;\n  auStack_1b0[0] = 0x38;\n  pcStack_1a0 = FUN_00019554;\n  uStack_198 = 3;\n  uStack_194 = 4;\n  uVar1 = (*_DAT_00016478)(_DAT_00016e60,&uStackX_10,auStack_1b0,&uStackX_18);\n  if (-1 < (int)uVar1) {\n    puVar2 = (undefined8 *)(*_DAT_00016870)(_DAT_00016e60,uStackX_18,_DAT_000161d0);\n    FUN_000143b0(puVar2,0,0x2d268);\n    *puVar2 = uStackX_18;\n    KeInitializeEvent(puVar2 + 0x1e,0,0);\n    FUN_000143b0(&uStack_178,0,0x50);\n    pcStack_150 = FUN_0001a168;\n    puVar5 = &uStackX_20;\n    uStack_178 = 0x50;\n    uStack_170 = 2;\n    uStack_174 = 2;\n    uStack_160 = 0;\n    uStack_158 = 0;\n    uStack_16b = 1;\n    uVar1 = (*_DAT_000166e0)(_DAT_00016e60,uStackX_18,&uStack_178,0,puVar5);\n    uVar4 = _DAT_00016e60;\n    if (-1 < (int)uVar1) {\n      puVar2[0x5a49] = uStackX_20;\n      uVar1 = (*_DAT_00016488)(uVar4,uStackX_18,&UNK_00015158,0);\n      if (-1 < (int)uVar1) {\n        FUN_000143b0(auStack_128,0,0x38);\n        uStack_108 = uStackX_18;\n        auStack_128[0] = 0x38;\n        uStack_110 = 1;\n        uStack_10c = 1;\n        pcStack_250 = FUN_000111fc;\n        uStack_258 = 0x18;\n        uStack_248 = 0;\n        uVar1 = (*_DAT_00016c10)(_DAT_00016e60,&uStack_258,auStack_128,puVar2 + 0xf);\n        if (-1 < (int)uVar1) {\n          FUN_000143b0(auStack_210,0,0x38);\n          uStack_1f0 = uStackX_18;\n          auStack_210[0] = 0x38;\n          uStack_1f8 = 1;\n          uStack_1f4 = 1;\n          uVar1 = (*_DAT_00016bf8)(_DAT_00016e60,auStack_210,puVar2 + 0xfc2);\n          if (-1 < (int)uVar1) {\n            FUN_000143b0(auStack_210,0,0x38);\n            uStack_1f0 = uStackX_18;\n            auStack_210[0] = 0x38;\n            uStack_1f8 = 1;\n            uStack_1f4 = 1;\n            uVar1 = (*_DAT_00016bf8)(_DAT_00016e60,auStack_210,puVar2 + 0xfc3);\n            if (-1 < (int)uVar1) {\n              lVar3 = MmAllocatePagesForMdl(0,0xffffffff,0,0x4e8);\n              puVar2[0x5894] = lVar3;\n              if ((lVar3 != 0) && (0x4e7 < *(uint *)(lVar3 + 0x28))) {\n                if ((*(byte *)(lVar3 + 10) & 5) == 0) {\n                  uVar4 = MmMapLockedPagesSpecifyCache\n                                    (lVar3,0,1,0,(ulonglong)puVar5 & 0xffffffff00000000,0x10);\n                }\n                else {\n                  uVar4 = *(undefined8 *)(lVar3 + 0x18);\n                }\n                puVar2[0x5893] = uVar4;\n                if (puVar2[0x5893] != 0) {\n                  FUN_000143b0(puVar2[0x5893],0,0x4e8);\n                  puVar2[0x589c] = puVar2[0x5893];\n                  FUN_000143b0(&uStack_240,0,0x30);\n                  uStack_240 = 0x30;\n                  uStack_23c = 2;\n                  uStack_238 = 2;\n                  uStack_234 = 2;\n                  uStack_230 = 2;\n                  uStack_22c = 2;\n                  uStack_228 = 2;\n                  uStack_220 = 2;\n                  uStack_21c = 2;\n                  uStack_218 = 0xffffffff;\n                  uStack_214 = 0xffffffff;\n                  uStack_224 = 1;\n                  (*_DAT_000164b8)(_DAT_00016e60,uStackX_18,&uStack_240);\n                  return uVar1 & 0xffffffff;\n                }\n              }\n              uVar1 = 0xc000009a;\n            }\n          }\n        }\n      }\n    }\n  }\n  return uVar1;\n}",
+      "mapped_wdf_calls": [
+        {
+          "instruction_va": "0x1908f",
+          "table_slot_va": "0x163d8",
+          "index": 55,
+          "wdk_name": "WdfDeviceInitSetPnpPowerEventCallbacks"
+        },
+        {
+          "instruction_va": "0x190ab",
+          "table_slot_va": "0x16470",
+          "index": 74,
+          "wdk_name": "WdfDeviceInitSetIoInCallerContextCallback"
+        },
+        {
+          "instruction_va": "0x19158",
+          "table_slot_va": "0x16458",
+          "index": 71,
+          "wdk_name": "WdfDeviceInitSetFileObjectConfig"
+        },
+        {
+          "instruction_va": "0x19173",
+          "table_slot_va": "0x16408",
+          "index": 61,
+          "wdk_name": "WdfDeviceInitSetIoType"
+        },
+        {
+          "instruction_va": "0x191dd",
+          "table_slot_va": "0x16478",
+          "index": 75,
+          "wdk_name": "WdfDeviceCreate"
+        },
+        {
+          "instruction_va": "0x19201",
+          "table_slot_va": "0x16870",
+          "index": 202,
+          "wdk_name": "WdfObjectGetTypedContextWorker"
+        },
+        {
+          "instruction_va": "0x192b1",
+          "table_slot_va": "0x166e0",
+          "index": 152,
+          "wdk_name": "WdfIoQueueCreate"
+        },
+        {
+          "instruction_va": "0x192e7",
+          "table_slot_va": "0x16488",
+          "index": 77,
+          "wdk_name": "WdfDeviceCreateDeviceInterface"
+        },
+        {
+          "instruction_va": "0x19373",
+          "table_slot_va": "0x16c10",
+          "index": 318,
+          "wdk_name": "WdfTimerCreate"
+        },
+        {
+          "instruction_va": "0x193c7",
+          "table_slot_va": "0x16bf8",
+          "index": 315,
+          "wdk_name": "WdfSpinLockCreate"
+        },
+        {
+          "instruction_va": "0x1941b",
+          "table_slot_va": "0x16bf8",
+          "index": 315,
+          "wdk_name": "WdfSpinLockCreate"
+        },
+        {
+          "instruction_va": "0x19525",
+          "table_slot_va": "0x164b8",
+          "index": 83,
+          "wdk_name": "WdfDeviceSetPnpCapabilities"
+        }
+      ],
+      "assembly": [
+        "19008: mov qword ptr [rsp + 8], rbx",
+        "1900d: mov qword ptr [rsp + 0x10], rdx",
+        "19012: push rbp",
+        "19013: push rsi",
+        "19014: push rdi",
+        "19015: push r12",
+        "19017: push r13",
+        "19019: sub rsp, 0x260",
+        "19020: mov rbx, rdx",
+        "19023: mov edi, 0x88",
+        "19028: lea rcx, [rsp + 0x1d0]",
+        "19030: mov r8, rdi",
+        "19033: xor edx, edx",
+        "19035: call 0x143b0",
+        "1903a: mov rcx, qword ptr [rip - 0x21e1]",
+        "19041: lea rax, [rip + 0x838]",
+        "19048: mov qword ptr [rsp + 0x1f8], rax",
+        "19050: lea rax, [rip + 0x939]",
+        "19057: lea r8, [rsp + 0x1d0]",
+        "1905f: mov qword ptr [rsp + 0x200], rax",
+        "19067: lea rax, [rip + 0x61e]",
+        "1906e: mov rdx, rbx",
+        "19071: mov qword ptr [rsp + 0x1d8], rax",
+        "19079: lea rax, [rip + 0x760]",
+        "19080: mov dword ptr [rsp + 0x1d0], edi",
+        "19087: mov qword ptr [rsp + 0x1e8], rax",
+        "1908f: call qword ptr [rip - 0x2cbd]",
+        "19095: mov rdx, qword ptr [rsp + 0x298]",
+        "1909d: mov rcx, qword ptr [rip - 0x2244]",
+        "190a4: lea r8, [rip - 0x5097]",
+        "190ab: call qword ptr [rip - 0x2c41]",
+        "190b1: xor ebx, ebx",
+        "190b3: lea rax, [rip + 0xff2]",
+        "190ba: mov qword ptr [rsp + 0xb8], rax",
+        "190c2: lea rax, [rip - 0x5121]",
+        "190c9: lea ebp, [rdi - 0x50]",
+        "190cc: lea esi, [rbx + 4]",
+        "190cf: lea r13d, [rbx + 2]",
+        "190d3: lea rcx, [rsp + 0x198]",
+        "190db: mov r8, rbp",
+        "190de: xor edx, edx",
+        "190e0: mov qword ptr [rsp + 0xc8], rax",
+        "190e8: mov dword ptr [rsp + 0xb0], 0x28",
+        "190f3: mov qword ptr [rsp + 0xc0], rbx",
+        "190fb: mov dword ptr [rsp + 0xd4], esi",
+        "19102: mov dword ptr [rsp + 0xd0], r13d",
+        "1910a: call 0x143b0",
+        "1910f: mov rax, qword ptr [rip - 0x2f6e]",
+        "19116: mov rdx, qword ptr [rsp + 0x298]",
+        "1911e: mov rcx, qword ptr [rip - 0x22c5]",
+        "19125: lea r12d, [rbx + 1]",
+        "19129: lea r9, [rsp + 0x198]",
+        "19131: lea r8, [rsp + 0xb0]",
+        "19139: mov qword ptr [rsp + 0x1c8], rax",
+        "19141: mov dword ptr [rsp + 0x198], ebp",
+        "19148: mov dword ptr [rsp + 0x1b0], r12d",
+        "19150: mov dword ptr [rsp + 0x1b4], r12d",
+        "19158: call qword ptr [rip - 0x2d06]",
+        "1915e: mov rdx, qword ptr [rsp + 0x298]",
+        "19166: mov rcx, qword ptr [rip - 0x230d]",
+        "1916d: lea edi, [rbx + 3]",
+        "19170: mov r8d, edi",
+        "19173: call qword ptr [rip - 0x2d71]",
+        "19179: lea rcx, [rsp + 0xd8]",
+        "19181: mov r8, rbp",
+        "19184: xor edx, edx",
+        "19186: call 0x143b0",
+        "1918b: mov rax, qword ptr [rip - 0x2fc2]",
+        "19192: mov rcx, qword ptr [rip - 0x2339]",
+        "19199: mov qword ptr [rsp + 0x108], rax",
+        "191a1: lea rax, [rip + 0x3ac]",
+        "191a8: lea r9, [rsp + 0x2a0]",
+        "191b0: lea r8, [rsp + 0xd8]",
+        "191b8: lea rdx, [rsp + 0x298]",
+        "191c0: mov dword ptr [rsp + 0xd8], ebp",
+        "191c7: mov qword ptr [rsp + 0xe8], rax",
+        "191cf: mov dword ptr [rsp + 0xf0], edi",
+        "191d6: mov dword ptr [rsp + 0xf4], esi",
+        "191dd: call qword ptr [rip - 0x2d6b]",
+        "191e3: cmp eax, ebx",
+        "191e5: jl 0x19534",
+        "191eb: mov r8, qword ptr [rip - 0x3022]",
+        "191f2: mov rdx, qword ptr [rsp + 0x2a0]",
+        "191fa: mov rcx, qword ptr [rip - 0x23a1]",
+        "19201: call qword ptr [rip - 0x2997]",
+        "19207: xor edx, edx",
+        "19209: mov r8d, 0x2d268",
+        "1920f: mov rcx, rax",
+        "19212: mov rsi, rax",
+        "19215: call 0x143b0",
+        "1921a: mov r11, qword ptr [rsp + 0x2a0]",
+        "19222: lea rcx, [rsi + 0xf0]",
+        "19229: xor r8d, r8d",
+        "1922c: xor edx, edx",
+        "1922e: mov qword ptr [rsi], r11",
+        "19231: call qword ptr [rip - 0x41df]",
+        "19237: lea edi, [rbx + 0x50]",
+        "1923a: lea rcx, [rsp + 0x110]",
+        "19242: mov r8, rdi",
+        "19245: xor edx, edx",
+        "19247: call 0x143b0",
+        "1924c: mov rdx, qword ptr [rsp + 0x2a0]",
+        "19254: mov rcx, qword ptr [rip - 0x23fb]",
+        "1925b: lea rax, [rip + 0xf06]",
+        "19262: lea r8, [rsp + 0x110]",
+        "1926a: xor r9d, r9d",
+        "1926d: mov qword ptr [rsp + 0x138], rax",
+        "19275: lea rax, [rsp + 0x2a8]",
+        "1927d: mov dword ptr [rsp + 0x110], edi",
+        "19284: mov dword ptr [rsp + 0x118], r13d",
+        "1928c: mov dword ptr [rsp + 0x114], r13d",
+        "19294: mov qword ptr [rsp + 0x128], rbx",
+        "1929c: mov qword ptr [rsp + 0x20], rax",
+        "192a1: mov qword ptr [rsp + 0x130], rbx",
+        "192a9: mov byte ptr [rsp + 0x11d], r12b",
+        "192b1: call qword ptr [rip - 0x2bd7]",
+        "192b7: cmp eax, ebx",
+        "192b9: jl 0x19534",
+        "192bf: mov rax, qword ptr [rsp + 0x2a8]",
+        "192c7: mov rcx, qword ptr [rip - 0x246e]",
+        "192ce: lea r8, [rip - 0x417d]",
+        "192d5: mov qword ptr [rsi + 0x2d248], rax",
+        "192dc: mov rdx, qword ptr [rsp + 0x2a0]",
+        "192e4: xor r9d, r9d",
+        "192e7: call qword ptr [rip - 0x2e65]",
+        "192ed: cmp eax, ebx",
+        "192ef: jl 0x19534",
+        "192f5: lea rcx, [rsp + 0x160]",
+        "192fd: mov r8, rbp",
+        "19300: xor edx, edx",
+        "19302: call 0x143b0",
+        "19307: mov rax, qword ptr [rsp + 0x2a0]",
+        "1930f: mov rcx, qword ptr [rip - 0x24b6]",
+        "19316: mov qword ptr [rsp + 0x180], rax",
+        "1931e: xor eax, eax",
+        "19320: lea r9, [rsi + 0x78]",
+        "19324: mov qword ptr [rsp + 0x40], rax",
+        "19329: mov qword ptr [rsp + 0x30], rax",
+        "1932e: mov qword ptr [rsp + 0x38], rax",
+        "19333: lea rax, [rip - 0x813e]",
+        "1933a: lea r8, [rsp + 0x160]",
+        "19342: lea rdx, [rsp + 0x30]",
+        "19347: mov dword ptr [rsp + 0x160], ebp",
+        "1934e: mov dword ptr [rsp + 0x178], r12d",
+        "19356: mov dword ptr [rsp + 0x17c], r12d",
+        "1935e: mov qword ptr [rsp + 0x38], rax",
+        "19363: mov dword ptr [rsp + 0x30], 0x18",
+        "1936b: mov dword ptr [rsp + 0x40], ebx",
+        "1936f: mov byte ptr [rsp + 0x44], bl",
+        "19373: call qword ptr [rip - 0x2769]",
+        "19379: cmp eax, ebx",
+        "1937b: jl 0x19534",
+        "19381: lea rcx, [rsp + 0x78]",
+        "19386: mov r8, rbp",
+        "19389: xor edx, edx",
+        "1938b: call 0x143b0",
+        "19390: mov rax, qword ptr [rsp + 0x2a0]",
+        "19398: mov rcx, qword ptr [rip - 0x253f]",
+        "1939f: lea r8, [rsi + 0x7e10]",
+        "193a6: lea rdx, [rsp + 0x78]",
+        "193ab: mov qword ptr [rsp + 0x98], rax",
+        "193b3: mov dword ptr [rsp + 0x78], ebp",
+        "193b7: mov dword ptr [rsp + 0x90], r12d",
+        "193bf: mov dword ptr [rsp + 0x94], r12d",
+        "193c7: call qword ptr [rip - 0x27d5]",
+        "193cd: cmp eax, ebx",
+        "193cf: jl 0x19534",
+        "193d5: lea rcx, [rsp + 0x78]",
+        "193da: mov r8, rbp",
+        "193dd: xor edx, edx",
+        "193df: call 0x143b0",
+        "193e4: mov rax, qword ptr [rsp + 0x2a0]",
+        "193ec: mov rcx, qword ptr [rip - 0x2593]",
+        "193f3: lea r8, [rsi + 0x7e18]",
+        "193fa: lea rdx, [rsp + 0x78]",
+        "193ff: mov qword ptr [rsp + 0x98], rax",
+        "19407: mov dword ptr [rsp + 0x78], ebp",
+        "1940b: mov dword ptr [rsp + 0x90], r12d",
+        "19413: mov dword ptr [rsp + 0x94], r12d",
+        "1941b: call qword ptr [rip - 0x2829]",
+        "19421: cmp eax, ebx",
+        "19423: mov ebp, eax",
+        "19425: jl 0x19534",
+        "1942b: mov edi, 0xffffffff",
+        "19430: mov r9d, 0x4e8",
+        "19436: mov r8, rbx",
+        "19439: mov rdx, rdi",
+        "1943c: mov rcx, rbx",
+        "1943f: call qword ptr [rip - 0x442d]",
+        "19445: cmp rax, rbx",
+        "19448: mov qword ptr [rsi + 0x2c4a0], rax",
+        "1944f: je 0x1952f",
+        "19455: cmp dword ptr [rax + 0x28], 0x4e8",
+        "1945c: jb 0x1952f",
+        "19462: test byte ptr [rax + 0xa], 5",
+        "19466: je 0x1946e",
+        "19468: mov rax, qword ptr [rax + 0x18]",
+        "1946c: jmp 0x1948b",
+        "1946e: xor r9d, r9d",
+        "19471: mov r8d, r12d",
+        "19474: xor edx, edx",
+        "19476: mov rcx, rax",
+        "19479: mov dword ptr [rsp + 0x28], 0x10",
+        "19481: mov dword ptr [rsp + 0x20], ebx",
+        "19485: call qword ptr [rip - 0x445b]",
+        "1948b: mov qword ptr [rsi + 0x2c498], rax",
+        "19492: mov rax, qword ptr [rsi + 0x2c498]",
+        "19499: cmp rax, rbx",
+        "1949c: je 0x1952f",
+        "194a2: mov rcx, qword ptr [rsi + 0x2c498]",
+        "194a9: xor edx, edx",
+        "194ab: mov r8d, 0x4e8",
+        "194b1: call 0x143b0",
+        "194b6: mov r11, qword ptr [rsi + 0x2c498]",
+        "194bd: mov ebx, 0x30",
+        "194c2: lea rcx, [rsp + 0x48]",
+        "194c7: mov r8, rbx",
+        "194ca: xor edx, edx",
+        "194cc: mov qword ptr [rsi + 0x2c4e0], r11",
+        "194d3: call 0x143b0",
+        "194d8: mov rdx, qword ptr [rsp + 0x2a0]",
+        "194e0: mov rcx, qword ptr [rip - 0x2687]",
+        "194e7: lea r8, [rsp + 0x48]",
+        "194ec: mov dword ptr [rsp + 0x48], ebx",
+        "194f0: mov dword ptr [rsp + 0x4c], r13d",
+        "194f5: mov dword ptr [rsp + 0x50], r13d",
+        "194fa: mov dword ptr [rsp + 0x54], r13d",
+        "194ff: mov dword ptr [rsp + 0x58], r13d",
+        "19504: mov dword ptr [rsp + 0x5c], r13d",
+        "19509: mov dword ptr [rsp + 0x60], r13d",
+        "1950e: mov dword ptr [rsp + 0x68], r13d",
+        "19513: mov dword ptr [rsp + 0x6c], r13d",
+        "19518: mov dword ptr [rsp + 0x70], edi",
+        "1951c: mov dword ptr [rsp + 0x74], edi",
+        "19520: mov dword ptr [rsp + 0x64], r12d",
+        "19525: call qword ptr [rip - 0x3073]",
+        "1952b: mov eax, ebp",
+        "1952d: jmp 0x19534",
+        "1952f: mov eax, 0xc000009a",
+        "19534: mov rbx, qword ptr [rsp + 0x290]",
+        "1953c: add rsp, 0x260",
+        "19543: pop r13",
+        "19545: pop r12",
+        "19547: pop rdi",
+        "19548: pop rsi",
+        "19549: pop rbp",
+        "1954a: ret "
+      ]
+    },
+    {
+      "start": "00019880",
+      "end_exclusive": "00019989",
+      "complete": true,
+      "diagnostic": "",
+      "pseudocode": "/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */\nulonglong FUN_00019880(undefined8 param_1)\n{\n  uint uVar1;\n  longlong lVar2;\n  longlong lVar3;\n  ulonglong uVar4;\n  undefined4 auStack_28 [4];\n  uint uStack_18;\n  lVar2 = (*_DAT_00016870)(_DAT_00016e60,param_1,_DAT_000161d0);\n  lVar3 = (*_DAT_00016870)(_DAT_00016e60,param_1,_DAT_000161d0);\n  if ((*(longlong *)(lVar3 + 8) != 0) ||\n     (uVar4 = (*_DAT_00016c30)(_DAT_00016e60,param_1,0,lVar3 + 8), -1 < (int)uVar4)) {\n    (*_DAT_00016c40)(_DAT_00016e60,*(undefined8 *)(lVar3 + 8),lVar3 + 0x10);\n    uVar4 = FUN_00019b18(param_1);\n    if (-1 < (int)uVar4) {\n      FUN_000143b0(auStack_28,0,0x14);\n      auStack_28[0] = 0x14;\n      uVar1 = (*_DAT_00016c38)(_DAT_00016e60,*(undefined8 *)(lVar2 + 8),auStack_28);\n      uVar4 = (ulonglong)uVar1;\n      if ((int)uVar1 < 0) {\n        *(undefined1 *)(lVar2 + 0x34) = 0;\n      }\n      else {\n        *(byte *)(lVar2 + 0x34) = (byte)(uStack_18 >> 2) & 1;\n      }\n      *(uint *)(lVar2 + 0x30) = uStack_18 & 2;\n      if (*(char *)(lVar2 + 0x34) == '\\0') {\n        uVar4 = 0xc0000184;\n      }\n    }\n  }\n  return uVar4;\n}",
+      "mapped_wdf_calls": [
+        {
+          "instruction_va": "0x198a8",
+          "table_slot_va": "0x16870",
+          "index": 202,
+          "wdk_name": "WdfObjectGetTypedContextWorker"
+        },
+        {
+          "instruction_va": "0x198c2",
+          "table_slot_va": "0x16870",
+          "index": 202,
+          "wdk_name": "WdfObjectGetTypedContextWorker"
+        },
+        {
+          "instruction_va": "0x198e3",
+          "table_slot_va": "0x16c30",
+          "index": 322,
+          "wdk_name": "WdfUsbTargetDeviceCreate"
+        },
+        {
+          "instruction_va": "0x19900",
+          "table_slot_va": "0x16c40",
+          "index": 324,
+          "wdk_name": "WdfUsbTargetDeviceGetDeviceDescriptor"
+        },
+        {
+          "instruction_va": "0x1993a",
+          "table_slot_va": "0x16c38",
+          "index": 323,
+          "wdk_name": "WdfUsbTargetDeviceRetrieveInformation"
+        }
+      ]
+    },
+    {
+      "start": "00019b18",
+      "end_exclusive": "00019c41",
+      "complete": true,
+      "diagnostic": "",
+      "pseudocode": "/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */\nulonglong FUN_00019b18(undefined8 param_1)\n{\n  uint uVar1;\n  longlong lVar2;\n  ulonglong uVar3;\n  undefined8 uVar4;\n  undefined2 auStackX_10 [4];\n  undefined8 uStackX_18;\n  undefined1 auStackX_20 [8];\n  undefined4 auStack_58 [6];\n  undefined4 uStack_40;\n  undefined4 uStack_3c;\n  undefined8 uStack_38;\n  auStackX_10[0] = 0;\n  uStackX_18 = 0;\n  lVar2 = (*_DAT_00016870)(_DAT_00016e60,param_1,_DAT_000161d0);\n  uVar3 = (*_DAT_00016c48)(_DAT_00016e60,*(undefined8 *)(lVar2 + 8),0,auStackX_10);\n  if ((int)uVar3 == -0x3fffffdd) {\n    FUN_000143b0(auStack_58,0,0x38);\n    uStack_40 = 1;\n    uStack_3c = 1;\n    auStack_58[0] = 0x38;\n    uStack_38 = *(undefined8 *)(lVar2 + 8);\n    uVar3 = (*_DAT_00016820)(_DAT_00016e60,auStack_58,0,0x726e6175,auStackX_10[0],auStackX_20,\n                             &uStackX_18);\n    if (-1 < (int)uVar3) {\n      uVar3 = (*_DAT_00016c48)(_DAT_00016e60,*(undefined8 *)(lVar2 + 8),uStackX_18,auStackX_10);\n      if (-1 < (int)uVar3) {\n        *(undefined8 *)(lVar2 + 0x28) = uStackX_18;\n        uVar1 = FUN_00019c48(param_1);\n        uVar3 = (ulonglong)uVar1;\n        uVar4 = (*_DAT_00016370)(_DAT_00016e60,param_1);\n        *(undefined8 *)(lVar2 + 0x50) = uVar4;\n      }\n    }\n  }\n  return uVar3;\n}",
+      "mapped_wdf_calls": [
+        {
+          "instruction_va": "0x19b43",
+          "table_slot_va": "0x16870",
+          "index": 202,
+          "wdk_name": "WdfObjectGetTypedContextWorker"
+        },
+        {
+          "instruction_va": "0x19b62",
+          "table_slot_va": "0x16c48",
+          "index": 325,
+          "wdk_name": "WdfUsbTargetDeviceRetrieveConfigDescriptor"
+        },
+        {
+          "instruction_va": "0x19bdb",
+          "table_slot_va": "0x16820",
+          "index": 192,
+          "wdk_name": "WdfMemoryCreate"
+        },
+        {
+          "instruction_va": "0x19c00",
+          "table_slot_va": "0x16c48",
+          "index": 325,
+          "wdk_name": "WdfUsbTargetDeviceRetrieveConfigDescriptor"
+        },
+        {
+          "instruction_va": "0x19c2a",
+          "table_slot_va": "0x16370",
+          "index": 42,
+          "wdk_name": "WdfDeviceGetIoTarget"
+        }
+      ]
+    },
+    {
+      "start": "00019c48",
+      "end_exclusive": "0001a0a4",
+      "complete": true,
+      "diagnostic": "",
+      "pseudocode": "/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */\nundefined4 FUN_00019c48(undefined8 param_1)\n{\n  longlong lVar1;\n  byte bVar2;\n  undefined4 uVar3;\n  longlong lVar4;\n  undefined8 uVar5;\n  undefined8 *puVar6;\n  undefined8 uVar7;\n  longlong lVar8;\n  undefined8 *puVar9;\n  uint uVar10;\n  bool bVar11;\n  undefined8 uStack_a8;\n  undefined8 uStack_a0;\n  undefined4 uStack_98;\n  undefined4 uStack_94;\n  byte bStack_90;\n  undefined8 *puStack_88;\n  undefined1 auStack_78 [2];\n  char cStack_76;\n  undefined4 auStack_68 [2];\n  undefined8 uStack_60;\n  undefined1 uStack_48;\n  code *pcStack_38;\n  longlong lStack_30;\n  lVar4 = (*_DAT_00016870)(_DAT_00016e60,param_1,_DAT_000161d0);\n  bVar2 = (*_DAT_00016c68)(_DAT_00016e60,*(undefined8 *)(lVar4 + 8));\n  bVar11 = bVar2 == 1;\n  *(bool *)(lVar4 + 0x40) = bVar11;\n  *(bool *)(lVar4 + 0x41) = bVar11;\n  if (bVar11) {\n    FUN_000143b0(&uStack_98,0,0x20);\n    uStack_98 = 0x20;\n    uStack_94 = 2;\n    uVar3 = (*_DAT_00016c70)(_DAT_00016e60,*(undefined8 *)(lVar4 + 8),0,&uStack_98);\n    uStack_a8 = 0x1100000010;\n    uStack_a0 = 1;\n    uVar5 = (*_DAT_00016d70)(_DAT_00016e60,*(undefined8 *)(lVar4 + 8),0);\n    (*_DAT_00016d60)(_DAT_00016e60,uVar5,0,&uStack_a8);\n    uVar5 = (*_DAT_00016d70)(_DAT_00016e60,*(undefined8 *)(lVar4 + 8),0);\n    (*_DAT_00016d58)(_DAT_00016e60,uVar5,0,auStack_78);\n    (*_DAT_00016d70)(_DAT_00016e60,*(undefined8 *)(lVar4 + 8),0);\n  }\n  else {\n    puVar6 = (undefined8 *)ExAllocatePoolWithTag(1,(ulonglong)bVar2 << 4,0x726e6175);\n    if (puVar6 == (undefined8 *)0x0) {\n      uVar3 = 0xc000009a;\n    }\n    else {\n      *(undefined8 *)(lVar4 + 0x80) = 0;\n      *(undefined8 *)(lVar4 + 0x58) = 0;\n      *(undefined8 *)(lVar4 + 0x48) = 0;\n      *(undefined8 *)(lVar4 + 0x88) = 0;\n      uVar10 = 0;\n      *(undefined8 **)(lVar4 + 0x38) = puVar6;\n      puVar9 = puVar6;\n      if (bVar2 != 0) {\n        do {\n          uVar7 = (*_DAT_00016d70)(_DAT_00016e60,*(undefined8 *)(lVar4 + 8),(char)uVar10);\n          uVar5 = _DAT_00016e60;\n          *puVar9 = uVar7;\n          (*_DAT_00016d58)(uVar5,uVar7,0,auStack_78);\n          if (cStack_76 == '\\x02') {\n            *(undefined1 *)(puVar9 + 1) = 1;\n            *(undefined8 *)(lVar4 + 0x48) = *puVar9;\n          }\n          else if (cStack_76 == '\\x01') {\n            *(undefined1 *)(puVar9 + 1) = 1;\n            *(undefined8 *)(lVar4 + 0x80) = *puVar9;\n          }\n          else {\n            *(undefined1 *)(puVar9 + 1) = 0;\n            if (cStack_76 == '\\x03') {\n              *(undefined8 *)(lVar4 + 0xa8) = *puVar9;\n            }\n          }\n          uVar10 = uVar10 + 1;\n          puVar9 = puVar9 + 2;\n        } while (uVar10 < bVar2);\n      }\n      FUN_000143b0(&uStack_98,0,0x20);\n      uStack_98 = 0x20;\n      if (bVar2 == 0) {\n        uStack_94 = 3;\n      }\n      else {\n        uStack_94 = 4;\n        bStack_90 = bVar2;\n        puStack_88 = puVar6;\n      }\n      (*_DAT_00016c70)(_DAT_00016e60,*(undefined8 *)(lVar4 + 8),0,&uStack_98);\n      (*_DAT_00016d80)(_DAT_00016e60,*(undefined8 *)(lVar4 + 0x48));\n      (*_DAT_00016d80)(_DAT_00016e60,*(undefined8 *)(lVar4 + 0x80));\n      (*_DAT_00016d80)(_DAT_00016e60,*(undefined8 *)(lVar4 + 0xa8));\n      FUN_000143b0(lVar4 + 0x60,0,0x14);\n      *(undefined4 *)(lVar4 + 0x60) = 0x14;\n      FUN_000143b0(lVar4 + 0x90,0,0x14);\n      *(undefined4 *)(lVar4 + 0x90) = 0x14;\n      FUN_000143b0(lVar4 + 0xb8,0,0x14);\n      *(undefined4 *)(lVar4 + 0xb8) = 0x14;\n      FUN_000143b0(lVar4 + 0xd8,0,0x14);\n      uVar5 = _DAT_00016e60;\n      *(undefined4 *)(lVar4 + 0xd8) = 0x14;\n      uVar7 = (*_DAT_00016d88)(uVar5,*(undefined8 *)(lVar4 + 0x48),0,lVar4 + 0x60);\n      uVar5 = _DAT_00016e60;\n      *(undefined8 *)(lVar4 + 0x58) = uVar7;\n      uVar7 = (*_DAT_00016d88)(uVar5,*(undefined8 *)(lVar4 + 0x80),0,lVar4 + 0x90);\n      uVar5 = _DAT_00016e60;\n      *(undefined8 *)(lVar4 + 0x88) = uVar7;\n      uVar7 = (*_DAT_00016d88)(uVar5,*(undefined8 *)(lVar4 + 0xa8),0,lVar4 + 0xb8);\n      uVar5 = _DAT_00016e60;\n      *(undefined8 *)(lVar4 + 0xb0) = uVar7;\n      lVar8 = (*_DAT_00016d88)(uVar5,*(undefined8 *)(lVar4 + 0xa8),1,lVar4 + 0xd8);\n      *(longlong *)(lVar4 + 0xd0) = lVar8;\n      if ((((*(longlong *)(lVar4 + 0x80) == 0) || (*(longlong *)(lVar4 + 0x48) == 0)) ||\n          (*(longlong *)(lVar4 + 0x58) == 0)) ||\n         (((*(longlong *)(lVar4 + 0x88) == 0 || (lVar1 = *(longlong *)(lVar4 + 0xb0), lVar1 == 0))\n          || (lVar8 == 0)))) {\n        uVar3 = 0xc0000182;\n      }\n      else {\n        FUN_000143b0(auStack_68,0,0x48);\n        pcStack_38 = FUN_000114c8;\n        auStack_68[0] = 0x48;\n        uStack_60 = 0x40;\n        uStack_48 = 0xf;\n        lStack_30 = lVar4;\n        uVar3 = (*_DAT_00016d10)(_DAT_00016e60,lVar1,auStack_68);\n      }\n    }\n  }\n  return uVar3;\n}",
+      "mapped_wdf_calls": [
+        {
+          "instruction_va": "0x19c74",
+          "table_slot_va": "0x16870",
+          "index": 202,
+          "wdk_name": "WdfObjectGetTypedContextWorker"
+        },
+        {
+          "instruction_va": "0x19c88",
+          "table_slot_va": "0x16c68",
+          "index": 329,
+          "wdk_name": "WdfUsbTargetDeviceGetNumInterfaces"
+        },
+        {
+          "instruction_va": "0x19cdc",
+          "table_slot_va": "0x16c70",
+          "index": 330,
+          "wdk_name": "WdfUsbTargetDeviceSelectConfig"
+        },
+        {
+          "instruction_va": "0x19d14",
+          "table_slot_va": "0x16d70",
+          "index": 362,
+          "wdk_name": "WdfUsbTargetDeviceGetInterface"
+        },
+        {
+          "instruction_va": "0x19d2c",
+          "table_slot_va": "0x16d60",
+          "index": 360,
+          "wdk_name": "WdfUsbInterfaceSelectSetting"
+        },
+        {
+          "instruction_va": "0x19d41",
+          "table_slot_va": "0x16d70",
+          "index": 362,
+          "wdk_name": "WdfUsbTargetDeviceGetInterface"
+        },
+        {
+          "instruction_va": "0x19d59",
+          "table_slot_va": "0x16d58",
+          "index": 359,
+          "wdk_name": "WdfUsbInterfaceGetDescriptor"
+        },
+        {
+          "instruction_va": "0x19d6e",
+          "table_slot_va": "0x16d70",
+          "index": 362,
+          "wdk_name": "WdfUsbTargetDeviceGetInterface"
+        },
+        {
+          "instruction_va": "0x19de8",
+          "table_slot_va": "0x16d70",
+          "index": 362,
+          "wdk_name": "WdfUsbTargetDeviceGetInterface"
+        },
+        {
+          "instruction_va": "0x19e03",
+          "table_slot_va": "0x16d58",
+          "index": 359,
+          "wdk_name": "WdfUsbInterfaceGetDescriptor"
+        },
+        {
+          "instruction_va": "0x19eab",
+          "table_slot_va": "0x16c70",
+          "index": 330,
+          "wdk_name": "WdfUsbTargetDeviceSelectConfig"
+        },
+        {
+          "instruction_va": "0x19ebd",
+          "table_slot_va": "0x16d80",
+          "index": 364,
+          "wdk_name": "WdfUsbInterfaceGetNumConfiguredPipes"
+        },
+        {
+          "instruction_va": "0x19ed2",
+          "table_slot_va": "0x16d80",
+          "index": 364,
+          "wdk_name": "WdfUsbInterfaceGetNumConfiguredPipes"
+        },
+        {
+          "instruction_va": "0x19ee7",
+          "table_slot_va": "0x16d80",
+          "index": 364,
+          "wdk_name": "WdfUsbInterfaceGetNumConfiguredPipes"
+        },
+        {
+          "instruction_va": "0x19f69",
+          "table_slot_va": "0x16d88",
+          "index": 365,
+          "wdk_name": "WdfUsbInterfaceGetConfiguredPipe"
+        },
+        {
+          "instruction_va": "0x19f8e",
+          "table_slot_va": "0x16d88",
+          "index": 365,
+          "wdk_name": "WdfUsbInterfaceGetConfiguredPipe"
+        },
+        {
+          "instruction_va": "0x19fb6",
+          "table_slot_va": "0x16d88",
+          "index": 365,
+          "wdk_name": "WdfUsbInterfaceGetConfiguredPipe"
+        },
+        {
+          "instruction_va": "0x19fde",
+          "table_slot_va": "0x16d88",
+          "index": 365,
+          "wdk_name": "WdfUsbInterfaceGetConfiguredPipe"
+        },
+        {
+          "instruction_va": "0x1a07d",
+          "table_slot_va": "0x16d10",
+          "index": 350,
+          "wdk_name": "WdfUsbTargetPipeConfigContinuousReader"
+        }
+      ]
+    },
+    {
+      "start": "0001968c",
+      "end_exclusive": "000197d9",
+      "complete": true,
+      "diagnostic": "",
+      "pseudocode": "/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */\nvoid FUN_0001968c(undefined8 param_1)\n{\n  bool bVar1;\n  char cVar2;\n  int iVar3;\n  longlong lVar4;\n  undefined1 auStack_88 [32];\n  undefined4 uStack_68;\n  undefined4 uStack_60;\n  undefined1 uStack_58;\n  undefined1 uStack_57;\n  char cStack_56;\n  ulonglong uStack_18;\n  uStack_18 = _DAT_00016100 ^ (ulonglong)auStack_88;\n  lVar4 = (*_DAT_00016870)(_DAT_00016e60,param_1,_DAT_000161d0);\n  if (*(char *)(lVar4 + 0x40) == '\\0') {\n    (*_DAT_00016d28)(_DAT_00016e60,*(undefined8 *)(lVar4 + 0x58),0,0);\n    (*_DAT_00016d28)(_DAT_00016e60,*(undefined8 *)(lVar4 + 0x88),0,0);\n    if (*(longlong *)(lVar4 + 0x7e28) == 0) {\n      iVar3 = FUN_00011420(lVar4);\n      if (iVar3 < 0) goto LAB_000197bb;\n    }\n    ExSetTimerResolution(10000,1);\n    uStack_58 = 0;\n    FUN_000143b0(&uStack_57,0,0x3f);\n    bVar1 = false;\n    do {\n      if (bVar1) break;\n      FUN_0001184c(lVar4,3,0);\n      uStack_60 = 1;\n      uStack_68 = 0;\n      bVar1 = true;\n      cVar2 = FUN_000118c4(lVar4,3);\n    } while (cVar2 == '\\0');\n    *(bool *)(lVar4 + 0x41) = cStack_56 == -0x40;\n  }\n  if (*(char *)(lVar4 + 0x41) == '\\0') {\n    iVar3 = (*_DAT_00016778)(_DAT_00016e60,*(undefined8 *)(lVar4 + 0xb0));\n    if (-1 < iVar3) {\n      *(undefined1 *)(lVar4 + 0xec) = 1;\n    }\n    FUN_00011a1c(lVar4,1);\n  }\n  FUN_00011a90(lVar4);\nLAB_000197bb:\n  func_0x00014100(uStack_18 ^ (ulonglong)auStack_88);\n  return;\n}",
+      "mapped_wdf_calls": [
+        {
+          "instruction_va": "0x196b9",
+          "table_slot_va": "0x16870",
+          "index": 202,
+          "wdk_name": "WdfObjectGetTypedContextWorker"
+        },
+        {
+          "instruction_va": "0x196dd",
+          "table_slot_va": "0x16d28",
+          "index": 353,
+          "wdk_name": "WdfUsbTargetPipeResetSynchronously"
+        },
+        {
+          "instruction_va": "0x196f7",
+          "table_slot_va": "0x16d28",
+          "index": 353,
+          "wdk_name": "WdfUsbTargetPipeResetSynchronously"
+        },
+        {
+          "instruction_va": "0x19796",
+          "table_slot_va": "0x16778",
+          "index": 171,
+          "wdk_name": "WdfIoTargetStart"
+        }
+      ],
+      "assembly": [
+        "1968c: mov qword ptr [rsp + 0x10], rbx",
+        "19691: push rdi",
+        "19692: sub rsp, 0x80",
+        "19699: mov rax, qword ptr [rip - 0x35a0]",
+        "196a0: xor rax, rsp",
+        "196a3: mov qword ptr [rsp + 0x70], rax",
+        "196a8: mov r8, qword ptr [rip - 0x34df]",
+        "196af: mov rdx, rcx",
+        "196b2: mov rcx, qword ptr [rip - 0x2859]",
+        "196b9: call qword ptr [rip - 0x2e4f]",
+        "196bf: mov rbx, rax",
+        "196c2: cmp byte ptr [rax + 0x40], 0",
+        "196c6: jne 0x19782",
+        "196cc: mov rdx, qword ptr [rax + 0x58]",
+        "196d0: mov rcx, qword ptr [rip - 0x2877]",
+        "196d7: xor r9d, r9d",
+        "196da: xor r8d, r8d",
+        "196dd: call qword ptr [rip - 0x29bb]",
+        "196e3: mov rdx, qword ptr [rbx + 0x88]",
+        "196ea: mov rcx, qword ptr [rip - 0x2891]",
+        "196f1: xor r9d, r9d",
+        "196f4: xor r8d, r8d",
+        "196f7: call qword ptr [rip - 0x29d5]",
+        "196fd: cmp qword ptr [rbx + 0x7e28], 0",
+        "19705: jne 0x19717",
+        "19707: mov rcx, rbx",
+        "1970a: call 0x11420",
+        "1970f: test eax, eax",
+        "19711: js 0x197bb",
+        "19717: mov dl, 1",
+        "19719: mov ecx, 0x2710",
+        "1971e: call qword ptr [rip - 0x46d4]",
+        "19724: xor edx, edx",
+        "19726: lea rcx, [rsp + 0x31]",
+        "1972b: lea r8d, [rdx + 0x3f]",
+        "1972f: mov byte ptr [rsp + 0x30], 0",
+        "19734: call 0x143b0",
+        "19739: xor edi, edi",
+        "1973b: cmp edi, 1",
+        "1973e: jae 0x19777",
+        "19740: xor r8d, r8d",
+        "19743: mov dl, 3",
+        "19745: mov rcx, rbx",
+        "19748: call 0x1184c",
+        "1974d: mov r9d, 3",
+        "19753: lea r8, [rsp + 0x30]",
+        "19758: mov dl, r9b",
+        "1975b: mov rcx, rbx",
+        "1975e: mov dword ptr [rsp + 0x28], 1",
+        "19766: and dword ptr [rsp + 0x20], 0",
+        "1976b: add edi, 1",
+        "1976e: call 0x118c4",
+        "19773: test al, al",
+        "19775: je 0x1973b",
+        "19777: cmp byte ptr [rsp + 0x32], 0xc0",
+        "1977c: sete al",
+        "1977f: mov byte ptr [rbx + 0x41], al",
+        "19782: cmp byte ptr [rbx + 0x41], 0",
+        "19786: jne 0x197b1",
+        "19788: mov rdx, qword ptr [rbx + 0xb0]",
+        "1978f: mov rcx, qword ptr [rip - 0x2936]",
+        "19796: call qword ptr [rip - 0x3024]",
+        "1979c: test eax, eax",
+        "1979e: js 0x197a7",
+        "197a0: mov byte ptr [rbx + 0xec], 1",
+        "197a7: mov dl, 1",
+        "197a9: mov rcx, rbx",
+        "197ac: call 0x11a1c",
+        "197b1: mov rcx, rbx",
+        "197b4: call 0x11a90",
+        "197b9: xor eax, eax",
+        "197bb: mov rcx, qword ptr [rsp + 0x70]",
+        "197c0: xor rcx, rsp",
+        "197c3: call 0x14100",
+        "197c8: mov rbx, qword ptr [rsp + 0x98]",
+        "197d0: add rsp, 0x80",
+        "197d7: pop rdi",
+        "197d8: ret "
+      ]
+    },
+    {
+      "start": "000197e0",
+      "end_exclusive": "00019877",
+      "complete": true,
+      "diagnostic": "",
+      "pseudocode": "/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */\nundefined8 FUN_000197e0(undefined8 param_1)\n{\n  longlong lVar1;\n  lVar1 = (*_DAT_00016870)(_DAT_00016e60,param_1,_DAT_000161d0);\n  if (*(char *)(lVar1 + 0xec) != '\\0') {\n    (*_DAT_00016780)(_DAT_00016e60,*(undefined8 *)(lVar1 + 0xb0),1);\n    *(undefined1 *)(lVar1 + 0xec) = 0;\n  }\n  if (*(char *)(lVar1 + 0x40) == '\\0') {\n    (*_DAT_00016c00)(_DAT_00016e60,*(undefined8 *)(lVar1 + 0x7e10));\n    FUN_00012408(lVar1,0);\n    (*_DAT_00016c08)(_DAT_00016e60,*(undefined8 *)(lVar1 + 0x7e10));\n    ExSetTimerResolution(10000,0);\n  }\n  return 0;\n}",
+      "mapped_wdf_calls": [
+        {
+          "instruction_va": "0x197f7",
+          "table_slot_va": "0x16870",
+          "index": 202,
+          "wdk_name": "WdfObjectGetTypedContextWorker"
+        },
+        {
+          "instruction_va": "0x1981d",
+          "table_slot_va": "0x16780",
+          "index": 172,
+          "wdk_name": "WdfIoTargetStop"
+        },
+        {
+          "instruction_va": "0x1983e",
+          "table_slot_va": "0x16c00",
+          "index": 316,
+          "wdk_name": "WdfSpinLockAcquire"
+        },
+        {
+          "instruction_va": "0x1985c",
+          "table_slot_va": "0x16c08",
+          "index": 317,
+          "wdk_name": "WdfSpinLockRelease"
+        }
+      ]
+    },
+    {
+      "start": "00019990",
+      "end_exclusive": "00019b0f",
+      "complete": true,
+      "diagnostic": "",
+      "pseudocode": "/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */\nundefined8 FUN_00019990(undefined8 param_1)\n{\n  int iVar1;\n  longlong lVar2;\n  undefined8 uVar3;\n  uint uVar4;\n  undefined8 uStackX_18;\n  undefined4 uStack_28;\n  undefined4 uStack_24;\n  lVar2 = (*_DAT_00016870)(_DAT_00016e60,param_1,_DAT_000161d0);\n  if (*(longlong *)(lVar2 + 8) == 0) {\n    uVar3 = 0;\n  }\n  else {\n    (*_DAT_00016c00)(_DAT_00016e60,*(undefined8 *)(lVar2 + 0x7e10));\n    FUN_00012408(lVar2,0);\n    (*_DAT_00016c08)(_DAT_00016e60,*(undefined8 *)(lVar2 + 0x7e10));\n    if (*(char *)(lVar2 + 0x40) == '\\0') {\n      *(undefined1 *)(*(longlong *)(lVar2 + 0x2c4e0) + 0x3a2) = 1;\n      *(undefined1 *)(lVar2 + 0x2d1c3) = 1;\n      KeInitializeTimer(lVar2 + 0x2d208);\n      for (uVar4 = 0; uVar4 < 1000; uVar4 = uVar4 + 0x14) {\n        (*_DAT_00016c00)(_DAT_00016e60,*(undefined8 *)(lVar2 + 0x7e10));\n        iVar1 = *(int *)(lVar2 + 0x2d1c4);\n        (*_DAT_00016c08)(_DAT_00016e60,*(undefined8 *)(lVar2 + 0x7e10));\n        if (iVar1 == 0) break;\n        uStackX_18 = 0xfffffffffffcf2c0;\n        KeSetTimer(lVar2 + 0x2d208,0xfffffffffffcf2c0,0);\n        KeWaitForSingleObject(lVar2 + 0x2d208,0,0,0,&uStackX_18);\n      }\n    }\n    (*_DAT_00016780)(_DAT_00016e60,*(undefined8 *)(lVar2 + 8),1);\n    FUN_000143b0(&uStack_28,0,0x20);\n    uStack_28 = 0x20;\n    uStack_24 = 1;\n    uVar3 = (*_DAT_00016c70)(_DAT_00016e60,*(undefined8 *)(lVar2 + 8),0,&uStack_28);\n  }\n  return uVar3;\n}",
+      "mapped_wdf_calls": [
+        {
+          "instruction_va": "0x199b5",
+          "table_slot_va": "0x16870",
+          "index": 202,
+          "wdk_name": "WdfObjectGetTypedContextWorker"
+        },
+        {
+          "instruction_va": "0x199da",
+          "table_slot_va": "0x16c00",
+          "index": 316,
+          "wdk_name": "WdfSpinLockAcquire"
+        },
+        {
+          "instruction_va": "0x199f8",
+          "table_slot_va": "0x16c08",
+          "index": 317,
+          "wdk_name": "WdfSpinLockRelease"
+        },
+        {
+          "instruction_va": "0x19a42",
+          "table_slot_va": "0x16c00",
+          "index": 316,
+          "wdk_name": "WdfSpinLockAcquire"
+        },
+        {
+          "instruction_va": "0x19a60",
+          "table_slot_va": "0x16c08",
+          "index": 317,
+          "wdk_name": "WdfSpinLockRelease"
+        },
+        {
+          "instruction_va": "0x19abb",
+          "table_slot_va": "0x16780",
+          "index": 172,
+          "wdk_name": "WdfIoTargetStop"
+        },
+        {
+          "instruction_va": "0x19af4",
+          "table_slot_va": "0x16c70",
+          "index": 330,
+          "wdk_name": "WdfUsbTargetDeviceSelectConfig"
+        }
+      ]
+    },
+    {
+      "start": "00011330",
+      "end_exclusive": "00011419",
+      "complete": true,
+      "diagnostic": "",
+      "pseudocode": "/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */\nundefined8\nFUN_00011330(undefined4 param_1,longlong param_2,undefined8 param_3,undefined8 *param_4,\n            undefined8 param_5,char param_6)\n{\n  undefined8 uVar1;\n  undefined4 *puVar2;\n  undefined4 auStack_48 [6];\n  undefined4 uStack_30;\n  undefined4 uStack_2c;\n  undefined8 uStack_18;\n  FUN_000143b0(auStack_48,0,0x38);\n  uStack_30 = 1;\n  uStack_2c = 1;\n  uStack_18 = _DAT_00016180;\n  if (param_6 != '\\0') {\n    uStack_18 = _DAT_00016158;\n  }\n  auStack_48[0] = 0x38;\n  uVar1 = (*_DAT_000169d8)(_DAT_00016e60,auStack_48,*(undefined8 *)(param_2 + 8),param_4);\n  if (-1 < (int)uVar1) {\n    uVar1 = (*_DAT_00016828)(_DAT_00016e60,0,param_3,0x1358,param_5);\n    if (-1 < (int)uVar1) {\n      uVar1 = _DAT_00016158;\n      if (param_6 == '\\0') {\n        uVar1 = _DAT_00016180;\n      }\n      puVar2 = (undefined4 *)(*_DAT_00016870)(_DAT_00016e60,*param_4,uVar1);\n      *puVar2 = param_1;\n      uVar1 = 0;\n    }\n  }\n  return uVar1;\n}",
+      "mapped_wdf_calls": [
+        {
+          "instruction_va": "0x113a3",
+          "table_slot_va": "0x169d8",
+          "index": 247,
+          "wdk_name": "WdfRequestCreate"
+        },
+        {
+          "instruction_va": "0x113cc",
+          "table_slot_va": "0x16828",
+          "index": 193,
+          "wdk_name": "WdfMemoryCreatePreallocated"
+        },
+        {
+          "instruction_va": "0x113f8",
+          "table_slot_va": "0x16870",
+          "index": 202,
+          "wdk_name": "WdfObjectGetTypedContextWorker"
+        }
+      ]
+    },
+    {
+      "start": "00011420",
+      "end_exclusive": "000114c1",
+      "complete": true,
+      "diagnostic": "",
+      "pseudocode": "undefined8 FUN_00011420(longlong param_1)\n{\n  undefined8 uVar1;\n  uint uVar2;\n  ulonglong uVar3;\n  uVar3 = 0;\n  while( true ) {\n    uVar1 = FUN_00011330(uVar3,param_1,param_1 + 0x7f36 + uVar3 * 0x1358,\n                         param_1 + 0x7e28 + uVar3 * 8,param_1 + 0x2c388 + uVar3 * 8,1);\n    if ((int)uVar1 < 0) {\n      return uVar1;\n    }\n    uVar1 = FUN_00011330(uVar3,param_1,&UNK_0001a15e + uVar3 * 0x1358 + param_1,\n                         param_1 + 0x7ea0 + uVar3 * 8,param_1 + 0x2c400 + uVar3 * 8,0);\n    if ((int)uVar1 < 0) break;\n    uVar2 = (int)uVar3 + 1;\n    uVar3 = (ulonglong)uVar2;\n    if (0xe < uVar2) {\n      return 0;\n    }\n  }\n  return uVar1;\n}",
+      "mapped_wdf_calls": []
+    },
+    {
+      "start": "000114c8",
+      "end_exclusive": "000115b8",
+      "complete": true,
+      "diagnostic": "",
+      "pseudocode": "/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */\nundefined8 FUN_000114c8(undefined8 param_1,undefined8 param_2,longlong param_3,longlong param_4)\n{\n  longlong lVar1;\n  undefined1 auVar2 [16];\n  undefined8 uVar3;\n  ulonglong uVar4;\n  auVar2._8_8_ = 0;\n  auVar2._0_8_ = uRamfffff78000000008;\n  uVar3 = SUB168(ZEXT816(0x346dc5d63886594b) * auVar2,0);\n  uVar4 = uRamfffff78000000008 / 10000;\n  if (param_3 == 0x40) {\n    (*_DAT_00016c00)(_DAT_00016e60,*(undefined8 *)(param_4 + 0x7e18));\n    lVar1 = (ulonglong)(*(uint *)(param_4 + 0x108) % 500) * 0x40 + 0x10c + param_4;\n    (*_DAT_00016840)(_DAT_00016e60,param_2,0,lVar1,0x40);\n    *(int *)(param_4 + 0x108) = *(int *)(param_4 + 0x108) + 1;\n    (*_DAT_00016c08)(_DAT_00016e60,*(undefined8 *)(param_4 + 0x7e18));\n    func_0x000115c0(param_4,lVar1,uVar4 & 0xffffffff);\n    uVar3 = KeSetEvent(param_4 + 0xf0,8);\n  }\n  return uVar3;\n}",
+      "mapped_wdf_calls": [
+        {
+          "instruction_va": "0x1151b",
+          "table_slot_va": "0x16c00",
+          "index": 316,
+          "wdk_name": "WdfSpinLockAcquire"
+        },
+        {
+          "instruction_va": "0x11560",
+          "table_slot_va": "0x16840",
+          "index": 196,
+          "wdk_name": "WdfMemoryCopyToBuffer"
+        },
+        {
+          "instruction_va": "0x1157b",
+          "table_slot_va": "0x16c08",
+          "index": 317,
+          "wdk_name": "WdfSpinLockRelease"
+        }
+      ]
+    },
+    {
+      "start": "000116a0",
+      "end_exclusive": "00011843",
+      "complete": true,
+      "diagnostic": "",
+      "pseudocode": "/* WARNING: Type propagation algorithm not settling */\n/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */\nvoid FUN_000116a0(longlong param_1,undefined1 param_2,undefined8 param_3)\n{\n  int iVar1;\n  int aiStackX_20 [2];\n  undefined1 *puStack_48;\n  longlong alStack_40 [5];\n  undefined8 uStack_18;\n  aiStackX_20[0] = 0;\n  alStack_40[0] = 0;\n  puStack_48 = (undefined1 *)0x0;\n  alStack_40[1] = 0x100000010;\n  alStack_40[2] = 0xfffffffffff0bdc0;\n  iVar1 = (*_DAT_00016820)(_DAT_00016e60,0,0,0x726e6175,0x40,alStack_40,&puStack_48);\n  if (-1 < iVar1) {\n    uStack_18 = 0;\n    alStack_40[4] = alStack_40[0];\n    alStack_40[3] = 3;\n    if (puStack_48 != (undefined1 *)0x0) {\n      FUN_000143b0(puStack_48,0,0x40);\n      *puStack_48 = param_2;\n      *(undefined4 *)(puStack_48 + 1) = 0x100c51c;\n      FUN_000144b0(puStack_48 + 5,param_3,0x3b);\n      iVar1 = (*_DAT_00016cf0)(_DAT_00016e60,*(undefined8 *)(param_1 + 0xd0),0,alStack_40 + 1,\n                               alStack_40 + 3,aiStackX_20);\n      if ((iVar1 < 0) || (aiStackX_20[0] != 0x40)) {\n        if (iVar1 == -0x3ffffff2) {\n          *(undefined1 *)(*(longlong *)(param_1 + 0x2c4e0) + 0x3a2) = 1;\n        }\n        if (iVar1 == -0x3ffffff3) {\n          (*_DAT_00016780)(_DAT_00016e60,*(undefined8 *)(param_1 + 0x50),1);\n          (*_DAT_00016ca8)(_DAT_00016e60,*(undefined8 *)(param_1 + 8));\n        }\n      }\n      if (alStack_40[0] != 0) {\n        (*_DAT_000168a0)(_DAT_00016e60);\n      }\n    }\n  }\n  return;\n}",
+      "mapped_wdf_calls": [
+        {
+          "instruction_va": "0x11717",
+          "table_slot_va": "0x16820",
+          "index": 192,
+          "wdk_name": "WdfMemoryCreate"
+        },
+        {
+          "instruction_va": "0x117bf",
+          "table_slot_va": "0x16cf0",
+          "index": 346,
+          "wdk_name": "WdfUsbTargetPipeWriteSynchronously"
+        },
+        {
+          "instruction_va": "0x11800",
+          "table_slot_va": "0x16780",
+          "index": 172,
+          "wdk_name": "WdfIoTargetStop"
+        },
+        {
+          "instruction_va": "0x11811",
+          "table_slot_va": "0x16ca8",
+          "index": 337,
+          "wdk_name": "WdfUsbTargetDeviceCyclePortSynchronously"
+        },
+        {
+          "instruction_va": "0x11828",
+          "table_slot_va": "0x168a0",
+          "index": 208,
+          "wdk_name": "WdfObjectDelete"
+        }
+      ],
+      "assembly": [
+        "116a0: mov r11, rsp",
+        "116a3: mov qword ptr [r11 + 8], rbx",
+        "116a7: mov qword ptr [r11 + 0x10], rsi",
+        "116ab: push rdi",
+        "116ac: sub rsp, 0x80",
+        "116b3: and dword ptr [r11 + 0x20], 0",
+        "116b8: and qword ptr [r11 - 0x40], 0",
+        "116bd: and qword ptr [r11 - 0x48], 0",
+        "116c2: xor eax, eax",
+        "116c4: mov rbx, rcx",
+        "116c7: mov rcx, qword ptr [rip + 0x5792]",
+        "116ce: mov qword ptr [r11 - 0x30], rax",
+        "116d2: mov qword ptr [r11 - 0x38], rax",
+        "116d6: lea rax, [r11 - 0x48]",
+        "116da: mov qword ptr [r11 - 0x58], rax",
+        "116de: lea rax, [r11 - 0x40]",
+        "116e2: mov rdi, r8",
+        "116e5: mov sil, dl",
+        "116e8: mov dword ptr [rsp + 0x50], 0x10",
+        "116f0: mov dword ptr [rsp + 0x54], 1",
+        "116f8: mov qword ptr [r11 - 0x60], rax",
+        "116fc: mov r9d, 0x726e6175",
+        "11702: xor r8d, r8d",
+        "11705: xor edx, edx",
+        "11707: mov qword ptr [r11 - 0x30], 0xfffffffffff0bdc0",
+        "1170f: mov qword ptr [r11 - 0x68], 0x40",
+        "11717: call qword ptr [rip + 0x5103]",
+        "1171d: test eax, eax",
+        "1171f: js 0x1182e",
+        "11725: mov rcx, qword ptr [rsp + 0x40]",
+        "1172a: xor eax, eax",
+        "1172c: mov qword ptr [rsp + 0x60], rax",
+        "11731: mov qword ptr [rsp + 0x68], rax",
+        "11736: mov qword ptr [rsp + 0x70], rax",
+        "1173b: mov rax, qword ptr [rsp + 0x48]",
+        "11740: and qword ptr [rsp + 0x70], 0",
+        "11746: test rcx, rcx",
+        "11749: mov qword ptr [rsp + 0x68], rax",
+        "1174e: mov dword ptr [rsp + 0x60], 3",
+        "11756: je 0x1182e",
+        "1175c: xor edx, edx",
+        "1175e: lea r8d, [rdx + 0x40]",
+        "11762: call 0x143b0",
+        "11767: mov r11, qword ptr [rsp + 0x40]",
+        "1176c: mov r8d, 0x3b",
+        "11772: mov byte ptr [r11], sil",
+        "11775: mov rax, qword ptr [rsp + 0x40]",
+        "1177a: mov rdx, rdi",
+        "1177d: mov dword ptr [rax + 1], 0x100c51c",
+        "11784: mov rcx, qword ptr [rsp + 0x40]",
+        "11789: add rcx, 5",
+        "1178d: call 0x144b0",
+        "11792: mov rdx, qword ptr [rbx + 0xd0]",
+        "11799: mov rcx, qword ptr [rip + 0x56c0]",
+        "117a0: lea rax, [rsp + 0xa8]",
+        "117a8: lea r9, [rsp + 0x50]",
+        "117ad: xor r8d, r8d",
+        "117b0: mov qword ptr [rsp + 0x28], rax",
+        "117b5: lea rax, [rsp + 0x60]",
+        "117ba: mov qword ptr [rsp + 0x20], rax",
+        "117bf: call qword ptr [rip + 0x552b]",
+        "117c5: test eax, eax",
+        "117c7: js 0x117d3",
+        "117c9: cmp dword ptr [rsp + 0xa8], 0x40",
+        "117d1: je 0x11817",
+        "117d3: cmp eax, 0xc000000e",
+        "117d8: jne 0x117e8",
+        "117da: mov rcx, qword ptr [rbx + 0x2c4e0]",
+        "117e1: mov byte ptr [rcx + 0x3a2], 1",
+        "117e8: cmp eax, 0xc000000d",
+        "117ed: jne 0x11817",
+        "117ef: mov rdx, qword ptr [rbx + 0x50]",
+        "117f3: mov rcx, qword ptr [rip + 0x5666]",
+        "117fa: mov r8d, 1",
+        "11800: call qword ptr [rip + 0x4f7a]",
+        "11806: mov rdx, qword ptr [rbx + 8]",
+        "1180a: mov rcx, qword ptr [rip + 0x564f]",
+        "11811: call qword ptr [rip + 0x5491]",
+        "11817: mov rdx, qword ptr [rsp + 0x48]",
+        "1181c: test rdx, rdx",
+        "1181f: je 0x1182e",
+        "11821: mov rcx, qword ptr [rip + 0x5638]",
+        "11828: call qword ptr [rip + 0x5072]",
+        "1182e: lea r11, [rsp + 0x80]",
+        "11836: mov rbx, qword ptr [r11 + 0x10]",
+        "1183a: mov rsi, qword ptr [r11 + 0x18]",
+        "1183e: mov rsp, r11",
+        "11841: pop rdi",
+        "11842: ret "
+      ]
+    },
+    {
+      "start": "0001184c",
+      "end_exclusive": "000118be",
+      "complete": true,
+      "diagnostic": "",
+      "pseudocode": "/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */\nvoid FUN_0001184c(longlong param_1,undefined1 param_2,undefined2 param_3)\n{\n  undefined1 auStack_78 [32];\n  undefined2 uStack_58;\n  ulonglong uStack_18;\n  uStack_18 = _DAT_00016100 ^ (ulonglong)auStack_78;\n  FUN_000143b0((longlong)&uStack_58 + 1,0,0x3f);\n  uStack_58 = param_3;\n  if (*(char *)(param_1 + 0x40) == '\\0') {\n    FUN_000116a0(param_1,param_2,&uStack_58);\n  }\n  func_0x00014100(uStack_18 ^ (ulonglong)auStack_78);\n  return;\n}",
+      "mapped_wdf_calls": [],
+      "assembly": [
+        "1184c: mov qword ptr [rsp + 0x10], rbx",
+        "11851: mov qword ptr [rsp + 0x20], rsi",
+        "11856: push rdi",
+        "11857: sub rsp, 0x70",
+        "1185b: mov rax, qword ptr [rip + 0x489e]",
+        "11862: xor rax, rsp",
+        "11865: mov qword ptr [rsp + 0x60], rax",
+        "1186a: mov sil, dl",
+        "1186d: xor edx, edx",
+        "1186f: movzx ebx, r8w",
+        "11873: mov rdi, rcx",
+        "11876: lea rcx, [rsp + 0x21]",
+        "1187b: lea r8d, [rdx + 0x3f]",
+        "1187f: call 0x143b0",
+        "11884: cmp byte ptr [rdi + 0x40], 0",
+        "11888: mov word ptr [rsp + 0x20], bx",
+        "1188d: jne 0x1189f",
+        "1188f: lea r8, [rsp + 0x20]",
+        "11894: mov dl, sil",
+        "11897: mov rcx, rdi",
+        "1189a: call 0x116a0",
+        "1189f: mov rcx, qword ptr [rsp + 0x60]",
+        "118a4: xor rcx, rsp",
+        "118a7: call 0x14100",
+        "118ac: lea r11, [rsp + 0x70]",
+        "118b1: mov rbx, qword ptr [r11 + 0x18]",
+        "118b5: mov rsi, qword ptr [r11 + 0x28]",
+        "118b9: mov rsp, r11",
+        "118bc: pop rdi",
+        "118bd: ret "
+      ]
+    },
+    {
+      "start": "000118c4",
+      "end_exclusive": "00011a14",
+      "complete": true,
+      "diagnostic": "",
+      "pseudocode": "undefined1\nFUN_000118c4(longlong param_1,char param_2,longlong param_3,int param_4,undefined8 param_5,\n            uint param_6)\n{\n  int iVar1;\n  longlong lVar2;\n  int iVar3;\n  undefined8 uStackX_8;\n  char cStackX_10;\n  if (*(char *)(param_1 + 0x40) == '\\0') {\n    iVar3 = 0;\n    cStackX_10 = param_2;\n    do {\n      lVar2 = (ulonglong)(param_6 % 500) * 0x40;\n      if (*(uint *)(param_1 + 0x108) <= param_6) {\n        uStackX_8 = 0xfffffffffff85ee0;\n        KeClearEvent(param_1 + 0xf0);\n        iVar1 = 0;\n        if (*(uint *)(param_1 + 0x108) <= param_6) {\n          iVar1 = KeWaitForSingleObject(param_1 + 0xf0,0,0,0,&uStackX_8);\n          KeClearEvent(param_1 + 0xf0);\n        }\n        param_2 = cStackX_10;\n        if (*(uint *)(param_1 + 0x108) <= param_6) {\n          if (iVar1 != 0) {\n            return 0;\n          }\n          if (*(char *)(param_1 + 0x2d1c3) != '\\0') {\n            return 0;\n          }\n        }\n      }\n      if ((*(char *)(param_1 + 0x10c + lVar2) == param_2) &&\n         (*(int *)(param_1 + 0x10d + lVar2) == 0x100c51c)) {\n        if (param_3 == 0) {\n          return 1;\n        }\n        if (0x40 < param_4 + 5U) {\n          return 0;\n        }\n        FUN_000144b0(param_3,param_1 + 0x111 + lVar2,param_4);\n        return 1;\n      }\n      iVar3 = iVar3 + 1;\n      param_6 = param_6 + 1;\n    } while (iVar3 < 4);\n  }\n  return 0;\n}",
+      "mapped_wdf_calls": []
+    },
+    {
+      "start": "00011a1c",
+      "end_exclusive": "00011a87",
+      "complete": true,
+      "diagnostic": "",
+      "pseudocode": "/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */\nvoid FUN_00011a1c(longlong param_1,char param_2)\n{\n  undefined1 auStack_78 [32];\n  undefined1 uStack_58;\n  undefined1 auStack_57 [63];\n  ulonglong uStack_18;\n  uStack_18 = _DAT_00016100 ^ (ulonglong)auStack_78;\n  *(char *)(param_1 + 0x2d1c0) = param_2;\n  FUN_000143b0(auStack_57,0,0x3f);\n  uStack_58 = param_2 != '\\0';\n  if (*(char *)(param_1 + 0x40) == '\\0') {\n    FUN_000116a0(param_1,0x36,&uStack_58);\n  }\n  func_0x00014100(uStack_18 ^ (ulonglong)auStack_78);\n  return;\n}",
+      "mapped_wdf_calls": []
+    },
+    {
+      "start": "00011a90",
+      "end_exclusive": "00011b79",
+      "complete": true,
+      "diagnostic": "",
+      "pseudocode": "ulonglong FUN_00011a90(longlong param_1)\n{\n  ushort uVar1;\n  undefined4 uVar2;\n  byte bVar3;\n  ulonglong in_RAX;\n  ulonglong uVar4;\n  ulonglong uVar5;\n  ushort auStackX_8 [4];\n  undefined2 auStackX_10 [4];\n  uVar1 = *(ushort *)(param_1 + 0x2d180);\n  uVar2 = *(undefined4 *)(param_1 + 0x108);\n  if ((uVar1 == 0xac44) || (uVar1 == 48000)) {\n    FUN_0001184c(param_1,0x31,uVar1 << 8 | uVar1 >> 8);\n    auStackX_10[0] = 0;\n    bVar3 = FUN_000118c4(param_1,0x31,auStackX_10,2,0,uVar2);\n    auStackX_8[0] = 0;\n    uVar4 = (ulonglong)bVar3;\n    FUN_0001184c(param_1,0x30,0);\n    uVar5 = FUN_000118c4(param_1,0x30,auStackX_8,2,0,uVar2);\n    if ((char)uVar5 == '\\0') {\n      uVar4 = uVar5 & 0xffffffffffffff00;\n    }\n    else {\n      if (auStackX_8[0] != (ushort)(uVar1 << 8 | uVar1 >> 8)) {\n        uVar4 = 0;\n      }\n      if ((char)uVar4 != '\\0') {\n        *(uint *)(param_1 + 0x2c4b0) = (uint)uVar1;\n      }\n    }\n  }\n  else {\n    uVar4 = in_RAX & 0xffffffffffffff00;\n  }\n  return uVar4;\n}",
+      "mapped_wdf_calls": [],
+      "assembly": [
+        "11a90: mov qword ptr [rsp + 0x18], rbx",
+        "11a95: mov qword ptr [rsp + 0x20], rbp",
+        "11a9a: push rsi",
+        "11a9b: push rdi",
+        "11a9c: push r13",
+        "11a9e: sub rsp, 0x30",
+        "11aa2: movzx edi, word ptr [rcx + 0x2d180]",
+        "11aa9: mov esi, dword ptr [rcx + 0x108]",
+        "11aaf: mov rbx, rcx",
+        "11ab2: cmp di, 0xac44",
+        "11ab7: je 0x11ac7",
+        "11ab9: cmp di, 0xbb80",
+        "11abe: je 0x11ac7",
+        "11ac0: xor al, al",
+        "11ac2: jmp 0x11b66",
+        "11ac7: movzx r8d, di",
+        "11acb: mov dl, 0x31",
+        "11acd: rol r8w, 8",
+        "11ad2: call 0x1184c",
+        "11ad7: xor r13d, r13d",
+        "11ada: lea r8, [rsp + 0x58]",
+        "11adf: lea r9d, [r13 + 2]",
+        "11ae3: mov dl, 0x31",
+        "11ae5: mov rcx, rbx",
+        "11ae8: mov dword ptr [rsp + 0x28], esi",
+        "11aec: mov word ptr [rsp + 0x58], r13w",
+        "11af2: mov dword ptr [rsp + 0x20], r13d",
+        "11af7: call 0x118c4",
+        "11afc: xor r8d, r8d",
+        "11aff: mov dl, 0x30",
+        "11b01: mov rcx, rbx",
+        "11b04: mov word ptr [rsp + 0x50], r13w",
+        "11b0a: mov bpl, al",
+        "11b0d: call 0x1184c",
+        "11b12: lea r9d, [r13 + 2]",
+        "11b16: lea r8, [rsp + 0x50]",
+        "11b1b: mov dl, 0x30",
+        "11b1d: mov rcx, rbx",
+        "11b20: mov dword ptr [rsp + 0x28], esi",
+        "11b24: mov dword ptr [rsp + 0x20], r13d",
+        "11b29: call 0x118c4",
+        "11b2e: cmp al, r13b",
+        "11b31: jne 0x11b38",
+        "11b33: mov al, r13b",
+        "11b36: jmp 0x11b66",
+        "11b38: movzx ecx, word ptr [rsp + 0x50]",
+        "11b3d: movzx r8d, di",
+        "11b41: movzx edx, r8b",
+        "11b45: mov eax, r8d",
+        "11b48: shr eax, 8",
+        "11b4b: shl edx, 8",
+        "11b4e: or edx, eax",
+        "11b50: movzx eax, bpl",
+        "11b54: cmp ecx, edx",
+        "11b56: cmovne eax, r13d",
+        "11b5a: cmp al, r13b",
+        "11b5d: je 0x11b66",
+        "11b5f: mov dword ptr [rbx + 0x2c4b0], r8d",
+        "11b66: mov rbx, qword ptr [rsp + 0x60]",
+        "11b6b: mov rbp, qword ptr [rsp + 0x68]",
+        "11b70: add rsp, 0x30",
+        "11b74: pop r13",
+        "11b76: pop rdi",
+        "11b77: pop rsi",
+        "11b78: ret "
+      ]
+    }
+  ],
+  "interpretation": "Four-interface configuration selects settings [0,1,1,0]. D0 entry resets audio pipes, allocates requests, attempts command 0x03 before starting the interrupt reader, conditionally starts that reader and sends command 0x36, then conditionally applies a requested sample rate. Commands use 64-byte interrupt OUT frames, not EP0 vendor requests. This is static recovery, not captured USB traffic or a proven fix for WinUSB startup."
+}

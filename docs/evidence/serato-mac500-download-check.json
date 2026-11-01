@@ -1,0 +1,35 @@
+{
+  "checkedUtc": "2026-10-27T07:44:45.356675+00:00",
+  "pageUrl": "https://serato.com/dj/pro/downloads/5.0.0",
+  "pageSha256": "20d0b44ad05894b707e404af5792667a8d55892ad2735ca720b020dca5a72023",
+  "installerMetadata": {
+    "name": "Serato DJ Pro 5.0.0.pkg",
+    "bytes": 1051590750,
+    "resourceId": 156199,
+    "installerType": "mac-installer"
+  },
+  "anonymousRoute": {
+    "method": "POST",
+    "url": "https://da.serato.com/api/v1/download/applicationinstaller/serato_dj_pro/5.0.0/mac",
+    "status": 403,
+    "recordSha256": "b0ac6fdb3b09842547d07b8a1368a3017c790a027dba0d711685731496ad8134"
+  },
+  "browserObservation": {
+    "signedInShownByLogoutControl": true,
+    "macInstallerLinkClicked": true,
+    "pageReportsSomethingWentWrong": true,
+    "downloadNotObservedInCheckedLocations": true,
+    "browserRequestStatusIndependentlyVerified": false
+  },
+  "installerObtained": false,
+  "installerHash": null,
+  "signatureVerified": false,
+  "installerExecuted": false,
+  "nextArtifact": "Serato DJ Pro 5.0.0.pkg",
+  "limits": [
+    "Metadata and advertised size are not installer bytes or signature evidence",
+    "Anonymous HTTP 403 and browser page error are distinct observations; root cause not proved",
+    "No credentials/cookies/tokens extracted or copied; browser used its existing session; no guessed CDN links or alternate mirrors",
+    "No Mac build/runtime or change to Windows drivers/security"
+  ]
+}

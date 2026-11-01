@@ -1,0 +1,45 @@
+# Current Serato integration: admission remains an independent requirement
+
+Checked 30 October 2026. The Windows transport has passed bounded silent hardware tests, but **there is still no demonstrated path that admits the rebuilt SL3 as current Serato primary DVS hardware**. Published requirements do not identify Phase HID or external master-output routing as substitutes for that admission. This is a project constraint, not a claim that every possible integration is technically impossible. The original Windows-first/current-Serato/two-deck-DVS objective remains unchanged.
+
+## Published requirements
+
+| Question | What the primary sources establish | Consequence for this project |
+| --- | --- | --- |
+| Does Serato support SL3 on Windows 11? | Serato lists it as unsupported and recommends Windows 10 with DJ Pro 2.5.5. | A replacement Windows driver does not by itself create vendor-supported current application compatibility. |
+| What is the last recommended SL3 release? | Serato's discontinued-hardware table lists DJ Pro 2.5.5. | Recovering descriptor data from 2.5.6 is static evidence, not proof that 2.5.6 supports a working SL3. |
+| Can Phase become the primary interface? | Serato calls Phase an official accessory requiring compatible hardware and a DVS licence. | USB HID avoids the Phase RCA signal path; primary-device admission remains necessary. |
+| Can an external soundcard replace the primary DVS device through the laptop-speaker option? | The documented option routes master output through the OS-selected soundcard and still requires compatible hardware. | This is not a documented six-channel DVS-input/deck-output registration interface. |
+| Does WIR remove the primary-hardware requirement? | Serato describes WIR for Phase remotes with DVS-supported hardware, controlling virtual decks 1 and 2. | A Phase descriptor and receiver connection alone do not establish a working two-deck session. |
+
+Sources: [Windows 11 compatibility](https://support.serato.com/hc/en-us/articles/4405841177999-Windows-11-Serato-DJ-Pro-DJ-Lite-primary-hardware-compatibility), [discontinued hardware](https://support.serato.com/hc/en-us/articles/4411117032975-Serato-software-operating-system-compatibility-for-discontinued-hardware), [Phase hardware requirements](https://serato.com/dj/hardware/phase), [external master-output routing](https://support.serato.com/hc/en-us/articles/360001860415-Use-Laptop-Speakers-or-External-Soundcard-as-Master-Output-with-Serato-DJ-Pro), [deck modes](https://support.serato.com/hc/en-us/articles/360004125475-Virtual-Deck-Play-Modes).
+
+The distinction between a licence and admitted hardware is also explicit in Serato's [compatible-hardware/licensing explanation](https://support.serato.com/hc/en-us/articles/202260274-Understanding-Serato-DJ-compatible-hardware-licensing). No account entitlement was inspected or changed, and this investigation makes no purchase recommendation. Published support status describes supported configurations; it is not a substitute for the original-binary and runtime evidence below.
+
+## Independent local evidence
+
+The installed/extracted 5.0.0.1278 executable remains pinned to SHA-256 `66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265`.
+
+- The application previously displayed the SL3 discontinued dialog on this actual host. The [checked dispatch chain](serato-discontinued-path.md) connects the identity stub's support value to that notification.
+- The [audio selector](serato-audio-routing.md) needs populated API/name fields to select an explicit ASIO route. The unchanged stub's empty fields do not establish that route. The recovered [DVS and deck/endpoint fields](serato-dvs-contract.md) are separate requirements.
+- The [legacy packed-24 path](serato-packed24-path.md) now verifies type-17 → three-byte host format and conditional input/output float converter selection. This supports preserving the rebuilt driver's native packed-24 format in a future legacy-backend experiment. It does not establish SL3 admission, the actual selected backend/user format or executed audio conversion.
+- The [userio archive](serato-resource-container.md) contains no scalar SL3 identity in its inspected descriptor nodes. The [additional Qt indexes](serato-qrc-indexes.md) contain no device-description folders or SL3 filename within their stated scope. Neither investigation is exhaustive proof about all providers or payloads.
+- The [remaining default readers](serato-provider-tail.md) now have checked argument/dispatch evidence: EffectResources cannot list entries, two additional archives map stems/analysis, and the extra direct registration maps `userio_images`. These sites provide no new evidenced device-profile route; indirect/later registrations remain outside that conclusion.
+- The actual unregistered ASIO DLL passes [object-recreation tests with simulated transport](asio-recreation-tests.md). Native transport has separate [silent within-object evidence](retained-physical-test.md). Neither is a current Serato session.
+- The [Windows USB discovery path](serato-usb-discovery.md) constructs descriptor/string identity records and takes them by VID/PID. A separate libusb streaming connection is not demonstrated by `requires_usb`; discovery lifetime during UsbDk redirection remains unverified.
+
+The published requirements and local results agree on the separation of layers. Their combination supports the following **inference**: registering a generic rebuilt ASIO DLL, connecting Phase, or redirecting Serato's master output is insufficient evidence for the requested SL3/two-deck-DVS result. No supported generic-ASIO primary-device registration mechanism has been identified in the reviewed material. This does not prove no such mechanism exists.
+
+The [current component-profile comparison](serato-component-profiles.md) adds a concrete data/code constraint: absent MIDI direction produces a nonzero default in the checked component-count branch. Current DS1/Flux declarations therefore cannot be assumed to be MIDI-free audio-only templates. The fifteen explicit no-MIDI profiles use HID except for virtual audio, whose resource declares no DVS capability. A genuine SL3 component/handshake path remains necessary; none of these profiles is adopted or impersonated.
+
+## Required integration decision
+
+The [complete historical startup-resource inventory](serato-cutoff-registration.md) now rules out a second scalar SL3 declaration in the checked 2.5.5/2.5.6 arrays: all 313 XMLs parse, each release has one SL3 entry, and that XML is unchanged. A separate literal Rane predicate selects product values 24–25 rather than 1. Neither finding locates a runtime exclusion mechanism or supplies current 5.0.0 registration. The new [explicit factory scope](factory-scope-controller.md) is an available project-owned in-process lifetime interface, but the inspected Serato backends do not request it. A genuine backend/interprocess integration and primary-device admission path remain required.
+
+Before selecting application modifications or deployment, establish a concrete way to supply an admitted SL3 description and connection/control contract while preserving its real identity and legitimate product/account behaviour. If a vendor-supported extension is available, the necessary answers are its registration mechanism, audio-driver naming/selection rules, deck/input/output mapping, device-control responsibilities and Phase/DVS requirements. No vendor message has been sent and no vendor access is assumed.
+
+The latest [DriverAPI notification-object provenance](serato-notification-object.md) now ties the formerly unknown virtual call to the receiver's `NotificationCenter` dependency and checked notification methods. Its Boolean callbacks are not a newly identified hardware/licensing predicate. This removes that type ambiguity without supplying the missing current SL3 registration/handshake contract or selecting an application patch.
+
+An isolated compatibility experiment would need its own complete descriptor/control contract, integrity and signature assessment, installation/removal plan and real application validation. An archive that decodes, a parser that accepts XML, or a changed support integer would not prove that contract. No archive, executable, descriptor, account check or hardware identity was modified by this work.
+
+Windows audio work can continue independently: the [prepared one-acquisition controls query with shared USB/WPP trace](controls-probe.md#optional-shared-usbdk-lifecycle-trace), then kernel handoff/reacquisition investigation, controlled analogue channel/level measurements and a measured ASIO timing profile. These advance necessary requirements without redefining the current-Serato objective around a generic audio-driver result. macOS remains deferred by the owner.

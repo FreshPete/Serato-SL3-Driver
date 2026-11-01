@@ -1,0 +1,419 @@
+[
+  {
+    "path": "DJPro/Serato DJ Pro 2.5.5/Serato DJ Pro 2.5.5.83_64bit_Installer.exe",
+    "bytes": 723834912,
+    "sha256": "bfade04e499b734127398f951fe83fae68eca3cc56d5284e4da15da2d8938958",
+    "format": "PE",
+    "machine": "0x14c"
+  },
+  {
+    "path": "DJPro/Serato DJ Pro 2.5.6/Serato DJ Pro 2.5.6.exe",
+    "bytes": 789139488,
+    "sha256": "3d5e44c6e8e775f3854d754980a80b32fa4f569a68592a5fc249288b9c255b56",
+    "format": "PE",
+    "machine": "0x14c"
+  },
+  {
+    "path": "DJPro/Serato DJ Pro 5.0.0/Serato DJ Pro 5.0.0.exe",
+    "bytes": 1774279752,
+    "sha256": "653e8027cf15cfeae324818b1b68bf08b04c4d811bbd20d18af2a5c2394d2ff8",
+    "format": "PE",
+    "machine": "0x8664"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/all-variants/app/ControlPanel.exe",
+    "bytes": 2096528,
+    "sha256": "12b31959d729728a89bcf2c91fdff14e638712f6578a5c80e791ae10fff84889",
+    "format": "PE",
+    "machine": "0x14c"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/all-variants/app/ControlPanel.exe$0",
+    "bytes": 2663312,
+    "sha256": "83edb1b4966fa091b4293621ad01ae60a800f30e5f5f797f825ad75d94d35cfb",
+    "format": "PE",
+    "machine": "0x8664"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/all-variants/app/driver/instdrv.exe",
+    "bytes": 84880,
+    "sha256": "c1e6cf8fe444103b8fc52686b328a66afc79efc34fa7e93289efb2c11070fed7",
+    "format": "PE",
+    "machine": "0x14c"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/all-variants/app/driver/instdrv.exe$0",
+    "bytes": 88976,
+    "sha256": "99e7d3bbde1bf98365148bbe62959711407c443b82e2f872a7287278f5d2cace",
+    "format": "PE",
+    "machine": "0x8664"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/all-variants/app/driver/instdrv32.exe",
+    "bytes": 84880,
+    "sha256": "c1e6cf8fe444103b8fc52686b328a66afc79efc34fa7e93289efb2c11070fed7",
+    "format": "PE",
+    "machine": "0x14c"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/all-variants/app/driver/instdrv64.exe",
+    "bytes": 88976,
+    "sha256": "99e7d3bbde1bf98365148bbe62959711407c443b82e2f872a7287278f5d2cace",
+    "format": "PE",
+    "machine": "0x8664"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/all-variants/app/driver/strmdrv.cat",
+    "bytes": 8554,
+    "sha256": "ded34cef3ad2dcbb892fe591760e94340ee00ead03cb727efdabe4ea57424b67",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/all-variants/app/driver/strmdrv.cat$0",
+    "bytes": 8502,
+    "sha256": "3169df3e2fcd8041a089f432d2cd04f05f93eb20bced840dfc5e68ee844e7986",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/all-variants/app/driver/strmdrv.inf",
+    "bytes": 2853,
+    "sha256": "7430961ae6866c061258ae3cc89c3a2cfdf8144c33f0ab88d43488942689d044",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/all-variants/app/driver/strmdrv.inf$0",
+    "bytes": 2857,
+    "sha256": "7191f7c6fd5fda7503eb9eabee2522868a9d1f2ddd766fe6dc9145d6c69e8f76",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/all-variants/app/driver/strmdrv.sys",
+    "bytes": 34448,
+    "sha256": "935265c869129fba9706141f37ef2388652f238a9bde6fca6cf7fd6f8f9a33bf",
+    "format": "PE",
+    "machine": "0x14c"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/all-variants/app/driver/strmdrv.sys$0",
+    "bytes": 36240,
+    "sha256": "e8e992a8ece1a57eab337d815a406b9f815954176c03db545fcf6d951ec615f5",
+    "format": "PE",
+    "machine": "0x8664"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/all-variants/app/driver/WdfCoInstaller01007.dll",
+    "bytes": 1112288,
+    "sha256": "bcf6fbbdf1ad402dc761f87d79688c9b81aa70d63b835fc6618fc8e0686f39f4",
+    "format": "PE",
+    "machine": "0x14c"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/all-variants/app/driver/WdfCoInstaller01007.dll$0",
+    "bytes": 1490656,
+    "sha256": "749cc009f1cae5c633083897e906b381aa685829fee2d7cd5e07bae543848ff7",
+    "format": "PE",
+    "machine": "0x8664"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/all-variants/app/EULA.rtf",
+    "bytes": 44364,
+    "sha256": "fc8495f023f6147eedda5ab05a76974ed1aa1351fe5963ab38eaf96b312f00b0",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/all-variants/sys/RaneAsioSL3.dll",
+    "bytes": 1988496,
+    "sha256": "3effa4a843158276f840aaa0764fe631b6e9ea4363e07304b9c6ed7b122d09ef",
+    "format": "PE",
+    "machine": "0x14c"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/all-variants/sys/RaneAsioSL3.dll$0",
+    "bytes": 2683280,
+    "sha256": "e3d88039547b70915b1a9bc9e3e3f7dba32aaa9bc3ce8fd51616565ea1734141",
+    "format": "PE",
+    "machine": "0x8664"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/all-variants/sys/RaneAsioSL3.dll@32bit",
+    "bytes": 1981440,
+    "sha256": "1b9b082df865ad2ecd1a06ea27f3f903806a45eddd10fa75f394afb3ffb329bb",
+    "format": "PE",
+    "machine": "0x14c"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/all-variants/sys/RaneSL3.cpl",
+    "bytes": 2066832,
+    "sha256": "456f2931a73ae0b9bb4c50271d436a1f165658b63f96db5bbc624666a8db5b10",
+    "format": "PE",
+    "machine": "0x14c"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/all-variants/sys/RaneSL3.cpl$0",
+    "bytes": 2621328,
+    "sha256": "c385803577bf3fd910f2e1463bb114a466c0f1322783c65dabec4d5fc398a67e",
+    "format": "PE",
+    "machine": "0x8664"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/x64/RaneAsioSL3.dll",
+    "bytes": 2683280,
+    "sha256": "e3d88039547b70915b1a9bc9e3e3f7dba32aaa9bc3ce8fd51616565ea1734141",
+    "format": "PE",
+    "machine": "0x8664"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/x64/strmdrv.cat",
+    "bytes": 8502,
+    "sha256": "3169df3e2fcd8041a089f432d2cd04f05f93eb20bced840dfc5e68ee844e7986",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/x64/strmdrv.inf",
+    "bytes": 2857,
+    "sha256": "7191f7c6fd5fda7503eb9eabee2522868a9d1f2ddd766fe6dc9145d6c69e8f76",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/x64/strmdrv.sys",
+    "bytes": 36240,
+    "sha256": "e8e992a8ece1a57eab337d815a406b9f815954176c03db545fcf6d951ec615f5",
+    "format": "PE",
+    "machine": "0x8664"
+  },
+  {
+    "path": "artifacts/extracted/rane-windows/x64/WdfCoInstaller01007.dll",
+    "bytes": 1490656,
+    "sha256": "749cc009f1cae5c633083897e906b381aa685829fee2d7cd5e07bae543848ff7",
+    "format": "PE",
+    "machine": "0x8664"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/payload/Payload~",
+    "bytes": 557056,
+    "sha256": "1e1f732b34bcaa3c594e0edfd44d6d14671ce14f0ee42d30b489e95425e3ced5",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/pkg/[TOC].xml",
+    "bytes": 18907,
+    "sha256": "3ea880326cea7a66e2199b55392ea1df6d6ea5770e0dd24d1e3a792941665a33",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/pkg/Distribution",
+    "bytes": 3335,
+    "sha256": "8b11227b513ef9b3505ad35dbc137854cac91b70e2d33fa9e82e646d56adcf21",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/pkg/Resources/en.lproj/license.rtf",
+    "bytes": 44364,
+    "sha256": "fc8495f023f6147eedda5ab05a76974ed1aa1351fe5963ab38eaf96b312f00b0",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/pkg/Resources/en.lproj/Localizable.strings",
+    "bytes": 236,
+    "sha256": "6233418228f3ecfe019dc3d92ffdfca3e7505bfcbfe0c66af30a3c1aaf8193e4",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/pkg/SL3.pkg/Bom",
+    "bytes": 38387,
+    "sha256": "93343b2c590fde1e7078a26267b1a9070c8f8d6aa1e7be129cba6aba95ba16bc",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/pkg/SL3.pkg/PackageInfo",
+    "bytes": 937,
+    "sha256": "9ba77e4441c7039ddd6572b7e3bec4eeb8ad3a051e820cdfb2d81761e517b94b",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/pkg/SL3.pkg/Payload",
+    "bytes": 204256,
+    "sha256": "2f9e3b88cff218744d332e129883435397dd0a576ecfb012fbc5de62780eb19e",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/pkg/SL3.pkg/Scripts",
+    "bytes": 514,
+    "sha256": "8985a84085e7171407351db5aad6e0838d7f3f773e9455cd3772074848ee4689",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/Sl3.pkg",
+    "bytes": 235660,
+    "sha256": "17f7d8af9b6db8c4ebcf07a437ffca134200d68624204469d16a5891ce570189",
+    "format": "XAR"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/Extensions/Sl3Driver.10.9.kext/Contents/_CodeSignature/CodeResources",
+    "bytes": 2469,
+    "sha256": "e0ba84e4d1fdb6cc16894ad941bccb6bf8204638e1c12c6f81be077d296fbc05",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/Extensions/Sl3Driver.10.9.kext/Contents/Info.plist",
+    "bytes": 2115,
+    "sha256": "0797266e7c49c2e6dd796f1c45730fbb63d9db3d35ea7181a5ba9867c1c5606a",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/Extensions/Sl3Driver.10.9.kext/Contents/MacOS/Sl3Driver.10.9",
+    "bytes": 174416,
+    "sha256": "285110fc73d8546e9fa629dee2c098c21e7b1ca8c35bc16a5e3ae5c5ab47519c",
+    "format": "Mach-O"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/Extensions/Sl3Driver.10.9.kext/Contents/Resources/English.lproj/InfoPlist.strings",
+    "bytes": 92,
+    "sha256": "39cf2ee07b7b333e7c179d0bf4d798a5b72af6a4e584f51e642703bbfa4fc828",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/Frameworks/Sl3Api.framework/Versions/A/Resources/English.lproj/InfoPlist.strings",
+    "bytes": 92,
+    "sha256": "39cf2ee07b7b333e7c179d0bf4d798a5b72af6a4e584f51e642703bbfa4fc828",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/Frameworks/Sl3Api.framework/Versions/A/Resources/Info.plist",
+    "bytes": 1224,
+    "sha256": "5673d6f96ca577fd7d7cc9323e52a5d752a343e83359927146915ad2d26766da",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/Frameworks/Sl3Api.framework/Versions/A/Sl3Api",
+    "bytes": 206292,
+    "sha256": "ec9d9657b640427a894ad542c1032e8eec8ec061b32f954fd40a4bc668185b0c",
+    "format": "Mach-O"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/LaunchDaemons/com.rane.sl3.daemon.plist",
+    "bytes": 392,
+    "sha256": "35354d8600ec6224453e69d0b20cadd713ccc70b3070daf511a2ca18a2d82a07",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/PreferencePanes/SL 3 Audio Control Panel.prefPane/Contents/Info.plist",
+    "bytes": 1553,
+    "sha256": "e1f0f00376d221737ec4b96e901fd3b4c4c52605e8f897a4f0058e8cf4dc52a8",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/PreferencePanes/SL 3 Audio Control Panel.prefPane/Contents/MacOS/SL 3 Audio Control Panel",
+    "bytes": 101252,
+    "sha256": "10de43f2b922f6b2a6f6f219407383f914f1c13dcf0c4f156b7765bf64adbc5e",
+    "format": "Mach-O"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/PreferencePanes/SL 3 Audio Control Panel.prefPane/Contents/Resources/10firmwaredisabled.png",
+    "bytes": 568,
+    "sha256": "6f9518ba8aa17af18c27f96c6091ae76bb907a750ec4d1fb81c059922e2e295f",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/PreferencePanes/SL 3 Audio Control Panel.prefPane/Contents/Resources/11firmwareenabled.png",
+    "bytes": 398,
+    "sha256": "b9d4a844fd739508ba1d87ef29a9266ac7fd2d19877a14822a01a3f5250dc0f8",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/PreferencePanes/SL 3 Audio Control Panel.prefPane/Contents/Resources/12firmwareupload.png",
+    "bytes": 382,
+    "sha256": "23a55c63346a4f4c50b875a39ce758e446657e65cf4148e2aeecbc52e740584a",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/PreferencePanes/SL 3 Audio Control Panel.prefPane/Contents/Resources/13latency.png",
+    "bytes": 1499,
+    "sha256": "1ba694234e995db2c32e2ffd27558e5202da318b43173f84c9289a1ae776dca3",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/PreferencePanes/SL 3 Audio Control Panel.prefPane/Contents/Resources/1background.png",
+    "bytes": 6033,
+    "sha256": "f9551f8e054e32dfac0e47b1514a64b48c85a20a24a7f212ee8552b9328770e2",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/PreferencePanes/SL 3 Audio Control Panel.prefPane/Contents/Resources/2background.png",
+    "bytes": 3091,
+    "sha256": "704e9462303f962d2d603a51bbd1a5d8a34a337477b41d801a7e6706317f7997",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/PreferencePanes/SL 3 Audio Control Panel.prefPane/Contents/Resources/3phono.png",
+    "bytes": 1492,
+    "sha256": "72b0a6e40f104d9a5771bfab37ef95dfc8f49840525682413c27382f18d0fb2b",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/PreferencePanes/SL 3 Audio Control Panel.prefPane/Contents/Resources/4cdline.png",
+    "bytes": 2115,
+    "sha256": "3a8bb62b4fab514d969c3d3e4b92aae23f988523b811099ce94d86ba67cd82fc",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/PreferencePanes/SL 3 Audio Control Panel.prefPane/Contents/Resources/5outputon.png",
+    "bytes": 333,
+    "sha256": "3ccee6fd59165d845ff8699f4c4bb0557004b9d0c851e3ff564892f28fad43de",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/PreferencePanes/SL 3 Audio Control Panel.prefPane/Contents/Resources/6outputoff.png",
+    "bytes": 508,
+    "sha256": "1679a86b7b0b707b263a0e4a8f1cd770f74fb91b21e4c9855f309868a1c21d7c",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/PreferencePanes/SL 3 Audio Control Panel.prefPane/Contents/Resources/7handle.png",
+    "bytes": 400,
+    "sha256": "c59ff1933c75b1c088f5db6e697cde522916c1a60c71719077d201aa269bef2e",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/PreferencePanes/SL 3 Audio Control Panel.prefPane/Contents/Resources/8ledoff.png",
+    "bytes": 705,
+    "sha256": "0403e5e878bad900b9e4b1dd27140d6bdd09d35b839702ed34e907fd64509b20",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/PreferencePanes/SL 3 Audio Control Panel.prefPane/Contents/Resources/9ledon.png",
+    "bytes": 711,
+    "sha256": "9ac3b873840d8f6590d32624be5ecd7f3057fd2f9ea3626b3ae6f6fcdb36f671",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/PreferencePanes/SL 3 Audio Control Panel.prefPane/Contents/Resources/English.lproj/InfoPlist.strings",
+    "bytes": 216,
+    "sha256": "efd5d41cec5985bc4e392e365eae550175348bab4faf8f8dce1ff2d237e4018f",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/PreferencePanes/SL 3 Audio Control Panel.prefPane/Contents/Resources/English.lproj/SL3AudioControlPanelPref.nib",
+    "bytes": 25161,
+    "sha256": "e45b06c428558b32f4b17283d50cd67cf5cac17bc96fe68aa5d9e39689efcb7a",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/PreferencePanes/SL 3 Audio Control Panel.prefPane/Contents/Resources/SL3AudioControlPanelPref.tiff",
+    "bytes": 4608,
+    "sha256": "0309041e76db06dfd5fb3cc4188db508ec47717dd61cd74d94158a4359527b5d",
+    "format": "unclassified"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/tree/Library/PrivilegedHelperTools/Sl3SettingsService",
+    "bytes": 10948,
+    "sha256": "d84b4aa0a59283204b8c5b6e3c9ad0c373724df6e4922f91a0b1cc1b269e187e",
+    "format": "Mach-O"
+  },
+  {
+    "path": "artifacts/extracted/rane-mac/Uninstall-SL3.command",
+    "bytes": 878,
+    "sha256": "88a395b4066b83b44a9360c14df55ab2149fe038665aa0b4ea3a039a1ece993b",
+    "format": "unclassified"
+  }
+]

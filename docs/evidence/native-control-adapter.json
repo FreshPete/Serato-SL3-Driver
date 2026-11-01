@@ -1,0 +1,101 @@
+{
+  "scope": "Default getter-only production configuration and explicit single-target native diagnostic; fake positives and safe native negatives only",
+  "adapterSha256": "30fe6ab81e11760f5d8d33592823758d91addd291fcc5f926e06533a926dc6c8",
+  "baselineOwnerSha256": "c2dc0a704b767693fe50b1919c18093efc99df95b9db87a31de0e0696976fb0d",
+  "baseline": {
+    "moveOnly": true,
+    "sameLiveOwnerRequired": true,
+    "singleUse": true,
+    "maximumAgeBeforeSetterMilliseconds": 1500,
+    "fullInitialTableMatchBeforeSetter": true,
+    "recheckedAfterPreparation": true,
+    "audioActivationAndCloseInvalidate": true,
+    "persistedPermit": false,
+    "nativeSelectionEnabled": "Explicit diagnostic target only"
+  },
+  "diagnosticSourceSha256": "8ee6740f0b637b2c0773f42cba8c708cc31122ef3eb9a51dc4f3386a8003a456",
+  "diagnostic": {
+    "nativeWorkerFlag": "--control-test-target",
+    "hostSpecField": "diagnostic_control_target",
+    "defaultEnabled": false,
+    "freshJournalRequired": true,
+    "oneTarget": true,
+    "oneAttempt": true,
+    "audioStartRefused": true,
+    "hostProbeCliConnected": true,
+    "nativeSettingPhysicallyTested": false
+  },
+  "diagnosticTests": [
+    "Same wrapper used by native device tested with fake transfers for default refusal, baseline admission and typed result",
+    "Different target, expired baseline and repeat attempt refuse without transfer; inspection cannot rearm",
+    "Parser round-trips all 54 canonical targets and rejects malformed ranges/strings",
+    "Actual simulated process capability changes after controls and is rechecked before repeat selection",
+    "Native standard/target-journal modes with absent helper and invalid mode/target/journal arguments",
+    "Host rejects non-native/non-retained/no-journal/invalid-target specs before launch and refuses audio"
+  ],
+  "testSourceSha256": "ad951fcb9da47ac7e53660633fbcad2965476f6f2d3f4e0b4a2aee9ddb4cce2c",
+  "builds": {
+    "Release": {
+      "manifestSha256": "8cd1143da61d312c7ca587b0215156f532a9f8971b8260506182a501324bf62d",
+      "ctestLogSha256": "21177ca31218be411e48a6e3b8ea3b4f94e1c6f588e589afee816d10bc24c618",
+      "testsPassed": 40,
+      "adapterTestExecutableSha256": "db40b58b0b4c06658a24c083316e485d8c36a31fadc357fdd2eae48db1f96010",
+      "workerSha256": "5fe2a44f1020032994c2b2e1a5ea868f87650caa9e23bc2077913760d0e88fe5"
+    },
+    "Debug": {
+      "manifestSha256": "05566ce0488a180c211357b36638a3a79e869d4571b705ab168ef7505fa28da5",
+      "ctestLogSha256": "c8f9774de2f9624f565e075d047aadd3de790bbbc88747d452ebdef4debc87fd",
+      "testsPassed": 40,
+      "adapterTestExecutableSha256": "721cb1579ef7807669b898847d2a3d718e1603ae2e9fb635cdfad6987d6caa88",
+      "workerSha256": "ede07074d00909a8021b9a18b2e3e5862b5224f8d36648131bad4a5931262cb3"
+    }
+  },
+  "sdkFreeTestsPassed": 25,
+  "sdkFreeLogSha256": "193b6c0c380da3d630261cf5a7e530059d380a213f75eba60d1b60294dc7c37f",
+  "productionTransferRetirementSourceUnchanged": true,
+  "oldNativeReferenceSha256": "c226f32ab3d99c8596b3c8a1730795db610f30015a71bc186ed013c1c0818df2",
+  "selectedConstructorRuntimeCaller": true,
+  "nativeCapabilityEnabled": "Explicit diagnostic after fresh getter only",
+  "adapterRuntimeCallerInventory": {
+    "src/windows/control_selection_diagnostic.hpp": 1
+  },
+  "oldHardwarePrerequisiteRejection": {
+    "utc": "2026-10-31T02:28:47.928826+00:00",
+    "workerSha256": "5fe2a44f1020032994c2b2e1a5ea868f87650caa9e23bc2077913760d0e88fe5",
+    "validatorSha256": "c74f952d813fdc68f6d3d47e841e16493fe01e7503d42a37633c5e81e78aa50f",
+    "exitCode": 1,
+    "expectedRateHz": 44100,
+    "result": {
+      "valid": false,
+      "error": "Build/security mismatch"
+    },
+    "accepted": false,
+    "error": "Build/security mismatch",
+    "scope": "Old physical prerequisites rejected for current worker; no device operation"
+  },
+  "oldHardwarePrerequisiteRejectionSha256": "eb9f14d0a1fe76586c0e663d4043f6d4791dc3bbf3ca9ca045a03499228fc2c7",
+  "fakeTransferChecks": [
+    "All 54 targets: inspect/set/readback and getter-only no-op",
+    "Every setter frame byte independently mutated and refused before native preparation",
+    "Setter before observation, read before request, invalid target and completed reuse refused",
+    "Failure/short/late completion at all six transfer boundaries",
+    "Native error preserved despite destructor changing GetLastError",
+    "Preparation consumes timeout; zero/excess timeout and clock regression refuse"
+  ],
+  "baselineChecks": [
+    "Unissued/wrong-owner/reused/expired/regressed tokens refuse before preparation",
+    "New observation and explicit invalidation revoke older tokens/reservations",
+    "Destroyed device cannot admit old token even with reused object storage",
+    "Full-table mismatch preserves observation/possible-write uncertainty without native setter submission",
+    "Expiry during inspection or setter preparation prevents submission",
+    "Timely setter may finish readback after baseline freshness interval",
+    "Fresh observed no-op remains write-free; malformed getter issues no token"
+  ],
+  "limits": [
+    "Fake transfers do not validate driver cancellation, hardware behaviour or physical settings",
+    "Production retirement code is unchanged, not newly exercised on hardware",
+    "Native setting probe CLI is diagnostic-only; no ASIO panel/deployed configuration or physical setting validation",
+    "Current-worker read-only baseline and supervised target/result/trace/recovery validation remain before a physical setting test",
+    "Safe reacquisition, analogue mapping, measured timing, sustained operation and current Serato/DVS remain incomplete"
+  ]
+}

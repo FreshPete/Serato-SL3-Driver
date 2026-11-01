@@ -1,0 +1,317 @@
+{
+  "scope": "Selected current DriverAPI notification paths in original disk bytes; no application execution",
+  "binarySha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "instructions": [
+    {
+      "va": "0x1421daeb9",
+      "bytes": "ff9290000000",
+      "assembly": "call qword ptr [rdx + 0x90]"
+    },
+    {
+      "va": "0x1421daebf",
+      "bytes": "440fb6e8",
+      "assembly": "movzx r13d, al"
+    },
+    {
+      "va": "0x1421daef0",
+      "bytes": "4584ed",
+      "assembly": "test r13b, r13b"
+    },
+    {
+      "va": "0x1421daef3",
+      "bytes": "7436",
+      "assembly": "je 0x1421daf2b"
+    },
+    {
+      "va": "0x1421daf2b",
+      "bytes": "84db",
+      "assembly": "test bl, bl"
+    },
+    {
+      "va": "0x1421daf2d",
+      "bytes": "c7456707000000",
+      "assembly": "mov dword ptr [rbp + 0x67], 7"
+    },
+    {
+      "va": "0x1421daf34",
+      "bytes": "7407",
+      "assembly": "je 0x1421daf3d"
+    },
+    {
+      "va": "0x1421daf36",
+      "bytes": "c7456706000000",
+      "assembly": "mov dword ptr [rbp + 0x67], 6"
+    },
+    {
+      "va": "0x1421de935",
+      "bytes": "49634628",
+      "assembly": "movsxd rax, dword ptr [r14 + 0x28]"
+    },
+    {
+      "va": "0x1421de939",
+      "bytes": "83f80e",
+      "assembly": "cmp eax, 0xe"
+    },
+    {
+      "va": "0x1421de949",
+      "bytes": "8b9481e4eb1d02",
+      "assembly": "mov edx, dword ptr [rcx + rax*4 + 0x21debe4]"
+    },
+    {
+      "va": "0x1421de950",
+      "bytes": "4803d1",
+      "assembly": "add rdx, rcx"
+    },
+    {
+      "va": "0x1421de953",
+      "bytes": "ffe2",
+      "assembly": "jmp rdx"
+    },
+    {
+      "va": "0x1421dea78",
+      "bytes": "488b07",
+      "assembly": "mov rax, qword ptr [rdi]"
+    },
+    {
+      "va": "0x1421dea7b",
+      "bytes": "488b5838",
+      "assembly": "mov rbx, qword ptr [rax + 0x38]"
+    },
+    {
+      "va": "0x14213f786",
+      "bytes": "ba52000000",
+      "assembly": "mov edx, 0x52"
+    },
+    {
+      "va": "0x14213f78e",
+      "bytes": "e8fdf671ff",
+      "assembly": "call 0x14185ee90"
+    },
+    {
+      "va": "0x14213f7ad",
+      "bytes": "ff5058",
+      "assembly": "call qword ptr [rax + 0x58]"
+    },
+    {
+      "va": "0x14185eec7",
+      "bytes": "48895f38",
+      "assembly": "mov qword ptr [rdi + 0x38], rbx"
+    },
+    {
+      "va": "0x14137b7cb",
+      "bytes": "8b4a0c",
+      "assembly": "mov ecx, dword ptr [rdx + 0xc]"
+    },
+    {
+      "va": "0x14137b7e0",
+      "bytes": "ffc9",
+      "assembly": "dec ecx"
+    },
+    {
+      "va": "0x14137b7e2",
+      "bytes": "83f953",
+      "assembly": "cmp ecx, 0x53"
+    },
+    {
+      "va": "0x14137b7f5",
+      "bytes": "0fb68402d4c83701",
+      "assembly": "movzx eax, byte ptr [rdx + rax + 0x137c8d4]"
+    },
+    {
+      "va": "0x14137b7fd",
+      "bytes": "8b8c82a0c83701",
+      "assembly": "mov ecx, dword ptr [rdx + rax*4 + 0x137c8a0]"
+    },
+    {
+      "va": "0x14137b807",
+      "bytes": "ffe1",
+      "assembly": "jmp rcx"
+    },
+    {
+      "va": "0x14137bdd9",
+      "bytes": "488bd7",
+      "assembly": "mov rdx, rdi"
+    },
+    {
+      "va": "0x14137bde1",
+      "bytes": "e85a460000",
+      "assembly": "call 0x141380440"
+    },
+    {
+      "va": "0x14137bde7",
+      "bytes": "488dbeb0000000",
+      "assembly": "lea rdi, [rsi + 0xb0]"
+    },
+    {
+      "va": "0x14137bec5",
+      "bytes": "e8a6f7ffff",
+      "assembly": "call 0x14137b670"
+    },
+    {
+      "va": "0x141380465",
+      "bytes": "e8f6fdd900",
+      "assembly": "call 0x142120260"
+    },
+    {
+      "va": "0x14137b6d2",
+      "bytes": "488d8eb0000000",
+      "assembly": "lea rcx, [rsi + 0xb0]"
+    },
+    {
+      "va": "0x14137b6d9",
+      "bytes": "e872fdffff",
+      "assembly": "call 0x14137b450"
+    },
+    {
+      "va": "0x14137b6e5",
+      "bytes": "e85643baff",
+      "assembly": "call 0x140f1fa40"
+    },
+    {
+      "va": "0x14137b6ed",
+      "bytes": "7409",
+      "assembly": "je 0x14137b6f8"
+    },
+    {
+      "va": "0x14137b6f5",
+      "bytes": "ff5240",
+      "assembly": "call qword ptr [rdx + 0x40]"
+    },
+    {
+      "va": "0x14137b707",
+      "bytes": "e8649227ff",
+      "assembly": "call 0x1405f4970"
+    },
+    {
+      "va": "0x14137b720",
+      "bytes": "e83b4b0000",
+      "assembly": "call 0x141380260"
+    },
+    {
+      "va": "0x1421de942",
+      "bytes": "488d0db716e2fd",
+      "assembly": "lea rcx, [rip - 0x21de949]"
+    },
+    {
+      "va": "0x14137b7ee",
+      "bytes": "488d150b48c8fe",
+      "assembly": "lea rdx, [rip - 0x137b7f5]"
+    },
+    {
+      "va": "0x141380449",
+      "bytes": "4c8d0d102f7102",
+      "assembly": "lea r9, [rip + 0x2712f10]"
+    },
+    {
+      "va": "0x141380452",
+      "bytes": "4c8d055f927002",
+      "assembly": "lea r8, [rip + 0x270925f]"
+    }
+  ],
+  "unwindRanges": [
+    {
+      "start": "0x1421dad00",
+      "endExclusive": "0x1421db075",
+      "sha256": "4f9f67590a7704277831f80ff8ad74f767885b214e8668db524980f82c10603e"
+    },
+    {
+      "start": "0x1421de890",
+      "endExclusive": "0x1421dec20",
+      "sha256": "f12d1907cf7545a3ee92e922b2f6f06ccf06cc871bcaada12f6ddaf2c756b714"
+    },
+    {
+      "start": "0x14213f740",
+      "endExclusive": "0x14213f7f3",
+      "sha256": "e21eafb3a213d8335e59de594f7d123eded82bcc58991601183b59d16a97aeca"
+    },
+    {
+      "start": "0x14185ee90",
+      "endExclusive": "0x14185eee3",
+      "sha256": "394b216c76377eaf94d99f49da88a5f468b9c474b0a50c1227e224259ae0885a"
+    },
+    {
+      "start": "0x14137b790",
+      "endExclusive": "0x14137c928",
+      "sha256": "62a5503ec22c2e8b4510c97b8cfdd5d39f57464599d7cfe96fcf2961a96b42a4"
+    },
+    {
+      "start": "0x140f1fa40",
+      "endExclusive": "0x140f1facb",
+      "sha256": "ec71d0520e80688fd31a797f2447e5f088a4aace881e40145388927d3bf170d5"
+    },
+    {
+      "start": "0x14137b670",
+      "endExclusive": "0x14137b74d",
+      "sha256": "e378fbc9599f645309a3adebe1c35b93d8c1fd1f8641bcd8fd30e46171fa6bbc"
+    },
+    {
+      "start": "0x141380440",
+      "endExclusive": "0x14138048c",
+      "sha256": "7c59785a74e52df0cf05f5b6f09920d4c8121f7bbffaba9dea0720d7b80e1117"
+    },
+    {
+      "start": "0x14137b450",
+      "endExclusive": "0x14137b538",
+      "sha256": "6d606696d6f3f90f668688a7e3a353832af10301eed2dda8cac221d15ab3e0d1"
+    }
+  ],
+  "focusedFunctions": [
+    {
+      "start": "140f1fa40",
+      "endExclusive": "140f1facb",
+      "pseudocode": "\nundefined8 FUN_140f1fa40(longlong param_1,longlong param_2)\n\n{\n  longlong lVar1;\n  longlong lVar2;\n  ulonglong uVar3;\n  longlong lVar4;\n  longlong *plVar5;\n  longlong alStackX_10 [3];\n  \n  if (param_2 != 0) {\n    alStackX_10[0] = param_2;\n    uVar3 = FUN_1404b1640(alStackX_10);\n    lVar1 = *(longlong *)(param_1 + 0x28);\n    plVar5 = (longlong *)\n             (*(longlong *)(param_1 + 0x38) + (uVar3 & *(ulonglong *)(param_1 + 0x50)) * 0x10);\n    lVar4 = plVar5[1];\n    if (lVar4 == lVar1) {\nLAB_140f1faa1:\n      lVar4 = 0;\n    }\n    else {\n      lVar2 = *(longlong *)(lVar4 + 0x10);\n      while (param_2 != lVar2) {\n        if (lVar4 == *plVar5) goto LAB_140f1faa1;\n        lVar4 = *(longlong *)(lVar4 + 8);\n        lVar2 = *(longlong *)(lVar4 + 0x10);\n      }\n    }\n    if (lVar4 == 0) {\n      lVar4 = lVar1;\n    }\n    if (lVar4 != lVar1) {\n      return *(undefined8 *)(lVar4 + 0x18);\n    }\n  }\n  return 0;\n}\n\n"
+    },
+    {
+      "start": "14137b670",
+      "endExclusive": "14137b74d",
+      "pseudocode": "\n/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */\n\nvoid FUN_14137b670(longlong param_1,undefined8 param_2)\n\n{\n  char cVar1;\n  longlong lVar2;\n  undefined8 *puVar3;\n  longlong *plVar4;\n  undefined1 auStack_68 [32];\n  undefined1 auStack_48 [32];\n  undefined8 uStack_28;\n  undefined4 uStack_20;\n  undefined4 uStack_1c;\n  ulonglong uStack_18;\n  \n  uStack_18 = _DAT_143a783c0 ^ (ulonglong)auStack_68;\n  uStack_28 = param_2;\n  lVar2 = FUN_1404a2730(param_1 + 0xb0,auStack_48,param_2);\n  if (*(char *)(*(longlong *)(lVar2 + 0x10) + 0x19) == '\\0') {\n    cVar1 = FUN_1404a41d0(param_1 + 0xb0,param_2,*(longlong *)(lVar2 + 0x10) + 0x20);\n    if (cVar1 == '\\0') {\n      puVar3 = (undefined8 *)FUN_14137b450(param_1 + 0xb0,param_2);\n      plVar4 = (longlong *)FUN_140f1fa40(*(undefined8 *)(param_1 + 0x48),*puVar3);\n      if (plVar4 != (longlong *)0x0) {\n        (**(code **)(*plVar4 + 0x40))(plVar4);\n      }\n      puVar3 = (undefined8 *)FUN_1405f4970(param_1 + 0xb0,auStack_48,param_2);\n      uStack_28 = *puVar3;\n      uStack_20 = *(undefined4 *)(puVar3 + 1);\n      uStack_1c = *(undefined4 *)((longlong)puVar3 + 0xc);\n      FUN_141380260(param_1 + 0xb0,&uStack_28);\n    }\n  }\n  FUN_1404a6a10(param_2);\n  FUN_142118190(uStack_18 ^ (ulonglong)auStack_68);\n  return;\n}\n\n"
+    },
+    {
+      "start": "141380440",
+      "endExclusive": "14138048c",
+      "pseudocode": "\nundefined8 FUN_141380440(undefined8 param_1,undefined8 param_2)\n\n{\n  longlong *plVar1;\n  \n  plVar1 = (longlong *)FUN_142120260(param_2,0,0x143a896b8,0x143a93360,0);\n  plVar1 = (longlong *)(**(code **)(*plVar1 + 0x38))(plVar1);\n  (**(code **)(*plVar1 + 0x10))(plVar1,param_1);\n  return param_1;\n}\n\n"
+    },
+    {
+      "start": "14137b450",
+      "endExclusive": "14137b538",
+      "pseudocode": "\nlonglong FUN_14137b450(undefined8 *param_1,undefined8 param_2)\n\n{\n  undefined8 uVar1;\n  code *pcVar2;\n  char cVar3;\n  undefined8 *puVar4;\n  longlong lVar5;\n  undefined8 *puStack_38;\n  undefined8 *puStack_30;\n  undefined1 auStack_28 [16];\n  longlong lStack_18;\n  \n  FUN_1404a2730(param_1,auStack_28,param_2);\n  if (*(char *)(lStack_18 + 0x19) == '\\0') {\n    cVar3 = FUN_1404a41d0(param_1,param_2,lStack_18 + 0x20);\n    if (cVar3 == '\\0') goto LAB_14137b513;\n  }\n  if (param_1[1] == 0x333333333333333) {\n    FUN_1404a6880();\n    pcVar2 = (code *)swi(3);\n    lVar5 = (*pcVar2)();\n    return lVar5;\n  }\n  uVar1 = *param_1;\n  puStack_30 = (undefined8 *)0x0;\n  puStack_38 = param_1;\n  puVar4 = (undefined8 *)FUN_142117f10(0x50);\n  puStack_30 = puVar4;\n  FUN_1404a3300(puVar4 + 4,param_2);\n  puVar4[8] = 0;\n  puVar4[9] = 0;\n  *puVar4 = uVar1;\n  puVar4[1] = uVar1;\n  puVar4[2] = uVar1;\n  *(undefined2 *)(puVar4 + 3) = 0;\n  lStack_18 = FUN_1404a64f0(param_1,&puStack_38,puVar4);\nLAB_14137b513:\n  return lStack_18 + 0x40;\n}\n\n"
+    }
+  ],
+  "action": 6,
+  "observer": {
+    "tableVa": "0x1431c3f28",
+    "completeObjectOffset": 136,
+    "slot": 56,
+    "targetVa": "0x14213f740"
+  },
+  "messageId": 82,
+  "messageTableIndex": 9,
+  "messageHandlerCaseVa": "0x14137bdd9",
+  "payloadTypes": [
+    {
+      "typeDescriptorVa": "0x143a93360",
+      "name": ".?AVUserIO_VoidPtrMessageData@data@message@serato@@"
+    },
+    {
+      "typeDescriptorVa": "0x143a896b8",
+      "name": ".?AVUserIO_MessageData@data@message@serato@@"
+    }
+  ],
+  "finding": "Conditional DriverAPI action 6 emits UserIO message 0x52; its receiver performs keyed state/object handling through +0xb0 and a conditional virtual +0x40 call.",
+  "currentSl3AdmissionVerified": false,
+  "audioOpenVerified": false,
+  "dvsVerified": false,
+  "limits": [
+    "The actual SL3 stub still takes the discontinued support branch; action 6 is a support-1 counterfactual.",
+    "A notification is neither an ASIO open nor proof of a new blocking hardware/driver requirement.",
+    "The dynamic target and full semantics of virtual +0x40 are not identified.",
+    "No exhaustive call graph, runtime observer identity or complete application path is proven.",
+    "Original descriptor provision, component/handshake/audio selection and legitimate product/account behavior remain independent."
+  ],
+  "dependencies": {
+    "scripts/export-serato-driver-notification.py": "1707541d6c9bdbdf001ca61ab7f506ec377362b7060db43f65daece959883b38",
+    "scripts/export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+    "analysis/serato500-action6-ui-01.json": "a5072753efec6d9805fa684b116075158f4c0731df07ae56a73deb1730ea330b",
+    "scripts/ghidra/FocusedDecompile.java": "54383ff3d55f0bb97c2a2e1129fa712eb237c7a2126420c627bb08d8c33672d6"
+  }
+}

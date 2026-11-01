@@ -1,0 +1,129 @@
+{
+  "scope": "Verify remaining default resource readers and literal registration arguments, without running Serato.",
+  "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "registrations": [
+    {
+      "callVa": "0x14139bb6b",
+      "prefix": "userio",
+      "archiveArgument": "userio_resources.bin",
+      "constructionStart": "0x14139baeb",
+      "constructionBytesSha256": "0ebd345c4283499f7c5453ba143dcebac6c54973452d0887e3db0df6d6e3b37c",
+      "instructionCount": 28,
+      "registrationTarget": "0x1417763c0",
+      "inDefaultConstructor": true
+    },
+    {
+      "callVa": "0x14139bcb5",
+      "prefix": "components",
+      "archiveArgument": "dj_resources_components.bin",
+      "constructionStart": "0x14139bc1d",
+      "constructionBytesSha256": "3caf187914dbc72c40410a66283ffcf4452c6a8cc07b60b9ff2a69859184fb6e",
+      "instructionCount": 31,
+      "registrationTarget": "0x1417763c0",
+      "inDefaultConstructor": true
+    },
+    {
+      "callVa": "0x14139bddb",
+      "prefix": "manifest",
+      "archiveArgument": "dj_resources_effect_manifest.bin",
+      "constructionStart": "0x14139bd67",
+      "constructionBytesSha256": "2a027361a814f4daba660aa7d3cb72ff16c030a9cc3f4c525818a51b485df138",
+      "instructionCount": 24,
+      "registrationTarget": "0x1417763c0",
+      "inDefaultConstructor": true
+    },
+    {
+      "callVa": "0x14139bf14",
+      "prefix": "effects",
+      "archiveArgument": "dj_resources_effects.bin",
+      "constructionStart": "0x14139be8d",
+      "constructionBytesSha256": "0dcf8594582ca35f6bfc274beae5f0ba618635a9e6072a386b5cc9fdc77c470e",
+      "instructionCount": 28,
+      "registrationTarget": "0x1417763c0",
+      "inDefaultConstructor": true
+    },
+    {
+      "callVa": "0x14139c05a",
+      "prefix": "fade_effects",
+      "archiveArgument": "dj_resources_fade_effects.bin",
+      "constructionStart": "0x14139bfc6",
+      "constructionBytesSha256": "ed74f7b1b94b134211b610cf1573f825dda81f9ff47f88d51c70d1d46170f655",
+      "instructionCount": 31,
+      "registrationTarget": "0x1417763c0",
+      "inDefaultConstructor": true
+    },
+    {
+      "callVa": "0x14139c38b",
+      "prefix": "stems",
+      "archiveArgument": "bundle2.bin",
+      "constructionStart": "0x14139c319",
+      "constructionBytesSha256": "c3e187ddf6caa300acccee092c4614a71620a320790f84fda63d7acad34ff4fa",
+      "instructionCount": 23,
+      "registrationTarget": "0x1417765e0",
+      "inDefaultConstructor": true
+    },
+    {
+      "callVa": "0x14139c563",
+      "prefix": "analysis_beatgrid",
+      "archiveArgument": "bundle1.bin",
+      "constructionStart": "0x14139c4d8",
+      "constructionBytesSha256": "6c8fd26c346e870a2fb29c5695ad50b61da6ebf02d99b653cb9b4d333dffd2b7",
+      "instructionCount": 29,
+      "registrationTarget": "0x1417765e0",
+      "inDefaultConstructor": true
+    },
+    {
+      "callVa": "0x1415febe7",
+      "prefix": "userio_images",
+      "archiveArgument": "userio_image_resources.bin",
+      "constructionStart": "0x1415feb51",
+      "constructionBytesSha256": "43aeb55654e85927fe2b964c48e16908feb134a86861a9739b5f8b939b062a96",
+      "instructionCount": 31,
+      "registrationTarget": "0x1417763c0",
+      "inDefaultConstructor": false
+    }
+  ],
+  "defaultConstructor": "0x14139b980",
+  "defaultAppendCalls": [
+    "0x14139c0c9",
+    "0x14139c237",
+    "0x14139c3f9",
+    "0x14139c5c5"
+  ],
+  "extraReader": {
+    "decoratedType": ".?AVEffectResources@audio@serato@@",
+    "vtable": "0x142f345d0",
+    "listingSlot": "0x28",
+    "listingLeaf": "0x1404a4b40",
+    "listingAlwaysEmpty": true,
+    "baseTypes": [
+      {
+        "type": ".?AVEffectResources@audio@serato@@",
+        "memberDisplacement": 0,
+        "vbtableDisplacement": -1
+      },
+      {
+        "type": ".?AVResourceReader@resources@serato@@",
+        "memberDisplacement": 0,
+        "vbtableDisplacement": -1
+      }
+    ]
+  },
+  "qrcAppendedLaterAt": "0x140b0b18a",
+  "focusedReportSha256": "1e9cac0969a8d7e8c5925bfd829f791c1cbb50d23334f024ea66762468d66de8",
+  "copierSha256": "8f656ac3c1251da63452d5f150e02179dbea31ab429b6df8a134aff151def6d4",
+  "copierTestsPassed": 8,
+  "copierTestsSha256": "136cfe36aadded0325add9314c6cf39068375c6b749d7f9391edd10e9bdaa388",
+  "copierTestLogSha256": "0027a51e86867af51b4103f779610a50ebf1f4f938678404316593cf95a8152d",
+  "exporterSha256": "0c4c1e8ec8e4446320bffcd4d1c407e93469b653b0062443565de9ec1e14e7c9",
+  "applicationExecuted": false,
+  "applicationModified": false,
+  "externalDeviceRegistrationVerified": false,
+  "currentSeratoAdmissionVerified": false,
+  "limits": [
+    "Literal-copy interpretation covers only the selected straight-line construction blocks.",
+    "The reader ordering is static construction evidence, not live dispatch.",
+    "These checked direct sites do not exhaust indirect registrations or later runtime mutations.",
+    "No archive writer, descriptor injection, handshake fallback or account change was used."
+  ]
+}

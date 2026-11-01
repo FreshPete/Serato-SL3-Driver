@@ -1,0 +1,28 @@
+# PLA source GUID and file-size paths
+
+The inspected PLA service load path explains a distinction relevant to the failed logging-only test: the configured `SegmentMaxSize` can remain a PLA supervision setting without becoming ETW's native `MaximumFileSize`. The saved ETL reports the latter as zero. This is consistent with the static sequential path below; historical service execution is not proven.
+
+The [reproducible evidence](evidence/pla-source-properties-20261031.json) now checks nine complete unwind ranges, 67 instruction facts, eight public-symbol/vtable links and two imported calls in the same pinned Microsoft PLA image/PDB used by the [mode-path inspection](pla-image-mode-path.md). No PLA code is executed by the inspection.
+
+| Inspected link | Evidence |
+| --- | --- |
+| Collector circular setting | `HDataCollector::Load` fills object `+0x32` through collector slot `+0xa0`, bound to `get_LogCircular`. |
+| Set size setting | The same loader fills object `+0x74` through set slot `+0xe0`, the `SegmentMaxSize` getter. |
+| Native limit forwarding | `HTraceDataCollector::Load` at RVA `0x12736e` checks `+0x32`. Zero skips the call copying `+0x74` into the session's `put_SegmentMaxSize`. The nonzero route calls it at `0x12738d`. |
+| Native field | The session setter stores at `+0x90`; its getter supplies properties `+0x3c`, the x64 `EVENT_TRACE_PROPERTIES.MaximumFileSize` field. |
+| Sequential route | At `0x128523`, nonzero size and zero circular setting select virtual slot `+0x30`, bound in the HTraceDataCollector table to `HDataCollector::SetCycle`. This method's implementation and stopping guarantees are not established here. |
+| GUID | The collector GUID getter reads `+0xc0`. The base properties builder has a conditional path copying that GUID to properties `+0x18` (`Wnode.Guid`). Whether the original configured collector GUID reaches the service-created session remains unresolved. |
+| Service session construction | `HTraceDataCollector::Load` queries a separate TraceSession through slot `+0x1d8`. That Query has a path creating a new `_TraceDataCollector`; its constructor zeros GUID field `+0xc0`. |
+| Generated native GUID | The properties builder compares the collector GUID with a verified 16-byte zero constant. One ordinary conditional path calls the imported `RPCRT4!UuidCreate` with the address of `Wnode.Guid`. A nonzero GUID can instead follow the copy branch. |
+
+The fully decoded service Load routine contains no direct `mov rax,[rax+0x180]` or `+0x188` loads for the collector GUID getter/setter slots. The report inventories all instructions of this precise form. This is a narrow absence result: helper calls, other aliases, dynamic object types and service dispatch are not proved by it. Together with the fresh zero-GUID constructor and generated-GUID branch, it makes an internally generated session identity a specific candidate explanation for the live mismatch. It does not recover the discarded GUID or establish that this route actually executed.
+
+Microsoft documents [`UuidCreate`](https://learn.microsoft.com/en-us/windows/win32/api/rpcdce/nf-rpcdce-uuidcreate) as creating a new UUID. No GUID-generation function is executed by this exporter. A persisted service XML readback can retain the requested GUID while the separate inner session uses another one; the newly prepared readback must therefore be compared with native query metadata, not treated as proof of native GUID forwarding.
+
+The previously missing compile-only ABI check now passes with the installed **Visual Studio 2019 Build Tools** compiler `14.29.30133` and Windows SDK `10.0.19041.0`. The earlier attempt had checked the Enterprise installation, which lacks that compiler. Eighteen assertions in [trace-properties-layout.cpp](../scripts/trace-properties-layout.cpp) establish Windows x64 header sizes, the GUID/clock/limit/mode/loss/string offsets used by the query helper, the system-logger bit and query-only control code. The [compile record](evidence/windows-trace-properties-layout-20261031.json) binds source/compiler/header/object/log hashes. Compilation produced an x64 COFF object only; it did not link or execute a program, rebuild the production worker, or prove live query contents.
+
+Microsoft describes [`SegmentMaxSize`](https://learn.microsoft.com/en-us/windows/win32/api/pla/nf-pla-idatacollectorset-get_segmentmaxsize) as a limit PLA tries to observe, with some possible overshoot. ETW documents [`MaximumFileSize=0`](https://learn.microsoft.com/en-us/windows/win32/api/evntrace/ns-evntrace-event_trace_properties) as unlimited. These are separate contracts; serializing a nonzero PLA setting does not prove a native cap.
+
+The next attended source-only experiment needs the [preserved rejected query properties](image-source-session-query.md) and a record of the effective service-created collector configuration. It must keep any mismatched GUID rejected. The original query did not save its returned GUID, so neither the new static path nor the ETL can supply that missing observation. A timer- or capacity-controlled experiment still needs independently observed stopping; the SetCycle symbol alone supplies no such proof. Circular logging would recreate the overwrite risk found in the control trace and is not selected as a workaround.
+
+Run `.venv/Scripts/python.exe scripts/export-pla-source-properties.py` from the repository root. Regeneration verifies exact image/PDB hashes, symbol cache binding, unwind boundaries, full decoding and selected instructions/slots. This is conditional static evidence, not exhaustive data-flow analysis or an attestation of loaded service bytes. It performs no source lifecycle operation, USB access, privilege change or device test.

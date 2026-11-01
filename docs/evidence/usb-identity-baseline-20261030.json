@@ -1,0 +1,108 @@
+{
+  "scope": "One actual read-only libusb identity observation; no redirect/control/audio/application open",
+  "localRecord": "tests/results/local/usb-identity-baseline-20261030-01",
+  "validation": {
+    "valid": true,
+    "samples": 4,
+    "incomplete_samples": 0,
+    "changed_comparisons": 0,
+    "all_snapshots_complete": true,
+    "started_utc": "2026-10-30T23:28:51.928105+00:00",
+    "closed_utc": "2026-10-30T23:28:58.034046+00:00",
+    "application_coexistence_verified": false,
+    "device_recovery_verified": false
+  },
+  "cadence": {
+    "samples": 4,
+    "completeSamples": 4,
+    "requestedPostCallSleepSeconds": 0.25,
+    "hostEnumerationDurationSeconds": {
+      "count": 4,
+      "minimum": 1.3256457000024966,
+      "maximum": 1.3444901000002574,
+      "mean": 1.3360619500008397
+    },
+    "sampleReturnGapSeconds": {
+      "count": 3,
+      "minimum": 1.5761228000010306,
+      "maximum": 1.595086999997875,
+      "mean": 1.5854692666665262
+    },
+    "lastLoopElapsedSeconds": 6.095667099998536,
+    "guaranteedTransientDetectionSeconds": null,
+    "physicalAudioClockMeasured": false
+  },
+  "sampledIdentity": {
+    "vendor": 7365,
+    "product": 1,
+    "revision": 0,
+    "bus": 3,
+    "address": 1
+  },
+  "sampleTiming": [
+    {
+      "enteredLoopSeconds": 0.00010379999730503187,
+      "returnedLoopSeconds": 1.3392592999989574,
+      "reportedCallSeconds": 1.3391692000004696
+    },
+    {
+      "enteredLoopSeconds": 1.5897363999974914,
+      "returnedLoopSeconds": 2.915382099999988,
+      "reportedCallSeconds": 1.3256887999996252
+    },
+    {
+      "enteredLoopSeconds": 3.1659789999976056,
+      "returnedLoopSeconds": 4.510469099997863,
+      "reportedCallSeconds": 1.344519100002799
+    },
+    {
+      "enteredLoopSeconds": 4.760710599999584,
+      "returnedLoopSeconds": 6.095667099998536,
+      "reportedCallSeconds": 1.3349806000005628
+    }
+  ],
+  "child": {
+    "started": true,
+    "pid": 38240,
+    "exit_code": 0,
+    "timed_out": false,
+    "forced_termination": false,
+    "child_exited": true,
+    "error": null,
+    "elapsed_seconds": 6.40478400000211
+  },
+  "requestedObservationSeconds": 5,
+  "producerSha256": {
+    "observer": "238aa772ef466832a6d63b020eab357b014a2eb998a1fb2662dd1a988c6e43ea",
+    "supervisor": "d36c13b7063fec9bc482e61ec1131f53b9f1e5d224656abda1ee356e4144b8a4",
+    "installedLibusb": "68883bc3254dbb4129cf68b49f9efe149cd50fd15e990c58a94a53d3ed4f7151"
+  },
+  "files": {
+    "supervisor.json": "4872559e6b8b0fa27531a861630709f7992fc044beeeff7bd6efd2e90b726b93",
+    "observations.jsonl": "5166d2a4874900c775c92fd02a74aaf5d74f89486f8757a650b49e2d0256be71",
+    "post-state.json": "0a9afc1cf14e6993ebf89cdb31ae7505bce4ef70ccdbf9d8a3dab60e6d2989ca"
+  },
+  "postState": {
+    "problemCode": 39,
+    "service": "strmdrv",
+    "inf": "oem136.inf",
+    "testProcesses": 0
+  },
+  "secureBootAttestedDuringRun": false,
+  "fullRecoveryAttested": false,
+  "redirectCoexistenceVerified": false,
+  "seratoCoexistenceVerified": false,
+  "limits": [
+    "Unchanged returned identity does not exclude unsampled changes or libusb caching",
+    "Snapshot duration includes all host enumeration work; no individual API bottleneck attribution",
+    "Requested interval is sleep after a synchronous call, not achieved polling cadence",
+    "Revision word 0 is USB descriptor data, not an identified firmware version",
+    "Post state is the failed original driver baseline, not a repaired Windows audio driver",
+    "No USB-stack/WPP trace, ownership handoff, rate/control change or audio/DVS validation"
+  ],
+  "softwareChecks": {
+    "fullPythonTests": 109,
+    "logSha256": "09b46dc000535f216ee066eab10e26fd232087f6dfb4aa7d43cca5b30e279eb6",
+    "cadenceTestSourceSha256": "17b5e3e333a8b69a9f24d9102873d2199e5c9466ad147924681b20acd9fbf983"
+  }
+}

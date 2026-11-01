@@ -1,0 +1,94 @@
+{
+  "utc": "2026-10-27T01:46:30.888543+00:00",
+  "scope": "Real Windows child-process/job supervision tests; no USB or audio session",
+  "builds": [
+    {
+      "configuration": "Release",
+      "utc": "2026-10-27T01:45:01.9321092Z",
+      "ctestTests": [
+        "sl3_core_tests",
+        "sl3_playback_tests",
+        "sl3_audio_bridge_tests",
+        "sl3_duplex_tests",
+        "sl3_asio_buffer_tests",
+        "sl3_asio_com_tests",
+        "sl3_worker_process_tests",
+        "sl3_usbdk_plan",
+        "sl3_usbdk_rejects_modes",
+        "sl3_usbdk_rejects_duplex_capture",
+        "sl3_capture_plan",
+        "sl3_capture_rejects_modes"
+      ],
+      "workerProcess": {
+        "testsPassed": true,
+        "librarySha256": "002C0E40658921AAE95563B64215566382A11D89BA00ADF74B3A360D4BEB4C1F",
+        "fixtureSha256": "875A54983055C8A85C7047DDBA35DD2C2DEB64BAEB61D56698A23FF4A4D60C89",
+        "testExecutableSha256": "846A9D587B98755096A9F2CA05CB3687917610172E14CCC8C85F22EE42916F2E",
+        "hardwareIntegrated": false,
+        "ipcImplemented": false
+      },
+      "buildScriptSha256": "D6D0BC5C42369B3242691078050747AEF2FB94E0DAE6C51AE4CFEFF48155E2F0"
+    },
+    {
+      "configuration": "Debug",
+      "utc": "2026-10-27T01:45:07.7463463Z",
+      "ctestTests": [
+        "sl3_core_tests",
+        "sl3_playback_tests",
+        "sl3_audio_bridge_tests",
+        "sl3_duplex_tests",
+        "sl3_asio_buffer_tests",
+        "sl3_asio_com_tests",
+        "sl3_worker_process_tests",
+        "sl3_usbdk_plan",
+        "sl3_usbdk_rejects_modes",
+        "sl3_usbdk_rejects_duplex_capture",
+        "sl3_capture_plan",
+        "sl3_capture_rejects_modes"
+      ],
+      "workerProcess": {
+        "testsPassed": true,
+        "librarySha256": "736BA8774478726F97753728D47BD0108BCCB7CA7CB256C7ADD53F7F47BB8B2E",
+        "fixtureSha256": "69946A87DABE665ACE9A5FEDB05535F652C421D68A6413FD7B8555C34EF6E374",
+        "testExecutableSha256": "6AC5203B56425DE2B49D567F5FAC21EF98BB635B34BA5D9D022E1C49A1BD2098",
+        "hardwareIntegrated": false,
+        "ipcImplemented": false
+      },
+      "buildScriptSha256": "D6D0BC5C42369B3242691078050747AEF2FB94E0DAE6C51AE4CFEFF48155E2F0"
+    }
+  ],
+  "sourceSha256": {
+    "src/windows/worker_process.hpp": "ec8e92629ba73694fff28b661288177eb20b96cef4c07595190cd34bb2a76e05",
+    "src/windows/worker_process.cpp": "4191f7614d8df20c47a317c2b30942874919ad125d6da0297c4f0137233be0e5",
+    "tests/native/worker_fixture.cpp": "ddee0b7ddd9df1fb6f9e84b86729d85035a55ee78bb270f947ecf38f962a57ad",
+    "tests/native/worker_process_tests.cpp": "c643732877470f115443c27afff9659a71adbb342690e20920ba51c87659b66f",
+    "CMakeLists.txt": "99dbefd091ab67c1e9e24a3e8643e4f2bb0f1adaa2d00ebb192638d6cd343eaa",
+    "scripts/build-native.ps1": "d6d0bc5c42369b3242691078050747aef2fb94e0dae6c51ae4cfeff48155e2f0"
+  },
+  "additionalChecks": {
+    "sdkFreeTestsPassed": 10,
+    "sdkFreePathDeliberatelyAbsent": true,
+    "ownerDeathAndDescendantsTested": true,
+    "malformedImageCreationRejected": true,
+    "callerThreadErrorModeRestored": true,
+    "exitCode259HandledAsExited": true,
+    "noFixtureProcessesRemain": true
+  },
+  "readOnlyPreflight": {
+    "recordSha256": "c0ebb216b29ff8015cdeeddd4921dace0d7b85f7fb07464bb12e455dcf55a4ce",
+    "driverAlreadyInstalled": false,
+    "helperLoaded": false,
+    "audioSubmissions": 0,
+    "secureBoot": {
+      "known": false,
+      "reason": "Unable to set proper privileges. Access was denied."
+    }
+  },
+  "limits": [
+    "IPC, continuous transport, callbacks and shared audio buffers are not implemented here",
+    "This component is not connected to the ASIO DLL",
+    "Job object accounting is conservative and does not prove USB/driver or callback retirement",
+    "No driver install, registration, security-policy change or audio transfer occurred",
+    "Assign/resume API-failure branches are implemented but not fault-injected in these tests"
+  ]
+}

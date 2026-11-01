@@ -1,0 +1,50 @@
+{
+  "scope": "Actual elevated source-only batch and rejected live query; no SL3/audio test",
+  "batchLaunched": true,
+  "batchProcessElevated": true,
+  "batchSuccessful": false,
+  "sourceDiagnosticSuccessful": false,
+  "committedConfigurationAccepted": true,
+  "configuredSessionGuid": "0fd7db65-c030-4a1b-a8de-bd83243b72f0",
+  "observedNativeSessionGuid": "902aa381-e9ba-452f-b3b1-28929ff30b6f",
+  "nativeGuidDiffersFromConfigured": true,
+  "nativeNameAndPrivateOutputMatch": true,
+  "nativeLogFileMode": "0x02800000",
+  "nativeMaximumFileSizeMiB": 0,
+  "nativeClockType": 1,
+  "sampledLossCountersZero": true,
+  "supervisorStoppedSource": true,
+  "collectorDeleted": true,
+  "independentAfterQueryAbsent": true,
+  "independentTimedExpiryVerified": false,
+  "readinessAdmission": false,
+  "physicalAudioVerified": false,
+  "etls": [
+    {
+      "bytes": 11599872,
+      "sha256": "271f53b4f125656f280815ea40d136fd3e3cac2d042c40ae88a50d1100d12276"
+    }
+  ],
+  "finding": "Persisted PLA configuration retains the requested GUID; the named native session returned a different GUID. Cleanup and the new launcher records worked.",
+  "limits": [
+    "Only one native live GUID observation was captured; stability and the generating call were not traced.",
+    "This is consistent with the inspected service GUID-generation path, not proof that UuidCreate executed.",
+    "The strict failed source result remains unchanged; no identity acceptance policy is relaxed here.",
+    "Zero native file limit is not a hard cap; supervisor stop does not prove timer expiry.",
+    "No kernel handoff, SL3 reopen, analogue audio, current-Serato or DVS result follows."
+  ],
+  "dependencies": {
+    "analysis/logging-batch-20261101-ready/batch.json": "b638ba75fb4df909599ace097bf0b8f4c3a523ba08b194239cc53faef20bf1fd",
+    "analysis/logging-batch-20261101-ready/batch-result.json": "79578820f29871229a38cc2add14784b2be41fe6ada5c5ce8c39d9a4adefcb7c",
+    "analysis/logging-batch-20261101-ready/launch-28acdf4ac30b4f73b2a37a10a6be59a7.json": "ecf4771a2faa6291ae574a9e615b8ae8dc0141bd91e1efb9aba28e400bc375a7",
+    "analysis/logging-batch-20261101-ready/child-28acdf4ac30b4f73b2a37a10a6be59a7-exit.json": "b373725d317fd4850e40325dcbe74f9f4782e21632d9ca5d1f218cd178de7ca8",
+    "analysis/logging-batch-20261101-ready/child-28acdf4ac30b4f73b2a37a10a6be59a7.log": "79578820f29871229a38cc2add14784b2be41fe6ada5c5ce8c39d9a4adefcb7c",
+    "tests/results/local/logging-batch-20261101-ready-1/run.json": "71876b2ccfe4fdadc0a8cfe31df0a9752710c798558894e5e255b493504a9c8a",
+    "tests/results/local/logging-batch-20261101-ready-1/start.json": "e218387d6dfdda29ae423c4b72ee7545aaf49cca80ceffb817e159cb5c834937",
+    "tests/results/local/logging-batch-20261101-ready-1/start.json.committed.json": "3ac22b361ae2e7a68db0419bdf1ffe0f54118b5352215ed235b4958c1c2e7505",
+    "tests/results/local/logging-batch-20261101-ready-1/sample-0.json": "9e579f87d765a710d29edf1d9e650a925e9bf1d48cbaf36023294c4308dce486",
+    "tests/results/local/logging-batch-20261101-ready-1/cleanup.json": "32d72f34e77a640043fef5ac1eef0348dbb9d7281937f4a6c7a4a7462ca9a9cf",
+    "tests/results/local/logging-batch-20261101-ready-1/after.json": "a4d8d4ec901185f4af477005c0f1798ef1429c46b237bca328044930cba028c2",
+    "scripts/export-attended-logging-20261101.py": "09398233253fc639e484d46309adf2efb9a763c46d572ab367972e3f7afbe9da"
+  }
+}

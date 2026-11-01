@@ -1,0 +1,247 @@
+{
+  "scope": "Static object provenance for current action-6 notification; no admitted SL3 session",
+  "binarySha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "priorRoutingEvidenceSha256": "bdfbacc0e2f509b267f2a04ab35c8461a7f1913bb34c63d7c980e24726493ccd",
+  "receiverType": "DeviceNotificationController",
+  "storedDependency": {
+    "type": "NotificationCenter",
+    "receiverOffset": "0x48",
+    "constructorRegister": "r8",
+    "engineEntryRspOffset": "0x60",
+    "engineExplicitArgument": 11,
+    "rttiSignatureSha256": "00eca52d672bbeb45bd93c9a8f8da420cbf44e53f7d515615003969cb234e3f5"
+  },
+  "checkedNotificationSlot": "0x40",
+  "baseImplementation": "0x140f25fc0",
+  "qmlSecondaryThunk": "0x1409c5f00",
+  "checkedCallbackBoolean": false,
+  "baseVirtualEventNumber": 9,
+  "contrastBaseSlot": "0x48",
+  "contrastSlotCallbackBoolean": true,
+  "contrastVirtualEventNumber": 10,
+  "classes": [
+    {
+      "tableVa": "0x142f2b598",
+      "locatorVa": "0x143385818",
+      "completeObjectOffset": 0,
+      "type": ".?AVDeviceNotificationController@dj@serato@@",
+      "hierarchyRva": 54024256
+    },
+    {
+      "tableVa": "0x142f29b28",
+      "locatorVa": "0x143384b48",
+      "completeObjectOffset": 0,
+      "type": ".?AVEngine@engine@dj@serato@@",
+      "hierarchyRva": 54020976
+    },
+    {
+      "tableVa": "0x142eb2078",
+      "locatorVa": "0x1433444b0",
+      "completeObjectOffset": 0,
+      "type": ".?AVNotificationCenter@notification@serato@@",
+      "hierarchyRva": 53210712
+    },
+    {
+      "tableVa": "0x142eb2828",
+      "locatorVa": "0x1433449d0",
+      "completeObjectOffset": 0,
+      "type": ".?AVNotification@notification@serato@@",
+      "hierarchyRva": 53212144
+    },
+    {
+      "tableVa": "0x142b828c0",
+      "locatorVa": "0x1432bf518",
+      "completeObjectOffset": 16,
+      "type": ".?AVQmlNotification@notification@serato@@",
+      "hierarchyRva": 53211992
+    }
+  ],
+  "qmlBaseRecords": [
+    {
+      "type": ".?AVQmlNotification@notification@serato@@",
+      "memberDisplacement": 0,
+      "vbtableDisplacement": -1,
+      "vdisp": 0
+    },
+    {
+      "type": ".?AVQObject@@",
+      "memberDisplacement": 0,
+      "vbtableDisplacement": -1,
+      "vdisp": 0
+    },
+    {
+      "type": ".?AVNotification@notification@serato@@",
+      "memberDisplacement": 16,
+      "vbtableDisplacement": -1,
+      "vdisp": 0
+    },
+    {
+      "type": ".?AVObserver@ProgressModel@notification@serato@@",
+      "memberDisplacement": 16,
+      "vbtableDisplacement": -1,
+      "vdisp": 0
+    },
+    {
+      "type": ".?AVRunningItemsObserver@ProgressModel@notification@serato@@",
+      "memberDisplacement": 24,
+      "vbtableDisplacement": -1,
+      "vdisp": 0
+    }
+  ],
+  "instructionFacts": [
+    {
+      "va": "0x14137b164",
+      "bytes": "488d052d04bb01",
+      "assembly": "lea rax, [rip + 0x1bb042d]"
+    },
+    {
+      "va": "0x1413707b5",
+      "bytes": "488d056c93bb01",
+      "assembly": "lea rax, [rip + 0x1bb936c]"
+    },
+    {
+      "va": "0x14137b155",
+      "bytes": "498bf8",
+      "assembly": "mov rdi, r8"
+    },
+    {
+      "va": "0x14137b172",
+      "bytes": "49897e48",
+      "assembly": "mov qword ptr [r14 + 0x48], rdi"
+    },
+    {
+      "va": "0x141370760",
+      "bytes": "488bc4",
+      "assembly": "mov rax, rsp"
+    },
+    {
+      "va": "0x14137077f",
+      "bytes": "488da8e8feffff",
+      "assembly": "lea rbp, [rax - 0x118]"
+    },
+    {
+      "va": "0x141370f9f",
+      "bytes": "4c8bbd78010000",
+      "assembly": "mov r15, qword ptr [rbp + 0x178]"
+    },
+    {
+      "va": "0x141370fa6",
+      "bytes": "4d8bc7",
+      "assembly": "mov r8, r15"
+    },
+    {
+      "va": "0x141370faf",
+      "bytes": "e88ca10000",
+      "assembly": "call 0x14137b140"
+    },
+    {
+      "va": "0x14137b6de",
+      "bytes": "488b10",
+      "assembly": "mov rdx, qword ptr [rax]"
+    },
+    {
+      "va": "0x14137b6e1",
+      "bytes": "488b4e48",
+      "assembly": "mov rcx, qword ptr [rsi + 0x48]"
+    },
+    {
+      "va": "0x14137b6e5",
+      "bytes": "e85643baff",
+      "assembly": "call 0x140f1fa40"
+    },
+    {
+      "va": "0x14137b6f5",
+      "bytes": "ff5240",
+      "assembly": "call qword ptr [rdx + 0x40]"
+    },
+    {
+      "va": "0x140f25fc9",
+      "bytes": "488b4918",
+      "assembly": "mov rcx, qword ptr [rcx + 0x18]"
+    },
+    {
+      "va": "0x140f25fcd",
+      "bytes": "e87ef9fdff",
+      "assembly": "call 0x140f05950"
+    },
+    {
+      "va": "0x140f25fdb",
+      "bytes": "c644243000",
+      "assembly": "mov byte ptr [rsp + 0x30], 0"
+    },
+    {
+      "va": "0x140f25fe8",
+      "bytes": "ff5010",
+      "assembly": "call qword ptr [rax + 0x10]"
+    },
+    {
+      "va": "0x140f25fee",
+      "bytes": "ba09000000",
+      "assembly": "mov edx, 9"
+    },
+    {
+      "va": "0x140f25ff6",
+      "bytes": "ff5078",
+      "assembly": "call qword ptr [rax + 0x78]"
+    },
+    {
+      "va": "0x140f26005",
+      "bytes": "c644243000",
+      "assembly": "mov byte ptr [rsp + 0x30], 0"
+    },
+    {
+      "va": "0x140f2601c",
+      "bytes": "ff5010",
+      "assembly": "call qword ptr [rax + 0x10]"
+    },
+    {
+      "va": "0x140f279bb",
+      "bytes": "c644243001",
+      "assembly": "mov byte ptr [rsp + 0x30], 1"
+    },
+    {
+      "va": "0x140f279ce",
+      "bytes": "ba0a000000",
+      "assembly": "mov edx, 0xa"
+    },
+    {
+      "va": "0x140f279e5",
+      "bytes": "c644243001",
+      "assembly": "mov byte ptr [rsp + 0x30], 1"
+    },
+    {
+      "va": "0x1409c5f00",
+      "bytes": "e9bb005600",
+      "assembly": "jmp 0x140f25fc0"
+    }
+  ],
+  "focusedConstructors": [
+    {
+      "start": "0x14137b140",
+      "endExclusive": "0x14137b3df"
+    },
+    {
+      "start": "0x141370760",
+      "endExclusive": "0x141371957"
+    }
+  ],
+  "runtimeDispatchObserved": false,
+  "audioAdmissionVerified": false,
+  "licensingMeaningAssigned": false,
+  "currentSl3ConnectionVerified": false,
+  "limits": [
+    "The original unchanged SL3 still selects support 2; action 6 is conditional on a different support branch.",
+    "Checked base and QML implementations do not enumerate every possible runtime subclass or callback consequence.",
+    "A Boolean callback value is not named an audio/driver/licensing result or a proven user-visible operation.",
+    "This identifies notification-object handling; genuine descriptor, handshake, transport and DVS admission remain separate."
+  ],
+  "sources": {
+    "scripts/export-serato-notification-object.py": "04b94691def19d70bced62fb77d38a9a95d0a97f3e5200b10dbe3d1d08da958c",
+    "scripts/export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+    "analysis/serato500-device-notification-ctor-20261101.json": "d4cc80a6c68797710bca7177b1bb1e90bf8e845abe45e415730df9ed9f98d282",
+    "docs/evidence/serato500-driver-notification.json": "bdfbacc0e2f509b267f2a04ab35c8461a7f1913bb34c63d7c980e24726493ccd",
+    "scripts/export-serato-driver-notification.py": "1707541d6c9bdbdf001ca61ab7f506ec377362b7060db43f65daece959883b38",
+    "analysis/serato500-device-notification-ctor-20261101.log": "c6a47f553947651961ad2461fa1ea6ee29c8cbbbba090a3a07ea7c185d0bc89a",
+    "analysis/serato500-notification-types-20261101.json": "4899adc4352f0b7815a015916eab064a724f90aa4ff79afff15c227d66410839"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "utc": "2026-10-26T22:02:17.6011511Z",
+  "infSha256": "49024cdfa21c0f501ab8105bf9a719fe249da42baaa469f85160316a91202e28",
+  "catSha256": "e59dbec113cd0c908c6bcacbdbd198c483f5ca87439bc63277ec184effb124ab",
+  "inf2catSha256": "82c302fc9069783674b51665ce80e769f8500db7fc737a4b8a3773c521950b86",
+  "target": "10_GE_X64",
+  "exitCode": 0,
+  "catalogueSignature": "NotSigned",
+  "interpretation": "Inf2Cat signability/catalogue generation passed. Not signed, WHCP certified, installed or hardware validated."
+}

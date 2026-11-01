@@ -1,0 +1,40 @@
+{
+  "scope": "Verify native redirect-overlap exclusion software evidence; no device/helper access.",
+  "nativeTestsPassed": 48,
+  "manifestSha256": "d7d0b783c5c6c87093bc92988b715dab50f6d06589156f0b9ad90ee990ac04c7",
+  "ctestLogSha256": "16b144ed4f8c3d891389e5225a90004d23c72e03996b4ab9bae7d34fdbb8b31e",
+  "actualGuardTestLogSha256": "2221881e447ea32d7d1635d4e651f7af0ad19115f05ece5fa8f7ee3ce41952dc",
+  "guardTestExecutableSha256": "e5522f792695b49d136f1a00130dae0cd85a3185d4c45fb903b3c6013e50b0bb",
+  "workerSha256": "1c99bbdd4ebf2e320d8eaf9f3577c3f980f38b988f8b66293a166147cb95f8e7",
+  "guardHeaderSha256": "0f98d35d3f65d0cb3b34311cf6d7d9f703750b5653950ebbf65857cff4b7648c",
+  "guardTestsSourceSha256": "6b487c1d304111b4f604eb1367679702e8001aae08c57c632b3aa0da3ae26c70",
+  "preflightSha256": "c27214e77e15295bbfeab6cd0caf1f03d1025dca2bdb7785c76707828ab38309",
+  "supersededPlanAbortSha256": "a9ab33165e77886522bc5bc5c46d8402f4696356531a3e8638dd5c8a2a2dbf0d",
+  "supersededPlanRefusalSha256": "22116218c872ec78bbae186c49ae15bc77389bf019839c5877c5916e2d164a5c",
+  "guardContract": {
+    "softwareTestsPassed": true,
+    "testExecutableSha256": "E5522F792695B49D136F1A00130DAE0CD85A3185D4C45FB903B3C6013E50B0BB",
+    "nativeOpenGuardConnected": true,
+    "globalObject": true,
+    "nonWaiting": true,
+    "retainedAcrossAudioStop": true,
+    "physicalOverlapTested": false,
+    "kernelDetachmentVerified": false,
+    "safeSuccessiveAcquisitionVerified": false
+  },
+  "secureBootFreshRead": {
+    "known": false,
+    "reason": "Unable to set proper privileges. Access was denied."
+  },
+  "exporterSha256": "a3fbb90cc5c167ad2e12f0ed58d6dc596999eb1c06d44e9e611b25560cf26bce",
+  "newPhysicalDeviceOperation": false,
+  "physicalOverlapTested": false,
+  "safeSuccessiveAcquisitionVerified": false,
+  "currentSeratoAdmissionVerified": false,
+  "limits": [
+    "Excludes overlapping cooperating workers while the existence handle survives.",
+    "Object destruction, helper close and process exit are not USB recovery attestations.",
+    "No mixed-integrity, other-user, other-session or native-USB overlap test was run.",
+    "Normal-token preflight could not freshly query Secure Boot; policies were not changed."
+  ]
+}

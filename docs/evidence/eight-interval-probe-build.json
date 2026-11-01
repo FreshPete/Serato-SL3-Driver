@@ -1,0 +1,21 @@
+{
+  "scope": "Eight/64-interval probe software checkpoint; physical eight-interval success not inferred",
+  "releaseTests": 33,
+  "debugTests": 33,
+  "supportedSingleOpenIntervals": [
+    8,
+    64
+  ],
+  "nativeWorkerSha256": "F29720369D443F7EC9B6EE4BF9C20A766F174EA02879B0727E28576A2077AB66",
+  "probeSha256": "DF6BE7F2BC98977F24805D593AFB752EF705DCC4527BFAA3DB69C7A891BD7393",
+  "nativeWorkerUnchanged": true,
+  "physicalEightIntervalVerified": false,
+  "files": {
+    "src/windows/host_probe_main.cpp": "080415469D866AD636DD4F7C3F335AE3F97EE341A4887AC9F7881B9DD1460F6A",
+    "scripts/test-host-probe.py": "56C976191F8E6E46199699D81E5DB6EBE9A1245DDFB41CA73606F8265F71A223",
+    "scripts/test-host-probe-traced.ps1": "AF20F4684B26AF7928A3D1C6A51D52807FD54A5C2925157C4011B4D8DD46B9A3",
+    "scripts/build-native.ps1": "3C016583DD62030F62D7B1A2166408CD617F7D42977DE3CEB4F7B2DB6252E762",
+    "analysis/eight-interval-build-release.log": "2B05C5B4321864C0D9E7B391A1D02D1DEDA336E74F735CE8BDA4E29377FA8C30",
+    "analysis/eight-interval-build-debug.log": "2956A17034DD7AB58C08CB1DD10B0F8FC51A4CE0F38CEFFF652F7B048804922A"
+  }
+}

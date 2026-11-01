@@ -1,0 +1,824 @@
+[
+  {
+    "path": "artifacts\\extracted\\rane-mac\\tree\\Library\\PrivilegedHelperTools\\Sl3SettingsService",
+    "sha256": "d84b4aa0a59283204b8c5b6e3c9ad0c373724df6e4922f91a0b1cc1b269e187e",
+    "slices": [
+      {
+        "offset": "0x0",
+        "bytes": 10948,
+        "cpu": "0x1000007",
+        "architecture": "x86_64",
+        "filetype": 2,
+        "libraries": [
+          {
+            "command": "0xc",
+            "name": "/Library/Frameworks/Sl3Api.framework/Versions/A/Sl3Api"
+          },
+          {
+            "command": "0xc",
+            "name": "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation"
+          },
+          {
+            "command": "0xc",
+            "name": "/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit"
+          },
+          {
+            "command": "0xc",
+            "name": "/usr/lib/libc++.1.dylib"
+          },
+          {
+            "command": "0xc",
+            "name": "/usr/lib/libSystem.B.dylib"
+          },
+          {
+            "command": "0xc",
+            "name": "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation"
+          },
+          {
+            "command": "0xc",
+            "name": "/usr/lib/libobjc.A.dylib"
+          }
+        ],
+        "sl3_symbols": [
+          {
+            "name": "_sl3_close",
+            "value": "0x0",
+            "type": 1
+          },
+          {
+            "name": "_sl3_get_buffer_millisecs",
+            "value": "0x0",
+            "type": 1
+          },
+          {
+            "name": "_sl3_set_buffer_millisecs",
+            "value": "0x0",
+            "type": 1
+          }
+        ],
+        "sl3_symbol_matches_total": 5,
+        "projection_note": "Only plain _sl3_ API symbols retained here; complete substring matches retained in ignored analysis/rane-mac-macho-full.json."
+      }
+    ],
+    "signature_status": "Not verified; Windows structural inspection is not codesign/pkgutil validation"
+  },
+  {
+    "path": "artifacts\\extracted\\rane-mac\\tree\\Library\\PreferencePanes\\SL 3 Audio Control Panel.prefPane\\Contents\\MacOS\\SL 3 Audio Control Panel",
+    "sha256": "10de43f2b922f6b2a6f6f219407383f914f1c13dcf0c4f156b7765bf64adbc5e",
+    "slices": [
+      {
+        "offset": "0x0",
+        "bytes": 101252,
+        "cpu": "0x1000007",
+        "architecture": "x86_64",
+        "filetype": 8,
+        "libraries": [
+          {
+            "command": "0xc",
+            "name": "/Library/Frameworks/Sl3Api.framework/Versions/A/Sl3Api"
+          },
+          {
+            "command": "0xc",
+            "name": "/System/Library/Frameworks/Cocoa.framework/Versions/A/Cocoa"
+          },
+          {
+            "command": "0xc",
+            "name": "/System/Library/Frameworks/PreferencePanes.framework/Versions/A/PreferencePanes"
+          },
+          {
+            "command": "0xc",
+            "name": "/usr/lib/libc++.1.dylib"
+          },
+          {
+            "command": "0xc",
+            "name": "/usr/lib/libSystem.B.dylib"
+          },
+          {
+            "command": "0xc",
+            "name": "/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit"
+          },
+          {
+            "command": "0xc",
+            "name": "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation"
+          },
+          {
+            "command": "0xc",
+            "name": "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation"
+          },
+          {
+            "command": "0xc",
+            "name": "/usr/lib/libobjc.A.dylib"
+          }
+        ],
+        "sl3_symbols": [
+          {
+            "name": "_sl3_close",
+            "value": "0x0",
+            "type": 1
+          },
+          {
+            "name": "_sl3_get_audio_controls",
+            "value": "0x0",
+            "type": 1
+          },
+          {
+            "name": "_sl3_get_buffer_millisecs",
+            "value": "0x0",
+            "type": 1
+          },
+          {
+            "name": "_sl3_get_firmware_embedded_version",
+            "value": "0x0",
+            "type": 1
+          },
+          {
+            "name": "_sl3_get_firmware_version",
+            "value": "0x0",
+            "type": 1
+          },
+          {
+            "name": "_sl3_is_C0_device",
+            "value": "0x0",
+            "type": 1
+          },
+          {
+            "name": "_sl3_open",
+            "value": "0x0",
+            "type": 1
+          },
+          {
+            "name": "_sl3_set_audio_controls",
+            "value": "0x0",
+            "type": 1
+          },
+          {
+            "name": "_sl3_set_buffer_millisecs",
+            "value": "0x0",
+            "type": 1
+          },
+          {
+            "name": "_sl3_set_phonoswitch_callback",
+            "value": "0x0",
+            "type": 1
+          },
+          {
+            "name": "_sl3_set_thrustate_callback",
+            "value": "0x0",
+            "type": 1
+          },
+          {
+            "name": "_sl3_set_update_firmware_from_embedded",
+            "value": "0x0",
+            "type": 1
+          }
+        ],
+        "sl3_symbol_matches_total": 332,
+        "projection_note": "Only plain _sl3_ API symbols retained here; complete substring matches retained in ignored analysis/rane-mac-macho-full.json."
+      }
+    ],
+    "signature_status": "Not verified; Windows structural inspection is not codesign/pkgutil validation"
+  },
+  {
+    "path": "artifacts\\extracted\\rane-mac\\tree\\Library\\Frameworks\\Sl3Api.framework\\Versions\\A\\Sl3Api",
+    "sha256": "ec9d9657b640427a894ad542c1032e8eec8ec061b32f954fd40a4bc668185b0c",
+    "slices": [
+      {
+        "offset": "0x1000",
+        "bytes": 100960,
+        "cpu": "0x1000007",
+        "architecture": "x86_64",
+        "filetype": 6,
+        "libraries": [
+          {
+            "command": "0xd",
+            "name": "/Library/Frameworks/Sl3Api.framework/Versions/A/Sl3Api"
+          },
+          {
+            "command": "0xc",
+            "name": "/System/Library/Frameworks/Cocoa.framework/Versions/A/Cocoa"
+          },
+          {
+            "command": "0xc",
+            "name": "/System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio"
+          },
+          {
+            "command": "0xc",
+            "name": "/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit"
+          },
+          {
+            "command": "0xc",
+            "name": "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation"
+          },
+          {
+            "command": "0xc",
+            "name": "/usr/lib/libc++.1.dylib"
+          },
+          {
+            "command": "0xc",
+            "name": "/usr/lib/libSystem.B.dylib"
+          },
+          {
+            "command": "0xc",
+            "name": "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation"
+          },
+          {
+            "command": "0xc",
+            "name": "/usr/lib/libobjc.A.dylib"
+          }
+        ],
+        "sl3_symbols": [
+          {
+            "name": "_sl3_open",
+            "value": "0x14fc",
+            "type": 36
+          },
+          {
+            "name": "_sl3_close",
+            "value": "0x1506",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_audio_controls",
+            "value": "0x154e",
+            "type": 36
+          },
+          {
+            "name": "_sl3_set_audio_controls",
+            "value": "0x167e",
+            "type": 36
+          },
+          {
+            "name": "_sl3_set_overload_callback",
+            "value": "0x17fe",
+            "type": 36
+          },
+          {
+            "name": "_sl3_set_phonoswitch_callback",
+            "value": "0x184a",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_parameter",
+            "value": "0x1896",
+            "type": 36
+          },
+          {
+            "name": "_sl3_set_parameter",
+            "value": "0x198b",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_firmware_embedded_version",
+            "value": "0x1acd",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_firmware_version",
+            "value": "0x1b20",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_overload_status",
+            "value": "0x1c0e",
+            "type": 36
+          },
+          {
+            "name": "_sl3_driver_timer",
+            "value": "0x1d1a",
+            "type": 36
+          },
+          {
+            "name": "_sl3_is_C0_device",
+            "value": "0x1e36",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_vendor_id",
+            "value": "0x1f62",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_product_id",
+            "value": "0x208e",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_api_version",
+            "value": "0x21dc",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_driver_version",
+            "value": "0x21f8",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_status",
+            "value": "0x22f6",
+            "type": 36
+          },
+          {
+            "name": "_sl3_set_alt_product_id",
+            "value": "0x23db",
+            "type": 36
+          },
+          {
+            "name": "_sl3_set_update_firmware",
+            "value": "0x24a7",
+            "type": 36
+          },
+          {
+            "name": "_sl3_set_update_firmware_from_embedded",
+            "value": "0x2725",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_buffer_millisecs",
+            "value": "0x29fd",
+            "type": 36
+          },
+          {
+            "name": "_sl3_set_buffer_millisecs",
+            "value": "0x2b32",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_usb_port_status",
+            "value": "0x2c4f",
+            "type": 36
+          },
+          {
+            "name": "_sl3_set_usb_port_status_callback",
+            "value": "0x2ca4",
+            "type": 36
+          },
+          {
+            "name": "_sl3_set_thrustate_callback",
+            "value": "0x2cf8",
+            "type": 36
+          },
+          {
+            "name": "_sl3_close",
+            "value": "0x1506",
+            "type": 15
+          },
+          {
+            "name": "_sl3_driver_timer",
+            "value": "0x1d1a",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_api_version",
+            "value": "0x21dc",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_audio_controls",
+            "value": "0x154e",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_buffer_millisecs",
+            "value": "0x29fd",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_driver_version",
+            "value": "0x21f8",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_firmware_embedded_version",
+            "value": "0x1acd",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_firmware_version",
+            "value": "0x1b20",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_overload_status",
+            "value": "0x1c0e",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_parameter",
+            "value": "0x1896",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_product_id",
+            "value": "0x208e",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_status",
+            "value": "0x22f6",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_usb_port_status",
+            "value": "0x2c4f",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_vendor_id",
+            "value": "0x1f62",
+            "type": 15
+          },
+          {
+            "name": "_sl3_is_C0_device",
+            "value": "0x1e36",
+            "type": 15
+          },
+          {
+            "name": "_sl3_open",
+            "value": "0x14fc",
+            "type": 15
+          },
+          {
+            "name": "_sl3_set_alt_product_id",
+            "value": "0x23db",
+            "type": 15
+          },
+          {
+            "name": "_sl3_set_audio_controls",
+            "value": "0x167e",
+            "type": 15
+          },
+          {
+            "name": "_sl3_set_buffer_millisecs",
+            "value": "0x2b32",
+            "type": 15
+          },
+          {
+            "name": "_sl3_set_overload_callback",
+            "value": "0x17fe",
+            "type": 15
+          },
+          {
+            "name": "_sl3_set_parameter",
+            "value": "0x198b",
+            "type": 15
+          },
+          {
+            "name": "_sl3_set_phonoswitch_callback",
+            "value": "0x184a",
+            "type": 15
+          },
+          {
+            "name": "_sl3_set_thrustate_callback",
+            "value": "0x2cf8",
+            "type": 15
+          },
+          {
+            "name": "_sl3_set_update_firmware",
+            "value": "0x24a7",
+            "type": 15
+          },
+          {
+            "name": "_sl3_set_update_firmware_from_embedded",
+            "value": "0x2725",
+            "type": 15
+          },
+          {
+            "name": "_sl3_set_usb_port_status_callback",
+            "value": "0x2ca4",
+            "type": 15
+          }
+        ],
+        "sl3_symbol_matches_total": 138,
+        "projection_note": "Only plain _sl3_ API symbols retained here; complete substring matches retained in ignored analysis/rane-mac-macho-full.json."
+      },
+      {
+        "offset": "0x1a000",
+        "bytes": 99796,
+        "cpu": "0x7",
+        "architecture": "i386",
+        "filetype": 6,
+        "libraries": [
+          {
+            "command": "0xd",
+            "name": "/Library/Frameworks/Sl3Api.framework/Versions/A/Sl3Api"
+          },
+          {
+            "command": "0xc",
+            "name": "/System/Library/Frameworks/Cocoa.framework/Versions/A/Cocoa"
+          },
+          {
+            "command": "0xc",
+            "name": "/System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio"
+          },
+          {
+            "command": "0xc",
+            "name": "/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit"
+          },
+          {
+            "command": "0xc",
+            "name": "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation"
+          },
+          {
+            "command": "0xc",
+            "name": "/usr/lib/libc++.1.dylib"
+          },
+          {
+            "command": "0xc",
+            "name": "/usr/lib/libSystem.B.dylib"
+          },
+          {
+            "command": "0xc",
+            "name": "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation"
+          },
+          {
+            "command": "0xc",
+            "name": "/usr/lib/libobjc.A.dylib"
+          }
+        ],
+        "sl3_symbols": [
+          {
+            "name": "_sl3_open",
+            "value": "0xc45",
+            "type": 36
+          },
+          {
+            "name": "_sl3_close",
+            "value": "0xc4e",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_audio_controls",
+            "value": "0xc91",
+            "type": 36
+          },
+          {
+            "name": "_sl3_set_audio_controls",
+            "value": "0xe3a",
+            "type": 36
+          },
+          {
+            "name": "_sl3_set_overload_callback",
+            "value": "0x1031",
+            "type": 36
+          },
+          {
+            "name": "_sl3_set_phonoswitch_callback",
+            "value": "0x1084",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_parameter",
+            "value": "0x10d7",
+            "type": 36
+          },
+          {
+            "name": "_sl3_set_parameter",
+            "value": "0x1237",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_firmware_embedded_version",
+            "value": "0x13ff",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_firmware_version",
+            "value": "0x1454",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_overload_status",
+            "value": "0x15ad",
+            "type": 36
+          },
+          {
+            "name": "_sl3_driver_timer",
+            "value": "0x171c",
+            "type": 36
+          },
+          {
+            "name": "_sl3_is_C0_device",
+            "value": "0x18b1",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_vendor_id",
+            "value": "0x1a4f",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_product_id",
+            "value": "0x1bed",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_api_version",
+            "value": "0x1da1",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_driver_version",
+            "value": "0x1dc4",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_status",
+            "value": "0x1f3c",
+            "type": 36
+          },
+          {
+            "name": "_sl3_set_alt_product_id",
+            "value": "0x207b",
+            "type": 36
+          },
+          {
+            "name": "_sl3_set_update_firmware",
+            "value": "0x21a8",
+            "type": 36
+          },
+          {
+            "name": "_sl3_set_update_firmware_from_embedded",
+            "value": "0x24eb",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_buffer_millisecs",
+            "value": "0x287a",
+            "type": 36
+          },
+          {
+            "name": "_sl3_set_buffer_millisecs",
+            "value": "0x2a36",
+            "type": 36
+          },
+          {
+            "name": "_sl3_get_usb_port_status",
+            "value": "0x2bd5",
+            "type": 36
+          },
+          {
+            "name": "_sl3_set_usb_port_status_callback",
+            "value": "0x2c24",
+            "type": 36
+          },
+          {
+            "name": "_sl3_set_thrustate_callback",
+            "value": "0x2c66",
+            "type": 36
+          },
+          {
+            "name": "_sl3_close",
+            "value": "0xc4e",
+            "type": 15
+          },
+          {
+            "name": "_sl3_driver_timer",
+            "value": "0x171c",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_api_version",
+            "value": "0x1da1",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_audio_controls",
+            "value": "0xc91",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_buffer_millisecs",
+            "value": "0x287a",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_driver_version",
+            "value": "0x1dc4",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_firmware_embedded_version",
+            "value": "0x13ff",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_firmware_version",
+            "value": "0x1454",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_overload_status",
+            "value": "0x15ad",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_parameter",
+            "value": "0x10d7",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_product_id",
+            "value": "0x1bed",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_status",
+            "value": "0x1f3c",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_usb_port_status",
+            "value": "0x2bd5",
+            "type": 15
+          },
+          {
+            "name": "_sl3_get_vendor_id",
+            "value": "0x1a4f",
+            "type": 15
+          },
+          {
+            "name": "_sl3_is_C0_device",
+            "value": "0x18b1",
+            "type": 15
+          },
+          {
+            "name": "_sl3_open",
+            "value": "0xc45",
+            "type": 15
+          },
+          {
+            "name": "_sl3_set_alt_product_id",
+            "value": "0x207b",
+            "type": 15
+          },
+          {
+            "name": "_sl3_set_audio_controls",
+            "value": "0xe3a",
+            "type": 15
+          },
+          {
+            "name": "_sl3_set_buffer_millisecs",
+            "value": "0x2a36",
+            "type": 15
+          },
+          {
+            "name": "_sl3_set_overload_callback",
+            "value": "0x1031",
+            "type": 15
+          },
+          {
+            "name": "_sl3_set_parameter",
+            "value": "0x1237",
+            "type": 15
+          },
+          {
+            "name": "_sl3_set_phonoswitch_callback",
+            "value": "0x1084",
+            "type": 15
+          },
+          {
+            "name": "_sl3_set_thrustate_callback",
+            "value": "0x2c66",
+            "type": 15
+          },
+          {
+            "name": "_sl3_set_update_firmware",
+            "value": "0x21a8",
+            "type": 15
+          },
+          {
+            "name": "_sl3_set_update_firmware_from_embedded",
+            "value": "0x24eb",
+            "type": 15
+          },
+          {
+            "name": "_sl3_set_usb_port_status_callback",
+            "value": "0x2c24",
+            "type": 15
+          }
+        ],
+        "sl3_symbol_matches_total": 138,
+        "projection_note": "Only plain _sl3_ API symbols retained here; complete substring matches retained in ignored analysis/rane-mac-macho-full.json."
+      }
+    ],
+    "signature_status": "Not verified; Windows structural inspection is not codesign/pkgutil validation"
+  },
+  {
+    "path": "artifacts\\extracted\\rane-mac\\tree\\Library\\Extensions\\Sl3Driver.10.9.kext\\Contents\\MacOS\\Sl3Driver.10.9",
+    "sha256": "285110fc73d8546e9fa629dee2c098c21e7b1ca8c35bc16a5e3ae5c5ab47519c",
+    "slices": [
+      {
+        "offset": "0x0",
+        "bytes": 174416,
+        "cpu": "0x1000007",
+        "architecture": "x86_64",
+        "filetype": 11,
+        "libraries": [],
+        "sl3_symbols": [],
+        "sl3_symbol_matches_total": 602,
+        "projection_note": "Only plain _sl3_ API symbols retained here; complete substring matches retained in ignored analysis/rane-mac-macho-full.json."
+      }
+    ],
+    "signature_status": "Not verified; Windows structural inspection is not codesign/pkgutil validation"
+  }
+]

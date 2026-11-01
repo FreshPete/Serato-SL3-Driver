@@ -1,0 +1,73 @@
+{
+  "scope": "Actual saved image-window metadata, not the earlier USB window, loaded-memory hash or readiness",
+  "sourceEtlSha256": "154edb3aa1e868836ebd36eda0f416b8cab3d88e575afcf7d66671b8fe609ab3",
+  "decodedXmlSha256": "5734df14b505ee3a72d9a1f10559e6cf2f7a2895d6e8b42d64205218d54996a4",
+  "schemaVersion": 3,
+  "kernelRundownPairs": 259,
+  "matchingHubRundownMetadata": true,
+  "hub": {
+    "kernelPath": "\\SystemRoot\\System32\\drivers\\UsbHub3.sys",
+    "sizeOfImage": 733184,
+    "timeDateStamp": 180548141,
+    "imageChecksum": 781464,
+    "diskSha256": "f93fa3a32037c597fd19ca9d65f59e53a1e337123582ed2479d5c16a4848df16"
+  },
+  "hubObservations": [
+    {
+      "ordinal": 173,
+      "operation": "DCStart",
+      "eventVersion": 3,
+      "time": "2026-10-31T12:10:14.325564700+00:00",
+      "kernelPath": "\\SystemRoot\\System32\\drivers\\UsbHub3.sys",
+      "sizeOfImage": 733184,
+      "timeDateStamp": 180548141,
+      "imageChecksum": 781464,
+      "signatureLevel": 12,
+      "signatureType": 1
+    },
+    {
+      "ordinal": 26663,
+      "operation": "DCEnd",
+      "eventVersion": 3,
+      "time": "2026-10-31T12:10:15.905201800+00:00",
+      "kernelPath": "\\SystemRoot\\System32\\drivers\\UsbHub3.sys",
+      "sizeOfImage": 733184,
+      "timeDateStamp": 180548141,
+      "imageChecksum": 781464,
+      "signatureLevel": 12,
+      "signatureType": 1
+    }
+  ],
+  "imageSourceWindow": {
+    "startFileTime": "134379222143243937",
+    "endFileTime": "134379222160933241",
+    "sessionName": "SL3Image-54e5af3318fe447abc0149795d067cd5"
+  },
+  "etlHeaderSystemLoggerModePresent": true,
+  "etlHeaderMaximumFileMiB": 0,
+  "originalSourceRunSuccessful": false,
+  "collectorDeleted": true,
+  "sourceAbsentAfterCleanup": true,
+  "independentStopValidated": false,
+  "loadedMemoryIdentityVerified": false,
+  "usbWindowQualified": false,
+  "readinessAdmission": false,
+  "limits": [
+    "The requested segment size was not an ETW hard file limit: MaxFileSize is zero.",
+    "Reported signature level/type are event fields, not independent signature verification.",
+    "This source ran after the USB read; it cannot retroactively attest that interval or the earlier failed reopen.",
+    "The GUID-query failure and failed original run remain preserved."
+  ],
+  "sources": {
+    "scripts/export-attended-hub-image.py": "1d889600edc93b213941c37eef0fb9a376efb10f6fcfcbfd6464ac4d40b706f4",
+    "scripts/inspect-kernel-image-rundown.py": "0becbf9a2faabbf25f1255b5eaebf94a2471bd55548012ea807da1115c94f3ab",
+    "scripts/test-kernel-image-rundown.py": "8f965d91882d1e900899ccc3d4663e7076e1539f92a76c29a3f15d2f0a0690b9",
+    "scripts/inspect-kernel-image-schema.ps1": "04b31f873564daf56b9b74a803e66702f22466ac50b2c15345d1c0f35b12530f",
+    "scripts/validate-usb-state-capture.py": "ae0023a0ae2ce1e3e0d1d5340a0ffdc4894c5df575d5b57439a77de6f3c9a472",
+    "analysis/installed-kernel-image-wmi-schema-02.json": "5ac42195048b02bdcaaa841cc9db0e759b6541fd22d4468d7b5a07e68383d8bf",
+    "artifacts/references/perfview-image-rundown/KernelTraceEventParser.cs": "2245ccc62b0d933190068a18344bc64749a2893bd9740a79706ba7fe5e86c778",
+    "tests/results/local/image-source-attended-20261031-120734/run.json": "9ef6e527c6b216dc4a4c75b34bdd45b6e413001a273c3dffb1710b49acec3918",
+    "tests/results/local/image-source-attended-20261031-120734/preparation.json": "0ab13ffb46a127c83e5056a160a4453bebbc9fb31ef35067a814fd7d6daf9407",
+    "analysis/attended-kernel-image-rundown-v3.json": "1eea65d25ce2684644c4414e793687d86a7039c0d52d00cac8f607c7bc4f147c"
+  }
+}

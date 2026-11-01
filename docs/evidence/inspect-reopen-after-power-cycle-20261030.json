@@ -1,0 +1,244 @@
+{
+  "scope": "Actual staged reopen after owner power-cycle acknowledgement and fresh Windows arrival; first inspection succeeds, second redirect start stalls",
+  "workerSha256": "F29720369D443F7EC9B6EE4BF9C20A766F174EA02879B0727E28576A2077AB66",
+  "probeSha256": "18B399C85408C32BBDBC6496AA882F73C0B14ED7EB709C0718B76A43601BB036",
+  "runRecordSha256": "96F42B0E07B6B50F737769106A6DCD83B18557996D07B8089A036ECF8146D92B",
+  "probeRecordSha256": "9842CB5E4ACFFF8C22F4E28367DE01B60D2AFBA731DBE47A8E0DF0A7DB71D3D4",
+  "probeStartedUtc": "2026-10-30T17:23:20.9222976Z",
+  "probeCompletedUtc": "2026-10-30T17:23:41.1949237Z",
+  "priorWindowsArrivalUtc": "2026-10-30T17:22:30.320158Z",
+  "firstInspectionCompleted": true,
+  "firstGetterRateValueNotPreservedInFinalOldProbe": true,
+  "millisecondsFromFirstCloseReturnToSecondRedirectEntry": 109,
+  "completed": false,
+  "secureBootBefore": true,
+  "secureBootAfter": true,
+  "selectedStateRecoveryConfirmed": true,
+  "traceStats": {
+    "eventsLost": 0,
+    "buffersLost": 0,
+    "eventCount": 14368,
+    "session": "SL3Startup-9c0f3e725e4840c1a74a1182bbfe0033",
+    "xmlSha256": "8d3f834be39c188be2625cd2cbf568e30f95caa5378f9567e4d37d632cffaccc"
+  },
+  "probe": {
+    "schema": "sl3.host-probe.v1",
+    "phase": "unretired",
+    "simulated": false,
+    "inspection_succeeded": true,
+    "stream_started": false,
+    "finished": false,
+    "successful": false,
+    "inspect_only": true,
+    "completed_inspections": 1,
+    "output_payload": "no audio submitted",
+    "requested_stream_ms": 0,
+    "observed_stream_ms": 0,
+    "bank_frames": 128,
+    "intervals": 64,
+    "reported_rate_hz": 0,
+    "callbacks": 0,
+    "callback_contract_failed": false,
+    "first_frame": 0,
+    "last_frame": 0,
+    "host_failure": 3,
+    "audio_exit": 0,
+    "audio_thread_retired": true,
+    "active_callbacks": 0,
+    "callbacks_started": 0,
+    "callbacks_completed": 0,
+    "audio_input_frames": 0,
+    "published_output_frames": 0,
+    "io_retired": false,
+    "device_released": false,
+    "worker_exited": false,
+    "private_job_empty": true,
+    "forced_termination": true,
+    "buffers_disposed": false,
+    "worker_phase": 0,
+    "worker_failure": 0,
+    "stream_fault": 0,
+    "native_error": 0,
+    "input_blocks": 0,
+    "input_frames": 0,
+    "output_submissions": 0,
+    "output_completions": 0,
+    "output_frames_submitted": 0,
+    "pending_mask": 0,
+    "retained_mask": 0,
+    "worker_diagnostic": "",
+    "analogue_signal_verified": false,
+    "latency_measured": false,
+    "asio_com_registered": false,
+    "input_nonzero_bytes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "callback_counter_frequency": 10000000,
+    "timing_records_dropped": 0,
+    "callback_timings": [],
+    "error": "Second worker clock inspection failed"
+  },
+  "journals": [
+    {
+      "snapshot": {
+        "name": "worker-1.tsv",
+        "snapshotBytes": 569,
+        "snapshotSha256": "F8409A04B4CE5F5862DB9EC685EFF9777C594B82506C53E1B3771C322E04D29B",
+        "completeRecords": 17,
+        "endsWithCompleteRecord": true,
+        "lastCompleteMarker": "7166578\t25532\thelper_unload.return",
+        "scope": "Exact observed prefix only; a live writer may append later records"
+      },
+      "markers": [
+        {
+          "uptimeMs": 7166421,
+          "stage": "worker.enter"
+        },
+        {
+          "uptimeMs": 7166421,
+          "stage": "helper_load.enter"
+        },
+        {
+          "uptimeMs": 7166421,
+          "stage": "helper_load.return"
+        },
+        {
+          "uptimeMs": 7166421,
+          "stage": "enumerate.enter"
+        },
+        {
+          "uptimeMs": 7166421,
+          "stage": "enumerate.return"
+        },
+        {
+          "uptimeMs": 7166421,
+          "stage": "configuration.enter"
+        },
+        {
+          "uptimeMs": 7166421,
+          "stage": "configuration.return"
+        },
+        {
+          "uptimeMs": 7166421,
+          "stage": "redirect_start.enter"
+        },
+        {
+          "uptimeMs": 7166578,
+          "stage": "redirect_start.return"
+        },
+        {
+          "uptimeMs": 7166578,
+          "stage": "system_handle.enter"
+        },
+        {
+          "uptimeMs": 7166578,
+          "stage": "system_handle.return"
+        },
+        {
+          "uptimeMs": 7166578,
+          "stage": "clock_getter.enter"
+        },
+        {
+          "uptimeMs": 7166578,
+          "stage": "clock_getter.return"
+        },
+        {
+          "uptimeMs": 7166578,
+          "stage": "redirect_close.enter"
+        },
+        {
+          "uptimeMs": 7166578,
+          "stage": "redirect_close.return"
+        },
+        {
+          "uptimeMs": 7166578,
+          "stage": "helper_unload.enter"
+        },
+        {
+          "uptimeMs": 7166578,
+          "stage": "helper_unload.return"
+        }
+      ]
+    },
+    {
+      "snapshot": {
+        "name": "worker-2.tsv",
+        "snapshotBytes": 379,
+        "snapshotSha256": "8B7FC789A78C472A6894B127DD325876C99FA10F81DF1124A5D37A5ABBC18728",
+        "completeRecords": 12,
+        "endsWithCompleteRecord": true,
+        "lastCompleteMarker": "7166687\t32156\tredirect_start.enter",
+        "scope": "Exact observed prefix only; a live writer may append later records"
+      },
+      "markers": [
+        {
+          "uptimeMs": 7166609,
+          "stage": "worker.enter"
+        },
+        {
+          "uptimeMs": 7166609,
+          "stage": "helper_load.enter"
+        },
+        {
+          "uptimeMs": 7166609,
+          "stage": "helper_load.return"
+        },
+        {
+          "uptimeMs": 7166609,
+          "stage": "enumerate.enter"
+        },
+        {
+          "uptimeMs": 7166609,
+          "stage": "enumerate.return"
+        },
+        {
+          "uptimeMs": 7166640,
+          "stage": "enumerate.enter"
+        },
+        {
+          "uptimeMs": 7166656,
+          "stage": "enumerate.return"
+        },
+        {
+          "uptimeMs": 7166671,
+          "stage": "enumerate.enter"
+        },
+        {
+          "uptimeMs": 7166671,
+          "stage": "enumerate.return"
+        },
+        {
+          "uptimeMs": 7166687,
+          "stage": "configuration.enter"
+        },
+        {
+          "uptimeMs": 7166687,
+          "stage": "configuration.return"
+        },
+        {
+          "uptimeMs": 7166687,
+          "stage": "redirect_start.enter"
+        }
+      ]
+    }
+  ],
+  "lateProcessObservation": {
+    "presentUtc": "2026-10-30T17:24:53.0850130Z",
+    "absentByUtc": "2026-10-30T17:26:50.4246641Z",
+    "boundedLeaseRetirementVerified": false
+  },
+  "subsequentReconnect": {
+    "windowsArrivalUtc": "2026-10-30T17:28:17.500657Z",
+    "descriptorFailureObserved": true,
+    "problemCode": 43,
+    "sameRecordedAcpiUsbLocation": true,
+    "normalSl3IdentityPresent": false,
+    "longerPowerOffAndDifferentPortRequested": true,
+    "recoveryConfirmed": false
+  }
+}

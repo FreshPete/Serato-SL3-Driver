@@ -1,0 +1,120 @@
+{
+  "decodedUsbDkRecords": 21,
+  "selectedStages": {
+    "powerQuery": {
+      "pid": 2324,
+      "tid": 35604,
+      "utc": "2026-11-01T16:41:33.9991277Z",
+      "message": "CWdmUsbDeviceAccess::Reset device power state D3"
+    },
+    "powerCompletion": {
+      "pid": 4,
+      "tid": 3848,
+      "utc": "2026-11-01T16:41:33.9991559Z",
+      "message": "PowerRequestCompletion -> D0"
+    },
+    "redirectHandle": {
+      "pid": 2324,
+      "tid": 35604,
+      "utc": "2026-11-01T16:41:34.1367993Z",
+      "message": "CUsbDkRedirection::CreateRedirectorHandle done for process 0x914"
+    },
+    "close": {
+      "pid": 2324,
+      "tid": 35604,
+      "utc": "2026-11-01T16:41:34.1464422Z",
+      "message": "CUsbDkRedirectorStrategy::OnClose"
+    },
+    "waitDetach": {
+      "pid": 2324,
+      "tid": 35604,
+      "utc": "2026-11-01T16:41:34.1464940Z",
+      "message": "CUsbDkControlDevice::RemoveRedirect Waiting for detachment from USB\\VID_1CC5&PID_0001:SL3.01.00"
+    },
+    "detached": {
+      "pid": 2324,
+      "tid": 35604,
+      "utc": "2026-11-01T16:41:34.1476064Z",
+      "message": "CUsbDkControlDevice::RemoveRedirect Detached from USB\\VID_1CC5&PID_0001:SL3.01.00"
+    },
+    "removalFinished": {
+      "pid": 2324,
+      "tid": 35604,
+      "utc": "2026-11-01T16:41:34.1476078Z",
+      "message": "CUsbDkControlDevice::RemoveRedirect Finished successfully. New redirections list:"
+    }
+  },
+  "observedPowerLogSpacingTicks": "282",
+  "powerCallbackRequestIdentityVerified": false,
+  "detachmentWaitTicks": "11124",
+  "removalReportedSuccessful": true,
+  "readinessAdmission": false,
+  "schema": "sl3.attended-port-lifecycle.v1",
+  "tracefmtCounts": {
+    "events": 10504,
+    "lost": 0,
+    "formatErrors": 0,
+    "unknown": 0
+  },
+  "port": {
+    "scope": "Trace-local exact-port/child correlation; no readiness decision",
+    "port": 4,
+    "workerVidPidCycles": 2,
+    "successfulPortEnumerations": 2,
+    "distinctTargetDsmContexts": 3,
+    "contextRows": {
+      "initial": 11,
+      "redirect": 158,
+      "postRelease": 97
+    },
+    "postReleaseContextMappedToSl3Port": true,
+    "firstStoppedEnumeratedAfterProbeTicks": "879493",
+    "lastSuccessfulEntryToTimerTicks": "100004557",
+    "stoppedAfterProbeTicks": "100918360",
+    "timeoutTail": [
+      {
+        "timestampFileTime": "134380249042523168",
+        "state": "DsmStateEtwCheckIfDeviceCanBeDisabledOnDriverNotFound",
+        "event": "DsmEventTimerFired",
+        "depth": 0
+      },
+      {
+        "timestampFileTime": "134380249042523182",
+        "state": "DsmStateEtwDisablingDeviceInControllerOnStartTimeout",
+        "event": "DsmEventYes",
+        "depth": 0
+      },
+      {
+        "timestampFileTime": "134380249042523650",
+        "state": "DsmStateEtwDisablingPortOnStartTimeout",
+        "event": "DsmEventUCXIoctlSuccess",
+        "depth": 0
+      },
+      {
+        "timestampFileTime": "134380249042523837",
+        "state": "DsmStateEtwStopped",
+        "event": "DsmEventPortDisabled",
+        "depth": 0
+      }
+    ],
+    "readinessAdmission": false,
+    "successiveAcquisitionVerified": false,
+    "normalUserReadinessObservationVerified": false
+  },
+  "originalExperimentPassed": false,
+  "fullWindowImageMetadataVerified": false,
+  "loadedMemoryIdentityVerified": false,
+  "physicalRetestPerformed": false,
+  "symbolScope": "Cached image/PDB interpretation; failed image logger does not qualify the full USB window",
+  "bindings": {
+    "tests/results/local/logging-batch-port-attended-20261101-1640-controls/trace/usb-startup_000001.etl": "35e2b56c16b4a422d49166df94954893424e33a523a1a208e5f4b6e3269bcfb1",
+    "tests/results/local/logging-batch-port-attended-20261101-1640-controls/events.xml": "7295244849927e139c01ec7eb53c024328432e29c012365b94ed1b43b955b638",
+    "tests/results/local/logging-batch-port-attended-20261101-1640-controls/run.json": "d93b0ee6d79e6957fd8b4398f86f4802852c2cf3a491a7d77ac63f88365cc632",
+    "analysis/attended-port-lifecycle-final-20261101/lifecycle-complete-observed.tmf": "9b081a61db2b4d18cce10e3dac95a0c323230c064ea30b14cfa736294c02130c",
+    "analysis/attended-port-lifecycle-final-20261101/messages.txt": "1fb9450a516882460643b39235a6442d4f79ee4a503af02d48ccffc18a58d941",
+    "analysis/attended-port-lifecycle-final-20261101/messages.txt.sum": "cfa27eac7a0bbe1095c85c5c9cf818f611ef239ed4b2ce7cbd7c5a5f2e9f5597",
+    "analysis/attended-port-lifecycle-final-20261101/tracefmt.log": "1b4d0b2b024110ca15a697d91e0221539a57d564035a6b891b4c5c94b3ae2093",
+    "scripts/analyse-attended-port-lifecycle.py": "09135e58035817fe87a5b2292d5045fee15a4e9bfa5d2e77ff49269bf3683965"
+  },
+  "tracefmtSha256": "ee71d8bb412ef0383bcc887d1ba3ea6fdabaf214183a3fb2a36ed2d699ebbe62"
+}

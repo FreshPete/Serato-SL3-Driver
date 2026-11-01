@@ -1,0 +1,48 @@
+{
+  "generatedUtc": "2026-10-27T07:13:34.425307+00:00",
+  "scope": "Traced rate workflow preparation, read-only evidence validation and synthetic/plan tests",
+  "sourceSha256": {
+    "scripts/test-usbdk-traced.ps1": "8f3a408fde74056a8f0f9e1a0c06e06d805310956406cb5f78e38d7eb068a5ff",
+    "scripts/validate-usbdk-rate.py": "b618c0d07d66b56fe6728b00241355bfd80e1f70cab8acd7dae79a8fd19a15ff",
+    "scripts/validate-usbdk-capture.py": "44c76600c13a9d0f5a5ed4127dbfd4621a9b2a2a80db8088f0a6651beb3c14a0",
+    "tests/test_usbdk_rate_evidence.py": "733a26074ff6a72946c92cdefa4a9acd6aaa8ae5d402192922bda59a64301761",
+    "scripts/capture-usb-startup.ps1": "e659df83b51879862f9ab0edce390a4c70a2ef118a92054daf86373fe69845e4",
+    "scripts/preflight-usbdk.ps1": "92a83517b40db12535c7b233a4f728498d37f77dae708ddca35a6bd567818887",
+    "scripts/collect-windows-state.ps1": "4028449556933a6c3ca970dfcb4f143a330847266a8e7dd58668f9b590eb1f66"
+  },
+  "pythonTestsPassed": 36,
+  "newRateEvidenceAndPlanTests": 9,
+  "pythonLogSha256": "164f3c736c851d776dbf422163cf2c4d06365842b120b01fb5f41d8e1d149142",
+  "nativeBuildsReusedWithoutSourceChange": [
+    {
+      "configuration": "Release",
+      "manifestSha256": "daf2979e5fd0b0c9745851f8101f3eb1a854b158a58c14978f5c7f2d96f0a52d",
+      "nativeSha256": "ef9f175a7c60225703624d0cc2bddf2f9ded42a96d13ba91e0436874c6afeae4"
+    },
+    {
+      "configuration": "Debug",
+      "manifestSha256": "ccbfccd9d8a9aadfa39b8dd547f15ee0308d1c048410395b7e1ad4bb2ed14e11",
+      "nativeSha256": "b66c9951405823b869264c145df4df14cb5c05b0a41b26e180c391c1de26e8a0"
+    }
+  ],
+  "nativeRateEvidenceSha256": "cf76fda89ce7bb0889bb235c9fa93969983077bf49a7cdf9a2712958292818cd",
+  "planModesTested": [
+    "List",
+    "Capture",
+    "DuplexSilence",
+    "Rate 44100",
+    "Rate 48000"
+  ],
+  "rateRequiresPriorSameBuildCapture": true,
+  "explicitTargetRequired": true,
+  "automaticRateRestoration": false,
+  "failurePreservesUnknownEffects": true,
+  "liveRunnerInvoked": false,
+  "physicalRateChangeTested": false,
+  "limits": [
+    "Live orchestration and native pending I/O have not been exercised",
+    "Validator checks record consistency, not hardware attestation or USB command correlation",
+    "Snapshot recovery is separate from restoring the prior sample rate",
+    "Physical audio/clock/latency, current Serato/DVS and Mac validation remain pending"
+  ]
+}

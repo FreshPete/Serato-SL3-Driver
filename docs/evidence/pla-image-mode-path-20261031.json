@@ -1,0 +1,248 @@
+{
+  "scope": "Pinned disk-image static candidate path; no execution of PLA or live session",
+  "imageSha256": "c36da0d945877ac66f1cf5761f93e4ca593d9ce01433a2941129449338ca3740",
+  "pdbSha256": "a1a6f6ed626d0a14362b47e6b646d0d437fd9331f5bca6be550aacd6ce61bc6d",
+  "rsds": {
+    "guid": "427754647A5E49604A9B216080C43DB1",
+    "age": 1,
+    "name": "pla.pdb"
+  },
+  "pdbIdentity": {
+    "guid": "427754647A5E49604A9B216080C43DB1",
+    "infoAge": 3,
+    "dbiAge": 1
+  },
+  "functions": [
+    {
+      "symbol": "_TraceDataCollector::put_ExtendedModes",
+      "startRva": "0x53cc0",
+      "endRva": "0x53d82",
+      "sha256": "191e14dbe9d8317844cadb5930fc006c4bff701e24dc53884dde2bbd83d66df3"
+    },
+    {
+      "symbol": "_TraceDataCollector::get_ExtendedModes",
+      "startRva": "0xa7460",
+      "endRva": "0xa7525",
+      "sha256": "e72252499c235e4f788d1d5df0d1f8b0f876e04597a9e626f49558835f8bfd56"
+    },
+    {
+      "symbol": "TraceSession::get_Mode",
+      "startRva": "0x8bbb0",
+      "endRva": "0x8bf21",
+      "sha256": "8f5e84da179f96e6e5e3b1463a22934cb053c929f73d4bf07b6f872be502a690"
+    },
+    {
+      "symbol": "TraceSession::Commit",
+      "startRva": "0x87690",
+      "endRva": "0x884d8",
+      "sha256": "001bde183701bf68ad73a14b68873d940dbc591db1a408268ecce91ecd568610"
+    },
+    {
+      "symbol": "TraceSession::Start",
+      "startRva": "0x17610",
+      "endRva": "0x18054",
+      "sha256": "6bf6bf1f00cf33866c090bacf6682076c36e2dd9e3bf80e1fbda776ef8bd81bd"
+    }
+  ],
+  "instructions": [
+    {
+      "rva": "0x53cd7",
+      "bytes": "8bf2",
+      "assembly": "mov esi, edx"
+    },
+    {
+      "rva": "0x53d64",
+      "bytes": "89b7b4000000",
+      "assembly": "mov dword ptr [rdi + 0xb4], esi"
+    },
+    {
+      "rva": "0xa7501",
+      "bytes": "8b87b4000000",
+      "assembly": "mov eax, dword ptr [rdi + 0xb4]"
+    },
+    {
+      "rva": "0xa750b",
+      "bytes": "8906",
+      "assembly": "mov dword ptr [rsi], eax"
+    },
+    {
+      "rva": "0x8bbf8",
+      "bytes": "488bf2",
+      "assembly": "mov rsi, rdx"
+    },
+    {
+      "rva": "0x8bd7e",
+      "bytes": "488b4d80",
+      "assembly": "mov rcx, qword ptr [rbp - 0x80]"
+    },
+    {
+      "rva": "0x8bd82",
+      "bytes": "488d542474",
+      "assembly": "lea rdx, [rsp + 0x74]"
+    },
+    {
+      "rva": "0x8bd87",
+      "bytes": "488b01",
+      "assembly": "mov rax, qword ptr [rcx]"
+    },
+    {
+      "rva": "0x8bd8a",
+      "bytes": "488b8050010000",
+      "assembly": "mov rax, qword ptr [rax + 0x150]"
+    },
+    {
+      "rva": "0x8bd91",
+      "bytes": "e87ae20b00",
+      "assembly": "call 0x18014a010"
+    },
+    {
+      "rva": "0x8be3c",
+      "bytes": "488d542470",
+      "assembly": "lea rdx, [rsp + 0x70]"
+    },
+    {
+      "rva": "0x8be5b",
+      "bytes": "4409642474",
+      "assembly": "or dword ptr [rsp + 0x74], r12d"
+    },
+    {
+      "rva": "0x8be7f",
+      "bytes": "834c247402",
+      "assembly": "or dword ptr [rsp + 0x74], 2"
+    },
+    {
+      "rva": "0x8bea3",
+      "bytes": "834c247420",
+      "assembly": "or dword ptr [rsp + 0x74], 0x20"
+    },
+    {
+      "rva": "0x8bec2",
+      "bytes": "8b442474",
+      "assembly": "mov eax, dword ptr [rsp + 0x74]"
+    },
+    {
+      "rva": "0x8becd",
+      "bytes": "0fbae80b",
+      "assembly": "bts eax, 0xb"
+    },
+    {
+      "rva": "0x8bed5",
+      "bytes": "8906",
+      "assembly": "mov dword ptr [rsi], eax"
+    },
+    {
+      "rva": "0x87703",
+      "bytes": "4c8bfa",
+      "assembly": "mov r15, rdx"
+    },
+    {
+      "rva": "0x87c6b",
+      "bytes": "498b06",
+      "assembly": "mov rax, qword ptr [r14]"
+    },
+    {
+      "rva": "0x87c6e",
+      "bytes": "498d5f40",
+      "assembly": "lea rbx, [r15 + 0x40]"
+    },
+    {
+      "rva": "0x87c72",
+      "bytes": "488bd3",
+      "assembly": "mov rdx, rbx"
+    },
+    {
+      "rva": "0x87c75",
+      "bytes": "498bce",
+      "assembly": "mov rcx, r14"
+    },
+    {
+      "rva": "0x87c78",
+      "bytes": "488b8068020000",
+      "assembly": "mov rax, qword ptr [rax + 0x268]"
+    },
+    {
+      "rva": "0x87c7f",
+      "bytes": "e88c230c00",
+      "assembly": "call 0x18014a010"
+    },
+    {
+      "rva": "0x17a54",
+      "bytes": "498b06",
+      "assembly": "mov rax, qword ptr [r14]"
+    },
+    {
+      "rva": "0x17a5a",
+      "bytes": "4c8b7d98",
+      "assembly": "mov r15, qword ptr [rbp - 0x68]"
+    },
+    {
+      "rva": "0x17a62",
+      "bytes": "498bd7",
+      "assembly": "mov rdx, r15"
+    },
+    {
+      "rva": "0x17a65",
+      "bytes": "488b8078020000",
+      "assembly": "mov rax, qword ptr [rax + 0x278]"
+    },
+    {
+      "rva": "0x17a6c",
+      "bytes": "e89f251300",
+      "assembly": "call 0x18014a010"
+    },
+    {
+      "rva": "0x17c88",
+      "bytes": "4d8bc7",
+      "assembly": "mov r8, r15"
+    },
+    {
+      "rva": "0x17c8b",
+      "bytes": "48ff153ebd1300",
+      "assembly": "call qword ptr [rip + 0x13bd3e]"
+    }
+  ],
+  "vtableSlots": [
+    {
+      "table": "TraceSession::`vftable'",
+      "tableRva": "0x14b6e8",
+      "slot": "0x268",
+      "targetRva": "0x8bbb0"
+    },
+    {
+      "table": "TraceSession::`vftable'",
+      "tableRva": "0x14b6e8",
+      "slot": "0x278",
+      "targetRva": "0x87690"
+    },
+    {
+      "table": "_TraceDataCollector::`vftable'",
+      "tableRva": "0x14bbe8",
+      "slot": "0x150",
+      "targetRva": "0xa7460"
+    }
+  ],
+  "startTraceIatRva": "0x1539d0",
+  "requestedSystemLoggerMode": "0x02000000",
+  "finding": "The inspected base get_Mode path reads raw ExtendedModes and adds bits; it does not narrow the raw value to older documented flags.",
+  "runtimeFlagForwardingVerified": false,
+  "actualDispatchVerified": false,
+  "liveImageRundownVerified": false,
+  "independentStopValidated": false,
+  "readinessAdmission": false,
+  "limits": [
+    "Static base-vtable links are conditional on actual dynamic dispatch.",
+    "Selected instruction assertions are not exhaustive control-flow or alias analysis.",
+    "Properties offset 0x40 uses the Windows x64 EVENT_TRACE_PROPERTIES ABI; no compiled layout check was completed.",
+    "Internal TraceSession::Commit is distinct from the public PLA validation-only Commit.",
+    "Installed disk image does not attest the service loaded image or historical USBHUB3 identity.",
+    "No source started, effective runtime modes queried, ETL produced, or USB operation performed."
+  ],
+  "dependencies": {
+    "scripts/export-pla-image-mode-path.py": "ffa385f429a7c33711281f94575e0374a21bf4773e04949e45ed8e1bf82a1e32",
+    "scripts/export-usbhub3-state-symbols.py": "2bd49ec3ae16caa86ac6331bf9fc2593c6d580dfc342c090d178d08da741a2ad",
+    "analysis/pla-all-public-symbols.py": "773311b17ef018a785e0630a2d63468b7de0120ccf301dfa3a2a63c36e439a8c",
+    "analysis/pla-all-public-symbols.json": "dfdaedde5d0f43a13a79bd9bac3e4692584a4ec73fc206c4fd340835b25e16bd",
+    "analysis/pla-installed-image.json": "7d59a1ee830395e0bad025f1878b6dc158a6760c3e826056665c955a1d8b3127",
+    "artifacts/references/windows-pla/acquisition.json": "85e15a9a520c2da8bad0a9b19edbd75c406d26dc661a140a28f7e7c7abbe398e"
+  }
+}

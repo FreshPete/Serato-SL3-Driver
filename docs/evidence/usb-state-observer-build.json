@@ -1,0 +1,173 @@
+{
+  "scope": "Actual normal-token saved-ETL replay in Release/Debug; live positive subscription and readiness admission unverified",
+  "builds": {
+    "Release": {
+      "manifestSha256": "5de8f7ad49afc2975a9296b5b7e45369227c2f595bf883860460d1b10e3e78bf",
+      "executableSha256": "9b6fa01a45b2b4aaae68bd08550581217a94158661e76ce21298a4a5631ba4e2",
+      "testRecordSha256": "2f869ee55fe5e2613c13b72893eec0376acc016ee7001d37d0dfbf985250c544",
+      "replaySha256": "894eebe37a21dfde7f070e3c49353daad500f405dbb6a06c7bd1b2754c822a19",
+      "summary": {
+        "record": "summary",
+        "successful": true,
+        "eventsSeen": 14368,
+        "stateRecords": 585,
+        "eventsLost": 0,
+        "buffersLost": 0,
+        "processTraceStatus": 0,
+        "closeTraceStatus": 0,
+        "deadlineExpired": false,
+        "propertyFailure": false,
+        "sourceLossCountersComplete": true,
+        "lossScope": "completed source-file header",
+        "readinessAdmission": false
+      },
+      "producer": {
+        "record": "header",
+        "schema": "sl3.usb-state-observer.v1",
+        "mode": "etl",
+        "deviceAccess": false,
+        "startsTraceSession": false,
+        "stopsSourceSession": false,
+        "readinessAdmission": false,
+        "sourceImageEvidenceRequired": true,
+        "opaqueValuesAsStrings": true,
+        "sourceSession": null,
+        "requestedSeconds": 0,
+        "pid": 5724,
+        "tokenQueried": true,
+        "elevated": false,
+        "elevationType": 3
+      },
+      "negativeCases": [
+        {
+          "case": "missing-file",
+          "exitCode": 1,
+          "outputCreated": false,
+          "processTraceStatus": null
+        },
+        {
+          "case": "invalid-session",
+          "exitCode": 1,
+          "outputCreated": false,
+          "processTraceStatus": null
+        },
+        {
+          "case": "duration-zero",
+          "exitCode": 1,
+          "outputCreated": false,
+          "processTraceStatus": null
+        },
+        {
+          "case": "duration-long",
+          "exitCode": 1,
+          "outputCreated": false,
+          "processTraceStatus": null
+        },
+        {
+          "case": "missing-session",
+          "exitCode": 1,
+          "outputCreated": true,
+          "processTraceStatus": 4201
+        },
+        {
+          "case": "malformed-etl",
+          "exitCode": 1,
+          "outputCreated": false
+        }
+      ]
+    },
+    "Debug": {
+      "manifestSha256": "d948b37fd93da99172c7b792a79f3634feb76560aec6849206c08589852a4ee7",
+      "executableSha256": "a1446c667f456107beaa076cd49b2b224d977f96229db9bd4f5b8826f25308d8",
+      "testRecordSha256": "b151f888f0de6292463b12344e0189ee02e15acf610090fdd9d5f7b8b5d45bf9",
+      "replaySha256": "febdb9f72961d911d47091b9f2b5d961ebb7876d94809323bb145b36c6d41407",
+      "summary": {
+        "record": "summary",
+        "successful": true,
+        "eventsSeen": 14368,
+        "stateRecords": 585,
+        "eventsLost": 0,
+        "buffersLost": 0,
+        "processTraceStatus": 0,
+        "closeTraceStatus": 0,
+        "deadlineExpired": false,
+        "propertyFailure": false,
+        "sourceLossCountersComplete": true,
+        "lossScope": "completed source-file header",
+        "readinessAdmission": false
+      },
+      "producer": {
+        "record": "header",
+        "schema": "sl3.usb-state-observer.v1",
+        "mode": "etl",
+        "deviceAccess": false,
+        "startsTraceSession": false,
+        "stopsSourceSession": false,
+        "readinessAdmission": false,
+        "sourceImageEvidenceRequired": true,
+        "opaqueValuesAsStrings": true,
+        "sourceSession": null,
+        "requestedSeconds": 0,
+        "pid": 40388,
+        "tokenQueried": true,
+        "elevated": false,
+        "elevationType": 3
+      },
+      "negativeCases": [
+        {
+          "case": "missing-file",
+          "exitCode": 1,
+          "outputCreated": false,
+          "processTraceStatus": null
+        },
+        {
+          "case": "invalid-session",
+          "exitCode": 1,
+          "outputCreated": false,
+          "processTraceStatus": null
+        },
+        {
+          "case": "duration-zero",
+          "exitCode": 1,
+          "outputCreated": false,
+          "processTraceStatus": null
+        },
+        {
+          "case": "duration-long",
+          "exitCode": 1,
+          "outputCreated": false,
+          "processTraceStatus": null
+        },
+        {
+          "case": "missing-session",
+          "exitCode": 1,
+          "outputCreated": true,
+          "processTraceStatus": 4201
+        },
+        {
+          "case": "malformed-etl",
+          "exitCode": 1,
+          "outputCreated": false
+        }
+      ]
+    }
+  },
+  "sourceInputs": {
+    "scripts/native/usb-state-observer/main.cpp": "363B7AEEFB840BD31FF663D092C4E0E36DEBD6531499EC2C1EB03EF46A66C8CE",
+    "scripts/native/usb-state-observer/CMakeLists.txt": "90C1BC7180AA439CD7D4BD0C41F826ADE9421D3B4BB1263D611E91E3F70C898E",
+    "scripts/build-usb-state-observer.ps1": "7ADE4B4D42F1CD3306131501A0B4EACD371D5EF4A6BAA2FCD1428E90BDBB1E09",
+    "scripts/test-usb-state-observer.py": "B025C6A50D3F7ABC7D6EE350585073379B5259EC5C6F377E44756EDABED198A1",
+    "scripts/export-reopen-usb-timeline.py": "0521E58F7D70AD68C3982D257C480CD91D84C5AAA8B2337DE266A5DD9520DF28"
+  },
+  "independentOfProductionAsioBuild": true,
+  "livePositiveValidated": false,
+  "readinessAdmission": false,
+  "limits": [
+    "Native rows exactly match the bound XML, including 100 ns times, but do not prove physical identity or loaded-image semantics.",
+    "Only owned consumer handles are closed; this tool cannot attest or stop source-session cleanup.",
+    "The live source must separately enable real-time delivery and grant consumer access.",
+    "Live header loss snapshots are incomplete; the full source ETL/loss validator remains authoritative.",
+    "A missing session may create a failed diagnostic output after OpenTrace succeeds; it never establishes a valid observation.",
+    "The live timeout requests consumer closure; already queued buffers can drain afterward. A supervising process still owns its deadline."
+  ]
+}

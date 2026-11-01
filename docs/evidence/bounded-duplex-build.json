@@ -1,0 +1,231 @@
+{
+  "utc": "2026-10-27T00:58:13.866987+00:00",
+  "scope": "Bounded duplex core/staging simulation, native builds, plan/invalid-mode checks and read-only preflight only",
+  "release": {
+    "utc": "2026-10-27T00:56:26.6864190Z",
+    "configuration": "Release",
+    "architecture": "x64",
+    "generator": "Visual Studio 16 2019",
+    "windowsSdk": "10.0.19041.0",
+    "coreTestsPassed": true,
+    "planOnlyPassed": true,
+    "physicalCaptureTested": false,
+    "inputs": {
+      "artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/asiosys.h": "F44A1ED0FD7C056FF047AEEBC4C05A8C185F0585A24D8DEBC55C70107777DBEF",
+      "tests/native/asio_buffer_tests.cpp": "836427BDD4F97C52A2E61932066F1D7EC0DABD3813B60E8AE1C21C6A7800E371",
+      "src/core/duplex.hpp": "20E32A03C471A0751CCB3EE90DBD49252BFA87E387C45A9BE03FF185011819DC",
+      "src/core/capture.cpp": "F16B23870B216A581FB21425F58586FC46DE13A9AF520953C870BFAAE5420CD3",
+      "third_party/usbdk/UsbDkHelper.h": "09CAD2056278CD9DD5D74E66EC0115569662B6643EBC28660EEAB3F089A0020C",
+      "src/core/audio_bridge.cpp": "6289660D879DFAB69AF7EDB6166F3A7C7AB45371C6766BCF3E1169255AB71435",
+      "third_party/usbdk/LICENSE": "09E8A9BCEC8067104652C168685AB0931E7868F9C8284B66F5AE6EDAE5F1130B",
+      "tests/native/playback_tests.cpp": "90A8D63D3CAB5795D3199B1D7E5DD2EF22FA9978F85C37937606F4BF32E36B18",
+      "src/windows/diagnostic.hpp": "5659A28562D9B06D6D0B5C08EB94F5542BD32E319A6A27F71C1B8F4090F9CC71",
+      "CMakeLists.txt": "0754681B059A8C87D94DAD69C26781316457A4DD6BD3A92AC08A275FE10FCB53",
+      "src/core/playback.cpp": "E8006A992A70BA9226E74D5E6CE49CA1D54F6214410FBD12A0C994A1CA32119B",
+      "src/windows/sl3_fixture.hpp": "F926D9EE87F0D9F02124D9514D50584F47235150180155D3A97DD3ACC73BC9F1",
+      "tests/native/audio_bridge_tests.cpp": "1A5AF82C40885B247AE95741F486D62951179D0AA21E7E288918331CF5C9E57B",
+      "tests/native/capture_tests.cpp": "CF54D91F245EA476FC704361483D53836861B4786F96839F9BF5E280F5935428",
+      "src/core/playback.hpp": "B56A303B0259C57B5999B2E80BCF260FE53575C158D224EEC4EA01ED8E56454B",
+      "tests/native/duplex_tests.cpp": "0C200FDEC05A5C25069A0D3A2F66948F318A8A5EA3B8E22231E5CE90CF1A72E5",
+      "third_party/usbdk/README.md": "605C7FAA50A802736C21AC03D362C8962445168CDCDB9EDCE54C3D82E62B3B9D",
+      "src/core/audio_bridge.hpp": "B43C7407F13CE72A9D10EF75B1023248876A3177DD23AC7D4E7D6BD2B98C2C5D",
+      "src/core/capture.hpp": "B6215776FE4F5B88678E69970D7B9B0E4C810FA2DCF8549D1F2FA045B23073E3",
+      "src/asio/buffer_set.cpp": "3B38534B2E014CE8D66B13053DA96BEDFC7C6850A21800182D4271D6B791C491",
+      "src/windows/capture_main.cpp": "E8DF087CACD40F500E6A89FE4EB85ACB1ED2FD79D81034D7FF26BD37A0C52BEA",
+      "src/windows/usbdk_main.cpp": "C992BBA31290B6205CEBB113550E8F262DC234972FB434A479B42AF29F09F483",
+      "src/core/duplex.cpp": "D15A169E365DE5897F7168369969E765F8D7D01227B3461EC8F4917077D3BF2D",
+      "third_party/usbdk/UsbDkData.h": "8F0A0F4F10D2D6FB371E48C7C9E82AF890CA75601EC4E5143949A42402D8CB83",
+      "artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/asio.h": "93D2F80D49B4AC9C963514E7C1307AB5111D8104246192233745BEB058534EA1",
+      "src/asio/buffer_set.hpp": "03F097B32D942E551283E005D2206A57D8B0D8ED2FE740B524435DFACCD1CA72"
+    },
+    "executableSha256": "954B2282E29D9632E5D85398F240B6A1C5F59ED2397477B417E7E1A538C1642A",
+    "executableBytes": 94720,
+    "ctestTests": [
+      "sl3_core_tests",
+      "sl3_playback_tests",
+      "sl3_audio_bridge_tests",
+      "sl3_duplex_tests",
+      "sl3_asio_buffer_tests",
+      "sl3_usbdk_plan",
+      "sl3_usbdk_rejects_modes",
+      "sl3_usbdk_rejects_duplex_capture",
+      "sl3_capture_plan",
+      "sl3_capture_rejects_modes"
+    ],
+    "buildScriptSha256": "88016F27E0912C74DFD28A31080C296E39297AE76F098232FDCA7B1E8D201E4E",
+    "asioComponent": {
+      "built": true,
+      "testsPassed": true,
+      "driverRegistered": false,
+      "hardwareIntegrated": false,
+      "librarySha256": "E05D05B6EAE7753B7E31EB85BEEE8EE3A96C55AC69293F98A90E5C68290A9507",
+      "testExecutableSha256": "0D0001D8105C3ACF014AC7188837C034C85F492B4EF696FDD6298A131061F17F"
+    },
+    "usbdk": {
+      "executableSha256": "A9F44C72F1FF136A91AE59F274666F5E35C7ADB7489F8F035819ADB773991277",
+      "executableBytes": 126976,
+      "planOnlyPassed": true,
+      "physicalCaptureTested": false,
+      "helperLoadedDuringPlan": false
+    }
+  },
+  "debug": {
+    "utc": "2026-10-27T00:56:29.5137290Z",
+    "configuration": "Debug",
+    "architecture": "x64",
+    "generator": "Visual Studio 16 2019",
+    "windowsSdk": "10.0.19041.0",
+    "coreTestsPassed": true,
+    "planOnlyPassed": true,
+    "physicalCaptureTested": false,
+    "inputs": {
+      "artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/asiosys.h": "F44A1ED0FD7C056FF047AEEBC4C05A8C185F0585A24D8DEBC55C70107777DBEF",
+      "tests/native/asio_buffer_tests.cpp": "836427BDD4F97C52A2E61932066F1D7EC0DABD3813B60E8AE1C21C6A7800E371",
+      "src/core/duplex.hpp": "20E32A03C471A0751CCB3EE90DBD49252BFA87E387C45A9BE03FF185011819DC",
+      "src/core/capture.cpp": "F16B23870B216A581FB21425F58586FC46DE13A9AF520953C870BFAAE5420CD3",
+      "third_party/usbdk/UsbDkHelper.h": "09CAD2056278CD9DD5D74E66EC0115569662B6643EBC28660EEAB3F089A0020C",
+      "src/core/audio_bridge.cpp": "6289660D879DFAB69AF7EDB6166F3A7C7AB45371C6766BCF3E1169255AB71435",
+      "third_party/usbdk/LICENSE": "09E8A9BCEC8067104652C168685AB0931E7868F9C8284B66F5AE6EDAE5F1130B",
+      "tests/native/playback_tests.cpp": "90A8D63D3CAB5795D3199B1D7E5DD2EF22FA9978F85C37937606F4BF32E36B18",
+      "src/windows/diagnostic.hpp": "5659A28562D9B06D6D0B5C08EB94F5542BD32E319A6A27F71C1B8F4090F9CC71",
+      "CMakeLists.txt": "0754681B059A8C87D94DAD69C26781316457A4DD6BD3A92AC08A275FE10FCB53",
+      "src/core/playback.cpp": "E8006A992A70BA9226E74D5E6CE49CA1D54F6214410FBD12A0C994A1CA32119B",
+      "src/windows/sl3_fixture.hpp": "F926D9EE87F0D9F02124D9514D50584F47235150180155D3A97DD3ACC73BC9F1",
+      "tests/native/audio_bridge_tests.cpp": "1A5AF82C40885B247AE95741F486D62951179D0AA21E7E288918331CF5C9E57B",
+      "tests/native/capture_tests.cpp": "CF54D91F245EA476FC704361483D53836861B4786F96839F9BF5E280F5935428",
+      "src/core/playback.hpp": "B56A303B0259C57B5999B2E80BCF260FE53575C158D224EEC4EA01ED8E56454B",
+      "tests/native/duplex_tests.cpp": "0C200FDEC05A5C25069A0D3A2F66948F318A8A5EA3B8E22231E5CE90CF1A72E5",
+      "third_party/usbdk/README.md": "605C7FAA50A802736C21AC03D362C8962445168CDCDB9EDCE54C3D82E62B3B9D",
+      "src/core/audio_bridge.hpp": "B43C7407F13CE72A9D10EF75B1023248876A3177DD23AC7D4E7D6BD2B98C2C5D",
+      "src/core/capture.hpp": "B6215776FE4F5B88678E69970D7B9B0E4C810FA2DCF8549D1F2FA045B23073E3",
+      "src/asio/buffer_set.cpp": "3B38534B2E014CE8D66B13053DA96BEDFC7C6850A21800182D4271D6B791C491",
+      "src/windows/capture_main.cpp": "E8DF087CACD40F500E6A89FE4EB85ACB1ED2FD79D81034D7FF26BD37A0C52BEA",
+      "src/windows/usbdk_main.cpp": "C992BBA31290B6205CEBB113550E8F262DC234972FB434A479B42AF29F09F483",
+      "src/core/duplex.cpp": "D15A169E365DE5897F7168369969E765F8D7D01227B3461EC8F4917077D3BF2D",
+      "third_party/usbdk/UsbDkData.h": "8F0A0F4F10D2D6FB371E48C7C9E82AF890CA75601EC4E5143949A42402D8CB83",
+      "artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/asio.h": "93D2F80D49B4AC9C963514E7C1307AB5111D8104246192233745BEB058534EA1",
+      "src/asio/buffer_set.hpp": "03F097B32D942E551283E005D2206A57D8B0D8ED2FE740B524435DFACCD1CA72"
+    },
+    "executableSha256": "960E7B7EEC9D980F738A83333A348CB72E523AE4E8AB865BCE85A69B0E792BF4",
+    "executableBytes": 422400,
+    "ctestTests": [
+      "sl3_core_tests",
+      "sl3_playback_tests",
+      "sl3_audio_bridge_tests",
+      "sl3_duplex_tests",
+      "sl3_asio_buffer_tests",
+      "sl3_usbdk_plan",
+      "sl3_usbdk_rejects_modes",
+      "sl3_usbdk_rejects_duplex_capture",
+      "sl3_capture_plan",
+      "sl3_capture_rejects_modes"
+    ],
+    "buildScriptSha256": "88016F27E0912C74DFD28A31080C296E39297AE76F098232FDCA7B1E8D201E4E",
+    "asioComponent": {
+      "built": true,
+      "testsPassed": true,
+      "driverRegistered": false,
+      "hardwareIntegrated": false,
+      "librarySha256": "FE2B93D7B089331B00210D54A638EF91858FBD209B445516198EE1D6DD889FF0",
+      "testExecutableSha256": "F83B54C11E50811147C2DC1A4FB3C33BE536E6A5383E4E4A2BEEC51D97BCB141"
+    },
+    "usbdk": {
+      "executableSha256": "B1529971210DD950F7B6C9FD5D350D1EA1E7709727C0F97C068B2ECBB26FFA34",
+      "executableBytes": 449024,
+      "planOnlyPassed": true,
+      "physicalCaptureTested": false,
+      "helperLoadedDuringPlan": false
+    }
+  },
+  "sdkFreeBuild": {
+    "configuration": "Release",
+    "testCount": 9,
+    "testLogSha256": "e42caf0b370d005cb5b95172895f890e3da3b37431e080674793e9cae8678087"
+  },
+  "preflight": {
+    "utc": "2026-10-27T00:56:30.7037572Z",
+    "scope": "Read-only dependency, source, signature and service checks",
+    "files": [
+      {
+        "path": "artifacts/packages/UsbDk_1.0.22_x64.msi",
+        "sha256": "91F6F695E1E13C656024E6D3B55620BF08D8835EF05EE0496935BA6BB62466A5",
+        "bytes": 6348800
+      },
+      {
+        "path": "artifacts/extracted/usbdk-msi/UsbDk.sys10",
+        "sha256": "C92B6C15BD550023312AE4CFE49A39757952A3C2EBDC7D1D143AC5E695F69A63",
+        "bytes": 103128
+      },
+      {
+        "path": "artifacts/extracted/usbdk-msi/UsbDkHelper.dll10",
+        "sha256": "66BBFE6F99B417F97C7A9E97816E24AF7DDE0E01B8E535C41E91E1C6C19CFEDA",
+        "bytes": 336072
+      }
+    ],
+    "configuration": "Release",
+    "nativeSha256": "A9F44C72F1FF136A91AE59F274666F5E35C7ADB7489F8F035819ADB773991277",
+    "signature": {
+      "index": 1,
+      "kernelVerificationExitCode": 0
+    },
+    "nativePlan": {
+      "plan_only": true,
+      "helper_loaded": false,
+      "driver_changes": false,
+      "scheduled_ms": 32,
+      "audio_output_submissions": 0,
+      "silent_duplex_requires_explicit_mode": true,
+      "scheduling": "UsbDk ASAP; continuity not verified"
+    },
+    "installedDriver": [],
+    "sl3": [
+      {
+        "Status": "Error",
+        "Class": "MEDIA",
+        "FriendlyName": "Rane SL3",
+        "InstanceId": "USB\\VID_1CC5&PID_0001\\SL3.01.00"
+      }
+    ],
+    "secureBoot": {
+      "known": false,
+      "reason": "Unable to set proper privileges. Access was denied."
+    },
+    "helperLoaded": false,
+    "driverInstalled": false,
+    "deviceRedirected": false,
+    "audioSubmissions": 0,
+    "nextGate": "Owner-present traced driver load test, exact-SL3 descriptor-only enumeration, then separate bounded capture; no audio OUT"
+  },
+  "ownershipChecks": [
+    "All resources prepared before I/O",
+    "OUT staged only after successful terminal IN",
+    "Cancel every pending direction before drain",
+    "One global operation deadline and one drain deadline",
+    "Partial preparation and IN/OUT submission/completion failures",
+    "Invalid input stops corresponding OUT",
+    "Cancel exceptions do not skip completion draining",
+    "Unretired IN/OUT storage retained",
+    "Failed release retains ownership"
+  ],
+  "stagingChecks": [
+    "Full 64-bit result validation before narrowing",
+    "Empty/error/oversize/unaligned packets rejected",
+    "Insufficient output capacity rejected without partial writes",
+    "Input packet lengths preserved",
+    "Entire bounded output storage zeroed"
+  ],
+  "nativeMode": "Explicit --duplex-silence; four 64-interval requests per direction, zero PCM only",
+  "nativeModeExecuted": false,
+  "validDuplexCommandInvoked": false,
+  "audioOutputSubmissionsDuringVerification": 0,
+  "usbDriverInstalled": false,
+  "helperLoaded": false,
+  "physicalCaptureTested": false,
+  "physicalPlaybackTested": false,
+  "limits": [
+    "ASAP continuity unverified",
+    "OUT returned lengths are not actual-byte-count proof",
+    "Actual sample clock, analogue signal and latency unverified",
+    "Continuous ASIO/session owner and COM device still pending"
+  ]
+}

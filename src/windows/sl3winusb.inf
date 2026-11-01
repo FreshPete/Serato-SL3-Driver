@@ -1,0 +1,37 @@
+; Experimental SL3 transport binding. NOT a signed/installable release package.
+; Requires a generated, appropriately signed catalogue before installation.
+; This exposes USB to user mode; it does not implement ASIO, controls or DVS.
+[Version]
+Signature = "$Windows NT$"
+Class = USBDevice
+ClassGuid = {88BAE032-5A81-49f0-BC3D-A4FF138216D6}
+Provider = %ProjectProvider%
+DriverVer = 10/26/2026,0.1.0.0
+CatalogFile = sl3winusb.cat
+PnpLockdown = 1
+
+[Manufacturer]
+%ProjectProvider% = Models,NTamd64
+
+[Models.NTamd64]
+%DeviceDescription% = SL3_WinUSB,USB\VID_1CC5&PID_0001
+
+[SL3_WinUSB.NT]
+Include = winusb.inf
+Needs = WINUSB.NT
+
+[SL3_WinUSB.NT.Services]
+Include = winusb.inf
+Needs = WINUSB.NT.Services
+
+[SL3_WinUSB.NT.HW]
+Include = winusb.inf
+Needs = WINUSB.NT.HW
+AddReg = SL3_Interface
+
+[SL3_Interface]
+HKR,,DeviceInterfaceGUIDs,0x00010000,"{45DFC124-470C-4C58-BA2B-BFF7614A64BC}"
+
+[Strings]
+ProjectProvider = "SL3 Compatibility Research"
+DeviceDescription = "Rane SL3 (experimental WinUSB transport)"

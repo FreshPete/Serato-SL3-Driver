@@ -1,0 +1,78 @@
+{
+  "scope": "Prepared optional identity observation around a single controls acquisition; no hardware run",
+  "configurations": {
+    "Release": {
+      "testsPassed": 39,
+      "manifestSha256": "f5eeb7936202784564bc6f4ec4c60f4d905987e6848856afe4fb809ddcafea85",
+      "ctestLogSha256": "0c83e7f24114ef484506b2b840e0a27a35bed68286bf93bb1741c29bed9c2419",
+      "runtimeIdentitiesMatchControlSelectionCheckpoint": true,
+      "binarySha256": {
+        "worker": "690090415FA5C70DD99592F1675DCE8F3A33A997F6A1969A965E1F0D27C9EBAF",
+        "probe": "3E8762EE8D3613A09E8E16A376AEDA045EBB038E18BE29CFC3C2E5C65C9DEE28",
+        "asio": "0F27CCDEB6683F155CB6655457852BCE07F31E31967CD70AEB8725B6A4C473E9"
+      },
+      "scriptInputs": {
+        "test-controls-host-traced.ps1": "1AFC98AC0A26182460F38F5AB4663DD15475DD104667A3F86AF2462844E64A93",
+        "validate-controls-host-probe.py": "F697DC98F7BA8C0B7C49E72FF03E158F1A7A9D0F91A580432350831737658E7C",
+        "test-controls-host-probe.py": "4AB1DB8C5DCD448C552E30CFCD8A2A8C7CBCACEB81A6BAA25AAE162FA8706AC1",
+        "read-startup-journal.ps1": "33DAD42650A140CAC93A0D0537464209B7CABC2E1D7912EDF01F897538D3B318",
+        "capture-usb-startup.ps1": "420AB3317566A05F7CB7C0C05D4F32C3E3104C034A4D1233DD0660F3DE479101",
+        "preflight-usbdk.ps1": "92A83517B40DB12535C7B233A4F728498D37F77DAE708DDCA35A6BD567818887",
+        "collect-windows-state.ps1": "4028449556933A6C3CA970DFCB4F143A330847266A8E7DD58668F9B590EB1F66",
+        "export-usbdk-physical-checkpoint.py": "36F9AFB6BADB95B2566A6413ED236AB10FBA1AF6634E5A946F957004E52B84BE",
+        "validate-usbdk-capture.py": "44C76600C13A9D0F5A5ED4127DBFD4621A9B2A2A80DB8088F0A6651BEB3C14A0",
+        "prepare-usbdk-lifecycle-trace.py": "FEE895320E0E01C971C569D392661D3683C7E10DE6AC15456B49DB83643F3042",
+        "observe-sl3-usb-identity.py": "238AA772EF466832A6D63B020EAB357B014A2EB998A1FB2662DD1A988C6E43EA",
+        "supervise-usb-identity.py": "D36C13B7063FEC9BC482E61EC1131F53B9F1E5D224656ABDA1EE356E4144B8A4",
+        "controls-usb-identity.py": "44AAE2391C7FD0E67F8518A9849966C3756DD89E490D6E319C9F8E68A82A099A"
+      }
+    },
+    "Debug": {
+      "testsPassed": 39,
+      "manifestSha256": "59c6228d331380f837803aaba337884943b3ebb08d81313d14e86f45ac52a0ef",
+      "ctestLogSha256": "b3beb7edfde1e2f95e219f50820d8e63851cfe09a38420a5e7919a229268d997",
+      "runtimeIdentitiesMatchControlSelectionCheckpoint": true,
+      "binarySha256": {
+        "worker": "EECBB6EE0E684CEF7D0990234332D3D1AD60F1B2A0415BA2A2D41416892C4E95",
+        "probe": "C40D3D41A57F6546ADA6653CAA1810A17FE88D2011A6409CA574DB1BA6A675AC",
+        "asio": "45180660F7BE541285A391254DD196062C76EFA6E2D1B160016693666178148C"
+      },
+      "scriptInputs": {
+        "test-controls-host-traced.ps1": "1AFC98AC0A26182460F38F5AB4663DD15475DD104667A3F86AF2462844E64A93",
+        "validate-controls-host-probe.py": "F697DC98F7BA8C0B7C49E72FF03E158F1A7A9D0F91A580432350831737658E7C",
+        "test-controls-host-probe.py": "4AB1DB8C5DCD448C552E30CFCD8A2A8C7CBCACEB81A6BAA25AAE162FA8706AC1",
+        "read-startup-journal.ps1": "33DAD42650A140CAC93A0D0537464209B7CABC2E1D7912EDF01F897538D3B318",
+        "capture-usb-startup.ps1": "420AB3317566A05F7CB7C0C05D4F32C3E3104C034A4D1233DD0660F3DE479101",
+        "preflight-usbdk.ps1": "92A83517B40DB12535C7B233A4F728498D37F77DAE708DDCA35A6BD567818887",
+        "collect-windows-state.ps1": "4028449556933A6C3CA970DFCB4F143A330847266A8E7DD58668F9B590EB1F66",
+        "export-usbdk-physical-checkpoint.py": "36F9AFB6BADB95B2566A6413ED236AB10FBA1AF6634E5A946F957004E52B84BE",
+        "validate-usbdk-capture.py": "44C76600C13A9D0F5A5ED4127DBFD4621A9B2A2A80DB8088F0A6651BEB3C14A0",
+        "prepare-usbdk-lifecycle-trace.py": "FEE895320E0E01C971C569D392661D3683C7E10DE6AC15456B49DB83643F3042",
+        "observe-sl3-usb-identity.py": "238AA772EF466832A6D63B020EAB357B014A2EB998A1FB2662DD1A988C6E43EA",
+        "supervise-usb-identity.py": "D36C13B7063FEC9BC482E61EC1131F53B9F1E5D224656ABDA1EE356E4144B8A4",
+        "controls-usb-identity.py": "44AAE2391C7FD0E67F8518A9849966C3756DD89E490D6E319C9F8E68A82A099A"
+      }
+    }
+  },
+  "fullPythonTests": 105,
+  "integrationTests": 5,
+  "planOnlyExecuted": true,
+  "controlsTraceIntegrated": true,
+  "nativeSourcesChanged": false,
+  "nativeRuntimeChanged": false,
+  "physicalObservationExecuted": false,
+  "heldDeviceCoverageVerified": false,
+  "seratoCoexistenceVerified": false,
+  "files": {
+    "scripts/controls-usb-identity.py": "44aae2391c7fd0e67f8518a9849966c3756dd89e490d6e319c9f8e68a82a099a",
+    "tests/test_controls_usb_identity.py": "265ccbc0bc3db377971d96199aefae8d4aba0e48ad267dc9fa6ca7a58094bcee",
+    "tests/test_controls_probe_evidence.py": "d55394eca25fb98c2ad669e53030370ff9ae243f3906e6d53bdbf27b167806cc",
+    "analysis/identity-controls-python-tests.log": "3b6971016e7e21a39349f6a0610da605437553bee45e0e5770bf0778cfefa282",
+    "analysis/identity-controls-plan.json": "b281ebf9f46959220dc68025503dc7967d4f144469a414a7e66e4b49aadaad61"
+  },
+  "sdkFree": {
+    "testsPassed": 25,
+    "precedingUnchangedNativeEvidence": true,
+    "logSha256": "8b96fbd82dafbe2f3a81df0ec52fa8cbca99acc8713f01b900d77831f6eee203"
+  }
+}

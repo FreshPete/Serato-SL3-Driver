@@ -1,0 +1,167 @@
+[
+  {
+    "path": "artifacts\\extracted\\rane-windows\\all-variants\\app\\ControlPanel.exe",
+    "sha256": "12B31959D729728A89BCF2C91FDFF14E638712F6578A5C80E791AE10FFF84889",
+    "bytes": 2096528,
+    "status": "Valid",
+    "message": "Signature verified.",
+    "signer": "CN=Rane Corporation, OU=R&D Engineering, O=Rane Corporation, L=Mukilteo, S=WA, C=US",
+    "timestampSigner": "CN=Symantec Time Stamping Services Signer - G4, O=Symantec Corporation, C=US",
+    "fileVersion": "1,3,5,302",
+    "productVersion": "1,3,5,302"
+  },
+  {
+    "path": "artifacts\\extracted\\rane-windows\\all-variants\\app\\ControlPanel.exe$0",
+    "sha256": "83EDB1B4966FA091B4293621AD01AE60A800F30E5F5F797F825AD75D94D35CFB",
+    "bytes": 2663312,
+    "status": "Valid",
+    "message": "Signature verified.",
+    "signer": "CN=Rane Corporation, OU=R&D Engineering, O=Rane Corporation, L=Mukilteo, S=WA, C=US",
+    "timestampSigner": "CN=Symantec Time Stamping Services Signer - G4, O=Symantec Corporation, C=US",
+    "fileVersion": "1,3,5,302",
+    "productVersion": "1,3,5,302"
+  },
+  {
+    "path": "artifacts\\extracted\\rane-windows\\all-variants\\app\\driver\\instdrv.exe",
+    "sha256": "C1E6CF8FE444103B8FC52686B328A66AFC79EFC34FA7E93289EFB2C11070FED7",
+    "bytes": 84880,
+    "status": "Valid",
+    "message": "Signature verified.",
+    "signer": "CN=Rane Corporation, OU=R&D Engineering, O=Rane Corporation, L=Mukilteo, S=WA, C=US",
+    "timestampSigner": "CN=Symantec Time Stamping Services Signer - G4, O=Symantec Corporation, C=US",
+    "fileVersion": "6.0.6001.18000 built by: WinDDK",
+    "productVersion": "6.0.6001.18000"
+  },
+  {
+    "path": "artifacts\\extracted\\rane-windows\\all-variants\\app\\driver\\instdrv.exe$0",
+    "sha256": "99E7D3BBDE1BF98365148BBE62959711407C443B82E2F872A7287278F5D2CACE",
+    "bytes": 88976,
+    "status": "Valid",
+    "message": "Signature verified.",
+    "signer": "CN=Rane Corporation, OU=R&D Engineering, O=Rane Corporation, L=Mukilteo, S=WA, C=US",
+    "timestampSigner": "CN=Symantec Time Stamping Services Signer - G4, O=Symantec Corporation, C=US",
+    "fileVersion": "6.0.6001.18000 built by: WinDDK",
+    "productVersion": "6.0.6001.18000"
+  },
+  {
+    "path": "artifacts\\extracted\\rane-windows\\all-variants\\app\\driver\\instdrv32.exe",
+    "sha256": "C1E6CF8FE444103B8FC52686B328A66AFC79EFC34FA7E93289EFB2C11070FED7",
+    "bytes": 84880,
+    "status": "Valid",
+    "message": "Signature verified.",
+    "signer": "CN=Rane Corporation, OU=R&D Engineering, O=Rane Corporation, L=Mukilteo, S=WA, C=US",
+    "timestampSigner": "CN=Symantec Time Stamping Services Signer - G4, O=Symantec Corporation, C=US",
+    "fileVersion": "6.0.6001.18000 built by: WinDDK",
+    "productVersion": "6.0.6001.18000"
+  },
+  {
+    "path": "artifacts\\extracted\\rane-windows\\all-variants\\app\\driver\\instdrv64.exe",
+    "sha256": "99E7D3BBDE1BF98365148BBE62959711407C443B82E2F872A7287278F5D2CACE",
+    "bytes": 88976,
+    "status": "Valid",
+    "message": "Signature verified.",
+    "signer": "CN=Rane Corporation, OU=R&D Engineering, O=Rane Corporation, L=Mukilteo, S=WA, C=US",
+    "timestampSigner": "CN=Symantec Time Stamping Services Signer - G4, O=Symantec Corporation, C=US",
+    "fileVersion": "6.0.6001.18000 built by: WinDDK",
+    "productVersion": "6.0.6001.18000"
+  },
+  {
+    "path": "artifacts\\extracted\\rane-windows\\all-variants\\app\\driver\\strmdrv.cat",
+    "sha256": "DED34CEF3AD2DCBB892FE591760E94340EE00EAD03CB727EFDABE4EA57424B67",
+    "bytes": 8554,
+    "status": "Valid",
+    "message": "Signature verified.",
+    "signer": "CN=Rane Corporation, OU=R&D Engineering, O=Rane Corporation, L=Mukilteo, S=WA, C=US",
+    "timestampSigner": "CN=Symantec Time Stamping Services Signer - G4, O=Symantec Corporation, C=US",
+    "fileVersion": null,
+    "productVersion": null
+  },
+  {
+    "path": "artifacts\\extracted\\rane-windows\\all-variants\\app\\driver\\strmdrv.cat$0",
+    "sha256": "3169DF3E2FCD8041A089F432D2CD04F05F93EB20BCED840DFC5E68EE844E7986",
+    "bytes": 8502,
+    "status": "HashMismatch",
+    "message": "The contents of file C:\\Users\\peter\\source\\repos\\Serato-SL3\\artifacts\\extracted\\rane-windows\\all-variants\\app\\driver\\strmdrv.cat$0 might have been changed by an unauthorized user or process, because the hash of the file does not match the hash stored in the digital signature. The script cannot run on the specified system. For more information, run Get-Help about_Signing.",
+    "signer": "CN=Rane Corporation, OU=R&D Engineering, O=Rane Corporation, L=Mukilteo, S=WA, C=US",
+    "timestampSigner": "CN=Symantec Time Stamping Services Signer - G4, O=Symantec Corporation, C=US",
+    "fileVersion": null,
+    "productVersion": null
+  },
+  {
+    "path": "artifacts\\extracted\\rane-windows\\all-variants\\app\\driver\\strmdrv.sys",
+    "sha256": "935265C869129FBA9706141F37EF2388652F238A9BDE6FCA6CF7FD6F8F9A33BF",
+    "bytes": 34448,
+    "status": "Valid",
+    "message": "Signature verified.",
+    "signer": "CN=Rane Corporation, OU=R&D Engineering, O=Rane Corporation, L=Mukilteo, S=WA, C=US",
+    "timestampSigner": "CN=Symantec Time Stamping Services Signer - G4, O=Symantec Corporation, C=US",
+    "fileVersion": "1.3.5f2 built by: WinDDK",
+    "productVersion": "1.3.5f2"
+  },
+  {
+    "path": "artifacts\\extracted\\rane-windows\\all-variants\\app\\driver\\strmdrv.sys$0",
+    "sha256": "E8E992A8ECE1A57EAB337D815A406B9F815954176C03DB545FCF6D951EC615F5",
+    "bytes": 36240,
+    "status": "Valid",
+    "message": "Signature verified.",
+    "signer": "CN=Rane Corporation, OU=R&D Engineering, O=Rane Corporation, L=Mukilteo, S=WA, C=US",
+    "timestampSigner": "CN=Symantec Time Stamping Services Signer - G4, O=Symantec Corporation, C=US",
+    "fileVersion": "1.3.5f2 built by: WinDDK",
+    "productVersion": "1.3.5f2"
+  },
+  {
+    "path": "artifacts\\extracted\\rane-windows\\all-variants\\app\\driver\\WdfCoInstaller01007.dll",
+    "sha256": "BCF6FBBDF1AD402DC761F87D79688C9B81AA70D63B835FC6618FC8E0686F39F4",
+    "bytes": 1112288,
+    "status": "Valid",
+    "message": "Signature verified.",
+    "signer": "CN=Microsoft Windows Component Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+    "timestampSigner": "CN=Microsoft Timestamping Service, OU=nCipher DSE ESN:10D8-5847-CBF8, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+    "fileVersion": "1.7.6001.0 (longhorn_rtm.080118-1840)",
+    "productVersion": "1.7.6001.0"
+  },
+  {
+    "path": "artifacts\\extracted\\rane-windows\\all-variants\\app\\driver\\WdfCoInstaller01007.dll$0",
+    "sha256": "749CC009F1CAE5C633083897E906B381AA685829FEE2D7CD5E07BAE543848FF7",
+    "bytes": 1490656,
+    "status": "Valid",
+    "message": "Signature verified.",
+    "signer": "CN=Microsoft Windows Component Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+    "timestampSigner": "CN=Microsoft Timestamping Service, OU=nCipher DSE ESN:27F4-D440-54F3, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+    "fileVersion": "1.7.6001.0 (longhorn_rtm.080118-1840)",
+    "productVersion": "1.7.6001.0"
+  },
+  {
+    "path": "artifacts\\extracted\\rane-windows\\all-variants\\sys\\RaneAsioSL3.dll",
+    "sha256": "3EFFA4A843158276F840AAA0764FE631B6E9EA4363E07304B9C6ED7B122D09EF",
+    "bytes": 1988496,
+    "status": "Valid",
+    "message": "Signature verified.",
+    "signer": "CN=Rane Corporation, OU=R&D Engineering, O=Rane Corporation, L=Mukilteo, S=WA, C=US",
+    "timestampSigner": "CN=Symantec Time Stamping Services Signer - G4, O=Symantec Corporation, C=US",
+    "fileVersion": "1,3,5,302",
+    "productVersion": "1,3,5,302"
+  },
+  {
+    "path": "artifacts\\extracted\\rane-windows\\all-variants\\sys\\RaneAsioSL3.dll@32bit",
+    "sha256": "1B9B082DF865AD2ECD1A06EA27F3F903806A45EDDD10FA75F394AFB3FFB329BB",
+    "bytes": 1981440,
+    "status": "NotSigned",
+    "message": "The file C:\\Users\\peter\\source\\repos\\Serato-SL3\\artifacts\\extracted\\rane-windows\\all-variants\\sys\\RaneAsioSL3.dll@32bit is not digitally signed. You cannot run this script on the current system. For more information about running scripts and setting execution policy, see about_Execution_Policies at https://go.microsoft.com/fwlink/?LinkID=135170",
+    "signer": null,
+    "timestampSigner": null,
+    "fileVersion": "1,3,5,302",
+    "productVersion": "1,3,5,302"
+  },
+  {
+    "path": "artifacts\\extracted\\rane-windows\\all-variants\\sys\\RaneAsioSL3.dll$0",
+    "sha256": "E3D88039547B70915B1A9BC9E3E3F7DBA32AAA9BC3CE8FD51616565EA1734141",
+    "bytes": 2683280,
+    "status": "Valid",
+    "message": "Signature verified.",
+    "signer": "CN=Rane Corporation, OU=R&D Engineering, O=Rane Corporation, L=Mukilteo, S=WA, C=US",
+    "timestampSigner": "CN=Symantec Time Stamping Services Signer - G4, O=Symantec Corporation, C=US",
+    "fileVersion": "1,3,5,302",
+    "productVersion": "1,3,5,302"
+  }
+]

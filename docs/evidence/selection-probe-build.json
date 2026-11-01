@@ -1,0 +1,121 @@
+{
+  "scope": "Actual setting-probe executables with simulated positives and safe native negatives; no physical setting/trace acceptance",
+  "feature": {
+    "simulatedLifecyclePassed": true,
+    "nativeSettingRunDuringBuild": false,
+    "audioStartAttempts": 0,
+    "singleTarget": true,
+    "immutableRequestBeforeLaunch": true,
+    "outcomeSeparateFromCleanup": true
+  },
+  "builds": {
+    "Release": {
+      "manifestSha256": "8cd1143da61d312c7ca587b0215156f532a9f8971b8260506182a501324bf62d",
+      "ctestLogSha256": "21177ca31218be411e48a6e3b8ea3b4f94e1c6f588e589afee816d10bc24c618",
+      "testsPassed": 40,
+      "scriptInputs": {
+        "test-selection-host-probe.py": "1203900CDA4BC8EEEF3971C79CE86DC4D43CB11E97868A5D4356FAA486B337D0",
+        "validate-selection-host-probe.py": "05A9F5B7701EAA71E7AE3450E2D5C709F58CD9B6F7158929A860492337145928",
+        "validate-controls-host-probe.py": "B5D8A33EE2E31635EA29657DA250BA9F0A2739C41AEAB86CF5AD726D6E5BBA6C"
+      },
+      "traceScriptInputs": {
+        "test-controls-host-traced.ps1": "E39BFA28700CA195CDA2BCA14DC8B3D21CB62C84ABE307FF85A7348805343E76",
+        "validate-controls-host-probe.py": "B5D8A33EE2E31635EA29657DA250BA9F0A2739C41AEAB86CF5AD726D6E5BBA6C",
+        "test-controls-host-probe.py": "4AB1DB8C5DCD448C552E30CFCD8A2A8C7CBCACEB81A6BAA25AAE162FA8706AC1",
+        "read-startup-journal.ps1": "33DAD42650A140CAC93A0D0537464209B7CABC2E1D7912EDF01F897538D3B318",
+        "capture-usb-startup.ps1": "AE83CD9719576F5A9B3E8D49F2B642EBF21A1F914133EFC68044075FA8021C09",
+        "preflight-usbdk.ps1": "92A83517B40DB12535C7B233A4F728498D37F77DAE708DDCA35A6BD567818887",
+        "collect-windows-state.ps1": "4028449556933A6C3CA970DFCB4F143A330847266A8E7DD58668F9B590EB1F66",
+        "export-usbdk-physical-checkpoint.py": "36F9AFB6BADB95B2566A6413ED236AB10FBA1AF6634E5A946F957004E52B84BE",
+        "validate-usbdk-capture.py": "44C76600C13A9D0F5A5ED4127DBFD4621A9B2A2A80DB8088F0A6651BEB3C14A0",
+        "prepare-usbdk-lifecycle-trace.py": "FEE895320E0E01C971C569D392661D3683C7E10DE6AC15456B49DB83643F3042",
+        "observe-sl3-usb-identity.py": "238AA772EF466832A6D63B020EAB357B014A2EB998A1FB2662DD1A988C6E43EA",
+        "supervise-usb-identity.py": "D36C13B7063FEC9BC482E61EC1131F53B9F1E5D224656ABDA1EE356E4144B8A4",
+        "controls-usb-identity.py": "44AAE2391C7FD0E67F8518A9849966C3756DD89E490D6E319C9F8E68A82A099A",
+        "capture-controls-user-context.ps1": "BCF6D685C20E0073B4C6937B23C1F8CD3FEEA7687B763A06787682D033F7D6CC",
+        "test-controls-user-probe.ps1": "F4842D1D983FEC8698B37142C4D021BE940B4E82BB2571F81919004ABE4C993B",
+        "inspect-process.psm1": "FD76680E42127FEEB4D8DA952B5E04A49B48D3BB6DF159B9C77A236A3C8F0752",
+        "validate-controls-user-probe.py": "14B81CCC46E6F19630C05DACA6B5285106D0707F3782DE7BEF4A0A449E9C6EBA",
+        "validate-usb-state-capture.py": "67CA3438FA472AA2D35684170207531DBEE25F1E332BCE8A4820A3B25F36C9C9",
+        "test-selection-host-probe.py": "1203900CDA4BC8EEEF3971C79CE86DC4D43CB11E97868A5D4356FAA486B337D0",
+        "validate-selection-host-probe.py": "05A9F5B7701EAA71E7AE3450E2D5C709F58CD9B6F7158929A860492337145928",
+        "test-selection-user-probe.ps1": "2F37CA995F63DF094B83AB26D27FDC132A7453F5FF16631570E9DF63C54D364D",
+        "validate-selection-user-probe.py": "91F45840E76A9C4E4CF42083A6BF4CD9091121EEAC7FB18A19121E726C89562F"
+      },
+      "binaries": {
+        "sl3_host_probe.exe": "6D876C8383992F298535E91EDA3B5FFD3734C0E10829ECCA39E038E24AF61F8D",
+        "sl3_host_probe_simulated.exe": "5522ED4DD7A2CF59C04AF17F641D19030EB2114C57E5B1EE94BC80397A5C932D",
+        "sl3_device_session_fixture.exe": "68F9B19F2D02A82C88FBACE83EF82CDC708D0B93D432157571EFC48727E3BDE6",
+        "sl3_usbdk.exe": "5FE2A44F1020032994C2B2E1A5EA868F87650CAA9E23BC2077913760D0E88FE5"
+      }
+    },
+    "Debug": {
+      "manifestSha256": "05566ce0488a180c211357b36638a3a79e869d4571b705ab168ef7505fa28da5",
+      "ctestLogSha256": "c8f9774de2f9624f565e075d047aadd3de790bbbc88747d452ebdef4debc87fd",
+      "testsPassed": 40,
+      "scriptInputs": {
+        "test-selection-host-probe.py": "1203900CDA4BC8EEEF3971C79CE86DC4D43CB11E97868A5D4356FAA486B337D0",
+        "validate-selection-host-probe.py": "05A9F5B7701EAA71E7AE3450E2D5C709F58CD9B6F7158929A860492337145928",
+        "validate-controls-host-probe.py": "B5D8A33EE2E31635EA29657DA250BA9F0A2739C41AEAB86CF5AD726D6E5BBA6C"
+      },
+      "traceScriptInputs": {
+        "test-controls-host-traced.ps1": "E39BFA28700CA195CDA2BCA14DC8B3D21CB62C84ABE307FF85A7348805343E76",
+        "validate-controls-host-probe.py": "B5D8A33EE2E31635EA29657DA250BA9F0A2739C41AEAB86CF5AD726D6E5BBA6C",
+        "test-controls-host-probe.py": "4AB1DB8C5DCD448C552E30CFCD8A2A8C7CBCACEB81A6BAA25AAE162FA8706AC1",
+        "read-startup-journal.ps1": "33DAD42650A140CAC93A0D0537464209B7CABC2E1D7912EDF01F897538D3B318",
+        "capture-usb-startup.ps1": "AE83CD9719576F5A9B3E8D49F2B642EBF21A1F914133EFC68044075FA8021C09",
+        "preflight-usbdk.ps1": "92A83517B40DB12535C7B233A4F728498D37F77DAE708DDCA35A6BD567818887",
+        "collect-windows-state.ps1": "4028449556933A6C3CA970DFCB4F143A330847266A8E7DD58668F9B590EB1F66",
+        "export-usbdk-physical-checkpoint.py": "36F9AFB6BADB95B2566A6413ED236AB10FBA1AF6634E5A946F957004E52B84BE",
+        "validate-usbdk-capture.py": "44C76600C13A9D0F5A5ED4127DBFD4621A9B2A2A80DB8088F0A6651BEB3C14A0",
+        "prepare-usbdk-lifecycle-trace.py": "FEE895320E0E01C971C569D392661D3683C7E10DE6AC15456B49DB83643F3042",
+        "observe-sl3-usb-identity.py": "238AA772EF466832A6D63B020EAB357B014A2EB998A1FB2662DD1A988C6E43EA",
+        "supervise-usb-identity.py": "D36C13B7063FEC9BC482E61EC1131F53B9F1E5D224656ABDA1EE356E4144B8A4",
+        "controls-usb-identity.py": "44AAE2391C7FD0E67F8518A9849966C3756DD89E490D6E319C9F8E68A82A099A",
+        "capture-controls-user-context.ps1": "BCF6D685C20E0073B4C6937B23C1F8CD3FEEA7687B763A06787682D033F7D6CC",
+        "test-controls-user-probe.ps1": "F4842D1D983FEC8698B37142C4D021BE940B4E82BB2571F81919004ABE4C993B",
+        "inspect-process.psm1": "FD76680E42127FEEB4D8DA952B5E04A49B48D3BB6DF159B9C77A236A3C8F0752",
+        "validate-controls-user-probe.py": "14B81CCC46E6F19630C05DACA6B5285106D0707F3782DE7BEF4A0A449E9C6EBA",
+        "validate-usb-state-capture.py": "67CA3438FA472AA2D35684170207531DBEE25F1E332BCE8A4820A3B25F36C9C9",
+        "test-selection-host-probe.py": "1203900CDA4BC8EEEF3971C79CE86DC4D43CB11E97868A5D4356FAA486B337D0",
+        "validate-selection-host-probe.py": "05A9F5B7701EAA71E7AE3450E2D5C709F58CD9B6F7158929A860492337145928",
+        "test-selection-user-probe.ps1": "2F37CA995F63DF094B83AB26D27FDC132A7453F5FF16631570E9DF63C54D364D",
+        "validate-selection-user-probe.py": "91F45840E76A9C4E4CF42083A6BF4CD9091121EEAC7FB18A19121E726C89562F"
+      },
+      "binaries": {
+        "sl3_host_probe.exe": "C19457DEA0F01E2289834D48B8D5980F2FAF1C1D9281132398E25A27592A6256",
+        "sl3_host_probe_simulated.exe": "39EB6EFFEDFA404F0FE37D0D9A0DE37A76257373AFA7410AB12D8835BC99B446",
+        "sl3_device_session_fixture.exe": "275834A553DD587CEC6CA83FF0EE2215491406607F7ED4236FC22D9064D6430F",
+        "sl3_usbdk.exe": "EDE07074D00909A8021B9A18B2E3E5862B5224F8D36648131BAD4A5931262CB3"
+      }
+    }
+  },
+  "python": {
+    "testsPassed": 140,
+    "logSha256": "7422a640ba4505049f129b6b5100622ebc4cea6e38adba72e1517dc5a0736398"
+  },
+  "validatorSourceSha256": "05a9f5b7701eaa71e7ae3450e2d5c709f58cd9b6f7158929a860492337145928",
+  "testSourceSha256": "796514c2573cdd577f5a14dec2a6ca85239d03fc437fbf0d23b661c0bc5b4a2d",
+  "recordSchema": "sl3.selection-host-probe.v2",
+  "wireVersion": 1,
+  "wireReplyBytes": 132,
+  "nativeReviewedTableRequired": true,
+  "reviewedTableComparedBeforePublication": true,
+  "supervisedLauncherPrepared": true,
+  "supervisedNativeSettingRun": false,
+  "splitRoleValidatorSourceSha256": "91f45840e76a9c4e4cf42083a6bf4cd9091121eeac7fb18a19121e726c89562f",
+  "splitRoleTestSourceSha256": "929f3872b5fa90fad6cf28d22a5a2d0a13cebb75b62281fac65ca5b51332a34e",
+  "splitRoleDefaultPlanSha256": "8acaada2e60a4052d12fe774ec033f8c5aae94f8c539be51bbdeb3d2d7ec0fa1",
+  "descriptorOnlyPrerequisiteRejectedSha256": "805f580706e476557689a214865a7dcfcc14e38513a694752497938ce5f3c15f",
+  "requestSavedBeforeWorker": true,
+  "pendingPublicationConservative": true,
+  "operationAndCleanupSeparate": true,
+  "limits": [
+    "Wire/result/owner/journal checks are recorded consistency, not USB trace/security/recovery validation",
+    "No supervised native setting run, analogue gain/through mapping or control-panel deployment",
+    "A verified operation with failed close remains unsuccessful while preserving its outcome",
+    "Missing/malformed outcome preserves possible-write uncertainty; no retry/rollback",
+    "Current-build normal-token read-only baseline and attended traced setting run remain required",
+    "Split-role unit tests use synthetic trace/results and isolated prerequisite/build dependencies; no physical WPP emission proved"
+  ]
+}

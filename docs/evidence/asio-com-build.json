@@ -1,0 +1,90 @@
+{
+  "utc": "2026-10-27T01:17:09.501662+00:00",
+  "scope": "Unregistered ASIO COM DLL ABI, unavailable state and object lifetime only",
+  "clsid": "{5A551CD0-F83E-48EB-8B9D-8614E07852FE}",
+  "builds": [
+    {
+      "configuration": "Release",
+      "utc": "2026-10-27T01:16:36.8612577Z",
+      "ctestTests": [
+        "sl3_core_tests",
+        "sl3_playback_tests",
+        "sl3_audio_bridge_tests",
+        "sl3_duplex_tests",
+        "sl3_asio_buffer_tests",
+        "sl3_asio_com_tests",
+        "sl3_usbdk_plan",
+        "sl3_usbdk_rejects_modes",
+        "sl3_usbdk_rejects_duplex_capture",
+        "sl3_capture_plan",
+        "sl3_capture_rejects_modes"
+      ],
+      "asioComponent": {
+        "built": true,
+        "testsPassed": true,
+        "driverRegistered": false,
+        "hardwareIntegrated": false,
+        "librarySha256": "E05D05B6EAE7753B7E31EB85BEEE8EE3A96C55AC69293F98A90E5C68290A9507",
+        "testExecutableSha256": "0D0001D8105C3ACF014AC7188837C034C85F492B4EF696FDD6298A131061F17F",
+        "comDllSha256": "3F3CDB21A40AE5589B2A9138B959537DA699ECAB4EDAD5512AACD87596C48623",
+        "comTestExecutableSha256": "22CEBAC22C204B04769A85BBCD8F76A9C3ADB16FDA4A8AA782C468E2C84B24BD",
+        "deviceInitializationAvailable": false
+      },
+      "buildScriptSha256": "204E1A9278720335BC7718073558C8E7209DF1C1E291B77A2B0E3795ADFB11D9"
+    },
+    {
+      "configuration": "Debug",
+      "utc": "2026-10-27T01:16:39.7965552Z",
+      "ctestTests": [
+        "sl3_core_tests",
+        "sl3_playback_tests",
+        "sl3_audio_bridge_tests",
+        "sl3_duplex_tests",
+        "sl3_asio_buffer_tests",
+        "sl3_asio_com_tests",
+        "sl3_usbdk_plan",
+        "sl3_usbdk_rejects_modes",
+        "sl3_usbdk_rejects_duplex_capture",
+        "sl3_capture_plan",
+        "sl3_capture_rejects_modes"
+      ],
+      "asioComponent": {
+        "built": true,
+        "testsPassed": true,
+        "driverRegistered": false,
+        "hardwareIntegrated": false,
+        "librarySha256": "FE2B93D7B089331B00210D54A638EF91858FBD209B445516198EE1D6DD889FF0",
+        "testExecutableSha256": "F83B54C11E50811147C2DC1A4FB3C33BE536E6A5383E4E4A2BEEC51D97BCB141",
+        "comDllSha256": "069B2E1037D2A42A6471E0B4A31B7F16C157AAC3041CBD48C7204FF246372EA6",
+        "comTestExecutableSha256": "5792216483B2FA5060398CF8D6AA16198FD8209D656B36FD4A2ACA199FB04EC7",
+        "deviceInitializationAvailable": false
+      },
+      "buildScriptSha256": "204E1A9278720335BC7718073558C8E7209DF1C1E291B77A2B0E3795ADFB11D9"
+    }
+  ],
+  "sourceSha256": {
+    "src/asio/com_server.cpp": "a3eb822f4605670442c813792bdbb878ddee710e5f1ab0e76d46d5cf48d666b4",
+    "src/asio/com_identity.hpp": "358f892e11f17308d37fdcb8c82ceea0171a3421d8472ac675f9e012783904ac",
+    "src/asio/sl3_asio.def": "5e364b9442615e09244cb1b261ffa63afe3c0cff6dfcb8ffb12bfa0c3101807d",
+    "tests/native/asio_com_tests.cpp": "1183e9585f1f9a4e5a32f940b8239fda50140cf7299d7f32cb106dbf8e789040",
+    "CMakeLists.txt": "16b86a07deaf0d61046e77a7797dfa42e8755d72e638ad34f5a80c4fd365fa1c",
+    "scripts/build-native.ps1": "204e1a9278720335bc7718073558c8e7209df1c1e291b77a2b0e3795adfb11d9"
+  },
+  "officialIasioHeaderSha256": "86ad4788452c74823653cf57d4bd557c48bb6542d7e6eb7fff80102c705a066d",
+  "additionalChecks": {
+    "sdkFreeTestsPassed": 9,
+    "sdkFreePathDeliberatelyAbsent": true,
+    "alteredPrivateIasioHeaderRejected": true,
+    "concurrentDeviceCyclesPerConfiguration": 1600
+  },
+  "driverRegistered": false,
+  "deviceInitializationAvailable": false,
+  "usbAccessDuringComTests": false,
+  "audioTransfersDuringComTests": 0,
+  "seratoIntegrationTested": false,
+  "limits": [
+    "DLL does not implement a live or isolated session",
+    "SDK buffer component is not yet connected to DLL",
+    "Hardware audio, timing, channel mapping, latency, DVS and Serato admission remain unverified"
+  ]
+}

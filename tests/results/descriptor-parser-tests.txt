@@ -1,0 +1,8 @@
+test_connected_unit_fixture (test_usb_descriptors.DescriptorTests.test_connected_unit_fixture) ... ok
+test_invalid_lengths (test_usb_descriptors.DescriptorTests.test_invalid_lengths) ... ok
+test_unknown_descriptor_preserved (test_usb_descriptors.DescriptorTests.test_unknown_descriptor_preserved) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.000s
+
+OK

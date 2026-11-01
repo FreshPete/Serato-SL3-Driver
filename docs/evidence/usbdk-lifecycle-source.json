@@ -1,0 +1,423 @@
+{
+  "scope": "Static source and matching driver/TMF message-GUID checks; no USB, tracing or driver execution",
+  "sourceCommit": "84752c30037956149d53b498005b5368616f9257",
+  "sourceLfSha256": {
+    "DeviceAccess.cpp": "1e58b0b4a30aba0114c92357e2cc0b67b60f25b0754821c8062c5d30d6920b8e",
+    "DeviceAccess.h": "19823af47f3381cda899718a4e7cc312e636af1d25093fe62358c188886d724f",
+    "Irp.cpp": "0819c4a33de8cc8b4057008eda9d3e8aacb9edd7815b943a3c1575b280f11b8d",
+    "Irp.h": "97d945e30a0bd5df880cd55a42fa25ef9cfd1375f28eda309654d99808195d9f",
+    "UsbDkUtil.cpp": "67e23da5bae686aaea1967cf9562fb78e1f207e3ca639c7d7f8eebb49d1fc66a",
+    "UsbDkUtil.h": "b1bb40666238d7af7c6ff7c314000e09a0898eeced8b2785c571012ea95246e8",
+    "ControlDevice.cpp": "84b14f706926b0ee4548e029eb24092b50929cf361e791e95b99b5671362f178",
+    "ControlDevice.h": "ea77a0bd73f7b2007dfc11990f8a20253fbc909878f7f6b508c727ae920c590f",
+    "FilterDevice.cpp": "c33df424c4ffcec5ead464835a08937714b889f4139fe3cfd76a0c50710c5600",
+    "RedirectorStrategy.cpp": "21bfc6522d18301435f5060fe00990d85652ffe62a0b67b9d8760ff283fc9e81",
+    "WdfDevice.h": "5071f9afb4759bc1334fc0085722ead4b49ea1b25199824a6f26e7d50a9fdff4",
+    "Trace.h": "439ccea826e5b9ed751109524b4b8698a786a609485dd5a114fb6844c9ebbc46",
+    "UsbDkHelper.cpp": "6790c5a9a67c7f64164198511cd855c1c7054d80850a86d7713831f5ed4b5350",
+    "DriverFile.h": "079dcf53753e4fac7629585ca6d5dc6ac2498748c83bf5dd6f41f604fe0f31b6"
+  },
+  "sourceFunctions": {
+    "UsbDk_StopRedirect": {
+      "file": "UsbDkHelper.cpp",
+      "lines": [
+        172,
+        190
+      ],
+      "normalizedBodySha256": "289eeebe727897b5889fc77d035cf827a0a61306e9ae7dfdfcd4bd3eb58c8144"
+    },
+    "CUsbDkRedirectorStrategy::OnClose": {
+      "file": "RedirectorStrategy.cpp",
+      "lines": [
+        629,
+        640
+      ],
+      "normalizedBodySha256": "4b558a083b4cfaba8ab120ad71f0b30db723dc79d3462bbeb40473399f5ff395"
+    },
+    "CUsbDkControlDevice::RemoveRedirect": {
+      "file": "ControlDevice.cpp",
+      "lines": [
+        1028,
+        1072
+      ],
+      "normalizedBodySha256": "0b07e790f2bb512edbae4188abbc8bd4a1e09f58befcf8a494c91491e76f50c1"
+    },
+    "CUsbDkRedirection::WaitForDetachment": {
+      "file": "ControlDevice.cpp",
+      "lines": [
+        1162,
+        1172
+      ],
+      "normalizedBodySha256": "6cf9e695603131fb91e4f7a6258c18e02f37b1af16df3f852e424735631f8326"
+    },
+    "CUsbDkRedirection::NotifyRedirectionRemoved": {
+      "file": "ControlDevice.cpp",
+      "lines": [
+        1140,
+        1149
+      ],
+      "normalizedBodySha256": "60226af1f61f7d745af6391c797174bebe297cfe76736c7b77e5788cf38b2b06"
+    },
+    "CUsbDkHubFilterStrategy::DropRemovedDevices": {
+      "file": "FilterDevice.cpp",
+      "lines": [
+        276,
+        294
+      ],
+      "normalizedBodySha256": "7046bb45e2f563fa50f3f4e7ed3f375774d8e77d4fc0a9cb7fefa02980e75de5"
+    },
+    "CUsbDkFilterDeviceInit::Configure": {
+      "file": "FilterDevice.cpp",
+      "lines": [
+        54,
+        103
+      ],
+      "normalizedBodySha256": "e5122b20a31720e343c47c30d9f4e9640d35bd6f3a9b1afcb062179f2bd8ba04"
+    },
+    "CUsbDkControlDevice::AddRedirect": {
+      "file": "ControlDevice.cpp",
+      "lines": [
+        726,
+        765
+      ],
+      "normalizedBodySha256": "5e1aaba46ecf76ae3c0875d7ade0a7c87219517f050d858fcffbe2ca9284720b"
+    },
+    "CUsbDkRedirection::CreateRedirectorHandle": {
+      "file": "ControlDevice.cpp",
+      "lines": [
+        1192,
+        1230
+      ],
+      "normalizedBodySha256": "2ead0259f51d4699d492d9cf57778e9410b9607d89616a6e7a93d436e25dbbbe"
+    },
+    "CWdmUsbDeviceAccess::Reset": {
+      "file": "DeviceAccess.cpp",
+      "lines": [
+        253,
+        286
+      ],
+      "normalizedBodySha256": "f4902b7cc660376e551be11fb3307e1ba1e0abfd74dbc2670774cc3e2bf35f8b"
+    },
+    "PowerRequestCompletion": {
+      "file": "DeviceAccess.cpp",
+      "lines": [
+        189,
+        204
+      ],
+      "normalizedBodySha256": "230ca3781dc3c8e70bd7b2c6a049707ad101a92731524039121f7746cbada5bf"
+    },
+    "CWdmEvent::Wait": {
+      "file": "UsbDkUtil.cpp",
+      "lines": [
+        30,
+        40
+      ],
+      "normalizedBodySha256": "4478e5a1847a79cea83fc21ad12c0f7e76d414c7726df5c3df2ad42412398f87"
+    },
+    "CIoControlIrp::SendSynchronously": {
+      "file": "Irp.cpp",
+      "lines": [
+        120,
+        132
+      ],
+      "normalizedBodySha256": "a39dedaa7f394544a6a9027acd33bc9d11048884e9448f61a009432a1f1c9af3"
+    }
+  },
+  "driverSha256": "c92b6c15bd550023312ae4cfe49a39757952a3c2ebdc7d1d143ac5e695f69a63",
+  "bundledTmfSha256": "dd84f5dd432baf179dd400641d37f046bc206e885daf83f59783b48910f454ec",
+  "selectedTmfSha256": "7bc6bd9eb84313544ad607f74012111bdb194b3fbf779e4f1aa9d7f993f94fdb",
+  "providerGuid": "88e1661f-48b6-410f-b096-ba84e9f0656f",
+  "flags": "0x650",
+  "level": 4,
+  "selectedFlags": [
+    "TRACE_DEVACCESS",
+    "TRACE_CONTROLDEVICE",
+    "TRACE_WDFDEVICE",
+    "TRACE_REDIRECTOR"
+  ],
+  "messages": [
+    {
+      "file": "DeviceAccess.cpp",
+      "messageGuid": "247ce428-ea04-0965-5ed0-64a353bd0a2e",
+      "driverGuidFileOffset": 67896,
+      "messageId": 17,
+      "function": "CWdmDeviceAccess::QueryPowerData",
+      "formatSha256": "a0fcad581271d5eb3b872fb8e5249919c293f81e7f8068a1ed8be1e5aac1f33a"
+    },
+    {
+      "file": "DeviceAccess.cpp",
+      "messageGuid": "247ce428-ea04-0965-5ed0-64a353bd0a2e",
+      "driverGuidFileOffset": 67896,
+      "messageId": 18,
+      "function": "PowerRequestCompletion",
+      "formatSha256": "6534bfe77eacc5ac381a75cf828347c5cffe38ca995ab5644cfd7dc530a5b46c"
+    },
+    {
+      "file": "DeviceAccess.cpp",
+      "messageGuid": "247ce428-ea04-0965-5ed0-64a353bd0a2e",
+      "driverGuidFileOffset": 67896,
+      "messageId": 21,
+      "function": "CWdmUsbDeviceAccess::Reset",
+      "formatSha256": "1382982c4959f29c0a7204b3d91a463687f4f39887fce3cfa8fcdd18b3dd5d4f"
+    },
+    {
+      "file": "DeviceAccess.cpp",
+      "messageGuid": "247ce428-ea04-0965-5ed0-64a353bd0a2e",
+      "driverGuidFileOffset": 67896,
+      "messageId": 22,
+      "function": "CWdmUsbDeviceAccess::Reset",
+      "formatSha256": "e8c4fd9ec3c15631d6833f608e8715df5f51b404201a6842522169b3f4b5b3c8"
+    },
+    {
+      "file": "DeviceAccess.cpp",
+      "messageGuid": "247ce428-ea04-0965-5ed0-64a353bd0a2e",
+      "driverGuidFileOffset": 67896,
+      "messageId": 23,
+      "function": "CWdmUsbDeviceAccess::Reset",
+      "formatSha256": "db4802efc4513afd49a013d0756af7dfa9b11a7f6741ccfd1b22b068a17272eb"
+    },
+    {
+      "file": "RedirectorStrategy.cpp",
+      "messageGuid": "4958a782-a8e3-0c75-39e2-15fde034bb64",
+      "driverGuidFileOffset": 68800,
+      "messageId": 28,
+      "function": "CUsbDkRedirectorStrategy::OnClose",
+      "formatSha256": "48d2ddbb3a67c2d642473a4c167e314e57928ec541756af42c656b1b5e2a8ea7"
+    },
+    {
+      "file": "RedirectorStrategy.cpp",
+      "messageGuid": "4958a782-a8e3-0c75-39e2-15fde034bb64",
+      "driverGuidFileOffset": 68800,
+      "messageId": 29,
+      "function": "CUsbDkRedirectorStrategy::OnClose",
+      "formatSha256": "c2aa579d5a5c7456a9b95732ec5db6f781d6833ecae5e184e121ad67caa7605e"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 36,
+      "function": "CUsbDkControlDevice::AddRedirect",
+      "formatSha256": "559ace21f62d3d8b7c9e082175e362d7df05b62b88722df968acd3a4645c1dd1"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 37,
+      "function": "CUsbDkControlDevice::AddRedirect",
+      "formatSha256": "662c4c96f63b50baf07de1b47a2aefcc4f663c75935edbabc542b7c7c88c772e"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 38,
+      "function": "CUsbDkControlDevice::AddRedirect",
+      "formatSha256": "ab574f7853fadd0260632acbb1a85ad44699a4b7b4a111a0216d844e49fc6e7c"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 39,
+      "function": "CUsbDkControlDevice::AddRedirect",
+      "formatSha256": "4b74710cb753ca48856fc5105d3754f95a2fecfe5ee32d7a7cafd415103bcbe4"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 51,
+      "function": "CUsbDkControlDevice::AddRedirectionToSet",
+      "formatSha256": "7205e92f243c078ff82cc1520a12c3ad320276f76a62e64981b6bc8929c00689"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 52,
+      "function": "CUsbDkControlDevice::AddRedirectionToSet",
+      "formatSha256": "90cb291181f2fe4e8cdba755723820161818fcf32bfd9a8b8bbceecf149af511"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 53,
+      "function": "CUsbDkControlDevice::AddRedirectionToSet",
+      "formatSha256": "eb75e1390244b5b97b07e61f92b3f5b9f1e155aa80f851f9eaee92622d206797"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 54,
+      "function": "CUsbDkControlDevice::AddRedirectionToSet",
+      "formatSha256": "072d270070fe0846eacb9d5379f816279a517e90187ca32e4b88885d36497e81"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 55,
+      "function": "CUsbDkControlDevice::AddRedirectionToSet",
+      "formatSha256": "6f7b9a51fe075c3beb09f02f8c08bbc656518b2de6dc928b70f8b93ce5435740"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 56,
+      "function": "CUsbDkControlDevice::RemoveRedirect",
+      "formatSha256": "c8a3c26ab64350555d5924c76d205be0f45b8ea80d96f60d3634e31378b39f87"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 57,
+      "function": "CUsbDkControlDevice::RemoveRedirect",
+      "formatSha256": "931c4ac1bc58412eaa3258501537e4ca7944950dda10c807dbf9bb4c39e0e809"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 58,
+      "function": "CUsbDkControlDevice::RemoveRedirect",
+      "formatSha256": "39cebae1ba159ec76de190469401a1663e381597e447abea0498d6f0b031df81"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 59,
+      "function": "CUsbDkControlDevice::RemoveRedirect",
+      "formatSha256": "9001b1b973a7653a209e1a553d7ee584a946bb435dd921e5710a5032c9ff24cc"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 60,
+      "function": "CUsbDkControlDevice::RemoveRedirect",
+      "formatSha256": "bf22d082d803fbb77e4a22c8a07b5be6d03f5d68018a088910a9c9922b631a76"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 61,
+      "function": "CUsbDkControlDevice::RemoveRedirect",
+      "formatSha256": "cb839d6e89d0727e25da1a41a401cf13b1acbf7f65f7277d2be89a8ebe983c87"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 62,
+      "function": "CUsbDkControlDevice::RemoveRedirect",
+      "formatSha256": "218e815031a4f9bdbdc6f9c598d7725f8447514441651fdd00476e6982f9d330"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 63,
+      "function": "CUsbDkControlDevice::WaitForDetachment",
+      "formatSha256": "16d34f0a871dfb8e1ca495ce3a18d3654bfdffaf94d9d8e5fc3f9c51094e8aa5"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 64,
+      "function": "CUsbDkRedirection::Dump",
+      "formatSha256": "62c6f8e7b1b72399433d923a966154a9ab9178d1265c737444b446b94374c5b2"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 66,
+      "function": "CUsbDkRedirection::NotifyRedirectorCreated",
+      "formatSha256": "b79903cf12f1608539e5bcf1a7abe6c8d9b3815c456aee12ca79a61008342276"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 67,
+      "function": "CUsbDkRedirection::NotifyRedirectionRemoved",
+      "formatSha256": "602ba5222253e43cdcba25e43a051418e7e22ecd4ab61ab8b949d44af5958c3d"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 68,
+      "function": "CUsbDkRedirection::NotifyRedirectionRemovalStarted",
+      "formatSha256": "183d2519642da11e41af66fdf56061e0cc88bc7886733ffd7e8b57582b1ab5a3"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 69,
+      "function": "CUsbDkRedirection::WaitForDetachment",
+      "formatSha256": "499a07371037e3b80d8e5ec74749c8da37899f73c58af99cd2c1c8757d196b2d"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 70,
+      "function": "CUsbDkRedirection::CreateRedirectorHandle",
+      "formatSha256": "c6b8f14d9614dbc59b7bc81a4cabe4259d73e5555ac563efa77b22cdbb08435d"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 71,
+      "function": "CUsbDkRedirection::CreateRedirectorHandle",
+      "formatSha256": "99909474dd09c261bd405c40dcfceadffaa10bcef96433c6de190a31bb57913a"
+    },
+    {
+      "file": "ControlDevice.cpp",
+      "messageGuid": "b5e6b989-2f0e-e5db-a780-e327b8ea6fff",
+      "driverGuidFileOffset": 67720,
+      "messageId": 72,
+      "function": "CUsbDkRedirection::CreateRedirectorHandle",
+      "formatSha256": "d309c74c4ef9efcc6cce4880a3539f97e0c41eab732267f02b29fb58e6a9219b"
+    }
+  ],
+  "kernelRemoveStatusReachesHelperBoolean": false,
+  "kernelRedirectionDeleteFailurePropagated": false,
+  "detachmentEventMeaning": "Removed child absent from a hub relations snapshot while removal is in progress",
+  "reacquisitionReadinessProven": false,
+  "resetPath": {
+    "operation": "IOCTL_INTERNAL_USB_CYCLE_PORT",
+    "addRedirectForceD0": true,
+    "removeRedirectForceD0": false,
+    "conditionalPowerWaitHasTimeout": false,
+    "pendingCycleIoctlHasTimeout": false,
+    "powerCompletionStatusPropagated": false,
+    "attachmentTimeoutBoundsEntireStartRedirect": false,
+    "selectedPowerMessages": {
+      "queryFailure": 17,
+      "completion": 18,
+      "request": 21,
+      "cycleIrpCreationFailure": 22,
+      "cycleSendFailure": 23
+    }
+  },
+  "limits": [
+    "Exact source review is not a complete signed-binary equivalence proof",
+    "The helper result cannot attest successful kernel reset/detachment or normal device readiness",
+    "GUID presence and invariant message definitions do not establish runtime emission/decoding",
+    "No live WPP capture performed; earlier USB-stack-only traces cannot supply missing WPP messages",
+    "Selected TMF omits unrelated messages; decoding omissions must not imply events never occurred"
+  ]
+}

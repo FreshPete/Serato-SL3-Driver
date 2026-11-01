@@ -1,0 +1,102 @@
+{
+  "generatedUtc": "2026-10-27T06:50:36.140385+00:00",
+  "currentSeratoSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "focusedReportsSha256": {
+    "serato500-portaudio-bank-open-01.json": "9653db522530a35f23226061950c3cc43d15c9c120518d803bf49f73b9bb0637",
+    "serato500-pa-open-dispatch-02.json": "9dcccbbb87db59028bfea97202c73944931e3e98ba64403c8728d0784fcce080",
+    "serato500-pa-asio-initialize-03.json": "2c65b347bda583fcdd90e95070ae3f17ae1cd26abdf65367afd693549b7ac53a",
+    "serato500-pa-asio-open-04.json": "7336d9b7de6c1974ae2364094eca5849eba74586901efd30085c0e2080397b90",
+    "serato500-pa-buffer-wrapper-05.json": "c397ccb480e640839faabdae87c099f2a3e7d3b5197348a8215c19086c6b12aa",
+    "serato500-pa-asio-callback-06.json": "550fe0233e59919f2f668c4ad234c19995ffaaa85dcb59f4fe30bdba9fdec27e",
+    "serato500-pa-buffer-end-07.json": "796b1c0048b29810b1dcc610220d78d7a821a1f0b364a6f7c878a5fc24370676"
+  },
+  "checkedInstructions": [
+    "1421e60ce: cvttsd2si r9d, qword ptr [r8]",
+    "1421e60d3: mov r8d, dword ptr [r8 + 8]",
+    "1421e60f3: call 0x1421e69b0",
+    "142218ed2: mov qword ptr [rax + 0x38], rcx",
+    "1422170ef: lea r8, [rbx + 0xbc]",
+    "142217104: call 0x142221eb0",
+    "142221eea: call qword ptr [rax + 0x58]",
+    "142217745: call 0x142221e00",
+    "142217756: je 0x1422177d4",
+    "142217758: cmp ebx, dword ptr [r13 + 0x1d8]",
+    "14221775f: je 0x1422177ad",
+    "142217777: mov ebx, dword ptr [r13 + 0x1d8]",
+    "142217787: mov dword ptr [rsp + 0x78], ebx",
+    "14221779e: mov r8d, ebx",
+    "1422177a4: call 0x142221e00",
+    "1422177ab: je 0x1422177d4",
+    "142217aa1: mov eax, dword ptr [rsp + 0x78]",
+    "142217aaa: mov dword ptr [rsp + 0x50], eax",
+    "142217ab9: mov eax, dword ptr [rsp + 0x770]",
+    "142217ac0: mov dword ptr [rsp + 0x40], eax",
+    "142217adf: call 0x142221680",
+    "14222169b: mov edi, dword ptr [rsp + 0x98]",
+    "1422216e2: mov dword ptr [rcx], edi",
+    "14222170b: mov r15d, dword ptr [rsp + 0xa0]",
+    "142221713: mov dword ptr [rcx + 4], r15d",
+    "142221717: mov ecx, dword ptr [rsp + 0xa8]",
+    "14222171e: mov dword ptr [rbx + 8], ecx",
+    "1422219bd: mov dword ptr [rbx + 0xc], r8d",
+    "14222145b: cmp dword ptr [rbx + 0xc], r12d",
+    "14222145f: je 0x1422215cf"
+  ],
+  "asioOpenVA": "142217160",
+  "processorInitializeVA": "142221680",
+  "processorEndVA": "142221440",
+  "callbackTable": [
+    "0x1422160a0",
+    "0x1422166e0",
+    "0x142216700",
+    "0x142216150"
+  ],
+  "staticFinding": "Requested user frames and selected ASIO host frames remain separate; failed requested-bank creation retries driver preferred frames.",
+  "builds": [
+    {
+      "configuration": "Release",
+      "manifestSha256": "f85aaf51efb83112848ce12c1c95f7bc8abae92b5c1458099f40b2c4e4b04825",
+      "ctestLogSha256": "e6df679b285578581a30642560d3ab8d88664dc9611df6b6653e1c23da7bb129",
+      "nativeTestsPassed": 27,
+      "retry": {
+        "testsPassed": true,
+        "librarySha256": "51B1B016D21B1C3286420844066EB944D255FE07C107CCF37100C018B9F63303",
+        "testExecutableSha256": "ACF5C13C45344262601B5046524C31D35761268238F25E29EB4468A0695A7C1A",
+        "sessionAbiTestExecutableSha256": "7C80C947EC4AC050835C79B996724817F37BBAFCFFB58B9EFD9AF98603E4B9D5",
+        "sessionFixtureDllSha256": "D905D228C42467B4FEBF1F300FD0167FF9CF6B621E0CD6E30531AAC41AAFB4B0",
+        "actualAsioVtableSessionsTested": true,
+        "preferredBankRetryTested": true,
+        "rejectedApplicationFrames": 240,
+        "acceptedPreferredFrames": 128,
+        "timingProfileSynthetic": true,
+        "productionProviderConfigured": false,
+        "physicalAudioTested": false
+      }
+    },
+    {
+      "configuration": "Debug",
+      "manifestSha256": "23b86ed567b98cf3b373a6c94e0959aa897b3e1a355df2c05dcca04c8a4fe385",
+      "ctestLogSha256": "f6d97e05c1384ad7752a64af07ddafa57ce3765533cd76429d2f0980fd21b73a",
+      "nativeTestsPassed": 27,
+      "retry": {
+        "testsPassed": true,
+        "librarySha256": "47D7AE395EB07A2409CF0D5BD07425F837E5B2B3629407581548561CEAEEBB9F",
+        "testExecutableSha256": "20AFED6DF8E37F8CA145013189AA8B31493BA5FF3AC20F00C3F664FE3A2CCB9C",
+        "sessionAbiTestExecutableSha256": "774E18FC5E6D4071BDF8F06DBC625DC07B11913973329C5E9DCF37305F92F61F",
+        "sessionFixtureDllSha256": "0EB51967CD2A9E0F63DDA454611283AFC8D19F5610C28B1953D0542835002F2E",
+        "actualAsioVtableSessionsTested": true,
+        "preferredBankRetryTested": true,
+        "rejectedApplicationFrames": 240,
+        "acceptedPreferredFrames": 128,
+        "timingProfileSynthetic": true,
+        "productionProviderConfigured": false,
+        "physicalAudioTested": false
+      }
+    }
+  ],
+  "seratoExecuted": false,
+  "portAudioExecuted": false,
+  "physicalAudioTested": false,
+  "productionBankRulesChanged": false,
+  "limits": "Our real IASIO vtable retry uses a simulated worker and synthetic timing. Static adaptation does not prove physical latency, stable USB audio, current descriptor/handshake integration or DVS."
+}

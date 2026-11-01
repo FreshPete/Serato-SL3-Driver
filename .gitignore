@@ -1,0 +1,21 @@
+artifacts/
+DJPro/
+analysis/
+tools/
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+tests/results/local/
+*.dmp
+*.pcap*
+*.etl
+
+# Private planning attachment (retained only in the local investigation history).
+docs/Rane_SL3_Compatibility_Plan.docx
+# Signing material and local credentials
+*.pfx
+*.p12
+*.key
+.env
+.env.*

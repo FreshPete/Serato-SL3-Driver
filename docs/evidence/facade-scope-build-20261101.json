@@ -1,0 +1,113 @@
+{
+  "scope": "Actual unregistered COM/IASIO plus isolated simulated worker; no physical USB/Serato operation",
+  "releaseTestsPassed": 50,
+  "manifestSha256": "48a1fdf7e67ee11866fce1b06213c3739fa24aa87c16b8cd37a07c02c723f472",
+  "ctestLogSha256": "99446a040c42ab88a9f94631689ad3e1a8626576c187b2719a59c7a2a6521180",
+  "feature": {
+    "implemented": true,
+    "exclusiveBorrowTested": true,
+    "singleAcquisitionAcrossThreeComObjectsTested": true,
+    "explicitCloseTested": true,
+    "failedOwnerSealedTested": true,
+    "blockedCallbackRetirementTested": true,
+    "productionProviderUsesSharedScope": false,
+    "physicalScopeTested": false,
+    "timingSynthetic": true
+  },
+  "factoryController": {
+    "productionCapabilityImplemented": true,
+    "defaultFactoryUsesScope": false,
+    "preparationDoesNotAcquire": true,
+    "singleAttemptPerFactory": true,
+    "explicitRetirementChecked": true,
+    "canonicalComIdentityTested": true,
+    "controllerBeforeDeviceReleaseTested": true,
+    "uninitializedDeviceAfterCloseTested": true,
+    "failedEndNoFallbackTested": true,
+    "missingProductionConfigurationRejected": true,
+    "physicalScopeTested": false,
+    "currentSeratoUsesScope": false
+  },
+  "clockRefresh": {
+    "readOnly": true,
+    "opcode": "0x307",
+    "wireLayoutVersion": 3,
+    "recreatedFacadeReadsFreshClock": true,
+    "preparedBuffersAndActiveAudioRefused": true,
+    "cachedFallbackOnFailure": false,
+    "changedClockMetadataTested": true,
+    "timingProfileMismatchTested": true,
+    "physicalRefreshTested": false
+  },
+  "metadataProbe": {
+    "planAndSimulatedLifecyclePassed": true,
+    "executableSha256": "F6D6A24D4F644D65467BD5EAF523552C528F16A52F3E2320EA30A9BB69D02D71",
+    "simulatedExecutableSha256": "BD709A9CC88B8A9FACB60DD6594A9F0ABEA260DADC081C2B151B00EE1A8B6693",
+    "validatorSha256": "AB9278F00A612F154DAB20DF13AFFF3F60BB80C1DDE6309E25E9014F78190178",
+    "testScriptSha256": "A1C22A66EDBDBF84B16A05E52A7A2879CBFD00D10B9A59489A56D07391732FFF",
+    "facadeObjects": 3,
+    "acquisitions": 1,
+    "clockReads": 3,
+    "audioStarts": 0,
+    "timingProfileRequired": false,
+    "physicalScopeTested": false
+  },
+  "binaries": {
+    "sl3_asio.dll": "6ff40ac23e667e2d972f5ea9760c6ea5f9f7facabfeebd032de17dbe7e0f375b",
+    "sl3_asio_session_fixture.dll": "1cbf91d40f6ff87815a08ed943b85aa14285447fe636b884b7df042a5e8fce80",
+    "sl3_asio_session_tests.exe": "0bc64687b07b26c2aa155d4aa3a992db2b6460be29336c3624d66d8e5f6a25f1",
+    "sl3_retained_host_tests.exe": "6b71469d45a6180c4c0a3319c3417baf83ac0f6d56bf790a1c37aaa16a459476",
+    "sl3_device_session_fixture.exe": "c2ea683caeaa4ff1702efb0cd0eeff0567e8d7428aa6d90e0cb3549a94996937",
+    "sl3_scope_probe.exe": "f6d6a24d4f644d65467bd5eaf523552c528f16a52f3e2320ea30a9bb69d02d71",
+    "sl3_scope_probe_simulated.exe": "bd709a9cc88b8a9facb60dd6594a9f0abea260dadc081c2b151b00ee1a8b6693"
+  },
+  "sharedComAudit": {
+    "objects": 3,
+    "enumerationObjects": 1,
+    "audioObjects": 2,
+    "streamsPerAudioObject": 2,
+    "acquisitions": 1,
+    "clockReads": 7,
+    "audioBeginEndPairs": 4,
+    "finalReleases": 1,
+    "auditComparedAfterEveryStage": true,
+    "competingBorrowAndCloseRejected": true
+  },
+  "productionTestExportsAbsent": true,
+  "registrationChanged": false,
+  "physicalScopeVerified": false,
+  "intermediateQueueFailure": {
+    "logSha256": "5c58ae7a8e2fa10d496e69638ac0068d52c22aebf6601efaaf5c4888627fb69b",
+    "returnedQueueStatusRecorded": false,
+    "causeVerified": false,
+    "diagnosticRepeatsPassed": 12,
+    "diagnosticRecordSha256": "f7a7e193859cfc99dd12f23b35279b509f292628eed7e76a4bd1817a199b6be0",
+    "testClientNowHandlesOnlyFullAsBackpressure": true,
+    "overallDeadlineIncreased": false
+  },
+  "sourceInputs": {
+    "tests/native/retained_host_tests.cpp": "a8d1d625016cabfd93ee540f3b7218757307b925e7ecbf74a97509378fbccc83",
+    "src/asio/scope_interface.hpp": "7d6949e962e1809badc8a9487d9f8aae77e3444b1857d42fe543451a6e3696d2",
+    "src/asio/com_server.cpp": "ee485400e4bb010ab772d8abe074e9ede907db398a5e319efd6b2f37ab7d3a29",
+    "src/asio/host_session.hpp": "92f113316953ca3b8f4d808f30e58095ff3ddfd563e05c4339bd6b86febb5459",
+    "src/asio/driver_facade.cpp": "ea4503867f535dc920dcce8e3fbbf7e7496121b00246a777d3e4c38d366e556e",
+    "tests/native/asio_session_provider.cpp": "a9ace07112d65d6c4a9e4795306a8669ba6038880a46efadfc381f63ea282c15",
+    "src/asio/driver_configuration.cpp": "73d82ac59b69d242e740d0891eeab2a71f5bf715be7d39c2bc792a0ff8636a82",
+    "src/asio/host_session.cpp": "5a7604fa32fa65287f1ef2fa4a92fac6cda7ccd911f123e06e57bd1fe383ec97",
+    "src/windows/device_session.cpp": "a0f53deb8a14d044c663b23a2a9d95741440912d67e6bee8f74bbb9c32dbb4b5",
+    "src/windows/device_session.hpp": "0fa8b20984bffea5cb9fc30fa30d1376ad9b7dc7616f8257b58cd12b3c9443e4",
+    "tests/native/device_session_fixture.cpp": "70d0185b14b1f79bbbb89af5d558c7128d668434079825a2db20c9e559fc66f2",
+    "src/asio/driver_configuration.hpp": "2febf97eabd8e4edb7b67e1f6523b48f7b1e7d6c9bf89316c1062f0c33741316",
+    "src/asio/driver_facade.hpp": "832662953ab910cde981181c7f9de6c1c4794ec078642e9d5fc889a4108aa2f9",
+    "tests/native/asio_session_tests.cpp": "db5cc1b59030a233aa067b125106455a121a0fdfcf2cb7880dd15b5dbcfc578b",
+    "tests/native/device_session_tests.cpp": "44a963a11dd3a4ca3b7eb12e1e78b2adc4910b9504859f64633f5a6eb813d865",
+    "tests/native/asio_com_tests.cpp": "ee0be6392012427eb504c7ac66882b4d3c379246ed5096009fe5de1bd27532d6",
+    "src/core/device_session_protocol.hpp": "6bc22a9b823a3ef1794672858bd723b3f635bed2a2b3b4d369b1f52f3411058a"
+  },
+  "limits": [
+    "Default production factory still creates one owner per object unless explicitly scoped before first creation",
+    "The project scope capability is not requested by the inspected current Serato backend",
+    "Recreated metadata objects refresh the held clock; every audio begin also verifies it",
+    "Simulation does not prove physical handoff, analogue mapping, latency or current Serato admission"
+  ]
+}

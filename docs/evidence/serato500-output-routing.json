@@ -1,0 +1,151 @@
+{
+  "scope": "Static descriptor-to-GraphOut stereo port routing; no physical audio or current SL3 integration",
+  "binarySha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "focusedReportSha256": {
+    "serato500-endpoint-mixer-03.json": "915f8c8fe1aac7838226febfacdfa16066c4959e2ba6fa646ffbd3af58654b68",
+    "serato500-output-builders-08.json": "127a51525c4b7e833a99905ca6ff783559c70bb6e26f5f49206e2557f8442447",
+    "serato500-output-router-07.json": "1166766dcf00bcd256ff356711f2266a5f1b3537b574efe7bbe0813710a0946c",
+    "serato500-output-enum-edge-09.json": "272a9f1143c6ba044487399fafa88efe0d4d7292c69410e626abec2ddd198835",
+    "serato500-output-connection-10.json": "76b98cc22bdafecaeec08968ab5ee8c957530f5de896970eb5613dd8f4b5651a"
+  },
+  "outputEnums": [
+    {
+      "name": "Deck1Out",
+      "value": 3,
+      "assembly": [
+        "1405c3fbd: movabs rbx, 0x74754f316b636544",
+        "1405c3fc7: mov qword ptr [rbp - 0x11], rbx",
+        "1405c3fcb: mov byte ptr [rbp - 9], 0",
+        "1405c3fcf: mov dword ptr [rbp + 0xf], 3",
+        "1405c3fd6: lea r8, [rbp - 0x11]",
+        "1405c3fda: lea rdx, [rbp - 0x31]",
+        "1405c3fde: mov rcx, r14"
+      ]
+    },
+    {
+      "name": "Deck2Out",
+      "value": 4,
+      "assembly": [
+        "1405c409d: movabs rax, 0x74754f326b636544",
+        "1405c40a7: mov qword ptr [rbp - 0x11], rax",
+        "1405c40ab: mov byte ptr [rbp - 9], 0",
+        "1405c40af: mov dword ptr [rbp + 0xf], 4",
+        "1405c40b6: lea r8, [rbp - 0x11]",
+        "1405c40ba: lea rdx, [rbp - 0x59]",
+        "1405c40be: mov rcx, r14"
+      ]
+    },
+    {
+      "name": "Deck3Out",
+      "value": 5,
+      "assembly": [
+        "1405c40f2: movabs rax, 0x74754f336b636544",
+        "1405c40fc: mov qword ptr [rbp - 0x11], rax",
+        "1405c4100: mov byte ptr [rbp - 9], 0",
+        "1405c4104: mov dword ptr [rbp + 0xf], 5",
+        "1405c410b: lea r8, [rbp - 0x11]",
+        "1405c410f: lea rdx, [rbp - 0x59]",
+        "1405c4113: mov rcx, r14"
+      ]
+    }
+  ],
+  "outputMap": {
+    "mixerCompleteOffset": "0x188",
+    "builderConfigurationOffset": "0x8",
+    "builder": "0x14228E2A0",
+    "graphNode": "serato::audio::model::GraphOutNode"
+  },
+  "graphOutputPorts": "2*hw_dest and 2*hw_dest+1",
+  "routeAssembly": [
+    "14228e5fe: mov eax, dword ptr [rbx + 0x20]",
+    "14228e601: lea r15d, [rax + rax]",
+    "14228e605: mov dword ptr [rsp + 0x28], r14d",
+    "14228e60a: mov dword ptr [rsp + 0x20], 0",
+    "14228e612: xor r9d, r9d",
+    "14228e615: mov r8, qword ptr [rbp - 0x61]",
+    "14228e619: mov rdx, r13",
+    "14228e61c: mov rcx, qword ptr [rbp + 0x67]",
+    "14228e620: call 0x1414db7f0",
+    "14228e625: lea esi, [r14 + 1]",
+    "14228e629: mov dword ptr [rsp + 0x28], esi",
+    "14228e62d: mov dword ptr [rsp + 0x20], 1",
+    "14228e635: xor r9d, r9d",
+    "14228e638: mov r8, qword ptr [rbp - 0x61]",
+    "14228e63c: mov rdx, r13",
+    "14228e63f: mov rcx, qword ptr [rbp + 0x67]",
+    "14228e643: call 0x1414db7f0",
+    "14228e648: mov dword ptr [rsp + 0x28], r15d",
+    "14228e64d: mov dword ptr [rsp + 0x20], r14d",
+    "14228e652: xor r9d, r9d",
+    "14228e655: mov r8, qword ptr [rbp - 0x41]",
+    "14228e659: mov rdx, qword ptr [rbp - 0x49]",
+    "14228e65d: mov r14, qword ptr [rbp + 0x67]",
+    "14228e661: mov rcx, r14",
+    "14228e664: call 0x1414db7f0",
+    "14228e669: lea eax, [r15 + 1]",
+    "14228e66d: mov dword ptr [rsp + 0x28], eax",
+    "14228e671: mov dword ptr [rsp + 0x20], esi",
+    "14228e675: xor r9d, r9d",
+    "14228e678: mov r8, qword ptr [rbp - 0x41]",
+    "14228e67c: mov rdx, qword ptr [rbp - 0x49]",
+    "14228e680: mov rcx, r14",
+    "14228e683: call 0x1414db7f0",
+    "14228e688: add r12, 4",
+    "14228e68c: cmp r12, qword ptr [rbp - 0x31]"
+  ],
+  "toPortPropertyAssembly": [
+    "14143ed00: lea r9, [rip + 0x1af8aa1]",
+    "14143ed07: lea r8, [rbp - 0x19]",
+    "14143ed0b: lea rdx, [rip + 0x1af8ad2]",
+    "14143ed12: mov rcx, rbx",
+    "14143ed15: call 0x1406a4cf0",
+    "14143ed1a: mov qword ptr [rbx + 0x288], rax",
+    "14143ed21: mov ecx, 0x140"
+  ],
+  "connectionPortAssignmentAssembly": [
+    "1414db9ad: mov edx, dword ptr [rsp + 0xb0]",
+    "1414db9b4: mov rcx, qword ptr [r14 + 0x280]",
+    "1414db9bb: call 0x1406af4e0",
+    "1414db9c0: mov byte ptr [rsp + 0x20], 1",
+    "1414db9c5: xor r9d, r9d",
+    "1414db9c8: lea r8, [rsp + 0x90]",
+    "1414db9d0: mov edx, dword ptr [rsp + 0xb8]",
+    "1414db9d7: mov rcx, qword ptr [r14 + 0x288]",
+    "1414db9de: call 0x1406af4e0",
+    "1414db9e3: mov byte ptr [rsp + 0x20], 1",
+    "1414db9e8: xor r9d, r9d",
+    "1414db9eb: lea r8, [rsp + 0x90]"
+  ],
+  "legacyEvidenceSha256": "a63a02804e5a00cc1da48faff9c9bdfa962da0f1c3b09a7019d9eec0570fab3a",
+  "historicalOrderInference": [
+    {
+      "endpoint": "Deck3Out",
+      "hardwarePair": 0,
+      "graphOutputPorts": [
+        0,
+        1
+      ]
+    },
+    {
+      "endpoint": "Deck1Out",
+      "hardwarePair": 1,
+      "graphOutputPorts": [
+        2,
+        3
+      ]
+    },
+    {
+      "endpoint": "Deck2Out",
+      "hardwarePair": 2,
+      "graphOutputPorts": [
+        4,
+        5
+      ]
+    }
+  ],
+  "limits": [
+    "The current discontinued SL3 stub does not supply this full historical configuration",
+    "Graph ports do not prove final backend channel conversion, physical sockets or analogue output",
+    "Account/product/handshake requirements remain independent and unchanged"
+  ]
+}

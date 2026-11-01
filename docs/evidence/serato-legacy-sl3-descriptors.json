@@ -1,0 +1,260 @@
+{
+  "scope": "Static historical descriptor recovery and startup registration-array membership; no runtime admission, audio, handshake, account or current-Serato validation",
+  "targets": [
+    {
+      "version": "2.5.5",
+      "binarySha256": "ba8641d0329fe0c955147d2b45f247eeea82ac0f812fe30a339834dbe0c0a503",
+      "registration": {
+        "arrayVA": "0x1447d4810",
+        "entries": 156,
+        "resourceId": 203,
+        "index": 132,
+        "sourceFunction": "0x1402abea0",
+        "parser": "0x140356cd0",
+        "startupAssembly": [
+          "1402b1e06: call 0x1402abea0",
+          "1402b1e0b: nop ",
+          "1402b1e0c: mov rbx, qword ptr [rbp + 0x158]",
+          "1402b1e13: mov rdi, qword ptr [rbp + 0x160]",
+          "1402b1e1a: cmp rbx, rdi",
+          "1402b1e1d: je 0x1402b1e30",
+          "1402b1e1f: nop ",
+          "1402b1e20: mov ecx, dword ptr [rbx]",
+          "1402b1e22: call 0x140356cd0",
+          "1402b1e27: add rbx, 4",
+          "1402b1e2b: cmp rbx, rdi",
+          "1402b1e2e: jne 0x1402b1e20",
+          "1402b1e30: lea rcx, [rbp + 0x158]"
+        ]
+      },
+      "resource": {
+        "payloadVA": "0x1420f47c0",
+        "bytes": 2968,
+        "cipherSha256": "66c4424b0f0e60a56bdce9cb973a30b1fcf77fcec96ccce639d317e9ef4b7a46",
+        "decodedSha256": "93e6539fcf6867f71b30528eb6e655d04c393d461c4905f0050a3b67de1e569c",
+        "xmlBytes": 2966,
+        "xmlSha256": "314e81ffb5d052e53280903d543107c8223e99ff1f4e200311a2b3d90e49154c",
+        "decoderFunction": "0x14067fff0",
+        "deviceSecretFieldEmpty": true
+      },
+      "supportedApps": [
+        "Serato DJ"
+      ],
+      "type": "native_pro_device",
+      "name": "Rane SL3",
+      "fields": {
+        "vendor_id": "0x1CC5",
+        "product_id": "0x0001",
+        "requires_usb": "true",
+        "handshake_type": "HANDSHAKE_TYPE_DRIVER_API",
+        "platter_resolution": "0",
+        "output_calibration_gain": "-1.5",
+        "braking_type": "BRAKING_TYPE_SOFTWARE_START_SOFTWARE_STOP",
+        "win_audio_api": "ASIO",
+        "mac_audio_api": "CoreAudio",
+        "win_audio_device_name": "SL 3",
+        "mac_audio_device_name": "SL 3",
+        "sample_rate": "HZ48000",
+        "num_decks": "3",
+        "dvs_device": "DVS_DEVICE_YES",
+        "hardware_mixer": "true",
+        "has_faders": "false",
+        "software_mic_gain": "SOFTWARE_MIXER_STATE_DISABLE",
+        "software_cue_gain": "SOFTWARE_MIXER_STATE_DISABLE",
+        "software_cf_curve": "SOFTWARE_MIXER_STATE_DISABLE",
+        "software_uf_curve": "SOFTWARE_MIXER_STATE_DISABLE",
+        "software_cue_mix": "SOFTWARE_MIXER_STATE_DISABLE",
+        "cue_crossfader_type": "PER_CHANNEL_CUE",
+        "software_master_cue": "SOFTWARE_MIXER_STATE_DISABLE",
+        "software_split_cue": "SOFTWARE_MIXER_STATE_DISABLE",
+        "software_crossfader_reverse": "SOFTWARE_MIXER_STATE_DISABLE",
+        "provides_talk_over": "false",
+        "provides_software_through": "true",
+        "midi_direction": "none"
+      },
+      "bufferAlignments": [
+        {
+          "sampleRate": "HZ48000",
+          "values": [
+            "48"
+          ]
+        }
+      ],
+      "outputsInDeclaredOrder": [
+        "Deck3Out",
+        "Deck1Out",
+        "Deck2Out"
+      ],
+      "inputsInDeclaredOrder": [
+        "Deck3In",
+        "Deck1In",
+        "Deck2In"
+      ],
+      "recordSources": [
+        {
+          "rec_src": "RECORD_SOURCE_CH1",
+          "endpoint": "Deck1In"
+        },
+        {
+          "rec_src": "RECORD_SOURCE_CH2",
+          "endpoint": "Deck2In"
+        },
+        {
+          "rec_src": "RECORD_SOURCE_CH3",
+          "endpoint": "Deck3In"
+        },
+        {
+          "rec_src": "RECORD_SOURCE_VIDEO_MIX",
+          "endpoint": "Deck3In"
+        }
+      ],
+      "driverDetection": {
+        "osx": "/Library/Extensions/SL3.10.9.kext",
+        "osx_x64": "/Library/Extensions/SL3.10.9.kext",
+        "win_x86": "SOFTWARE\\ASIO\\Rane SL 3",
+        "win_x64": "SOFTWARE\\ASIO\\Rane SL 3"
+      },
+      "validation": {
+        "publishedEcbVectors": 3,
+        "directionsPerVector": 2,
+        "cipherConstantsSha256": "1b2102001d189daaf6da08d5655426cfb6f48aab720f6ee488ca754c16ff01f3",
+        "peAndVendorCodeExecuted": false,
+        "physicalAudioVerified": false
+      }
+    },
+    {
+      "version": "2.5.6",
+      "binarySha256": "3b04472cd5597fd56266e1c2c86dc298431b0026001aefe4b43aa3b909ee35c5",
+      "registration": {
+        "arrayVA": "0x1449e8dc0",
+        "entries": 157,
+        "resourceId": 207,
+        "index": 133,
+        "sourceFunction": "0x1402acce0",
+        "parser": "0x140357b40",
+        "startupAssembly": [
+          "1402b2c46: call 0x1402acce0",
+          "1402b2c4b: nop ",
+          "1402b2c4c: mov rbx, qword ptr [rbp + 0x158]",
+          "1402b2c53: mov rdi, qword ptr [rbp + 0x160]",
+          "1402b2c5a: cmp rbx, rdi",
+          "1402b2c5d: je 0x1402b2c70",
+          "1402b2c5f: nop ",
+          "1402b2c60: mov ecx, dword ptr [rbx]",
+          "1402b2c62: call 0x140357b40",
+          "1402b2c67: add rbx, 4",
+          "1402b2c6b: cmp rbx, rdi",
+          "1402b2c6e: jne 0x1402b2c60",
+          "1402b2c70: lea rcx, [rbp + 0x158]"
+        ]
+      },
+      "resource": {
+        "payloadVA": "0x142c5e930",
+        "bytes": 2968,
+        "cipherSha256": "66c4424b0f0e60a56bdce9cb973a30b1fcf77fcec96ccce639d317e9ef4b7a46",
+        "decodedSha256": "93e6539fcf6867f71b30528eb6e655d04c393d461c4905f0050a3b67de1e569c",
+        "xmlBytes": 2966,
+        "xmlSha256": "314e81ffb5d052e53280903d543107c8223e99ff1f4e200311a2b3d90e49154c",
+        "decoderFunction": "0x140681860",
+        "deviceSecretFieldEmpty": true
+      },
+      "supportedApps": [
+        "Serato DJ"
+      ],
+      "type": "native_pro_device",
+      "name": "Rane SL3",
+      "fields": {
+        "vendor_id": "0x1CC5",
+        "product_id": "0x0001",
+        "requires_usb": "true",
+        "handshake_type": "HANDSHAKE_TYPE_DRIVER_API",
+        "platter_resolution": "0",
+        "output_calibration_gain": "-1.5",
+        "braking_type": "BRAKING_TYPE_SOFTWARE_START_SOFTWARE_STOP",
+        "win_audio_api": "ASIO",
+        "mac_audio_api": "CoreAudio",
+        "win_audio_device_name": "SL 3",
+        "mac_audio_device_name": "SL 3",
+        "sample_rate": "HZ48000",
+        "num_decks": "3",
+        "dvs_device": "DVS_DEVICE_YES",
+        "hardware_mixer": "true",
+        "has_faders": "false",
+        "software_mic_gain": "SOFTWARE_MIXER_STATE_DISABLE",
+        "software_cue_gain": "SOFTWARE_MIXER_STATE_DISABLE",
+        "software_cf_curve": "SOFTWARE_MIXER_STATE_DISABLE",
+        "software_uf_curve": "SOFTWARE_MIXER_STATE_DISABLE",
+        "software_cue_mix": "SOFTWARE_MIXER_STATE_DISABLE",
+        "cue_crossfader_type": "PER_CHANNEL_CUE",
+        "software_master_cue": "SOFTWARE_MIXER_STATE_DISABLE",
+        "software_split_cue": "SOFTWARE_MIXER_STATE_DISABLE",
+        "software_crossfader_reverse": "SOFTWARE_MIXER_STATE_DISABLE",
+        "provides_talk_over": "false",
+        "provides_software_through": "true",
+        "midi_direction": "none"
+      },
+      "bufferAlignments": [
+        {
+          "sampleRate": "HZ48000",
+          "values": [
+            "48"
+          ]
+        }
+      ],
+      "outputsInDeclaredOrder": [
+        "Deck3Out",
+        "Deck1Out",
+        "Deck2Out"
+      ],
+      "inputsInDeclaredOrder": [
+        "Deck3In",
+        "Deck1In",
+        "Deck2In"
+      ],
+      "recordSources": [
+        {
+          "rec_src": "RECORD_SOURCE_CH1",
+          "endpoint": "Deck1In"
+        },
+        {
+          "rec_src": "RECORD_SOURCE_CH2",
+          "endpoint": "Deck2In"
+        },
+        {
+          "rec_src": "RECORD_SOURCE_CH3",
+          "endpoint": "Deck3In"
+        },
+        {
+          "rec_src": "RECORD_SOURCE_VIDEO_MIX",
+          "endpoint": "Deck3In"
+        }
+      ],
+      "driverDetection": {
+        "osx": "/Library/Extensions/SL3.10.9.kext",
+        "osx_x64": "/Library/Extensions/SL3.10.9.kext",
+        "win_x86": "SOFTWARE\\ASIO\\Rane SL 3",
+        "win_x64": "SOFTWARE\\ASIO\\Rane SL 3"
+      },
+      "validation": {
+        "publishedEcbVectors": 3,
+        "directionsPerVector": 2,
+        "cipherConstantsSha256": "1b2102001d189daaf6da08d5655426cfb6f48aab720f6ee488ca754c16ff01f3",
+        "peAndVendorCodeExecuted": false,
+        "physicalAudioVerified": false
+      }
+    }
+  ],
+  "comparison": {
+    "sameCiphertext": true,
+    "sameDecodedResource": true,
+    "sameXml": true
+  },
+  "vectorSource": "https://www.schneier.com/wp-content/uploads/2015/12/vectors-2.txt",
+  "interpretation": "The SL3 descriptor and startup registration-array entry remain in both releases. Presence does not prove successful runtime connection or contradict an official end-of-support policy.",
+  "remaining": [
+    "Runtime selection and any additional historical product/connection restrictions",
+    "Current descriptor/driver-API integration boundary",
+    "Consumer units for endpoint indices and buffer alignment",
+    "Physical sample-rate, stereo-pair, gain, through and DVS validation"
+  ]
+}

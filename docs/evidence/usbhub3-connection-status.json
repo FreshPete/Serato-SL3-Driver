@@ -1,0 +1,24 @@
+{
+  "scope": "Inspected-image cached connection-status query path; not a ready-to-redirect predicate or a physical query result",
+  "imageSha256": "f93fa3a32037c597fd19ca9d65f59e53a1e337123582ed2479d5c16a4848df16",
+  "pdbSha256": "63c7a9e69445700717fe3f69bc468f6f7a11e6358e5054c1a933388037cc19f5",
+  "querySymbolsSha256": "d190fc5f93e5f2aa9ab627a1ad048f6755fe319685a9b995412b1aa51a1089f8",
+  "disassemblySha256": "af12a27470ec68dd3f34a85dac0511640916868bfb0dddb1c5cff61e96b74af3",
+  "symbolInspectorSha256": "2bd49ec3ae16caa86ac6331bf9fc2593c6d580dfc342c090d178d08da741a2ad",
+  "exporterSha256": "25a386236318115bfcdf0a4625867f0b686353d0ae292fc107a9d32f89352118",
+  "portConnectionStatusOffset": 1424,
+  "copiedOutputOffset": 31,
+  "cachedStatusEnum": "_USB_CONNECTION_STATUS",
+  "deviceConnectedValue": 1,
+  "sourceSetsConnectedDuringPdoCreation": true,
+  "queryPathCopiesCachedStatus": true,
+  "genericConnectedAcceptedAsReadiness": false,
+  "limits": [
+    "The identified getter path copies a cached port field, not the DSM state.",
+    "The creation path assigns DeviceConnected; the small Stopped entry itself has no field update.",
+    "This is not an exhaustive write/call-graph analysis, nor a proof that the cached value is identical in every runtime state.",
+    "No hub IOCTL was sent and normal-token hub query permissions were not tested.",
+    "The current image/PDB identity does not bind the driver loaded in an earlier trace.",
+    "This does not rule out every supported normal-user observation API or establish a need for a privileged broker."
+  ]
+}

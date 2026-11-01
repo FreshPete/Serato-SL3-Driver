@@ -1,0 +1,142 @@
+{
+  "utc": "2026-10-27T00:22:34.917463+00:00",
+  "scope": "Original stream-core build and synthetic tests only; no ASIO object, driver registration, real transport or hardware streaming",
+  "release": {
+    "utc": "2026-10-27T00:20:30.7504508Z",
+    "configuration": "Release",
+    "architecture": "x64",
+    "generator": "Visual Studio 16 2019",
+    "windowsSdk": "10.0.19041.0",
+    "coreTestsPassed": true,
+    "planOnlyPassed": true,
+    "physicalCaptureTested": false,
+    "inputs": {
+      "src/core/playback.cpp": "E8006A992A70BA9226E74D5E6CE49CA1D54F6214410FBD12A0C994A1CA32119B",
+      "third_party/usbdk/README.md": "605C7FAA50A802736C21AC03D362C8962445168CDCDB9EDCE54C3D82E62B3B9D",
+      "CMakeLists.txt": "A4914BAA6589BEBBABB5147C4F7F7CA6681B3EA54104D430B19D0C1EAD55451C",
+      "third_party/usbdk/UsbDkData.h": "8F0A0F4F10D2D6FB371E48C7C9E82AF890CA75601EC4E5143949A42402D8CB83",
+      "tests/native/playback_tests.cpp": "90A8D63D3CAB5795D3199B1D7E5DD2EF22FA9978F85C37937606F4BF32E36B18",
+      "src/windows/sl3_fixture.hpp": "F926D9EE87F0D9F02124D9514D50584F47235150180155D3A97DD3ACC73BC9F1",
+      "src/core/audio_bridge.cpp": "6289660D879DFAB69AF7EDB6166F3A7C7AB45371C6766BCF3E1169255AB71435",
+      "src/core/audio_bridge.hpp": "B43C7407F13CE72A9D10EF75B1023248876A3177DD23AC7D4E7D6BD2B98C2C5D",
+      "tests/native/audio_bridge_tests.cpp": "1A5AF82C40885B247AE95741F486D62951179D0AA21E7E288918331CF5C9E57B",
+      "src/core/capture.hpp": "B6215776FE4F5B88678E69970D7B9B0E4C810FA2DCF8549D1F2FA045B23073E3",
+      "tests/native/capture_tests.cpp": "CF54D91F245EA476FC704361483D53836861B4786F96839F9BF5E280F5935428",
+      "src/windows/capture_main.cpp": "E8DF087CACD40F500E6A89FE4EB85ACB1ED2FD79D81034D7FF26BD37A0C52BEA",
+      "src/windows/usbdk_main.cpp": "0B01A22ABF4066359C6F265D7A6A7A2FAFC6EC683C1C769C2382F1BAB8F714F9",
+      "third_party/usbdk/UsbDkHelper.h": "09CAD2056278CD9DD5D74E66EC0115569662B6643EBC28660EEAB3F089A0020C",
+      "third_party/usbdk/LICENSE": "09E8A9BCEC8067104652C168685AB0931E7868F9C8284B66F5AE6EDAE5F1130B",
+      "src/windows/diagnostic.hpp": "5659A28562D9B06D6D0B5C08EB94F5542BD32E319A6A27F71C1B8F4090F9CC71",
+      "src/core/capture.cpp": "F16B23870B216A581FB21425F58586FC46DE13A9AF520953C870BFAAE5420CD3",
+      "src/core/playback.hpp": "B56A303B0259C57B5999B2E80BCF260FE53575C158D224EEC4EA01ED8E56454B"
+    },
+    "executableSha256": "255DE9C34EC4A0BDBD036F13F26972AC9696812A213C4255013AAA020026B217",
+    "executableBytes": 94720,
+    "ctestTests": [
+      "sl3_core_tests",
+      "sl3_playback_tests",
+      "sl3_audio_bridge_tests",
+      "sl3_usbdk_plan",
+      "sl3_usbdk_rejects_modes",
+      "sl3_capture_plan",
+      "sl3_capture_rejects_modes"
+    ],
+    "buildScriptSha256": "CB4A79E0EA2ED3A0F373D7C656D9A85E4A51EE9014FB3BD00EE1EE63547B0CEF",
+    "usbdk": {
+      "executableSha256": "44AABF1C9291A087B7F79014E4F19F636A12812135BE2E6B46FBE005ED5A3C96",
+      "executableBytes": 105984,
+      "planOnlyPassed": true,
+      "physicalCaptureTested": false,
+      "helperLoadedDuringPlan": false
+    }
+  },
+  "debug": {
+    "utc": "2026-10-27T00:20:32.1191653Z",
+    "configuration": "Debug",
+    "architecture": "x64",
+    "generator": "Visual Studio 16 2019",
+    "windowsSdk": "10.0.19041.0",
+    "coreTestsPassed": true,
+    "planOnlyPassed": true,
+    "physicalCaptureTested": false,
+    "inputs": {
+      "src/core/playback.cpp": "E8006A992A70BA9226E74D5E6CE49CA1D54F6214410FBD12A0C994A1CA32119B",
+      "third_party/usbdk/README.md": "605C7FAA50A802736C21AC03D362C8962445168CDCDB9EDCE54C3D82E62B3B9D",
+      "CMakeLists.txt": "A4914BAA6589BEBBABB5147C4F7F7CA6681B3EA54104D430B19D0C1EAD55451C",
+      "third_party/usbdk/UsbDkData.h": "8F0A0F4F10D2D6FB371E48C7C9E82AF890CA75601EC4E5143949A42402D8CB83",
+      "tests/native/playback_tests.cpp": "90A8D63D3CAB5795D3199B1D7E5DD2EF22FA9978F85C37937606F4BF32E36B18",
+      "src/windows/sl3_fixture.hpp": "F926D9EE87F0D9F02124D9514D50584F47235150180155D3A97DD3ACC73BC9F1",
+      "src/core/audio_bridge.cpp": "6289660D879DFAB69AF7EDB6166F3A7C7AB45371C6766BCF3E1169255AB71435",
+      "src/core/audio_bridge.hpp": "B43C7407F13CE72A9D10EF75B1023248876A3177DD23AC7D4E7D6BD2B98C2C5D",
+      "tests/native/audio_bridge_tests.cpp": "1A5AF82C40885B247AE95741F486D62951179D0AA21E7E288918331CF5C9E57B",
+      "src/core/capture.hpp": "B6215776FE4F5B88678E69970D7B9B0E4C810FA2DCF8549D1F2FA045B23073E3",
+      "tests/native/capture_tests.cpp": "CF54D91F245EA476FC704361483D53836861B4786F96839F9BF5E280F5935428",
+      "src/windows/capture_main.cpp": "E8DF087CACD40F500E6A89FE4EB85ACB1ED2FD79D81034D7FF26BD37A0C52BEA",
+      "src/windows/usbdk_main.cpp": "0B01A22ABF4066359C6F265D7A6A7A2FAFC6EC683C1C769C2382F1BAB8F714F9",
+      "third_party/usbdk/UsbDkHelper.h": "09CAD2056278CD9DD5D74E66EC0115569662B6643EBC28660EEAB3F089A0020C",
+      "third_party/usbdk/LICENSE": "09E8A9BCEC8067104652C168685AB0931E7868F9C8284B66F5AE6EDAE5F1130B",
+      "src/windows/diagnostic.hpp": "5659A28562D9B06D6D0B5C08EB94F5542BD32E319A6A27F71C1B8F4090F9CC71",
+      "src/core/capture.cpp": "F16B23870B216A581FB21425F58586FC46DE13A9AF520953C870BFAAE5420CD3",
+      "src/core/playback.hpp": "B56A303B0259C57B5999B2E80BCF260FE53575C158D224EEC4EA01ED8E56454B"
+    },
+    "executableSha256": "4708517BB2FB81FC36D16940B58CF1090559B69490D961528A3B7881EA178EDF",
+    "executableBytes": 422400,
+    "ctestTests": [
+      "sl3_core_tests",
+      "sl3_playback_tests",
+      "sl3_audio_bridge_tests",
+      "sl3_usbdk_plan",
+      "sl3_usbdk_rejects_modes",
+      "sl3_capture_plan",
+      "sl3_capture_rejects_modes"
+    ],
+    "buildScriptSha256": "CB4A79E0EA2ED3A0F373D7C656D9A85E4A51EE9014FB3BD00EE1EE63547B0CEF",
+    "usbdk": {
+      "executableSha256": "4CFD908204B6AA5A69F274C42975C0AB6D7AAE25A24A3BD50A2231E382C1F2A3",
+      "executableBytes": 416768,
+      "planOnlyPassed": true,
+      "physicalCaptureTested": false,
+      "helperLoadedDuringPlan": false
+    }
+  },
+  "successfulSyntheticStreamRuns": 11,
+  "syntheticRatesHz": [
+    44100,
+    48000
+  ],
+  "blockSizesFrames": [
+    64,
+    128,
+    256,
+    512,
+    1024
+  ],
+  "checks": {
+    "variablePacketBoundaries": true,
+    "signedSamplesAndLogicalChannelMapping": true,
+    "twoBlockStartupDelay": true,
+    "deferredHostOutput": true,
+    "partialOutputClearsStaleBank": true,
+    "inputOnlyAndOutputOnlySelections": true,
+    "stablePlanesAcrossRestart": true,
+    "zeroCppNewAllocationsInSuccessfulStreamPaths": true,
+    "explicitQueueUnderflowOverflowFaults": true,
+    "discontinuityAndTimeRegressionFaults": true,
+    "callbackExceptionFault": true,
+    "reentrantMutationRejected": true
+  },
+  "clockLimit": "Host observation timestamps, not measured hardware sample time; no packet generator or resampling",
+  "threadingLimit": "Single-owner core; session synchronization, native I/O lifecycle and real callback deadlines remain outside this component",
+  "sdkReference": {
+    "url": "https://download.steinberg.net/sdk_downloads/ASIO-SDK_2.3.4_2025-10-15.zip",
+    "bytes": 8910208,
+    "sha256": "d5ebf0c20dd2c5f43771fd0c1418f4b361bf52434ee670097cfa6b3a335e2eca",
+    "headersUsedInBuild": false,
+    "sourceRedistributed": false,
+    "licenseAgreementExecuted": false
+  },
+  "asioDriverRegistered": false,
+  "continuousTransportIntegrated": false,
+  "hardwareAudioTested": false,
+  "seratoIntegrationTested": false
+}

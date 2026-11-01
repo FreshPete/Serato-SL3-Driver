@@ -1,0 +1,200 @@
+{
+  "utc": "2026-10-27T05:34:44.114156+00:00",
+  "scope": "Windows structural package inspection, official Apple/Serato research and simulated read-only Mac preflight tests",
+  "package": {
+    "archive_sha256": "e6558b7d8c95148a9629a0c2a70dfb8e4dd0351fb03c43b158304a08f1617264",
+    "source": "https://cdn.inmusicbrands.com/rane/legacy-product-downloads/Sl3-2.0.1f2.zip",
+    "package_info_sha256": "9ba77e4441c7039ddd6572b7e3bec4eeb8ad3a051e820cdfb2d81761e517b94b",
+    "attributes": {
+      "format-version": "2",
+      "identifier": "com.rane.pkg.Sl3",
+      "version": "2.0.1f2",
+      "overwrite-permissions": "false",
+      "install-location": "/",
+      "auth": "root",
+      "postinstall-action": "restart"
+    }
+  },
+  "kext": {
+    "info_plist_sha256": "0797266e7c49c2e6dd796f1c45730fbb63d9db3d35ea7181a5ba9867c1c5606a",
+    "personality": {
+      "CFBundleIdentifier": "com.rane.driver.sl3",
+      "CFBundleVersion": "2.0.1f2",
+      "IOClass": "com_rane_sl3_audiodevice",
+      "IOProviderClass": "IOUSBHostDevice",
+      "bcdDevice": 0,
+      "idProduct": 1,
+      "idVendor": 7365
+    },
+    "dependencies": {
+      "com.apple.iokit.IOAudioFamily": "1.6.4",
+      "com.apple.iokit.IOUSBFamily": "3.0.3",
+      "com.apple.iokit.IOUSBHostFamily": "1.0.1",
+      "com.apple.kpi.iokit": "10.0.0",
+      "com.apple.kpi.libkern": "10.0.0",
+      "com.apple.kpi.mach": "10.0.0"
+    }
+  },
+  "legacy_binaries": [
+    {
+      "path": "artifacts\\extracted\\rane-mac\\tree\\Library\\PrivilegedHelperTools\\Sl3SettingsService",
+      "sha256": "d84b4aa0a59283204b8c5b6e3c9ad0c373724df6e4922f91a0b1cc1b269e187e",
+      "architectures": [
+        "x86_64"
+      ],
+      "signature_verified_on_mac": false
+    },
+    {
+      "path": "artifacts\\extracted\\rane-mac\\tree\\Library\\PreferencePanes\\SL 3 Audio Control Panel.prefPane\\Contents\\MacOS\\SL 3 Audio Control Panel",
+      "sha256": "10de43f2b922f6b2a6f6f219407383f914f1c13dcf0c4f156b7765bf64adbc5e",
+      "architectures": [
+        "x86_64"
+      ],
+      "signature_verified_on_mac": false
+    },
+    {
+      "path": "artifacts\\extracted\\rane-mac\\tree\\Library\\Frameworks\\Sl3Api.framework\\Versions\\A\\Sl3Api",
+      "sha256": "ec9d9657b640427a894ad542c1032e8eec8ec061b32f954fd40a4bc668185b0c",
+      "architectures": [
+        "x86_64",
+        "i386"
+      ],
+      "signature_verified_on_mac": false
+    },
+    {
+      "path": "artifacts\\extracted\\rane-mac\\tree\\Library\\Extensions\\Sl3Driver.10.9.kext\\Contents\\MacOS\\Sl3Driver.10.9",
+      "sha256": "285110fc73d8546e9fa629dee2c098c21e7b1ca8c35bc16a5e3ae5c5ab47519c",
+      "architectures": [
+        "x86_64"
+      ],
+      "signature_verified_on_mac": false
+    }
+  ],
+  "prior_macho_report_sha256": "2d2b35bfd1ab23bda787d6ae93fd91286258fdfa89e24bf025a4b81a0567f373",
+  "apple_api_sources": [
+    {
+      "url": "https://developer.apple.com/documentation/iousbhost/iousbhostisochronousframe.md",
+      "file": "artifacts\\references\\apple-iousbhost\\iso-frame.md",
+      "sha256": "c923f52fc64478710af9d835bcfa122184631093365dd2f36154ec4cac6bd50e"
+    },
+    {
+      "url": "https://developer.apple.com/documentation/iousbhost/iousbhostisochronoustransaction.md",
+      "file": "artifacts\\references\\apple-iousbhost\\iso-transaction.md",
+      "sha256": "a74d33c4a39bc3fc1ae9818bb42e5083918f00a1cff1ff0be0be3db80a2286ec"
+    },
+    {
+      "url": "https://developer.apple.com/documentation/iousbhost/iousbhostpipe/enqueueiorequest(with:framelist:framelistcount:firstframenumber:completionhandler:).md",
+      "file": "artifacts\\references\\apple-iousbhost\\enqueue-frame.md",
+      "sha256": "e86ab7094ff008d4f11e60997aa7d3e6cfc087bd5a08e9bba5755ef05cb0a8b9"
+    },
+    {
+      "url": "https://developer.apple.com/documentation/iousbhost/iousbhostpipe/enqueueiorequest(with:transactionlist:transactionlistcount:firstframenumber:options:completionhandler:).md",
+      "file": "artifacts\\references\\apple-iousbhost\\enqueue-transaction.md",
+      "sha256": "77984afdb8371f4f7dacf064563937b8377be077c4b378aac5290a87f8e1fa48"
+    }
+  ],
+  "research_links": [
+    "https://developer.apple.com/documentation/iousbhost/iousbhostobjectinitoptions/devicecapture",
+    "https://developer.apple.com/documentation/audiodriverkit",
+    "https://developer.apple.com/documentation/usbdriverkit/iousbhostpipe",
+    "https://developer.apple.com/documentation/driverkit/requesting-entitlements-for-driverkit-development",
+    "https://developer.apple.com/documentation/coreaudio/creating-an-audio-server-driver-plug-in",
+    "https://support.serato.com/hc/en-us/articles/12934808677007-macOS-26-Tahoe-supported-Serato-software-status"
+  ],
+  "preflight_plan": {
+    "schema": 1,
+    "utc": "2026-10-27T05:34:43.914856+00:00",
+    "plan_only": true,
+    "analysis_platform": "Windows",
+    "scope": "Read-only Mac/SL3 host and registry preflight",
+    "usb_user_client_opened": false,
+    "driver_activated": false,
+    "driver_unloaded": false,
+    "security_changed": false,
+    "firmware_operations": 0,
+    "audio_submissions": 0,
+    "physical_audio_compatibility_verified": false,
+    "commands_to_query": {
+      "os_version": [
+        "/usr/bin/sw_vers",
+        "-productVersion"
+      ],
+      "os_build": [
+        "/usr/bin/sw_vers",
+        "-buildVersion"
+      ],
+      "process_architecture": [
+        "/usr/bin/uname",
+        "-m"
+      ],
+      "model": [
+        "/usr/sbin/sysctl",
+        "-n",
+        "hw.model"
+      ],
+      "hardware_arm64": [
+        "/usr/sbin/sysctl",
+        "-n",
+        "hw.optional.arm64"
+      ],
+      "process_translated": [
+        "/usr/sbin/sysctl",
+        "-n",
+        "sysctl.proc_translated"
+      ],
+      "sip": [
+        "/usr/bin/csrutil",
+        "status"
+      ],
+      "assessment": [
+        "/usr/sbin/spctl",
+        "--status"
+      ],
+      "loaded_extensions": [
+        "/usr/bin/kmutil",
+        "showloaded"
+      ],
+      "legacy_receipt": [
+        "/usr/sbin/pkgutil",
+        "--pkg-info",
+        "com.rane.pkg.Sl3"
+      ],
+      "developer_directory": [
+        "/usr/bin/xcode-select",
+        "-p"
+      ],
+      "usb_registry": [
+        "/usr/sbin/ioreg",
+        "-a",
+        "-r",
+        "-c",
+        "IOUSBHostDevice",
+        "-l"
+      ]
+    },
+    "conditional_commands": {
+      "existing_legacy_kext_signature": [
+        "/usr/bin/codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "--verbose=2",
+        "/Library/Extensions/Sl3Driver.10.9.kext"
+      ]
+    }
+  },
+  "plan_sha256": "9cc0efa1a9d47d133cf361b59649a04bc4985b178e35856fc3d0ded036613142",
+  "python_tests_passed": 27,
+  "python_log_sha256": "fb609f49d2d2093e6aeb298dd5f8fcd55e7962659471b8fa1d89f9af8b6523e2",
+  "inputs": {
+    "scripts/preflight-macos.py": "46d145d8c05ec9c20862b837cf17a0f967e40df5f14cf6fdf63b872564ef7e2e",
+    "tests/test_macos_preflight.py": "74ccad5d75203b528680243fece28a9d80c1655f9b97c72605e40ca7f198b71d",
+    "scripts/export-macos-route-evidence.py": "0abc77d87301985b0642603809bd54ce9239acce6d30247371b9fdf44c22bf9b"
+  },
+  "mac_compilation_performed": false,
+  "mac_runtime_collection_performed": false,
+  "mac_signatures_verified": false,
+  "usb_transport_validated_on_mac": false,
+  "core_audio_device_implemented": false,
+  "mac_serato_dvs_validated": false
+}

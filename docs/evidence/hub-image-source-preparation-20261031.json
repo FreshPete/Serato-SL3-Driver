@@ -1,0 +1,84 @@
+{
+  "scope": "Actual uncommitted PLA property/configuration checks, not a trace capture",
+  "sourceSha256": "ad60c3f9c24a1325220cafdb11d767d0b8196ab4891aba578e3734b5d4d0c2df",
+  "primaryOutputSha256": "faf315fb32bdc3545206301ff6649f9b3b5f4b657e99f032108d5c03cb848399",
+  "primary": {
+    "scope": "Actual uncommitted PLA configuration round-trip; no trace or persistent collector created",
+    "configurationValidated": true,
+    "producerPid": 31632,
+    "durationSeconds": 5,
+    "sessionName": "SL3Image-6a8ca986bd8848db92d9c72ca4258c73",
+    "sessionGuid": "1f3e0ee1-ba0b-4d4f-9fd6-ea664175d68d",
+    "prospectiveRootPath": "C:\\Users\\peter\\source\\repos\\Serato-SL3\\tests\\results\\local\\SL3Image-6a8ca986bd8848db92d9c72ca4258c73",
+    "prospectiveRootCreated": false,
+    "providerGuid": "151f55dc-467d-471f-83b5-5f889d46ff66",
+    "providerKeywordsAny": 4096,
+    "extendedModes": 33554432,
+    "plaLegacyKernelClassification": false,
+    "sourceCommitted": false,
+    "sourceStarted": false,
+    "runtimeFlagForwardingVerified": false,
+    "independentStopValidated": false,
+    "imageRundownObserved": false,
+    "readinessAdmission": false,
+    "sourceSha256": "ad60c3f9c24a1325220cafdb11d767d0b8196ab4891aba578e3734b5d4d0c2df"
+  },
+  "positiveDurationBoundaries": [
+    {
+      "durationSeconds": 1,
+      "sessionName": "SL3Image-a73092d96c0f432dafafe79b2e2b5cf4",
+      "sessionGuid": "79cfbc78-349c-4a20-ab24-ff41e43c493c",
+      "configurationValidated": true,
+      "sourceStarted": false,
+      "prospectiveRootCreated": false
+    },
+    {
+      "durationSeconds": 60,
+      "sessionName": "SL3Image-81342e43a2da40169d2c9d5a81fae550",
+      "sessionGuid": "e6959616-2c2b-4437-80a7-288d394b1549",
+      "configurationValidated": true,
+      "sourceStarted": false,
+      "prospectiveRootCreated": false
+    }
+  ],
+  "negativeCliChecks": [
+    {
+      "case": "duration-zero",
+      "exitCode": 1,
+      "existingOutputPreserved": true
+    },
+    {
+      "case": "duration-too-long",
+      "exitCode": 1,
+      "existingOutputPreserved": true
+    },
+    {
+      "case": "existing-output",
+      "exitCode": 1,
+      "existingOutputPreserved": true
+    },
+    {
+      "case": "run-not-supported",
+      "exitCode": 1,
+      "existingOutputPreserved": true
+    }
+  ],
+  "sourceCommitted": false,
+  "sourceStarted": false,
+  "independentStopValidated": false,
+  "runtimeFlagForwardingVerified": false,
+  "readinessAdmission": false,
+  "systemProviderReference": {
+    "url": "https://raw.githubusercontent.com/microsoft/win32metadata/64ed9177fb76eb244fc9051c74b8a93fdfe20873/generation/WinSDK/RecompiledIdlHeaders/shared/evntrace.h",
+    "commit": "64ed9177fb76eb244fc9051c74b8a93fdfe20873",
+    "bytes": 102819,
+    "sha256": "67e7544ebb9dc0d2a6321afb000d02bb7a1c1539513161800c37ed3f42a3ef61"
+  },
+  "limits": [
+    "ExtendedModes accepts/preserves the bit in memory; its runtime forwarding remains unverified.",
+    "A duration property is not an observed independent stop.",
+    "No emitted image/rundown events, USB operation or loaded hub version qualification is claimed."
+  ],
+  "astAuditSha256": "0aa51e01e53faeaebbbe1046323e8b12fb7a7f224aeeab626590bb8d9ca6bd1a",
+  "astOperationalMethodNamesFound": 0
+}

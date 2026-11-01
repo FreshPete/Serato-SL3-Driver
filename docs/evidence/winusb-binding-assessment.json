@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-26",
+  "genericInfPath": "C:\\Windows\\INF\\winusb.inf",
+  "genericInfSha256": "3f04a907bc44d35697a5f516959da7a9395647a63fa7a3876d923d62651dc802",
+  "copySha256": "3f04a907bc44d35697a5f516959da7a9395647a63fa7a3876d923d62651dc802",
+  "genericInfHardwareMatch": "USB\\MS_COMP_WINUSB",
+  "capturedSl3HasWinUsbCompatibleId": false,
+  "userReportedManualSelection": "doesnt contain a compatible software driver for your device",
+  "experimentalApiSelection": "No successful binding established; diagnostic call returned invalid parameter. Experimental installer retained only under ignored analysis; tracked enumerator is read-only.",
+  "finalDevice": {
+    "Status": "Error",
+    "Class": "MEDIA",
+    "FriendlyName": "Rane SL3",
+    "Problem": 39
+  },
+  "finalProperties": [
+    {
+      "KeyName": "DEVPKEY_Device_Service",
+      "Data": "strmdrv"
+    },
+    {
+      "KeyName": "DEVPKEY_Device_ProblemCode",
+      "Data": 39
+    },
+    {
+      "KeyName": "DEVPKEY_Device_DriverInfPath",
+      "Data": "oem136.inf"
+    }
+  ],
+  "probe": {
+    "utc": "2026-10-26T22:00:27.185125+00:00",
+    "initialized": false,
+    "error": "Expected one project SL3 interface; found 0",
+    "scope": "Enumerate the project SL3 WinUSB interface and query descriptors/pipes only.\n\nOpens one exact VID/PID interface. No vendor/control transfers, alternate-setting\nselection, reset, audio transfer, policy changes or firmware operations.\n"
+  },
+  "transportIoValidated": false,
+  "securityPolicyChanged": false,
+  "originalPackageRemoved": false
+}

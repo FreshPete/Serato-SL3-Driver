@@ -1,0 +1,55 @@
+{
+  "nonElevatedDescriptorAccessVerified": true,
+  "redirectAccessVerified": false,
+  "nonElevatedStreamingVerified": false,
+  "separateStandardAccountTested": false,
+  "scope": "Actual limited-token descriptor-only access; source review does not prove streaming permission",
+  "parentToken": {
+    "elevated": false,
+    "elevationType": 3
+  },
+  "childToken": {
+    "elevated": false,
+    "elevationType": 3
+  },
+  "childExited": true,
+  "elapsedSeconds": 0.04135099999984959,
+  "nativeOutput": {
+    "matched_sl3": 1,
+    "descriptor_fixture_matches": true,
+    "high_speed": true,
+    "device_redirected": false
+  },
+  "workerSha256": "690090415fa5c70dd99592f1675dce8f3a33a997f6a1969a965e1f0d27c9ebaf",
+  "helperSha256": "66bbfe6f99b417f97c7a9e97816e24af7dde0e01b8e535c41e91e1c6c19cfeda",
+  "reviewedSourceCommit": "84752c30037956149d53b498005b5368616f9257",
+  "sourceLfSha256": {
+    "ControlDevice.cpp": "84b14f706926b0ee4548e029eb24092b50929cf361e791e95b99b5671362f178",
+    "UsbDkHelper.cpp": "6790c5a9a67c7f64164198511cd855c1c7054d80850a86d7713831f5ed4b5350",
+    "UsbDkUtil.cpp": "67e23da5bae686aaea1967cf9562fb78e1f207e3ca639c7d7f8eebb49d1fc66a"
+  },
+  "nativeListSourceSha256": "c226f32ab3d99c8596b3c8a1730795db610f30015a71bc186ed013c1c0818df2",
+  "controlDeviceSddlMacro": "SDDL_DEVOBJ_SYS_ALL_ADM_RWX_WORLD_RWX_RES_RWX",
+  "liveDeviceAclDumped": false,
+  "aclChanged": false,
+  "secureBootAttestedDuringRun": false,
+  "fullRecoveryAttested": false,
+  "files": {
+    "run.json": "b83256f1b32de33e2c6db04c0ae98ea4d812a71a7715b191b2fa9392216ea244",
+    "stdout.txt": "469a60bb82b5796d1a0f7f86cabf2e0e01ef89252dd92f16f3be70ebda12454c",
+    "stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "post-state.json": "5ab2a02f8943b1be28833a302fcfeb437af1ad5870dce9161e91d5d7763ed819"
+  },
+  "limits": [
+    "The current account used its limited token; a separately created standard-user account was not tested",
+    "No StartRedirect, SL3 command-pipe transaction, audio, native ASIO deployment or Serato open",
+    "Default source descriptor is not an attestation of every live policy/ACL override",
+    "Driver installation/tracing administrative requirements remain separate from runtime transport",
+    "Repeated redirection readiness remains unresolved independently of access rights"
+  ],
+  "softwareChecks": {
+    "fullPythonTests": 114,
+    "logSha256": "bd0865c9334c5d8fcd7c4daca0d7804572ccef9504700d61c9668f57ba47be67",
+    "testSourceSha256": "e65d7438192dc68cd34812b0ae1375ccfff2df2724f711bdfb4f83f2a3f791f2"
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "scope": "Real process IPC/host tests with simulated device; native target diagnostic connected, no physical setting test",
+  "feature": {
+    "testsPassed": true,
+    "protocolVersion": 3,
+    "command": "0x306",
+    "workerWatchdogMilliseconds": 7500,
+    "hostReplyMilliseconds": 8000,
+    "idleHeldOnly": true,
+    "capabilityRequired": true,
+    "hostApiConnected": true,
+    "simulatedProcessTestsPassed": true,
+    "nativeAdapterConnected": true,
+    "nativeDiagnosticOnly": true,
+    "nativeSingleTarget": true,
+    "nativeAudioStartRefused": true,
+    "physicalSettingsTested": false
+  },
+  "builds": {
+    "Release": {
+      "testsPassed": 40,
+      "manifestSha256": "8cd1143da61d312c7ca587b0215156f532a9f8971b8260506182a501324bf62d",
+      "ctestLogSha256": "21177ca31218be411e48a6e3b8ea3b4f94e1c6f588e589afee816d10bc24c618",
+      "binaries": {
+        "sl3_device_session_tests.exe": "25B08D6A214775272BAD421E9408590F5FBBAF03A0335C183C5EC9593C6351E9",
+        "sl3_device_session_fixture.exe": "68F9B19F2D02A82C88FBACE83EF82CDC708D0B93D432157571EFC48727E3BDE6",
+        "sl3_retained_host_tests.exe": "8F3C5877496ABAE3B07CB6325F1E9E15AD5C55B8B7A4F6266A727C9C0A3DA520",
+        "sl3_usbdk.exe": "5FE2A44F1020032994C2B2E1A5EA868F87650CAA9E23BC2077913760D0E88FE5",
+        "sl3_asio.dll": "CEAB049155410B873204AD4DAAEFCC72DDB6A92A1D712C1C48C90FA185055361",
+        "sl3_host_probe.exe": "6D876C8383992F298535E91EDA3B5FFD3734C0E10829ECCA39E038E24AF61F8D"
+      }
+    },
+    "Debug": {
+      "testsPassed": 40,
+      "manifestSha256": "05566ce0488a180c211357b36638a3a79e869d4571b705ab168ef7505fa28da5",
+      "ctestLogSha256": "c8f9774de2f9624f565e075d047aadd3de790bbbc88747d452ebdef4debc87fd",
+      "binaries": {
+        "sl3_device_session_tests.exe": "6750016B17409531F4EBE07CF5B2BA73EE6C2B0AF78C0F6F60553DDFCB03E0CE",
+        "sl3_device_session_fixture.exe": "275834A553DD587CEC6CA83FF0EE2215491406607F7ED4236FC22D9064D6430F",
+        "sl3_retained_host_tests.exe": "4A0A04487F1DA8F12E6E67FEE4313D7315E16C5641763C2A4AF48E42E2B0B8DB",
+        "sl3_usbdk.exe": "EDE07074D00909A8021B9A18B2E3E5862B5224F8D36648131BAD4A5931262CB3",
+        "sl3_asio.dll": "40DBF48A914786B63A40341157A13297699C47DD4FE5F6B11B42F85CA560EA0D",
+        "sl3_host_probe.exe": "C19457DEA0F01E2289834D48B8D5980F2FAF1C1D9281132398E25A27592A6256"
+      }
+    }
+  },
+  "sdkFree": {
+    "testsPassed": 25,
+    "logSha256": "193b6c0c380da3d630261cf5a7e530059d380a213f75eba60d1b60294dc7c37f"
+  },
+  "python": {
+    "testsPassed": 140,
+    "logSha256": "7422a640ba4505049f129b6b5100622ebc4cea6e38adba72e1517dc5a0736398"
+  },
+  "testSources": {
+    "tests/native/device_session_tests.cpp": "ec5e13996398b92f1cb16384866be77a35447412349465bf738e67045dcf26ea",
+    "tests/native/device_session_fixture.cpp": "22b353226f581b8e746de30fc492652196dfef578bd9c052a9a09b6743b61530",
+    "tests/native/retained_host_tests.cpp": "b589999eaf8870f518a95afdb4ee4c8176b70fdef0f5dc6c26042a4c0e79f90c"
+  },
+  "operationEvidenceSeparateFromFinalRelease": true,
+  "lostReplyPreservesPossibleWrite": true,
+  "historicalPrerequisitesRejected": {
+    "workerSha256": "5fe2a44f1020032994c2b2e1a5ea868f87650caa9e23bc2077913760d0e88fe5",
+    "recordSha256": "eb9f14d0a1fe76586c0e663d4043f6d4791dc3bbf3ca9ca045a03499228fc2c7"
+  },
+  "capabilityRequired": true,
+  "nativeSelectionSupported": "Explicit single-target diagnostic after fresh baseline only",
+  "automaticAsioSelection": false,
+  "physicalSettingRun": false,
+  "limits": [
+    "Setting probe CLI positives are simulated; no panel, deployment or physical control write tested",
+    "Version 2 retained workers/results are incompatible with this version 3 protocol",
+    "The 5.5-second fixture dispatch delay validates reply policy, not native transfer/drain timing",
+    "Real control baseline, native end-to-end budget/cleanup and routing/level verification remain required"
+  ]
+}

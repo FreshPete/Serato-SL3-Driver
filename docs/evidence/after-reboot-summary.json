@@ -1,0 +1,93 @@
+{
+  "collectedUtc": "2026-10-26T21:35:11.8739297Z",
+  "lastBootUtc": "2026-10-26T21:33:15.5000000Z",
+  "os": {
+    "Caption": "Microsoft Windows 11 Pro",
+    "Version": "10.0.26300",
+    "BuildNumber": "26300",
+    "OSArchitecture": "64-bit"
+  },
+  "device": {
+    "name": "Rane SL3",
+    "problem": 39,
+    "properties": [
+      {
+        "KeyName": "DEVPKEY_Device_HardwareIds",
+        "Data": [
+          "USB\\VID_1CC5&PID_0001&REV_0000",
+          "USB\\VID_1CC5&PID_0001"
+        ]
+      },
+      {
+        "KeyName": "DEVPKEY_Device_CompatibleIds",
+        "Data": [
+          "USB\\COMPAT_VID_1CC5&Class_FF&SubClass_01&Prot_20",
+          "USB\\COMPAT_VID_1CC5&Class_FF&SubClass_01",
+          "USB\\COMPAT_VID_1CC5&Class_FF",
+          "USB\\Class_FF&SubClass_01&Prot_20",
+          "USB\\Class_FF&SubClass_01",
+          "USB\\Class_FF"
+        ]
+      },
+      {
+        "KeyName": "DEVPKEY_Device_Service",
+        "Data": "strmdrv"
+      },
+      {
+        "KeyName": "DEVPKEY_Device_ProblemCode",
+        "Data": 39
+      },
+      {
+        "KeyName": "DEVPKEY_Device_DriverVersion",
+        "Data": "6.0.6001.18000"
+      },
+      {
+        "KeyName": "DEVPKEY_Device_DriverInfPath",
+        "Data": "oem136.inf"
+      },
+      {
+        "KeyName": "DEVPKEY_Device_MatchingDeviceId",
+        "Data": "USB\\VID_1CC5&PID_0001"
+      }
+    ]
+  },
+  "asio": [
+    {
+      "architecture": "x64",
+      "clsid": "{843BA37D-204E-CA80-4E5E-DA79D40C3A30}",
+      "description": "Rane SL 3",
+      "server": "c:\\windows\\system32\\raneasiosl3.dll",
+      "exists": true
+    },
+    {
+      "architecture": "x86",
+      "clsid": "{EED7996D-443E-4B20-8E18-39994B9854D5}",
+      "description": "Rane SL 3",
+      "server": "c:\\windows\\SysWow64\\raneasiosl3.dll",
+      "exists": true
+    }
+  ],
+  "deviceGuard": {
+    "VirtualizationBasedSecurityStatus": 2,
+    "SecurityServicesConfigured": [
+      0
+    ],
+    "SecurityServicesRunning": [
+      0
+    ]
+  },
+  "secureBootQuery": "Unavailable: Unable to set proper privileges. Access was denied.",
+  "newCodeIntegrityEventIds": [
+    3089,
+    3077,
+    3076,
+    3089,
+    3004,
+    3089,
+    3077,
+    3076,
+    3089,
+    3004
+  ],
+  "interpretation": "Reboot completed x64/x86 ASIO registration but original driver remains blocked by enforced cross-certificate policy. No audio or DVS success established."
+}

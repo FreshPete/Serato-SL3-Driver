@@ -1,0 +1,516 @@
+{
+  "scope": "Static USB-only removal through concrete USB audio manager; no final ASIO close or live callback proof",
+  "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "classes": [
+    {
+      "type": ".?AVCUSBAudioManager@@",
+      "vtable": "0x142843138",
+      "objectOffset": 0,
+      "checkedSlots": {}
+    },
+    {
+      "type": ".?AVCUSBAudioManager@@",
+      "vtable": "0x142843168",
+      "objectOffset": 16,
+      "checkedSlots": {
+        "0x18": "0x1407108e0"
+      }
+    },
+    {
+      "type": ".?AVUserIO_VoidPtrMessageData@data@message@serato@@",
+      "vtable": "0x142fbf4b8",
+      "objectOffset": 0,
+      "checkedSlots": {
+        "0x38": "0x140790070"
+      }
+    },
+    {
+      "type": ".?AVControllerDescriptor@dj@serato@@",
+      "vtable": "0x14281cbe8",
+      "objectOffset": 1848,
+      "checkedSlots": {
+        "0x18": "0x1405c7d80",
+        "0x20": "0x1405c7130",
+        "0x28": "0x1405c6530"
+      }
+    }
+  ],
+  "instructions": [
+    {
+      "va": "0x142140ca1",
+      "bytes": "e82afeabfe",
+      "instruction": "call 0x140c00ad0"
+    },
+    {
+      "va": "0x142140ca6",
+      "bytes": "84c0",
+      "instruction": "test al, al"
+    },
+    {
+      "va": "0x142140ca8",
+      "bytes": "0f8594010000",
+      "instruction": "jne 0x142140e42"
+    },
+    {
+      "va": "0x142140cb2",
+      "bytes": "e8f9fdabfe",
+      "instruction": "call 0x140c00ab0"
+    },
+    {
+      "va": "0x142140cb7",
+      "bytes": "84c0",
+      "instruction": "test al, al"
+    },
+    {
+      "va": "0x142140cb9",
+      "bytes": "0f8583010000",
+      "instruction": "jne 0x142140e42"
+    },
+    {
+      "va": "0x142140cc7",
+      "bytes": "e8a4f8abfe",
+      "instruction": "call 0x140c00570"
+    },
+    {
+      "va": "0x142140ce2",
+      "bytes": "ff5018",
+      "instruction": "call qword ptr [rax + 0x18]"
+    },
+    {
+      "va": "0x142140ce5",
+      "bytes": "0fb7f8",
+      "instruction": "movzx edi, ax"
+    },
+    {
+      "va": "0x142140ce8",
+      "bytes": "48c1e720",
+      "instruction": "shl rdi, 0x20"
+    },
+    {
+      "va": "0x142140d28",
+      "bytes": "e843f8abfe",
+      "instruction": "call 0x140c00570"
+    },
+    {
+      "va": "0x142140d43",
+      "bytes": "ff5020",
+      "instruction": "call qword ptr [rax + 0x20]"
+    },
+    {
+      "va": "0x142140d46",
+      "bytes": "0fb7c0",
+      "instruction": "movzx eax, ax"
+    },
+    {
+      "va": "0x142140d49",
+      "bytes": "48c1e010",
+      "instruction": "shl rax, 0x10"
+    },
+    {
+      "va": "0x142140d4d",
+      "bytes": "4803f8",
+      "instruction": "add rdi, rax"
+    },
+    {
+      "va": "0x142140d8c",
+      "bytes": "e8dff7abfe",
+      "instruction": "call 0x140c00570"
+    },
+    {
+      "va": "0x142140da7",
+      "bytes": "ff5028",
+      "instruction": "call qword ptr [rax + 0x28]"
+    },
+    {
+      "va": "0x142140daa",
+      "bytes": "0fb7c0",
+      "instruction": "movzx eax, ax"
+    },
+    {
+      "va": "0x142140dad",
+      "bytes": "4803f8",
+      "instruction": "add rdi, rax"
+    },
+    {
+      "va": "0x142140e14",
+      "bytes": "4c8bc7",
+      "instruction": "mov r8, rdi"
+    },
+    {
+      "va": "0x142140e17",
+      "bytes": "bad5020000",
+      "instruction": "mov edx, 0x2d5"
+    },
+    {
+      "va": "0x142140e1f",
+      "bytes": "e86ce071ff",
+      "instruction": "call 0x14185ee90"
+    },
+    {
+      "va": "0x142140e3e",
+      "bytes": "ff5058",
+      "instruction": "call qword ptr [rax + 0x58]"
+    },
+    {
+      "va": "0x14185eea6",
+      "bytes": "498bd8",
+      "instruction": "mov rbx, r8"
+    },
+    {
+      "va": "0x14185eec0",
+      "bytes": "488d05f1057601",
+      "instruction": "lea rax, [rip + 0x17605f1]"
+    },
+    {
+      "va": "0x14185eec7",
+      "bytes": "48895f38",
+      "instruction": "mov qword ptr [rdi + 0x38], rbx"
+    },
+    {
+      "va": "0x14070fda3",
+      "bytes": "488d058e331302",
+      "instruction": "lea rax, [rip + 0x213338e]"
+    },
+    {
+      "va": "0x14070fdaa",
+      "bytes": "488907",
+      "instruction": "mov qword ptr [rdi], rax"
+    },
+    {
+      "va": "0x14070fdad",
+      "bytes": "488d05b4331302",
+      "instruction": "lea rax, [rip + 0x21333b4]"
+    },
+    {
+      "va": "0x14070fdb4",
+      "bytes": "48894710",
+      "instruction": "mov qword ptr [rdi + 0x10], rax"
+    },
+    {
+      "va": "0x14070fdf4",
+      "bytes": "41b907000000",
+      "instruction": "mov r9d, 7"
+    },
+    {
+      "va": "0x14070fdfa",
+      "bytes": "4533c0",
+      "instruction": "xor r8d, r8d"
+    },
+    {
+      "va": "0x14070fdfd",
+      "bytes": "bad5020000",
+      "instruction": "mov edx, 0x2d5"
+    },
+    {
+      "va": "0x14070fe02",
+      "bytes": "488d4f10",
+      "instruction": "lea rcx, [rdi + 0x10]"
+    },
+    {
+      "va": "0x14070fe06",
+      "bytes": "e845cfe300",
+      "instruction": "call 0x14154cd50"
+    },
+    {
+      "va": "0x1407108e6",
+      "bytes": "448b420c",
+      "instruction": "mov r8d, dword ptr [rdx + 0xc]"
+    },
+    {
+      "va": "0x1407108ea",
+      "bytes": "488bf9",
+      "instruction": "mov rdi, rcx"
+    },
+    {
+      "va": "0x1407108ed",
+      "bytes": "4181e8d4020000",
+      "instruction": "sub r8d, 0x2d4"
+    },
+    {
+      "va": "0x1407108f4",
+      "bytes": "0f84a7000000",
+      "instruction": "je 0x1407109a1"
+    },
+    {
+      "va": "0x1407108fa",
+      "bytes": "4183e801",
+      "instruction": "sub r8d, 1"
+    },
+    {
+      "va": "0x1407108fe",
+      "bytes": "7474",
+      "instruction": "je 0x140710974"
+    },
+    {
+      "va": "0x140710974",
+      "bytes": "488b02",
+      "instruction": "mov rax, qword ptr [rdx]"
+    },
+    {
+      "va": "0x140710977",
+      "bytes": "488bca",
+      "instruction": "mov rcx, rdx"
+    },
+    {
+      "va": "0x14071097a",
+      "bytes": "ff5038",
+      "instruction": "call qword ptr [rax + 0x38]"
+    },
+    {
+      "va": "0x14071097d",
+      "bytes": "488bc8",
+      "instruction": "mov rcx, rax"
+    },
+    {
+      "va": "0x140710980",
+      "bytes": "440fb7c8",
+      "instruction": "movzx r9d, ax"
+    },
+    {
+      "va": "0x140710984",
+      "bytes": "48c1e910",
+      "instruction": "shr rcx, 0x10"
+    },
+    {
+      "va": "0x140710988",
+      "bytes": "48c1e820",
+      "instruction": "shr rax, 0x20"
+    },
+    {
+      "va": "0x14071098c",
+      "bytes": "440fb7c1",
+      "instruction": "movzx r8d, cx"
+    },
+    {
+      "va": "0x140710990",
+      "bytes": "488d4ff0",
+      "instruction": "lea rcx, [rdi - 0x10]"
+    },
+    {
+      "va": "0x140710994",
+      "bytes": "0fb7d0",
+      "instruction": "movzx edx, ax"
+    },
+    {
+      "va": "0x14071099c",
+      "bytes": "e90ffaffff",
+      "instruction": "jmp 0x1407103b0"
+    },
+    {
+      "va": "0x1407103cb",
+      "bytes": "418bf0",
+      "instruction": "mov esi, r8d"
+    },
+    {
+      "va": "0x1407103ce",
+      "bytes": "8bda",
+      "instruction": "mov ebx, edx"
+    },
+    {
+      "va": "0x1407103d0",
+      "bytes": "4c8bf1",
+      "instruction": "mov r14, rcx"
+    },
+    {
+      "va": "0x140710403",
+      "bytes": "0f1005ce2d1302",
+      "instruction": "movups xmm0, xmmword ptr [rip + 0x2132dce]"
+    },
+    {
+      "va": "0x14071040d",
+      "bytes": "f20f1005d32d1302",
+      "instruction": "movsd xmm0, qword ptr [rip + 0x2132dd3]"
+    },
+    {
+      "va": "0x14071042c",
+      "bytes": "81f3e5130000",
+      "instruction": "xor ebx, 0x13e5"
+    },
+    {
+      "va": "0x140710466",
+      "bytes": "81f6e5130000",
+      "instruction": "xor esi, 0x13e5"
+    },
+    {
+      "va": "0x1407104a0",
+      "bytes": "e8db0a2501",
+      "instruction": "call 0x141960f80"
+    },
+    {
+      "va": "0x1407104a8",
+      "bytes": "488b9198000000",
+      "instruction": "mov rdx, qword ptr [rcx + 0x98]"
+    },
+    {
+      "va": "0x1407104b2",
+      "bytes": "ffd2",
+      "instruction": "call rdx"
+    },
+    {
+      "va": "0x1407104e8",
+      "bytes": "483bd0",
+      "instruction": "cmp rdx, rax"
+    },
+    {
+      "va": "0x1407104eb",
+      "bytes": "0f855b010000",
+      "instruction": "jne 0x14071064c"
+    },
+    {
+      "va": "0x1407104f1",
+      "bytes": "e88a0a2501",
+      "instruction": "call 0x141960f80"
+    },
+    {
+      "va": "0x1407104f9",
+      "bytes": "4c8b8190000000",
+      "instruction": "mov r8, qword ptr [rcx + 0x90]"
+    },
+    {
+      "va": "0x140710500",
+      "bytes": "33d2",
+      "instruction": "xor edx, edx"
+    },
+    {
+      "va": "0x140710505",
+      "bytes": "41ffd0",
+      "instruction": "call r8"
+    },
+    {
+      "va": "0x140710565",
+      "bytes": "498d4650",
+      "instruction": "lea rax, [r14 + 0x50]"
+    },
+    {
+      "va": "0x140710569",
+      "bytes": "4c897810",
+      "instruction": "mov qword ptr [rax + 0x10], r15"
+    },
+    {
+      "va": "0x140710577",
+      "bytes": "c60000",
+      "instruction": "mov byte ptr [rax], 0"
+    },
+    {
+      "va": "0x140710588",
+      "bytes": "e883f9ffff",
+      "instruction": "call 0x14070ff10"
+    },
+    {
+      "va": "0x14071061e",
+      "bytes": "4533c9",
+      "instruction": "xor r9d, r9d"
+    },
+    {
+      "va": "0x140710621",
+      "bytes": "4533c0",
+      "instruction": "xor r8d, r8d"
+    },
+    {
+      "va": "0x140710624",
+      "bytes": "baca020000",
+      "instruction": "mov edx, 0x2ca"
+    },
+    {
+      "va": "0x14071062c",
+      "bytes": "e85fe81401",
+      "instruction": "call 0x14185ee90"
+    },
+    {
+      "va": "0x140710648",
+      "bytes": "ff5058",
+      "instruction": "call qword ptr [rax + 0x58]"
+    },
+    {
+      "va": "0x140c00ab4",
+      "bytes": "4883c110",
+      "instruction": "add rcx, 0x10"
+    },
+    {
+      "va": "0x140c00ab8",
+      "bytes": "33d2",
+      "instruction": "xor edx, edx"
+    },
+    {
+      "va": "0x140c00aba",
+      "bytes": "e8212090ff",
+      "instruction": "call 0x140502ae0"
+    },
+    {
+      "va": "0x140c00abf",
+      "bytes": "3401",
+      "instruction": "xor al, 1"
+    },
+    {
+      "va": "0x140c00ad4",
+      "bytes": "33d2",
+      "instruction": "xor edx, edx"
+    },
+    {
+      "va": "0x140c00ad6",
+      "bytes": "e8052090ff",
+      "instruction": "call 0x140502ae0"
+    },
+    {
+      "va": "0x140c00adb",
+      "bytes": "3401",
+      "instruction": "xor al, 1"
+    },
+    {
+      "va": "0x140c0058a",
+      "bytes": "488b4130",
+      "instruction": "mov rax, qword ptr [rcx + 0x30]"
+    }
+  ],
+  "identityGetters": [
+    {
+      "field": "VID",
+      "getter": "0x1405c7d80",
+      "bytes": "0fb78170f9ffffc3",
+      "completeObjectFieldOffset": "0xa8"
+    },
+    {
+      "field": "PID",
+      "getter": "0x1405c7130",
+      "bytes": "0fb78172f9ffffc3",
+      "completeObjectFieldOffset": "0xaa"
+    },
+    {
+      "field": "revision",
+      "getter": "0x1405c6530",
+      "bytes": "0fb78174f9ffffc3",
+      "completeObjectFieldOffset": "0xac"
+    }
+  ],
+  "message": {
+    "id": 725,
+    "onlyWhenComponentPointersAt0And16Absent": true,
+    "payload": "(uint16 VID << 32) + (uint16 PID << 16) + uint16 revision",
+    "payloadStorageOffset": 56,
+    "busAddressOrUsbIdentityStringIncluded": false
+  },
+  "handler": {
+    "receiverOffset": 16,
+    "messageSlot": 24,
+    "removalTarget": "0x1407103b0",
+    "diagnostic": "Disconnecting USB device",
+    "matchGuard": true,
+    "identityTransformationFullyInterpreted": false,
+    "matchingBranchVirtualCall": {
+      "slot": 144,
+      "argumentEdx": 0
+    },
+    "matchingBranchPublishes": {
+      "messageId": 714,
+      "scalarPayload": 0
+    },
+    "finalAsioStopDisposeReleaseProved": false,
+    "liveDispatchProved": false
+  },
+  "limits": [
+    "Callback and message delivery remain conditional; runtime receiver/service binding not observed",
+    "The 0x2d5 path precedes ordinary device-list 0x2df publication and is not that message",
+    "Concrete ASIO close/reopen consumer of 0x2ca or virtual slot 0x90 remains to be recovered",
+    "No application patch, device/USB request, firmware, registration, account or security operation"
+  ]
+}

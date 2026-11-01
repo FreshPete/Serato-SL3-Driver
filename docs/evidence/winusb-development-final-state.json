@@ -1,0 +1,49 @@
+{
+  "collectedUtc": "2026-10-26T22:27:36.1065191Z",
+  "secureBoot": true,
+  "deviceGuard": {
+    "VirtualizationBasedSecurityStatus": 2,
+    "SecurityServicesConfigured": [
+      0
+    ],
+    "SecurityServicesRunning": [
+      0
+    ]
+  },
+  "device": {
+    "Status": "Error",
+    "Class": "MEDIA",
+    "FriendlyName": "Rane SL3",
+    "Problem": 39
+  },
+  "properties": [
+    {
+      "KeyName": "DEVPKEY_Device_Service",
+      "Data": "strmdrv"
+    },
+    {
+      "KeyName": "DEVPKEY_Device_ProblemCode",
+      "Data": 39
+    },
+    {
+      "KeyName": "DEVPKEY_Device_DriverInfPath",
+      "Data": "oem136.inf"
+    }
+  ],
+  "deviceDescriptorMatches": true,
+  "configurationDescriptorMatches": true,
+  "experimentalInfPresent": false,
+  "originalInfPresent": true,
+  "machineRootCertificatePresent": false,
+  "machinePublisherCertificatePresent": false,
+  "signingIdentityPresent": false,
+  "note": "Recovered after restoring baseline and owner full power cycle. Development signing identity and non-exportable key also removed after the test.",
+  "projectInterfaceGuidPresent": false,
+  "interfaceGuidCleanupVerifiedUtc": "2026-10-26T22:32:55.862634Z",
+  "elevatedSecuritySnapshotUtc": "2026-10-26T22:24:15.8428922Z",
+  "finalBinarySha256": {
+    "winusb": "3893c030728f73b429dcdafb791563623fdcf87678232a8dc373420dd6c6aef7",
+    "originalRane": "e8e992a8ece1a57eab337d815a406b9f815954176c03db545fcf6d951ec615f5",
+    "serato": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265"
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "scope": "Actual unregistered COM/IASIO DLL with isolated simulated workers; no native USB or Serato execution",
+  "builds": {
+    "Release": {
+      "testsPassed": 40,
+      "manifestSha256": "8cd1143da61d312c7ca587b0215156f532a9f8971b8260506182a501324bf62d",
+      "ctestLogSha256": "21177ca31218be411e48a6e3b8ea3b4f94e1c6f588e589afee816d10bc24c618",
+      "testedBinaries": {
+        "sl3_asio_session_tests.exe": "BA0025F098142307D2432A534461E56A910B7537DA20C2B29537A0EC129722E4",
+        "sl3_asio_session_fixture.dll": "1E990ECD4A70C77219CE2191A1C44E080975EE746E8C1A49AC9A44BE203891B9",
+        "sl3_asio.dll": "CEAB049155410B873204AD4DAAEFCC72DDB6A92A1D712C1C48C90FA185055361",
+        "sl3_device_session_fixture.exe": "68F9B19F2D02A82C88FBACE83EF82CDC708D0B93D432157571EFC48727E3BDE6"
+      },
+      "productionSourcesUnchangedFromControlsCheckpoint": false,
+      "sourceChangesFromControlsCheckpoint": [
+        "src/asio/host_session.cpp",
+        "src/asio/host_session.hpp",
+        "src/core/audio_control_selection.hpp",
+        "src/core/audio_control_selection_io.hpp",
+        "src/core/audio_control_selection_wire.hpp",
+        "src/core/control_frames.hpp",
+        "src/core/control_test_target.hpp",
+        "src/core/device_session_protocol.cpp",
+        "src/core/device_session_protocol.hpp",
+        "src/windows/control_baseline.hpp",
+        "src/windows/control_selection_diagnostic.hpp",
+        "src/windows/control_transfer_io.hpp",
+        "src/windows/device_session.cpp",
+        "src/windows/device_session.hpp",
+        "src/windows/host_probe_main.cpp",
+        "src/windows/usbdk_main.cpp"
+      ],
+      "runtimeBinaries": {
+        "sl3_asio.dll": {
+          "sha256": "ceab049155410b873204ad4daaefcc72ddb6a92a1d712c1c48c90fa185055361",
+          "matchesControlsCheckpoint": false
+        },
+        "sl3_usbdk.exe": {
+          "sha256": "5fe2a44f1020032994c2b2e1a5ea868f87650caa9e23bc2077913760d0e88fe5",
+          "matchesControlsCheckpoint": false
+        },
+        "sl3_host_probe.exe": {
+          "sha256": "6d876c8383992f298535e91eda3b5ffd3734c0e10829ecca39e038e24af61f8d",
+          "matchesControlsCheckpoint": false
+        }
+      },
+      "testOnlyAuditExportAbsentFromProduction": true,
+      "testSourceSha256": "36D1BFEF84E41C9E0FAA42D78E65865DD27F43620CC170B3F46B4FDF2C2D85EC",
+      "providerSourceSha256": "DE4C38587664539DB643166DA8A5579EFAF9F29BF9981CC22558AF7E5F9FCC84"
+    },
+    "Debug": {
+      "testsPassed": 40,
+      "manifestSha256": "05566ce0488a180c211357b36638a3a79e869d4571b705ab168ef7505fa28da5",
+      "ctestLogSha256": "c8f9774de2f9624f565e075d047aadd3de790bbbc88747d452ebdef4debc87fd",
+      "testedBinaries": {
+        "sl3_asio_session_tests.exe": "BCD5029C0AD7B03B3DEFD3086D0CCAA31B80EBFBADD1CFDE9031A0C920689C1E",
+        "sl3_asio_session_fixture.dll": "03B3E7661D206B5D45CA4C5C8CDFE31352314EF1EFAAEA10D5628EC55A21D091",
+        "sl3_asio.dll": "40DBF48A914786B63A40341157A13297699C47DD4FE5F6B11B42F85CA560EA0D",
+        "sl3_device_session_fixture.exe": "275834A553DD587CEC6CA83FF0EE2215491406607F7ED4236FC22D9064D6430F"
+      },
+      "productionSourcesUnchangedFromControlsCheckpoint": false,
+      "sourceChangesFromControlsCheckpoint": [
+        "src/asio/host_session.cpp",
+        "src/asio/host_session.hpp",
+        "src/core/audio_control_selection.hpp",
+        "src/core/audio_control_selection_io.hpp",
+        "src/core/audio_control_selection_wire.hpp",
+        "src/core/control_frames.hpp",
+        "src/core/control_test_target.hpp",
+        "src/core/device_session_protocol.cpp",
+        "src/core/device_session_protocol.hpp",
+        "src/windows/control_baseline.hpp",
+        "src/windows/control_selection_diagnostic.hpp",
+        "src/windows/control_transfer_io.hpp",
+        "src/windows/device_session.cpp",
+        "src/windows/device_session.hpp",
+        "src/windows/host_probe_main.cpp",
+        "src/windows/usbdk_main.cpp"
+      ],
+      "runtimeBinaries": {
+        "sl3_asio.dll": {
+          "sha256": "40dbf48a914786b63a40341157a13297699c47dd4fe5f6b11b42f85ca560ea0d",
+          "matchesControlsCheckpoint": false
+        },
+        "sl3_usbdk.exe": {
+          "sha256": "ede07074d00909a8021b9a18b2e3e5862b5224f8d36648131bad4a5931262cb3",
+          "matchesControlsCheckpoint": false
+        },
+        "sl3_host_probe.exe": {
+          "sha256": "c19457dea0f01e2289834d48b8d5980f2faf1c1d9281132398e25a27592a6256",
+          "matchesControlsCheckpoint": false
+        }
+      },
+      "testOnlyAuditExportAbsentFromProduction": true,
+      "testSourceSha256": "36D1BFEF84E41C9E0FAA42D78E65865DD27F43620CC170B3F46B4FDF2C2D85EC",
+      "providerSourceSha256": "DE4C38587664539DB643166DA8A5579EFAF9F29BF9981CC22558AF7E5F9FCC84"
+    }
+  },
+  "newAuditedScenario": {
+    "objects": 3,
+    "metadataOnlyEnumerationObjects": 1,
+    "recreatedObjects": 2,
+    "streamsPerRecreatedObject": 2,
+    "setupHoldMilliseconds": 80,
+    "bankFrames": 128,
+    "expectedAcquisitions": 3,
+    "expectedClockReads": 7,
+    "expectedAudioBeginEndPairs": 4,
+    "expectedFinalReleases": 3,
+    "auditComparedAfterEveryStage": true
+  },
+  "limits": [
+    "Transport/rate/input and timing profile are explicitly simulated",
+    "Setup delay mirrors an observed application call shape; it is not a device-readiness barrier",
+    "No actual Serato callback/reset dispatch or physical reacquisition is proved",
+    "Existing native evidence remains pinned to its own binaries; deployment and DVS remain incomplete"
+  ]
+}

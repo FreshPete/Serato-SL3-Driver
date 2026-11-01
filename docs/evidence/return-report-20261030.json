@@ -1,0 +1,83 @@
+{
+  "scope": "Return report source bindings and read-only host observation; no new device/audio/application validation",
+  "webCheckedDate": "2026-10-30",
+  "sources": [
+    {
+      "url": "https://support.serato.com/hc/en-us/articles/4405841177999-Windows-11-Serato-DJ-Pro-DJ-Lite-primary-hardware-compatibility",
+      "finding": "SL3 listed unsupported on Windows 11; Windows 10 and DJ Pro 2.5.5 recommended"
+    },
+    {
+      "url": "https://support.serato.com/hc/en-us/articles/4411117032975-Serato-software-operating-system-compatibility-for-discontinued-hardware",
+      "finding": "SL3 recommended software entry is DJ Pro 2.5.5"
+    },
+    {
+      "url": "https://serato.com/dj/hardware/phase",
+      "finding": "Phase is an accessory requiring compatible hardware and DVS licensing"
+    },
+    {
+      "url": "https://support.serato.com/hc/en-us/articles/360001860415-Use-Laptop-Speakers-or-External-Soundcard-as-Master-Output-with-Serato-DJ-Pro",
+      "finding": "OS-selected soundcard receives master output; compatible hardware is still required"
+    },
+    {
+      "url": "https://support.serato.com/hc/en-us/articles/360004125475-Virtual-Deck-Play-Modes",
+      "finding": "WIR for Phase remotes requires DVS-supported hardware and controls decks 1 and 2"
+    }
+  ],
+  "localEvidenceSha256": {
+    "docs/evidence/retained-physical-20261030.json": "5432e4768695306d915b9153ad59e91a638da1e192dc554c4a0b47cd4747cfc5",
+    "docs/evidence/usbdk-physical-checkpoint-20261030.json": "71ea0a16e843102d608deb0ded9f37adf4e680f0f11d0d22a0fe21328df20453",
+    "docs/evidence/held-controls-build.json": "4bff63611a40707914cf7fae80343f25f4f0bb81583115e2ff39ad2f88c0dcd9",
+    "docs/evidence/serato500-resource-container.json": "534101950d270f83aa376f544e0e5667d14b8a2c1c765e9e52e27d3e8b5ae87c",
+    "docs/evidence/serato500-qrc-indexes.json": "f8e0eed8d6f63949ee3dfaf65788c2ca3396710c2db2b806e5f28698c03546cd",
+    "docs/evidence/serato500-asio-reset.json": "a1c692dbfeea8097e2ca6dba9405f148dd04d5431f7ba267a1121ef9ca632553",
+    "docs/evidence/audio-control-selection.json": "e101af55b03014f7de193ec9f91373df58e61c28db1a77ae6e6623d868e22eaf"
+  },
+  "softwareChecks": {
+    "Release": {
+      "manifestSha256": "5a6fc83dc0a901a739a106a10a61758e3d1ecd524ce51953888917678736b934",
+      "testsPassed": 39,
+      "ctestLogSha256": "2bb10b032f35eb140eb2a41a087de9293890c0605aa4d0d9ce12c523a9c9ee25"
+    },
+    "Debug": {
+      "manifestSha256": "3873d6fd19dda2f174f34d35a0f2276915e463663d7f5e640080651247c2c39b",
+      "testsPassed": 39,
+      "ctestLogSha256": "e03587ce220338d0483827befbfc9098e5001727f8587b1b0380f8e113cbcd41"
+    },
+    "Python": {
+      "testsPassed": 80,
+      "logSha256": "5b4c34453ca11ea433e74ab9b696ca73cea67a43b63646c958ce4febec8dd592",
+      "precedingRun": true
+    },
+    "SdkFree": {
+      "testsPassed": 25,
+      "logSha256": "8b96fbd82dafbe2f3a81df0ec52fa8cbca99acc8713f01b900d77831f6eee203"
+    }
+  },
+  "hostObservation": {
+    "observedUtc": "2026-10-30T22:08:55.0149305Z",
+    "scope": "Read-only PnP/process/service observation; no helper or USB scenario launched",
+    "sl3": [
+      {
+        "InstanceId": "USB\\VID_1CC5&PID_0001\\SL3.01.00",
+        "Status": "Error",
+        "Problem": "CM_PROB_DRIVER_FAILED_LOAD"
+      }
+    ],
+    "testProcesses": [],
+    "usbdkService": [
+      {
+        "Name": "UsbDk",
+        "State": "Running"
+      }
+    ]
+  },
+  "accountEntitlementsInspected": false,
+  "firmwareChanged": false,
+  "applicationModified": false,
+  "limits": [
+    "Published supported configurations do not prove technical impossibility of other integration",
+    "No admitted current-Serato SL3 path or real DVS result is established",
+    "No new native operation, live WPP, analogue or timing measurement ran"
+  ],
+  "latestImplementation": "Offline sensitivity/through selection; no runtime caller; rebuilt identities require fresh native prerequisites"
+}

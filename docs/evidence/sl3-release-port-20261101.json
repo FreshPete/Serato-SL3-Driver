@@ -1,0 +1,54 @@
+{
+  "scope": "Trace-local exact-port/child correlation; no readiness decision",
+  "port": 4,
+  "workerVidPidCycles": 2,
+  "successfulPortEnumerations": 2,
+  "distinctTargetDsmContexts": 3,
+  "contextRows": {
+    "initial": 11,
+    "redirect": 158,
+    "postRelease": 97
+  },
+  "postReleaseContextMappedToSl3Port": true,
+  "firstStoppedEnumeratedAfterProbeTicks": "474256",
+  "lastSuccessfulEntryToTimerTicks": "100000898",
+  "stoppedAfterProbeTicks": "100511163",
+  "timeoutTail": [
+    {
+      "timestampFileTime": "134380172045651744",
+      "state": "DsmStateEtwCheckIfDeviceCanBeDisabledOnDriverNotFound",
+      "event": "DsmEventTimerFired",
+      "depth": 0
+    },
+    {
+      "timestampFileTime": "134380172045651758",
+      "state": "DsmStateEtwDisablingDeviceInControllerOnStartTimeout",
+      "event": "DsmEventYes",
+      "depth": 0
+    },
+    {
+      "timestampFileTime": "134380172045652180",
+      "state": "DsmStateEtwDisablingPortOnStartTimeout",
+      "event": "DsmEventUCXIoctlSuccess",
+      "depth": 0
+    },
+    {
+      "timestampFileTime": "134380172045652351",
+      "state": "DsmStateEtwStopped",
+      "event": "DsmEventPortDisabled",
+      "depth": 0
+    }
+  ],
+  "readinessAdmission": false,
+  "successiveAcquisitionVerified": false,
+  "normalUserReadinessObservationVerified": false,
+  "all493StateRowsCorroborated": true,
+  "imageVersionMetadataMatchesNativeUsbWindow": true,
+  "loadedMemoryIdentityVerified": false,
+  "usbNativeStartFileTime": "134380171884888900",
+  "usbNativeEndFileTime": "134380172085071035",
+  "runSha256": "e191c95ed262e9432a37db5c919f24edbe9f22e93b2fb6ac96c1562854d20724",
+  "xmlSha256": "fe6fe7ebbafc41435440fcce94fd5c6da4f71ccf68e007a639b028a7395c48a2",
+  "symbolsImageSha256": "f93fa3a32037c597fd19ca9d65f59e53a1e337123582ed2479d5c16a4848df16",
+  "symbolsPdbSha256": "63c7a9e69445700717fe3f69bc468f6f7a11e6358e5054c1a933388037cc19f5"
+}

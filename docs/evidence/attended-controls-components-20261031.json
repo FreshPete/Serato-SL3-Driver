@@ -1,0 +1,60 @@
+{
+  "scope": "Independent preserved component assessment; original wrapper failed and remains inadmissible",
+  "originalRunSha256": "bd39f540be3ecbc3c38dd2069d481ec8ab5fc58629069102429e8f28fa90e3b8",
+  "endToEndPassed": false,
+  "normalTokenControlComponentPassed": true,
+  "rateHz": 44100,
+  "rawControls": [
+    0,
+    1,
+    1,
+    5,
+    96,
+    0,
+    96,
+    0,
+    1,
+    5,
+    96,
+    0,
+    96,
+    0,
+    0,
+    5,
+    96,
+    0,
+    96,
+    0,
+    0,
+    1
+  ],
+  "workerSha256": "5fe2a44f1020032994c2b2e1a5ea868f87650caa9e23bc2077913760d0e88fe5",
+  "normalParentProbeWorkerTokensVerified": true,
+  "selectedRecoveryMatches": true,
+  "secureBootBeforeAfter": true,
+  "traceEventsRetained": 25305,
+  "reportedEventsLost": 0,
+  "reportedBuffersLost": 0,
+  "circularOverwrite": {
+    "bufferBytes": 131072,
+    "buffersWritten": 919,
+    "totalBufferBytesWritten": 120455168,
+    "maximumFileBytes": 67108864
+  },
+  "stateRows": {
+    "live": 514,
+    "retainedInFile": 21,
+    "retainedRowsMatchExactly": true,
+    "missingFromFile": 493
+  },
+  "fullWindowVerified": false,
+  "automaticPrerequisiteAdmission": false,
+  "audioTested": false,
+  "currentSeratoIntegrationVerified": false,
+  "sources": {
+    "scripts/export-attended-controls-20261031.py": "cb85ae5e402a36717f411b3a4de49bf9e63d8567d1eb2bcedf03b3cce7dddf82",
+    "scripts/validate-controls-host-probe.py": "b5d8a33ee2e31635ea29657da250ba9f0a2739c41aeab86cf5ad726d6e5bba6c",
+    "scripts/validate-controls-user-probe.py": "14b81ccc46e6f19630c05daca6b5285106d0707f3782de7bef4a0a449e9c6eba",
+    "scripts/validate-usb-state-capture.py": "ae0023a0ae2ce1e3e0d1d5340a0ffdc4894c5df575d5b57439a77de6f3c9a472"
+  }
+}

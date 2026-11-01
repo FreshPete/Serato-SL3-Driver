@@ -1,0 +1,626 @@
+{
+  "scope": "Original installed PE static reset chain; no vendor execution or native operation",
+  "binarySha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "installedImageMatches": true,
+  "sdkSha256": "93d2f80d49b4ac9c963514e7c1307ab5111d8104246192233745beb058534ea1",
+  "baseClasses": [
+    {
+      "name": ".?AVASIOAudioIODevice@juce@@",
+      "memberDisplacement": 0
+    },
+    {
+      "name": ".?AVAudioIODevice@juce@@",
+      "memberDisplacement": 0
+    },
+    {
+      "name": ".?AVTimer@juce@@",
+      "memberDisplacement": 24
+    }
+  ],
+  "timerSubobjectOffset": 24,
+  "completeResetFlagOffset": "0x7b5",
+  "timerReceiverFlagOffset": "0x79d",
+  "timerVtable": "0x1431dd7d0",
+  "explicitMessageLeafRange": [
+    "0x14220a820",
+    "0x14220a83b"
+  ],
+  "selectedActiveSlot": 0,
+  "sdkCallbackOrder": [
+    "bufferSwitch",
+    "sampleRateDidChange",
+    "asioMessage",
+    "bufferSwitchTimeInfo"
+  ],
+  "boundaryCheckedInstructions": [
+    {
+      "va": "0x1422081ba",
+      "bytes": "488d4f18",
+      "opcode": "lea",
+      "operands": "rcx, [rdi + 0x18]"
+    },
+    {
+      "va": "0x1422081be",
+      "bytes": "e85db70000",
+      "opcode": "call",
+      "operands": "0x142213920"
+    },
+    {
+      "va": "0x1422081c4",
+      "bytes": "488d053d55fd00",
+      "opcode": "lea",
+      "operands": "rax, [rip + 0xfd553d]"
+    },
+    {
+      "va": "0x1422081cb",
+      "bytes": "488907",
+      "opcode": "mov",
+      "operands": "qword ptr [rdi], rax"
+    },
+    {
+      "va": "0x1422081ce",
+      "bytes": "488d05fb55fd00",
+      "opcode": "lea",
+      "operands": "rax, [rip + 0xfd55fb]"
+    },
+    {
+      "va": "0x1422081d5",
+      "bytes": "48894718",
+      "opcode": "mov",
+      "operands": "qword ptr [rdi + 0x18], rax"
+    },
+    {
+      "va": "0x1422083be",
+      "bytes": "488d0d6bf1ea01",
+      "opcode": "lea",
+      "operands": "rcx, [rip + 0x1eaf16b]"
+    },
+    {
+      "va": "0x1422083c5",
+      "bytes": "48893cc1",
+      "opcode": "mov",
+      "operands": "qword ptr [rcx + rax*8], rdi"
+    },
+    {
+      "va": "0x14220d731",
+      "bytes": "488bd9",
+      "opcode": "mov",
+      "operands": "rbx, rcx"
+    },
+    {
+      "va": "0x14220d7c9",
+      "bytes": "48391d609dea01",
+      "opcode": "cmp",
+      "operands": "qword ptr [rip + 0x1ea9d60], rbx"
+    },
+    {
+      "va": "0x14220d7d0",
+      "bytes": "488d7140",
+      "opcode": "lea",
+      "operands": "rsi, [rcx + 0x40]"
+    },
+    {
+      "va": "0x14220d7d4",
+      "bytes": "752d",
+      "opcode": "jne",
+      "operands": "0x14220d803"
+    },
+    {
+      "va": "0x14220d7e0",
+      "bytes": "488d0539d0ffff",
+      "opcode": "lea",
+      "operands": "rax, [rip - 0x2fc7]"
+    },
+    {
+      "va": "0x14220d7e7",
+      "bytes": "48894610",
+      "opcode": "mov",
+      "operands": "qword ptr [rsi + 0x10], rax"
+    },
+    {
+      "va": "0x14220d824",
+      "bytes": "4889742420",
+      "opcode": "mov",
+      "operands": "qword ptr [rsp + 0x20], rsi"
+    },
+    {
+      "va": "0x14220d82c",
+      "bytes": "ff9098000000",
+      "opcode": "call",
+      "operands": "qword ptr [rax + 0x98]"
+    },
+    {
+      "va": "0x14220f7e7",
+      "bytes": "488d5f40",
+      "opcode": "lea",
+      "operands": "rbx, [rdi + 0x40]"
+    },
+    {
+      "va": "0x14220f7eb",
+      "bytes": "48393d3e7dea01",
+      "opcode": "cmp",
+      "operands": "qword ptr [rip + 0x1ea7d3e], rdi"
+    },
+    {
+      "va": "0x14220f7f2",
+      "bytes": "752d",
+      "opcode": "jne",
+      "operands": "0x14220f821"
+    },
+    {
+      "va": "0x14220f7fe",
+      "bytes": "488d051bb0ffff",
+      "opcode": "lea",
+      "operands": "rax, [rip - 0x4fe5]"
+    },
+    {
+      "va": "0x14220f805",
+      "bytes": "48894310",
+      "opcode": "mov",
+      "operands": "qword ptr [rbx + 0x10], rax"
+    },
+    {
+      "va": "0x14220f840",
+      "bytes": "48895c2420",
+      "opcode": "mov",
+      "operands": "qword ptr [rsp + 0x20], rbx"
+    },
+    {
+      "va": "0x14220f856",
+      "bytes": "ff9098000000",
+      "opcode": "call",
+      "operands": "qword ptr [rax + 0x98]"
+    },
+    {
+      "va": "0x14220a820",
+      "bytes": "8bc1",
+      "opcode": "mov",
+      "operands": "eax, ecx"
+    },
+    {
+      "va": "0x14220a822",
+      "bytes": "488b0d07cdea01",
+      "opcode": "mov",
+      "operands": "rcx, qword ptr [rip + 0x1eacd07]"
+    },
+    {
+      "va": "0x14220a829",
+      "bytes": "4885c9",
+      "opcode": "test",
+      "operands": "rcx, rcx"
+    },
+    {
+      "va": "0x14220a82c",
+      "bytes": "740a",
+      "opcode": "je",
+      "operands": "0x14220a838"
+    },
+    {
+      "va": "0x14220a82e",
+      "bytes": "448bc2",
+      "opcode": "mov",
+      "operands": "r8d, edx"
+    },
+    {
+      "va": "0x14220a831",
+      "bytes": "8bd0",
+      "opcode": "mov",
+      "operands": "edx, eax"
+    },
+    {
+      "va": "0x14220a833",
+      "bytes": "e9a8000000",
+      "opcode": "jmp",
+      "operands": "0x14220a8e0"
+    },
+    {
+      "va": "0x14220a838",
+      "bytes": "33c0",
+      "opcode": "xor",
+      "operands": "eax, eax"
+    },
+    {
+      "va": "0x14220a83a",
+      "bytes": "c3",
+      "opcode": "ret",
+      "operands": ""
+    },
+    {
+      "va": "0x14220a8e4",
+      "bytes": "ffca",
+      "opcode": "dec",
+      "operands": "edx"
+    },
+    {
+      "va": "0x14220a8e6",
+      "bytes": "83fa0e",
+      "opcode": "cmp",
+      "operands": "edx, 0xe"
+    },
+    {
+      "va": "0x14220a8e9",
+      "bytes": "7728",
+      "opcode": "ja",
+      "operands": "0x14220a913"
+    },
+    {
+      "va": "0x14220a8ee",
+      "bytes": "4c8d0d0b57dffd",
+      "opcode": "lea",
+      "operands": "r9, [rip - 0x220a8f5]"
+    },
+    {
+      "va": "0x14220a8f5",
+      "bytes": "418b94814ca92002",
+      "opcode": "mov",
+      "operands": "edx, dword ptr [r9 + rax*4 + 0x220a94c]"
+    },
+    {
+      "va": "0x14220a8fd",
+      "bytes": "4903d1",
+      "opcode": "add",
+      "operands": "rdx, r9"
+    },
+    {
+      "va": "0x14220a900",
+      "bytes": "ffe2",
+      "opcode": "jmp",
+      "operands": "rdx"
+    },
+    {
+      "va": "0x14220a902",
+      "bytes": "4183f80f",
+      "opcode": "cmp",
+      "operands": "r8d, 0xf"
+    },
+    {
+      "va": "0x14220a906",
+      "bytes": "770b",
+      "opcode": "ja",
+      "operands": "0x14220a913"
+    },
+    {
+      "va": "0x14220a908",
+      "bytes": "b86c840000",
+      "opcode": "mov",
+      "operands": "eax, 0x846c"
+    },
+    {
+      "va": "0x14220a90d",
+      "bytes": "440fa3c0",
+      "opcode": "bt",
+      "operands": "eax, r8d"
+    },
+    {
+      "va": "0x14220a911",
+      "bytes": "7215",
+      "opcode": "jb",
+      "operands": "0x14220a928"
+    },
+    {
+      "va": "0x14220a913",
+      "bytes": "33c0",
+      "opcode": "xor",
+      "operands": "eax, eax"
+    },
+    {
+      "va": "0x14220a91a",
+      "bytes": "4883c118",
+      "opcode": "add",
+      "operands": "rcx, 0x18"
+    },
+    {
+      "va": "0x14220a91e",
+      "bytes": "baf4010000",
+      "opcode": "mov",
+      "operands": "edx, 0x1f4"
+    },
+    {
+      "va": "0x14220a923",
+      "bytes": "e888a70000",
+      "opcode": "call",
+      "operands": "0x1422150b0"
+    },
+    {
+      "va": "0x14220a928",
+      "bytes": "b801000000",
+      "opcode": "mov",
+      "operands": "eax, 1"
+    },
+    {
+      "va": "0x14220a932",
+      "bytes": "b802000000",
+      "opcode": "mov",
+      "operands": "eax, 2"
+    },
+    {
+      "va": "0x14220a93c",
+      "bytes": "ff81b8070000",
+      "opcode": "inc",
+      "operands": "dword ptr [rcx + 0x7b8]"
+    },
+    {
+      "va": "0x14220a942",
+      "bytes": "b801000000",
+      "opcode": "mov",
+      "operands": "eax, 1"
+    },
+    {
+      "va": "0x142212dd1",
+      "bytes": "488be9",
+      "opcode": "mov",
+      "operands": "rbp, rcx"
+    },
+    {
+      "va": "0x142212dd4",
+      "bytes": "80b99e07000000",
+      "opcode": "cmp",
+      "operands": "byte ptr [rcx + 0x79e], 0"
+    },
+    {
+      "va": "0x142212ddb",
+      "bytes": "0f85f2000000",
+      "opcode": "jne",
+      "operands": "0x142212ed3"
+    },
+    {
+      "va": "0x142212de1",
+      "bytes": "e8da230000",
+      "opcode": "call",
+      "operands": "0x1422151c0"
+    },
+    {
+      "va": "0x142212de6",
+      "bytes": "4c8bbd28070000",
+      "opcode": "mov",
+      "operands": "r15, qword ptr [rbp + 0x728]"
+    },
+    {
+      "va": "0x142212ded",
+      "bytes": "488b45e8",
+      "opcode": "mov",
+      "operands": "rax, qword ptr [rbp - 0x18]"
+    },
+    {
+      "va": "0x142212df1",
+      "bytes": "488d4de8",
+      "opcode": "lea",
+      "operands": "rcx, [rbp - 0x18]"
+    },
+    {
+      "va": "0x142212df5",
+      "bytes": "ff5038",
+      "opcode": "call",
+      "operands": "qword ptr [rax + 0x38]"
+    },
+    {
+      "va": "0x142212df8",
+      "bytes": "c6859d07000001",
+      "opcode": "mov",
+      "operands": "byte ptr [rbp + 0x79d], 1"
+    },
+    {
+      "va": "0x142212dff",
+      "bytes": "488b45e8",
+      "opcode": "mov",
+      "operands": "rax, qword ptr [rbp - 0x18]"
+    },
+    {
+      "va": "0x142212e03",
+      "bytes": "488b7030",
+      "opcode": "mov",
+      "operands": "rsi, qword ptr [rax + 0x30]"
+    },
+    {
+      "va": "0x142212e07",
+      "bytes": "8bbdc4060000",
+      "opcode": "mov",
+      "operands": "edi, dword ptr [rbp + 0x6c4]"
+    },
+    {
+      "va": "0x142212e0d",
+      "bytes": "f20f10b5d0060000",
+      "opcode": "movsd",
+      "operands": "xmm6, qword ptr [rbp + 0x6d0]"
+    },
+    {
+      "va": "0x142212e3b",
+      "bytes": "897c2428",
+      "opcode": "mov",
+      "operands": "dword ptr [rsp + 0x28], edi"
+    },
+    {
+      "va": "0x142212e3f",
+      "bytes": "f20f11742420",
+      "opcode": "movsd",
+      "operands": "qword ptr [rsp + 0x20], xmm6"
+    },
+    {
+      "va": "0x142212e50",
+      "bytes": "488d4de8",
+      "opcode": "lea",
+      "operands": "rcx, [rbp - 0x18]"
+    },
+    {
+      "va": "0x142212e54",
+      "bytes": "ffd6",
+      "opcode": "call",
+      "operands": "rsi"
+    },
+    {
+      "va": "0x142212e7f",
+      "bytes": "4d85ff",
+      "opcode": "test",
+      "operands": "r15, r15"
+    },
+    {
+      "va": "0x142212e82",
+      "bytes": "740e",
+      "opcode": "je",
+      "operands": "0x142212e92"
+    },
+    {
+      "va": "0x142212e88",
+      "bytes": "498bd7",
+      "opcode": "mov",
+      "operands": "rdx, r15"
+    },
+    {
+      "va": "0x142212e8f",
+      "bytes": "ff5048",
+      "opcode": "call",
+      "operands": "qword ptr [rax + 0x48]"
+    },
+    {
+      "va": "0x142212ed3",
+      "bytes": "ba64000000",
+      "opcode": "mov",
+      "operands": "edx, 0x64"
+    },
+    {
+      "va": "0x142212ed8",
+      "bytes": "e8d3210000",
+      "opcode": "call",
+      "operands": "0x1422150b0"
+    },
+    {
+      "va": "0x14220f663",
+      "bytes": "80bfb507000000",
+      "opcode": "cmp",
+      "operands": "byte ptr [rdi + 0x7b5], 0"
+    },
+    {
+      "va": "0x14220f66a",
+      "bytes": "0f84c4000000",
+      "opcode": "je",
+      "operands": "0x14220f734"
+    },
+    {
+      "va": "0x14220f673",
+      "bytes": "e8c81c0000",
+      "opcode": "call",
+      "operands": "0x142211340"
+    },
+    {
+      "va": "0x14220f688",
+      "bytes": "e8a3380000",
+      "opcode": "call",
+      "operands": "0x142212f30"
+    },
+    {
+      "va": "0x14220f695",
+      "bytes": "e826f2ffff",
+      "opcode": "call",
+      "operands": "0x14220e8c0"
+    }
+  ],
+  "selectorDispatch": [
+    {
+      "selector": 1,
+      "name": "kAsioSelectorSupported",
+      "destination": "0x14220a902",
+      "advertisedSupported": false
+    },
+    {
+      "selector": 2,
+      "name": "kAsioEngineVersion",
+      "destination": "0x14220a932",
+      "advertisedSupported": true
+    },
+    {
+      "selector": 3,
+      "name": "kAsioResetRequest",
+      "destination": "0x14220a91a",
+      "advertisedSupported": true
+    },
+    {
+      "selector": 4,
+      "name": "kAsioBufferSizeChange",
+      "destination": "0x14220a91a",
+      "advertisedSupported": false
+    },
+    {
+      "selector": 5,
+      "name": "kAsioResyncRequest",
+      "destination": "0x14220a91a",
+      "advertisedSupported": true
+    },
+    {
+      "selector": 6,
+      "name": "kAsioLatenciesChanged",
+      "destination": "0x14220a928",
+      "advertisedSupported": true
+    },
+    {
+      "selector": 7,
+      "name": "kAsioSupportsTimeInfo",
+      "destination": "0x14220a913",
+      "advertisedSupported": false
+    },
+    {
+      "selector": 8,
+      "name": "kAsioSupportsTimeCode",
+      "destination": "0x14220a913",
+      "advertisedSupported": false
+    },
+    {
+      "selector": 9,
+      "name": "kAsioMMCCommand",
+      "destination": "0x14220a913",
+      "advertisedSupported": false
+    },
+    {
+      "selector": 10,
+      "name": "kAsioSupportsInputMonitor",
+      "destination": "0x14220a913",
+      "advertisedSupported": true
+    },
+    {
+      "selector": 11,
+      "name": "kAsioSupportsInputGain",
+      "destination": "0x14220a913",
+      "advertisedSupported": false
+    },
+    {
+      "selector": 12,
+      "name": "kAsioSupportsInputMeter",
+      "destination": "0x14220a913",
+      "advertisedSupported": false
+    },
+    {
+      "selector": 13,
+      "name": "kAsioSupportsOutputGain",
+      "destination": "0x14220a913",
+      "advertisedSupported": false
+    },
+    {
+      "selector": 14,
+      "name": "kAsioSupportsOutputMeter",
+      "destination": "0x14220a913",
+      "advertisedSupported": false
+    },
+    {
+      "selector": 15,
+      "name": "kAsioOverload",
+      "destination": "0x14220a93c",
+      "advertisedSupported": true
+    }
+  ],
+  "timerIntervalArguments": {
+    "resetScheduling": 500,
+    "modalRetry": 100
+  },
+  "findings": [
+    "Dummy-buffer setup and ordinary open install the slot-zero leaf as ASIOCallbacks.asioMessage",
+    "Non-null active slot-zero object is passed to the common selector handler",
+    "Selectors 3, 4 and 5 schedule Timer+24 then return one; support query advertises 3 and 5 but not 4",
+    "Timer callback closes complete object, sets complete+0x7b5 and invokes its Open method",
+    "Open tests that flag and enters the previously verified IASIO release/create/init path",
+    "Saved audio callback is conditionally passed to the complete-object Start method after Open"
+  ],
+  "limits": [
+    "No runtime reset request, measured timer deadline, active SL3 backend selection or application success proved",
+    "Other active-slot wrapper bindings and external device-change window dispatch are not covered",
+    "No native lifetime, driver policy, registration, firmware or application resources changed"
+  ]
+}

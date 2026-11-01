@@ -1,0 +1,53 @@
+{
+  "scope": "Isolated native timer diagnostic; software tests and actual plan only",
+  "buildDirectory": "artifacts\\build\\timer-diagnostic",
+  "manifestSha256": "b8bd56eb7dde698e6b9ea74ec5d4700b56e65d14a0fb8afcf2b790b1ef4c23df",
+  "workerSha256": "44894510970f96ad190914933d5411a2e94e6171ccb0e73f32d9e8be73cf9e31",
+  "ctestLogSha256": "1805d9b42095b9b35806f6300c3afadee922d0be414862ed611f7a5a98b41f8f",
+  "nativeTestsPassed": 47,
+  "exporterSha256": "92b2dab46b1d130ff046883e1fd58f41614acfc2e75f3d4ddaac50b911bb60eb",
+  "timerPlan": {
+    "plan_only": true,
+    "helper_loaded": false,
+    "device_access": false,
+    "driver_changes": false,
+    "timer_command": "0x37",
+    "maximum_writes": 1,
+    "maximum_reads": 4,
+    "budget_ms": 1500,
+    "audio_submissions": 0,
+    "response_verified": false,
+    "challenge_hex": "0123456789abcdef"
+  },
+  "actualCliFailureCasesPassed": 8,
+  "cliRecordSha256": "704dbced9261b1061f470b55e8d13ab76d3bdf934bb10922a020f0ee6a88dca1",
+  "cliScriptSha256": "0d2b28925d0c748191bc255c36690a43cfc25f66db54005d589a6fd851c1ce05",
+  "diagnostic": {
+    "softwareTestsPassed": true,
+    "queryTestExecutableSha256": "BCE98D1F933DFD5945BC67A680A017B7A4A8C60B030346B8A6F3259C1E19C552",
+    "adapterTestExecutableSha256": "2290EBA5D1BE471AA69A4B11CAAE77645C1A0BEC9F74268A91929457795451C6",
+    "explicitNativeMode": "--timer-query",
+    "challengeBytes": 8,
+    "replyBytes": 8,
+    "maximumWrites": 1,
+    "maximumReads": 4,
+    "budgetMilliseconds": 1500,
+    "nativeQueryRunDuringBuild": false,
+    "automaticStartupExchange": false,
+    "responseVerified": false,
+    "currentSeratoAdmissionVerified": false
+  },
+  "preservedPhysicalCaptureBuild": {
+    "native-build-Release.json": "0d875f3d3e438e1f296cfc3b73e9f14c80b656df1e78bd0a8825a341461ab3da",
+    "Release/sl3_usbdk.exe": "5fe2a44f1020032994c2b2e1a5ea868f87650caa9e23bc2077913760d0e88fe5",
+    "Release/sl3_host_probe.exe": "6d876c8383992f298535e91eda3b5ffd3734c0e10829ecca39e038e24af61f8d"
+  },
+  "preservedPhysicalCaptureDirectory": "artifacts\\build\\checkpoints\\native-controls-build-20261101",
+  "physicalTimerQueryTested": false,
+  "currentSeratoAdmissionVerified": false,
+  "limits": [
+    "The transfer budget excludes device opening, cancellation/drain and redirect release.",
+    "A parsed reply is not key verification, safe reopening or current Serato admission.",
+    "The older physical controls pass does not validate this new executable."
+  ]
+}

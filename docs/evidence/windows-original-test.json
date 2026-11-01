@@ -1,0 +1,148 @@
+{
+  "before": {
+    "collectedUtc": "2026-10-26T21:12:04.3665192Z",
+    "os": {
+      "Caption": "Microsoft Windows 11 Pro",
+      "Version": "10.0.26300",
+      "BuildNumber": "26300",
+      "OSArchitecture": "64-bit"
+    },
+    "cpu": {
+      "Name": "AMD Ryzen 9 5900X 12-Core Processor            ",
+      "Architecture": 9
+    },
+    "secureBoot": true,
+    "deviceGuard": {
+      "VirtualizationBasedSecurityStatus": 2,
+      "SecurityServicesConfigured": [
+        0
+      ],
+      "SecurityServicesRunning": [
+        0
+      ]
+    },
+    "hvciRegistry": "Key absent; use DeviceGuard running services to determine runtime state",
+    "asio": [],
+    "application": {
+      "path": "C:\\Program Files\\Serato\\Serato DJ Pro\\Serato DJ Pro.exe",
+      "version": "5,0,0,1278",
+      "sha256": "66E7AF01DDFD151814F51BF44BD8472E5C94F54B3CE12119EF70B7CBAB433265"
+    },
+    "device_status": [
+      {
+        "friendlyName": "SL 3",
+        "class": null,
+        "problem": 28,
+        "properties": [
+          {
+            "KeyName": "DEVPKEY_Device_HardwareIds",
+            "Data": [
+              "USB\\VID_1CC5&PID_0001&REV_0000",
+              "USB\\VID_1CC5&PID_0001"
+            ]
+          },
+          {
+            "KeyName": "DEVPKEY_Device_CompatibleIds",
+            "Data": [
+              "USB\\COMPAT_VID_1CC5&Class_FF&SubClass_01&Prot_20",
+              "USB\\COMPAT_VID_1CC5&Class_FF&SubClass_01",
+              "USB\\COMPAT_VID_1CC5&Class_FF",
+              "USB\\Class_FF&SubClass_01&Prot_20",
+              "USB\\Class_FF&SubClass_01",
+              "USB\\Class_FF"
+            ]
+          },
+          {
+            "KeyName": "DEVPKEY_Device_ProblemCode",
+            "Data": 28
+          }
+        ]
+      }
+    ]
+  },
+  "after": {
+    "collectedUtc": "2026-10-26T21:13:02.2819188Z",
+    "os": {
+      "Caption": "Microsoft Windows 11 Pro",
+      "Version": "10.0.26300",
+      "BuildNumber": "26300",
+      "OSArchitecture": "64-bit"
+    },
+    "cpu": {
+      "Name": "AMD Ryzen 9 5900X 12-Core Processor            ",
+      "Architecture": 9
+    },
+    "secureBoot": true,
+    "deviceGuard": {
+      "VirtualizationBasedSecurityStatus": 2,
+      "SecurityServicesConfigured": [
+        0
+      ],
+      "SecurityServicesRunning": [
+        0
+      ]
+    },
+    "hvciRegistry": "Key absent; use DeviceGuard running services to determine runtime state",
+    "asio": [],
+    "application": {
+      "path": "C:\\Program Files\\Serato\\Serato DJ Pro\\Serato DJ Pro.exe",
+      "version": "5,0,0,1278",
+      "sha256": "66E7AF01DDFD151814F51BF44BD8472E5C94F54B3CE12119EF70B7CBAB433265"
+    },
+    "device_status": [
+      {
+        "friendlyName": "Rane SL3",
+        "class": "MEDIA",
+        "problem": 39,
+        "properties": [
+          {
+            "KeyName": "DEVPKEY_Device_HardwareIds",
+            "Data": [
+              "USB\\VID_1CC5&PID_0001&REV_0000",
+              "USB\\VID_1CC5&PID_0001"
+            ]
+          },
+          {
+            "KeyName": "DEVPKEY_Device_CompatibleIds",
+            "Data": [
+              "USB\\COMPAT_VID_1CC5&Class_FF&SubClass_01&Prot_20",
+              "USB\\COMPAT_VID_1CC5&Class_FF&SubClass_01",
+              "USB\\COMPAT_VID_1CC5&Class_FF",
+              "USB\\Class_FF&SubClass_01&Prot_20",
+              "USB\\Class_FF&SubClass_01",
+              "USB\\Class_FF"
+            ]
+          },
+          {
+            "KeyName": "DEVPKEY_Device_Service",
+            "Data": "strmdrv"
+          },
+          {
+            "KeyName": "DEVPKEY_Device_ProblemCode",
+            "Data": 39
+          },
+          {
+            "KeyName": "DEVPKEY_Device_DriverVersion",
+            "Data": "6.0.6001.18000"
+          },
+          {
+            "KeyName": "DEVPKEY_Device_DriverInfPath",
+            "Data": "oem136.inf"
+          },
+          {
+            "KeyName": "DEVPKEY_Device_MatchingDeviceId",
+            "Data": "USB\\VID_1CC5&PID_0001"
+          }
+        ]
+      }
+    ]
+  },
+  "installer_exit": {
+    "exitCode": 0,
+    "finishedUtc": "2026-10-26T21:13:01.3215825Z"
+  },
+  "owner_instruction": "Proceed on Windows 11 without rollback preparation; owner accepted possible failure.",
+  "firmware_operations": false,
+  "security_settings_changed": false,
+  "reboot_performed": false
+}

@@ -1,0 +1,354 @@
+{
+  "scope": "Historical 2.5.5 original-byte SL3 control contract; no vendor execution, USB write or current Serato admission",
+  "seratoSha256": "ba8641d0329fe0c955147d2b45f247eeea82ac0f812fe30a339834dbe0c0a503",
+  "raneAsioSha256": "e3d88039547b70915b1a9bc9e3e3f7dba32aaa9bc3ce8fd51616565ea1734141",
+  "exporterSha256": "b06e2b0608e1c45b355d85e0b8b025df9302499266d6965a3b6cb955ed648f88",
+  "imageHelperSha256": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+  "rtti": {
+    "name": ".?AVRaneSL3API@driver@device@serato@@",
+    "vtableVa": "0x1447b9b08",
+    "locatorVa": "0x14482fbe0"
+  },
+  "logicalSlotToControlGroup": [
+    1,
+    2,
+    0
+  ],
+  "logicalSlotToTableOffset": [
+    14,
+    20,
+    8
+  ],
+  "booleanWrite": {
+    "false": 1,
+    "true": 0,
+    "length": 1,
+    "rawOperation": "input byte XOR 1"
+  },
+  "readAndNotificationFlag": "raw byte equals zero",
+  "notificationInputByteForSlot": [
+    1,
+    2,
+    0
+  ],
+  "notificationFourthByteInterpreted": false,
+  "upstreamRemap": {
+    "entryVa": "0x140422200",
+    "endExclusive": "0x140422256",
+    "ownerDriverApiOffset": "0xf8",
+    "globalVa": "0x144e39ef8",
+    "vectorBeginOffset": "0x398",
+    "vectorEndOffset": "0x3a0",
+    "elementBytes": 4,
+    "invalidIndexForwarded": -1,
+    "runtimeVectorCaptured": false,
+    "assembly": [
+      "140422200: mov rax, qword ptr [rip + 0x4a17cf1]",
+      "140422207: test rax, rax",
+      "14042220a: je 0x140422255",
+      "14042220c: mov rcx, qword ptr [rcx + 0xf8]",
+      "140422213: test rcx, rcx",
+      "140422216: je 0x140422255",
+      "140422218: mov r9, qword ptr [rax + 0x398]",
+      "14042221f: mov rax, qword ptr [rax + 0x3a0]",
+      "140422226: sub rax, r9",
+      "140422229: sar rax, 2",
+      "14042222d: cmp edx, eax",
+      "14042222f: jge 0x140422246",
+      "140422231: test edx, edx",
+      "140422233: js 0x140422246",
+      "140422235: movsxd rax, edx",
+      "140422238: mov edx, dword ptr [r9 + rax*4]",
+      "14042223c: mov rax, qword ptr [rcx]",
+      "14042223f: jmp qword ptr [rax + 0xb0]",
+      "140422246: mov rax, qword ptr [rcx]",
+      "140422249: mov edx, 0xffffffff",
+      "14042224e: jmp qword ptr [rax + 0xb0]",
+      "140422255: ret "
+    ]
+  },
+  "instructionChecks": [
+    {
+      "va": "0x14069b095",
+      "instruction": "mov qword ptr [rdi + 0x90], rax"
+    },
+    {
+      "va": "0x14069b0b6",
+      "instruction": "mov qword ptr [rdi + 0x98], rax"
+    },
+    {
+      "va": "0x14069b0d7",
+      "instruction": "mov qword ptr [rdi + 0xa0], rax"
+    },
+    {
+      "va": "0x140691cb4",
+      "instruction": "cmp byte ptr [rcx + 8], 0"
+    },
+    {
+      "va": "0x140691cbd",
+      "instruction": "xor r8b, 1"
+    },
+    {
+      "va": "0x140691cc1",
+      "instruction": "mov byte ptr [rsp + 0x30], r8b"
+    },
+    {
+      "va": "0x140691cc6",
+      "instruction": "test edx, edx"
+    },
+    {
+      "va": "0x140691cc8",
+      "instruction": "je 0x140691ce2"
+    },
+    {
+      "va": "0x140691cca",
+      "instruction": "sub edx, 1"
+    },
+    {
+      "va": "0x140691ccd",
+      "instruction": "je 0x140691cdb"
+    },
+    {
+      "va": "0x140691ccf",
+      "instruction": "cmp edx, 1"
+    },
+    {
+      "va": "0x140691cd2",
+      "instruction": "jne 0x140691cfd"
+    },
+    {
+      "va": "0x140691cd4",
+      "instruction": "mov edx, 8"
+    },
+    {
+      "va": "0x140691cd9",
+      "instruction": "jmp 0x140691ce7"
+    },
+    {
+      "va": "0x140691cdb",
+      "instruction": "mov edx, 0x14"
+    },
+    {
+      "va": "0x140691ce0",
+      "instruction": "jmp 0x140691ce7"
+    },
+    {
+      "va": "0x140691ce2",
+      "instruction": "mov edx, 0xe"
+    },
+    {
+      "va": "0x140691ce7",
+      "instruction": "mov rcx, qword ptr [rcx + 0x68]"
+    },
+    {
+      "va": "0x140691ceb",
+      "instruction": "lea r8, [rsp + 0x30]"
+    },
+    {
+      "va": "0x140691cf0",
+      "instruction": "mov r9d, 1"
+    },
+    {
+      "va": "0x140691cf6",
+      "instruction": "call qword ptr [r10 + 0x98]"
+    },
+    {
+      "va": "0x140691c38",
+      "instruction": "mov byte ptr [rsp + 0x30], 1"
+    },
+    {
+      "va": "0x140691c3f",
+      "instruction": "test edi, edi"
+    },
+    {
+      "va": "0x140691c41",
+      "instruction": "je 0x140691c59"
+    },
+    {
+      "va": "0x140691c43",
+      "instruction": "sub eax, 1"
+    },
+    {
+      "va": "0x140691c46",
+      "instruction": "je 0x140691c52"
+    },
+    {
+      "va": "0x140691c48",
+      "instruction": "cmp eax, 1"
+    },
+    {
+      "va": "0x140691c4d",
+      "instruction": "lea edx, [rax + 7]"
+    },
+    {
+      "va": "0x140691c52",
+      "instruction": "mov edx, 0x14"
+    },
+    {
+      "va": "0x140691c59",
+      "instruction": "mov edx, 0xe"
+    },
+    {
+      "va": "0x140691c5e",
+      "instruction": "mov r9d, 1"
+    },
+    {
+      "va": "0x140691c64",
+      "instruction": "lea r8, [rsp + 0x30]"
+    },
+    {
+      "va": "0x140691c69",
+      "instruction": "mov rcx, qword ptr [rbx + 0x68]"
+    },
+    {
+      "va": "0x140691c6d",
+      "instruction": "call qword ptr [rbx + 0x90]"
+    },
+    {
+      "va": "0x140691c73",
+      "instruction": "cmp byte ptr [rsp + 0x30], 0"
+    },
+    {
+      "va": "0x140691c78",
+      "instruction": "sete dl"
+    },
+    {
+      "va": "0x140691c8e",
+      "instruction": "inc edi"
+    },
+    {
+      "va": "0x140691c94",
+      "instruction": "cmp edi, 3"
+    },
+    {
+      "va": "0x140691c97",
+      "instruction": "jl 0x140691c31"
+    },
+    {
+      "va": "0x140691d25",
+      "instruction": "cmp byte ptr [rcx + 1], 0"
+    },
+    {
+      "va": "0x140691d29",
+      "instruction": "sete dl"
+    },
+    {
+      "va": "0x140691d4b",
+      "instruction": "cmp byte ptr [rbx + 2], 0"
+    },
+    {
+      "va": "0x140691d4f",
+      "instruction": "sete dl"
+    },
+    {
+      "va": "0x140691d71",
+      "instruction": "cmp byte ptr [rbx], 0"
+    },
+    {
+      "va": "0x140691d74",
+      "instruction": "sete dl"
+    },
+    {
+      "va": "0x140420ae1",
+      "instruction": "call 0x140680270"
+    },
+    {
+      "va": "0x140420ae9",
+      "instruction": "mov rax, qword ptr [rax]"
+    },
+    {
+      "va": "0x140420af7",
+      "instruction": "mov qword ptr [rdi + 0xf8], rax"
+    },
+    {
+      "va": "0x140691b19",
+      "instruction": "mov rax, qword ptr [rcx + 0x68]"
+    },
+    {
+      "va": "0x140691b1d",
+      "instruction": "mov r8, qword ptr [rcx + 0xa0]"
+    },
+    {
+      "va": "0x140691b26",
+      "instruction": "mov rcx, rax"
+    },
+    {
+      "va": "0x140691b35",
+      "instruction": "call r8"
+    }
+  ],
+  "focusedReports": [
+    {
+      "path": "analysis/serato255-sl3-api-lifecycle.json",
+      "sha256": "e47cb9bf5c4fa369b5a511701af7a5683c714b3037be0ace61d6fdfc85099c49",
+      "functions": [
+        {
+          "start": "1406918e0",
+          "endExclusive": "140691973"
+        },
+        {
+          "start": "140691980",
+          "endExclusive": "1406919ab"
+        },
+        {
+          "start": "1406915e0",
+          "endExclusive": "140691625"
+        },
+        {
+          "start": "140691cb0",
+          "endExclusive": "140691d02"
+        },
+        {
+          "start": "140691c10",
+          "endExclusive": "140691ca9"
+        },
+        {
+          "start": "140691ae0",
+          "endExclusive": "140691c09"
+        },
+        {
+          "start": "14069aef0",
+          "endExclusive": "14069afce"
+        },
+        {
+          "start": "14069afd0",
+          "endExclusive": "14069b225"
+        }
+      ]
+    },
+    {
+      "path": "analysis/serato255-sl3-thru-callback.json",
+      "sha256": "a22471001c91ed0bc04d95820db8af2d463d1ce51abd5d031bfbe530cc7bfb9e",
+      "functions": [
+        {
+          "start": "140691d10",
+          "endExclusive": "140691dd2"
+        }
+      ]
+    },
+    {
+      "path": "analysis/serato255-thru-owner.json",
+      "sha256": "e831e34aa7f1461d28273edbd80f3c5e905818d22416d3b5222f8a942cc3d825",
+      "functions": [
+        {
+          "start": "14041ff00",
+          "endExclusive": "140420c28"
+        },
+        {
+          "start": "1404211d0",
+          "endExclusive": "1404219de"
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Logical API slots are not proven physical jacks or user-visible deck numbers.",
+    "The upstream remapping vector is runtime state and has not been captured.",
+    "Boolean inversion is established for Boolean arguments; arbitrary input bytes use XOR, not logical negation.",
+    "The historical getter initializes its byte to 1 and consumes a void-style getter; unchanged data cannot prove successful I/O.",
+    "Current control transactions must retain explicit success/error/read-back evidence rather than copy historical fallback behavior.",
+    "The fourth notification byte is not consumed by these three callbacks.",
+    "Current 5.0.0 lacks a demonstrated SL3 DriverAPI/descriptor/handshake integration; this does not restore it.",
+    "No driver, application resource, account check, physical routing, security policy or firmware changed."
+  ]
+}

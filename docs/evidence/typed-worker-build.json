@@ -1,0 +1,127 @@
+{
+  "utc": "2026-10-27T02:11:46.791352+00:00",
+  "scope": "Typed finite-worker codec, actual diagnostic IPC handshake, and service-absence rejection only",
+  "builds": [
+    {
+      "configuration": "Release",
+      "utc": "2026-10-27T02:09:48.6105225Z",
+      "ctestTests": [
+        "sl3_core_tests",
+        "sl3_playback_tests",
+        "sl3_audio_bridge_tests",
+        "sl3_duplex_tests",
+        "sl3_asio_buffer_tests",
+        "sl3_asio_com_tests",
+        "sl3_mailbox_tests",
+        "sl3_worker_process_tests",
+        "sl3_worker_protocol_tests",
+        "sl3_usbdk_rejects_worker_capture",
+        "sl3_usbdk_plan",
+        "sl3_usbdk_rejects_modes",
+        "sl3_usbdk_rejects_duplex_capture",
+        "sl3_capture_plan",
+        "sl3_capture_rejects_modes"
+      ],
+      "usbdk": {
+        "executableSha256": "5AA75F08E5B973E8335BA24037CBD0A02DFE4C218E2DDF22D3616A0C757D05EB",
+        "executableBytes": 142336,
+        "planOnlyPassed": true,
+        "physicalCaptureTested": false,
+        "helperLoadedDuringPlan": false
+      },
+      "usbdkWorker": {
+        "protocolVersion": 1,
+        "testsPassed": true,
+        "testExecutableSha256": "87ECDDADF75C75BE5D001A5D4C54C0D38BA479AE88D969A55067BFB2B4EE6BA7",
+        "maximumCaptureReplyBytes": 32544,
+        "finiteInputIpcImplemented": true,
+        "physicalInputIpcTested": false,
+        "continuousAudioImplemented": false,
+        "audioOutputImplemented": false,
+        "asioConnected": false
+      },
+      "buildScriptSha256": "114350DF80BE64D2B175878ACF7D2B249570DA66C2BDDCB5377A89B7852A4649"
+    },
+    {
+      "configuration": "Debug",
+      "utc": "2026-10-27T02:09:54.0866941Z",
+      "ctestTests": [
+        "sl3_core_tests",
+        "sl3_playback_tests",
+        "sl3_audio_bridge_tests",
+        "sl3_duplex_tests",
+        "sl3_asio_buffer_tests",
+        "sl3_asio_com_tests",
+        "sl3_mailbox_tests",
+        "sl3_worker_process_tests",
+        "sl3_worker_protocol_tests",
+        "sl3_usbdk_rejects_worker_capture",
+        "sl3_usbdk_plan",
+        "sl3_usbdk_rejects_modes",
+        "sl3_usbdk_rejects_duplex_capture",
+        "sl3_capture_plan",
+        "sl3_capture_rejects_modes"
+      ],
+      "usbdk": {
+        "executableSha256": "F9055D595C15F3C43D92119AE8F53434FCEC0E12996A93CEA10DB8A60DE755E1",
+        "executableBytes": 519680,
+        "planOnlyPassed": true,
+        "physicalCaptureTested": false,
+        "helperLoadedDuringPlan": false
+      },
+      "usbdkWorker": {
+        "protocolVersion": 1,
+        "testsPassed": true,
+        "testExecutableSha256": "0863DAA9C78DE1708EA73459619E847D26821B1BD43FFD664392EB98D2078F06",
+        "maximumCaptureReplyBytes": 32544,
+        "finiteInputIpcImplemented": true,
+        "physicalInputIpcTested": false,
+        "continuousAudioImplemented": false,
+        "audioOutputImplemented": false,
+        "asioConnected": false
+      },
+      "buildScriptSha256": "114350DF80BE64D2B175878ACF7D2B249570DA66C2BDDCB5377A89B7852A4649"
+    }
+  ],
+  "sourceSha256": {
+    "src/core/worker_protocol.hpp": "96a7e20ffbdf789dfb85255a8a66028e07eb040dc7d6f0ecbd4475bbae0509c4",
+    "src/core/worker_protocol.cpp": "97584c60519909039bea1a94fa56d67f789d1d0754f90a007bfc48fedc398803",
+    "src/windows/usbdk_main.cpp": "408ab7d6cdd2425c9ecfb8f709c6f7945f5b1f4608520a767049eca83df0d82d",
+    "src/windows/mailbox.cpp": "e5eba291267180a44966930e624bf6577ed4893c7e42004d7c5426506099d144",
+    "tests/native/worker_protocol_tests.cpp": "5d600e2ff7cc8ee493d5d319fe06335de6497b985683c374e68f8bac77781792",
+    "CMakeLists.txt": "9ee2be6bb0d8e5732e2de18740d989368624d6d6bc123380c5642dc9d6dd0638",
+    "scripts/build-native.ps1": "114350df80be64d2b175878acf7d2b249570da66c2bddcb5377a89b7852a4649"
+  },
+  "additionalChecks": {
+    "sdkFreeTestsPassed": 13,
+    "sdkFreePathDeliberatelyAbsent": true,
+    "realWorkerHandshakeTested": true,
+    "final64thReplySurvivesExit": true,
+    "missingDriverExplicitTestPassed": true,
+    "missingDriverWin32Error": 1060,
+    "helperPathInTestsDeliberatelyMissing": true,
+    "maximumCapturePayloadBytes": 32544,
+    "noWorkerProcessesRemain": true
+  },
+  "readOnlyPreflight": {
+    "recordSha256": "1a2237ceb377a67c4c6d7f2de6f03eda6bad7f8c4578045688000bad32d5ce4d",
+    "nativeSha256": "5AA75F08E5B973E8335BA24037CBD0A02DFE4C218E2DDF22D3616A0C757D05EB",
+    "installedDriver": [],
+    "helperLoaded": false,
+    "secureBoot": {
+      "known": false,
+      "reason": "Unable to set proper privileges. Access was denied."
+    }
+  },
+  "physicalCaptureViaWorkerTested": false,
+  "audioOutputCommandsImplemented": false,
+  "continuousAudioImplemented": false,
+  "asioConnected": false,
+  "audioOutputSubmissions": 0,
+  "limits": [
+    "Handshake advertises compiled diagnostic features, not SL3 or stream availability",
+    "Synthetic codec packets do not validate physical data, sample clock, mapping or latency",
+    "Actual descriptor probe/capture requires the separate owner-present traced driver/hardware gates",
+    "The worker capture path is implemented but has not run on hardware"
+  ]
+}

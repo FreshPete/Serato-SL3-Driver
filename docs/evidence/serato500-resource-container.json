@@ -1,0 +1,62 @@
+{
+  "schema": "sl3.serato.resource-inspection.v1",
+  "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "archiveSha256": "872fc4fdad2eab2ddd34387d2d3c04dd9731c84798d9fdc7bd05ca54e1567db8",
+  "archiveBytes": 2291764,
+  "encryptedIndexBytes": 12876,
+  "decodedIndexSha256": "f67f8a6d2bfff5f0a4902d91af67ef9b20e1fc3543e2e03a97268a7a7e650986",
+  "memberCount": 229,
+  "allMemberZipCrcsVerified": true,
+  "xmlMembersParsed": 228,
+  "schemaMembersNotParsed": 1,
+  "descriptorKindCounts": {
+    "native_pro_device": 65,
+    "osa_device": 56,
+    "native_intro_device": 76
+  },
+  "sl3IdentityMatchesInRecognizedNodes": [],
+  "sl3NamedMembers": [],
+  "phaseInteroperabilityFields": [
+    {
+      "kind": "osa_device",
+      "fields": {
+        "vendor_id": "0x00f1",
+        "product_id": "0x01f1",
+        "midi_direction": "none",
+        "has_hid": "true",
+        "is_wireless_device": "true",
+        "num_wireless_decks": "2",
+        "handshake_type": "HANDSHAKE_TYPE_SERATO_DJ_HID"
+      }
+    }
+  ],
+  "vendorCodeExecuted": false,
+  "filesExtracted": false,
+  "applicationChanges": false,
+  "limits": [
+    "Only this pinned archive is inspected; other resource providers are not covered",
+    "Scalar descriptor identity fields are inspected, not all possible identity encodings",
+    "Decoded data and interoperability fields do not establish runtime device support or authentication",
+    "No archive writer, injection, signing, driver admission, audio or DVS test"
+  ],
+  "installedExecutableAndArchiveMatch": true,
+  "focusedReports": {
+    "serato500-archive-setup-01.json": "dec241904abec2dc2b8e30a05ce13a8b8f1df260bf40bfa01c96f98a4823738d",
+    "serato500-container-index-01.json": "4d35cc137146b205c14cfccad12e327213012a708cd431abc2f79a4e55d8aab0",
+    "serato500-container-load-01.json": "19ea419fc712bf4ea8e711c4de6511d98edc0af1fc8e4b480f250f2b81b78866",
+    "serato500-archive-codec-01.json": "70c9e88ca481ce2f1f4ed64765efc647d24271f782db93208f9a39bc840ab9dd",
+    "serato500-resource-transform-01.json": "ec0811266ae7c975edc159a52c90df41057779baad57c8806b7ea6ead005699f"
+  },
+  "memberMetadataSha256": "9ad47913acfdf365d6480635caec2a4d09857e0823eeabc8a814b0fe71002a4d",
+  "readerSourceSha256": "5c8773f42f1bd55d3477cf75e94c8b84be09a066370c97608e1f42f3a7ef15f6",
+  "staticBoundary": {
+    "keySetup": "14139c650",
+    "keyToBytes": "141772250",
+    "containerIndex": "1417740d0",
+    "readMember": "141775520",
+    "decodeWrapper": "1417723b0",
+    "wordTransform": "141cc5ed0",
+    "paddingCheck": "141cc6250",
+    "innerZipReader": "141cbca70"
+  }
+}

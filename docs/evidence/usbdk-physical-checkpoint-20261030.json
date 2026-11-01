@@ -1,0 +1,202 @@
+{
+  "generatedUtc": "2026-10-30T15:48:23.244473+00:00",
+  "scope": "Observed bounded SL3 USB input and zero-PCM output with saved trace consistency",
+  "nativeSha256": "7341FDC3D254E7E5575B18B832B835C929923E1FA815D61C63665DEDA0A4DC0F",
+  "buildManifestSha256": "f900aee2e51555e53c0c0394c392358ffbf202066839fb707156b81ffd94079e",
+  "listing": {
+    "runRecordSha256": "02b06d14228d1256760884882016774c84aa3bed735818c0e1541f2e589ef703",
+    "beforeStateSha256": "be156c84a6657725d1fcb8aa0ca325bf89fd66c9bb9b13649cc83feaf423c904",
+    "afterStateSha256": "2c076e97233fe104b69b323edea778c4b5b0cf93cec10c515a3ce349b6932943",
+    "traceStats": {
+      "eventsLost": 0,
+      "buffersLost": 0,
+      "eventCount": 17172,
+      "session": "SL3Startup-a2a0e0225c9540fd9673cecd74d3c2bc",
+      "xmlSha256": "87df6842ad80934e30ea61b730819a4135264c8897c14c4c08123af7d72f3a2b"
+    },
+    "etlSha256": "4f6361d4314ffb2ba58089928141c9d2cd56339a69cb052435b833960536cee0",
+    "secureBootBeforeAndAfter": true,
+    "recoveryConfirmed": true,
+    "matched_sl3": 1,
+    "descriptor_fixture_matches": true,
+    "high_speed": true,
+    "device_redirected": false
+  },
+  "capture": {
+    "runRecordSha256": "cc7b7c4697e9cc6f6793c63186c874135c8bfe01e1a4ade1e934a439d3d9fa35",
+    "beforeStateSha256": "d0b93d01ede2a5c99a297571716dc62014411100efdece8b5c5d4cd0ec61be81",
+    "afterStateSha256": "766950222a7a58ba2b14e12c5a743d75c7251dd46c645361f1acf47b8f837f68",
+    "traceStats": {
+      "eventsLost": 0,
+      "buffersLost": 0,
+      "eventCount": 17908,
+      "session": "SL3Startup-afe89c036faa4c03bc5c101c23396147",
+      "xmlSha256": "2f5688002bdc9fd6f52363b21105c69e2d997f9f8dfad7f4820c5c347f71feb2"
+    },
+    "etlSha256": "e857ac7d370b40d064a23660dd9e08ec7aab1b093c358e48680dc54486b08dae",
+    "secureBootBeforeAndAfter": true,
+    "recoveryConfirmed": true,
+    "reportedRateHz": 44100,
+    "frames": 1411,
+    "packetCount": 256,
+    "plannedIntervals": 256,
+    "packetLengthHistogram": {
+      "90": 125,
+      "108": 131
+    },
+    "pcmBytes": 25398,
+    "pcmSha256": "22aa87a0aced608d783879532b49649aeb4e9714a4ee74eeb0a00c73c1422d6a",
+    "nativeRecordSha256": "2c2e8d18e31de9ca72fb202a330d44897ac3b74d98ab0ef5722cd124afb6c6ac",
+    "audioOutputSubmissions": 0,
+    "continuityVerified": false
+  },
+  "silentDuplex": {
+    "runRecordSha256": "9442aa3090d67d56163c29de55c6444147cf6a99d1c4a926d3d6ce6e7c27f340",
+    "beforeStateSha256": "ba812c244eb82a8b0bed1c62a27bce81a54f813c43bd0f52769404b0b3cef37d",
+    "afterStateSha256": "1f0bc1f1b695800ebeafeb706cc8e455942060c7ab994f66764bb31d0fddb323",
+    "traceStats": {
+      "eventsLost": 0,
+      "buffersLost": 0,
+      "eventCount": 17897,
+      "session": "SL3Startup-2dcb9e5f05054680bb145f567f788773",
+      "xmlSha256": "8ed2d5966c1858bf5b221dc212e26722e44252f37a66ac8593edfa5c4b322680"
+    },
+    "etlSha256": "8a6af7ac93cc88461a7db204acdbc25628db03bb722cae5acda56cee31cfdd80",
+    "secureBootBeforeAndAfter": true,
+    "recoveryConfirmed": true,
+    "reportedRateHz": 44100,
+    "inputRequestsCompleted": 4,
+    "outputRequestsCompleted": 4,
+    "inputPackets": 256,
+    "outputPackets": 256,
+    "outputBytesRequestedAndAcceptedByApi": 25398,
+    "outputBuffers": [
+      {
+        "slot": 1,
+        "bytes": 8064,
+        "sha256": "05bf9d87a6313c41625d93de63e30bc39be25e54b472f17e99d78cf12fccb3da",
+        "allZero": true
+      },
+      {
+        "slot": 3,
+        "bytes": 8064,
+        "sha256": "05bf9d87a6313c41625d93de63e30bc39be25e54b472f17e99d78cf12fccb3da",
+        "allZero": true
+      },
+      {
+        "slot": 5,
+        "bytes": 8064,
+        "sha256": "05bf9d87a6313c41625d93de63e30bc39be25e54b472f17e99d78cf12fccb3da",
+        "allZero": true
+      },
+      {
+        "slot": 7,
+        "bytes": 8064,
+        "sha256": "05bf9d87a6313c41625d93de63e30bc39be25e54b472f17e99d78cf12fccb3da",
+        "allZero": true
+      }
+    ],
+    "nativeRecordSha256": "093264d5165b6e4168edbad4abb5bd965e8d43252c18f4f577e90118e111b2f5",
+    "continuityVerified": false,
+    "sampleClockValidated": false,
+    "analogOutputVerified": false
+  },
+  "rateChange48k": {
+    "runRecordSha256": "02072656198892100423eaff0ecff69c8230841cb7cbc474cf002b3f402e4569",
+    "beforeStateSha256": "a5dcba3e41163a4415c3f7c081c007c42f32f5c84a379d89470a7fb0b6b7c678",
+    "afterStateSha256": "8f26357761d880fc95998c3efaa4fc38e8f5fa398fd791e0ed252c5b077b323f",
+    "traceStats": {
+      "eventsLost": 0,
+      "buffersLost": 0,
+      "eventCount": 19171,
+      "session": "SL3Startup-d68d459c057a486bb0d5bc2a168f47dc",
+      "xmlSha256": "a2e4f0ff7aecc5654daa0536569b669a655438630d3d1a8f239623e2b33ee41e"
+    },
+    "etlSha256": "1ca445d5fa438f475c8d1c1919bd8ad0ff4342b65826c2e953452b553981d28b",
+    "secureBootBeforeAndAfter": true,
+    "recoveryConfirmed": true,
+    "initialRateHz": 44100,
+    "targetAndReadbackHz": 48000,
+    "nativeRecordSha256": "80c7b5a17b0aa66b9063302b61f14e188abfdf57e91a78a05bf0cc1db111564b",
+    "audioSubmissions": 0,
+    "rateRestorationAttempted": false
+  },
+  "capture48k": {
+    "runRecordSha256": "1b3ae3424b53dcfe15a292b8d7bf3d86b29d54a320214252afd9f21f1c2e1c85",
+    "beforeStateSha256": "76cfc4d8a973124c8fe6fc8ba95870bba4f408a898bcd513fc57902ede2187bb",
+    "afterStateSha256": "f699510ae3675f054c8dce5ab06c2306b929fae60396d21fa6bf7a2e0c2c0ea2",
+    "traceStats": {
+      "eventsLost": 0,
+      "buffersLost": 0,
+      "eventCount": 19073,
+      "session": "SL3Startup-bf6fb4b0e2ba44949566568d748c97f2",
+      "xmlSha256": "4b94ee9218e4b21e38122134d92609c69053f052c444fe1039e6508b0e4c7101"
+    },
+    "etlSha256": "03f2a0e9fb93ce900ad3906c9a2547cee83f4e355211ec2bab9617df221c5998",
+    "secureBootBeforeAndAfter": true,
+    "recoveryConfirmed": true,
+    "reportedRateHz": 48000,
+    "frames": 1534,
+    "packetCount": 256,
+    "packetLengthHistogram": {
+      "90": 9,
+      "108": 240,
+      "126": 7
+    },
+    "nativeRecordSha256": "302aa53d94e5169c2eb0223f9cc5cd08c47790cb1a0192a9c19b2128669ab8c0",
+    "pcmBytes": 27612,
+    "pcmSha256": "9a88d9b240204cfdadca9e284aa72e1b6290c0901e6b06154a48ac9feae60827",
+    "audioOutputSubmissions": 0
+  },
+  "silentDuplex48k": {
+    "runRecordSha256": "fe5dd90b0fd66425f5b0cb29b8bae444be96a54614d0e28853be639479d7bab9",
+    "beforeStateSha256": "3196e6ba2327a8fb2869394797eb6554842b6505a872e8ed8d36b17c09fb53dd",
+    "afterStateSha256": "fdb2e0155eb24a1b0942049997dee8161910b6c23fa421dd4480c46a9ce06e02",
+    "traceStats": {
+      "eventsLost": 0,
+      "buffersLost": 0,
+      "eventCount": 18628,
+      "session": "SL3Startup-2033f988b80f49f495581f1b075cb494",
+      "xmlSha256": "bcb7ad34aeb89552332ec940050c2cffcd54ba09bbbfc5c3c5e12f3a0f7da210"
+    },
+    "etlSha256": "1496192eec1ddc598f92fde112f0ddc2d3fac48efad6a95cae3321616713aa56",
+    "secureBootBeforeAndAfter": true,
+    "recoveryConfirmed": true,
+    "reportedRateHz": 48000,
+    "inputRequestsCompleted": 4,
+    "outputRequestsCompleted": 4,
+    "outputBytesRequestedAndAcceptedByApi": 27630,
+    "outputBuffers": [
+      {
+        "slot": 1,
+        "sha256": "05bf9d87a6313c41625d93de63e30bc39be25e54b472f17e99d78cf12fccb3da",
+        "allZero": true
+      },
+      {
+        "slot": 3,
+        "sha256": "05bf9d87a6313c41625d93de63e30bc39be25e54b472f17e99d78cf12fccb3da",
+        "allZero": true
+      },
+      {
+        "slot": 5,
+        "sha256": "05bf9d87a6313c41625d93de63e30bc39be25e54b472f17e99d78cf12fccb3da",
+        "allZero": true
+      },
+      {
+        "slot": 7,
+        "sha256": "05bf9d87a6313c41625d93de63e30bc39be25e54b472f17e99d78cf12fccb3da",
+        "allZero": true
+      }
+    ],
+    "nativeRecordSha256": "366004a832b40d67c40294bee9817927ae0d4486bd804de8e200224809818d39",
+    "continuityVerified": false,
+    "analogOutputVerified": false
+  },
+  "limits": [
+    "Input signal identity, physical channel mapping and analogue output remain unverified",
+    "Planned intervals and sample count do not prove continuous clocking or latency",
+    "No Windows audio/ASIO application or current Serato/DVS integration tested",
+    "The original Rane binding is restored to its code-39 baseline after redirection",
+    "Raw USB traces, buffers and PCM remain local and are not exported"
+  ]
+}

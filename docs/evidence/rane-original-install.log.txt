@@ -1,0 +1,96 @@
+2026-10-26 21:12:06.133   Log opened. (Time zone: UTC+00:00)
+2026-10-26 21:12:06.133   Setup version: Inno Setup version 5.5.3 (u)
+2026-10-26 21:12:06.133   Original Setup EXE: <USERPROFILE>\source\repos\Serato-SL3\artifacts\extracted\rane-windows\RaneAsioSl3Setup.exe
+2026-10-26 21:12:06.133   Setup command line: /SL5="$770BAA,8121360,118784,<USERPROFILE>\source\repos\Serato-SL3\artifacts\extracted\rane-windows\RaneAsioSl3Setup.exe" /LOG="<USERPROFILE>\source\repos\Serato-SL3\tests\results\local\rane-original-install.log" /NORESTART
+2026-10-26 21:12:06.133   Windows version: 6.2.9200  (NT platform: Yes)
+2026-10-26 21:12:06.133   64-bit Windows: Yes
+2026-10-26 21:12:06.133   Processor architecture: x64
+2026-10-26 21:12:06.133   User privileges: Administrative
+2026-10-26 21:12:06.133   64-bit install mode: Yes
+2026-10-26 21:12:06.138   Created temporary directory: <USERPROFILE>\AppData\Local\Temp\is-M1PGA.tmp
+2026-10-26 21:12:55.549   Extracting temporary file: <USERPROFILE>\AppData\Local\Temp\is-M1PGA.tmp\instdrv64.exe
+2026-10-26 21:12:55.668   "-o<USERPROFILE>\AppData\Local\Temp\is-M1PGA.tmp\dco.tmp" status "USB\VID_1CC5&PID_0001"
+2026-10-26 21:12:55.668   Result: 0
+2026-10-26 21:12:55.673
+
+                          USB\VID_1CC5&PID_0001\SL3.01.00
+                              Name: SL 3
+                              The device has the following problem: 28
+                          1 matching device(s) found.
+
+
+
+2026-10-26 21:12:55.673
+
+                          SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\RaneAsioSL3_is1 not found
+
+
+2026-10-26 21:12:55.693   Starting the installation process.
+2026-10-26 21:12:55.697   Creating directory: C:\Program Files\Rane
+2026-10-26 21:12:55.697   Creating directory: C:\Program Files\Rane\SL 3
+2026-10-26 21:12:55.698   Directory for uninstall files: C:\Program Files\Rane\SL 3
+2026-10-26 21:12:55.698   Creating new uninstall log: C:\Program Files\Rane\SL 3\unins000.dat
+2026-10-26 21:12:55.701   -- File entry --
+2026-10-26 21:12:55.702   Dest filename: C:\Program Files\Rane\SL 3\unins000.exe
+2026-10-26 21:12:55.702   Non-default bitness: 32-bit
+2026-10-26 21:12:55.705   Time stamp of our file: 2026-10-26 21:12:05.747
+2026-10-26 21:12:55.705   Installing the file.
+2026-10-26 21:12:55.707   Uninstaller requires administrator: Yes
+2026-10-26 21:12:55.707   Successfully installed the file.
+2026-10-26 21:12:55.708   -- File entry --
+2026-10-26 21:12:55.708   Dest filename: C:\WINDOWS\system32\RaneAsioSL3.dll
+2026-10-26 21:12:55.708   Time stamp of our file: 2014-06-11 22:37:32.000
+2026-10-26 21:12:55.708   Installing the file.
+2026-10-26 21:12:55.762   Successfully installed the file.
+2026-10-26 21:12:55.762   Will register the file (a DLL/OCX) later.
+2026-10-26 21:12:55.763   -- File entry --
+2026-10-26 21:12:55.763   Dest filename: C:\Program Files\Rane\SL 3\driver\instdrv.exe
+2026-10-26 21:12:55.763   Time stamp of our file: 2014-06-11 22:37:32.000
+2026-10-26 21:12:55.763   Installing the file.
+2026-10-26 21:12:55.763   Creating directory: C:\Program Files\Rane\SL 3\driver
+2026-10-26 21:12:55.766   Successfully installed the file.
+2026-10-26 21:12:55.766   -- File entry --
+2026-10-26 21:12:55.766   Dest filename: C:\Program Files\Rane\SL 3\driver\strmdrv.sys
+2026-10-26 21:12:55.766   Time stamp of our file: 2014-06-11 22:37:28.000
+2026-10-26 21:12:55.766   Installing the file.
+2026-10-26 21:12:55.768   Successfully installed the file.
+2026-10-26 21:12:55.768   -- File entry --
+2026-10-26 21:12:55.769   Dest filename: C:\Program Files\Rane\SL 3\driver\strmdrv.inf
+2026-10-26 21:12:55.769   Time stamp of our file: 2014-06-11 22:36:48.000
+2026-10-26 21:12:55.769   Installing the file.
+2026-10-26 21:12:55.769   Successfully installed the file.
+2026-10-26 21:12:55.770   -- File entry --
+2026-10-26 21:12:55.770   Dest filename: C:\Program Files\Rane\SL 3\driver\strmdrv.cat
+2026-10-26 21:12:55.770   Time stamp of our file: 2014-06-11 22:37:30.000
+2026-10-26 21:12:55.770   Installing the file.
+2026-10-26 21:12:55.771   Successfully installed the file.
+2026-10-26 21:12:55.771   -- File entry --
+2026-10-26 21:12:55.772   Dest filename: C:\Program Files\Rane\SL 3\driver\WdfCoInstaller01007.dll
+2026-10-26 21:12:55.772   Time stamp of our file: 2014-03-07 12:50:42.000
+2026-10-26 21:12:55.772   Installing the file.
+2026-10-26 21:12:55.783   Successfully installed the file.
+2026-10-26 21:12:55.783   -- File entry --
+2026-10-26 21:12:55.783   Dest filename: C:\Program Files\Rane\SL 3\ControlPanel.exe
+2026-10-26 21:12:55.783   Time stamp of our file: 2014-06-11 22:37:32.000
+2026-10-26 21:12:55.783   Installing the file.
+2026-10-26 21:12:55.835   Successfully installed the file.
+2026-10-26 21:12:55.835   -- File entry --
+2026-10-26 21:12:55.836   Dest filename: C:\WINDOWS\system32\RaneAsioSL3.dll
+2026-10-26 21:12:55.836   Non-default bitness: 32-bit
+2026-10-26 21:12:55.841   Time stamp of our file: 2014-06-11 22:34:32.000
+2026-10-26 21:12:55.841   Installing the file.
+2026-10-26 21:12:55.884   Successfully installed the file.
+2026-10-26 21:12:55.884   Will register the file (a DLL/OCX) later.
+2026-10-26 21:12:55.884   -- File entry --
+2026-10-26 21:12:55.884   Dest filename: C:\Program Files\Rane\SL 3\EULA.rtf
+2026-10-26 21:12:55.884   Time stamp of our file: 2014-03-07 12:50:20.000
+2026-10-26 21:12:55.884   Installing the file.
+2026-10-26 21:12:55.886   Successfully installed the file.
+2026-10-26 21:12:59.219   Will restart because NeedRestart returned True.
+2026-10-26 21:12:59.219   Delaying registration of all files until the next logon since a restart is needed.
+2026-10-26 21:12:59.221   Registration executable created: C:\WINDOWS\is-TEKGH.exe
+2026-10-26 21:12:59.225   Installation process succeeded.
+2026-10-26 21:12:59.227   Need to restart Windows? Yes
+2026-10-26 21:13:00.460   Will not restart Windows automatically.
+2026-10-26 21:13:00.462   Deinitializing Setup.
+2026-10-26 21:13:00.475   Log closed.

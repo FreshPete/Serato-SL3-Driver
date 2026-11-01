@@ -1,0 +1,1289 @@
+{
+  "path": "artifacts/extracted/rane-windows/x64/RaneAsioSL3.dll",
+  "sha256": "e3d88039547b70915b1a9bc9e3e3f7dba32aaa9bc3ce8fd51616565ea1734141",
+  "bytes": 2683280,
+  "machine": "0x8664",
+  "image_base": "0x180000000",
+  "sections": [
+    {
+      "name": ".text",
+      "rva": "0x1000",
+      "raw_offset": "0x400",
+      "characteristics": "0x60000020"
+    },
+    {
+      "name": ".rdata",
+      "rva": "0x1b4000",
+      "raw_offset": "0x1b2600",
+      "characteristics": "0x40000040"
+    },
+    {
+      "name": ".data",
+      "rva": "0x24c000",
+      "raw_offset": "0x24a200",
+      "characteristics": "0xc0000040"
+    },
+    {
+      "name": ".pdata",
+      "rva": "0x268000",
+      "raw_offset": "0x257800",
+      "characteristics": "0x40000040"
+    },
+    {
+      "name": ".rsrc",
+      "rva": "0x27d000",
+      "raw_offset": "0x26be00",
+      "characteristics": "0x40000040"
+    },
+    {
+      "name": ".reloc",
+      "rva": "0x28b000",
+      "raw_offset": "0x279a00",
+      "characteristics": "0x42000040"
+    }
+  ],
+  "imports": {
+    "WINMM.dll": [
+      "timeGetTime",
+      "PlaySoundA"
+    ],
+    "SETUPAPI.dll": [
+      "SetupDiDestroyDeviceInfoList",
+      "SetupDiGetDeviceInterfaceDetailA",
+      "SetupDiGetClassDevsA",
+      "SetupDiEnumDeviceInterfaces"
+    ],
+    "KERNEL32.dll": [
+      "GetConsoleMode",
+      "GetStdHandle",
+      "GetStartupInfoW",
+      "ReadConsoleW",
+      "GetProcessHeap",
+      "QueryPerformanceCounter",
+      "GetEnvironmentStringsW",
+      "FreeEnvironmentStringsW",
+      "RtlCaptureContext",
+      "RtlVirtualUnwind",
+      "UnhandledExceptionFilter",
+      "IsProcessorFeaturePresent",
+      "TerminateProcess",
+      "IsValidCodePage",
+      "GetTimeZoneInformation",
+      "GetStringTypeW",
+      "SetFilePointerEx",
+      "WriteConsoleW",
+      "OutputDebugStringW",
+      "LCMapStringW",
+      "CreateFileW",
+      "SetEnvironmentVariableA",
+      "IsDebuggerPresent",
+      "HeapQueryInformation",
+      "HeapSize",
+      "AreFileApisANSI",
+      "ExitProcess",
+      "ExitThread",
+      "HeapReAlloc",
+      "VirtualQuery",
+      "VirtualAlloc",
+      "GetSystemInfo",
+      "RaiseException",
+      "RtlPcToFileHeader",
+      "GetCommandLineA",
+      "GetConsoleCP",
+      "HeapFree",
+      "RtlUnwindEx",
+      "RtlLookupFunctionEntry",
+      "FindResourceExW",
+      "VirtualProtect",
+      "SearchPathA",
+      "GetProfileIntA",
+      "GetTempFileNameA",
+      "GetTempPathA",
+      "VerifyVersionInfoA",
+      "VerSetConditionMask",
+      "lstrcpyA",
+      "GetFileTime",
+      "GetFileSizeEx",
+      "GetFileAttributesExA",
+      "FileTimeToLocalFileTime",
+      "GetWindowsDirectoryA",
+      "GetVolumeInformationA",
+      "lstrcmpiA",
+      "GetCurrentProcess",
+      "DuplicateHandle",
+      "WriteFile",
+      "UnlockFile",
+      "SetFilePointer",
+      "SetEndOfFile",
+      "ReadFile",
+      "LockFile",
+      "GetFullPathNameA",
+      "GetFileSize",
+      "FlushFileBuffers",
+      "FindFirstFileA",
+      "FindClose",
+      "GetCurrentDirectoryA",
+      "GetFileType",
+      "SetStdHandle",
+      "HeapAlloc",
+      "GetCPInfo",
+      "GetOEMCP",
+      "GetUserDefaultUILanguage",
+      "GetSystemDefaultUILanguage",
+      "GetLocaleInfoW",
+      "CompareStringW",
+      "FileTimeToSystemTime",
+      "GlobalFlags",
+      "GetACP",
+      "SetErrorMode",
+      "LocalReAlloc",
+      "LocalAlloc",
+      "GlobalHandle",
+      "GlobalReAlloc",
+      "TlsFree",
+      "TlsSetValue",
+      "TlsGetValue",
+      "TlsAlloc",
+      "WritePrivateProfileStringA",
+      "GetPrivateProfileStringA",
+      "GetPrivateProfileIntA",
+      "lstrcmpA",
+      "GetVersionExA",
+      "ResumeThread",
+      "CompareStringA",
+      "GlobalGetAtomNameA",
+      "GlobalFindAtomA",
+      "GlobalAddAtomA",
+      "lstrcmpW",
+      "GlobalDeleteAtom",
+      "LoadLibraryExW",
+      "GetProcAddress",
+      "GetModuleHandleW",
+      "GetSystemDirectoryW",
+      "DecodePointer",
+      "EncodePointer",
+      "CopyFileA",
+      "MulDiv",
+      "GlobalSize",
+      "QueryActCtxW",
+      "FindActCtxSectionStringW",
+      "DeactivateActCtx",
+      "ActivateActCtx",
+      "CreateActCtxW",
+      "LoadLibraryW",
+      "GetModuleHandleExW",
+      "GetModuleFileNameW",
+      "FreeResource",
+      "SetLastError",
+      "OutputDebugStringA",
+      "FreeLibrary",
+      "GetModuleHandleA",
+      "GetModuleFileNameA",
+      "MultiByteToWideChar",
+      "OpenFile",
+      "CreateFileA",
+      "CreateProcessA",
+      "DeleteFileA",
+      "CreateEventA",
+      "FormatMessageA",
+      "ResetEvent",
+      "SetThreadPriority",
+      "GetCurrentThread",
+      "LocalFree",
+      "GetVersion",
+      "CloseHandle",
+      "DeviceIoControl",
+      "DeleteCriticalSection",
+      "LeaveCriticalSection",
+      "EnterCriticalSection",
+      "InitializeCriticalSection",
+      "GetLastError",
+      "GetCurrentThreadId",
+      "GetFileAttributesA",
+      "GetCurrentProcessId",
+      "WideCharToMultiByte",
+      "FindResourceW",
+      "FindResourceA",
+      "GetTickCount",
+      "SizeofResource",
+      "LoadResource",
+      "Sleep",
+      "WaitForSingleObject",
+      "CreateThread",
+      "GlobalFree",
+      "GlobalUnlock",
+      "GlobalLock",
+      "GlobalAlloc",
+      "LockResource",
+      "InitializeCriticalSectionAndSpinCount",
+      "GetSystemTimeAsFileTime",
+      "SetUnhandledExceptionFilter"
+    ],
+    "USER32.dll": [
+      "DestroyCursor",
+      "GetWindowRgn",
+      "DrawIcon",
+      "GetKeyboardState",
+      "MapVirtualKeyExA",
+      "IsCharLowerA",
+      "GetKeyboardLayout",
+      "WaitMessage",
+      "PostThreadMessageA",
+      "GetSystemMenu",
+      "IsZoomed",
+      "GetComboBoxInfo",
+      "LoadMenuW",
+      "TrackMouseEvent",
+      "ReuseDDElParam",
+      "UnpackDDElParam",
+      "InsertMenuItemA",
+      "LoadMenuA",
+      "TranslateAcceleratorA",
+      "LoadAcceleratorsA",
+      "BringWindowToTop",
+      "MonitorFromPoint",
+      "UpdateLayeredWindow",
+      "IsMenu",
+      "UnionRect",
+      "SetWindowRgn",
+      "DrawFrameControl",
+      "DrawEdge",
+      "LoadImageW",
+      "DrawStateA",
+      "EmptyClipboard",
+      "SetClipboardData",
+      "CloseClipboard",
+      "OpenClipboard",
+      "EnumDisplayMonitors",
+      "SetLayeredWindowAttributes",
+      "GetKeyNameTextA",
+      "MapVirtualKeyA",
+      "NotifyWinEvent",
+      "LoadCursorW",
+      "InvertRect",
+      "HideCaret",
+      "EnableScrollBar",
+      "GetAsyncKeyState",
+      "MessageBeep",
+      "GetIconInfo",
+      "DrawIconEx",
+      "LoadImageA",
+      "IsRectEmpty",
+      "OffsetRect",
+      "SetRectEmpty",
+      "DrawFocusRect",
+      "WindowFromPoint",
+      "ReleaseCapture",
+      "SetCapture",
+      "GetNextDlgGroupItem",
+      "GetMenuDefaultItem",
+      "CreatePopupMenu",
+      "CharUpperA",
+      "DestroyIcon",
+      "IsIconic",
+      "DeleteMenu",
+      "CopyImage",
+      "SystemParametersInfoA",
+      "GetMenuItemInfoA",
+      "DestroyMenu",
+      "LoadCursorA",
+      "GetSystemMetrics",
+      "RealChildWindowFromPoint",
+      "UnregisterClassA",
+      "SetCursor",
+      "ShowOwnedPopups",
+      "PostQuitMessage",
+      "GetCursorPos",
+      "TranslateMessage",
+      "GetMessageA",
+      "GetWindowThreadProcessId",
+      "IsDialogMessageA",
+      "SetWindowTextA",
+      "SendDlgItemMessageA",
+      "MapDialogRect",
+      "CheckDlgButton",
+      "MoveWindow",
+      "ShowWindow",
+      "GetMonitorInfoA",
+      "MonitorFromWindow",
+      "WinHelpA",
+      "GetScrollInfo",
+      "SetScrollInfo",
+      "LoadIconW",
+      "CallNextHookEx",
+      "SetWindowsHookExA",
+      "GetWindow",
+      "GetLastActivePopup",
+      "GetTopWindow",
+      "CopyAcceleratorTableA",
+      "GetClassLongPtrA",
+      "GetClassLongA",
+      "SetWindowLongPtrA",
+      "GetWindowLongPtrA",
+      "SetWindowLongA",
+      "EqualRect",
+      "MapWindowPoints",
+      "AdjustWindowRectEx",
+      "GetWindowTextLengthA",
+      "GetWindowTextA",
+      "RemovePropA",
+      "GetPropA",
+      "SetPropA",
+      "ShowScrollBar",
+      "GetScrollRange",
+      "SetScrollRange",
+      "GetScrollPos",
+      "SetScrollPos",
+      "ScrollWindow",
+      "RedrawWindow",
+      "ValidateRect",
+      "SetForegroundWindow",
+      "GetForegroundWindow",
+      "UpdateWindow",
+      "TrackPopupMenu",
+      "SetMenu",
+      "GetMenu",
+      "GetCapture",
+      "GetKeyState",
+      "SetFocus",
+      "GetDlgCtrlID",
+      "IsWindowVisible",
+      "EndDeferWindowPos",
+      "DeferWindowPos",
+      "BeginDeferWindowPos",
+      "SetWindowPlacement",
+      "GetWindowPlacement",
+      "SetWindowPos",
+      "IsChild",
+      "CreateWindowExA",
+      "GetClassInfoExA",
+      "GetClassInfoA",
+      "RegisterClassA",
+      "CallWindowProcA",
+      "DefWindowProcA",
+      "PostMessageA",
+      "GetMessageTime",
+      "GetMessagePos",
+      "PeekMessageA",
+      "DispatchMessageA",
+      "RegisterWindowMessageA",
+      "LoadBitmapW",
+      "SetMenuItemInfoA",
+      "GetMenuCheckMarkDimensions",
+      "SetMenuItemBitmaps",
+      "EnableMenuItem",
+      "CheckMenuItem",
+      "GetFocus",
+      "IntersectRect",
+      "InflateRect",
+      "CopyRect",
+      "FillRect",
+      "GetSysColor",
+      "ScreenToClient",
+      "ClientToScreen",
+      "EndPaint",
+      "BeginPaint",
+      "GetWindowDC",
+      "TabbedTextOutA",
+      "CreateMenu",
+      "SubtractRect",
+      "GetUpdateRect",
+      "IsClipboardFormatAvailable",
+      "TranslateMDISysAccel",
+      "DefMDIChildProcA",
+      "DefFrameProcA",
+      "DrawMenuBar",
+      "FrameRect",
+      "CharUpperBuffA",
+      "RegisterClipboardFormatA",
+      "ModifyMenuA",
+      "SetMenuDefaultItem",
+      "CopyIcon",
+      "GetDoubleClickTime",
+      "SetClassLongPtrA",
+      "LockWindowUpdate",
+      "SetParent",
+      "SetRect",
+      "SetCursorPos",
+      "GrayStringA",
+      "DrawTextExA",
+      "DrawTextA",
+      "UnhookWindowsHookEx",
+      "RemoveMenu",
+      "AppendMenuA",
+      "InsertMenuA",
+      "GetMenuItemCount",
+      "GetMenuItemID",
+      "GetSubMenu",
+      "GetMenuState",
+      "GetMenuStringA",
+      "GetParent",
+      "GetDesktopWindow",
+      "GetWindowLongA",
+      "SetActiveWindow",
+      "IsWindowEnabled",
+      "GetActiveWindow",
+      "GetNextDlgTabItem",
+      "GetDlgItem",
+      "EndDialog",
+      "CreateDialogIndirectParamA",
+      "DestroyWindow",
+      "IsWindow",
+      "CharLowerA",
+      "CharLowerBuffA",
+      "MessageBoxA",
+      "LoadIconA",
+      "PtInRect",
+      "GetWindowRect",
+      "GetClientRect",
+      "InvalidateRect",
+      "ReleaseDC",
+      "GetDC",
+      "EnableWindow",
+      "KillTimer",
+      "SetTimer",
+      "SendMessageA",
+      "DestroyAcceleratorTable",
+      "CreateAcceleratorTableA",
+      "LoadAcceleratorsW",
+      "GetClassNameA",
+      "ToAsciiEx",
+      "GetSysColorBrush"
+    ],
+    "GDI32.dll": [
+      "TextOutA",
+      "SetTextColor",
+      "ExtTextOutA",
+      "SetViewportExtEx",
+      "SetViewportOrgEx",
+      "SetWindowExtEx",
+      "SetWindowOrgEx",
+      "OffsetViewportOrgEx",
+      "OffsetWindowOrgEx",
+      "ScaleViewportExtEx",
+      "ScaleWindowExtEx",
+      "CombineRgn",
+      "CreateFontIndirectA",
+      "CreateRectRgnIndirect",
+      "PatBlt",
+      "SetRectRgn",
+      "DPtoLP",
+      "GetTextMetricsA",
+      "CreatePalette",
+      "GetNearestPaletteIndex",
+      "GetPaletteEntries",
+      "GetSystemPaletteEntries",
+      "RealizePalette",
+      "GetBkColor",
+      "CreateCompatibleBitmap",
+      "CreateDIBitmap",
+      "EnumFontFamiliesA",
+      "GetTextCharsetInfo",
+      "SetPixel",
+      "StretchBlt",
+      "CreateDIBSection",
+      "SetDIBColorTable",
+      "CreateEllipticRgn",
+      "Ellipse",
+      "GetTextColor",
+      "CreatePolygonRgn",
+      "Polygon",
+      "Polyline",
+      "MoveToEx",
+      "EnumFontFamiliesExA",
+      "GetRgnBox",
+      "OffsetRgn",
+      "CreateRoundRectRgn",
+      "RoundRect",
+      "FrameRgn",
+      "PtInRegion",
+      "SetPixelV",
+      "ExtFloodFill",
+      "SetPaletteEntries",
+      "FillRgn",
+      "GetBoundsRect",
+      "GetWindowOrgEx",
+      "LPtoDP",
+      "GetViewportOrgEx",
+      "GetTextFaceA",
+      "SetROP2",
+      "SetPolyFillMode",
+      "GetLayout",
+      "GetObjectA",
+      "BitBlt",
+      "GetDeviceCaps",
+      "CreateDCA",
+      "CopyMetaFileA",
+      "GetStockObject",
+      "Rectangle",
+      "GetTextExtentPoint32A",
+      "SetLayout",
+      "SetMapMode",
+      "SetBkMode",
+      "SetBkColor",
+      "SelectPalette",
+      "SelectObject",
+      "ExtSelectClipRgn",
+      "SelectClipRgn",
+      "SaveDC",
+      "RestoreDC",
+      "RectVisible",
+      "PtVisible",
+      "LineTo",
+      "IntersectClipRect",
+      "GetWindowExtEx",
+      "GetViewportExtEx",
+      "GetPixel",
+      "GetObjectType",
+      "GetClipBox",
+      "ExcludeClipRect",
+      "Escape",
+      "DeleteObject",
+      "DeleteDC",
+      "CreateSolidBrush",
+      "CreateRectRgn",
+      "CreatePatternBrush",
+      "CreatePen",
+      "CreateHatchBrush",
+      "CreateCompatibleDC",
+      "CreateBitmap",
+      "SetTextAlign"
+    ],
+    "MSIMG32.dll": [
+      "AlphaBlend",
+      "TransparentBlt"
+    ],
+    "WINSPOOL.DRV": [
+      "ClosePrinter",
+      "DocumentPropertiesA",
+      "OpenPrinterA"
+    ],
+    "ADVAPI32.dll": [
+      "RegEnumKeyExA",
+      "RegEnumValueA",
+      "RegQueryValueA",
+      "RegDeleteValueA",
+      "RegCreateKeyExA",
+      "RegDeleteKeyA",
+      "RegOpenKeyExA",
+      "RegEnumKeyA",
+      "RegSetValueExA",
+      "RegQueryValueExA",
+      "RegOpenKeyA",
+      "RegCreateKeyA",
+      "RegCloseKey",
+      "SetSecurityDescriptorDacl",
+      "InitializeSecurityDescriptor"
+    ],
+    "SHELL32.dll": [
+      "SHAppBarMessage",
+      "SHGetFileInfoA",
+      "SHGetPathFromIDListA",
+      "SHGetSpecialFolderLocation",
+      "SHGetDesktopFolder",
+      "SHBrowseForFolderA",
+      "ShellExecuteA",
+      "DragFinish",
+      "DragQueryFileA"
+    ],
+    "SHLWAPI.dll": [
+      "PathFileExistsA",
+      "SHRegGetValueA",
+      "PathFindExtensionA",
+      "PathFindFileNameA",
+      "PathIsUNCA",
+      "PathStripToRootA",
+      "StrFormatKBSizeA",
+      "PathRemoveFileSpecW"
+    ],
+    "UxTheme.dll": [
+      "CloseThemeData",
+      "GetThemePartSize",
+      "GetWindowTheme",
+      "GetThemeSysColor",
+      "IsThemeBackgroundPartiallyTransparent",
+      "DrawThemeText",
+      "DrawThemeParentBackground",
+      "IsAppThemed",
+      "GetCurrentThemeName",
+      "OpenThemeData",
+      "DrawThemeBackground",
+      "GetThemeColor"
+    ],
+    "ole32.dll": [
+      "CoTaskMemFree",
+      "StringFromCLSID",
+      "CLSIDFromString",
+      "CoCreateInstance",
+      "CoUninitialize",
+      "CoInitialize",
+      "RevokeDragDrop",
+      "RegisterDragDrop",
+      "CoLockObjectExternal",
+      "OleGetClipboard",
+      "IsAccelerator",
+      "OleTranslateAccelerator",
+      "OleDuplicateData",
+      "ReleaseStgMedium",
+      "CoCreateGuid",
+      "CoInitializeEx",
+      "DoDragDrop",
+      "OleLockRunning",
+      "CreateStreamOnHGlobal",
+      "OleDestroyMenuDescriptor",
+      "OleCreateMenuDescriptor",
+      "CoTaskMemAlloc"
+    ],
+    "OLEAUT32.dll": [
+      "SysFreeString",
+      "SysAllocString",
+      "VarBstrFromDate",
+      "VariantTimeToSystemTime",
+      "SysStringLen",
+      "VariantChangeType",
+      "VariantClear",
+      "VariantInit",
+      "SysAllocStringLen",
+      "SystemTimeToVariantTime"
+    ],
+    "gdiplus.dll": [
+      "GdipCreateBitmapFromHBITMAP",
+      "GdipDrawImageI",
+      "GdipBitmapUnlockBits",
+      "GdipBitmapLockBits",
+      "GdipGetImagePaletteSize",
+      "GdipGetImagePalette",
+      "GdipGetImagePixelFormat",
+      "GdiplusShutdown",
+      "GdiplusStartup",
+      "GdipMeasureString",
+      "GdipDrawString",
+      "GdipDeleteFont",
+      "GdipCreateFont",
+      "GdipDeleteFontFamily",
+      "GdipCreateFontFamilyFromName",
+      "GdipDrawImageRectI",
+      "GdipDrawImageRect",
+      "GdipFillRectangle",
+      "GdipDrawLine",
+      "GdipSetTextRenderingHint",
+      "GdipSetSmoothingMode",
+      "GdipSetCompositingQuality",
+      "GdipDeleteGraphics",
+      "GdipCreateFromHDC",
+      "GdipCreateBitmapFromScan0",
+      "GdipCreateBitmapFromStreamICM",
+      "GdipCreateBitmapFromStream",
+      "GdipGetImageHeight",
+      "GdipGetImageWidth",
+      "GdipGetImageGraphicsContext",
+      "GdipDisposeImage",
+      "GdipCloneImage",
+      "GdipSetPenLineCap197819",
+      "GdipDeletePen",
+      "GdipCreatePen1",
+      "GdipCreateSolidFill",
+      "GdipDeleteBrush",
+      "GdipCloneBrush",
+      "GdipFree",
+      "GdipAlloc",
+      "GdipSetInterpolationMode"
+    ],
+    "OLEACC.dll": [
+      "CreateStdAccessibleObject",
+      "AccessibleObjectFromWindow",
+      "LresultFromObject"
+    ],
+    "IMM32.dll": [
+      "ImmReleaseContext",
+      "ImmGetContext",
+      "ImmGetOpenStatus"
+    ]
+  },
+  "exports": [
+    {
+      "name": "DllCanUnloadNow",
+      "rva": "0x1a4250",
+      "ordinal": 1
+    },
+    {
+      "name": "DllGetClassObject",
+      "rva": "0x1a4270",
+      "ordinal": 2
+    },
+    {
+      "name": "DllMain",
+      "rva": "0x1663c",
+      "ordinal": 3
+    },
+    {
+      "name": "DllRegisterServer",
+      "rva": "0x12cd0",
+      "ordinal": 4
+    },
+    {
+      "name": "DllUnregisterServer",
+      "rva": "0x12e50",
+      "ordinal": 5
+    },
+    {
+      "name": "sl3_close",
+      "rva": "0x7080",
+      "ordinal": 6
+    },
+    {
+      "name": "sl3_driver_timer",
+      "rva": "0x7140",
+      "ordinal": 7
+    },
+    {
+      "name": "sl3_get_api_version",
+      "rva": "0x7110",
+      "ordinal": 8
+    },
+    {
+      "name": "sl3_get_audio_controls",
+      "rva": "0x74f0",
+      "ordinal": 9
+    },
+    {
+      "name": "sl3_get_buffer_millisecs",
+      "rva": "0x7c80",
+      "ordinal": 10
+    },
+    {
+      "name": "sl3_get_driver_version",
+      "rva": "0x7120",
+      "ordinal": 11
+    },
+    {
+      "name": "sl3_get_firmware_embedded_version",
+      "rva": "0x7350",
+      "ordinal": 12
+    },
+    {
+      "name": "sl3_get_firmware_version",
+      "rva": "0x7340",
+      "ordinal": 13
+    },
+    {
+      "name": "sl3_get_overload_status",
+      "rva": "0x7150",
+      "ordinal": 14
+    },
+    {
+      "name": "sl3_get_parameter",
+      "rva": "0x7400",
+      "ordinal": 15
+    },
+    {
+      "name": "sl3_get_product_id",
+      "rva": "0x7100",
+      "ordinal": 16
+    },
+    {
+      "name": "sl3_get_status",
+      "rva": "0x7130",
+      "ordinal": 17
+    },
+    {
+      "name": "sl3_get_usb_port_status",
+      "rva": "0x7cb0",
+      "ordinal": 18
+    },
+    {
+      "name": "sl3_get_vendor_id",
+      "rva": "0x70f0",
+      "ordinal": 19
+    },
+    {
+      "name": "sl3_is_C0_device",
+      "rva": "0x7090",
+      "ordinal": 20
+    },
+    {
+      "name": "sl3_open",
+      "rva": "0x7070",
+      "ordinal": 21
+    },
+    {
+      "name": "sl3_set_alt_product_id",
+      "rva": "0x7ca0",
+      "ordinal": 22
+    },
+    {
+      "name": "sl3_set_audio_controls",
+      "rva": "0x75f0",
+      "ordinal": 23
+    },
+    {
+      "name": "sl3_set_buffer_millisecs",
+      "rva": "0x7c90",
+      "ordinal": 24
+    },
+    {
+      "name": "sl3_set_overload_callback",
+      "rva": "0x76d0",
+      "ordinal": 25
+    },
+    {
+      "name": "sl3_set_parameter",
+      "rva": "0x7360",
+      "ordinal": 26
+    },
+    {
+      "name": "sl3_set_phonoswitch_callback",
+      "rva": "0x7730",
+      "ordinal": 27
+    },
+    {
+      "name": "sl3_set_thrustate_callback",
+      "rva": "0x7d80",
+      "ordinal": 28
+    },
+    {
+      "name": "sl3_set_update_firmware",
+      "rva": "0x7790",
+      "ordinal": 29
+    },
+    {
+      "name": "sl3_set_update_firmware_from_embedded",
+      "rva": "0x7880",
+      "ordinal": 30
+    },
+    {
+      "name": "sl3_set_usb_port_status_callback",
+      "rva": "0x7d20",
+      "ordinal": 31
+    },
+    {
+      "name": "uRaneAudioIsDeviceAvailable",
+      "rva": "0x7020",
+      "ordinal": 32
+    }
+  ],
+  "strings": [
+    {
+      "text": "uRaneAudioOpen()",
+      "encoding": "ascii",
+      "offset": "0x1b5530",
+      "va": "0x1801b6f30"
+    },
+    {
+      "text": "NULL pointer in sl3_get_overload_status",
+      "encoding": "ascii",
+      "offset": "0x1b5658",
+      "va": "0x1801b7058"
+    },
+    {
+      "text": "c:\\temp\\RaneEnableDebugLog.flag",
+      "encoding": "ascii",
+      "offset": "0x1b5718",
+      "va": "0x1801b7118"
+    },
+    {
+      "text": "c:\\temp\\RaneAsioLog\\RaneAsioLogDLL_%06x.log",
+      "encoding": "ascii",
+      "offset": "0x1b5738",
+      "va": "0x1801b7138"
+    },
+    {
+      "text": "Copyright 20?? Rane Corporation",
+      "encoding": "ascii",
+      "offset": "0x1b5a98",
+      "va": "0x1801b7498"
+    },
+    {
+      "text": "Firmware update failed; write to C0 ram ioctl failed",
+      "encoding": "ascii",
+      "offset": "0x1b5c90",
+      "va": "0x1801b7690"
+    },
+    {
+      "text": "Bad result from get asio info IOCTL",
+      "encoding": "ascii",
+      "offset": "0x1b5f88",
+      "va": "0x1801b7988"
+    },
+    {
+      "text": "Second attempt -- bad result from get asio info IOCTL",
+      "encoding": "ascii",
+      "offset": "0x1b5fb0",
+      "va": "0x1801b79b0"
+    },
+    {
+      "text": "No handle in wrapped device IOCTL",
+      "encoding": "ascii",
+      "offset": "0x1b5fe8",
+      "va": "0x1801b79e8"
+    },
+    {
+      "text": "kIoCtlGetClientId",
+      "encoding": "ascii",
+      "offset": "0x1b6020",
+      "va": "0x1801b7a20"
+    },
+    {
+      "text": "kIoCtlInitBuffers",
+      "encoding": "ascii",
+      "offset": "0x1b6038",
+      "va": "0x1801b7a38"
+    },
+    {
+      "text": "kIoCtlGetAsioInfo",
+      "encoding": "ascii",
+      "offset": "0x1b6050",
+      "va": "0x1801b7a50"
+    },
+    {
+      "text": "kIoCtlDisposeOfBuffers",
+      "encoding": "ascii",
+      "offset": "0x1b6068",
+      "va": "0x1801b7a68"
+    },
+    {
+      "text": "UnknownIoCtl",
+      "encoding": "ascii",
+      "offset": "0x1b6080",
+      "va": "0x1801b7a80"
+    },
+    {
+      "text": "Short-circuited failure of IOCTL due to INVALID_HANDLE_VALUE",
+      "encoding": "ascii",
+      "offset": "0x1b6090",
+      "va": "0x1801b7a90"
+    },
+    {
+      "text": "IOCTL 0x%lx (%s) failed, last error 0x%lx",
+      "encoding": "ascii",
+      "offset": "0x1b6190",
+      "va": "0x1801b7b90"
+    },
+    {
+      "text": "IOCTL failed in SendDeviceMessage",
+      "encoding": "ascii",
+      "offset": "0x1b61c0",
+      "va": "0x1801b7bc0"
+    },
+    {
+      "text": "Error: IOCTL failed to %s value %d",
+      "encoding": "ascii",
+      "offset": "0x1b61f8",
+      "va": "0x1801b7bf8"
+    },
+    {
+      "text": "c:\\temp\\RaneOverrideSchedulingParams.flag",
+      "encoding": "ascii",
+      "offset": "0x1b6848",
+      "va": "0x1801b8248"
+    },
+    {
+      "text": "c:\\temp\\RaneKernelLoopback.flag",
+      "encoding": "ascii",
+      "offset": "0x1b6878",
+      "va": "0x1801b8278"
+    },
+    {
+      "text": "c:\\temp\\RaneEraseBuffers.flag",
+      "encoding": "ascii",
+      "offset": "0x1b6898",
+      "va": "0x1801b8298"
+    },
+    {
+      "text": "c:\\temp\\RaneAsioNotifyTiming.flag",
+      "encoding": "ascii",
+      "offset": "0x1b68b8",
+      "va": "0x1801b82b8"
+    },
+    {
+      "text": "c:\\temp\\RaneAutoLaunchLog.flag",
+      "encoding": "ascii",
+      "offset": "0x1b68e0",
+      "va": "0x1801b82e0"
+    },
+    {
+      "text": "Negotiating elevated priority: about to invoke ioctl",
+      "encoding": "ascii",
+      "offset": "0x1b69a8",
+      "va": "0x1801b83a8"
+    },
+    {
+      "text": "Bad result from negotiate thread priority IOCTL",
+      "encoding": "ascii",
+      "offset": "0x1b6a18",
+      "va": "0x1801b8418"
+    },
+    {
+      "text": "Bad handle from uCreateRaneAudioDeviceInterfaceWrapper; logging ID: %d",
+      "encoding": "ascii",
+      "offset": "0x1b6b40",
+      "va": "0x1801b8540"
+    },
+    {
+      "text": "Bad result from get client id IOCTL; logging ID: %d",
+      "encoding": "ascii",
+      "offset": "0x1b6b88",
+      "va": "0x1801b8588"
+    },
+    {
+      "text": "RaneSL3AsioBufferReady",
+      "encoding": "ascii",
+      "offset": "0x1b6bc0",
+      "va": "0x1801b85c0"
+    },
+    {
+      "text": "Invoking kIoCtlInitBuffers for block size %d, sample rate %d, logging id %d",
+      "encoding": "ascii",
+      "offset": "0x1b6be0",
+      "va": "0x1801b85e0"
+    },
+    {
+      "text": "Failure in kIoCtlInitBuffers, so bailing; logging ID: %d",
+      "encoding": "ascii",
+      "offset": "0x1b6ea0",
+      "va": "0x1801b88a0"
+    },
+    {
+      "text": "RANEASIO",
+      "encoding": "ascii",
+      "offset": "0x1b73d0",
+      "va": "0x1801b8dd0"
+    },
+    {
+      "text": "Rane SL 3",
+      "encoding": "ascii",
+      "offset": "0x1b7478",
+      "va": "0x1801b8e78"
+    },
+    {
+      "text": "Software\\Rane\\SL 3",
+      "encoding": "ascii",
+      "offset": "0x1b7850",
+      "va": "0x1801b9250"
+    },
+    {
+      "text": "RaneAsioSL3.dll",
+      "encoding": "ascii",
+      "offset": "0x1b79f8",
+      "va": "0x1801b93f8"
+    },
+    {
+      "text": "Rane SL 3 ASIO Driver",
+      "encoding": "ascii",
+      "offset": "0x1b7a38",
+      "va": "0x1801b9438"
+    },
+    {
+      "text": "SOFTWARE\\Rane\\SL 3",
+      "encoding": "ascii",
+      "offset": "0x1b7a88",
+      "va": "0x1801b9488"
+    },
+    {
+      "text": "C:\\aldev\\Rane\\SL3\\trunk\\windows\\driver\\asio\\x64\\Release\\RaneAsioSL3.pdb",
+      "encoding": "ascii",
+      "offset": "0x20fc80",
+      "va": "0x180211680"
+    },
+    {
+      "text": "RaneAsioSL3.dll",
+      "encoding": "ascii",
+      "offset": "0x249e78",
+      "va": "0x18024b878"
+    },
+    {
+      "text": "sl3_close",
+      "encoding": "ascii",
+      "offset": "0x249ed8",
+      "va": "0x18024b8d8"
+    },
+    {
+      "text": "sl3_driver_timer",
+      "encoding": "ascii",
+      "offset": "0x249ee2",
+      "va": "0x18024b8e2"
+    },
+    {
+      "text": "sl3_get_api_version",
+      "encoding": "ascii",
+      "offset": "0x249ef3",
+      "va": "0x18024b8f3"
+    },
+    {
+      "text": "sl3_get_audio_controls",
+      "encoding": "ascii",
+      "offset": "0x249f07",
+      "va": "0x18024b907"
+    },
+    {
+      "text": "sl3_get_buffer_millisecs",
+      "encoding": "ascii",
+      "offset": "0x249f1e",
+      "va": "0x18024b91e"
+    },
+    {
+      "text": "sl3_get_driver_version",
+      "encoding": "ascii",
+      "offset": "0x249f37",
+      "va": "0x18024b937"
+    },
+    {
+      "text": "sl3_get_firmware_embedded_version",
+      "encoding": "ascii",
+      "offset": "0x249f4e",
+      "va": "0x18024b94e"
+    },
+    {
+      "text": "sl3_get_firmware_version",
+      "encoding": "ascii",
+      "offset": "0x249f70",
+      "va": "0x18024b970"
+    },
+    {
+      "text": "sl3_get_overload_status",
+      "encoding": "ascii",
+      "offset": "0x249f89",
+      "va": "0x18024b989"
+    },
+    {
+      "text": "sl3_get_parameter",
+      "encoding": "ascii",
+      "offset": "0x249fa1",
+      "va": "0x18024b9a1"
+    },
+    {
+      "text": "sl3_get_product_id",
+      "encoding": "ascii",
+      "offset": "0x249fb3",
+      "va": "0x18024b9b3"
+    },
+    {
+      "text": "sl3_get_status",
+      "encoding": "ascii",
+      "offset": "0x249fc6",
+      "va": "0x18024b9c6"
+    },
+    {
+      "text": "sl3_get_usb_port_status",
+      "encoding": "ascii",
+      "offset": "0x249fd5",
+      "va": "0x18024b9d5"
+    },
+    {
+      "text": "sl3_get_vendor_id",
+      "encoding": "ascii",
+      "offset": "0x249fed",
+      "va": "0x18024b9ed"
+    },
+    {
+      "text": "sl3_is_C0_device",
+      "encoding": "ascii",
+      "offset": "0x249fff",
+      "va": "0x18024b9ff"
+    },
+    {
+      "text": "sl3_open",
+      "encoding": "ascii",
+      "offset": "0x24a010",
+      "va": "0x18024ba10"
+    },
+    {
+      "text": "sl3_set_alt_product_id",
+      "encoding": "ascii",
+      "offset": "0x24a019",
+      "va": "0x18024ba19"
+    },
+    {
+      "text": "sl3_set_audio_controls",
+      "encoding": "ascii",
+      "offset": "0x24a030",
+      "va": "0x18024ba30"
+    },
+    {
+      "text": "sl3_set_buffer_millisecs",
+      "encoding": "ascii",
+      "offset": "0x24a047",
+      "va": "0x18024ba47"
+    },
+    {
+      "text": "sl3_set_overload_callback",
+      "encoding": "ascii",
+      "offset": "0x24a060",
+      "va": "0x18024ba60"
+    },
+    {
+      "text": "sl3_set_parameter",
+      "encoding": "ascii",
+      "offset": "0x24a07a",
+      "va": "0x18024ba7a"
+    },
+    {
+      "text": "sl3_set_phonoswitch_callback",
+      "encoding": "ascii",
+      "offset": "0x24a08c",
+      "va": "0x18024ba8c"
+    },
+    {
+      "text": "sl3_set_thrustate_callback",
+      "encoding": "ascii",
+      "offset": "0x24a0a9",
+      "va": "0x18024baa9"
+    },
+    {
+      "text": "sl3_set_update_firmware",
+      "encoding": "ascii",
+      "offset": "0x24a0c4",
+      "va": "0x18024bac4"
+    },
+    {
+      "text": "sl3_set_update_firmware_from_embedded",
+      "encoding": "ascii",
+      "offset": "0x24a0dc",
+      "va": "0x18024badc"
+    },
+    {
+      "text": "sl3_set_usb_port_status_callback",
+      "encoding": "ascii",
+      "offset": "0x24a102",
+      "va": "0x18024bb02"
+    },
+    {
+      "text": "uRaneAudioIsDeviceAvailable",
+      "encoding": "ascii",
+      "offset": "0x24a123",
+      "va": "0x18024bb23"
+    },
+    {
+      "text": "RANEASIO",
+      "encoding": "utf-16le",
+      "offset": "0x1b79c8",
+      "va": "0x1801b93c8"
+    },
+    {
+      "text": "Rane ASIO SL 3",
+      "encoding": "utf-16le",
+      "offset": "0x279520",
+      "va": "0x18028a720"
+    },
+    {
+      "text": "RaneAsioSL3",
+      "encoding": "utf-16le",
+      "offset": "0x279594",
+      "va": "0x18028a794"
+    },
+    {
+      "text": "RaneAsioSL3.dll",
+      "encoding": "utf-16le",
+      "offset": "0x279620",
+      "va": "0x18028a820"
+    },
+    {
+      "text": "Rane ASIO SL 3",
+      "encoding": "utf-16le",
+      "offset": "0x279660",
+      "va": "0x18028a860"
+    }
+  ],
+  "limitation": "MOV/LEA byte candidates require instruction-boundary review; absence is not proof of absent functionality.",
+  "projection_note": "Full repetitive MOV/LEA disassembly retained in ignored analysis/rane-asio-x64-full.json; 44 candidate references omitted here. Metadata/imports/exports/strings preserved."
+}

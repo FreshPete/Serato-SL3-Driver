@@ -1,0 +1,223 @@
+{
+  "scope": "Actual limited-token PLA validate-only API and 16 CLI cases; no persistent commit, trace start or USB request",
+  "positive": {
+    "scope": "PLA validation-only preflight; no persistent commit or trace start requested",
+    "valid": true,
+    "producer": {
+      "pid": 41228,
+      "creationFileTimeUtc": "134378983910906514",
+      "imagePath": "C:\\Users\\peter\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+      "alive": true,
+      "tokenQueried": true,
+      "elevated": false,
+      "elevationType": 3
+    },
+    "collectorName": "[Service]SL3Image-6a8ca986bd8848db92d9c72ca4258c73",
+    "commitMode": 4096,
+    "before": {
+      "querySucceeded": false,
+      "error": {
+        "hresult": "0x80300002",
+        "message": "Data Collector Set was not found. (0x80300002)"
+      }
+    },
+    "validationCallSucceeded": true,
+    "validationItems": [
+      {
+        "key": "TaskArguments",
+        "code": "0x00300100",
+        "description": "Property value will be ignored.\r\n"
+      },
+      {
+        "key": "SubdirectoryFormatPattern",
+        "code": "0x00300100",
+        "description": "Property value will be ignored.\r\n"
+      }
+    ],
+    "knownInactiveWarningsAccepted": true,
+    "error": null,
+    "after": {
+      "querySucceeded": false,
+      "error": {
+        "hresult": "0x80300002",
+        "message": "Data Collector Set was not found. (0x80300002)"
+      }
+    },
+    "prospectiveDirectoryExists": false,
+    "sourceStarted": false,
+    "runtimeFlagForwardingVerified": false,
+    "independentStopValidated": false,
+    "readinessAdmission": false,
+    "preparationRecordSha256": "faf315fb32bdc3545206301ff6649f9b3b5f4b657e99f032108d5c03cb848399",
+    "preparerSha256": "ad60c3f9c24a1325220cafdb11d767d0b8196ab4891aba578e3734b5d4d0c2df",
+    "processInspectorSha256": "fd76680e42127feeb4d8da952b5e04a49b48d3bb6df159b9c77a236a3c8f0752",
+    "sourceSha256": "5a2506ebef922509989ce3cfb10eb994ba5d040810ba7c94b133f10c31f8c68b"
+  },
+  "positiveReportSha256": "d3a12b52bbfe208b3bfafffd3d73210ec124eaebe27189e9fecc6cbde51695be",
+  "actualCliChecks": [
+    {
+      "case": "valid",
+      "exitCode": 0,
+      "reportCreated": true,
+      "valid": true,
+      "validationItems": [
+        {
+          "key": "TaskArguments",
+          "code": "0x00300100",
+          "description": "Property value will be ignored.\r\n"
+        },
+        {
+          "key": "SubdirectoryFormatPattern",
+          "code": "0x00300100",
+          "description": "Property value will be ignored.\r\n"
+        }
+      ]
+    },
+    {
+      "case": "stale-source",
+      "exitCode": 1,
+      "reportCreated": false,
+      "valid": null,
+      "validationItems": null
+    },
+    {
+      "case": "unsafe-name",
+      "exitCode": 1,
+      "reportCreated": false,
+      "valid": null,
+      "validationItems": null
+    },
+    {
+      "case": "committed-role",
+      "exitCode": 1,
+      "reportCreated": false,
+      "valid": null,
+      "validationItems": null
+    },
+    {
+      "case": "false-string-role",
+      "exitCode": 1,
+      "reportCreated": false,
+      "valid": null,
+      "validationItems": null
+    },
+    {
+      "case": "oversized-record",
+      "exitCode": 1,
+      "reportCreated": false,
+      "valid": null,
+      "validationItems": null
+    },
+    {
+      "case": "dtd",
+      "exitCode": 1,
+      "reportCreated": false,
+      "valid": null,
+      "validationItems": null
+    },
+    {
+      "case": "wrong-provider",
+      "exitCode": 1,
+      "reportCreated": false,
+      "valid": null,
+      "validationItems": null
+    },
+    {
+      "case": "wrong-mode",
+      "exitCode": 1,
+      "reportCreated": false,
+      "valid": null,
+      "validationItems": null
+    },
+    {
+      "case": "circular-mode",
+      "exitCode": 1,
+      "reportCreated": false,
+      "valid": null,
+      "validationItems": null
+    },
+    {
+      "case": "output-path",
+      "exitCode": 1,
+      "reportCreated": false,
+      "valid": null,
+      "validationItems": null
+    },
+    {
+      "case": "extra-filter",
+      "exitCode": 1,
+      "reportCreated": false,
+      "valid": null,
+      "validationItems": null
+    },
+    {
+      "case": "task-not-empty",
+      "exitCode": 1,
+      "reportCreated": false,
+      "valid": null,
+      "validationItems": null
+    },
+    {
+      "case": "nonempty-TaskArguments",
+      "exitCode": 1,
+      "reportCreated": true,
+      "valid": false,
+      "validationItems": [
+        {
+          "key": "TaskArguments",
+          "code": "0x00300100",
+          "description": "Property value will be ignored.\r\n"
+        },
+        {
+          "key": "SubdirectoryFormatPattern",
+          "code": "0x00300100",
+          "description": "Property value will be ignored.\r\n"
+        }
+      ]
+    },
+    {
+      "case": "nonempty-SubdirectoryFormatPattern",
+      "exitCode": 1,
+      "reportCreated": false,
+      "valid": null,
+      "validationItems": null
+    },
+    {
+      "case": "existing-output",
+      "exitCode": 1,
+      "existingOutputPreserved": true
+    }
+  ],
+  "cliTestReportSha256": "63b3b4d881c4315b6063447248cd3c7cefb100e4df6fd34b368ac5ebf44af4ee",
+  "testSourceSha256": "92d2b1fed02cdf2be24aac27bb25b0c36b945648757f3c1142a88ec198de40c4",
+  "astAudit": {
+    "scope": "Actual PowerShell AST scope check",
+    "parseErrors": 0,
+    "commitCalls": 1,
+    "literalCommitMode": 4096,
+    "prohibitedOperationalCalls": 0,
+    "sourceSha256": "5a2506ebef922509989ce3cfb10eb994ba5d040810ba7c94b133f10c31f8c68b"
+  },
+  "astAuditSha256": "4a9f91d10f718e8bf4eb7a6459e37708630d241a6428b987720e2975354ca96c",
+  "exporterSha256": "2074f016616016f842f1236d5464eb8c9f4477d2ef3afd8275c34f96716ad598",
+  "sdkFacts": {
+    "plaValidateOnly": 4096,
+    "PLA_E_DCS_NOT_FOUND": "0x80300002",
+    "PLA_S_PROPERTY_IGNORED": "0x00300100",
+    "plaHeaderSha256": "881f3a959ed307cedb66777958f6d2b615b4085f91fa69d2602b6d5adb4e5c4b",
+    "winerrorHeaderSha256": "607481285e8609a6cc5510dc2987115510f620fbc8a6e427afe8f426cede01cd"
+  },
+  "productionNativeInputsChanged": false,
+  "runtimeFlagForwardingVerified": false,
+  "independentStopValidated": false,
+  "readinessAdmission": false,
+  "apiDocs": [
+    "https://learn.microsoft.com/en-us/windows/win32/api/pla/ne-pla-commitmode",
+    "https://learn.microsoft.com/en-us/windows/win32/api/pla/nf-pla-idatacollectorset-commit"
+  ],
+  "limits": [
+    "Commit-time validation does not verify effective live session properties or image-event emission.",
+    "Only exact ignored warnings for blank inactive fields are accepted.",
+    "No separate service-process execution, new source, independent expiry or USB/app result is inferred."
+  ]
+}

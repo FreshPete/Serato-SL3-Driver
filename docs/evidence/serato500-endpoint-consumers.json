@@ -1,0 +1,161 @@
+{
+  "scope": "Static current Serato input-map units and mixer consumers; no runtime integration or physical mapping",
+  "binarySha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "focusedReportSha256": {
+    "serato500-endpoint-consumers-01.json": "61fcc3e7564e5d4a23423f5f687ee3450b2723f1d75c1a3007e47a8b0e23e4fc",
+    "serato500-endpoint-enum-02.json": "002c889f912fc8cdb4ce8f77a62595ead9a3916aad21d5cf2846ff37d03c02c0",
+    "serato500-endpoint-mixer-03.json": "915f8c8fe1aac7838226febfacdfa16066c4959e2ba6fa646ffbd3af58654b68"
+  },
+  "inputEnum": [
+    {
+      "name": "Deck1In",
+      "value": 2,
+      "assembly": [
+        "1405c35e4: mov rax, qword ptr [rip + 0x2259b95]",
+        "1405c35eb: mov dword ptr [rbp - 0x11], eax",
+        "1405c35ee: movzx eax, word ptr [rip + 0x2259b8f]",
+        "1405c35f5: mov word ptr [rbp - 0xd], ax",
+        "1405c35f9: movzx eax, byte ptr [rip + 0x2259b86]",
+        "1405c3600: mov byte ptr [rbp - 0xb], al",
+        "1405c3603: mov byte ptr [rbp - 0xa], 0",
+        "1405c3607: mov dword ptr [rbp + 0xf], 2",
+        "1405c360e: lea r8, [rbp - 0x11]",
+        "1405c3612: lea rdx, [rbp - 0x31]"
+      ]
+    },
+    {
+      "name": "Deck2In",
+      "value": 3,
+      "assembly": [
+        "1405c3709: mov rax, qword ptr [rip + 0x2259a78]",
+        "1405c3710: mov dword ptr [rbp - 0x11], eax",
+        "1405c3713: movzx eax, word ptr [rip + 0x2259a72]",
+        "1405c371a: mov word ptr [rbp - 0xd], ax",
+        "1405c371e: movzx eax, byte ptr [rip + 0x2259a69]",
+        "1405c3725: mov byte ptr [rbp - 0xb], al",
+        "1405c3728: mov byte ptr [rbp - 0xa], 0",
+        "1405c372c: mov dword ptr [rbp + 0xf], 3",
+        "1405c3733: lea r8, [rbp - 0x11]",
+        "1405c3737: lea rdx, [rbp - 0x31]"
+      ]
+    },
+    {
+      "name": "Deck3In",
+      "value": 4,
+      "assembly": [
+        "1405c37f8: mov rax, qword ptr [rip + 0x2259991]",
+        "1405c37ff: mov dword ptr [rbp - 0x11], eax",
+        "1405c3802: movzx eax, word ptr [rip + 0x225998b]",
+        "1405c3809: mov word ptr [rbp - 0xd], ax",
+        "1405c380d: movzx eax, byte ptr [rip + 0x2259982]",
+        "1405c3814: mov byte ptr [rbp - 0xb], al",
+        "1405c3817: mov byte ptr [rbp - 0xa], 0",
+        "1405c381b: mov dword ptr [rbp + 0xf], 4",
+        "1405c3822: lea r8, [rbp - 0x11]",
+        "1405c3826: lea rdx, [rbp - 0x59]"
+      ]
+    }
+  ],
+  "mixerInterface": {
+    "vtable": "0x1431c4aa8",
+    "completeObjectOffset": "0x88",
+    "setupSlot": "0x80",
+    "inputConsumerSlot": "0x10",
+    "inputMapInterfaceOffset": "0xF0",
+    "outputMapInterfaceOffset": "0x100"
+  },
+  "hardwareInputIndexUnits": "stereo pairs: mono channels 2*hw_src and 2*hw_src+1",
+  "inputAttachAssembly": [
+    "14214e4ba: mov eax, dword ptr [rcx + 0x20]",
+    "14214e4bd: lea ebx, [rax + rax]",
+    "14214e4c0: movsxd rdx, ebx",
+    "14214e4c3: mov rcx, r12",
+    "14214e4c6: call 0x1421b9d30",
+    "14214e4cb: mov r15, rax",
+    "14214e4ce: lea ecx, [rbx + 1]",
+    "14214e4d1: movsxd rdx, ecx",
+    "14214e4d4: mov rcx, r12",
+    "14214e4d7: call 0x1421b9d30",
+    "14214e4dc: mov rbx, rax",
+    "14214e4df: lea rcx, [rsi - 0x88]",
+    "14214e4e6: mov rdx, rdi",
+    "14214e4e9: call 0x14214c730",
+    "14214e4ee: mov rcx, rax",
+    "14214e4f1: call 0x1404b4430",
+    "14214e4f6: test rax, rax",
+    "14214e4f9: je 0x14214e516",
+    "14214e4fb: mov rcx, rax",
+    "14214e4fe: call 0x1408794a0",
+    "14214e503: test rax, rax",
+    "14214e506: je 0x14214e516",
+    "14214e508: mov r8, rbx",
+    "14214e50b: mov rdx, r15",
+    "14214e50e: mov rcx, rax",
+    "14214e511: call 0x142185b10",
+    "14214e516: inc rdi",
+    "14214e519: mov r8, qword ptr [rsi + 0xc0]"
+  ],
+  "planarAddressAssembly": [
+    "1421b9d30: mov qword ptr [rsp + 8], rbx",
+    "1421b9d35: push rdi",
+    "1421b9d36: sub rsp, 0x20",
+    "1421b9d3a: mov rbx, rdx",
+    "1421b9d3d: mov rdi, rcx",
+    "1421b9d40: call 0x1421b9d70",
+    "1421b9d45: cmp rbx, rax",
+    "1421b9d48: jb 0x1421b9d57",
+    "1421b9d4a: xor eax, eax",
+    "1421b9d4c: mov rbx, qword ptr [rsp + 0x30]",
+    "1421b9d51: add rsp, 0x20",
+    "1421b9d55: pop rdi",
+    "1421b9d56: ret ",
+    "1421b9d57: imul rbx, qword ptr [rdi]",
+    "1421b9d5b: mov rax, qword ptr [rdi + 8]",
+    "1421b9d5f: lea rax, [rax + rbx*4]",
+    "1421b9d63: mov rbx, qword ptr [rsp + 0x30]",
+    "1421b9d68: add rsp, 0x20",
+    "1421b9d6c: pop rdi",
+    "1421b9d6d: ret "
+  ],
+  "parserIndexAssembly": [
+    "1405cb384: mov dword ptr [rcx + 0x20], r14d",
+    "1405cb388: mov r14d, dword ptr [rsp + 0x34]",
+    "1405cb38d: inc r14d",
+    "1405cb390: mov dword ptr [rsp + 0x34], r14d",
+    "1405cb395: lea rdx, [rip + 0x225291c]",
+    "1405cb39c: mov rcx, qword ptr [rsp + 0x48]"
+  ],
+  "legacyEvidenceSha256": "a63a02804e5a00cc1da48faff9c9bdfa962da0f1c3b09a7019d9eec0570fab3a",
+  "historicalOrderInference": [
+    {
+      "endpoint": "Deck3In",
+      "pairIndex": 0,
+      "zeroBasedMonoChannels": [
+        0,
+        1
+      ]
+    },
+    {
+      "endpoint": "Deck1In",
+      "pairIndex": 1,
+      "zeroBasedMonoChannels": [
+        2,
+        3
+      ]
+    },
+    {
+      "endpoint": "Deck2In",
+      "pairIndex": 2,
+      "zeroBasedMonoChannels": [
+        4,
+        5
+      ]
+    }
+  ],
+  "limits": [
+    "Original XML order is a conditional mapping when parsed, not current SL3 stub configuration",
+    "Physical sockets, through/routing state, channel polarity and DVS deck attachment are unverified",
+    "Output indices need their own final sample consumer verification",
+    "No executable, resource, account state, authentication predicate or registration is changed"
+  ]
+}

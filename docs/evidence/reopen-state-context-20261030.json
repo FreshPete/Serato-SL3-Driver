@@ -1,0 +1,193 @@
+{
+  "scope": "Offline version-qualified interpretation of the saved failed reopen; candidate startup mechanism, no repaired or new hardware result",
+  "timelineSha256": "96e4ab373cd0b0dfb4ba5e5b8ad84d36fedc75e1cce3f97443096d28a07393c8",
+  "symbolsSha256": "aec5bcc3254c582cbb6e71771e69a08cbc6af1b2dd88bd42dd63f2ee1c9ef55d",
+  "decodedDsmSha256": "e1070f2d78541e8694f3509b6f479768a5b5d7023a1080b267026025e57e9bca",
+  "symbolExporterSha256": "2bd49ec3ae16caa86ac6331bf9fc2593c6d580dfc342c090d178d08da741a2ad",
+  "contextExporterSha256": "6ae7b398049832e8445f19a97f9eb61f4dc4192a58c2f1c47fecd690ae374f29",
+  "installedImageObservationSha256": "b022a50576535e54cf7ce25baa909fe5eaa6830f3ca71948b57943d090d3431c",
+  "installedImageVersion": "10.0.26100.1 (WinBuild.160101.0800)",
+  "negativeCliChecksSha256": "02e748d750dbcf0e19c7f81c4e72239c762efb9469836e3735a90f18dc91f5cb",
+  "imageSha256": "f93fa3a32037c597fd19ca9d65f59e53a1e337123582ed2479d5c16a4848df16",
+  "pdbSha256": "63c7a9e69445700717fe3f69bc468f6f7a11e6358e5054c1a933388037cc19f5",
+  "rsds": {
+    "guid": "179F1445B718DC8543144991DC161F09",
+    "age": 1,
+    "name": "usbhub3.pdb"
+  },
+  "pdbIdentity": {
+    "guid": "179F1445B718DC8543144991DC161F09",
+    "infoAge": 4,
+    "dbiAge": 1
+  },
+  "pdbUrl": "https://msdl.microsoft.com/download/symbols/usbhub3.pdb/179F1445B718DC8543144991DC161F091/usbhub3.pdb",
+  "pdbValidationSource": {
+    "commit": "1bdc5900390b6edec02e7b6a1b6e7bdef6e76df1",
+    "sourceUrl": "https://github.com/microsoft/microsoft-pdb/blob/1bdc5900390b6edec02e7b6a1b6e7bdef6e76df1/PDB/dbi/pdb.cpp",
+    "downloadUrl": "https://raw.githubusercontent.com/microsoft/microsoft-pdb/1bdc5900390b6edec02e7b6a1b6e7bdef6e76df1/PDB/dbi/pdb.cpp",
+    "sha256": "a6f274f9b47abd875f2dbd2716c273bec7846be3d41e87c14fa815710896c898"
+  },
+  "dbghelpSha256": "2d2ec94891162a61d86789133623b47d64d74c15d6be99473b25ad7a6468cf39",
+  "historicalLoadedImageIdentityCaptured": false,
+  "inspectedImagePdbMatchVerified": true,
+  "stateFieldIsEntryEtwName": true,
+  "eventDescriptor": {
+    "rva": 403040,
+    "eventId": 111,
+    "task": 13
+  },
+  "selectedStates": [
+    {
+      "name": "DsmStateStoppedEnumerated",
+      "internalValue": 4243,
+      "etwValue": 4224,
+      "etwName": "DsmStateEtwStoppedEnumerated",
+      "entryRva": 314352,
+      "topLevelClientCyclePresent": false
+    },
+    {
+      "name": "DsmStateStopped",
+      "internalValue": 4241,
+      "etwValue": 4222,
+      "etwName": "DsmStateEtwStopped",
+      "entryRva": 389040,
+      "topLevelClientCyclePresent": true
+    }
+  ],
+  "unhandledEvent": {
+    "time": "2026-10-30T17:23:21.243607000+00:00",
+    "pid": 32156,
+    "eventId": 111,
+    "task": 13,
+    "message": "Unhandled State Machine Event",
+    "data": {
+      "fid_UsbDevice": "0x3AF06C00C6F8",
+      "fid_Context": "0xFFFFC50F96CEF0D0",
+      "fid_StartIndex": "0xFA0",
+      "fid_State": "0x1080",
+      "fid_Event": "0xFAB",
+      "fid_Depth": "0x0"
+    },
+    "stateNameForInspectedImage": "DsmStateEtwStoppedEnumerated",
+    "eventNameForInspectedImage": "DsmEventClientRequestCycle"
+  },
+  "targetStateEvents": 252,
+  "decodedDsmEvents": 246,
+  "otherStateNamespaces": 6,
+  "lastTopLevelStoppedEnumeratedBeforeCycle": {
+    "time": "2026-10-30T17:23:21.240180300+00:00",
+    "pid": 4,
+    "eventId": 110,
+    "task": 13,
+    "message": "State Machine Event",
+    "data": {
+      "fid_UsbDevice": "0x3AF06C00C6F8",
+      "fid_Context": "0xFFFFC50F96CEF0D0",
+      "fid_StartIndex": "0xFA0",
+      "fid_State": "0x1080",
+      "fid_Event": "0xFED",
+      "fid_Depth": "0x0"
+    },
+    "stateNameForInspectedImage": "DsmStateEtwStoppedEnumerated",
+    "eventNameForInspectedImage": "DsmEventOperationSuccess"
+  },
+  "postCycleTransitions": [
+    {
+      "time": "2026-10-30T17:23:31.240187100+00:00",
+      "pid": 0,
+      "eventId": 110,
+      "task": 13,
+      "message": "State Machine Event",
+      "data": {
+        "fid_UsbDevice": "0x3AF06C00C6F8",
+        "fid_Context": "0xFFFFC50F96CEF0D0",
+        "fid_StartIndex": "0xFA0",
+        "fid_State": "0x1080",
+        "fid_Event": "0x3E8",
+        "fid_Depth": "0x0"
+      },
+      "stateNameForInspectedImage": "DsmStateEtwStoppedEnumerated",
+      "eventNameForInspectedImage": "DsmEventNull"
+    },
+    {
+      "time": "2026-10-30T17:23:31.240187800+00:00",
+      "pid": 0,
+      "eventId": 110,
+      "task": 13,
+      "message": "State Machine Event",
+      "data": {
+        "fid_UsbDevice": "0x3AF06C00C6F8",
+        "fid_Context": "0xFFFFC50F96CEF0D0",
+        "fid_StartIndex": "0xFA0",
+        "fid_State": "0x130F",
+        "fid_Event": "0x3EA",
+        "fid_Depth": "0x0"
+      },
+      "stateNameForInspectedImage": "DsmStateEtwCheckIfDeviceCanBeDisabledOnDriverNotFound",
+      "eventNameForInspectedImage": "DsmEventTimerFired"
+    },
+    {
+      "time": "2026-10-30T17:23:31.240188900+00:00",
+      "pid": 0,
+      "eventId": 110,
+      "task": 13,
+      "message": "State Machine Event",
+      "data": {
+        "fid_UsbDevice": "0x3AF06C00C6F8",
+        "fid_Context": "0xFFFFC50F96CEF0D0",
+        "fid_StartIndex": "0xFA0",
+        "fid_State": "0x12D7",
+        "fid_Event": "0xFF9",
+        "fid_Depth": "0x0"
+      },
+      "stateNameForInspectedImage": "DsmStateEtwDisablingDeviceInControllerOnStartTimeout",
+      "eventNameForInspectedImage": "DsmEventYes"
+    },
+    {
+      "time": "2026-10-30T17:23:31.240240300+00:00",
+      "pid": 0,
+      "eventId": 110,
+      "task": 13,
+      "message": "State Machine Event",
+      "data": {
+        "fid_UsbDevice": "0x3AF06C00C6F8",
+        "fid_Context": "0xFFFFC50F96CEF0D0",
+        "fid_StartIndex": "0xFA0",
+        "fid_State": "0x12D8",
+        "fid_Event": "0xFBC",
+        "fid_Depth": "0x0"
+      },
+      "stateNameForInspectedImage": "DsmStateEtwDisablingPortOnStartTimeout",
+      "eventNameForInspectedImage": "DsmEventUCXIoctlSuccess"
+    },
+    {
+      "time": "2026-10-30T17:23:31.240259100+00:00",
+      "pid": 0,
+      "eventId": 110,
+      "task": 13,
+      "message": "State Machine Event",
+      "data": {
+        "fid_UsbDevice": "0x3AF06C00C6F8",
+        "fid_Context": "0xFFFFC50F96CEF0D0",
+        "fid_StartIndex": "0xFA0",
+        "fid_State": "0x107E",
+        "fid_Event": "0xFCA",
+        "fid_Depth": "0x0"
+      },
+      "stateNameForInspectedImage": "DsmStateEtwStopped",
+      "eventNameForInspectedImage": "DsmEventPortDisabled"
+    }
+  ],
+  "secondsToObservedStartTimeout": 10.000007,
+  "restingDeviceProblemBeforeRun": 39,
+  "limits": [
+    "The old capture did not bind the loaded USBHUB3 image. Current-image labels are conditional when applied to it.",
+    "ETW state values differ from internal state values; direct internal-enum lookup would mislabel this event.",
+    "Six other target-child state events use another namespace and are not labelled as DSM events.",
+    "The inspected stopped-enumerated top-level table lacks a cycle transition; this is not an exhaustive proof of every substate path.",
+    "The decoded sequence is consistent with incomplete original-driver startup; code 39 alone does not prove the entire cause.",
+    "A ten-second observed timeout is not a universal delay policy or a verified recovery barrier.",
+    "The exact outstanding UsbDk wait, supported normal-token state observation and repeated-open repair still require attended evidence.",
+    "No USB operation, kernel debugging, driver/security modification, ASIO deployment or current Serato connection occurred."
+  ]
+}

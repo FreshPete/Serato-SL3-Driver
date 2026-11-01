@@ -1,0 +1,658 @@
+{
+  "scope": "Selected static disk-image source-property paths; no PLA/session or USB execution",
+  "imageSha256": "c36da0d945877ac66f1cf5761f93e4ca593d9ce01433a2941129449338ca3740",
+  "pdbSha256": "a1a6f6ed626d0a14362b47e6b646d0d437fd9331f5bca6be550aacd6ce61bc6d",
+  "functions": [
+    {
+      "symbol": "HDataCollector::Load",
+      "startRva": "0x123c90",
+      "endRva": "0x12476b",
+      "sha256": "10fc618d9bbadaf8d35d11f2e01a92975b57426c85da95706ecaf28631582bfe"
+    },
+    {
+      "symbol": "HTraceDataCollector::Load",
+      "startRva": "0x126d00",
+      "endRva": "0x128741",
+      "sha256": "e3a7f5d04ba4a9fc2c64e1d209504578ab43dec661597e71fc4b75fedb24bbbc"
+    },
+    {
+      "symbol": "DataCollectorSet::put_SegmentMaxSize",
+      "startRva": "0x52c50",
+      "endRva": "0x52e43",
+      "sha256": "9855e66bfde77235b7901cebda571ed59e1aba7d3eaf157691764d9126bfba3c"
+    },
+    {
+      "symbol": "DataCollectorSet::get_SegmentMaxSize",
+      "startRva": "0xc1bc0",
+      "endRva": "0xc1c85",
+      "sha256": "18165edce0f296133ee270b52c5a94340077516fca01d4541565c62b818c1384"
+    },
+    {
+      "symbol": "_TraceDataCollector::get_Guid",
+      "startRva": "0xa76d0",
+      "endRva": "0xa7798",
+      "sha256": "f2e2a185668f8751a6187427142232d1422838a80699233e744faa1dc7ee2913"
+    },
+    {
+      "symbol": "TraceSession::Commit",
+      "startRva": "0x87690",
+      "endRva": "0x884d8",
+      "sha256": "001bde183701bf68ad73a14b68873d940dbc591db1a408268ecce91ecd568610"
+    },
+    {
+      "symbol": "TraceSession::Query",
+      "startRva": "0x1e7b0",
+      "endRva": "0x1f377",
+      "sha256": "d16a774b67edde9031200cfe33750bab9321ab8a388a2ed76127f113024850d4"
+    },
+    {
+      "symbol": "CreateClassObject<_TraceDataCollector>",
+      "startRva": "0x1f5bc",
+      "endRva": "0x1f8bf",
+      "sha256": "fbc52273a26cbab66cc745ce9e92be32a8dcecc00806ed900d618742dab380e9"
+    },
+    {
+      "symbol": "_TraceDataCollector::_TraceDataCollector",
+      "startRva": "0x1f8c8",
+      "endRva": "0x1fa8e",
+      "sha256": "92cab5ee20358b7dd5825dddbde565162aed0f122686ab8a07220f0cbf3dfa04"
+    }
+  ],
+  "instructions": [
+    {
+      "rva": "0x123cd1",
+      "bytes": "488bf9",
+      "assembly": "mov rdi, rcx"
+    },
+    {
+      "rva": "0x12448b",
+      "bytes": "488b8f80000000",
+      "assembly": "mov rcx, qword ptr [rdi + 0x80]"
+    },
+    {
+      "rva": "0x124492",
+      "bytes": "488d5732",
+      "assembly": "lea rdx, [rdi + 0x32]"
+    },
+    {
+      "rva": "0x124499",
+      "bytes": "488b80a0000000",
+      "assembly": "mov rax, qword ptr [rax + 0xa0]"
+    },
+    {
+      "rva": "0x124666",
+      "bytes": "488d5774",
+      "assembly": "lea rdx, [rdi + 0x74]"
+    },
+    {
+      "rva": "0x12466d",
+      "bytes": "488b80e0000000",
+      "assembly": "mov rax, qword ptr [rax + 0xe0]"
+    },
+    {
+      "rva": "0x126d3d",
+      "bytes": "4533ff",
+      "assembly": "xor r15d, r15d"
+    },
+    {
+      "rva": "0x126d40",
+      "bytes": "488bf1",
+      "assembly": "mov rsi, rcx"
+    },
+    {
+      "rva": "0x127238",
+      "bytes": "488bce",
+      "assembly": "mov rcx, rsi"
+    },
+    {
+      "rva": "0x12723b",
+      "bytes": "e850caffff",
+      "assembly": "call 0x180123c90"
+    },
+    {
+      "rva": "0x12736e",
+      "bytes": "6644397e32",
+      "assembly": "cmp word ptr [rsi + 0x32], r15w"
+    },
+    {
+      "rva": "0x127373",
+      "bytes": "0f84a5000000",
+      "assembly": "je 0x18012741e"
+    },
+    {
+      "rva": "0x127379",
+      "bytes": "488b8e30010000",
+      "assembly": "mov rcx, qword ptr [rsi + 0x130]"
+    },
+    {
+      "rva": "0x127380",
+      "bytes": "8b5674",
+      "assembly": "mov edx, dword ptr [rsi + 0x74]"
+    },
+    {
+      "rva": "0x127386",
+      "bytes": "488b80e8000000",
+      "assembly": "mov rax, qword ptr [rax + 0xe8]"
+    },
+    {
+      "rva": "0x12738d",
+      "bytes": "e87e2c0200",
+      "assembly": "call 0x18014a010"
+    },
+    {
+      "rva": "0x127421",
+      "bytes": "0fb75632",
+      "assembly": "movzx edx, word ptr [rsi + 0x32]"
+    },
+    {
+      "rva": "0x127428",
+      "bytes": "488b80a8000000",
+      "assembly": "mov rax, qword ptr [rax + 0xa8]"
+    },
+    {
+      "rva": "0x128523",
+      "bytes": "44397e74",
+      "assembly": "cmp dword ptr [rsi + 0x74], r15d"
+    },
+    {
+      "rva": "0x128527",
+      "bytes": "0f84a8000000",
+      "assembly": "je 0x1801285d5"
+    },
+    {
+      "rva": "0x12852d",
+      "bytes": "6644397e32",
+      "assembly": "cmp word ptr [rsi + 0x32], r15w"
+    },
+    {
+      "rva": "0x128532",
+      "bytes": "0f859d000000",
+      "assembly": "jne 0x1801285d5"
+    },
+    {
+      "rva": "0x128540",
+      "bytes": "8bd3",
+      "assembly": "mov edx, ebx"
+    },
+    {
+      "rva": "0x128545",
+      "bytes": "488b4030",
+      "assembly": "mov rax, qword ptr [rax + 0x30]"
+    },
+    {
+      "rva": "0x52c93",
+      "bytes": "8bf2",
+      "assembly": "mov esi, edx"
+    },
+    {
+      "rva": "0x52c95",
+      "bytes": "488bd9",
+      "assembly": "mov rbx, rcx"
+    },
+    {
+      "rva": "0x52e06",
+      "bytes": "89b390000000",
+      "assembly": "mov dword ptr [rbx + 0x90], esi"
+    },
+    {
+      "rva": "0xc1c61",
+      "bytes": "8b8790000000",
+      "assembly": "mov eax, dword ptr [rdi + 0x90]"
+    },
+    {
+      "rva": "0xc1c6b",
+      "bytes": "8906",
+      "assembly": "mov dword ptr [rsi], eax"
+    },
+    {
+      "rva": "0x87703",
+      "bytes": "4c8bfa",
+      "assembly": "mov r15, rdx"
+    },
+    {
+      "rva": "0x87c2a",
+      "bytes": "498d573c",
+      "assembly": "lea rdx, [r15 + 0x3c]"
+    },
+    {
+      "rva": "0x87c31",
+      "bytes": "488b80e0000000",
+      "assembly": "mov rax, qword ptr [rax + 0xe0]"
+    },
+    {
+      "rva": "0x87f10",
+      "bytes": "488d55e0",
+      "assembly": "lea rdx, [rbp - 0x20]"
+    },
+    {
+      "rva": "0x87f17",
+      "bytes": "488b8080010000",
+      "assembly": "mov rax, qword ptr [rax + 0x180]"
+    },
+    {
+      "rva": "0xa7771",
+      "bytes": "0f1087c0000000",
+      "assembly": "movups xmm0, xmmword ptr [rdi + 0xc0]"
+    },
+    {
+      "rva": "0xa777c",
+      "bytes": "f30f7f06",
+      "assembly": "movdqu xmmword ptr [rsi], xmm0"
+    },
+    {
+      "rva": "0x87ff4",
+      "bytes": "0f8594000000",
+      "assembly": "jne 0x18008808e"
+    },
+    {
+      "rva": "0x8808e",
+      "bytes": "0f1045e0",
+      "assembly": "movups xmm0, xmmword ptr [rbp - 0x20]"
+    },
+    {
+      "rva": "0x88092",
+      "bytes": "f3410f7f4718",
+      "assembly": "movdqu xmmword ptr [r15 + 0x18], xmm0"
+    },
+    {
+      "rva": "0x126ec3",
+      "bytes": "488b8e30010000",
+      "assembly": "mov rcx, qword ptr [rsi + 0x130]"
+    },
+    {
+      "rva": "0x126eca",
+      "bytes": "4533c0",
+      "assembly": "xor r8d, r8d"
+    },
+    {
+      "rva": "0x126ecd",
+      "bytes": "498b16",
+      "assembly": "mov rdx, qword ptr [r14]"
+    },
+    {
+      "rva": "0x126ed3",
+      "bytes": "488b80d8010000",
+      "assembly": "mov rax, qword ptr [rax + 0x1d8]"
+    },
+    {
+      "rva": "0x126eda",
+      "bytes": "e831310200",
+      "assembly": "call 0x18014a010"
+    },
+    {
+      "rva": "0x126edf",
+      "bytes": "488b8e30010000",
+      "assembly": "mov rcx, qword ptr [rsi + 0x130]"
+    },
+    {
+      "rva": "0x1e906",
+      "bytes": "e8b10c0000",
+      "assembly": "call 0x18001f5bc"
+    },
+    {
+      "rva": "0x1e90b",
+      "bytes": "48894588",
+      "assembly": "mov qword ptr [rbp - 0x78], rax"
+    },
+    {
+      "rva": "0x1e93f",
+      "bytes": "e85c110000",
+      "assembly": "call 0x18001faa0"
+    },
+    {
+      "rva": "0x1e98a",
+      "bytes": "4c8bc6",
+      "assembly": "mov r8, rsi"
+    },
+    {
+      "rva": "0x1e98d",
+      "bytes": "33c9",
+      "assembly": "xor ecx, ecx"
+    },
+    {
+      "rva": "0x1e98f",
+      "bytes": "48ff1562501300",
+      "assembly": "call qword ptr [rip + 0x135062]"
+    },
+    {
+      "rva": "0x1e99b",
+      "bytes": "3d69100000",
+      "assembly": "cmp eax, 0x1069"
+    },
+    {
+      "rva": "0x1e9a6",
+      "bytes": "bb02003080",
+      "assembly": "mov ebx, 0x80300002"
+    },
+    {
+      "rva": "0x1f660",
+      "bytes": "e863020000",
+      "assembly": "call 0x18001f8c8"
+    },
+    {
+      "rva": "0x1f8d4",
+      "bytes": "488bd9",
+      "assembly": "mov rbx, rcx"
+    },
+    {
+      "rva": "0x1f929",
+      "bytes": "0f57c0",
+      "assembly": "xorps xmm0, xmm0"
+    },
+    {
+      "rva": "0x1f962",
+      "bytes": "0f1183c0000000",
+      "assembly": "movups xmmword ptr [rbx + 0xc0], xmm0"
+    },
+    {
+      "rva": "0x87fa6",
+      "bytes": "4585e4",
+      "assembly": "test r12d, r12d"
+    },
+    {
+      "rva": "0x87fa9",
+      "bytes": "0f85ee000000",
+      "assembly": "jne 0x18008809d"
+    },
+    {
+      "rva": "0x87faf",
+      "bytes": "4585ed",
+      "assembly": "test r13d, r13d"
+    },
+    {
+      "rva": "0x87fb2",
+      "bytes": "0f85e5000000",
+      "assembly": "jne 0x18008809d"
+    },
+    {
+      "rva": "0x87fd6",
+      "bytes": "488b45e0",
+      "assembly": "mov rax, qword ptr [rbp - 0x20]"
+    },
+    {
+      "rva": "0x87fda",
+      "bytes": "482b05dffd0c00",
+      "assembly": "sub rax, qword ptr [rip + 0xcfddf]"
+    },
+    {
+      "rva": "0x87fe3",
+      "bytes": "488b45e8",
+      "assembly": "mov rax, qword ptr [rbp - 0x18]"
+    },
+    {
+      "rva": "0x87fe7",
+      "bytes": "482b05dafd0c00",
+      "assembly": "sub rax, qword ptr [rip + 0xcfdda]"
+    },
+    {
+      "rva": "0x87ffa",
+      "bytes": "498d4f18",
+      "assembly": "lea rcx, [r15 + 0x18]"
+    },
+    {
+      "rva": "0x87ffe",
+      "bytes": "48ff15e3b20c00",
+      "assembly": "call qword ptr [rip + 0xcb2e3]"
+    }
+  ],
+  "vtableSlots": [
+    {
+      "table": "TraceSession::`vftable'",
+      "tableRva": "0x14b6e8",
+      "slot": "0xe0",
+      "targetRva": "0xc1bc0",
+      "targetSymbol": "DataCollectorSet::get_SegmentMaxSize"
+    },
+    {
+      "table": "TraceSession::`vftable'",
+      "tableRva": "0x14b6e8",
+      "slot": "0xe8",
+      "targetRva": "0x52c50",
+      "targetSymbol": "DataCollectorSet::put_SegmentMaxSize"
+    },
+    {
+      "table": "_TraceDataCollector::`vftable'",
+      "tableRva": "0x14bbe8",
+      "slot": "0xa0",
+      "targetRva": "0x7e7c0",
+      "targetSymbol": "_DataCollector<ITraceDataCollector>::get_LogCircular"
+    },
+    {
+      "table": "_TraceDataCollector::`vftable'",
+      "tableRva": "0x14bbe8",
+      "slot": "0xa8",
+      "targetRva": "0x85110",
+      "targetSymbol": "_DataCollector<ITraceDataCollector>::put_LogCircular"
+    },
+    {
+      "table": "_TraceDataCollector::`vftable'",
+      "tableRva": "0x14bbe8",
+      "slot": "0x180",
+      "targetRva": "0xa76d0",
+      "targetSymbol": "_TraceDataCollector::get_Guid"
+    },
+    {
+      "table": "_TraceDataCollector::`vftable'",
+      "tableRva": "0x14bbe8",
+      "slot": "0x188",
+      "targetRva": "0x44ef0",
+      "targetSymbol": "_TraceDataCollector::put_Guid"
+    },
+    {
+      "table": "HTraceDataCollector::`vftable'",
+      "tableRva": "0x14dc38",
+      "slot": "0x30",
+      "targetRva": "0x125060",
+      "targetSymbol": "HDataCollector::SetCycle"
+    },
+    {
+      "table": "TraceSession::`vftable'",
+      "tableRva": "0x14b6e8",
+      "slot": "0x1d8",
+      "targetRva": "0x1e7b0",
+      "targetSymbol": "TraceSession::Query"
+    }
+  ],
+  "imports": [
+    {
+      "callRva": "0x87ffe",
+      "iatRva": "0x1532e8",
+      "name": "UuidCreate",
+      "dll": "RPCRT4.dll"
+    },
+    {
+      "callRva": "0x1e98f",
+      "iatRva": "0x1539f8",
+      "name": "QueryTraceW",
+      "dll": "api-ms-win-eventing-legacy-l1-1-0.dll"
+    }
+  ],
+  "guidNullConstantRva": "0x157dc0",
+  "serviceLoadDirectRaxVtableSlotLoads": [
+    {
+      "rva": "0x126e38",
+      "slot": "0x208"
+    },
+    {
+      "rva": "0x126ed3",
+      "slot": "0x1d8"
+    },
+    {
+      "rva": "0x126eeb",
+      "slot": "0x1b0"
+    },
+    {
+      "rva": "0x126f91",
+      "slot": "0x38"
+    },
+    {
+      "rva": "0x127052",
+      "slot": "0x40"
+    },
+    {
+      "rva": "0x127103",
+      "slot": "0x0"
+    },
+    {
+      "rva": "0x1271a0",
+      "slot": "0x210"
+    },
+    {
+      "rva": "0x1272d6",
+      "slot": "0x98"
+    },
+    {
+      "rva": "0x127386",
+      "slot": "0xe8"
+    },
+    {
+      "rva": "0x127428",
+      "slot": "0xa8"
+    },
+    {
+      "rva": "0x1274d4",
+      "slot": "0x100"
+    },
+    {
+      "rva": "0x127578",
+      "slot": "0x108"
+    },
+    {
+      "rva": "0x127624",
+      "slot": "0x130"
+    },
+    {
+      "rva": "0x1276c8",
+      "slot": "0x138"
+    },
+    {
+      "rva": "0x127774",
+      "slot": "0x160"
+    },
+    {
+      "rva": "0x127818",
+      "slot": "0x168"
+    },
+    {
+      "rva": "0x1278c4",
+      "slot": "0x198"
+    },
+    {
+      "rva": "0x127968",
+      "slot": "0x1a0"
+    },
+    {
+      "rva": "0x127a14",
+      "slot": "0x1a8"
+    },
+    {
+      "rva": "0x127ab8",
+      "slot": "0x1b0"
+    },
+    {
+      "rva": "0x127b64",
+      "slot": "0x150"
+    },
+    {
+      "rva": "0x127c08",
+      "slot": "0x158"
+    },
+    {
+      "rva": "0x127cb4",
+      "slot": "0x1b8"
+    },
+    {
+      "rva": "0x127d58",
+      "slot": "0x1c0"
+    },
+    {
+      "rva": "0x127e04",
+      "slot": "0x1c8"
+    },
+    {
+      "rva": "0x127ea9",
+      "slot": "0x1d0"
+    },
+    {
+      "rva": "0x127f55",
+      "slot": "0x1d8"
+    },
+    {
+      "rva": "0x127ffa",
+      "slot": "0x1e0"
+    },
+    {
+      "rva": "0x1280a6",
+      "slot": "0x228"
+    },
+    {
+      "rva": "0x12814a",
+      "slot": "0x230"
+    },
+    {
+      "rva": "0x1281f6",
+      "slot": "0x238"
+    },
+    {
+      "rva": "0x12829c",
+      "slot": "0x238"
+    },
+    {
+      "rva": "0x12833b",
+      "slot": "0x60"
+    },
+    {
+      "rva": "0x1283da",
+      "slot": "0x68"
+    },
+    {
+      "rva": "0x12848b",
+      "slot": "0x1e0"
+    },
+    {
+      "rva": "0x128545",
+      "slot": "0x30"
+    },
+    {
+      "rva": "0x1285de",
+      "slot": "0x30"
+    },
+    {
+      "rva": "0x1286d3",
+      "slot": "0x10"
+    },
+    {
+      "rva": "0x1286ec",
+      "slot": "0x10"
+    },
+    {
+      "rva": "0x128705",
+      "slot": "0x10"
+    }
+  ],
+  "finding": "The inspected HTraceDataCollector::Load forwards SegmentMaxSize into TraceSession only when LogCircular is nonzero; a nonzero sequential limit follows a separate SetCycle virtual path.",
+  "guidFinding": "The service loader queries a fresh TraceSession; its inspected Query creates a collector with a zero GUID. The base properties builder has a GUID_NULL path calling UuidCreate into Wnode.Guid. No direct mov rax,[rax+0x180/0x188] GUID accessor slot loads occur in the decoded service Load function; this narrow inventory is not exhaustive alias/callee analysis. These paths make service-generated identity a candidate explanation, not proof of the historical mismatch.",
+  "effectiveNativeLimitVerified": false,
+  "guidMismatchResolved": false,
+  "readinessAdmission": false,
+  "limits": [
+    "Static paths are conditional on real object types, successful calls and dispatch.",
+    "The separate sequential virtual path is not decoded or proved to stop at the configured size.",
+    "The original live query discarded its returned GUID; it cannot be reconstructed here.",
+    "Persisted service XML readback does not necessarily expose the inner native-session collector.",
+    "Neither a fresh generated GUID nor an expected-configuration GUID is admitted as the original native identity without live evidence.",
+    "This is consistent with the saved MaxFileSize=0 header, not proof of the historical service execution path.",
+    "No circular logging, source-policy relaxation or new live test is selected."
+  ],
+  "references": [
+    "https://learn.microsoft.com/en-us/windows/win32/api/pla/nf-pla-idatacollectorset-get_segmentmaxsize",
+    "https://learn.microsoft.com/en-us/windows/win32/api/evntrace/ns-evntrace-event_trace_properties",
+    "https://learn.microsoft.com/en-us/windows/win32/api/rpcdce/nf-rpcdce-uuidcreate"
+  ],
+  "dependencies": {
+    "scripts/export-pla-source-properties.py": "80ab44898bc2bac37df98fe4a5ddd0c0a369bbcd5bc5d288d73e2484511cbde0",
+    "scripts/export-pla-image-mode-path.py": "ffa385f429a7c33711281f94575e0374a21bf4773e04949e45ed8e1bf82a1e32",
+    "analysis/pla-all-public-symbols.py": "773311b17ef018a785e0630a2d63468b7de0120ccf301dfa3a2a63c36e439a8c",
+    "analysis/pla-all-public-symbols.json": "dfdaedde5d0f43a13a79bd9bac3e4692584a4ec73fc206c4fd340835b25e16bd"
+  }
+}

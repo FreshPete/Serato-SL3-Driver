@@ -1,0 +1,342 @@
+{
+  "scope": "Original 2.5.6.1001 static SL3 API path; no execution or application modification",
+  "binarySha256": "3b04472cd5597fd56266e1c2c86dc298431b0026001aefe4b43aa3b909ee35c5",
+  "factoryVa": "0x140681ae0",
+  "constructorVa": "0x140694100",
+  "loaderVa": "0x14069d900",
+  "vtableVa": "0x1449cdff8",
+  "completeObjectLocatorVa": "0x144a44420",
+  "rttiType": ".?AVRaneSL3API@driver@device@serato@@",
+  "exports": [
+    {
+      "name": "sl3_open",
+      "stringVa": "0x1449d0440",
+      "memberOffset": "0x70"
+    },
+    {
+      "name": "sl3_close",
+      "stringVa": "0x1449d03e8",
+      "memberOffset": "0x78"
+    },
+    {
+      "name": "sl3_driver_timer",
+      "stringVa": "0x1449d03f8",
+      "memberOffset": "0x80"
+    },
+    {
+      "name": "sl3_get_usb_port_status",
+      "stringVa": "0x1449d0368",
+      "memberOffset": "0x88"
+    },
+    {
+      "name": "sl3_get_audio_controls",
+      "stringVa": "0x1449d0380",
+      "memberOffset": "0x90"
+    },
+    {
+      "name": "sl3_set_audio_controls",
+      "stringVa": "0x1449d0330",
+      "memberOffset": "0x98"
+    },
+    {
+      "name": "sl3_set_thrustate_callback",
+      "stringVa": "0x1449d0348",
+      "memberOffset": "0xa0"
+    }
+  ],
+  "functions": [
+    {
+      "startVa": "0x140681ae0",
+      "endVa": "0x140684c0e",
+      "sha256": "62352745f1cae53d675fbd0d5fa8625672cb6614a65d3eae59119a88278586a4"
+    },
+    {
+      "startVa": "0x140694100",
+      "endVa": "0x14069415d",
+      "sha256": "4ed21e483d02b26e1f51763a33aa8220d839ea02a49ea1b232adc08273477705"
+    },
+    {
+      "startVa": "0x14069d900",
+      "endVa": "0x14069db55",
+      "sha256": "617cf373c44fa0a596806bc2edf5b72409d9274199b7b3f8156ef3e9bbcb9c25"
+    }
+  ],
+  "instructionFacts": [
+    {
+      "va": "0x140681b27",
+      "bytes": "41bc01000000",
+      "assembly": "mov r12d, 1"
+    },
+    {
+      "va": "0x140682de1",
+      "bytes": "bfc51c0000",
+      "assembly": "mov edi, 0x1cc5"
+    },
+    {
+      "va": "0x140683cc6",
+      "bytes": "ff5018",
+      "assembly": "call qword ptr [rax + 0x18]"
+    },
+    {
+      "va": "0x140683cc9",
+      "bytes": "663bc7",
+      "assembly": "cmp ax, di"
+    },
+    {
+      "va": "0x140683ccc",
+      "bytes": "756d",
+      "assembly": "jne 0x140683d3b"
+    },
+    {
+      "va": "0x140683cd4",
+      "bytes": "ff5020",
+      "assembly": "call qword ptr [rax + 0x20]"
+    },
+    {
+      "va": "0x140683cd7",
+      "bytes": "66413bc4",
+      "assembly": "cmp ax, r12w"
+    },
+    {
+      "va": "0x140683cdb",
+      "bytes": "755e",
+      "assembly": "jne 0x140683d3b"
+    },
+    {
+      "va": "0x140683ce5",
+      "bytes": "7548",
+      "assembly": "jne 0x140683d2f"
+    },
+    {
+      "va": "0x140683ce7",
+      "bytes": "b9a8000000",
+      "assembly": "mov ecx, 0xa8"
+    },
+    {
+      "va": "0x140683cfe",
+      "bytes": "488bc8",
+      "assembly": "mov rcx, rax"
+    },
+    {
+      "va": "0x140683d01",
+      "bytes": "e8fa030100",
+      "assembly": "call 0x140694100"
+    },
+    {
+      "va": "0x14069410d",
+      "bytes": "e89e48ffff",
+      "assembly": "call 0x1406889b0"
+    },
+    {
+      "va": "0x14069411a",
+      "bytes": "488903",
+      "assembly": "mov qword ptr [rbx], rax"
+    },
+    {
+      "va": "0x14069414e",
+      "bytes": "e8ad970000",
+      "assembly": "call 0x14069d900"
+    },
+    {
+      "va": "0x14069d92a",
+      "bytes": "48894760",
+      "assembly": "mov qword ptr [rdi + 0x60], rax"
+    },
+    {
+      "va": "0x14069da17",
+      "bytes": "ff5770",
+      "assembly": "call qword ptr [rdi + 0x70]"
+    },
+    {
+      "va": "0x14069da1a",
+      "bytes": "48894768",
+      "assembly": "mov qword ptr [rdi + 0x68], rax"
+    },
+    {
+      "va": "0x14069da1e",
+      "bytes": "4885c0",
+      "assembly": "test rax, rax"
+    },
+    {
+      "va": "0x14069da21",
+      "bytes": "0f8493000000",
+      "assembly": "je 0x14069daba"
+    },
+    {
+      "va": "0x14069da27",
+      "bytes": "c6470801",
+      "assembly": "mov byte ptr [rdi + 8], 1"
+    },
+    {
+      "va": "0x140694113",
+      "bytes": "488d05de9e3304",
+      "assembly": "lea rax, [rip + 0x4339ede]"
+    },
+    {
+      "va": "0x14069d924",
+      "bytes": "ff1546794600",
+      "assembly": "call qword ptr [rip + 0x467946]"
+    },
+    {
+      "va": "0x14069d937",
+      "bytes": "488d15022b3304",
+      "assembly": "lea rdx, [rip + 0x4332b02]"
+    },
+    {
+      "va": "0x14069d941",
+      "bytes": "ff15717a4600",
+      "assembly": "call qword ptr [rip + 0x467a71]"
+    },
+    {
+      "va": "0x14069d947",
+      "bytes": "48894770",
+      "assembly": "mov qword ptr [rdi + 0x70], rax"
+    },
+    {
+      "va": "0x14069d94f",
+      "bytes": "488d15922a3304",
+      "assembly": "lea rdx, [rip + 0x4332a92]"
+    },
+    {
+      "va": "0x14069d95f",
+      "bytes": "ff15537a4600",
+      "assembly": "call qword ptr [rip + 0x467a53]"
+    },
+    {
+      "va": "0x14069d965",
+      "bytes": "48894778",
+      "assembly": "mov qword ptr [rdi + 0x78], rax"
+    },
+    {
+      "va": "0x14069d972",
+      "bytes": "488d157f2a3304",
+      "assembly": "lea rdx, [rip + 0x4332a7f]"
+    },
+    {
+      "va": "0x14069d97d",
+      "bytes": "ff15357a4600",
+      "assembly": "call qword ptr [rip + 0x467a35]"
+    },
+    {
+      "va": "0x14069d983",
+      "bytes": "48898780000000",
+      "assembly": "mov qword ptr [rdi + 0x80], rax"
+    },
+    {
+      "va": "0x14069d993",
+      "bytes": "488d15ce293304",
+      "assembly": "lea rdx, [rip + 0x43329ce]"
+    },
+    {
+      "va": "0x14069d99e",
+      "bytes": "ff15147a4600",
+      "assembly": "call qword ptr [rip + 0x467a14]"
+    },
+    {
+      "va": "0x14069d9a4",
+      "bytes": "48898788000000",
+      "assembly": "mov qword ptr [rdi + 0x88], rax"
+    },
+    {
+      "va": "0x14069d9b4",
+      "bytes": "488d15c5293304",
+      "assembly": "lea rdx, [rip + 0x43329c5]"
+    },
+    {
+      "va": "0x14069d9bf",
+      "bytes": "ff15f3794600",
+      "assembly": "call qword ptr [rip + 0x4679f3]"
+    },
+    {
+      "va": "0x14069d9c5",
+      "bytes": "48898790000000",
+      "assembly": "mov qword ptr [rdi + 0x90], rax"
+    },
+    {
+      "va": "0x14069d9d5",
+      "bytes": "488d1554293304",
+      "assembly": "lea rdx, [rip + 0x4332954]"
+    },
+    {
+      "va": "0x14069d9e0",
+      "bytes": "ff15d2794600",
+      "assembly": "call qword ptr [rip + 0x4679d2]"
+    },
+    {
+      "va": "0x14069d9e6",
+      "bytes": "48898798000000",
+      "assembly": "mov qword ptr [rdi + 0x98], rax"
+    },
+    {
+      "va": "0x14069d9f6",
+      "bytes": "488d154b293304",
+      "assembly": "lea rdx, [rip + 0x433294b]"
+    },
+    {
+      "va": "0x14069da01",
+      "bytes": "ff15b1794600",
+      "assembly": "call qword ptr [rip + 0x4679b1]"
+    },
+    {
+      "va": "0x14069da07",
+      "bytes": "488987a0000000",
+      "assembly": "mov qword ptr [rdi + 0xa0], rax"
+    }
+  ],
+  "imports": [
+    {
+      "callVa": "0x14069d924",
+      "iatVa": "0x140b05270",
+      "name": "LoadLibraryW"
+    },
+    {
+      "callVa": "0x14069d941",
+      "iatVa": "0x140b053b8",
+      "name": "GetProcAddress"
+    },
+    {
+      "callVa": "0x14069d95f",
+      "iatVa": "0x140b053b8",
+      "name": "GetProcAddress"
+    },
+    {
+      "callVa": "0x14069d97d",
+      "iatVa": "0x140b053b8",
+      "name": "GetProcAddress"
+    },
+    {
+      "callVa": "0x14069d99e",
+      "iatVa": "0x140b053b8",
+      "name": "GetProcAddress"
+    },
+    {
+      "callVa": "0x14069d9bf",
+      "iatVa": "0x140b053b8",
+      "name": "GetProcAddress"
+    },
+    {
+      "callVa": "0x14069d9e0",
+      "iatVa": "0x140b053b8",
+      "name": "GetProcAddress"
+    },
+    {
+      "callVa": "0x14069da01",
+      "iatVa": "0x140b053b8",
+      "name": "GetProcAddress"
+    }
+  ],
+  "runtimeBranchEntryVerified": false,
+  "dllPathVerified": false,
+  "connectionVerified": false,
+  "currentSeratoIntegrationVerified": false,
+  "limits": [
+    "Selected factory case uses preloaded VID/PID comparison registers; no exhaustive reachability proof is claimed.",
+    "Retained data, factory and loader do not override discontinued support or prove connection eligibility.",
+    "LoadLibraryW uses a runtime global wide string; its populated path was not observed.",
+    "No vendor exports, transport, firmware, entitlement checks or application binary were executed or modified."
+  ],
+  "sources": {
+    "scripts/export-serato256-sl3-api-path.py": "0c4a5db10644d73e21ff9aa16cea91de61cbe6fa4201a2316d8c13cec7ac4cdf",
+    "scripts/export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20"
+  }
+}

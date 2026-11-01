@@ -1,0 +1,118 @@
+{
+  "utc": "2026-10-27T01:59:44.194674+00:00",
+  "scope": "Windows shared-memory message framing and real-process ownership/failure tests only",
+  "builds": [
+    {
+      "configuration": "Release",
+      "utc": "2026-10-27T01:58:56.7604910Z",
+      "ctestTests": [
+        "sl3_core_tests",
+        "sl3_playback_tests",
+        "sl3_audio_bridge_tests",
+        "sl3_duplex_tests",
+        "sl3_asio_buffer_tests",
+        "sl3_asio_com_tests",
+        "sl3_mailbox_tests",
+        "sl3_worker_process_tests",
+        "sl3_usbdk_plan",
+        "sl3_usbdk_rejects_modes",
+        "sl3_usbdk_rejects_duplex_capture",
+        "sl3_capture_plan",
+        "sl3_capture_rejects_modes"
+      ],
+      "mailbox": {
+        "testsPassed": true,
+        "librarySha256": "4191022E534066C52DE6034A4AC17DB73E31A2A5EF28723F042F7F81DC2B4EB8",
+        "testExecutableSha256": "CEF7E49875A3256C2A003B304B0CB0D8E9710782A139E4D94637D4B3D76033BA",
+        "maximumPayloadBytes": 32768,
+        "crossProcessFramingImplemented": true,
+        "continuousAudioImplemented": false,
+        "asioConnected": false
+      },
+      "workerProcess": {
+        "testsPassed": true,
+        "librarySha256": "002C0E40658921AAE95563B64215566382A11D89BA00ADF74B3A360D4BEB4C1F",
+        "fixtureSha256": "0AA0EB913F87228DE96D3443E092E8BD9E1DC66FB6C53F71204CB237FD9A23D5",
+        "testExecutableSha256": "846A9D587B98755096A9F2CA05CB3687917610172E14CCC8C85F22EE42916F2E",
+        "hardwareIntegrated": false,
+        "ipcImplemented": false
+      },
+      "buildScriptSha256": "47306B7235BB3BEA49391D0940E0C2708ABBC078ED5B733B96B4D65FED65BAF6"
+    },
+    {
+      "configuration": "Debug",
+      "utc": "2026-10-27T01:59:00.7932242Z",
+      "ctestTests": [
+        "sl3_core_tests",
+        "sl3_playback_tests",
+        "sl3_audio_bridge_tests",
+        "sl3_duplex_tests",
+        "sl3_asio_buffer_tests",
+        "sl3_asio_com_tests",
+        "sl3_mailbox_tests",
+        "sl3_worker_process_tests",
+        "sl3_usbdk_plan",
+        "sl3_usbdk_rejects_modes",
+        "sl3_usbdk_rejects_duplex_capture",
+        "sl3_capture_plan",
+        "sl3_capture_rejects_modes"
+      ],
+      "mailbox": {
+        "testsPassed": true,
+        "librarySha256": "63BC70DAF953B2B6256A5FF1F4EDFD5D1A605CBB5C7C00F9FD41FBAF6D262635",
+        "testExecutableSha256": "A7A964409574D594FCF876A340A20C4B40BD8FB97E8D68BE483A870997401ABA",
+        "maximumPayloadBytes": 32768,
+        "crossProcessFramingImplemented": true,
+        "continuousAudioImplemented": false,
+        "asioConnected": false
+      },
+      "workerProcess": {
+        "testsPassed": true,
+        "librarySha256": "736BA8774478726F97753728D47BD0108BCCB7CA7CB256C7ADD53F7F47BB8B2E",
+        "fixtureSha256": "5E357F8FC335BE98B4B7A7D3E41D7C1481894AE764A1DE5D91F156C8D2866F6A",
+        "testExecutableSha256": "6AC5203B56425DE2B49D567F5FAC21EF98BB635B34BA5D9D022E1C49A1BD2098",
+        "hardwareIntegrated": false,
+        "ipcImplemented": false
+      },
+      "buildScriptSha256": "47306B7235BB3BEA49391D0940E0C2708ABBC078ED5B733B96B4D65FED65BAF6"
+    }
+  ],
+  "sourceSha256": {
+    "src/windows/mailbox.hpp": "871da1dcc43ce2fcf73e85c1f98d5d3a481991ede87ace5c2e3bc8ecf0b109d9",
+    "src/windows/mailbox_layout.hpp": "4a2c97ce926e1c8a0886df02b5295abf9b11d984e86ec4a0ca05e80d68f6754e",
+    "src/windows/mailbox.cpp": "069279e11a30f49c7ce0d05d5b8c4a5cc578a47cb46102d35b065b5db81ae093",
+    "tests/native/mailbox_tests.cpp": "6dee276721cb3de4f56fd7d009e00c5997a3fa12e2bb5630bad075dbd03925df",
+    "tests/native/worker_fixture.cpp": "52c12c714d05ce78779a825a829ceb0e03b55fbebc4aa84f46c60bbc25f01872",
+    "CMakeLists.txt": "365289a60da8800887693ec6048f8016e2dd55b2958690d88afd59bdc75887c4",
+    "scripts/build-native.ps1": "47306b7235bb3bea49391d0940e0c2708abbc078ed5b733b96b4d65fed65baf6"
+  },
+  "additionalChecks": {
+    "sdkFreeTestsPassed": 11,
+    "sdkFreePathDeliberatelyAbsent": true,
+    "roundTripsPerMailboxTest": 100,
+    "payloadSizesBytes": [
+      0,
+      18,
+      18432,
+      32768
+    ],
+    "badRequestSequenceAndLengthRejected": true,
+    "badReplySequenceLengthVersionOpcodeRejected": true,
+    "wrongExpectedPeerRejected": true,
+    "timeoutWorkerExitAndLateReplyTested": true,
+    "hostDestructionWithPeerMappingTested": true,
+    "noFixtureProcessesRemain": true
+  },
+  "continuousAudioImplemented": false,
+  "audioSessionDispatcherImplemented": false,
+  "asioConnected": false,
+  "usbAccess": false,
+  "driverInstalled": false,
+  "audioOutputSubmissions": 0,
+  "limits": [
+    "Generic framing does not define audio commands or assert device availability",
+    "Control/batch API allocates, copies and waits; not a real-time callback channel",
+    "Per-user DACL and PID checks are not authentication against hostile same-user processes",
+    "Hardware audio, clock, latency, callback retirement and Serato integration remain unverified"
+  ]
+}

@@ -1,0 +1,283 @@
+{
+  "scope": "Conditional static removal notification and ordinary DeviceManager list-update path",
+  "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "classes": [
+    {
+      "type": ".?AVDispatchDeviceDeferredAction@composite@device@serato@@",
+      "vtable": "0x1431d6940",
+      "locator": "0x1433ed7b0",
+      "objectOffset": 0,
+      "checkedSlots": {
+        "0x8": "0x1421de890"
+      }
+    },
+    {
+      "type": ".?AVDeviceManager@@",
+      "vtable": "0x1431c3f28",
+      "locator": "0x1433e3048",
+      "objectOffset": 136,
+      "checkedSlots": {
+        "0x10": "0x142140060"
+      }
+    },
+    {
+      "type": ".?AV?$UserIO_TemplateMessageData@VDeviceList@@@data@message@serato@@",
+      "vtable": "0x1431c4090",
+      "locator": "0x1433e3070",
+      "objectOffset": 0,
+      "checkedSlots": {}
+    }
+  ],
+  "instructions": [
+    {
+      "va": "0x1421c0aa7",
+      "bytes": "e8f4d564fe",
+      "instruction": "call 0x14080e0a0"
+    },
+    {
+      "va": "0x1421c0ab2",
+      "bytes": "84c0",
+      "instruction": "test al, al"
+    },
+    {
+      "va": "0x1421c0ab4",
+      "bytes": "0f8475010000",
+      "instruction": "je 0x1421c0c2f"
+    },
+    {
+      "va": "0x1421c0ad0",
+      "bytes": "c7458f01000000",
+      "instruction": "mov dword ptr [rbp - 0x71], 1"
+    },
+    {
+      "va": "0x1421c0b1c",
+      "bytes": "4c8d4d8f",
+      "instruction": "lea r9, [rbp - 0x71]"
+    },
+    {
+      "va": "0x1421c0b2b",
+      "bytes": "e880db0100",
+      "instruction": "call 0x1421de6b0"
+    },
+    {
+      "va": "0x1421c0be4",
+      "bytes": "e8b7d40100",
+      "instruction": "call 0x1421de0a0"
+    },
+    {
+      "va": "0x1421de6c5",
+      "bytes": "488d057482ff00",
+      "instruction": "lea rax, [rip + 0xff8274]"
+    },
+    {
+      "va": "0x1421de71b",
+      "bytes": "8b06",
+      "instruction": "mov eax, dword ptr [rsi]"
+    },
+    {
+      "va": "0x1421de722",
+      "bytes": "894328",
+      "instruction": "mov dword ptr [rbx + 0x28], eax"
+    },
+    {
+      "va": "0x1421de935",
+      "bytes": "49634628",
+      "instruction": "movsxd rax, dword ptr [r14 + 0x28]"
+    },
+    {
+      "va": "0x1421de939",
+      "bytes": "83f80e",
+      "instruction": "cmp eax, 0xe"
+    },
+    {
+      "va": "0x1421de942",
+      "bytes": "488d0db716e2fd",
+      "instruction": "lea rcx, [rip - 0x21de949]"
+    },
+    {
+      "va": "0x1421de949",
+      "bytes": "8b9481e4eb1d02",
+      "instruction": "mov edx, dword ptr [rcx + rax*4 + 0x21debe4]"
+    },
+    {
+      "va": "0x1421de950",
+      "bytes": "4803d1",
+      "instruction": "add rdx, rcx"
+    },
+    {
+      "va": "0x1421de953",
+      "bytes": "ffe2",
+      "instruction": "jmp rdx"
+    },
+    {
+      "va": "0x1421de968",
+      "bytes": "488b5810",
+      "instruction": "mov rbx, qword ptr [rax + 0x10]"
+    },
+    {
+      "va": "0x1421de970",
+      "bytes": "e90a020000",
+      "instruction": "jmp 0x1421deb7f"
+    },
+    {
+      "va": "0x142140072",
+      "bytes": "488d0587000000",
+      "instruction": "lea rax, [rip + 0x87]"
+    },
+    {
+      "va": "0x142140091",
+      "bytes": "4c8d8178ffffff",
+      "instruction": "lea r8, [rcx - 0x88]"
+    },
+    {
+      "va": "0x142140098",
+      "bytes": "4883c118",
+      "instruction": "add rcx, 0x18"
+    },
+    {
+      "va": "0x1421400a4",
+      "bytes": "e877adffff",
+      "instruction": "call 0x14213ae20"
+    },
+    {
+      "va": "0x142140e75",
+      "bytes": "e846e7abfe",
+      "instruction": "call 0x140bff5c0"
+    },
+    {
+      "va": "0x142140e7a",
+      "bytes": "488b9e50010000",
+      "instruction": "mov rbx, qword ptr [rsi + 0x150]"
+    },
+    {
+      "va": "0x142140ed4",
+      "bytes": "488d8e60010000",
+      "instruction": "lea rcx, [rsi + 0x160]"
+    },
+    {
+      "va": "0x142140edb",
+      "bytes": "e8c00c0000",
+      "instruction": "call 0x142141ba0"
+    },
+    {
+      "va": "0x140c00a49",
+      "bytes": "488d5140",
+      "instruction": "lea rdx, [rcx + 0x40]"
+    },
+    {
+      "va": "0x140c00a50",
+      "bytes": "e8ab288aff",
+      "instruction": "call 0x1404a3300"
+    },
+    {
+      "va": "0x140bff674",
+      "bytes": "e8c7130000",
+      "instruction": "call 0x140c00a40"
+    },
+    {
+      "va": "0x140bff6d9",
+      "bytes": "e882010000",
+      "instruction": "call 0x140bff860"
+    },
+    {
+      "va": "0x142141c76",
+      "bytes": "e8d59bffff",
+      "instruction": "call 0x14213b850"
+    },
+    {
+      "va": "0x142141c8d",
+      "bytes": "4c8b5260",
+      "instruction": "mov r10, qword ptr [rdx + 0x60]"
+    },
+    {
+      "va": "0x142141cb1",
+      "bytes": "41ffd2",
+      "instruction": "call r10"
+    },
+    {
+      "va": "0x14213bf98",
+      "bytes": "488dbe60010000",
+      "instruction": "lea rdi, [rsi + 0x160]"
+    },
+    {
+      "va": "0x14213c1f4",
+      "bytes": "660f6f0574820801",
+      "instruction": "movdqa xmm0, xmmword ptr [rip + 0x1088274]"
+    },
+    {
+      "va": "0x14213c1fc",
+      "bytes": "f30f7f45e8",
+      "instruction": "movdqu xmmword ptr [rbp - 0x18], xmm0"
+    },
+    {
+      "va": "0x14213c2b2",
+      "bytes": "8b45e8",
+      "instruction": "mov eax, dword ptr [rbp - 0x18]"
+    },
+    {
+      "va": "0x14213c2b5",
+      "bytes": "894718",
+      "instruction": "mov dword ptr [rdi + 0x18], eax"
+    },
+    {
+      "va": "0x14213b8e6",
+      "bytes": "488d05a3870801",
+      "instruction": "lea rax, [rip + 0x10887a3]"
+    },
+    {
+      "va": "0x14213b8ed",
+      "bytes": "498907",
+      "instruction": "mov qword ptr [r15], rax"
+    }
+  ],
+  "reports": {
+    "serato500-usb-removal-dispatch-01.json": {
+      "sha256": "1de2cf1da0f76336c5c46f189d7baf63ad87b3cbbf7e887ab1143add1c6b5f87",
+      "selectedRanges": [
+        "1421c0970:1421c0dab"
+      ]
+    },
+    "serato500-usb-removal-dispatch-02.json": {
+      "sha256": "9650e006d1a0d0784adf6dec1d5210ab204961cfdb2ed5cff8e8c550f93c0ccd",
+      "selectedRanges": [
+        "142140060:1421400fb"
+      ]
+    },
+    "serato500-usb-removal-dispatch-03.json": {
+      "sha256": "301df14653179c3fc96c6530a9a58b4978c4c31d08472f00ace60a0bd712a5f6",
+      "selectedRanges": [
+        "142140100:142140fab"
+      ]
+    },
+    "serato500-usb-removal-dispatch-04.json": {
+      "sha256": "26a7e090812d00d268cccbbdbc5e0e619dec7c1887a729886483008ce2d28608",
+      "selectedRanges": [
+        "140bff5c0:140bff857",
+        "142141ba0:142141cec"
+      ]
+    }
+  },
+  "conditionalDispatch": {
+    "compositeFlagOffset": 96,
+    "whenNonzero": "Queue action 1",
+    "actionObserverSlot": 16,
+    "managerReceiverOffset": 136,
+    "scheduledCallback": "0x142140100"
+  },
+  "ordinaryCallbackPath": {
+    "collectionOffset": 336,
+    "compositeKeyStringOffset": 64,
+    "publicationStateOffset": 352,
+    "messageId": 735,
+    "payloadType": "UserIO_TemplateMessageData<DeviceList>"
+  },
+  "audioCloseProven": false,
+  "actualSL3RemovalDispatchCaptured": false,
+  "limits": [
+    "Composite flag +0x60 is a raw checked predicate; its full lifecycle semantics are not established here",
+    "Callback has earlier conditional paths/returns; ordinary collection removal is not universal",
+    "Collection publication is not a direct IASIO stop/dispose/Release call",
+    "No exhaustive subscriber recovery, runtime observer proof or scheduling deadline",
+    "Current SL3 admission and UsbDk identity churn remain unverified; no application/resource/security change"
+  ]
+}

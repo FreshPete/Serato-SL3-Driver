@@ -1,0 +1,12 @@
+[
+  {
+    "TimeCreated": "2026-10-26T22:18:35.2437825+00:00",
+    "Id": 411,
+    "Message": "Device USB\\VID_1CC5&PID_0001\\SL3.01.00 had a problem starting.\r\n\r\nDriver Name: oem152.inf\r\nClass GUID: {88bae032-5a81-49f0-bc3d-a4ff138216d6}\r\nService: WINUSB\r\nLower Filters: \r\nUpper Filters: \r\nProblem: 0xA\r\nProblem Status: 0xC000009E"
+  },
+  {
+    "TimeCreated": "2026-10-26T22:18:33.5284038+00:00",
+    "Id": 400,
+    "Message": "Device USB\\VID_1CC5&PID_0001\\SL3.01.00 was configured.\r\n\r\nDriver Name: oem152.inf\r\nDriver Package ID: sl3winusb.inf_amd64_3091160257b90090\r\nClass GUID: {88bae032-5a81-49f0-bc3d-a4ff138216d6}\r\nDriver Date: 10/26/2026\r\nDriver Version: 0.1.0.0\r\nDriver Provider: SL3 Compatibility Research\r\nDriver Section: SL3_WinUSB.NT\r\nDriver Rank: 0xFF0001\r\nMatching Device ID: USB\\VID_1CC5&PID_0001\r\nOutranked Drivers: oem136.inf:USB\\VID_1CC5&PID_0001:00FF0001\r\nDevice Updated: true\r\nParent Device: USB\\ROOT_HUB30\\7&124f193f&0&0"
+  }
+]

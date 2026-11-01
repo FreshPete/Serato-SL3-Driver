@@ -1,0 +1,7 @@
+{
+  "status": "UnknownError",
+  "signer": "CN=Windows Internal Build Tools CodeSign, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+  "message": "A certificate chain processed, but terminated in a root certificate which is not trusted by the trust provider.",
+  "sha256": "82c302fc9069783674b51665ce80e769f8500db7fc737a4b8a3773c521950b86",
+  "packageVerification": "dotnet nuget verify --all exit 0; see wdk-nuget-verification.txt"
+}

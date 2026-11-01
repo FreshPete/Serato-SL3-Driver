@@ -1,0 +1,253 @@
+{
+  "scope": "Recheck saved capture content and byte-exact WAVs; no live audio/device access.",
+  "captures": [
+    {
+      "reportedRateHz": 44100,
+      "frames": 1411,
+      "pcmBytes": 25398,
+      "pcmSha256": "22aa87a0aced608d783879532b49649aeb4e9714a4ee74eeb0a00c73c1422d6a",
+      "captureRecordSha256": "2c2e8d18e31de9ca72fb202a330d44897ac3b74d98ab0ef5722cd124afb6c6ac",
+      "analysisSha256": "ef2b80b53fa21a779080c9aa5acc59bb4402a15a39b10c47f9633829d5421dd0",
+      "wavSha256": "d84242525cd44c40db36410a3f785bf0bdba87835ef5035ac4935a249b00b90d",
+      "packetFrameCountHistogram": {
+        "5": 125,
+        "6": 131
+      },
+      "nominalRetainedDurationMs": 31.99546485260771,
+      "fullMaximumMagnitudeByStreamChannel": [
+        7876993,
+        7831159,
+        7568891,
+        8386111,
+        8367222,
+        8232234
+      ],
+      "fullFirstMaximumMagnitudeFrameByStreamChannel": [
+        1,
+        3,
+        2,
+        6,
+        10,
+        7
+      ],
+      "postHocPrefixPackets": 2,
+      "postHocBoundaryFrame": 11,
+      "remainingMaximumMagnitudeByStreamChannel": [
+        203,
+        220,
+        994,
+        1118,
+        991,
+        1116
+      ],
+      "remainingAcRmsByStreamChannel": [
+        51.21412663852561,
+        55.559173083978756,
+        276.4505044823963,
+        323.8443496590954,
+        286.261687570863,
+        333.9755462383497
+      ],
+      "largestFourPacketPeaks": [
+        {
+          "packetOrdinal": 1,
+          "request": 0,
+          "packet": 1,
+          "firstRetainedFrame": 5,
+          "retainedFrames": 6,
+          "maximumMagnitudeByStreamChannel": [
+            7796730,
+            7339495,
+            4231939,
+            8386111,
+            8367222,
+            8232234
+          ]
+        },
+        {
+          "packetOrdinal": 0,
+          "request": 0,
+          "packet": 0,
+          "firstRetainedFrame": 0,
+          "retainedFrames": 5,
+          "maximumMagnitudeByStreamChannel": [
+            7876993,
+            7831159,
+            7568891,
+            6292097,
+            7238873,
+            5694926
+          ]
+        },
+        {
+          "packetOrdinal": 76,
+          "request": 1,
+          "packet": 12,
+          "firstRetainedFrame": 419,
+          "retainedFrames": 5,
+          "maximumMagnitudeByStreamChannel": [
+            102,
+            63,
+            386,
+            1118,
+            370,
+            315
+          ]
+        },
+        {
+          "packetOrdinal": 170,
+          "request": 2,
+          "packet": 42,
+          "firstRetainedFrame": 937,
+          "retainedFrames": 5,
+          "maximumMagnitudeByStreamChannel": [
+            146,
+            58,
+            606,
+            370,
+            377,
+            1116
+          ]
+        }
+      ],
+      "railSamples": 0,
+      "captureClaimsContinuity": false,
+      "wiringKnown": false
+    },
+    {
+      "reportedRateHz": 48000,
+      "frames": 1534,
+      "pcmBytes": 27612,
+      "pcmSha256": "9a88d9b240204cfdadca9e284aa72e1b6290c0901e6b06154a48ac9feae60827",
+      "captureRecordSha256": "302aa53d94e5169c2eb0223f9cc5cd08c47790cb1a0192a9c19b2128669ab8c0",
+      "analysisSha256": "dfe4359e498063d325564d85df81f68cea9bbfb2431283e7fcd634fd087f68a0",
+      "wavSha256": "768c0b2948ff9816983e4c5c17ab933e9c4272a4e122009edd43dede12eeb866",
+      "packetFrameCountHistogram": {
+        "5": 9,
+        "6": 240,
+        "7": 7
+      },
+      "nominalRetainedDurationMs": 31.958333333333332,
+      "fullMaximumMagnitudeByStreamChannel": [
+        128511,
+        165120,
+        1806,
+        1673,
+        1587,
+        1953
+      ],
+      "fullFirstMaximumMagnitudeFrameByStreamChannel": [
+        5,
+        5,
+        829,
+        395,
+        1305,
+        1327
+      ],
+      "postHocPrefixPackets": 2,
+      "postHocBoundaryFrame": 11,
+      "remainingMaximumMagnitudeByStreamChannel": [
+        159,
+        191,
+        1806,
+        1673,
+        1587,
+        1953
+      ],
+      "remainingAcRmsByStreamChannel": [
+        48.8078227101459,
+        53.93468732900637,
+        659.7745202917165,
+        710.0551525733323,
+        566.5045667553309,
+        795.0264281063439
+      ],
+      "largestFourPacketPeaks": [
+        {
+          "packetOrdinal": 1,
+          "request": 0,
+          "packet": 1,
+          "firstRetainedFrame": 5,
+          "retainedFrames": 6,
+          "maximumMagnitudeByStreamChannel": [
+            128511,
+            165120,
+            408,
+            1146,
+            717,
+            370
+          ]
+        },
+        {
+          "packetOrdinal": 221,
+          "request": 3,
+          "packet": 29,
+          "firstRetainedFrame": 1324,
+          "retainedFrames": 6,
+          "maximumMagnitudeByStreamChannel": [
+            102,
+            52,
+            1419,
+            946,
+            1501,
+            1953
+          ]
+        },
+        {
+          "packetOrdinal": 218,
+          "request": 3,
+          "packet": 26,
+          "firstRetainedFrame": 1306,
+          "retainedFrames": 6,
+          "maximumMagnitudeByStreamChannel": [
+            71,
+            60,
+            1256,
+            928,
+            1517,
+            1941
+          ]
+        },
+        {
+          "packetOrdinal": 220,
+          "request": 3,
+          "packet": 28,
+          "firstRetainedFrame": 1318,
+          "retainedFrames": 6,
+          "maximumMagnitudeByStreamChannel": [
+            38,
+            87,
+            1214,
+            936,
+            1218,
+            1821
+          ]
+        }
+      ],
+      "railSamples": 0,
+      "captureClaimsContinuity": false,
+      "wiringKnown": false
+    }
+  ],
+  "focusedSoftwareTestsPassed": 12,
+  "testLogSha256": "0d235adfffeeab6dfd3b6d16d2dc539bf397c548ab461963510b4328a9c9fa98",
+  "testSourceSha256": "ec3396e662e1f3f5d42fca8e66bbe103b4f2c7e27e989d2ee48834c0f9c40007",
+  "analyserSha256": "f70e84e7c2a8285e79c897ba289bf8b55a534072e1229e6289b376788065eb90",
+  "exporterSha256": "ae198f0d4549a79582536158c325f46a35b1500c1d71ec7ab2017a5f013e3106",
+  "historicalPhysicalSummarySha256": "71ea0a16e843102d608deb0ded9f37adf4e680f0f11d0d22a0fe21328df20453",
+  "historicalCaptureWorkerSha256": "7341FDC3D254E7E5575B18B832B835C929923E1FA815D61C63665DEDA0A4DC0F",
+  "newDeviceOperation": false,
+  "playbackRequested": false,
+  "samplesDiscarded": 0,
+  "warmupOrDiscardPolicyValidated": false,
+  "analogueSignalVerified": false,
+  "physicalJackMappingVerified": false,
+  "currentWorkerAudioVerified": false,
+  "loopbackLatencyVerified": false,
+  "limits": [
+    "The high-magnitude early samples are real saved values; their physical/firmware/transport cause is unproved.",
+    "Input wiring and intended signal were not recorded for these captures.",
+    "Both records explicitly lack verified continuity; WAV timestamps cannot recreate it.",
+    "These earlier finite captures do not validate the current worker or a stream-start suppression policy."
+  ]
+}

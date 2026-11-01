@@ -1,0 +1,61 @@
+{
+  "generatedUtc": "2026-10-30T11:32:06.282885+00:00",
+  "scope": "Offline parsed-reply comparison only",
+  "originalApplicationSha256": "ba8641d0329fe0c955147d2b45f247eeea82ac0f812fe30a339834dbe0c0a503",
+  "originalInstructionChecks": [
+    "140691a68: mov edx, 8",
+    "140691a90: call 0x14054f520",
+    "140691aa2: cmp rcx, qword ptr [rsp + 0x88]",
+    "140691ab6: cmove eax, edx",
+    "14054f27e: mov eax, 0x34",
+    "14054f283: div r9d",
+    "14054f29b: lea esi, [rax + 6]",
+    "14054f2c0: add r11d, 0x9e3779b9",
+    "14054f37e: jg 0x14054f2c0",
+    "14054f565: movzx eax, byte ptr [rsi + 3]",
+    "14054f569: mov byte ptr [rdi], al",
+    "14054f579: movzx eax, byte ptr [rsi]",
+    "14054f57c: mov byte ptr [rdi + 3], al",
+    "14054f5ed: movzx ecx, byte ptr [rdx + r14 + 3]",
+    "14054f65f: movzx eax, byte ptr [rdx + rbx + 3]"
+  ],
+  "focusedTransformReportSha256": "d189aeea7dc01faf028979e946cde9f7a5a42ac5212a50e5d20110563bef7bb8",
+  "sourceSha256": {
+    "src/core/timer_verification.hpp": "79df9844d5031b4d7d03600917070e9b7516a9c7dc31ebb97ff0d2ba962bcefa",
+    "src/core/timer_verification.cpp": "e2b21f044646b8b38ddc0dcfb9ed85e1730bb0ea5f9a7a006c56f77543785f02",
+    "tests/native/timer_verification_tests.cpp": "6c08ac3cea4d0599fa7df67e64c8a6e79630c1c9b5fff6b70b3d058d218548ab"
+  },
+  "syntheticReferenceVectors": 4,
+  "nativeBuilds": [
+    {
+      "configuration": "Release",
+      "testsPassed": 29,
+      "manifestSha256": "f900aee2e51555e53c0c0394c392358ffbf202066839fb707156b81ffd94079e",
+      "ctestLogSha256": "4d7cb6d912e2202482a7bcb35327420cd3e82c1dec9f89fcbc7520c403f88112",
+      "timerTestSha256": "91bc24cdb548109ee39ba36dedd03dd18fd2c67f59ab3461591fc4f2a8a25eb2"
+    },
+    {
+      "configuration": "Debug",
+      "testsPassed": 29,
+      "manifestSha256": "d77029e3cf064a84a76726254f427ce23c421dcc62a3eab46cbdd58dce9a1b04",
+      "ctestLogSha256": "996ad5e7eea2251adc8b8ab5fdefd19e36650d7bb6d655f32c904e1976dbc027",
+      "timerTestSha256": "81e03913d794cb4fa6067a7569fb5e3ebb1aec98ed193ea517064fcd0817d945"
+    }
+  ],
+  "sdkFreeTestsPassed": 21,
+  "sdkFreeLogSha256": "86542ac32f7dc9e95f54621a1845ccdaf1d2003e754890a585041c50fdd3e6a1",
+  "pythonTestsPassed": 42,
+  "pythonLogSha256": "40ac2fa77af99fac7c1ea742c7e55e9c48fca6a6c52517bde4dd79adcc8f6221",
+  "algorithmReference": "https://www.cl.cam.ac.uk/ftp/users/djw3/xxtea.ps",
+  "runtimeCallers": [],
+  "vendorKeyEmbedded": false,
+  "deviceResponseEmitted": false,
+  "physicalTimerExchangeTested": false,
+  "currentSeratoHandshakeImplemented": false,
+  "limits": [
+    "Synthetic vectors verify arithmetic and byte order, not firmware behavior",
+    "Caller supplies the appropriate key; no original key is read or redistributed by this verifier",
+    "An Event match does not establish physical provenance, product/account entitlement or audio readiness",
+    "No runtime/IPC/CLI hook, driver install, USB command or security change was introduced"
+  ]
+}

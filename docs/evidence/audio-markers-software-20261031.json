@@ -1,0 +1,23 @@
+{
+  "scope": "Offline synthetic-file analysis only; no device access or physical audio/latency result",
+  "softwareCasesPassed": 14,
+  "actualCliSyntheticRates": [
+    44100,
+    48000
+  ],
+  "numpyVersion": "2.3.4",
+  "physicalChannelMappingVerified": false,
+  "measuredLatencyAvailable": false,
+  "files": {
+    "scripts/analyse-audio-markers.py": "56ba76ccf5483b9300d339d0ec271d7748ea1906801192312b63d29d246d291c",
+    "tests/test_audio_markers.py": "a641a80a68f408701e417372521ec0611ba6c65fd65a100f5a14db2195fcb137",
+    "scripts/requirements-analysis.txt": "5e2bd75f6a083cb2334e4c3a929ea6f8ae3bedbd66d4f2f7ecf26fd6c5a0fd72",
+    "analysis/audio-marker-tests-20261031.log": "10483c9976c7892190d5dbfb3d2ab5143e55a12207d8c8f1f68728a61968a529",
+    "analysis/audio-marker-offline-20261031/reference-44100.wav": "f182ce6dad404fa6eac5259950ef234b211b58786fffe1e53d22bf51f301069d",
+    "analysis/audio-marker-offline-20261031/reference-48000.wav": "11db58fab2a41b55f206944d73ad896a80af30e8c20a3ffa8b39d8fbef8bfb3e",
+    "analysis/audio-marker-offline-20261031/SYNTHETIC-analysis-bounded-read-44100.json": "9da0da97df3f8699373fcce135fbbf533683f26e7e1f7751a4f903817ce82e8c",
+    "analysis/audio-marker-offline-20261031/SYNTHETIC-analysis-bounded-read-48000.json": "3367dde6bf240286b96e15b184504061e14c36710fc1dd59b28929ee6dfbe025",
+    "analysis/audio-marker-offline-20261031/SYNTHETIC-capture-44100.wav": "8b2a9b80217e0b1c5c8cf5cd8802c883c675453b175d05a71cb21812a3d5e527",
+    "analysis/audio-marker-offline-20261031/SYNTHETIC-capture-48000.wav": "cb9e3bedf497ddd619b428f6386b0d6f6c4360b30033198c963f1c53a2a800c2"
+  }
+}

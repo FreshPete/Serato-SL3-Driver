@@ -1,0 +1,37 @@
+{
+  "preparedUtc": "2026-10-26T22:14:32.7430076Z",
+  "subject": "CN=SL3 WinUSB Local Development Only",
+  "thumbprint": "11538DF7C55A5BB2DBFE7160C45ECC804F3BB077",
+  "certificateSha256": "ee80d5551969f4a1b2007d13c847d431d438c434d09b0df173fa1b88d4640f50",
+  "notBeforeUtc": "2026-10-26T22:09:32.0000000Z",
+  "notAfterUtc": "2026-11-02T22:14:32.0000000Z",
+  "privateKey": "Non-exportable; CurrentUser/My only",
+  "enhancedKeyUsage": [
+    "1.3.6.1.5.5.7.3.3"
+  ],
+  "catalogueStatusBeforeTrust": "UnknownError",
+  "trustStores": [
+    {
+      "store": "Cert:\\LocalMachine\\Root",
+      "containsCertificate": false
+    },
+    {
+      "store": "Cert:\\LocalMachine\\TrustedPublisher",
+      "containsCertificate": false
+    },
+    {
+      "store": "Cert:\\CurrentUser\\Root",
+      "containsCertificate": false
+    },
+    {
+      "store": "Cert:\\CurrentUser\\TrustedPublisher",
+      "containsCertificate": false
+    }
+  ],
+  "files": {
+    "sl3winusb.inf": "49024cdfa21c0f501ab8105bf9a719fe249da42baaa469f85160316a91202e28",
+    "sl3winusb.cat": "dd2712dde8ab1f40851e9c019aaf22d5d5da958c7278fb8f516e49fd8de76c47",
+    "sl3-winusb-development.cer": "ee80d5551969f4a1b2007d13c847d431d438c434d09b0df173fa1b88d4640f50"
+  },
+  "scope": "Development INF/catalogue only; no replacement SYS, firmware, boot-policy change, trust import or driver installation."
+}

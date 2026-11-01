@@ -1,0 +1,154 @@
+{
+  "scope": "Actual offline ETL decoding and independent software tests; no new USB operation, UAC prompt, trace session, privilege or security change",
+  "files": [
+    {
+      "path": "scripts/inspect-kernel-image-rundown.py",
+      "sha256": "44d2c9a67bfd1adc446ebcad4646a17d9c9e143fcb66242bad2744f0fb532df8",
+      "bytes": 12046
+    },
+    {
+      "path": "scripts/test-kernel-image-rundown.py",
+      "sha256": "56a468a45969742afb7029d93b6015f339bcdc4b3238be8b72f357fb4315039f",
+      "bytes": 8447
+    },
+    {
+      "path": "analysis/perfview-image-rundown-inspection.json",
+      "sha256": "24e40cdde7f31ec04aeecb902057837541ff4959d942f50f99831f9cfcb06bbc",
+      "bytes": 130160
+    },
+    {
+      "path": "analysis/reopen-image-rundown-inspection.json",
+      "sha256": "9e5e819d9b7ba7d558d35b71ead0cc85f8264c75546f61a29ab9fe861c7938d9",
+      "bytes": 2280
+    },
+    {
+      "path": "analysis/kernel-image-rundown-cli-negatives.json",
+      "sha256": "56b32260c11a7313cca67ea11efb163422de1dabe052c1d84fff72db07aa48e2",
+      "bytes": 628
+    },
+    {
+      "path": "analysis/kernel-image-rundown-tests.log",
+      "sha256": "519f7dbbafe072186393932fa5bf2c9d371fbec143e8343e621b7242fc65be10",
+      "bytes": 1376
+    },
+    {
+      "path": "analysis/loaded-driver-query-normal-token.json",
+      "sha256": "2fbf439ae257656401440ede30ea515db3700e89914e330c38bbad98e97ea424",
+      "bytes": 344
+    },
+    {
+      "path": "artifacts/references/perfview-image-rundown/acquisition.json",
+      "sha256": "3d4576c1804a9174cc7ffe4d311d2e91219fcdf04e4ae39d5717248b04f9b980",
+      "bytes": 1526
+    }
+  ],
+  "normalTokenModuleQuery": {
+    "scope": "Actual normal-token read-only driver enumeration; no privilege adjustment or device operation",
+    "tokenQueried": true,
+    "elevated": false,
+    "elevationType": 3,
+    "apiSucceeded": true,
+    "error": null,
+    "bytesNeeded": 2072,
+    "reportedEntries": 259,
+    "nonNullBases": 0,
+    "loadedHubImageIdentityVerified": false
+  },
+  "publicSampleAcquisition": {
+    "scope": "Microsoft public historical test input, not local SL3 hardware evidence",
+    "repository": "https://github.com/microsoft/perfview",
+    "commit": "9f071a5cb2e70cdfee13abc510344ab1e8840c90",
+    "license": "MIT",
+    "files": [
+      {
+        "path": "artifacts/references/perfview-image-rundown/net.4.5.2.x64.etl.zip",
+        "url": "https://raw.githubusercontent.com/microsoft/perfview/9f071a5cb2e70cdfee13abc510344ab1e8840c90/src/TraceEvent/TraceEvent.Tests/inputs/net.4.5.2.x64.etl.zip",
+        "bytes": 3846762,
+        "sha256": "7ff6701d6efe27f755678d009e78c765ae7cdf2255610863ddf4605cff29cbc8"
+      },
+      {
+        "path": "artifacts/references/perfview-image-rundown/KernelTraceEventParser.cs",
+        "url": "https://raw.githubusercontent.com/microsoft/perfview/9f071a5cb2e70cdfee13abc510344ab1e8840c90/src/TraceEvent/Parsers/KernelTraceEventParser.cs",
+        "bytes": 565509,
+        "sha256": "2245ccc62b0d933190068a18344bc64749a2893bd9740a79706ba7fe5e86c778"
+      },
+      {
+        "path": "artifacts/references/perfview-image-rundown/LICENSE.TXT",
+        "url": "https://raw.githubusercontent.com/microsoft/perfview/9f071a5cb2e70cdfee13abc510344ab1e8840c90/LICENSE.TXT",
+        "bytes": 1116,
+        "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310"
+      }
+    ],
+    "extractedEtl": {
+      "path": "artifacts/references/perfview-image-rundown/net.4.5.2.x64.etl",
+      "bytes": 4879401,
+      "sha256": "50da7f725f80f88a7622b37f9826844a790cb0c4f64e351fa1f38cf24916889a"
+    }
+  },
+  "publicSample": {
+    "sourceEtlSha256": "50da7f725f80f88a7622b37f9826844a790cb0c4f64e351fa1f38cf24916889a",
+    "decodedXmlSha256": "6d20e843ffc89ff16a443cc3a8f8d24560de7eacec0de1c7468a50ba2a514e30",
+    "decoderSha256": "a83fe5ce5f57fafdf5dced6ef3ba8be143b474658d6224adb51c42bfcec77464",
+    "events": 179474,
+    "imageEvents": 3598,
+    "nonKernelImageEvents": 3314,
+    "otherImageOpcodes": 2,
+    "kernelImageOperations": {
+      "DCStart": 141,
+      "DCEnd": 141
+    },
+    "sourceReportsNoLoss": true,
+    "comparison": {
+      "expected": {
+        "kernelPath": "\\SystemRoot\\System32\\drivers\\USBHUB3.SYS",
+        "sizeOfImage": 733184,
+        "timeDateStamp": 180548141,
+        "imageChecksum": 781464,
+        "diskSha256": "f93fa3a32037c597fd19ca9d65f59e53a1e337123582ed2479d5c16a4848df16"
+      },
+      "targetPresent": false,
+      "matchingRundownMetadata": false
+    }
+  },
+  "consistentSampleKernelImagePairs": 141,
+  "savedReopen": {
+    "sourceEtlSha256": "f8f5b31c79988232ad3f1a9ce4d1f2b7e7ddfeeaf7accea43350adbbf7ad6a41",
+    "decodedXmlSha256": "8d3f834be39c188be2625cd2cbf568e30f95caa5378f9567e4d37d632cffaccc",
+    "events": 14368,
+    "imageEvents": 0,
+    "kernelImageOperations": {},
+    "sourceReportsNoLoss": true,
+    "comparison": {
+      "expected": {
+        "kernelPath": "\\SystemRoot\\System32\\drivers\\USBHUB3.SYS",
+        "sizeOfImage": 733184,
+        "timeDateStamp": 180548141,
+        "imageChecksum": 781464,
+        "diskSha256": "f93fa3a32037c597fd19ca9d65f59e53a1e337123582ed2479d5c16a4848df16"
+      },
+      "targetPresent": false,
+      "matchingRundownMetadata": false
+    }
+  },
+  "independentTestsPassed": 10,
+  "actualNegativeCliChecksPassed": 3,
+  "currentUsbHubImageMetadata": {
+    "kernelPath": "\\SystemRoot\\System32\\drivers\\USBHUB3.SYS",
+    "sizeOfImage": 733184,
+    "timeDateStamp": 180548141,
+    "imageChecksum": 781464,
+    "diskSha256": "f93fa3a32037c597fd19ca9d65f59e53a1e337123582ed2479d5c16a4848df16"
+  },
+  "loadedMemoryIdentityVerified": false,
+  "usbWindowQualified": false,
+  "readinessAdmission": false,
+  "productionNativeInputsChanged": false,
+  "productionNativeSuitesRepeated": false,
+  "notes": [
+    "The 141 public-sample pairs are other kernel modules, not USBHUB3 or evidence from this PC.",
+    "The saved failed-reopen trace cannot retrospectively bind the loaded hub image.",
+    "The normal-token query was an actual read-only call; its all-null results provide no module identity.",
+    "Fresh kernel image capture, USB interval correlation, normal-token device access, repeated opens and current Serato DVS still require actual evidence.",
+    "The separate ten-test suite does not change the archived 140-test production record."
+  ]
+}

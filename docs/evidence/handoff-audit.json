@@ -1,0 +1,81 @@
+{
+  "generatedUtc": "2026-10-27T07:36:39.851793+00:00",
+  "scope": "Full objective remains unmet",
+  "hostSnapshotSha256": "38b704d9d58e8fbe92854e75657a2f3c59bf6368f4c1e3e547bf9eed5dadf08a",
+  "hostSnapshot": {
+    "utc": "2026-10-27T07:34:21.9500282Z",
+    "scope": "Read-only handoff audit; no driver/helper/app execution",
+    "devices": [
+      {
+        "status": "Error",
+        "class": "MEDIA",
+        "name": "Rane SL3",
+        "problemCode": 39,
+        "inf": "oem136.inf",
+        "service": "strmdrv"
+      }
+    ],
+    "usbDkDrivers": [],
+    "secureBoot": {
+      "known": false,
+      "reason": "Unable to set proper privileges. Access was denied."
+    },
+    "developmentTrustEntries": [],
+    "rebuiltComRegistration": {
+      "localMachine": false,
+      "currentUser": false
+    },
+    "adjacentProductionConfiguration": {
+      "release": false,
+      "debug": false
+    },
+    "installedSeratoSha256": "66E7AF01DDFD151814F51BF44BD8472E5C94F54B3CE12119EF70B7CBAB433265"
+  },
+  "nativeBuilds": [
+    {
+      "configuration": "Release",
+      "testsPassed": 28,
+      "manifestSha256": "daf2979e5fd0b0c9745851f8101f3eb1a854b158a58c14978f5c7f2d96f0a52d",
+      "ctestLogSha256": "cbaa206da8e7e49712375d31f8ad43546b496c90d76673c3ecf2fb815ac2907d"
+    },
+    {
+      "configuration": "Debug",
+      "testsPassed": 28,
+      "manifestSha256": "ccbfccd9d8a9aadfa39b8dd547f15ee0308d1c048410395b7e1ad4bb2ed14e11",
+      "ctestLogSha256": "8bcdbb1b5cdf93cb95d3962b485e4a592eee98b4b249ec3ebcbda6db01935efd"
+    }
+  ],
+  "python": {
+    "testsPassed": 36,
+    "logSha256": "164f3c736c851d776dbf422163cf2c4d06365842b120b01fb5f41d8e1d149142",
+    "rerunForAudit": false
+  },
+  "sdkFree": {
+    "testsPassed": 20,
+    "logSha256": "4acb3eeddda3e29e52681aea89a27c51f92b1fef99ab242fbcc62e162bd8a8ab",
+    "rerunForAudit": false
+  },
+  "acceptanceGates": {
+    "normalSecurityPhysicalTransport": "incomplete: original code 39; candidate UsbDk absent",
+    "physicalCapturePlayback": "unverified: original native code and simulated tests only",
+    "rateAndControls": "partial: earlier 44100 getter observed; setter/routing/real response unverified",
+    "hardwareAsio": "unverified: real COM/IASIO simulated sessions; no deployment or measured timing profile",
+    "currentSeratoIntegration": "incomplete: retained discontinued path; external descriptor/handshake route unestablished",
+    "twoDeckDvs": "unverified: no physical calibration/control-vinyl session",
+    "latencyAndStability": "unverified: no measured loopback, four-hour run or required recovery cycles",
+    "productionInstallationRemoval": "incomplete: no release configuration/registration/admitted hardware transport",
+    "macosTahoe": "prepared only: no target Mac, native build/runtime or Core Audio/DVS verification",
+    "reviewableProgressReport": "provided in STATUS.md; does not establish the full rebuild"
+  },
+  "complete": false,
+  "officialSourcesChecked": [
+    "https://serato.com/dj/hardware/rane-sl3",
+    "https://support.rane.com/en/support/solutions/articles/69000829417-rane-dj-hardware-won-t-connect-to-serato-",
+    "https://support.serato.com/hc/en-us/articles/203401184-Does-my-mixer-controller-interface-support-DVS-in-Serato-DJ-Pro"
+  ],
+  "limits": [
+    "Fresh non-elevated Secure Boot query is unknown, not false; earlier elevated enabled evidence is historical",
+    "No new device access, trust/install/binding/security change, vendor execution or firmware operation",
+    "Software tests do not prove physical transport/audio, timing, application integration or DVS"
+  ]
+}

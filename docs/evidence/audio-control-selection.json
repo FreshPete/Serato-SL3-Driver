@@ -1,0 +1,351 @@
+{
+  "scope": "Original-byte contract and tested native diagnostic-only selection wiring; no physical setting test",
+  "asioSha256": "e3d88039547b70915b1a9bc9e3e3f7dba32aaa9bc3ce8fd51616565ea1734141",
+  "kernelSha256": "e8e992a8ece1a57eab337d815a406b9f815954176c03db545fcf6d951ec615f5",
+  "checkedInstructions": [
+    {
+      "binary": "ASIO",
+      "va": "0x180007611",
+      "bytes": "4963f1",
+      "instruction": "movsxd rsi, r9d"
+    },
+    {
+      "binary": "ASIO",
+      "va": "0x180007614",
+      "bytes": "498bf8",
+      "instruction": "mov rdi, r8"
+    },
+    {
+      "binary": "ASIO",
+      "va": "0x180007617",
+      "bytes": "8bda",
+      "instruction": "mov ebx, edx"
+    },
+    {
+      "binary": "ASIO",
+      "va": "0x180007630",
+      "bytes": "488d4c2442",
+      "instruction": "lea rcx, [rsp + 0x42]"
+    },
+    {
+      "binary": "ASIO",
+      "va": "0x18000763a",
+      "bytes": "4c8bc6",
+      "instruction": "mov r8, rsi"
+    },
+    {
+      "binary": "ASIO",
+      "va": "0x18000763d",
+      "bytes": "488bd7",
+      "instruction": "mov rdx, rdi"
+    },
+    {
+      "binary": "ASIO",
+      "va": "0x18000764f",
+      "bytes": "4088742441",
+      "instruction": "mov byte ptr [rsp + 0x41], sil"
+    },
+    {
+      "binary": "ASIO",
+      "va": "0x180007670",
+      "bytes": "885c2440",
+      "instruction": "mov byte ptr [rsp + 0x40], bl"
+    },
+    {
+      "binary": "ASIO",
+      "va": "0x180007674",
+      "bytes": "e8c7271800",
+      "instruction": "call 0x180189e40"
+    },
+    {
+      "binary": "ASIO",
+      "va": "0x180007679",
+      "bytes": "33db",
+      "instruction": "xor ebx, ebx"
+    },
+    {
+      "binary": "ASIO",
+      "va": "0x18000767b",
+      "bytes": "4c8d4c2440",
+      "instruction": "lea r9, [rsp + 0x40]"
+    },
+    {
+      "binary": "ASIO",
+      "va": "0x180007683",
+      "bytes": "8d5303",
+      "instruction": "lea edx, [rbx + 3]"
+    },
+    {
+      "binary": "ASIO",
+      "va": "0x180007686",
+      "bytes": "448d4301",
+      "instruction": "lea r8d, [rbx + 1]"
+    },
+    {
+      "binary": "ASIO",
+      "va": "0x18000768f",
+      "bytes": "e82c240000",
+      "instruction": "call 0x180009ac0"
+    },
+    {
+      "binary": "ASIO",
+      "va": "0x180007699",
+      "bytes": "84c0",
+      "instruction": "test al, al"
+    },
+    {
+      "binary": "ASIO",
+      "va": "0x18000769b",
+      "bytes": "0f94c3",
+      "instruction": "sete bl"
+    },
+    {
+      "binary": "ASIO",
+      "va": "0x1800076a3",
+      "bytes": "8bc3",
+      "instruction": "mov eax, ebx"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x1210d",
+      "bytes": "bf01000000",
+      "instruction": "mov edi, 1"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x12112",
+      "bytes": "397a04",
+      "instruction": "cmp dword ptr [rdx + 4], edi"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x12117",
+      "bytes": "8b02",
+      "instruction": "mov eax, dword ptr [rdx]"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x12130",
+      "bytes": "448d6f01",
+      "instruction": "lea r13d, [rdi + 1]"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x12134",
+      "bytes": "412bc5",
+      "instruction": "sub eax, r13d"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x1213d",
+      "bytes": "2bc7",
+      "instruction": "sub eax, edi"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x1213f",
+      "bytes": "745e",
+      "instruction": "je 0x1219f"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x121a5",
+      "bytes": "4c8d4208",
+      "instruction": "lea r8, [rdx + 8]"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x121a9",
+      "bytes": "b233",
+      "instruction": "mov dl, 0x33"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x121ab",
+      "bytes": "e8f0f4ffff",
+      "instruction": "call 0x116a0"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x121b8",
+      "bytes": "458bcd",
+      "instruction": "mov r9d, r13d"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x121c3",
+      "bytes": "b233",
+      "instruction": "mov dl, 0x33"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x121c5",
+      "bytes": "e9ebfeffff",
+      "instruction": "jmp 0x120b5"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x120c1",
+      "bytes": "e8fef7ffff",
+      "instruction": "call 0x118c4"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x1175c",
+      "bytes": "33d2",
+      "instruction": "xor edx, edx"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x1175e",
+      "bytes": "448d4240",
+      "instruction": "lea r8d, [rdx + 0x40]"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x11762",
+      "bytes": "e8492c0000",
+      "instruction": "call 0x143b0"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x1176c",
+      "bytes": "41b83b000000",
+      "instruction": "mov r8d, 0x3b"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x116e2",
+      "bytes": "498bf8",
+      "instruction": "mov rdi, r8"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x116e5",
+      "bytes": "408af2",
+      "instruction": "mov sil, dl"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x1177a",
+      "bytes": "488bd7",
+      "instruction": "mov rdx, rdi"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x11772",
+      "bytes": "418833",
+      "instruction": "mov byte ptr [r11], sil"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x1177d",
+      "bytes": "c740011cc50001",
+      "instruction": "mov dword ptr [rax + 1], 0x100c51c"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x11789",
+      "bytes": "4883c105",
+      "instruction": "add rcx, 5"
+    },
+    {
+      "binary": "kernel",
+      "va": "0x1178d",
+      "bytes": "e81e2d0000",
+      "instruction": "call 0x144b0"
+    }
+  ],
+  "originalUiContractSha256": "708e05e39435a9bae002c54a3637e8ad50146f695fc0db746f0afaae988012c4",
+  "builds": {
+    "Release": {
+      "testsPassed": 40,
+      "manifestSha256": "8cd1143da61d312c7ca587b0215156f532a9f8971b8260506182a501324bf62d",
+      "logSha256": "21177ca31218be411e48a6e3b8ea3b4f94e1c6f588e589afee816d10bc24c618",
+      "controlTestSha256": "db40b58b0b4c06658a24c083316e485d8c36a31fadc357fdd2eae48db1f96010",
+      "workerSha256": "5FE2A44F1020032994C2B2E1A5EA868F87650CAA9E23BC2077913760D0E88FE5"
+    },
+    "Debug": {
+      "testsPassed": 40,
+      "manifestSha256": "05566ce0488a180c211357b36638a3a79e869d4571b705ab168ef7505fa28da5",
+      "logSha256": "c8f9774de2f9624f565e075d047aadd3de790bbbc88747d452ebdef4debc87fd",
+      "controlTestSha256": "721cb1579ef7807669b898847d2a3d718e1603ae2e9fb635cdfad6987d6caa88",
+      "workerSha256": "EDE07074D00909A8021B9A18B2E3E5862B5224F8D36648131BAD4A5931262CB3"
+    }
+  },
+  "selectionSourceSha256": "4bfcd11e112f0a7dbb47d5fae39607f4cedae64fb8d7f1c406de4a6a1c9ccb04",
+  "selectionIoSourceSha256": "25170a7ab1555933334a824ec1b34b9b395724b26a66dd389b0ae6fcaad3caed",
+  "selectionWireSourceSha256": "c634bde00e663637364ce266312de2efe21c7c17ef3cbb3084516adc0e49002d",
+  "selectionWire": {
+    "version": 1,
+    "requestBytes": 24,
+    "replyBytes": 132,
+    "exactTargetRequired": true,
+    "initialObservedVerifiedAndReceiptDistinct": true,
+    "nativeErrorPreserved": true,
+    "workerCommandConnected": true,
+    "nativeAdapterConnected": true,
+    "nativeDiagnosticOnly": true,
+    "deviceOwnershipProved": false,
+    "runtimeCallers": [
+      "src/asio/host_session.cpp",
+      "src/core/device_session_protocol.cpp",
+      "src/windows/device_session.cpp",
+      "src/windows/host_probe_main.cpp",
+      "src/windows/usbdk_main.cpp"
+    ]
+  },
+  "selectionIo": {
+    "totalBudgetMilliseconds": 4500,
+    "maximumTransfers": 15,
+    "maximumSetterAttempts": 1,
+    "runtimeCallers": [
+      "src/windows/control_selection_diagnostic.hpp"
+    ],
+    "cancellationAfterWritePreservesUncertainty": true,
+    "lateReadbackCannotVerify": true,
+    "automaticRetry": false,
+    "rollback": false
+  },
+  "selectionTestSha256": "b302bf5791adaa1d1a44ed7235f1dbee3ef2fd019cf7691b67b9690df2a8c2b0",
+  "sdkFree": {
+    "testsPassed": 25,
+    "logSha256": "193b6c0c380da3d630261cf5a7e530059d380a213f75eba60d1b60294dc7c37f",
+    "controlTestSha256": "409b4c22c2e98d35e4d1c49db947c01d438bd5539ae1acdaff701cc13eceda00"
+  },
+  "allowedSettings": {
+    "sensitivity": {
+      "indexes": [
+        3,
+        9,
+        15
+      ],
+      "codes": [
+        0,
+        15
+      ]
+    },
+    "through": {
+      "indexes": [
+        8,
+        14,
+        20
+      ],
+      "codes": [
+        0,
+        1
+      ]
+    }
+  },
+  "maximumRequests": 3,
+  "maximumReceivedFrames": 12,
+  "acknowledgementBytes": 2,
+  "acknowledgementValuesInterpreted": false,
+  "runtimeCallers": [],
+  "limits": [
+    "Phono switches, other table bytes and physical jack order are not writable contracts",
+    "Byte readback is not calibration, routing or analogue validation; the ABI has no transaction nonce",
+    "Any future native owner must enforce idle exclusivity, wall-clock/cancellation/drain budgets and recovery",
+    "No retry, rollback, physical native write, panel deployment or Serato integration tested; explicit native diagnostic target only"
+  ]
+}

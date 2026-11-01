@@ -1,0 +1,50 @@
+{
+  "scope": "Verify the current default build and unstarted capture preparation; no hardware operation.",
+  "defaultBuildTestsPassed": 47,
+  "observerSoftwareTestsPassed": 15,
+  "manifestSha256": "46940c78a240e644459259ec4e29cba4314a0e39987662af9803fb039bb971b5",
+  "ctestLogSha256": "5fe542c11fa24ade43e3ec779195317fb113700802aee38e0315e75340f2d3a6",
+  "workerSha256": "68af44e1d860008fdde0e18846f2c93fd74444a40dc36ccb3e5026f834c4d2ad",
+  "hostProbeSha256": "6d876c8383992f298535e91eda3b5ffd3734c0e10829ecca39e038e24af61f8d",
+  "preflightSha256": "95e31beb072a671fe997349bf2227e1647ae3c435d3d6192644c40c7f618ed4f",
+  "collectorPlanSha256": "14b7305608bc883893e40a6578d97dbc0dd5ca187a0c1c915a47a3acf8c624d4",
+  "observerPlanSha256": "3aa1c98a421e91daef6a03aba4a876480c040c71025efa4fe7ffc6f6cc5398bb",
+  "observerTestLogSha256": "229f7c5fc4446a8f64a083875367356fe93e7fe1b48cc0003722455391585308",
+  "observerSourceSha256": "7622867a188c41a403653f62709f9466d34a52c919fb6c1bda6a99aa5fbcfdad",
+  "observerTestsSourceSha256": "ffae26f6423fde152529d9b89a9d0129eab93d998470a5a9051a75d560647b61",
+  "cachedQuerySha256": "4f9d6440b664dcb9fef2c96015f2f294573ef2080cbd7dafcc33766470e327ef",
+  "cachedConnection": {
+    "connectionStatus": 1,
+    "connectionStatusName": "DeviceConnected",
+    "speedCode": 2,
+    "deviceAddress": 1,
+    "currentConfiguration": 0,
+    "numberOfOpenPipes": 0,
+    "deviceIsHub": false,
+    "descriptorLength": 18,
+    "vendor": 7365,
+    "product": 1,
+    "deviceRevisionBcd": 0,
+    "targetDescriptorMatches": true,
+    "readinessAdmission": false
+  },
+  "preparedOnly": true,
+  "preFixObserverPlanRefused": true,
+  "traceStarted": false,
+  "sl3Opened": false,
+  "audioStarted": false,
+  "securityChanged": false,
+  "secureBootFreshRead": {
+    "known": false,
+    "reason": "Unable to set proper privileges. Access was denied."
+  },
+  "readinessAdmission": false,
+  "physicalCurrentBuildTested": false,
+  "currentSeratoAdmissionVerified": false,
+  "exporterSha256": "b556e8efdc7e812e88a030a9bee598ff3e60d80e510e9576f8a251e8217a693a",
+  "limits": [
+    "Read-only preflight could not freshly query Secure Boot from this normal token.",
+    "Connected cached descriptors do not establish readiness to redirect or stream.",
+    "Revalidate both plans and physical port before the attended one-approval launch."
+  ]
+}

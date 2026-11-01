@@ -1,0 +1,29 @@
+{
+  "scope": "Actual Windows x64 SDK compile-only layout assertions; no linking, executable or device access",
+  "successful": true,
+  "staticAssertions": 18,
+  "sourceSha256": "2b1d7b169f1490cdc93be6dd71359f133c69ce2cf4b028c54094b89429bf80b6",
+  "objectSha256": "067c740712e8f4c4b0f9462d4aa90fce3fd01dd6570731cdb7e3a2f002085494",
+  "objectMachine": "0x8664",
+  "compiler": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.29.30133\\bin\\Hostx64\\x64\\cl.exe",
+  "compilerSha256": "8e4352b523f4ff37b429aea1d340094be1e17bbdf4f687247fc0be92d6eb9440",
+  "vcToolsVersion": "14.29.30133",
+  "windowsSdkVersion": "10.0.19041.0",
+  "commandSha256": "dc36cf280666bb8159f2aa1d8ee1b341c254a1c5c952bd9f35d931caf52e0576",
+  "logSha256": "8300971f2199d600b797fef34bf9ad34d5e795ea9a92cc6b54fe1269861f0982",
+  "headers": {
+    "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\shared\\evntrace.h": "8ef7836020e8fd754930064416e15b91b79d9dc3e38c8a36fc27903649f6d174",
+    "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\shared\\wmistr.h": "4bc46f8dc75dd2f65232636aa4b90dc5f14b3f43d306f0b03973ee50482e5d09"
+  },
+  "source": "scripts/trace-properties-layout.cpp",
+  "compilerExitCode": 0,
+  "compilerArguments": [
+    "/nologo",
+    "/c",
+    "/W4",
+    "/WX",
+    "/std:c++17",
+    "/Foanalysis/trace-properties-layout-20261031.obj",
+    "scripts/trace-properties-layout.cpp"
+  ]
+}

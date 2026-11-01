@@ -1,0 +1,200 @@
+{
+  "collected_utc": "2026-10-26T21:06:25.187501+00:00",
+  "devices": [
+    {
+      "hub_index": 3,
+      "port": 3,
+      "device_descriptor_hex": "12010002ffffff40c51c0100000001020301",
+      "speed": 2,
+      "configuration": 0,
+      "connection_status": 1,
+      "configuration_descriptor_hex": "0902eb0004010080c80904000000ff01200409240100020a4b000008240a050303000011240201010100050600000000050000000c2403020306000105000000112402030306000506000000000b0000000c24030401010003050000000904010000ff0220000904010101ff02200010240101000101000000060000000005062402010318070506057e000108250100000000000904020000ff0220000904020101ff0220001024010300010100000006000000000b062402010318070582257e000108250100000000000904030002ff000000092110010001221c000705810340000107050103400001",
+      "descriptors": [
+        {
+          "offset": 0,
+          "type": 2,
+          "hex": "0902eb0004010080c8",
+          "total_length": 235,
+          "interfaces": 4,
+          "configuration": 1
+        },
+        {
+          "offset": 9,
+          "type": 4,
+          "hex": "0904000000ff012004",
+          "interface": 0,
+          "alternate": 0,
+          "endpoints": 0,
+          "interface_class": 255,
+          "subclass": 1,
+          "protocol": 32
+        },
+        {
+          "offset": 18,
+          "type": 36,
+          "hex": "09240100020a4b0000"
+        },
+        {
+          "offset": 27,
+          "type": 36,
+          "hex": "08240a0503030000"
+        },
+        {
+          "offset": 35,
+          "type": 36,
+          "hex": "1124020101010005060000000005000000"
+        },
+        {
+          "offset": 52,
+          "type": 36,
+          "hex": "0c2403020306000105000000"
+        },
+        {
+          "offset": 64,
+          "type": 36,
+          "hex": "112402030306000506000000000b000000"
+        },
+        {
+          "offset": 81,
+          "type": 36,
+          "hex": "0c2403040101000305000000"
+        },
+        {
+          "offset": 93,
+          "type": 4,
+          "hex": "0904010000ff022000",
+          "interface": 1,
+          "alternate": 0,
+          "endpoints": 0,
+          "interface_class": 255,
+          "subclass": 2,
+          "protocol": 32
+        },
+        {
+          "offset": 102,
+          "type": 4,
+          "hex": "0904010101ff022000",
+          "interface": 1,
+          "alternate": 1,
+          "endpoints": 1,
+          "interface_class": 255,
+          "subclass": 2,
+          "protocol": 32
+        },
+        {
+          "offset": 111,
+          "type": 36,
+          "hex": "10240101000101000000060000000005"
+        },
+        {
+          "offset": 127,
+          "type": 36,
+          "hex": "062402010318"
+        },
+        {
+          "offset": 133,
+          "type": 5,
+          "hex": "070506057e0001",
+          "endpoint": "0x6",
+          "direction": "out",
+          "transfer": "isochronous",
+          "attributes": 5,
+          "max_packet": 126,
+          "interval": 1
+        },
+        {
+          "offset": 140,
+          "type": 37,
+          "hex": "0825010000000000"
+        },
+        {
+          "offset": 148,
+          "type": 4,
+          "hex": "0904020000ff022000",
+          "interface": 2,
+          "alternate": 0,
+          "endpoints": 0,
+          "interface_class": 255,
+          "subclass": 2,
+          "protocol": 32
+        },
+        {
+          "offset": 157,
+          "type": 4,
+          "hex": "0904020101ff022000",
+          "interface": 2,
+          "alternate": 1,
+          "endpoints": 1,
+          "interface_class": 255,
+          "subclass": 2,
+          "protocol": 32
+        },
+        {
+          "offset": 166,
+          "type": 36,
+          "hex": "1024010300010100000006000000000b"
+        },
+        {
+          "offset": 182,
+          "type": 36,
+          "hex": "062402010318"
+        },
+        {
+          "offset": 188,
+          "type": 5,
+          "hex": "070582257e0001",
+          "endpoint": "0x82",
+          "direction": "in",
+          "transfer": "isochronous",
+          "attributes": 37,
+          "max_packet": 126,
+          "interval": 1
+        },
+        {
+          "offset": 195,
+          "type": 37,
+          "hex": "0825010000000000"
+        },
+        {
+          "offset": 203,
+          "type": 4,
+          "hex": "0904030002ff000000",
+          "interface": 3,
+          "alternate": 0,
+          "endpoints": 2,
+          "interface_class": 255,
+          "subclass": 0,
+          "protocol": 0
+        },
+        {
+          "offset": 212,
+          "type": 33,
+          "hex": "092110010001221c00"
+        },
+        {
+          "offset": 221,
+          "type": 5,
+          "hex": "07058103400001",
+          "endpoint": "0x81",
+          "direction": "in",
+          "transfer": "interrupt",
+          "attributes": 3,
+          "max_packet": 64,
+          "interval": 1
+        },
+        {
+          "offset": 228,
+          "type": 5,
+          "hex": "07050103400001",
+          "endpoint": "0x1",
+          "direction": "out",
+          "transfer": "interrupt",
+          "attributes": 3,
+          "max_packet": 64,
+          "interval": 1
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

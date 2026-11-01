@@ -1,0 +1,161 @@
+{
+  "path": "artifacts\\extracted\\Serato DJ Pro 5.0.0\\tree\\PFiles64\\Serato\\Serato DJ Pro\\Serato DJ Pro.exe",
+  "sha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "matches": [
+    {
+      "offset": "0x2f2a1c0",
+      "encoding": "ascii",
+      "text": "failed cast for kUnsupportedDevice"
+    },
+    {
+      "offset": "0x2f2a1e8",
+      "encoding": "ascii",
+      "text": "failed cast for kDiscontinuedDevice"
+    },
+    {
+      "offset": "0x2f2a308",
+      "encoding": "ascii",
+      "text": "DeviceDiscontinued"
+    },
+    {
+      "offset": "0x2f2a320",
+      "encoding": "ascii",
+      "text": "id-device-discontinued-notification-title"
+    },
+    {
+      "offset": "0x2f2a350",
+      "encoding": "ascii",
+      "text": "id-device-discontinued-notification-paragraph"
+    },
+    {
+      "offset": "0x3132a80",
+      "encoding": "ascii",
+      "text": "ssl3_write_bytes"
+    },
+    {
+      "offset": "0x3132a98",
+      "encoding": "ascii",
+      "text": "ssl3_read_bytes"
+    },
+    {
+      "offset": "0x3134778",
+      "encoding": "ascii",
+      "text": "ssl3_output_cert_chain"
+    },
+    {
+      "offset": "0x3138000",
+      "encoding": "ascii",
+      "text": "ssl3_ctrl"
+    },
+    {
+      "offset": "0x3138010",
+      "encoding": "ascii",
+      "text": "ssl3_ctx_ctrl"
+    },
+    {
+      "offset": "0x3138088",
+      "encoding": "ascii",
+      "text": "ssl3_do_change_cipher_spec"
+    },
+    {
+      "offset": "0x3138f78",
+      "encoding": "ascii",
+      "text": "ssl3_check_cert_and_algorithm"
+    },
+    {
+      "offset": "0x3139b28",
+      "encoding": "ascii",
+      "text": "ssl3_generate_key_block"
+    },
+    {
+      "offset": "0x3139b50",
+      "encoding": "ascii",
+      "text": "ssl3_change_cipher_state"
+    },
+    {
+      "offset": "0x3139b70",
+      "encoding": "ascii",
+      "text": "ssl3_setup_key_block"
+    },
+    {
+      "offset": "0x3139b88",
+      "encoding": "ascii",
+      "text": "ssl3_init_finished_mac"
+    },
+    {
+      "offset": "0x3139ba0",
+      "encoding": "ascii",
+      "text": "ssl3_finish_mac"
+    },
+    {
+      "offset": "0x3139bb0",
+      "encoding": "ascii",
+      "text": "ssl3_digest_cached_records"
+    },
+    {
+      "offset": "0x3139bd0",
+      "encoding": "ascii",
+      "text": "ssl3_final_finish_mac"
+    },
+    {
+      "offset": "0x3139be8",
+      "encoding": "ascii",
+      "text": "ssl3_generate_master_secret"
+    },
+    {
+      "offset": "0x313d0c0",
+      "encoding": "ascii",
+      "text": "666666666666666666666666666666666666666666666666\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ssl3_set_crypto_state"
+    },
+    {
+      "offset": "0x313d138",
+      "encoding": "ascii",
+      "text": "ssl\\record\\methods\\ssl3_meth.c"
+    },
+    {
+      "offset": "0x313d158",
+      "encoding": "ascii",
+      "text": "ssl3_cipher"
+    },
+    {
+      "offset": "0x3145a88",
+      "encoding": "ascii",
+      "text": "CALG_SSL3_SHAMD5"
+    },
+    {
+      "offset": "0x3145aa0",
+      "encoding": "ascii",
+      "text": "CALG_SSL3_MASTER"
+    },
+    {
+      "offset": "0x2e87ef0",
+      "encoding": "utf-16le",
+      "text": "\\Rane\\Seventy-Two\\DeviceSettings.exe"
+    },
+    {
+      "offset": "0x2e87f90",
+      "encoding": "utf-16le",
+      "text": "\\Rane\\Seventy\\DeviceSettings.exe"
+    },
+    {
+      "offset": "0x2e88148",
+      "encoding": "utf-16le",
+      "text": "\\Rane\\ONE\\Panel.exe"
+    },
+    {
+      "offset": "0x2e88208",
+      "encoding": "utf-16le",
+      "text": "\\Rane\\FOUR\\Panel.exe"
+    },
+    {
+      "offset": "0x2e88238",
+      "encoding": "utf-16le",
+      "text": "\\Rane\\FOUR\\VersionReporter.exe"
+    },
+    {
+      "offset": "0x2e898e8",
+      "encoding": "utf-16le",
+      "text": "\\RaneControlPanel.exe"
+    }
+  ]
+}

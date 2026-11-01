@@ -1,0 +1,364 @@
+{
+  "scope": "First verified real single-open one-second callback bridge; earlier packet failure retained; no full ASIO/Serato/DVS claim",
+  "workerSha256": "F29720369D443F7EC9B6EE4BF9C20A766F174EA02879B0727E28576A2077AB66",
+  "probeSha256": "ABE85E2A0978C68CD643611E7DD1B6636896BF413A6C85526A0762F5B2F48498",
+  "sequenceRecordSha256": "4d0818193bb245662e14f03c31a705c70b82dc4621fd85cad1fef98e23c8eea6",
+  "capture": {
+    "runRecordSha256": "366126185d3f2a6aa1db248b4c035c35bee1b9ac1b8009b46af1c3c272919186",
+    "beforeStateSha256": "ef3d240fa828e51ac4028850c7b0a8daefa022a6f7bd88114b7687cbe8dfbc6f",
+    "afterStateSha256": "33ce08056d857331a7adbe86a0b976f6cb3bec43a27a7094cfe5e6045c1feb93",
+    "traceStats": {
+      "eventsLost": 0,
+      "buffersLost": 0,
+      "eventCount": 16359,
+      "session": "SL3Startup-8d0f0e03300c4ece97a31c6adf5461f6",
+      "xmlSha256": "07af4c4d1b7f9fe848126c5f174e1c175ba1c85b32fa5cd85ad35540376cc6b0"
+    },
+    "etlSha256": "b687e024efb6a5c8c5cc528d45db52dcbb50821076a04dad4ccbd0af2d139ba0",
+    "secureBootBeforeAndAfter": true,
+    "recoveryConfirmed": true,
+    "rateHz": 44100,
+    "frames": 1411
+  },
+  "silentDuplex": {
+    "runRecordSha256": "c4b071b30013a8c5473208f7d2b5440dd623354e63d66193ab148728631a36a6",
+    "beforeStateSha256": "8ba7d95400406b9289c89afbdac9eab826f4a8ed2e1333d192c60cd54dd29729",
+    "afterStateSha256": "81d15693e3dc132e6cbb92f05995d57f557ea643412ad59342d717e0f3e953bc",
+    "traceStats": {
+      "eventsLost": 0,
+      "buffersLost": 0,
+      "eventCount": 17246,
+      "session": "SL3Startup-3b4ac6fa252342d79dcc003c56b0d78e",
+      "xmlSha256": "6ec6bbb8161d010cc325636d9eac150f909eafa99434dbc26e355b5f04f1f74b"
+    },
+    "etlSha256": "af79375fdf4d7c3b4f9d879cf2cbe71d2c363c0cff13c506dc707c99ec290c9b",
+    "secureBootBeforeAndAfter": true,
+    "recoveryConfirmed": true,
+    "outputBytesAcceptedByApi": 25398,
+    "zeroOutputBuffers": [
+      {
+        "name": "registered-1.bin",
+        "sha256": "05bf9d87a6313c41625d93de63e30bc39be25e54b472f17e99d78cf12fccb3da",
+        "allZero": true
+      },
+      {
+        "name": "registered-3.bin",
+        "sha256": "05bf9d87a6313c41625d93de63e30bc39be25e54b472f17e99d78cf12fccb3da",
+        "allZero": true
+      },
+      {
+        "name": "registered-5.bin",
+        "sha256": "05bf9d87a6313c41625d93de63e30bc39be25e54b472f17e99d78cf12fccb3da",
+        "allZero": true
+      },
+      {
+        "name": "registered-7.bin",
+        "sha256": "05bf9d87a6313c41625d93de63e30bc39be25e54b472f17e99d78cf12fccb3da",
+        "allZero": true
+      }
+    ]
+  },
+  "bridge": {
+    "runRecordSha256": "96fc484583a734b6de344eadd81aa60dd32528a415480fa7dd611bd251246b03",
+    "probeRecordSha256": "8b7e83a75416c125b441808c888a659daa95f17af19be9ed5ecce43d8738c07c",
+    "startedUtc": "2026-10-30T17:54:03.8121496Z",
+    "completedUtc": "2026-10-30T17:54:05.0537445Z",
+    "traceStats": {
+      "eventsLost": 0,
+      "buffersLost": 0,
+      "eventCount": 16255,
+      "session": "SL3Startup-d64937423d1649c8874d90a40bd3ae12",
+      "xmlSha256": "624c19d262cbbe1dd34be1e2967912f4639d4670e573a5ed5fe4b3a8c15abfce"
+    },
+    "etlSha256": "4a93daa50cdab1c66b5b20e0eea91bc4305f92f7532d5b64bdfc3fe0a73c1e4b",
+    "probe": {
+      "schema": "sl3.host-probe.v1",
+      "phase": "finished",
+      "simulated": false,
+      "inspection_succeeded": false,
+      "stream_started": true,
+      "finished": true,
+      "successful": true,
+      "inspect_only": false,
+      "completed_inspections": 0,
+      "single_open": true,
+      "expected_rate_hz": 44100,
+      "initial_reported_rate_hz": 0,
+      "output_payload": "zero PCM only",
+      "requested_stream_ms": 1000,
+      "observed_stream_ms": 1000,
+      "bank_frames": 128,
+      "intervals": 64,
+      "reported_rate_hz": 44100,
+      "callbacks": 341,
+      "callback_contract_failed": false,
+      "first_frame": 0,
+      "last_frame": 43520,
+      "host_failure": 0,
+      "audio_exit": 2,
+      "audio_thread_retired": true,
+      "active_callbacks": 0,
+      "callbacks_started": 341,
+      "callbacks_completed": 341,
+      "audio_input_frames": 43744,
+      "published_output_frames": 43744,
+      "io_retired": true,
+      "device_released": true,
+      "worker_exited": true,
+      "private_job_empty": true,
+      "forced_termination": false,
+      "buffers_disposed": true,
+      "worker_phase": 4,
+      "worker_failure": 0,
+      "stream_fault": 0,
+      "native_error": 0,
+      "input_blocks": 124,
+      "input_frames": 43744,
+      "output_submissions": 124,
+      "output_completions": 123,
+      "output_frames_submitted": 43744,
+      "pending_mask": 0,
+      "retained_mask": 0,
+      "worker_diagnostic": "",
+      "analogue_signal_verified": false,
+      "latency_measured": false,
+      "asio_com_registered": false,
+      "input_nonzero_bytes": [
+        84844,
+        85915,
+        103685,
+        104606,
+        103714,
+        104758
+      ],
+      "callback_counter_frequency": 10000000,
+      "timing_records_dropped": 0,
+      "error": ""
+    },
+    "callbackTiming": {
+      "schema": "sl3.callback-timing-analysis.v1",
+      "simulated": false,
+      "probeSuccessful": true,
+      "rateHz": 44100,
+      "bankFrames": 128,
+      "observations": 341,
+      "recordsDropped": 0,
+      "completeCallbackCoverage": true,
+      "nominalBankPeriodNs": 2902494.3310657595,
+      "callbackSpacingNs": {
+        "minimum": 3100,
+        "median": 4300,
+        "p95": 8001400,
+        "p99": 8025800,
+        "maximum": 8053400
+      },
+      "publicationSpacingNs": {
+        "minimum": 0,
+        "median": 0,
+        "p95": 8006300,
+        "p99": 8024700,
+        "maximum": 8058900
+      },
+      "repeatedPublicationTimestamps": 217,
+      "observationWindowFrames": 43520,
+      "callbackSpanNs": 983969800,
+      "softwareDeliveryFramesPerSecond": 44228.99971117,
+      "latencyMeasured": false,
+      "physicalClockVerified": false,
+      "usbContinuityVerified": false,
+      "limits": [
+        "Callback entry times and backend publication observations are software timing only",
+        "Multiple banks may share one publication observation; neither clock is a DAC or ADC playhead",
+        "Logical frame increments do not prove that USB packets or analogue samples were gap-free",
+        "No ASIO timing profile or approval is generated"
+      ],
+      "probeRecordSha256": "8b7e83a75416c125b441808c888a659daa95f17af19be9ed5ecce43d8738c07c"
+    }
+  },
+  "earlierFailedGate": {
+    "sequenceRecordSha256": "fbd169f450e7b66d4a3e89ee92c56e9b58252fdfe801c93b1a934f036be46d26",
+    "packetStatusSummary": {
+      "schema": "sl3.finite-usbd-status-summary.v1",
+      "requests": [
+        {
+          "direction": "IN",
+          "slot": 0,
+          "packetRows": 64,
+          "attempted": true,
+          "submitted": true,
+          "terminal": true,
+          "requestStatus": {
+            "rawHex": "0x0000000000000000",
+            "canonical32BitValue": true,
+            "usbdHex": "0x00000000",
+            "symbol": "USBD_STATUS_SUCCESS"
+          },
+          "completionWin32Error": 0,
+          "packetResultsInterpreted": true,
+          "packetStatusHistogram": [
+            {
+              "rawHex": "0x0000000000000000",
+              "canonical32BitValue": true,
+              "usbdHex": "0x00000000",
+              "symbol": "USBD_STATUS_SUCCESS",
+              "packets": 63
+            },
+            {
+              "rawHex": "0xFFFFFFFFC0000012",
+              "canonical32BitValue": true,
+              "usbdHex": "0xC0000012",
+              "symbol": "USBD_STATUS_BABBLE_DETECTED",
+              "packets": 1
+            }
+          ]
+        },
+        {
+          "direction": "IN",
+          "slot": 2,
+          "packetRows": 64,
+          "attempted": true,
+          "submitted": true,
+          "terminal": true,
+          "requestStatus": {
+            "rawHex": "0xFFFFFFFFC0010000",
+            "canonical32BitValue": true,
+            "usbdHex": "0xC0010000",
+            "symbol": "USBD_STATUS_CANCELED"
+          },
+          "completionWin32Error": 0,
+          "packetResultsInterpreted": true,
+          "packetStatusHistogram": [
+            {
+              "rawHex": "0x0000000000000000",
+              "canonical32BitValue": true,
+              "usbdHex": "0x00000000",
+              "symbol": "USBD_STATUS_SUCCESS",
+              "packets": 1
+            },
+            {
+              "rawHex": "0xFFFFFFFFC0020000",
+              "canonical32BitValue": true,
+              "usbdHex": "0xC0020000",
+              "symbol": "USBD_STATUS_ISO_NOT_ACCESSED_BY_HW",
+              "packets": 63
+            }
+          ]
+        },
+        {
+          "direction": "IN",
+          "slot": 4,
+          "packetRows": 64,
+          "attempted": true,
+          "submitted": true,
+          "terminal": true,
+          "requestStatus": {
+            "rawHex": "0xFFFFFFFFC0010000",
+            "canonical32BitValue": true,
+            "usbdHex": "0xC0010000",
+            "symbol": "USBD_STATUS_CANCELED"
+          },
+          "completionWin32Error": 0,
+          "packetResultsInterpreted": true,
+          "packetStatusHistogram": [
+            {
+              "rawHex": "0xFFFFFFFFC0020000",
+              "canonical32BitValue": true,
+              "usbdHex": "0xC0020000",
+              "symbol": "USBD_STATUS_ISO_NOT_ACCESSED_BY_HW",
+              "packets": 64
+            }
+          ]
+        },
+        {
+          "direction": "IN",
+          "slot": 6,
+          "packetRows": 64,
+          "attempted": true,
+          "submitted": true,
+          "terminal": true,
+          "requestStatus": {
+            "rawHex": "0xFFFFFFFFC0010000",
+            "canonical32BitValue": true,
+            "usbdHex": "0xC0010000",
+            "symbol": "USBD_STATUS_CANCELED"
+          },
+          "completionWin32Error": 0,
+          "packetResultsInterpreted": true,
+          "packetStatusHistogram": [
+            {
+              "rawHex": "0xFFFFFFFFC0020000",
+              "canonical32BitValue": true,
+              "usbdHex": "0xC0020000",
+              "symbol": "USBD_STATUS_ISO_NOT_ACCESSED_BY_HW",
+              "packets": 64
+            }
+          ]
+        },
+        {
+          "direction": "OUT",
+          "slot": 1,
+          "packetRows": 64,
+          "attempted": false,
+          "submitted": false,
+          "terminal": false,
+          "requestStatus": null,
+          "completionWin32Error": null,
+          "packetResultsInterpreted": false,
+          "packetStatusHistogram": []
+        },
+        {
+          "direction": "OUT",
+          "slot": 3,
+          "packetRows": 64,
+          "attempted": false,
+          "submitted": false,
+          "terminal": false,
+          "requestStatus": null,
+          "completionWin32Error": null,
+          "packetResultsInterpreted": false,
+          "packetStatusHistogram": []
+        },
+        {
+          "direction": "OUT",
+          "slot": 5,
+          "packetRows": 64,
+          "attempted": false,
+          "submitted": false,
+          "terminal": false,
+          "requestStatus": null,
+          "completionWin32Error": null,
+          "packetResultsInterpreted": false,
+          "packetStatusHistogram": []
+        },
+        {
+          "direction": "OUT",
+          "slot": 7,
+          "packetRows": 64,
+          "attempted": false,
+          "submitted": false,
+          "terminal": false,
+          "requestStatus": null,
+          "completionWin32Error": null,
+          "packetResultsInterpreted": false,
+          "packetStatusHistogram": []
+        }
+      ],
+      "submittedRequests": 4,
+      "unsubmittedPacketRowsExcludedFromCompletionResults": 256,
+      "limits": [
+        "Status names do not identify the electrical, device or scheduling cause",
+        "Cancellation results may follow the first fault; no causal ordering is inferred automatically",
+        "Unsubmitted/nonterminal packet storage is not completion evidence",
+        "No validation policy is relaxed and no hardware result is promoted to success"
+      ],
+      "recordSha256": "35a8c04acd3af3b01c30b2fc03276f0c024ab61af454c7fb87d6e3d920261abe",
+      "sdkHeaderSha256": "bc76bb6a44dea9c1fa53c9aad55ac87fdf3437650d7ee853976dd82ae6811fe7"
+    }
+  },
+  "limits": [
+    "One second at 44.1 kHz, 64 intervals and 128-frame banks is not production eight-interval validation",
+    "Output submission/completion counters differ at stop; final masks and independent ownership domains retired normally",
+    "Software callback batching/rate is not physical clock or sample-continuity proof",
+    "No analogue loopback, timing profile, ASIO registration, current Serato/DVS or sustained stability result"
+  ]
+}

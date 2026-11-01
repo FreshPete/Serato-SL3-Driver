@@ -1,0 +1,13 @@
+{
+  "originalInf": "oem136.inf",
+  "removePackage": [
+    "oem152.inf"
+  ],
+  "removeCertificate": "11538DF7C55A5BB2DBFE7160C45ECC804F3BB077",
+  "onlyStoresAddedByTest": [
+    "Cert:\\LocalMachine\\Root",
+    "Cert:\\LocalMachine\\TrustedPublisher"
+  ],
+  "note": "Original Rane driver was blocked before this experiment; restoring it is expected to restore code 39. No reboot is automated. Untrusted signing identity remains in CurrentUser/My until separately removed or expired.",
+  "completedUtc": "2026-10-26T22:21:10.0916063Z"
+}
