@@ -33,6 +33,7 @@ try {
     if('sl3_device_session_tests' -notin $testNames -or 'sl3_usbdk_rejects_device_modes' -notin $testNames){throw 'Required retained-device worker tests are missing'}
     if($WithAsioComponent -and 'sl3_asio_buffer_tests' -notin $testNames){throw 'Required SDK-facing ASIO test is missing'}
     if($WithAsioComponent -and 'sl3_asio_com_tests' -notin $testNames){throw 'Required ASIO COM DLL test is missing'}
+    if($WithAsioComponent -and 'sl3_broker_asio_tests' -notin $testNames){throw 'Required broker-backed IASIO lifecycle test is missing'}
     if($WithAsioComponent -and 'sl3_asio_queue_tests' -notin $testNames){throw 'Required queue-to-SDK test is missing'}
     if($WithAsioComponent -and 'sl3_audio_owner_tests' -notin $testNames){throw 'Required audio-thread ownership test is missing'}
     if($WithAsioComponent -and 'sl3_host_session_tests' -notin $testNames){throw 'Required host-session control test is missing'}
@@ -79,12 +80,17 @@ try {
     $record.retainedBroker=[ordered]@{separateClientProcessTestsPassed=$true
         testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_retained_broker_tests.exe")).Hash
         simulatedClients=2;simulatedAcquisitions=1;simulatedStreams=2;simulatedClockReads=6
-        clientDeathAndStaleLeaseTestsPassed=$true;nativeBrokerRun=$false;asioClientAttachmentImplemented=$false}
+        clientDeathAndStaleLeaseTestsPassed=$true;nativeBrokerRun=$false;productionAsioClientAttachmentEnabled=$false}
     $record.brokerPipe=[ordered]@{simulatedProcessTestsPassed=$true
         testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_broker_pipe_tests.exe")).Hash
         exactProcessChallenge=$true;clientMappingReferenceBound=$true;directPcm=$true
         terminalDetachAcknowledgement=$true
-        nativeRun=$false;automaticDiscoveryImplemented=$false;ordinaryAsioAttachmentImplemented=$false}
+        nativeRun=$false;automaticDiscoveryImplemented=$false;productionOrdinaryAsioAttachmentEnabled=$false}
+    if($WithAsioComponent){$record.brokerAsio=[ordered]@{simulatedOrdinaryComLifecyclePassed=$true
+        testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_broker_asio_tests.exe")).Hash
+        ordinaryObjects=3;starts=4;acquisitions=1;freshClockReads=8;customFactoryScopeRequested=$false
+        clientDetachDistinctFromPhysicalRelease=$true;blockedCallbackModuleRetentionPassed=$true
+        productionDiscoveryImplemented=$false;productionBrokerConfigurationEnabled=$false;nativeBrokerAudioRun=$false}}
     if($WithAsioComponent){$record.hostProbe=[ordered]@{planAndSimulatedLifecyclePassed=$true;executableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_host_probe.exe")).Hash;simulatedExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_host_probe_simulated.exe")).Hash;nativeDeviceRunDuringBuild=$false;streamMilliseconds=1000;outputPayload='zero PCM only';singleOpenIntervals=@(8,64)}}
     if($WithAsioComponent){$record.scopeProbe=[ordered]@{planAndSimulatedLifecyclePassed=$true;executableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_scope_probe.exe")).Hash;simulatedExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_scope_probe_simulated.exe")).Hash;validatorSha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'validate-scope-host-probe.py')).Hash;testScriptSha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'test-scope-host-probe.py')).Hash;facadeObjects=3;acquisitions=1;clockReads=3;audioStarts=0;timingProfileRequired=$false;physicalScopeTested=$false}}
     if($WithAsioComponent){$record.hostProbe.retained=[ordered]@{simulatedLifecyclePassed=$true;streams=2;streamMilliseconds=1000;intervals=8;bankFrames=128;physicalLifecycleTested=$false;validatorSha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'validate-retained-host-probe.py')).Hash;testScriptSha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'test-retained-host-probe.py')).Hash;runnerSha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'test-retained-host-traced.ps1')).Hash}}

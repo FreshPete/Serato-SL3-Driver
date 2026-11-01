@@ -32,10 +32,13 @@ public:
     BrokerClient& operator=(const BrokerClient&)=delete;
     unsigned clock();
     device_session::Snapshot start(Mailbox& audio,StreamConfig);
-    device_session::Snapshot stop();
+    device_session::Snapshot stop(DWORD timeout_ms=7000);
     // Retire local callbacks separately before disposal. This acknowledges the
     // held-state reply and detaches only this client, not the physical worker.
-    device_session::Snapshot detach();
+    device_session::Snapshot detach(DWORD timeout_ms=7000);
+    // Nonwaiting failure path: no stop/detach success is inferred. The server
+    // owns subsequent worker containment; local callbacks keep their own leases.
+    void disconnect() noexcept;
     const device_session::Snapshot& observation() const noexcept;
     HANDLE worker_process_handle() const noexcept; // Borrowed wait/query only.
 private:

@@ -1,6 +1,6 @@
 #pragma once
 #include "asio/queue_pump.hpp"
-#include "windows/worker_process.hpp"
+#include "windows/process_wait.hpp"
 #include <atomic>
 
 namespace sl3::asio {
@@ -35,6 +35,7 @@ class AudioOwner final {
     friend class BufferLease;
 public:
     AudioOwner(std::shared_ptr<BufferLease>,std::shared_ptr<worker::Mailbox>,std::shared_ptr<worker::Process>);
+    AudioOwner(std::shared_ptr<BufferLease>,std::shared_ptr<worker::Mailbox>,std::shared_ptr<worker::ProcessWait>);
     ~AudioOwner();
     AudioOwner(const AudioOwner&)=delete;
     AudioOwner& operator=(const AudioOwner&)=delete;

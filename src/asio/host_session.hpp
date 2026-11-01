@@ -21,7 +21,14 @@ struct WorkerSpec {
     std::optional<unsigned> diagnostic_rate_target;
 };
 enum class HostFailure {none,launch,handshake,inspection,rate_changed,audio_start,worker_start,worker,control,audio,containment};
+enum class HostDomain {owned_worker,broker_client};
+struct BrokerClientReport {
+    bool attached=false,ever_attached=false,detached=false,worker_alive=false,worker_exited=false;
+    DWORD worker_pid=0;
+};
 struct HostReport {
+    HostDomain domain=HostDomain::owned_worker;
+    BrokerClientReport broker{};
     HostFailure failure=HostFailure::none;
     bool running=false,reentrant=false,io_retired=true,device_released=true,termination_requested=false;
     // Confirmed live retained control session, not proof of I/O retirement.

@@ -14,7 +14,8 @@ struct Handle {
     ~Handle(){if(value && value!=INVALID_HANDLE_VALUE)CloseHandle(value);}
     Handle()=default;Handle(const Handle&)=delete;Handle& operator=(const Handle&)=delete;
 };
-[[noreturn]] void fail(const char* text){throw std::runtime_error(std::string(text)+": "+std::to_string(GetLastError()));}
+struct PipeError:std::runtime_error {DWORD code;PipeError(const char* text,DWORD error):std::runtime_error(std::string(text)+": "+std::to_string(error)),code(error){}};
+[[noreturn]] void fail(const char* text){throw PipeError(text,GetLastError());}
 struct Identity {std::vector<std::uint8_t> sid;LUID authentication{};DWORD session=0,integrity=0;bool elevated=false;};
 std::vector<std::uint8_t> info(HANDLE token,TOKEN_INFORMATION_CLASS kind){
     DWORD size=0;GetTokenInformation(token,kind,nullptr,0,&size);std::vector<std::uint8_t> bytes(size);
@@ -96,10 +97,11 @@ std::optional<Frame> read(HANDLE pipe,DWORD timeout,HANDLE peer){
     Frame frame{get32(bytes,8),get32(bytes,12),get32(bytes,16),{bytes.begin()+24,bytes.end()}};
     if(!frame.sequence || frame.opcode<1 || frame.opcode>6)throw std::runtime_error("Invalid broker frame identity");return frame;
 }
-void write(HANDLE pipe,const Frame& frame,HANDLE peer){
+DWORD remaining(ULONGLONG deadline) noexcept {const auto now=GetTickCount64();return now>=deadline?0:DWORD(deadline-now);}
+void write(HANDLE pipe,const Frame& frame,HANDLE peer,DWORD timeout=6000){
     if(frame.bytes.size()>maximum)throw std::invalid_argument("Broker payload too large");std::vector<std::uint8_t> bytes;
     for(unsigned n:{magic,version,frame.sequence,frame.opcode,frame.status,unsigned(frame.bytes.size())})put32(bytes,n);
-    bytes.insert(bytes.end(),frame.bytes.begin(),frame.bytes.end());if(!transfer(pipe,true,bytes,6000,peer))throw std::runtime_error("Broker write deadline");
+    bytes.insert(bytes.end(),frame.bytes.begin(),frame.bytes.end());if(!transfer(pipe,true,bytes,timeout,peer))throw std::runtime_error("Broker write deadline");
 }
 void request(const Frame& f,unsigned sequence,Op op){
     if(f.sequence!=sequence || f.opcode!=unsigned(op) || f.status || !f.bytes.empty())throw std::runtime_error("Invalid broker handshake/control request");
@@ -216,18 +218,20 @@ BrokerServeResult serve_broker_client(BrokerListener& listener,RetainedBroker& o
 struct BrokerClient::State {
     Handle pipe,server,worker;bool attached=false;unsigned sequence=3;
     device_session::Snapshot observed;
-    Frame exchange(Op op,const std::vector<std::uint8_t>& bytes={}){
+    Frame exchange(Op op,const std::vector<std::uint8_t>& bytes={},DWORD timeout=7000){
         if(!attached || !sequence)throw std::runtime_error("Broker client is detached/sealed");
+        if(!timeout || timeout>7000)throw std::invalid_argument("Broker client command needs a bounded deadline");
+        const auto deadline=GetTickCount64()+timeout;
         const auto current=sequence++;
         try{
-            write(pipe.value,{current,unsigned(op),0,bytes},server.value);
-            const auto reply=read(pipe.value,7000,server.value);
+            write(pipe.value,{current,unsigned(op),0,bytes},server.value,remaining(deadline));
+            const auto reply=read(pipe.value,remaining(deadline),server.value);
             if(!reply || reply->sequence!=current || reply->opcode!=unsigned(op) || reply->status)throw std::runtime_error("Broker reply unavailable/mismatched");return *reply;
         }catch(...){attached=false;throw;}
     }
-    device_session::Snapshot command(Op op,const std::vector<std::uint8_t>& bytes={}){
+    device_session::Snapshot command(Op op,const std::vector<std::uint8_t>& bytes={},DWORD timeout=7000){
         try{
-            observed=device_session::decode_snapshot(exchange(op,bytes).bytes);
+            observed=device_session::decode_snapshot(exchange(op,bytes,timeout).bytes);
             if(observed.failure!=session::Failure::none || observed.stream_fault!=StreamFault::none || observed.device_released ||
                (op==Op::start?(observed.phase!=device_session::Phase::running || observed.io_retired):
                 (observed.phase!=device_session::Phase::ready || !observed.io_retired)))
@@ -241,6 +245,10 @@ BrokerClient::BrokerClient(const std::wstring& name,HANDLE expected,session::Kin
     if(!endpoint(name) || (expected_kind!=session::Kind::native && expected_kind!=session::Kind::simulated))throw std::invalid_argument("Invalid explicit broker endpoint/kind");
     if(!DuplicateHandle(GetCurrentProcess(),expected,GetCurrentProcess(),&state_->server.value,SYNCHRONIZE|PROCESS_QUERY_LIMITED_INFORMATION,FALSE,0))fail("Retain exact broker process reference");
     if(WaitForSingleObject(state_->server.value,0)!=WAIT_TIMEOUT || !same(process_identity(GetCurrentProcess()),process_identity(state_->server.value)))throw std::runtime_error("Broker server is not a live ordinary-user peer");
+    // Wait for this explicit pipe instance to accept a client, not for USB
+    // recovery. One CreateFile follows; no process launch or reconnect loop.
+    if(!WaitNamedPipeW(name.c_str(),2000))fail("Wait for explicit broker endpoint availability");
+    if(WaitForSingleObject(state_->server.value,0)!=WAIT_TIMEOUT)throw std::runtime_error("Expected broker exited before connection");
     state_->pipe.value=CreateFileW(name.c_str(),GENERIC_READ|GENERIC_WRITE,0,nullptr,OPEN_EXISTING,
         FILE_FLAG_OVERLAPPED|SECURITY_SQOS_PRESENT|SECURITY_IDENTIFICATION,nullptr);
     if(state_->pipe.value==INVALID_HANDLE_VALUE)fail("Connect explicit broker endpoint");
@@ -270,11 +278,23 @@ device_session::Snapshot BrokerClient::start(Mailbox& audio,StreamConfig config)
     const auto result=state_->command(Op::start,bytes);
     if(result.rate_hz!=config.rate_hz || result.intervals!=config.intervals){state_->attached=false;throw std::runtime_error("Broker started a different stream mode");}return result;
 }
-device_session::Snapshot BrokerClient::stop(){return state_->command(Op::stop);}
-device_session::Snapshot BrokerClient::detach(){
-    const auto s=state_->command(Op::detach);state_->attached=false;
+device_session::Snapshot BrokerClient::stop(DWORD timeout){return state_->command(Op::stop,{},timeout);}
+device_session::Snapshot BrokerClient::detach(DWORD timeout){
+    if(!timeout || timeout>7000)throw std::invalid_argument("Broker detach needs a bounded deadline");
+    const auto deadline=GetTickCount64()+timeout;
+    const auto s=state_->command(Op::detach,{},timeout);state_->attached=false;
     if(!state_->sequence)throw std::runtime_error("Broker detach acknowledgement sequence exhausted");
-    write(state_->pipe.value,{state_->sequence++,unsigned(Op::detach),0,{}},state_->server.value);return s;
+    write(state_->pipe.value,{state_->sequence++,unsigned(Op::detach),0,{}},state_->server.value,remaining(deadline));
+    try{
+        (void)read(state_->pipe.value,remaining(deadline),state_->server.value);
+        throw std::runtime_error("Broker detach did not end the connection");
+    }catch(const PipeError& e){
+        if(e.code!=ERROR_BROKEN_PIPE && e.code!=ERROR_PIPE_NOT_CONNECTED && e.code!=ERROR_NO_DATA)throw;
+    }
+    return s;
+}
+void BrokerClient::disconnect() noexcept {
+    state_->attached=false;if(state_->pipe.value && state_->pipe.value!=INVALID_HANDLE_VALUE)CloseHandle(state_->pipe.value);state_->pipe.value=nullptr;
 }
 const device_session::Snapshot& BrokerClient::observation() const noexcept{return state_->observed;}
 HANDLE BrokerClient::worker_process_handle() const noexcept{return state_->worker.value;}

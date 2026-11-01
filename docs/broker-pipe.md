@@ -101,6 +101,8 @@ client exit; there is no native device handle grant.
 
 ## Verification and remaining work
 
+**Later checkpoint:** [broker-backed ASIO callbacks and ordinary COM object lifetimes](broker-asio.md) now have simulated component/process coverage. Reviewed discovery and production configuration remain unfinished; the paragraphs below preserve this pipe checkpoint's scope.
+
 `sl3_broker_pipe_tests` exercises real Windows pipes, process tokens, handle
 duplication and mapping-object comparison with the simulated worker. Two
 independent clients each receive 24 ordered input blocks from frame zero and

@@ -11,20 +11,24 @@ template<class T>void split(std::uint64_t value,T& result) noexcept {
 }
 DriverFacade::DriverFacade(WorkerSpec spec,LatencyProfile latency,std::shared_ptr<const void> lease):
     DriverFacade(std::make_shared<DriverOwner>(std::move(spec),std::move(lease)),latency){}
+DriverFacade::DriverFacade(BrokerAttachment spec,LatencyProfile latency,std::shared_ptr<const void> lease):
+    DriverFacade(std::make_shared<DriverOwner>(std::move(spec),std::move(lease)),latency){}
 DriverOwner::DriverOwner(WorkerSpec spec,std::shared_ptr<const void> lease):
-    configuration_lease_(std::move(lease)),session_(std::move(spec)){}
+    configuration_lease_(std::move(lease)),session_(make_owned_driver_session(std::move(spec))){}
+DriverOwner::DriverOwner(BrokerAttachment spec,std::shared_ptr<const void> lease):
+    configuration_lease_(std::move(lease)),session_(make_broker_driver_session(std::move(spec))){}
 std::optional<HostReport> DriverOwner::close(DWORD timeout) noexcept {
     bool idle=false;if(!borrowed_.compare_exchange_strong(idle,true))return std::nullopt;
-    sealed_=true;const auto result=session_.close(timeout);borrowed_=false;return result;
+    sealed_=true;const auto result=session_->close(timeout);borrowed_=false;return result;
 }
 void DriverOwner::detach(bool buffers_created) noexcept {
-    const auto report=session_.report();
+    const auto report=session_->report();
     // Active/blocked callbacks must stop admitting new calls immediately. Keep
     // the existing AudioOwner leases until an executing callback returns.
-    bool clean=!session_.on_audio_thread() && report.audio.retired && !report.running &&
+    bool clean=!session_->on_audio_thread() && report.audio.retired && !report.running &&
         report.failure==HostFailure::none && report.io_retired;
-    if(clean && buffers_created)clean=session_.dispose_buffers()==ASE_OK;
-    if(!clean){sealed_=true;session_.request_shutdown();}
+    if(clean && buffers_created)clean=session_->dispose_buffers()==ASE_OK;
+    if(!clean){sealed_=true;session_->request_shutdown();}
     borrowed_=false;
 }
 std::shared_ptr<DriverOwner> DriverFacade::claim(std::shared_ptr<DriverOwner> owner,LatencyProfile latency){
@@ -40,7 +44,7 @@ std::shared_ptr<DriverOwner> DriverFacade::claim(std::shared_ptr<DriverOwner> ow
     return owner;
 }
 DriverFacade::DriverFacade(std::shared_ptr<DriverOwner> owner,LatencyProfile latency):
-    owner_(claim(std::move(owner),latency)),session_(owner_->session_),latency_(latency){}
+    owner_(claim(std::move(owner),latency)),session_(*owner_->session_),latency_(latency){}
 DriverFacade::~DriverFacade(){owner_->detach(frames_.load()!=0);}
 ASIOError DriverFacade::fail(ASIOError code,const char* text) noexcept {error_=text;return code;}
 ASIOBool DriverFacade::init() noexcept {
@@ -67,7 +71,9 @@ ASIOError DriverFacade::stop() noexcept {
     if(!initialized_ && !frames_)return ASE_NotPresent;
     const auto result=session_.stop();started_=false;
     const bool released=result.device_released && (!result.process.started || (result.process.process_exited && result.process.job_empty));
-    const bool held=result.device_held && !result.device_released && result.process.started && result.process.job_assigned && !result.process.process_exited &&
+    const bool live_owner=result.domain==HostDomain::broker_client?(result.broker.attached && result.broker.worker_alive):
+        (result.process.started && result.process.job_assigned && !result.process.process_exited);
+    const bool held=result.device_held && !result.device_released && live_owner &&
         result.device_snapshot.phase==device_session::Phase::ready;
     if(!result.audio.retired || !result.io_retired || (!released && !held) || result.failure!=HostFailure::none){
         initialized_=false;return fail(ASE_HWMalfunction,"SL3 stop is incomplete or the session failed; retained buffers stay owned.");

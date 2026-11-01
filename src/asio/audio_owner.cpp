@@ -7,7 +7,7 @@ namespace {constexpr unsigned closed_gate=0x80000000u;thread_local void* current
 struct AudioOwner::State {
     std::shared_ptr<BufferLease> buffers;
     std::shared_ptr<worker::Mailbox> channel;
-    std::shared_ptr<worker::Process> process;
+    std::shared_ptr<worker::ProcessWait> process;
     HANDLE stop=nullptr,ready=nullptr,retired=nullptr,thread=nullptr;
     std::atomic<unsigned> gate{0};
     std::atomic<AudioExit> exit{AudioExit::not_started};std::atomic<bool> flow_started{false};
@@ -15,7 +15,7 @@ struct AudioOwner::State {
     std::atomic<std::uint64_t> observed_sequence{0},position{0},time{0};
     std::atomic<unsigned> bank{0};std::atomic<bool> observation_valid{false};
     unsigned rate=0;PumpFailure failure{};
-    State(std::shared_ptr<BufferLease> b,std::shared_ptr<worker::Mailbox> c,std::shared_ptr<worker::Process> p):
+    State(std::shared_ptr<BufferLease> b,std::shared_ptr<worker::Mailbox> c,std::shared_ptr<worker::ProcessWait> p):
         buffers(std::move(b)),channel(std::move(c)),process(std::move(p)){
         stop=CreateEventW(nullptr,TRUE,FALSE,nullptr);ready=CreateEventW(nullptr,TRUE,FALSE,nullptr);retired=CreateEventW(nullptr,TRUE,FALSE,nullptr);
         if(!stop || !ready || !retired){if(stop)CloseHandle(stop);if(ready)CloseHandle(ready);if(retired)CloseHandle(retired);throw std::runtime_error("Cannot create audio-owner lifetime events");}
@@ -34,14 +34,16 @@ ASIOError BufferLease::create(ASIOBufferInfo* info,long count,long frames,const 
     const auto result=buffers_.create(info,count,frames,&wrapped);if(result==ASE_OK)callbacks_=*callbacks;return result;
 }
 ASIOError BufferLease::dispose() noexcept {if(acquired_)return ASE_InvalidMode;const auto result=buffers_.dispose();if(result==ASE_OK)callbacks_={};return result;}
-AudioOwner::AudioOwner(std::shared_ptr<BufferLease> b,std::shared_ptr<worker::Mailbox> c,std::shared_ptr<worker::Process> p){
+AudioOwner::AudioOwner(std::shared_ptr<BufferLease> b,std::shared_ptr<worker::Mailbox> c,std::shared_ptr<worker::Process> p):
+    AudioOwner(std::move(b),std::move(c),worker::ProcessWait::owned(std::move(p))){}
+AudioOwner::AudioOwner(std::shared_ptr<BufferLease> b,std::shared_ptr<worker::Mailbox> c,std::shared_ptr<worker::ProcessWait> p){
     if(!b || !c || !p)throw std::invalid_argument("Audio owner needs shared buffers, channel and process");
     state_=std::make_shared<State>(std::move(b),std::move(c),std::move(p));
 }
 AudioOwner::~AudioOwner(){request_stop();if(attempted_ && WaitForSingleObject(state_->retired,0)!=WAIT_OBJECT_0)state_->channel->close();}
 void AudioOwner::callback(long bank,ASIOBool direct){
     auto* state=static_cast<State*>(current_audio);if(!state)return;
-    if(WaitForSingleObject(state->process->process_handle(),0)==WAIT_OBJECT_0){if(state->close_gate())state->exit=AudioExit::worker_exited;return;}
+    if(WaitForSingleObject(state->process->handle(),0)==WAIT_OBJECT_0){if(state->close_gate())state->exit=AudioExit::worker_exited;return;}
     auto value=state->gate.load();
     do{if(value&closed_gate)return;}while(!state->gate.compare_exchange_weak(value,value+1));
     struct Lease {State* state;~Lease(){state->gate.fetch_sub(1);}} lease{state};
@@ -58,9 +60,9 @@ unsigned __stdcall AudioOwner::thread_entry(void* raw) noexcept {
         if(pump.begin(state->rate)!=PumpResult::ok){state->exit=AudioExit::startup_failed;SetEvent(state->ready);}
         else{
             state->flow_started=true;state->exit=AudioExit::running;SetEvent(state->ready);
-            const HANDLE waits[]={state->stop,state->process->process_handle(),state->channel->input_event()};
+            const HANDLE waits[]={state->stop,state->process->handle(),state->channel->input_event()};
             while(!(state->gate.load()&closed_gate)){
-                if(WaitForSingleObject(state->process->process_handle(),0)==WAIT_OBJECT_0){if(state->close_gate())state->exit=AudioExit::worker_exited;state->channel->close();break;}
+                if(WaitForSingleObject(state->process->handle(),0)==WAIT_OBJECT_0){if(state->close_gate())state->exit=AudioExit::worker_exited;state->channel->close();break;}
                 const auto result=pump.step();const auto stats=pump.stats();
                 state->input_frames=stats.received_frames;state->published_frames=stats.published_frames;
                 if(result==PumpResult::ok)continue;
@@ -97,7 +99,7 @@ void CALLBACK AudioOwner::thread_retired(PTP_CALLBACK_INSTANCE instance,void* ra
     // The DLL reference is released by Windows only after THIS callback returns.
 }
 bool AudioOwner::start(unsigned rate,DWORD timeout){
-    if(attempted_ || (state_->gate.load()&closed_gate) || timeout>5000 || (rate!=44100 && rate!=48000) || !state_->buffers->buffers_.prepared() || !state_->process->process_handle())return false;
+    if(attempted_ || (state_->gate.load()&closed_gate) || timeout>5000 || (rate!=44100 && rate!=48000) || !state_->buffers->buffers_.prepared() || !state_->process->handle())return false;
     bool expected=false;if(!state_->buffers->acquired_.compare_exchange_strong(expected,true))return false;
     attempted_=true;state_->rate=rate;HMODULE module=nullptr;PTP_WAIT wait=nullptr;ReaperContext* reaper=nullptr;ThreadContext* thread=nullptr;
     try{

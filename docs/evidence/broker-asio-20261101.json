@@ -1,0 +1,144 @@
+{
+  "schema": "sl3.broker-asio-verification.v1",
+  "createdUtc": "2026-11-01T23:16:58.669741+00:00",
+  "tests": {
+    "native": [
+      {
+        "build": "native",
+        "configuration": "Release",
+        "tests": 54,
+        "manifestSha256": "a40b73c865db88d8ba9f8627ca9e5ba729779d349f7a3763e285d93c66808932",
+        "brokerAsioTestSha256": "cdd74dd911b47bd094175907db53c62933a5ebdfed299516f81244f65193b9b6",
+        "testDllSha256": "ee4bad2ae902c8ccb8ed2e22665f9683b90ee3707f07ea204322a6e902a87258",
+        "productionDllSha256": "ed862cd10e1d17df5b554509e2d5b2788fc15d50cb4c32b986a4437b65f940fd"
+      },
+      {
+        "build": "native",
+        "configuration": "Debug",
+        "tests": 54,
+        "manifestSha256": "2e089b57dcb77d5fda4387a61dfc601894a0924ddbe7e78e8b5f4582150e2480",
+        "brokerAsioTestSha256": "0071c94e8909cf4a6daa9e85ac7d84c1258d414f755eadd94c7f2cd5fa572d3c",
+        "testDllSha256": "9cf5050183aed6bd45fd48e7a5ba49722c2348f16da6c1d1e7e287bad71812aa",
+        "productionDllSha256": "09d6032b9103fb733b1172200872a37943337c1c11eb8ea0beee29603e99b4fe"
+      },
+      {
+        "build": "native-without-sdk",
+        "configuration": "Release",
+        "tests": 35,
+        "manifestSha256": "abfd22bcd72b4e5766b8ddb4b2878a1822077042eefbbcbe038823db4b3e9838"
+      }
+    ],
+    "python": 392,
+    "focusedNativeCases": 4
+  },
+  "ordinaryScenario": {
+    "simulationOnly": true,
+    "actualComTestDll": true,
+    "separateHostProcess": true,
+    "freshFactories": 3,
+    "ordinaryObjects": 3,
+    "customDeviceScopeRequested": false,
+    "registryActivationTested": false,
+    "streams": 4,
+    "minimumCallbacksPerStream": 12,
+    "bankFrames": 128,
+    "output": "zero PCM",
+    "workerAcquisitions": 1,
+    "freshClockReads": 8,
+    "finalOwnerReleases": 1,
+    "parentServedBarrierBetweenObjects": false
+  },
+  "lifetimeCoverage": {
+    "callbackBankPositionClockAndReentry": true,
+    "stableSdkPlanesAcrossRestarts": true,
+    "privateOwnedWorkerLifetimeRegressionPassed": true,
+    "blockedCallbackSurvivesComReleaseAndCallerDllUnload": true,
+    "moduleUnloadAfterActualThreadRetirement": true,
+    "noAdditionalCallbackLeaseAfterStop": true,
+    "clientDetachReportDistinctFromPhysicalRelease": true,
+    "brokerReportClaimsOwnedJob": false,
+    "sharedClientFacadeFreshClock": true,
+    "productionHasFixtureConfigureExport": false
+  },
+  "scope": {
+    "productionDiscoveryImplemented": false,
+    "productionBrokerConfigurationEnabled": false,
+    "nativeBrokerAudioTested": false,
+    "measuredLatencyProfile": false,
+    "physicalAudioTested": false,
+    "currentSeratoTested": false,
+    "uacLaunched": false,
+    "securityChanged": false,
+    "driverBindingChanged": false
+  },
+  "controlContract": {
+    "observedRateOnlyAsio": true,
+    "noRateSetterInBroker": true,
+    "waitOnlyWorkerReference": true,
+    "privateWorkerRetainedViaLifetimeLease": true,
+    "clientDetachWaitsTerminalDisconnect": true,
+    "ipcAvailabilityWaitMs": 2000,
+    "createFileAttemptsPerConnection": 1,
+    "usbReacquisitionLoop": false
+  },
+  "disarmedUnitPlans": [
+    {
+      "path": "analysis/rate-trace-unit-54c2a761584d42ceab50a003783972f4",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-563f1186aa6b4dcaa40e8927511f8361",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-5800b13038a54a2faedbcecf8507c5f9",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-6053828dc5544db382e650777082fda7",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-71306d4ea8b24de38c1574b3b16402a9",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-9d4afeb51c624e8580a345116462cb10",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-b2ae77261c934f54aa7246b0dbf75d86",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-c163f214f8be49588a7726609c1c1353",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-e22299b204f7462eacb2fe31d5d82d7f",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    }
+  ],
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/broker-asio-20261101",
+    "files": 437,
+    "manifestSha256": "45946bca103b2cf02f9a5d05f365317510f8a91937c9832a66f1db1b4bda8bec"
+  },
+  "logs": {
+    "broker-asio-release-20261101.log": "46ced03cedbe7caafc72304da7b5437425f8db56e9c13b950567d62b9338ef4a",
+    "broker-asio-debug-20261101.log": "a3f4dbd327cd6e85631afed1240bc6c5a191d5cb936423de89b09e3d195ec8f1",
+    "broker-asio-sdkfree-20261101.log": "336c02fd79a0f682d0b49d155e568bca96d41dc1f3849f0be349eae0bca8318f",
+    "broker-asio-python-20261101.log": "9773a5ad5f0af313653288eed35dd2b6c7e3588ba752736059787656eb4d6a39",
+    "broker-asio-focused-20261101.log": "eac3085ec94a0041e7fef840535187570e366c5b26acb74b61742ff0829d9c65",
+    "broker-asio-targeted-20261101.log": "b254a6223a3cbbc7dcb2c5be3513414f20215c9fe389729dbd4f78de4e37d5ae"
+  }
+}

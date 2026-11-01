@@ -1,5 +1,5 @@
 #pragma once
-#include "asio/host_session.hpp"
+#include "asio/driver_session.hpp"
 #include <atomic>
 
 namespace sl3::asio {
@@ -19,11 +19,12 @@ struct LatencyProfile {
 class DriverOwner final {
 public:
     explicit DriverOwner(WorkerSpec,std::shared_ptr<const void> configuration_lease={});
+    explicit DriverOwner(BrokerAttachment,std::shared_ptr<const void> configuration_lease={});
     std::optional<HostReport> close(DWORD total_timeout_ms=5000) noexcept;
 private:
     friend class DriverFacade;
     std::shared_ptr<const void> configuration_lease_;
-    HostSession session_;
+    std::unique_ptr<DriverSession> session_;
     std::atomic<bool> borrowed_{false},sealed_{false};
     void detach(bool buffers_created) noexcept;
 };
@@ -32,6 +33,7 @@ private:
 class DriverFacade final {
 public:
     DriverFacade(WorkerSpec,LatencyProfile,std::shared_ptr<const void> configuration_lease={});
+    DriverFacade(BrokerAttachment,LatencyProfile,std::shared_ptr<const void> configuration_lease={});
     DriverFacade(std::shared_ptr<DriverOwner>,LatencyProfile);
     ~DriverFacade();
     ASIOBool init() noexcept;
@@ -55,7 +57,7 @@ public:
     ASIOError outputReady() const noexcept;
 private:
     std::shared_ptr<DriverOwner> owner_;
-    HostSession& session_;
+    DriverSession& session_;
     const LatencyProfile latency_;
     std::atomic<bool> initialized_{false},started_{false};
     std::atomic<unsigned> rate_{0},frames_{0},active_{0};

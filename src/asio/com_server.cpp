@@ -154,9 +154,7 @@ public:
         }
         // Do not hold the factory mutex through worker/callback retirement.
         const auto value=scope->owner->close();if(!value)return S_FALSE;
-        const bool retired=value->failure==sl3::asio::HostFailure::none && !value->reentrant && value->audio.retired &&
-            value->io_retired && value->device_released && !value->device_held &&
-            (!value->process.started || (value->process.process_exited && value->process.job_empty));
+        const bool retired=sl3::asio::driver_session_closed(*value);
         std::lock_guard<std::mutex> guard(scope_mutex_);
         if(!retired){scope_state_=ScopeState::failed;return E_FAIL;}
         scope_.reset();scope_state_=ScopeState::closed;return S_OK;
