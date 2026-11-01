@@ -6,6 +6,11 @@
 #include <iostream>
 #include <stdexcept>
 #include <type_traits>
+#include <vector>
+#ifdef _WIN32
+#include "windows/rate_io_log.hpp"
+#include <fstream>
+#endif
 
 namespace {
 using namespace sl3::control;
@@ -101,6 +106,11 @@ void failures(){
 struct FakeIo final:RateIo {
     std::uint64_t clock=1000;unsigned elapsed=1,operations=0,fail_at=99,cancel_at=99,short_at=99;
     unsigned current=44100,command=0,notifications=0,notifications_per_reply=3,setters=0;
+    std::array<RateIoObservation,15> observations{};unsigned observed_count=0,observer_delay_ms=0;
+    void observed(const RateIoObservation& o) noexcept override{
+        if(observed_count>=observations.size() || o.sequence!=observed_count)std::terminate();
+        observations[observed_count++]=o;clock+=observer_delay_ms;
+    }
     unsigned last_timeout=0;bool malformed_ack=false,mismatch=false,rollback_clock=false;
     std::uint64_t now_ms() noexcept override{return clock;}
     bool cancelled() noexcept override{return operations==cancel_at;}
@@ -196,6 +206,61 @@ void grants(){
     for(const auto text:{L"",L"+48000",L"48000 ",L" 48000",L"048000",L"96000",L"44100junk"})rejects([&]{parse_rate_test_target(text);});
     rejects([]{parse_rate_test_target(std::wstring_view(L"48000\0junk",10));});
 }
+void recording_decisions(){
+    FakeIo io;const auto result=checked_diagnose(48000,io);
+    require(result.error==DiagnosticError::none && io.observed_count==io.operations && io.observed_count==15,"One bounded observation per retired adapter return");
+    unsigned writes=0,notifications=0,replies=0;
+    for(unsigned i=0;i<io.observed_count;++i){
+        const auto& o=io.observations[i];require(o.sequence==i && o.transferred && o.bytes==64 && o.completed_ms>=o.started_ms,"Observation preserves order, count and runner timing");
+        writes+=o.decision==RateIoDecision::write_retired;notifications+=o.decision==RateIoDecision::notification;replies+=o.decision==RateIoDecision::reply;
+        require(o.timeout_ms==(o.output?100u:300u),"Recorder does not alter per-transfer limits");
+    }
+    require(writes==3 && notifications==9 && replies==3 && io.observations[5].frame[0]==0x31 &&
+        io.observations[5].frame[5]==0xbb && io.observations[5].frame[6]==0x80,"Exact one setter and bounded notifications survive recording");
+    for(unsigned op=0;op<15;++op)for(unsigned fault=0;fault<3;++fault){
+        FakeIo failed;if(fault==0)failed.fail_at=op;if(fault==1)failed.short_at=op;if(fault==2)failed.cancel_at=op;
+        const auto r=checked_diagnose(48000,failed);
+        require(r.error!=DiagnosticError::none && failed.observed_count==failed.operations,"Fault boundaries preserve every actual adapter return, without inventing an attempt");
+        if(failed.observed_count){const auto& last=failed.observations[failed.observed_count-1];
+            require(last.decision==(fault==2?RateIoDecision::cancelled:RateIoDecision::transfer_failure),"Failed/short/cancelled frame cannot be recorded as accepted reply");
+            if(fault==1)require(last.bytes==63,"Short reply retains its actual byte count");}
+    }
+    {FakeIo late;late.elapsed=10;const auto r=checked_diagnose(48000,late,150);const auto& last=late.observations[14];
+     require(r.error==DiagnosticError::deadline && !r.readback_rate_hz && last.transferred && last.bytes==64 && last.frame[0]==0x30 &&
+        last.frame[5]==0xbb && last.frame[6]==0x80 && last.decision==RateIoDecision::deadline,"Late supported getter is retained raw but never promoted to accepted readback");}
+    {FakeIo mismatch;mismatch.mismatch=true;const auto r=checked_diagnose(48000,mismatch);
+     require(r.transaction_error==RateError::readback_mismatch && mismatch.observations[14].decision==RateIoDecision::reply && !r.verified_rate_hz,
+        "Accepted exchange reply and target verification remain different facts");}
+    {FakeIo malformed;malformed.malformed_ack=true;checked_diagnose(48000,malformed);
+     require(malformed.observations[malformed.observed_count-1].decision==RateIoDecision::exchange_failure,"Malformed acknowledgement preserves rejected exchange classification");}
+    {FakeIo delayed;delayed.observer_delay_ms=3000;const auto r=checked_diagnose(48000,delayed);
+     require(r.error==DiagnosticError::deadline && delayed.operations==1 && delayed.observed_count==1 && !r.device_may_have_changed,
+        "Time consumed by observation cannot admit a later I/O beyond the transaction deadline");}
+}
+#ifdef _WIN32
+void native_recording_file(){
+    using namespace sl3::diagnostic;
+    const auto path=std::filesystem::temp_directory_path()/(L"SL3RateIo-"+std::to_wstring(GetCurrentProcessId())+L"-"+std::to_wstring(GetTickCount64())+L".jsonl");
+    require(!std::filesystem::exists(path),"Fresh no-hardware recording fixture required");
+    Frame request=rate_query().frame();auto input=reply(0x30,44100);RateNativeFacts native;native.invoked=native.api_attempted=native.api_accepted=native.terminal=true;native.adapter_timeout_ms=90;
+    const RateIoObservation sent{0,true,100,10,12,true,64,request,RateIoDecision::write_retired};
+    const RateIoObservation short_reply{1,false,300,13,15,true,63,input,RateIoDecision::transfer_failure};
+    {RateIoLog log(path,48000,"2026-11-01T21:00:00Z");log.begin(true,100,10,request);log.end(sent,native);
+     log.begin(false,300,13,Frame{});log.end(short_reply,native);log.decided(sent);log.decided(short_reply);}
+    std::vector<std::string> lines;{std::ifstream in(path);for(std::string line;std::getline(in,line);)lines.push_back(line);}
+    require(lines.size()==7 && lines[0].find("sl3.rate-io.v1")!=std::string::npos && lines[1].find("\"event\":\"begin\"")!=std::string::npos,"Fresh header and bounded append-only records written");
+    require(lines[3].find("\"frame_hex\":null")!=std::string::npos && lines[4].find("\"bytes\":63")!=std::string::npos &&
+        lines[4].find("decision")==std::string::npos && lines[5].find("write_retired")!=std::string::npos && lines[6].find("transfer_failure")!=std::string::npos,
+        "Raw short frame and post-transaction decisions have distinct records; no fabricated input before read");
+    bool refused=false;try{RateIoLog duplicate(path,48000,"2026-11-01T21:00:00Z");}catch(const std::runtime_error&){refused=true;}
+    require(refused,"An existing I/O recording is never overwritten");
+    std::filesystem::remove(path);
+    {RateIoLog prefix(path,48000,"2026-11-01T21:00:00Z");prefix.begin(true,100,10,request);}
+    lines.clear();{std::ifstream in(path);for(std::string line;std::getline(in,line);)lines.push_back(line);}
+    require(lines.size()==2 && lines[1].find("\"event\":\"begin\"")!=std::string::npos,"A prefix without return/decision remains explicitly incomplete evidence");
+    std::filesystem::remove(path);
+}
+#endif
 void diagnostics(){
     {FakeIo io;const auto result=checked_diagnose(48000,io);require(result.error==DiagnosticError::none && result.verified_rate_hz==48000 && result.initial_rate_hz==44100 && result.device_may_have_changed && result.write_attempts==3 && result.read_attempts==12 && io.operations==15 && io.setters==1,"Full bounded runner uses twelve frames and one setter");}
     {FakeIo io;const auto result=checked_diagnose(48000,io);require(result.readback_rate_hz==48000 && result.acknowledgement_received && result.setter_attempts==1,"Runner exports accepted readback, acknowledgement and one setter attempt");}
@@ -220,5 +285,9 @@ void diagnostics(){
     {FakeIo io;const auto result=checked_diagnose(96000,io);require(result.error==DiagnosticError::invalid_target && !io.operations,"Invalid diagnostic target performs no I/O");}
 }
 }
-int main(){try{success();failures();diagnostics();wire();grants();std::cout<<"Bounded rate-selection transaction and injected diagnostic runner passed; no physical device operations\n";}
+int main(){try{success();failures();diagnostics();wire();grants();recording_decisions();
+#ifdef _WIN32
+native_recording_file();
+#endif
+std::cout<<"Bounded rate-selection transaction and injected diagnostic runner passed; no physical device operations\n";}
 catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}}

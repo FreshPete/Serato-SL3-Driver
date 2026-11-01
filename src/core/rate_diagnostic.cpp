@@ -17,10 +17,18 @@ RateDiagnosticResult diagnose_rate(unsigned target_hz,RateIo& io,unsigned budget
         else ++result.read_attempts;
         const auto transferred=io.transfer(output,frame,timeout,bytes);
         const auto completed=io.now_ms();
-        if(io.cancelled()){result.error=DiagnosticError::cancelled;break;}
-        if(completed<now || completed-start>=budget_ms){result.error=DiagnosticError::deadline;break;}
-        if(!transferred || bytes!=frame_bytes){result.error=DiagnosticError::transfer;break;}
-        if(!output)selection.accept(frame.data(),bytes);
+        const auto observe=[&](RateIoDecision decision){
+            io.observed({operation,output,timeout,now,completed,transferred,bytes,frame,decision});
+        };
+        if(io.cancelled()){result.error=DiagnosticError::cancelled;observe(RateIoDecision::cancelled);break;}
+        if(completed<now || completed-start>=budget_ms){result.error=DiagnosticError::deadline;observe(RateIoDecision::deadline);break;}
+        if(!transferred || bytes!=frame_bytes){result.error=DiagnosticError::transfer;observe(RateIoDecision::transfer_failure);break;}
+        if(output)observe(RateIoDecision::write_retired);
+        else{
+            const auto event=selection.accept(frame.data(),bytes);
+            observe(event.outcome==Outcome::notification?RateIoDecision::notification:
+                event.outcome==Outcome::reply?RateIoDecision::reply:RateIoDecision::exchange_failure);
+        }
         if(selection.phase()==RatePhase::complete)break;
         if(selection.phase()==RatePhase::failed){result.error=DiagnosticError::transaction;break;}
     }

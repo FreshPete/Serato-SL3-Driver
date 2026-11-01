@@ -2,6 +2,15 @@
 #include "core/rate_selection.hpp"
 
 namespace sl3::control {
+// A reply decision is acceptance by the bounded exchange, not verification of
+// the requested clock. A mismatching supported getter is still a reply.
+enum class RateIoDecision {write_retired,notification,reply,exchange_failure,cancelled,deadline,transfer_failure};
+struct RateIoObservation {
+    unsigned sequence=0;bool output=false;unsigned timeout_ms=0;
+    std::uint64_t started_ms=0,completed_ms=0;
+    bool transferred=false;std::size_t bytes=0;Frame frame{};
+    RateIoDecision decision=RateIoDecision::transfer_failure;
+};
 class RateIo {
 public:
     virtual ~RateIo()=default;
@@ -11,6 +20,11 @@ public:
     // failure. An adapter unable to prove retirement must contain its process
     // while retaining storage; returning and freeing it is forbidden.
     virtual bool transfer(bool output,Frame&,unsigned timeout_ms,std::size_t& bytes) noexcept=0;
+    // Optional telemetry after the runner decides whether to consume the frame.
+    // Must be bounded, nonblocking and perform no I/O. A native adapter buffers
+    // these decisions and persists them after the bounded transaction returns.
+    // Observing a frame cannot promote late/cancelled data to accepted evidence.
+    virtual void observed(const RateIoObservation&) noexcept{}
 };
 enum class DiagnosticError {none,invalid_target,deadline,cancelled,transfer,transaction};
 struct RateDiagnosticResult {

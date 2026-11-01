@@ -1,5 +1,7 @@
 # Single-use shared trace for a held-rate diagnostic
 
+**Later checkpoint:** [raw per-transfer rate recording](rate-io-recording.md) is now emitted by the native adapter. Replay and a required recording gate are still pending, so the trace qualification below does not claim to validate that new file. Native inputs changed; prepared test plans stay disarmed.
+
 The rate experiment now has a dedicated normal-user runner, an administrator trace/state collector, a frozen plan and a single-use launcher. This is source and offline validation work: no elevated launch, USB acquisition or physical rate selection ran for this checkpoint.
 
 ## Plan and roles

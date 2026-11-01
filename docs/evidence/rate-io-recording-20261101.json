@@ -1,0 +1,104 @@
+{
+  "schema": "sl3.rate-io-recording-verification.v1",
+  "createdUtc": "2026-11-01T21:53:20.823447+00:00",
+  "tests": {
+    "python": 379,
+    "releaseNative": 51,
+    "debugNative": 51,
+    "sdkFreeNative": 33,
+    "transferShortAndCancelBoundaryCases": 45,
+    "filesystemOnlyWriterTestPassed": true,
+    "lateRawGetterNotPromotedToReadback": true,
+    "mismatchingReplyNotPromotedToVerification": true,
+    "prefixAndCreateNewBehaviorChecked": true
+  },
+  "recordingContract": {
+    "schema": "sl3.rate-io.v1",
+    "maximumAttempts": 15,
+    "maximumBeginEndRows": 30,
+    "maximumDecisionRows": 15,
+    "headerRows": 1,
+    "maximumFrameBytes": 64,
+    "rawAttemptBeforeSubmission": true,
+    "returnedNativeBytesAndStatusRetainedOnFailure": true,
+    "decisionCallbackFixedStorageOnly": true,
+    "decisionCallbackPerformsIO": false,
+    "decisionsPersistedAfterTransaction": true,
+    "newUsbCommands": 0,
+    "transactionBudgetMsUnchanged": 3000,
+    "newRetriesOrRestoration": false,
+    "newSummaryReferencesAdditiveV2": true,
+    "recorderFailureContainmentImplemented": true,
+    "recorderFailureContainmentFaultInjected": false
+  },
+  "initialReleaseCompileFailed": true,
+  "compileFailureReason": "Windows min macro expanded a std::min call when the recorder header was included without NOMINMAX; parenthesized the standard function name.",
+  "nativeImageSha256": {
+    "Release": {
+      "sl3_host_probe.exe": "27ca98e86b06258eaaa5eb7ecf3b229def537278465e9a4b1c9c489fab96ccd5",
+      "sl3_usbdk.exe": "4582d28abefae99ff835c983ad0423c01db81218a8870e58cb3a2757f4e0c176",
+      "sl3_rate_selection_tests.exe": "193d1404be74bf77f8655e72e285d497f909f8091afdb610993555cc7a029551"
+    },
+    "Debug": {
+      "sl3_host_probe.exe": "5f369d16a459fc97f4f99add076b3f5ac024cae9489b50db82ef0c8dd9bda276",
+      "sl3_usbdk.exe": "2e77b2c427f411ebe2cb2fd2d83c13d3f685d5d988d83b7e3396117dbe6c564a",
+      "sl3_rate_selection_tests.exe": "d6352755160cfef5b87f853cf4ee718803fcf17bf85abc0e3db63ad882504815"
+    }
+  },
+  "sourceSha256": {
+    "src/core/rate_diagnostic.cpp": "7dd99ebc0901f19b48bdcd93f08b2943083e44aad134160de3522ee5a95cb1b3",
+    "src/core/rate_diagnostic.hpp": "000b041c764c0d7d0d26420cc9cd09bb8415113d4ea031899a65f779a38a8149",
+    "src/windows/usbdk_main.cpp": "1d931d5a63295c3104e8baeccba1de18c8cff1c5bdd7609fed1c6321ce67c47d",
+    "tests/native/rate_selection_tests.cpp": "32b6df8993f4917006dc9e97e798f0514d905d52ba2352ec27dcd8bbcf78fa6f",
+    "src/windows/rate_io_log.hpp": "4437017ce4ccbc10456ed95ec133e384e08a96f1a782f98cfce52610eb7d16fe"
+  },
+  "buildManifestSha256": {
+    "artifacts/build/native/native-build-Release.json": "0aeb4ef94abdb62b5e60c264dc6e588a825d2bb581ad36cea3cdbf3436cd387f",
+    "artifacts/build/native/native-build-Debug.json": "79a6a89703ce3a6d1b2f858ce494d81a362a32ccfcba98f20fca37b1dca18f84",
+    "artifacts/build/native-without-sdk/native-build-Release.json": "972f74a26ea20a8b0bd7b9a6a6f4bf6affa88454aeae60641520a395ca637a0d"
+  },
+  "privateLogSha256": {
+    "rate-io-recording-debug-20261101.log": "406104897b16430cd080620db79af0ced31f82c42c47e635b61fbe9b2aa58124",
+    "rate-io-recording-python-suite-20261101.log": "26c21aca635b2155a5a3eb976dda7e537a3580b3f0e4a1081a6c9c98647a7d63",
+    "rate-io-recording-release-20261101.log": "30dd425eede150e8cd3dac0e33e0908afa79a30f302700ebddf45ac09080b585",
+    "rate-io-recording-release-final-20261101.log": "18fcd275d44fd7be4e207f77d5285b0f66f321e4332008b3746e87e7681cdee7",
+    "rate-io-recording-sdkfree-20261101.log": "6a5fce0ed5c245b4b3ffe588c892e3499c2d6499a1c87035f254ec96112d5f42"
+  },
+  "disarmedUnitPlans": [
+    {
+      "path": "analysis/rate-trace-unit-54c2a761584d42ceab50a003783972f4",
+      "planSha256": "99c50b72ebbd6adda1e452b13c82c7fa4d820ff5db0aa47759c7806c7695dec3",
+      "disarmSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067"
+    },
+    {
+      "path": "analysis/rate-trace-unit-6053828dc5544db382e650777082fda7",
+      "planSha256": "f0c090a2b312d3dcbfff05d41c87b497f73ca2a3b0c9090517e0ac9d24135d95",
+      "disarmSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067"
+    },
+    {
+      "path": "analysis/rate-trace-unit-71306d4ea8b24de38c1574b3b16402a9",
+      "planSha256": "d3e7421b78c87bad3a90bbbdff06b6fe9d12ef55564fbb394eafd35def88ec59",
+      "disarmSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067"
+    }
+  ],
+  "checkpoint": {
+    "path": "artifacts/build/checkpoints/rate-io-recording-20261101",
+    "files": 251,
+    "bytes": 21198620,
+    "manifestSha256": "3b782f26978212194ec05cbb466fce096123efa41dc5ef03f96b541e62875a93"
+  },
+  "limits": {
+    "positiveNativeRecordingCollected": false,
+    "recordingSchemaParserImplemented": false,
+    "recordingReplayAndRequiredValidationGateImplemented": false,
+    "usbPayloadCorrelationVerified": false,
+    "physicalAcquisition": false,
+    "physicalRateSelection": false,
+    "traceSourceStarted": false,
+    "uacLaunch": false,
+    "securityTrustBindingRegistrationOrFirmwareChanges": false,
+    "productionAsioRateSetterImplemented": false,
+    "currentSeratoOrDvsVerified": false,
+    "previousScopePlanStillDisarmed": true
+  }
+}

@@ -28,6 +28,7 @@
 #include "windows/diagnostic.hpp"
 #include "windows/sl3_fixture.hpp"
 #include "windows/startup_journal.hpp"
+#include "windows/rate_io_log.hpp"
 #include "windows/control_transfer_io.hpp"
 #include "windows/control_selection_diagnostic.hpp"
 #include "windows/driver_timer_io.hpp"
@@ -279,17 +280,24 @@ struct Transfer {
 };
 struct NativeRateIo final:sl3::control::RateIo {
     Device& device;std::ofstream& report;const std::filesystem::path& output;unsigned target;
+    sl3::diagnostic::RateIoLog log;sl3::diagnostic::RateNativeFacts facts{};
+    std::array<sl3::control::RateIoObservation,15> observations{};unsigned observed_count=0,saved_decisions=0;
     bool possible=false,retired=true;unsigned transfers=0,setter_attempts=0;std::array<char,512> error{};
-    NativeRateIo(Device& d,std::ofstream& r,const std::filesystem::path& p,unsigned hz):device(d),report(r),output(p),target(hz){}
+    NativeRateIo(Device& d,std::ofstream& r,const std::filesystem::path& p,unsigned hz):device(d),report(r),output(p),target(hz),log(p/L"rate-io.jsonl",hz,utc_now()){}
     std::uint64_t now_ms() noexcept override{return GetTickCount64();}
     bool cancelled() noexcept override{return false;} // Parent watchdog contains the entire process.
     void save(const char* phase,const sl3::control::RateDiagnosticResult* result=nullptr,bool closed=false){
         if(result && result->setter_attempts!=setter_attempts)throw std::runtime_error("Rate setter attempt accounting differs");
+        if(result){
+            if(observed_count!=transfers)throw std::runtime_error("Rate observation count differs");
+            for(;saved_decisions<observed_count;++saved_decisions)log.decided(observations[saved_decisions]);
+        }
         report.close();report.open(output/L"rate.json",std::ios::trunc);
         report<<"{\"schema\":\"sl3.rate-diagnostic.v2\",\"phase\":"<<quote(phase)<<",\"utc\":"<<quote(utc_now())
               <<",\"target_rate_hz\":"<<target<<",\"device_may_have_changed\":"<<(possible?"true":"false")
               <<",\"last_io_retired\":"<<(retired?"true":"false")<<",\"control_transfer_attempts\":"<<transfers
               <<",\"redirect_closed\":"<<(closed?"true":"false")<<",\"audio_submissions\":0,\"alternate_changes\":0,\"automatic_rollback\":false"
+              <<",\"rate_io_schema\":\"sl3.rate-io.v1\",\"rate_io_file\":\"rate-io.jsonl\""
               <<",\"setter_attempts\":"<<setter_attempts;
         if(result)report<<",\"diagnostic_error\":"<<unsigned(result->error)<<",\"transaction_error\":"<<unsigned(result->transaction_error)
                         <<",\"exchange_error\":"<<unsigned(result->exchange_error)<<",\"initial_rate_hz\":"<<result->initial_rate_hz
@@ -299,23 +307,40 @@ struct NativeRateIo final:sl3::control::RateIo {
         report<<",\"error\":"<<quote(error.data())<<"}\n"<<std::flush;
         if(!report)throw std::runtime_error("Cannot persist rate-test state");
     }
+    void observed(const sl3::control::RateIoObservation& observation) noexcept override{
+        if(observed_count>=observations.size() || observation.sequence!=observed_count)fail_stop();
+        observations[observed_count++]=observation; // Fixed storage only; no I/O on the decision boundary.
+    }
     bool transfer(bool output_frame,sl3::control::Frame& frame,unsigned timeout,std::size_t& bytes) noexcept override{
+        Transfer request(device);facts={};facts.invoked=true;const auto started=GetTickCount64();
+        const auto capture=[&]() noexcept{
+            bytes=std::size_t(request.request.Result.GenResult.BytesTransferred);
+            facts.api_attempted=!request.submitted_utc.empty();facts.api_accepted=request.accepted;facts.terminal=request.terminal;
+            facts.completion_error=request.completion_error;facts.usbd_status=request.request.Result.GenResult.UsbdStatus;
+            strncpy_s(facts.submitted_utc.data(),facts.submitted_utc.size(),request.submitted_utc.c_str(),_TRUNCATE);
+            strncpy_s(facts.completed_utc.data(),facts.completed_utc.size(),request.completed_utc.c_str(),_TRUNCATE);
+            if(!output_frame){frame.fill(0);std::copy_n(request.buffer.begin(),std::min({bytes,frame.size(),request.buffer.size()}),frame.begin());}
+        };
+        const auto finish=[&](bool success) noexcept{
+            log.end({transfers-1,output_frame,timeout,started,GetTickCount64(),success,bytes,frame,
+                sl3::control::RateIoDecision::transfer_failure},facts);
+        };
         try{
-            const auto started=GetTickCount64();
             if(output_frame && frame[0]==0x31){possible=true;++setter_attempts;}
             ++transfers;retired=false;save(output_frame?"before control write":"before control read");
-            Transfer request(device);request.prepare(output_frame?0x01:0x81,64,false);
+            log.begin(output_frame,timeout,started,frame);
+            request.prepare(output_frame?0x01:0x81,64,false);
             if(output_frame)std::copy(frame.begin(),frame.end(),request.buffer.begin());
             const auto elapsed=GetTickCount64()-started;
-            if(elapsed>=timeout){retired=true;strcpy_s(error.data(),error.size(),"Rate transfer budget expired before submission");return false;}
-            request.bounded(output_frame,timeout-DWORD(elapsed)); // Retains storage through cancellation/drain or fail-stops.
-            retired=true;bytes=std::size_t(request.request.Result.GenResult.BytesTransferred);
-            if(!output_frame && bytes==frame.size())std::copy(request.buffer.begin(),request.buffer.end(),frame.begin());
-            save("control transfer retired");return true;
+            if(elapsed>=timeout){retired=true;capture();strcpy_s(error.data(),error.size(),"Rate transfer budget expired before submission");finish(false);return false;}
+            facts.adapter_timeout_ms=timeout-DWORD(elapsed);
+            request.bounded(output_frame,facts.adapter_timeout_ms); // Retains storage through cancellation/drain or fail-stops.
+            retired=true;capture();
+            save("control transfer retired");finish(true);return true;
         }catch(const std::exception& e){
             // Transfer's destructor cannot return with pending I/O.
-            retired=true;strncpy_s(error.data(),error.size(),e.what(),_TRUNCATE);return false;
-        }catch(...){retired=true;strcpy_s(error.data(),error.size(),"Unexpected rate transfer failure");return false;}
+            retired=true;capture();strncpy_s(error.data(),error.size(),e.what(),_TRUNCATE);finish(false);return false;
+        }catch(...){retired=true;capture();strcpy_s(error.data(),error.size(),"Unexpected rate transfer failure");finish(false);return false;}
     }
 };
 int run_rate_diagnostic(Api& api,USB_DK_DEVICE_INFO& selected,const std::filesystem::path& output,std::ofstream& report,unsigned target){

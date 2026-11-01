@@ -1,5 +1,7 @@
 # SL3 rebuild goal — working checkpoint
 
+**Raw rate I/O recording, 1 November:** the [bounded recorder](rate-io-recording.md) now preserves raw request/reply/status facts and separate acceptance decisions, including late and failed data. Decision buffering performs no I/O on the runner boundary; no extra USB command or timeout extension was added. Software coverage is offline only. Recording replay/qualification and positive native collection remain unfinished; changed native inputs require fresh attended plans.
+
 **Shared held-rate trace preparation, 1 November:** the [rate-specific split-role runner, frozen plan and single-use launcher](held-rate-trace.md) now bind a reviewed clock pair to one normal-token rate probe and separate bounded administrator collection. Qualification requires fresh collector identity, separate operation/cleanup evidence and twelve seconds after retirement. Actual inert/refusal checks and synthetic composition pass; no elevated/physical launch ran. Unit plans and the old Scope/image plan remain disarmed.
 
 **Bounded held-rate probe, 1 November:** the [rate host probe and offline validator](held-rate-probe.md) now preserve initial intent, one-acquisition rate outcomes and separate final cleanup. Native mode requires a reviewed initial clock; disagreement refuses before the selection command. Actual positive process checks use simulation; native malformed/missing-helper cases access no SL3. Shared tracing, physical held-rate validation and production ASIO rate selection remain unfinished.

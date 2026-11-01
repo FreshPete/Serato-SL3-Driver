@@ -19,6 +19,8 @@ Detailed provenance and limits are in the [return report](RETURN-REPORT.md), [fi
 
 ## Latest integration work
 
+The [raw rate I/O recorder](rate-io-recording.md) now retains request/reply/status facts separately from accepted transaction decisions. Software checks include late, short, cancelled and mismatching frames. Recording replay and a host/trace validation gate remain pending; no positive native recording is claimed.
+
 The [held-rate shared-trace source](held-rate-trace.md) now includes a normal-token runner, separate administrator collector, frozen single-use plan and final qualification. Actual default inspection creates no device context; synthetic complete/fault qualification tests pass. Positive elevated/physical execution remains unrun, and test plans are permanently disarmed.
 
 The latest [bounded held-rate probe](held-rate-probe.md) adds a reviewed initial-clock check, immutable intent and offline result/ownership validation around the host/native diagnostic. Positive process checks use simulation; native safe negatives select no rate. Shared rate tracing and a positive physical run remain unfinished. Prior prepared Scope/image plans remain permanently disarmed after these native input changes.
@@ -27,7 +29,7 @@ The source snapshot includes work in progress to reduce an attended scope experi
 
 The [scope launcher refusal and single-use paths](scope-trace-launcher.md) now have offline and actual non-elevating process checks, but the elevated launcher and physical experiment have not run. The separate kernel-image-version-qualified scope window is unfinished. Neither a controls-only result nor a simulated scope result qualifies as that experiment.
 
-See [held-rate trace verification](evidence/held-rate-trace-20261101.json) for current test counts and source identities; [probe-only verification](evidence/held-rate-probe-20261101.json) retains its scope; [initial publication verification](evidence/publication-verification-20261101.json) retains its earlier checkpoint scope. These software checks do not attest physical audio, latency, deployment or Serato compatibility. No hardware/UAC test ran for this publication.
+See [rate I/O recording verification](evidence/rate-io-recording-20261101.json) for current test counts and source identities; [trace-source verification](evidence/held-rate-trace-20261101.json) retains its scope; [probe-only verification](evidence/held-rate-probe-20261101.json) retains its scope; [initial publication verification](evidence/publication-verification-20261101.json) retains its earlier checkpoint scope. These software checks do not attest physical audio, latency, deployment or Serato compatibility. No hardware/UAC test ran for this publication.
 
 ## Building and reproducing
 
