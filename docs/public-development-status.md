@@ -19,6 +19,8 @@ Detailed provenance and limits are in the [return report](RETURN-REPORT.md), [fi
 
 ## Latest integration work
 
+The [broker pipe frontend](broker-pipe.md) now supports process-authenticated ordinary-user client connections and exact mapping-reference checks, with direct synthetic audio between separate clients and one retained worker. Discovery, production ASIO attachment and physical validation remain unfinished.
+
 The [retained broker backend](retained-broker-backend.md) now separates worker ownership from two independent simulated audio-client processes, preserving one acquisition across fresh client audio channels. Process-bound exclusive leases, fresh admission clocks and failure/client-death cleanup have software coverage. Authenticated IPC and ordinary production ASIO attachment are the next boundary; no native broker, installed driver or Serato success is claimed.
 
 The [rate I/O replay gate](rate-io-replay.md) now requires complete raw v2 recording/summary/PID agreement for current native host tests and binds raw timestamps/digests in shared tracing. Positive evidence here is synthetic or actual-writer fixture output, not physical USB. An attended native run remains unperformed.

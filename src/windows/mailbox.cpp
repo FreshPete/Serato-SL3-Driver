@@ -65,6 +65,24 @@ const std::wstring& Mailbox::name() const noexcept{return state_->name;}
 HANDLE Mailbox::request_event() const noexcept{return state_->request_event.value;}
 HANDLE Mailbox::input_event() const noexcept{return state_->input_event.value;}
 HANDLE Mailbox::output_event() const noexcept{return state_->output_event.value;}
+HANDLE Mailbox::mapping_handle() const noexcept{return state_->mapping.value;}
+std::shared_ptr<const void> Mailbox::hold_audio_reference(HANDLE process,HANDLE remote,const std::wstring& name){
+    if(!valid_name(name) || !remote || remote==INVALID_HANDLE_VALUE)throw std::invalid_argument("Invalid audio mapping reference");
+    Handle expected,copy;
+    expected.value=OpenFileMappingW(FILE_MAP_READ,FALSE,(name+L"-map").c_str());
+    if(!expected.value)failed("Open named audio mapping for identity check");
+    if(!DuplicateHandle(process,remote,GetCurrentProcess(),&copy.value,FILE_MAP_READ,FALSE,0))failed("Duplicate client audio mapping reference");
+    // This SDK lacks Kernelbase.lib. Resolve the documented Windows 10+ API
+    // only from the already loaded system module; absence refuses admission.
+    using Compare=BOOL(WINAPI*)(HANDLE,HANDLE);
+    const auto module=GetModuleHandleW(L"kernelbase.dll");
+    const auto address=module?GetProcAddress(module,"CompareObjectHandles"):nullptr;
+    Compare compare=nullptr;static_assert(sizeof(compare)==sizeof(address),"Windows function pointer size");
+    std::memcpy(&compare,&address,sizeof(compare));
+    if(!compare || !compare(expected.value,copy.value))throw std::runtime_error("Client mapping reference does not match audio channel");
+    auto result=std::shared_ptr<const void>(copy.value,[](const void* p){CloseHandle(const_cast<void*>(p));});
+    copy.value=nullptr;return result;
+}
 std::unique_ptr<Mailbox> Mailbox::create(){
     auto state=std::make_unique<State>();state->host=true;
     std::array<UCHAR,16> random{};

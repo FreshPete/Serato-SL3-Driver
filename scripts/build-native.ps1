@@ -22,6 +22,7 @@ try {
     if('sl3_timer_verification_tests' -notin $testNames){throw 'Required timer-verification test is missing'}
     if('sl3_redirect_owner_tests' -notin $testNames){throw 'Required interprocess redirect ownership test is missing'}
     if('sl3_retained_broker_tests' -notin $testNames){throw 'Required separate-client retained broker test is missing'}
+    if('sl3_broker_pipe_tests' -notin $testNames){throw 'Required authenticated broker pipe/process tests are missing'}
     foreach($required in @('sl3_driver_timer_query_tests','sl3_driver_timer_io_tests','sl3_usbdk_timer_plan',
         'sl3_usbdk_rejects_timer_without_challenge','sl3_usbdk_rejects_timer_malformed_challenge',
         'sl3_usbdk_rejects_timer_conflict','sl3_usbdk_rejects_unused_timer_challenge')){
@@ -79,6 +80,11 @@ try {
         testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_retained_broker_tests.exe")).Hash
         simulatedClients=2;simulatedAcquisitions=1;simulatedStreams=2;simulatedClockReads=6
         clientDeathAndStaleLeaseTestsPassed=$true;nativeBrokerRun=$false;asioClientAttachmentImplemented=$false}
+    $record.brokerPipe=[ordered]@{simulatedProcessTestsPassed=$true
+        testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_broker_pipe_tests.exe")).Hash
+        exactProcessChallenge=$true;clientMappingReferenceBound=$true;directPcm=$true
+        terminalDetachAcknowledgement=$true
+        nativeRun=$false;automaticDiscoveryImplemented=$false;ordinaryAsioAttachmentImplemented=$false}
     if($WithAsioComponent){$record.hostProbe=[ordered]@{planAndSimulatedLifecyclePassed=$true;executableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_host_probe.exe")).Hash;simulatedExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_host_probe_simulated.exe")).Hash;nativeDeviceRunDuringBuild=$false;streamMilliseconds=1000;outputPayload='zero PCM only';singleOpenIntervals=@(8,64)}}
     if($WithAsioComponent){$record.scopeProbe=[ordered]@{planAndSimulatedLifecyclePassed=$true;executableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_scope_probe.exe")).Hash;simulatedExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_scope_probe_simulated.exe")).Hash;validatorSha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'validate-scope-host-probe.py')).Hash;testScriptSha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'test-scope-host-probe.py')).Hash;facadeObjects=3;acquisitions=1;clockReads=3;audioStarts=0;timingProfileRequired=$false;physicalScopeTested=$false}}
     if($WithAsioComponent){$record.hostProbe.retained=[ordered]@{simulatedLifecyclePassed=$true;streams=2;streamMilliseconds=1000;intervals=8;bankFrames=128;physicalLifecycleTested=$false;validatorSha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'validate-retained-host-probe.py')).Hash;testScriptSha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'test-retained-host-probe.py')).Hash;runnerSha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'test-retained-host-traced.ps1')).Hash}}

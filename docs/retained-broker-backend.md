@@ -75,6 +75,8 @@ Exact verification counts and evidence hashes accompany this checkpoint in
 
 ## Remaining integration work
 
+**Later checkpoint:** the [private pipe frontend](broker-pipe.md) now supplies process admission and mapping-reference binding. The paragraphs below describe the boundary at this backend checkpoint; reviewed discovery and ordinary ASIO integration remain unfinished.
+
 The next stage is an authenticated local IPC frontend with explicit owner
 start/stop, client identity/liveness handling and a reviewed rendezvous record.
 It must bind an ordinary ASIO client's request and data-channel ownership to its

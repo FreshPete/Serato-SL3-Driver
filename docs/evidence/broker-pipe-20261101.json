@@ -1,0 +1,141 @@
+{
+  "schema": "sl3.broker-pipe-verification.v1",
+  "createdUtc": "2026-11-01T22:57:24.870948+00:00",
+  "tests": {
+    "native": [
+      {
+        "build": "native",
+        "configuration": "Release",
+        "tests": 53,
+        "manifestSha256": "8e9adcbd01cd416a2c0617653fc5d582e953bf9baaa1b0294792634916f1c9b6",
+        "pipeTestSha256": "b3d5894172b5873b6d60a9fde896162d31960af870635a7ec52f386d11af4fb2"
+      },
+      {
+        "build": "native",
+        "configuration": "Debug",
+        "tests": 53,
+        "manifestSha256": "eadfd92e74a569db9d70193c76b84aeb56b7c4fc2c1a0f1473606c287c69cb2c",
+        "pipeTestSha256": "91b39184ce72d4b4dd8a419a70116bb3afd8ef6b9732e85b3cf8e6684e329eae"
+      },
+      {
+        "build": "native-without-sdk",
+        "configuration": "Release",
+        "tests": 35,
+        "manifestSha256": "7e971cf6a94c1d971af72ee3abe70de9d59fc9f880739c8f73e97a8982bbc8c7",
+        "pipeTestSha256": "67112b586fb31e15255c552621758d7899903eb136740c05dce15a9bc7cc3ea0"
+      }
+    ],
+    "python": 392
+  },
+  "positiveScenario": {
+    "simulationOnly": true,
+    "separateClientProcesses": 2,
+    "sameWorkerProcessVerified": true,
+    "distinctMappingObjectsVerified": true,
+    "workerAcquisitions": 1,
+    "freshClockReads": 7,
+    "streams": 2,
+    "inputBlocksPerClient": 24,
+    "silentOutputBlocksSubmittedPerClient": 24,
+    "positiveOutputCompletions": true,
+    "finalReleases": 1
+  },
+  "implementedAdmission": {
+    "ownerSidDacl": true,
+    "remoteClientsRejected": true,
+    "expectedServerProcessReference": true,
+    "userLogonSessionIntegrityAndElevationMatch": true,
+    "processEventChallengeBeforeLease": true,
+    "mappingReferenceDuplicatedFromAuthenticatedProcess": true,
+    "exactMappingObjectCompared": true,
+    "mappingCreatorIdentityProved": false,
+    "workerReferenceWaitQueryOnly": true,
+    "terminalDetachReplyAcknowledgedBeforeDisconnect": true,
+    "arbitraryWorkerForwarding": false
+  },
+  "faultCoverage": [
+    "pre-accept disconnect",
+    "malformed greeting",
+    "oversized message",
+    "wrong server",
+    "wrong native/simulated kind before lease",
+    "failed process proof",
+    "wrong sequence",
+    "forbidden worker opcode",
+    "exact wrong-object mapping refusal",
+    "live idle disconnect",
+    "idle process death and replacement",
+    "running process death",
+    "delayed detach reader and terminal acknowledgement"
+  ],
+  "scope": {
+    "ordinaryAsioAttachmentImplemented": false,
+    "reviewedRendezvousImplemented": false,
+    "nativeBrokerTested": false,
+    "physicalAudioTested": false,
+    "currentSeratoTested": false,
+    "crossAccountOrElevatedAttackTested": false,
+    "forcedPidReuseTested": false,
+    "uacLaunched": false,
+    "securityChanged": false
+  },
+  "reviewFix": "Bounded terminal acknowledgement prevents disconnect from discarding an unread detach reply; no unbounded FlushFileBuffers.",
+  "disarmedUnitPlans": [
+    {
+      "path": "analysis/rate-trace-unit-54c2a761584d42ceab50a003783972f4",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-563f1186aa6b4dcaa40e8927511f8361",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-5800b13038a54a2faedbcecf8507c5f9",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-6053828dc5544db382e650777082fda7",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-71306d4ea8b24de38c1574b3b16402a9",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-9d4afeb51c624e8580a345116462cb10",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-c163f214f8be49588a7726609c1c1353",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-e22299b204f7462eacb2fe31d5d82d7f",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    }
+  ],
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/broker-pipe-20261101",
+    "files": 423,
+    "manifestSha256": "af5fdb07feacabeec667550b6b5a9021753c3fd84be5269a1f86566341df646f"
+  },
+  "finalLogs": {
+    "broker-pipe-release-checked-20261101.log": "b4d8df9ab3f24905ab77efa747ec336dc7b13562e44826e7d947849a67307815",
+    "broker-pipe-debug-checked-20261101.log": "5d53470f4322e80a6b96062cea2ef9bc2c2101229d7ac88b119b064e3d108729",
+    "broker-pipe-sdkfree-checked-20261101.log": "9aaed4cf8a568eaa52a8bd639847b161c7c3405e021ef51ac4bdad012da4c3aa",
+    "broker-pipe-python-checked-20261101.log": "7be6b28318cd452d9210a4e2841610fceafc2aa0134865accef3d4ca9bad9515",
+    "broker-pipe-detach-ack-20261101.log": "ec13c35b98236843916f9921356fef5d8a001170e6b1bf1792f0a545ead59000"
+  },
+  "primaryApiReferences": [
+    "https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-compareobjecthandles",
+    "https://learn.microsoft.com/en-us/windows/win32/api/namedpipeapi/nf-namedpipeapi-disconnectnamedpipe"
+  ]
+}

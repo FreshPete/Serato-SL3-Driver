@@ -32,6 +32,7 @@ public:
     // Explicit acquisition once. Failure seals; neither attach nor stream start
     // launches a worker. No retry, reconnect, rate/control writes or elevation.
     bool open() noexcept;
+    session::Kind kind() const noexcept {return spec_.kind;}
     // One exclusive live client, bound to a duplicated process object. Fresh
     // clock query precedes admission. Lease numbers are local stale-call guards.
     std::uint64_t attach(HANDLE client_process);
@@ -47,6 +48,7 @@ public:
     void poll_client() noexcept;
     BrokerReport report() noexcept;
     BrokerReport close() noexcept;
+    BrokerReport abandon() noexcept {seal();return close();} // Unknown client/control outcome; never reusable.
     // Borrowed local wait handle; never close it or use it beyond owner life.
     // An IPC frontend must duplicate an appropriate wait-only handle to clients.
     HANDLE worker_process_handle() const noexcept {return process_.process_handle();}

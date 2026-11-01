@@ -28,6 +28,11 @@ public:
     HANDLE request_event() const noexcept;
     HANDLE input_event() const noexcept;
     HANDLE output_event() const noexcept;
+    HANDLE mapping_handle() const noexcept; // Borrowed; do not close.
+    // Bind a supplied name to a mapping reference held by this exact process.
+    // Does not claim the worker peer or certify creator identity/I/O readiness.
+    // Keep the returned reference through worker admission to prevent replacement.
+    static std::shared_ptr<const void> hold_audio_reference(HANDLE process,HANDLE remote_mapping,const std::wstring& name);
     bool send(std::uint32_t opcode,const std::uint8_t*,std::size_t);
     MessageResult await_reply(HANDLE expected_peer,DWORD timeout_ms,Message&);
     MessageResult receive(DWORD timeout_ms,Message&);
