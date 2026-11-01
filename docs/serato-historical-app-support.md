@@ -33,3 +33,5 @@ This removes the unsupported assumption that 2.5.6 simply renamed the default ap
 The remaining integration requirements still include genuine current Serato descriptor/handshake admission, transport lifetime across ordinary host activity, measured audio timing, physical analogue validation and two-deck DVS. No XML, executable, account, identity or support predicate was changed. No vendor code, hardware acquisition, audio, UAC, installation, registration, firmware or security-policy operation ran.
 
 [Machine-checked evidence](evidence/serato-historical-app-support-20261101.json). See the preceding [local caller comparison](serato-cutoff-caller.md), [complete resource inventory](serato-cutoff-registration.md) and [current application boundary](current-serato-integration-decision.md).
+
+The subsequent [support-consumer check](serato-historical-support-consumer.md) links the selected typed registration/record path to the aggregation worker's support gate and retained DriverAPI call sites. It remains a conditional static path with explicit normal-return and runtime limits.
