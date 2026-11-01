@@ -1,5 +1,7 @@
 # SL3 rebuild progress for the owner's return
 
+**Separate-process session owner, 1 November:** the [retained broker backend](retained-broker-backend.md) now keeps one worker/redirect across two separate simulated audio-client processes. Clients use fresh direct audio channels; exclusive process-bound leases, fresh admission clocks, stale-call refusal and client-death cleanup have process coverage. No native broker ran. Authenticated IPC discovery, ordinary ASIO attachment, measured profiles, physical current-build audio and current Serato/DVS remain unfinished.
+
 **Rate I/O replay gate, 1 November:** [raw v2 replay](rate-io-replay.md) now checks exact transaction timing, requests, responses and acceptance against the summary. Current native host and traced tests require a complete recording, PID/digest agreement and fresh UTC window. Synthetic and actual-writer fixture checks pass without USB. Historical summaries retain their earlier scope; positive native collection, production ASIO rate selection and current Serato remain unfinished.
 
 **Raw rate I/O recording, 1 November:** the [bounded recorder](rate-io-recording.md) now preserves raw request/reply/status facts and separate acceptance decisions, including late and failed data. Decision buffering performs no I/O on the runner boundary; no extra USB command or timeout extension was added. Software coverage is offline only. Recording replay/qualification and positive native collection remain unfinished; changed native inputs require fresh attended plans.

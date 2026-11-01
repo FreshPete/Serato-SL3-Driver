@@ -1,0 +1,112 @@
+{
+  "schema": "sl3.retained-broker-verification.v1",
+  "createdUtc": "2026-11-01T22:36:38.691542+00:00",
+  "tests": {
+    "native": [
+      {
+        "build": "native",
+        "configuration": "Release",
+        "tests": 52,
+        "manifestSha256": "fc53fb749736aa0f832dd259ed7fe96b84f3e5369d237c2ff92949307360dbd5",
+        "brokerTestSha256": "68ab30fde803b282ad2bb38e6e3c4edda1b37f259ed988f316f5d5954870cdad"
+      },
+      {
+        "build": "native",
+        "configuration": "Debug",
+        "tests": 52,
+        "manifestSha256": "a310ea32e572b1c0a68c376684b2486e8cc137a4e3b50b0873653a04dbcce55c",
+        "brokerTestSha256": "0452648e896ab1f18752b170d01963ffeacd10d6d1e81be80362b2847ccf8f12"
+      },
+      {
+        "build": "native-without-sdk",
+        "configuration": "Release",
+        "tests": 34,
+        "manifestSha256": "fb62fea2437177266c55e8aec2d96df3932b502b9803b4ebaa51b32027ea2b6e",
+        "brokerTestSha256": "9618b4a81b82ce11eba13a601326bfffd051bdca066c5b0ed17bf6a120416862"
+      }
+    ],
+    "python": 392,
+    "focusedExistingSupervisor": 11
+  },
+  "positiveScenario": {
+    "simulationOnly": true,
+    "separateAudioClientProcesses": 2,
+    "workerAcquisitions": 1,
+    "freshClockReads": 6,
+    "streams": 2,
+    "inputBlocksPerClient": 24,
+    "output": "silent synthetic PCM",
+    "finalReleases": 1
+  },
+  "failureCoverage": [
+    "overlap",
+    "stale lease and detach",
+    "local malformed start",
+    "fresh admission clock failure",
+    "mismatched rate",
+    "acquisition and activation failure",
+    "stalled acquisition containment",
+    "idle client death",
+    "running client death",
+    "exact owned worker death",
+    "native/simulated handshake mismatch",
+    "no reopen after terminal owner"
+  ],
+  "scope": {
+    "ordinaryAsioAttachmentImplemented": false,
+    "authenticatedIpcFrontendImplemented": false,
+    "nativeBrokerTested": false,
+    "physicalAudioTested": false,
+    "currentSeratoTested": false,
+    "uacLaunched": false,
+    "securityChanged": false
+  },
+  "disarmedUnitPlans": [
+    {
+      "path": "analysis/rate-trace-unit-54c2a761584d42ceab50a003783972f4",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-563f1186aa6b4dcaa40e8927511f8361",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-5800b13038a54a2faedbcecf8507c5f9",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-6053828dc5544db382e650777082fda7",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-71306d4ea8b24de38c1574b3b16402a9",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-9d4afeb51c624e8580a345116462cb10",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    }
+  ],
+  "validationHistory": {
+    "preservedEarlyPythonLog": "artifacts/build/broker-python-20261101.log",
+    "earlyRun": "Stale manifest/source pins refused during overlapping edits/builds; one existing bounded child-start output assertion also failed. Its isolated 11-test rerun and final fixed-input 392-test suite passed. No deadlines or checks weakened."
+  },
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/retained-broker-20261101",
+    "files": 411,
+    "manifestSha256": "47003413b5c92a9f4e76b7bbc9b5bc70296cbf6f4fb30bea8e5b7282d51d8e89"
+  },
+  "finalLogs": {
+    "broker-release-checked-20261101.log": "ebc5313adbfd6d45c56688759d1eb2838b07e6966b0bd3d7d2dcc6a7f2b010e9",
+    "broker-debug-checked-20261101.log": "c5064a9d28bec556297104ff9397cbbfd89aeb6a1ed5d33c10e60ac588b42f1c",
+    "broker-sdkfree-checked-20261101.log": "fb6b3a82e61b58600ad7769ca4fd07258cdba2a14cc68d9743f60d016e7e085f",
+    "broker-python-checked-20261101.log": "32c2d96e09e7112090cc6cb32952b15262ed74112209f8ef5f365be43e6cd7d7",
+    "broker-supervisor-20261101.log": "7440ddcd73cd80a267774442560a3c8c1906304e1cfe950502375d4a66829bfe"
+  }
+}
