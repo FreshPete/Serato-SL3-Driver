@@ -17,6 +17,8 @@ struct WorkerSpec {
     DeviceLifetime lifetime=DeviceLifetime::temporary;
     // Explicit native diagnostic only; production configuration leaves empty.
     std::optional<control::selection_wire::Target> diagnostic_control_target;
+    // Single-use native rate diagnostic only; audio is disabled for this lease.
+    std::optional<unsigned> diagnostic_rate_target;
 };
 enum class HostFailure {none,launch,handshake,inspection,rate_changed,audio_start,worker_start,worker,control,audio,containment};
 struct HostReport {
@@ -34,6 +36,11 @@ struct HostReport {
 struct ControlSelectionReport {
     bool command_attempted=false,outcome_unknown=false,device_may_have_changed=false;
     std::optional<control::selection_wire::Reply> outcome;
+};
+struct RateSelectionReport {
+    bool command_attempted=false,outcome_unknown=false,device_may_have_changed=false;
+    bool rejected_before_operation=false;
+    std::optional<control::rate_wire::Reply> outcome;
 };
 // One control owner. No COM registration or helper loading inside the host.
 // Temporary mode preserves the diagnostic inspect/reopen contract. Retained
@@ -55,6 +62,10 @@ public:
     // No acquisition or retry. Outcome and subsequent cleanup are independent;
     // use report()/close() for process/device ownership, including on failure.
     ControlSelectionReport select_control(control::selection_wire::Target) noexcept;
+    // Explicit control-owner request on an acquired idle lease, before buffer
+    // preparation. No acquisition, cached fallback, retry or restoration write.
+    // A missing reply invalidates the prior clock and retains possible effects.
+    RateSelectionReport select_rate(unsigned target_hz) noexcept;
     ASIOError create_buffers(ASIOBufferInfo*,long channels,long frames,const ASIOCallbacks*) noexcept;
     ASIOError dispose_buffers() noexcept;
     bool start(unsigned intervals=8) noexcept;

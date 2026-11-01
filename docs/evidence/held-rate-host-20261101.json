@@ -1,0 +1,101 @@
+{
+  "schema": "sl3.held-rate-host-native-verification.v1",
+  "createdUtc": "2026-11-01T21:11:20.146781+00:00",
+  "tests": {
+    "python": 365,
+    "releaseNative": 50,
+    "debugNative": 50,
+    "sdkFreeNative": 33,
+    "malformedCli": [
+      {
+        "configuration": "Release",
+        "executableSha256": "cb231d27a61626a06e14655b4c062fa7d318180dff762e5cac4b2e9aeb50d11b",
+        "invalidCasesRejected": 28,
+        "absentServiceTested": false
+      },
+      {
+        "configuration": "Debug",
+        "executableSha256": "9e4d87ed16747ed11dc1967e1557dbd0ea0f7fb70ddc74f61bdb63929431fd28",
+        "invalidCasesRejected": 28,
+        "absentServiceTested": false
+      }
+    ],
+    "nativeGrantedHandshakeAndPreacquireRefusal": true,
+    "nativePositiveRateOperationRun": false
+  },
+  "hostContract": {
+    "unknownOutcomeInvalidatesPriorClock": true,
+    "acceptedMismatchReadbackRetained": true,
+    "validatedOptionalCommandRefusalPreservesIdleOwner": true,
+    "preparedBuffersPreventRateCommand": true,
+    "callbackReentryPrevented": true,
+    "noImplicitAcquisitionRetryOrRestoration": true,
+    "operationEvidenceSurvivesLaterCloseFailure": true
+  },
+  "nativeDiagnostic": {
+    "singleUseTargetGrant": true,
+    "canonicalTargetsHz": [
+      44100,
+      48000
+    ],
+    "mutuallyExclusiveWithControlTarget": true,
+    "requiresFreshStartupJournal": true,
+    "audioDisabledForGrantedLifetime": true,
+    "usesExistingRedirect": true,
+    "heldObservationClaimsRedirectClosed": false,
+    "defaultProductionRateGrant": false,
+    "positiveAdapterPhysicallyVerified": false
+  },
+  "bounds": {
+    "transactionMs": 3000,
+    "singleCancellationDrainMs": 2000,
+    "workerWatchdogMs": 5500,
+    "hostReplyMs": 6000,
+    "transactionMaximumWrites": 3,
+    "transactionMaximumReads": 12,
+    "maximumSetterAttempts": 1,
+    "initialAcquisitionGetterSeparate": true
+  },
+  "sourceSha256": {
+    "scripts/test-rate-diagnostic-cli.py": "9d5fd61b963ad15e2d6cac3a699c2c5f7c07132e109a1f2931861fbe2436836f",
+    "src/asio/host_session.cpp": "bc9c93084e4df5d10114bf19e086e1ae2f46773be6b25b627bc43f1aa1d1c9b8",
+    "src/asio/host_session.hpp": "30b1d69bececa5a84c1a845ae6c22fa9bd7b5230f8c50f18a79c3a3e7119091c",
+    "src/windows/usbdk_main.cpp": "9d2444bc810239b10f151ecdce231513d9c016ffcefed22cdf641cda57a58c5c",
+    "tests/native/device_session_fixture.cpp": "b32d2a1a0a2c663db9c9c7fa0b3a714529d93e98f78fe8a9529cb2c679cce1cc",
+    "tests/native/device_session_tests.cpp": "60db362622e2887c42661af1546135dfba92fbb3d84ae33aecde83aef2b0f9bd",
+    "tests/native/rate_selection_tests.cpp": "79cb6fa47f6baaeaa419f5f96f3b9121915f18e60c8bf5fc02bbc00ac4fc2848",
+    "tests/native/retained_host_tests.cpp": "a5649fe6c0538b2143de351a43b5a51838b294335d2149da719999f1463a5992",
+    "src/core/rate_test_grant.hpp": "7b2f714cad08548fca977bfbf13dc80ede25790b46b9d87b4f397f0f38e7b466"
+  },
+  "buildManifestSha256": {
+    "artifacts/build/native/native-build-Release.json": "eada501905e12912f05a47e449d76be0c0756cfff48acf8b3e76b6c9eeaba688",
+    "artifacts/build/native/native-build-Debug.json": "caa5ec08c93ebcf6da4a92c702ac6ac2dbf74493ebfb8774f561d732a4e3f377",
+    "artifacts/build/native-without-sdk/native-build-Release.json": "213be0e6a61fc19d1dcb06cd9a254a0de897ed9fdf17534a9e8adff09ce318ef"
+  },
+  "privateLogSha256": {
+    "held-rate-native-cli-20261101.log": "a1a9c8af36c8e9b3d6ca8a14af90cb7bca0b88e7a6c0a66d7608c503a7e323fe",
+    "held-rate-native-debug-20261101.log": "753c993d9bfaf36f63f16662726619f9c29238d7cae7ccdc7e9e44d83e119010",
+    "held-rate-native-python-suite-20261101.log": "ecbe8f2671131b1c4ed71c9781a347dd3d41f81f677bb9943de016371925e2f0",
+    "held-rate-native-release-20261101.log": "12cca8435ea82c8cea86793cfaa73ccd2043d2d3c4bf3bfc18f673ba2c98d31b",
+    "held-rate-native-sdkfree-20261101.log": "b0d1db7f60478ddc27104035c9ac042d81c25d0c682919d515d9b097049c626c",
+    "held-rate-host-release-20261101.log": "7a0ce63a15be6d23a584ee812aa672cdd7881c321db866cf37b6659ee10bb962"
+  },
+  "checkpoint": {
+    "path": "artifacts/build/checkpoints/held-rate-host-native-20261101",
+    "files": 222,
+    "bytes": 20569702,
+    "manifestSha256": "a35ccf058a55a00279d061119626b059f6143f58cfacdfb6d59bdc20681928fe"
+  },
+  "limits": {
+    "physicalAcquisition": false,
+    "physicalRateWrite": false,
+    "physicalAudioValidation": false,
+    "uacLaunch": false,
+    "securityTrustBindingOrFirmwareChanges": false,
+    "productionAsioRateSetterImplemented": false,
+    "tracedHeldRateLauncherImplemented": false,
+    "currentSeratoIntegrationVerified": false,
+    "dvsVerified": false,
+    "previousScopePlanStillDisarmed": true
+  }
+}

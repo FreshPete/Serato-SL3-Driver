@@ -49,14 +49,14 @@ static void codecs(){
 }
 struct Client {
     std::unique_ptr<Mailbox> control=Mailbox::create();Process process;std::filesystem::path audit;
-    Client(const std::filesystem::path& executable,const std::wstring& mode,bool native=false){
+    Client(const std::filesystem::path& executable,const std::wstring& mode,bool native=false,bool rate_grant=false){
         audit=std::filesystem::temp_directory_path()/(control->name().substr(17)+L"-device-audit.txt");
         require(!std::filesystem::exists(audit),"Fresh fixture audit required");
         if(native){
             const auto missing=std::filesystem::temp_directory_path()/(control->name().substr(17)+L"-absent-helper.dll");
             require(!std::filesystem::exists(missing),"Native negative helper must not exist");
             std::vector<std::wstring> args{L"--device-worker",L"--channel",control->name(),L"--helper",missing.native()};
-            if(!mode.empty()){args.insert(args.end(),{L"--startup-log",audit.native(),L"--control-test-target",mode});}
+            if(!mode.empty()){args.insert(args.end(),{L"--startup-log",audit.native(),rate_grant?L"--rate-test-target":L"--control-test-target",mode});}
             process.launch(executable,Process::executable_sha256(executable),args);
         }else process.launch(executable,Process::executable_sha256(executable),{control->name(),mode,audit.native()});
     }
@@ -291,6 +291,15 @@ static void native_negative(const std::filesystem::path& native){
       require(child.observe().exit_code==2,"Control grant requires isolated mode, valid target and journal before helper access");
   }
 }
+static void native_rate_preacquire(const std::filesystem::path& native){
+    Client granted(native,L"44100",true,true);granted.hello(session::Kind::native);
+    const auto bytes=control::rate_wire::encode_request(44100);
+    require(granted.call(protocol::Command::select_rate,{bytes.begin(),bytes.end()}).status==unsigned(session::Status::bad_state),
+        "Valid native diagnostic grant cannot select before acquisition or load helper implicitly");
+    granted.quit();const auto markers=granted.marks();
+    require(markers.size()==1 && markers.front().find("worker.enter")!=std::string::npos,
+        "Native granted handshake/quit records no device acquisition or rate operation");
+}
 static void clock_inspection(const std::filesystem::path& fixture){
     Client c(fixture,L"normal");require(c.call(protocol::Command::clock).status==unsigned(session::Status::bad_state),"Clock requires handshake");
     c.hello();require(c.call(protocol::Command::clock).status==unsigned(session::Status::bad_state),"Clock query never acquires implicitly");
@@ -358,6 +367,6 @@ static void rate_selection(const std::filesystem::path& fixture){
     }
 }
 int wmain(int argc,wchar_t** argv){
-    try{if(argc!=3)return 2;codecs();rate_selection(argv[1]);clock_inspection(argv[1]);lifecycle(argv[1]);admission_failures(argv[1]);admission_and_partial_start(argv[1]);control_loss(argv[1]);controls_inspection(argv[1]);selection(argv[1]);containment(argv[1]);native_negative(argv[2]);std::cout<<"Retained-device codec, control inspection/selection, lifetime, fresh queues, failure and containment tests passed\n";return 0;}
+    try{if(argc!=3)return 2;codecs();native_rate_preacquire(argv[2]);rate_selection(argv[1]);clock_inspection(argv[1]);lifecycle(argv[1]);admission_failures(argv[1]);admission_and_partial_start(argv[1]);control_loss(argv[1]);controls_inspection(argv[1]);selection(argv[1]);containment(argv[1]);native_negative(argv[2]);std::cout<<"Retained-device codec, control inspection/selection, lifetime, fresh queues, failure and containment tests passed\n";return 0;}
     catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}
 }

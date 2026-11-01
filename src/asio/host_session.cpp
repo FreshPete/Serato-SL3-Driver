@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include "core/control_test_target.hpp"
+#include "core/rate_test_grant.hpp"
 
 namespace sl3::asio {
 namespace {
@@ -18,6 +19,12 @@ HostSession::HostSession(WorkerSpec spec):spec_(std::move(spec)){
         control::selection_wire::encode_request(*spec_.diagnostic_control_target);
         if(spec_.kind!=session::Kind::native || spec_.lifetime!=DeviceLifetime::retained || !spec_.diagnostic_directory.is_absolute())
             throw std::invalid_argument("Control target requires an explicit native retained diagnostic directory");
+    }
+    if(spec_.diagnostic_rate_target){
+        (void)control::RateTestGrant(spec_.diagnostic_rate_target);
+        if(spec_.kind!=session::Kind::native || spec_.lifetime!=DeviceLifetime::retained ||
+           !spec_.diagnostic_directory.is_absolute() || spec_.diagnostic_control_target)
+            throw std::invalid_argument("Rate target requires a separate native retained diagnostic directory");
     }
 }
 HostSession::~HostSession(){
@@ -68,6 +75,9 @@ void HostSession::launch(){
         }
         if(spec_.diagnostic_control_target){
             args.push_back(L"--control-test-target");args.push_back(control::format_control_test_target(*spec_.diagnostic_control_target));
+        }
+        if(spec_.diagnostic_rate_target){
+            args.push_back(L"--rate-test-target");args.push_back(std::to_wstring(*spec_.diagnostic_rate_target));
         }
         process_->launch(spec_.executable,spec_.sha256,args);
     }catch(...){failure(HostFailure::launch);throw;}
@@ -126,13 +136,13 @@ ASIOError HostSession::dispose_buffers() noexcept {
     const auto result=buffers_->dispose();if(result==ASE_OK)prepared_=false;return result;
 }
 bool HostSession::start(unsigned intervals) noexcept {
-    if(spec_.diagnostic_control_target)return false;
+    if(spec_.diagnostic_control_target || spec_.diagnostic_rate_target)return false;
     if(reentrant() || !usable_)return false;
     if(spec_.lifetime==DeviceLifetime::retained)return start_retained(intervals);
     return start_impl(state_.observed_rate_hz,intervals,true);
 }
 bool HostSession::start_checked(unsigned rate,unsigned intervals) noexcept {
-    if(spec_.diagnostic_control_target)return false;
+    if(spec_.diagnostic_control_target || spec_.diagnostic_rate_target)return false;
     if(reentrant() || device_closed_ || spec_.lifetime==DeviceLifetime::retained || usable_ || state_.failure!=HostFailure::none || (rate!=44100 && rate!=48000))return false;
     return start_impl(rate,intervals,false);
 }
@@ -232,6 +242,7 @@ std::optional<unsigned> HostSession::inspect_rate() noexcept {
 }
 ControlSelectionReport HostSession::select_control(control::selection_wire::Target target) noexcept {
     ControlSelectionReport result;
+    if(spec_.diagnostic_rate_target)return result;
     if(spec_.diagnostic_control_target && !control::selection_wire::detail::same(target,*spec_.diagnostic_control_target))return result;
     if(reentrant() || spec_.lifetime!=DeviceLifetime::retained || device_closed_ || !usable_ || state_.running ||
        !quiescent() || !state_.device_snapshot.selection_supported)return result;
@@ -267,6 +278,49 @@ ControlSelectionReport HostSession::select_control(control::selection_wire::Targ
         if(success)return result;
     }catch(...){failure(HostFailure::control);}
     usable_=false;close();return result; // Preserve an accepted outcome through failed final release.
+}
+RateSelectionReport HostSession::select_rate(unsigned target) noexcept {
+    RateSelectionReport result;
+    if(spec_.diagnostic_control_target || (spec_.diagnostic_rate_target && target!=*spec_.diagnostic_rate_target))return result;
+    if(reentrant() || spec_.lifetime!=DeviceLifetime::retained || device_closed_ || !usable_ || prepared_ || state_.running ||
+       !quiescent())return result;
+    std::vector<std::uint8_t> request;
+    try{const auto bytes=control::rate_wire::encode_request(target);request.assign(bytes.begin(),bytes.end());}
+    catch(...){return result;} // Invalid target cannot poison an otherwise idle lease.
+    const auto prior_rate=state_.observed_rate_hz;
+    try{
+        state_.io_retired=false;state_.observed_rate_hz=0;
+        result.command_attempted=true;result.outcome_unknown=true;result.device_may_have_changed=true;
+        const auto reply=device_call(device_session::Command::select_rate,request,device_session::rate_reply_ms);
+        if(reply.status==unsigned(session::Status::bad_request) || reply.status==unsigned(session::Status::bad_state)){
+            const auto owner=device_session::decode_snapshot(reply.bytes);
+            // Optional-command refusal is safe to keep only with an unchanged,
+            // fully retired idle owner. An arbitrary error status is not proof.
+            if(owner.phase!=device_session::Phase::ready || owner.failure!=session::Failure::none ||
+               owner.stream_fault!=StreamFault::none || !owner.io_retired || owner.device_released || owner.rate_hz!=prior_rate)
+                throw std::runtime_error("Rate refusal did not preserve idle ownership");
+            accept_device_value(owner);state_.observed_rate_hz=prior_rate;
+            result.outcome_unknown=false;result.device_may_have_changed=false;result.rejected_before_operation=true;
+            return result;
+        }
+        if(reply.status!=unsigned(session::Status::ok) && reply.status!=unsigned(session::Status::operation_failed))
+            throw std::runtime_error("Unexpected rate-selection status");
+        if(reply.status==unsigned(session::Status::operation_failed)){
+            std::optional<device_session::Snapshot> owner_only;
+            try{owner_only=device_session::decode_snapshot(reply.bytes);}catch(...){}
+            if(owner_only){accept_device_value(*owner_only);throw std::runtime_error("Rate outcome unavailable");}
+        }
+        const auto value=device_session::decode_rate_selection(reply.bytes,target);
+        const bool success=value.outcome.observation.error==control::DiagnosticError::none;
+        if((reply.status==unsigned(session::Status::ok))!=success)throw std::runtime_error("Rate status/result differs");
+        result.outcome=value.outcome;result.outcome_unknown=false;
+        result.device_may_have_changed=value.outcome.observation.device_may_have_changed;
+        state_.observed_rate_hz=value.device.rate_hz;
+        if(!success)failure(HostFailure::control);
+        accept_device_value(value.device);
+        if(success)return result;
+    }catch(...){failure(HostFailure::control);}
+    usable_=false;close();return result; // Cleanup cannot erase accepted operation evidence.
 }
 bool HostSession::acquire_retained() noexcept {
     if(reentrant() || device_closed_ || state_.running || state_.failure!=HostFailure::none)return false;

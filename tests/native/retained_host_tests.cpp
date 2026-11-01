@@ -33,7 +33,7 @@ static void callback(long bank,ASIOBool direct){
     const auto stopped=h.session->stop(0),closed=h.session->close(0);
     if(!stopped.reentrant || !closed.reentrant || stopped.io_retired || closed.device_released || !stopped.audio.reentrant ||
        h.session->dispose_buffers()!=ASE_InvalidMode || h.session->inspect() || h.session->inspect_controls() ||
-       h.session->select_control({sl3::control::AudioControlSetting::through,0,1}).command_attempted || h.session->start() || h.session->start_checked(48000))h.bad=true;
+       h.session->select_control({sl3::control::AudioControlSetting::through,0,1}).command_attempted || h.session->select_rate(44100).command_attempted || h.session->start() || h.session->start_checked(48000))h.bad=true;
     SetEvent(h.entered);if(h.throws)throw std::runtime_error("Retained host callback failed");
     if(h.block)WaitForSingleObject(h.release,INFINITE);
     for(unsigned c=0;c<6;++c){auto* out=static_cast<unsigned char*>(h.planes[c+6].buffers[bank]);for(unsigned i=0;i<h.frames*3;++i)out[i]=0;}
@@ -115,6 +115,58 @@ static void controls(const std::filesystem::path& fixture){
     }
     auto temporary=spec(fixture);temporary.lifetime=DeviceLifetime::temporary;HostSession temp(temporary);
     require(!temp.inspect_controls() && !temp.report().process.started,"Temporary mode cannot silently create a controls-only redirect");
+}
+static void rate_selection(const std::filesystem::path& fixture){
+    File audit;Host h;host=&h;HostSession session(spec(fixture,L"rate-audit:"+audit.path.native()));h.session=&session;Close close{h,session};
+    require(!session.select_rate(44100).command_attempted && !session.report().process.started,"Clock selection never acquires implicitly");
+    require(session.inspect(),"Acquire retained rate-capable fixture");
+    require(!session.select_rate(96000).command_attempted,"Invalid rate starts no command");ready(session.report());
+    const auto changed=session.select_rate(44100);
+    require(changed.command_attempted && !changed.outcome_unknown && changed.device_may_have_changed && !changed.rejected_before_operation &&
+        changed.outcome && changed.outcome->observation.initial_rate_hz==48000 && changed.outcome->observation.verified_rate_hz==44100 &&
+        session.report().observed_rate_hz==44100,"Fresh verified rate replaces host's old observation on the same lease");ready(session.report());
+    const auto noop=session.select_rate(44100);
+    require(noop.outcome && !noop.outcome_unknown && !noop.device_may_have_changed && !noop.outcome->observation.setter_attempts &&
+        !noop.outcome->observation.readback_rate_hz,"Host distinguishes verified no-op from a changed rate");
+    require(session.inspect_rate()==44100,"Independent retained getter agrees after selection");
+    require(session.select_rate(48000).outcome && session.report().observed_rate_hz==48000,"Explicit reverse selection updates host observation");
+    const auto cb=callbacks();require(session.create_buffers(h.planes.data(),12,h.frames,&cb)==ASE_OK,"Prepare after verified selection");
+    require(!session.select_rate(44100).command_attempted,"Prepared buffer contract prevents clock writes");
+    require(session.start() && WaitForSingleObject(h.entered,2000)==WAIT_OBJECT_0,"Stream starts using newly observed rate");
+    require(!session.select_rate(44100).command_attempted,"Running stream prevents rate command");
+    ready(session.stop());require(!session.select_rate(44100).command_attempted,"Stopped but prepared buffers still prevent rate change");
+    require(session.dispose_buffers()==ASE_OK && session.select_rate(44100).outcome,"Dispose old buffer contract before next selection");
+    released(session.close());require(!session.select_rate(48000).command_attempted && !h.bad,"Closed owner and callback reentry cannot select rates");
+    require(audit.lines()==std::vector<std::string>({"acquire","rate","select-rate","rate-setter","select-rate","rate","select-rate","rate-setter","rate","begin","end","select-rate","rate-setter","release"}),
+        "Host clock changes have one acquire/release, one setter per change and no hidden retries or rollback");
+    {HostSession unsupported(spec(fixture));require(unsupported.inspect(),"Acquire adapter with no clock-write capability");
+        const auto denied=unsupported.select_rate(44100);
+        require(denied.command_attempted && denied.rejected_before_operation && !denied.outcome_unknown && !denied.device_may_have_changed &&
+            !denied.outcome && unsupported.report().observed_rate_hz==48000,"Explicit optional-command refusal proves no setter effect");
+        ready(unsupported.report());require(unsupported.inspect_rate()==48000,"Unchanged retired refusal preserves usable idle device");released(unsupported.close());}
+    for(const auto mode:{L"rate-mismatch",L"rate-transfer",L"rate-transfer-close"}){
+        HostSession failed(spec(fixture,mode));require(failed.inspect(),"Acquire known rate-outcome fault fixture");
+        const auto result=failed.select_rate(44100);const auto owner=failed.report();
+        require(result.command_attempted && result.outcome && !result.outcome_unknown && result.device_may_have_changed &&
+            !result.outcome->observation.verified_rate_hz && owner.failure==HostFailure::control && owner.io_retired &&
+            owner.process.process_exited && owner.process.job_empty,"Failed rate outcome survives independent final retirement");
+        require(owner.observed_rate_hz==(std::wstring(mode)==L"rate-mismatch"?48000u:0u),"Failed host clock uses only actual post-write getter");
+        require(owner.device_released==(std::wstring(mode)!=L"rate-transfer-close"),"Failed close cannot fabricate redirect release");
+        require(!failed.select_rate(44100).command_attempted && !failed.inspect(),"Unverified rate seals owner against retry or reacquisition");
+    }
+    for(const auto mode:{L"rate-throw",L"rate-bad",L"rate-hang"}){
+        HostSession failed(spec(fixture,mode));require(failed.inspect(),"Acquire unknown rate-outcome fixture");
+        const auto result=failed.select_rate(44100);const auto owner=failed.report();
+        require(result.command_attempted && result.outcome_unknown && result.device_may_have_changed && !result.outcome &&
+            !owner.observed_rate_hz && owner.process.process_exited && owner.process.job_empty,"Missing or malformed rate outcome invalidates stale host clock");
+        if(std::wstring(mode)==L"rate-hang")require(!owner.io_retired && !owner.device_released,"Worker death cannot prove stalled rate I/O retirement");
+    }
+    {HostSession failed_close(spec(fixture,L"rate-success-close"));require(failed_close.inspect(),"Acquire rate close-fault fixture");
+        const auto result=failed_close.select_rate(44100);require(result.outcome && result.outcome->observation.verified_rate_hz==44100,"Rate verified before final-close fault");
+        const auto owner=failed_close.close();require(result.outcome->observation.verified_rate_hz==44100 && !owner.device_released && owner.io_retired &&
+            owner.process.process_exited && owner.process.job_empty,"Later close fault does not erase accepted clock observation");}
+    auto temporary=spec(fixture);temporary.lifetime=DeviceLifetime::temporary;HostSession temp(temporary);
+    require(!temp.select_rate(44100).command_attempted && !temp.report().process.started,"Temporary device mode cannot open an implicit rate session");
 }
 static void selection(const std::filesystem::path& fixture){
     const sl3::control::selection_wire::Target target{sl3::control::AudioControlSetting::through,0,1};
@@ -247,6 +299,21 @@ static void diagnostic_configuration(const std::filesystem::path& native){
         bool rejected=false;try{HostSession session(bad);}catch(const std::invalid_argument&){rejected=true;}
         require(rejected,"Invalid diagnostic grant rejects at construction before launch");
     }
+    auto rate=allowed;rate.diagnostic_control_target.reset();rate.diagnostic_rate_target=44100;
+    for(unsigned mutation=0;mutation<5;++mutation){
+        auto bad=rate;
+        if(mutation==0)bad.lifetime=DeviceLifetime::temporary;
+        if(mutation==1)bad.kind=sl3::session::Kind::simulated;
+        if(mutation==2)bad.diagnostic_directory.clear();
+        if(mutation==3)bad.diagnostic_rate_target=96000;
+        if(mutation==4)bad.diagnostic_control_target=allowed.diagnostic_control_target;
+        bool rejected=false;try{HostSession invalid(bad);}catch(const std::invalid_argument&){rejected=true;}
+        require(rejected,"Invalid or combined rate diagnostic grant rejects before launch");
+    }
+    HostSession rate_only(rate);
+    require(!rate_only.select_rate(48000).command_attempted && !rate_only.select_control(*allowed.diagnostic_control_target).command_attempted &&
+        !rate_only.start() && !rate_only.start_checked(48000) && !rate_only.report().process.started,
+        "Native rate target grants no other selection or audio launch");
     HostSession session(allowed);
     require(!session.start() && !session.start_checked(44100) && !session.report().process.started,
             "Diagnostic host refuses audio without creating a worker");
@@ -330,7 +397,7 @@ static void fresh_clock(const std::filesystem::path& fixture){
     released(*bound->close());
 }
 int wmain(int argc,wchar_t** argv){
-    try{require(argc==3,"Retained fixture and native worker required");fresh_clock(argv[1]);facade_scope(argv[1]);blocked_facade_scope(argv[1]);diagnostic_configuration(argv[2]);lifecycle(argv[1]);blocked(argv[1]);blocked_final_close(argv[1]);destruction(argv[1]);controls(argv[1]);selection(argv[1]);failures(argv[1],argv[2]);
+    try{require(argc==3,"Retained fixture and native worker required");rate_selection(argv[1]);fresh_clock(argv[1]);facade_scope(argv[1]);blocked_facade_scope(argv[1]);diagnostic_configuration(argv[2]);lifecycle(argv[1]);blocked(argv[1]);blocked_final_close(argv[1]);destruction(argv[1]);controls(argv[1]);selection(argv[1]);failures(argv[1],argv[2]);
         std::cout<<"Retained ASIO host acquire/restart/recreate/final-release, callback ownership, native kind/absent-helper and fault tests passed; simulated positive lifetime only\n";return 0;}
     catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}
 }

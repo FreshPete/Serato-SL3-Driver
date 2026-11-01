@@ -1,5 +1,6 @@
 // Original bounded diagnostic using the unchanged UsbDk 1.0.22 helper ABI.
-// No installer, hide rule, reset or firmware. Rate writes require --select-rate.
+// No installer, hide rule, reset or firmware. Rate writes require --select-rate
+// or a single-use --rate-test-target in an explicitly journalled device worker.
 // Audio OUT is available
 // in the explicit bounded --duplex-silence diagnostic (all zero), or after an
 // explicit typed start in an isolated --stream-worker or --device-worker mode.
@@ -16,6 +17,7 @@
 #include "core/control_frames.hpp"
 #include "core/audio_controls_query.hpp"
 #include "core/rate_diagnostic.hpp"
+#include "core/rate_test_grant.hpp"
 #include "core/driver_timer_query.hpp"
 #include "windows/redirect_owner.hpp"
 #include "core/device_presence.hpp"
@@ -632,9 +634,12 @@ public:
 class NativeHeldDevice final:public sl3::worker::SessionDevice {
     Api api_;Device device_{api_};bool active_=false,closed_=false;DWORD error_=0;
     NativeControlDiagnostic controls_;
+    sl3::control::RateTestGrant rate_grant_;
+    std::filesystem::path rate_directory_;
 public:
     NativeHeldDevice(const std::filesystem::path& helper,sl3::diagnostic::StartupJournal& journal,
-                     std::optional<sl3::control::selection_wire::Target> target):controls_(device_,target){
+                     std::optional<sl3::control::selection_wire::Target> target,std::optional<unsigned> rate_target,
+                     const std::filesystem::path& log):controls_(device_,target),rate_grant_(rate_target),rate_directory_(log.native()+L".rate"){
         api_.journal=&journal;
         if(target){
             api_.mark(target->setting==sl3::control::AudioControlSetting::through?"control_target_through.enter":"control_target_sensitivity.enter");
@@ -667,8 +672,24 @@ public:
         if(active_ || closed_)throw std::runtime_error("Native control test requires an idle held device");
         const auto result=controls_.select(target);error_=controls_.native_error();return result;
     }
+    bool supports_rate_selection() const noexcept override{return !active_ && !closed_ && rate_grant_.available();}
+    sl3::control::rate_wire::Reply select_rate(unsigned target) override{
+        if(active_ || closed_ || !rate_grant_.consume(target))throw std::runtime_error("Native rate test requires its unused idle target grant");
+        api_.mark(target==44100?"rate_target_44100.enter":"rate_target_48000.enter");
+        // The journal is already CREATE_NEW on a local fixed drive. Never reuse
+        // another operation's record directory; device_ keeps its sole redirect.
+        if(!std::filesystem::create_directory(rate_directory_))throw std::runtime_error("Held rate record directory already exists");
+        std::ofstream report;
+        NativeRateIo io(device_,report,rate_directory_,target);io.save("before held rate transaction");
+        api_.mark("rate_selection.enter");
+        const auto result=sl3::control::diagnose_rate(target,io);
+        // This observation precedes final device release. It deliberately does
+        // not claim redirect_closed; later cleanup has separate owner evidence.
+        io.save("finished",&result,false);api_.mark("rate_selection.return");error_=0;
+        return {target,result,0}; // No independently captured Win32 status.
+    }
     std::unique_ptr<sl3::worker::SessionTarget> begin(sl3::StreamConfig) override{
-        if(controls_.enabled())throw std::runtime_error("Control-test device cannot start audio");
+        if(controls_.enabled() || rate_grant_.enabled())throw std::runtime_error("Control/rate-test device cannot start audio");
         if(active_ || closed_)throw std::runtime_error("Held device is not available for activation");
         return std::make_unique<NativeHeldTarget>(device_,active_);
     }
@@ -682,11 +703,11 @@ public:
     DWORD native_error() const noexcept override{return error_;}
 };
 int serve_native_device(const std::wstring& channel,const std::filesystem::path& helper,const std::filesystem::path& log,
-                        std::optional<sl3::control::selection_wire::Target> target){
+                        std::optional<sl3::control::selection_wire::Target> target,std::optional<unsigned> rate_target){
     sl3::diagnostic::StartupJournal journal(log);journal.mark("worker.enter");
     auto mailbox=sl3::worker::Mailbox::open(channel);
     return sl3::worker::serve_device_session(*mailbox,sl3::session::Kind::native,
-        [helper,&journal,target]{return std::make_unique<NativeHeldDevice>(helper,journal,target);});
+        [helper,&journal,target,rate_target,log]{return std::make_unique<NativeHeldDevice>(helper,journal,target,rate_target,log);});
 }
 int serve_native_stream(const std::wstring& channel,const std::filesystem::path& helper,const std::filesystem::path& log){
     sl3::diagnostic::StartupJournal journal(log);journal.mark("worker.enter");
@@ -706,6 +727,7 @@ int wmain(int argc,wchar_t** argv) {
     bool capture=false,list=false,plan=false,duplex=false,worker=false,stream_worker=false,device_worker=false,timer_query=false;
     unsigned rate_target=0;
     std::optional<sl3::control::selection_wire::Target> control_target;
+    std::optional<unsigned> held_rate_target;
     std::optional<sl3::control::Challenge> timer_challenge;
     std::wstring channel;
     std::filesystem::path helper,output,startup_log;
@@ -724,6 +746,10 @@ int wmain(int argc,wchar_t** argv) {
             try{control_target=sl3::control::parse_control_test_target(argv[++i]);}
             catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 2;}
         }
+        else if(arg==L"--rate-test-target" && i+1<argc && !held_rate_target){
+            try{held_rate_target=sl3::control::parse_rate_test_target(argv[++i]);}
+            catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 2;}
+        }
         else if(arg==L"--select-rate" && i+1<argc && !rate_target){
             const std::wstring value=argv[++i];
             if(value==L"44100")rate_target=44100;else if(value==L"48000")rate_target=48000;
@@ -737,8 +763,11 @@ int wmain(int argc,wchar_t** argv) {
     if(unsigned(capture)+unsigned(list)+unsigned(plan)+unsigned(duplex)+unsigned(worker)+unsigned(stream_worker)+unsigned(device_worker)+unsigned(rate_target!=0)+unsigned(timer_query)>1 || ((!capture && !duplex && !rate_target && !timer_query) && !output.empty()) || ((!capture && !list && !duplex && !worker && !stream_worker && !device_worker && !rate_target && !timer_query) && !helper.empty()) || (!worker && !stream_worker && !device_worker && !channel.empty()) || ((worker || stream_worker || device_worker) && (channel.empty() || helper.empty())) || (rate_target && output.empty()) || (timer_query && (!timer_challenge || output.empty())) || (timer_challenge && !timer_query && !plan)){std::cerr<<"Conflicting, missing or unused arguments\n";return 2;}
     if(!startup_log.empty() && !stream_worker && !device_worker){std::cerr<<"Startup journal is only valid for an isolated audio worker\n";return 2;}
     if(control_target && (!device_worker || startup_log.empty())){std::cerr<<"Control-test target requires an isolated device worker and explicit fresh startup journal\n";return 2;}
+    if(held_rate_target && (!device_worker || startup_log.empty() || control_target)){
+        std::cerr<<"Rate-test target requires a separate isolated device worker and explicit fresh startup journal\n";return 2;
+    }
     if(plan && timer_challenge){std::cout<<"{\"plan_only\":true,\"helper_loaded\":false,\"device_access\":false,\"driver_changes\":false,\"timer_command\":\"0x37\",\"maximum_writes\":1,\"maximum_reads\":4,\"budget_ms\":1500,\"audio_submissions\":0,\"response_verified\":false,\"challenge_hex\":"<<quote(timer_hex(*timer_challenge))<<"}\n";return 0;}
-    if(device_worker){try{return serve_native_device(channel,helper,startup_log,control_target);}catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}}
+    if(device_worker){try{return serve_native_device(channel,helper,startup_log,control_target,held_rate_target);}catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}}
     if(stream_worker){try{return serve_native_stream(channel,helper,startup_log);}catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}}
     if(worker){try{return serve_worker(channel,helper);}catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}}
     if(!capture && !list && !duplex && !rate_target && !timer_query){std::cout<<"{\"plan_only\":true,\"helper_loaded\":false,\"driver_changes\":false,\"scheduled_ms\":32,\"audio_output_submissions\":0,\"silent_duplex_requires_explicit_mode\":true,\"rate_test_requires_explicit_target\":true,\"scheduling\":\"UsbDk ASAP; continuity not verified\"}\n";return 0;}

@@ -1,5 +1,7 @@
 # Rate selection on a retained device: wire and worker dispatch
 
+**Later checkpoint:** [host outcome handling and the single-use native adapter](held-rate-host.md) are now connected. The original wire/dispatch results below retain their checkpoint scope; the physical held-rate path and production ASIO setter remain unverified.
+
 The retained-device worker now accepts the optional `select_rate` command (`0x308`) on its existing version-three session channel. The request contains one explicit 44,100 or 48,000 target. It never acquires a device implicitly. Dispatch requires a completed handshake, a ready idle device, retired I/O, no active stream, and an adapter that independently opts in through `supports_rate_selection()`. Support for audio-control selection does not authorize a clock write. Older workers reject the unknown command; default and current physical adapters refuse it without a rate transfer.
 
 The original rate transaction supplies the operation: initial getter, at most one setter, accepted opaque acknowledgement and independent verification getter. Its existing 3,000 ms transaction budget and request/read limits remain. The worker has a 5,500 ms operation watchdog, leaving room for the adapter's single 2,000 ms cancellation drain; the future host call has a 6,000 ms reply limit. These constants do not extend native I/O deadlines. An adapter that cannot retire requests must contain its isolated process and retain storage.

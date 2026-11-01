@@ -101,6 +101,7 @@ public:
     control::rate_wire::Reply select_rate(unsigned target) override{
         if(active_ || closed_)throw std::runtime_error("Fixture rate selection outside idle lease");
         audit_.mark("select-rate");
+        if(mode_==L"rate-hang")Sleep(INFINITE);
         if(mode_==L"rate-throw")throw std::runtime_error("Fixture rate operation failed after retired I/O");
         struct Io final:control::RateIo {
             Device& device;std::uint64_t tick=100;unsigned command=0;
@@ -114,7 +115,7 @@ public:
                     if(command==0x31){
                         device.audit_.mark("rate-setter");
                         if(device.mode_!=L"rate-mismatch")device.selected_rate_=(unsigned(frame[5])<<8)|frame[6];
-                        if(device.mode_==L"rate-transfer")return false;
+                        if(device.mode_==L"rate-transfer" || device.mode_==L"rate-transfer-close")return false;
                     }
                 }else{
                     frame.fill(0);frame[0]=std::uint8_t(command);frame[1]=0x1c;frame[2]=0xc5;frame[4]=1;
@@ -138,7 +139,8 @@ public:
         if(closed_)return true;
         if(active_)return false;
         if(mode_==L"hang-device-close")Sleep(INFINITE);
-        if(mode_==L"fail-device-close" || mode_==L"selection-fail-close" || mode_==L"selection-success-close")return false;
+        if(mode_==L"fail-device-close" || mode_==L"selection-fail-close" || mode_==L"selection-success-close" ||
+           mode_==L"rate-transfer-close" || mode_==L"rate-success-close")return false;
         try{audit_.mark("release");}catch(...){return false;}
         closed_=true;return true;
     }
@@ -154,6 +156,7 @@ int wmain(int argc,wchar_t** argv){
         auto control=Mailbox::open(argv[native_cli?3:1]);std::wstring mode=native_cli?L"normal":argv[2];
         std::filesystem::path audit_path=(!native_cli && argc==4)?argv[3]:L"";
         if(mode.rfind(L"audit:",0)==0){audit_path=mode.substr(6);mode=L"normal";}
+        if(mode.rfind(L"rate-audit:",0)==0){audit_path=mode.substr(11);mode=L"rate-normal";}
         Audit audit(audit_path);
         return serve_device_session(*control,session::Kind::simulated,[&]{
             if(mode==L"hang-acquire")Sleep(INFINITE);

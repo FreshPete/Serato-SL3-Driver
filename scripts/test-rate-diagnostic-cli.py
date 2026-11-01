@@ -44,6 +44,18 @@ def main():
                 ["--select-rate", "48000", "--helper", "unused"]]
     for conflict in ("--plan", "--list", "--capture", "--duplex-silence", "--worker", "--stream-worker"):
         rejected.append(["--select-rate", "48000", conflict, "--helper", "unused", "--output", "unused"])
+    for value in ("0", "96000", "+48000", "48000 ", "048000", ""):
+        rejected.append(["--rate-test-target", value])
+    rejected.extend([["--rate-test-target"], ["--rate-test-target", "44100"],
+                     ["--rate-test-target", "44100", "--rate-test-target", "48000"]])
+    worker = ["--channel", "Local\\SL3Mailbox-0123456789abcdef0123456789abcdef", "--helper", "unused"]
+    rejected.append(["--device-worker", *worker, "--rate-test-target", "44100"])
+    for mode in ("--stream-worker", "--worker", "--plan"):
+        rejected.append([mode, *worker, "--startup-log", "unused.tsv", "--rate-test-target", "44100"])
+    rejected.append(["--device-worker", *worker, "--startup-log", "unused.tsv", "--rate-test-target", "44100",
+                     "--control-test-target", "through:0:1"])
+    rejected.append(["--device-worker", *worker, "--startup-log", "unused.tsv", "--rate-test-target", "44100",
+                     "--select-rate", "48000", "--output", "unused"])
     records = []
     for configuration in ("Release", "Debug"):
         exe = ROOT / "artifacts/build/native" / configuration / "sl3_usbdk.exe"

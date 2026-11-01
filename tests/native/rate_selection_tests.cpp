@@ -1,6 +1,7 @@
 #include "core/rate_selection.hpp"
 #include "core/rate_diagnostic.hpp"
 #include "core/rate_selection_wire.hpp"
+#include "core/rate_test_grant.hpp"
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
@@ -181,6 +182,20 @@ void wire(){
     }
     for(const auto target:{0u,96000u,0xffffffffu})rejects([&]{encode_request(target);});
 }
+void grants(){
+    static_assert(!std::is_copy_constructible<RateTestGrant>::value && !std::is_move_constructible<RateTestGrant>::value,
+        "A process-local diagnostic grant cannot be cloned or transferred");
+    RateTestGrant disabled;require(!disabled.enabled() && !disabled.available() && !disabled.consume(44100),"Default adapter has no rate grant");
+    for(const auto target:{44100u,48000u}){
+        RateTestGrant once(target);require(once.enabled() && once.available() && once.consume(target),"Explicit target permits one attempt");
+        require(once.enabled() && !once.available() && !once.consume(target),"Consumption cannot re-enable audio or repeat a rate attempt");
+        RateTestGrant wrong(target);require(!wrong.consume(target==44100?48000:44100) && !wrong.available() && !wrong.consume(target),"Mismatched attempt consumes grant without permission to submit");
+    }
+    for(const auto target:{0u,96000u,0xffffffffu})rejects([&]{RateTestGrant invalid(target);});
+    require(parse_rate_test_target(L"44100")==44100 && parse_rate_test_target(L"48000")==48000,"Canonical diagnostic target parse");
+    for(const auto text:{L"",L"+48000",L"48000 ",L" 48000",L"048000",L"96000",L"44100junk"})rejects([&]{parse_rate_test_target(text);});
+    rejects([]{parse_rate_test_target(std::wstring_view(L"48000\0junk",10));});
+}
 void diagnostics(){
     {FakeIo io;const auto result=checked_diagnose(48000,io);require(result.error==DiagnosticError::none && result.verified_rate_hz==48000 && result.initial_rate_hz==44100 && result.device_may_have_changed && result.write_attempts==3 && result.read_attempts==12 && io.operations==15 && io.setters==1,"Full bounded runner uses twelve frames and one setter");}
     {FakeIo io;const auto result=checked_diagnose(48000,io);require(result.readback_rate_hz==48000 && result.acknowledgement_received && result.setter_attempts==1,"Runner exports accepted readback, acknowledgement and one setter attempt");}
@@ -205,5 +220,5 @@ void diagnostics(){
     {FakeIo io;const auto result=checked_diagnose(96000,io);require(result.error==DiagnosticError::invalid_target && !io.operations,"Invalid diagnostic target performs no I/O");}
 }
 }
-int main(){try{success();failures();diagnostics();wire();std::cout<<"Bounded rate-selection transaction and injected diagnostic runner passed; no physical device operations\n";}
+int main(){try{success();failures();diagnostics();wire();grants();std::cout<<"Bounded rate-selection transaction and injected diagnostic runner passed; no physical device operations\n";}
 catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}}
