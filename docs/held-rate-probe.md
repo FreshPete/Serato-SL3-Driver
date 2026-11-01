@@ -1,5 +1,7 @@
 # Bounded held-rate host probe and offline validator
 
+**Later checkpoint:** the [shared-trace runner, plan and launcher](held-rate-trace.md) are now implemented and checked offline. Positive elevated/physical execution remains unverified; the original probe-only results below retain their checkpoint scope.
+
 `sl3_host_probe --select-rate` now runs a dedicated no-audio experiment through the retained host API and single-use native diagnostic adapter. It acquires once, checks the acquired clock against an explicitly reviewed initial rate, requests one target selection and performs final close. Native mode requires both `--target 44100|48000` and `--expected-initial 44100|48000`; a native fixture override is rejected. Default invocation remains plan-only.
 
 A complete invocation also supplies the absolute worker/helper paths, reviewed worker SHA-256 and a fresh output directory using the existing `--worker`, `--worker-sha256`, `--helper` and `--output` options. This is the underlying diagnostic executable, not the future shared-trace launcher. No positive native invocation ran for this checkpoint.

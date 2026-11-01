@@ -126,6 +126,23 @@ try {
                           'export-usbdk-physical-checkpoint.py','validate-usbdk-capture.py')){
             $record.hostProbe.rateSelection.scriptInputs[$name]=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot $name)).Hash
         }
+        $record.hostProbe.rateSelection.traceRunnerPrepared=$true
+        $record.hostProbe.rateSelection.traceLauncherPrepared=$true
+        $record.hostProbe.rateSelection.sharedTraceImplemented=$true
+        $record.hostProbe.rateSelection.positiveElevatedLauncherTested=$false
+        $record.hostProbe.rateSelection.traceScriptInputs=@{}
+        foreach($name in @('test-controls-host-traced.ps1','validate-controls-host-probe.py','test-controls-host-probe.py',
+            'read-startup-journal.ps1','capture-usb-startup.ps1','preflight-usbdk.ps1','collect-windows-state.ps1',
+            'export-usbdk-physical-checkpoint.py','validate-usbdk-capture.py','prepare-usbdk-lifecycle-trace.py',
+            'observe-sl3-usb-identity.py','supervise-usb-identity.py','controls-usb-identity.py','capture-controls-user-context.ps1',
+            'test-controls-user-probe.ps1','inspect-process.psm1','validate-controls-user-probe.py','validate-usb-state-capture.py',
+            'test-rate-host-probe.py','validate-rate-host-probe.py','validate-usbdk-rate.py','test-rate-user-probe.ps1','validate-rate-user-probe.py')){
+            $record.hostProbe.rateSelection.traceScriptInputs[$name]=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot $name)).Hash
+        }
+        $record.hostProbe.rateSelection.traceLauncherInputs=@{}
+        foreach($name in @('prepare-rate-trace.py','start-rate-trace.ps1')){
+            $record.hostProbe.rateSelection.traceLauncherInputs[$name]=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot $name)).Hash
+        }
     }
     $record.rateSelection=[ordered]@{testsPassed=$true;testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_rate_selection_tests.exe")).Hash;offlineOnly=$false;maximumRequests=3;maximumReceivedFrames=12;nativeSetterConnected=$true;nativeDiagnosticImplemented=$true;automaticStartupRateChanges=$false;physicalRateChangeTested=$false}
     $record.controlFrames=[ordered]@{testsPassed=$true;testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_control_frames_tests.exe")).Hash;maximumReceivedFrames=4;nativeRateQueryConnected=$true;additionalQueriesSubmitted=$false;deviceResponseVerified=$false;physicalQueriesTested=$false}

@@ -1,0 +1,126 @@
+{
+  "schema": "sl3.held-rate-trace-verification.v1",
+  "createdUtc": "2026-11-01T21:33:46.956194+00:00",
+  "tests": {
+    "python": 379,
+    "focused": 7,
+    "releaseNative": 51,
+    "debugNative": 51,
+    "sdkFreeNative": 33,
+    "actualInertLauncherInspected": true,
+    "actualElevatedLauncherRun": false,
+    "syntheticTraceCompositionOnly": true
+  },
+  "traceContract": {
+    "traceSeconds": 60,
+    "probeDeadlineSeconds": 30,
+    "postRetirementSecondsRequired": 12,
+    "maximumAcquisitions": 1,
+    "maximumRateSetters": 1,
+    "audioStarts": 0,
+    "freshLiveCollectorRecheckedBeforeLaunch": true,
+    "maximumLaunchObservationAgeSeconds": 2,
+    "nativeRateTimestampInsideProbeLifetime": true,
+    "sourceDependencies": 23,
+    "launcherInputs": 2,
+    "oneAdministratorLaunchDesigned": true,
+    "oneAdministratorLaunchPhysicallyVerified": false,
+    "rateRestorationVerified": false,
+    "usbPayloadCorrelationVerified": false,
+    "imageWindowQualified": false,
+    "readinessVerified": false
+  },
+  "initialFocusedRunFailed": true,
+  "failureReason": "Fixture classes imported into the test module were also discovered; an older contract test rejected the stale build manifest after build-runner changes. Imports corrected and manifests rebuilt.",
+  "nativeCppInputsUnchangedFromProbeCheckpoint": true,
+  "disarmedInertPlans": [
+    {
+      "path": "analysis/rate-trace-unit-6053828dc5544db382e650777082fda7",
+      "planSha256": "f0c090a2b312d3dcbfff05d41c87b497f73ca2a3b0c9090517e0ac9d24135d95",
+      "disarmSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "contextCreated": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-71306d4ea8b24de38c1574b3b16402a9",
+      "planSha256": "d3e7421b78c87bad3a90bbbdff06b6fe9d12ef55564fbb394eafd35def88ec59",
+      "disarmSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "contextCreated": false
+    }
+  ],
+  "nativeImageSha256": {
+    "Release": {
+      "sl3_host_probe.exe": "3cb8a3ce79473bdf81bbdad21da12a0fa814e5182647a4f567a36e05f51cb317",
+      "sl3_usbdk.exe": "cb231d27a61626a06e14655b4c062fa7d318180dff762e5cac4b2e9aeb50d11b"
+    },
+    "Debug": {
+      "sl3_host_probe.exe": "ff216d1308a27bee1685bd60289814d79307b9fdc05430a229d2dd703120fad8",
+      "sl3_usbdk.exe": "9e4d87ed16747ed11dc1967e1557dbd0ea0f7fb70ddc74f61bdb63929431fd28"
+    }
+  },
+  "traceAndLauncherScriptSha256": {
+    "prepare-usbdk-lifecycle-trace.py": "fee895320e0e01c971c569d392661d3683c7e10de6ac15456b49db83643f3042",
+    "validate-usbdk-capture.py": "e909291b7e7d6bc4995179477f24fe0338593f3857967e14185f0ad11d2136d4",
+    "validate-usbdk-rate.py": "3f6e5b89c40596144328a4544c23505690795547cab7c0e0f1a5092a23514ba4",
+    "validate-usb-state-capture.py": "ae0023a0ae2ce1e3e0d1d5340a0ffdc4894c5df575d5b57439a77de6f3c9a472",
+    "validate-controls-user-probe.py": "74d2f24e565628e00f882d83d11ac20b43941008618b51ed08e541b16c4af065",
+    "validate-rate-user-probe.py": "57b5a9d3f676a398f859448c91a1ec333267de68f94eca9a9194376acf2076ed",
+    "supervise-usb-identity.py": "d36c13b7063fec9bc482e61ec1131f53b9f1e5d224656abda1ee356e4144b8a4",
+    "test-controls-user-probe.ps1": "54f97fa214d5659eddb1d4dbe5927782ccb172bc820e978ad15a6e60438cee30",
+    "capture-controls-user-context.ps1": "3a8a1e241ac9ea7452e8ed145e51c5bb29f9ce86c81f6f72dd262f28b4888655",
+    "test-controls-host-probe.py": "4ab1db8c5dcd448c552e30cfcd8a2a8c7cbcaceb81a6baa25aae162fa8706ac1",
+    "read-startup-journal.ps1": "0a515c935e6106bd999009a4c027eb543281a5c53d411b74cbe69409f3c75105",
+    "test-rate-host-probe.py": "7e61db116f025e20e1c5207967efe288bac10e4cf764f3772e2fcf200eb75003",
+    "observe-sl3-usb-identity.py": "238aa772ef466832a6d63b020eab357b014a2eb998a1fb2662dd1a988c6e43ea",
+    "capture-usb-startup.ps1": "4d51f8d01e345d42158cf7d0e504e0bf34dac85290ea9da5e276a657e659fba5",
+    "test-controls-host-traced.ps1": "e39bfa28700ca195cda2bca14dc8b3d21cb62c84abe307ff85a7348805343e76",
+    "export-usbdk-physical-checkpoint.py": "36f9afb6badb95b2566a6413ed236ab10fba1af6634e5a946f957004e52b84be",
+    "validate-controls-host-probe.py": "6176896488250b02217e1068bb58e075e5153ddf9321e06a820bcd3b3951181f",
+    "preflight-usbdk.ps1": "92a83517b40db12535c7b233a4f728498d37f77dae708ddca35a6bd567818887",
+    "test-rate-user-probe.ps1": "ae1fd6f7780a074e583c685e4a98acacecb649041cf9cf570969f4e4d93c0190",
+    "validate-rate-host-probe.py": "7fce205f8929dbb4f55c127ca53bc0d1fe031399e753cddec1e9780d507450ad",
+    "controls-usb-identity.py": "44aae2391c7fd0e67f8518a9849966c3756dd89e490d6e319c9f8e68a82a099a",
+    "inspect-process.psm1": "fd76680e42127feeb4d8da952b5e04a49b48d3bb6df159b9c77a236a3c8f0752",
+    "collect-windows-state.ps1": "4028449556933a6c3ca970dfcb4f143a330847266a8e7dd58668f9b590eb1f66",
+    "start-rate-trace.ps1": "cd0e1987b19036ec44c1db051d26cc8a6567b0afa98917d1e9a00a76e4e298b5",
+    "prepare-rate-trace.py": "b5f847f796a9ae8d0d44c8b9b81c65e56d1559b3086d3a673218422a98a89786"
+  },
+  "sourceSha256": {
+    "scripts/build-native.ps1": "dde6f18c12b90d5910db4e441ee16b9ed6cad17a3997b02b230f8503da6df0ad",
+    "scripts/prepare-rate-trace.py": "b5f847f796a9ae8d0d44c8b9b81c65e56d1559b3086d3a673218422a98a89786",
+    "scripts/start-rate-trace.ps1": "cd0e1987b19036ec44c1db051d26cc8a6567b0afa98917d1e9a00a76e4e298b5",
+    "scripts/test-rate-user-probe.ps1": "ae1fd6f7780a074e583c685e4a98acacecb649041cf9cf570969f4e4d93c0190",
+    "scripts/validate-rate-user-probe.py": "57b5a9d3f676a398f859448c91a1ec333267de68f94eca9a9194376acf2076ed",
+    "tests/test_rate_user_probe.py": "be37eed4c76b5cd90868060c92dc52c50dce30fcec6650f8beceb495896a894a"
+  },
+  "buildManifestSha256": {
+    "artifacts/build/native/native-build-Release.json": "aa80c5bdcee49924cf218aa1865e4ba0095c73d385d5205607fed7f105e3f629",
+    "artifacts/build/native/native-build-Debug.json": "82a6c0172449ad5decc97132b2748b4957960289da84724eb9a0022335376fbf",
+    "artifacts/build/native-without-sdk/native-build-Release.json": "6f3e34f5f088fbe23e891faab785329a516189af6f375b77da3dfdf533a37956"
+  },
+  "privateLogSha256": {
+    "held-rate-trace-debug-20261101.log": "041090fed686098c07b03a21db935957d9dc3475dcf8773ea13e681b0ca73713",
+    "held-rate-trace-python-suite-20261101.log": "a4803de7b3b89fd01c89c0803d02807c6ea8dfcdb895e725851f4d8629dad1bf",
+    "held-rate-trace-release-20261101.log": "e5a1a0782fad1c37a0d26fc276ff3d0afb58588d6219d6f0f22e0530031f6d04",
+    "held-rate-trace-sdkfree-20261101.log": "92e7f58ad203a7a8e96c37af357904163fad0a6135180e0ce9517107480183b8",
+    "held-rate-trace-targeted-20261101.log": "bd16e7f74bed55d996d64323d320cdda63289196e4f54106feea07d4da34c878",
+    "held-rate-trace-targeted-complete-20261101.log": "e252b29cd07bcb906f3adf86ab5c45423537f0f9a66eef7db4f62045eba41cd8",
+    "held-rate-trace-targeted-final-20261101.log": "8370bd9b193aa0033bf90a3a6f808c6e09c9f742b58b56ff8f0adaa231cefec8"
+  },
+  "checkpoint": {
+    "path": "artifacts/build/checkpoints/held-rate-trace-20261101",
+    "files": 257,
+    "bytes": 20996043,
+    "manifestSha256": "174bd39580faf6a66ac085d817a3bb5e31a1a4445e524c8eb638c1301bfe01fb"
+  },
+  "limits": {
+    "traceSourceStarted": false,
+    "deviceContextCreated": false,
+    "physicalAcquisition": false,
+    "physicalRateSelection": false,
+    "uacLaunch": false,
+    "securityTrustBindingRegistrationOrFirmwareChanges": false,
+    "productionAsioRateSetterImplemented": false,
+    "currentSeratoOrDvsVerified": false,
+    "previousScopePlanStillDisarmed": true
+  }
+}
