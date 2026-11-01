@@ -6,6 +6,7 @@ RateDiagnosticResult diagnose_rate(unsigned target_hz,RateIo& io,unsigned budget
     RateDiagnosticResult result;RateSelection selection(target_hz);
     if(selection.phase()==RatePhase::failed){result.error=DiagnosticError::invalid_target;result.transaction_error=selection.error();return result;}
     const auto start=io.now_ms();
+    io.transaction_started(start,budget_ms);
     for(unsigned operation=0;operation<15;++operation){
         if(io.cancelled()){result.error=DiagnosticError::cancelled;break;}
         const auto now=io.now_ms();
@@ -38,6 +39,7 @@ RateDiagnosticResult diagnose_rate(unsigned target_hz,RateIo& io,unsigned budget
     result.transaction_error=selection.error();result.exchange_error=selection.exchange_error();
     result.initial_rate_hz=selection.initial_rate_hz();result.verified_rate_hz=selection.verified_rate_hz();
     result.readback_rate_hz=selection.readback_rate_hz();result.acknowledgement_received=selection.acknowledgement_received();
-    result.device_may_have_changed=selection.device_may_have_changed();return result;
+    result.device_may_have_changed=selection.device_may_have_changed();
+    io.transaction_finished(io.now_ms(),result.error);return result;
 }
 }

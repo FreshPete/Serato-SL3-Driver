@@ -30,7 +30,7 @@ if(-not $build.hostProbe.rateSelection.testsPassed -or $build.hostProbe.rateSele
    (Get-FileHash -LiteralPath $probe).Hash -ne $build.hostProbe.executableSha256 -or
    (Get-FileHash -LiteralPath $worker).Hash -ne $build.usbdk.executableSha256){throw 'Rate probe/worker differs from tested build'}
 $pins=$build.hostProbe.rateSelection.traceScriptInputs.PSObject.Properties
-if(@($pins).Count -ne 23 -or -not $build.hostProbe.rateSelection.traceRunnerPrepared){throw 'Expected all reviewed rate trace dependencies'}
+if(@($pins).Count -ne 24 -or -not $build.hostProbe.rateSelection.traceRunnerPrepared){throw 'Expected all reviewed rate trace dependencies'}
 foreach($pin in $pins){if((Get-FileHash -LiteralPath (Join-Path $PSScriptRoot $pin.Name)).Hash -ne $pin.Value){throw "Reviewed dependency changed: $($pin.Name)"}}
 $intentText=& $python $validator --intent --target $TargetHz --expected-initial $ExpectedInitialHz --worker-sha256 $build.usbdk.executableSha256 --probe-sha256 $build.hostProbe.executableSha256
 if($LASTEXITCODE -ne 0 -or ($intentText|ConvertFrom-Json).valid -ne $true){throw "No device launch: $intentText"}
@@ -38,7 +38,7 @@ $prerequisite=$intentText|ConvertFrom-Json -DateKind String
 function Read-Json([string]$Name){Get-Content -LiteralPath (Join-Path $ContextDirectory $Name) -Raw|ConvertFrom-Json -DateKind String}
 function Save-Run{$record|ConvertTo-Json -Depth 14|Set-Content -LiteralPath (Join-Path $ContextDirectory 'run.json')}
 function Preserve-ProbeFiles{
-    foreach($pair in @(@('probe/request.json','requestRecordSha256'),@('probe/probe.json','probeRecordSha256'),@('probe/worker-1.tsv.rate/rate.json','nativeRateRecordSha256'))){
+    foreach($pair in @(@('probe/request.json','requestRecordSha256'),@('probe/probe.json','probeRecordSha256'),@('probe/worker-1.tsv.rate/rate.json','nativeRateRecordSha256'),@('probe/worker-1.tsv.rate/rate-io.jsonl','rateIoRecordSha256'))){
         try{
             $saved=Join-Path $ContextDirectory $pair[0]
             if(Test-Path -LiteralPath $saved){$record[$pair[1]]=(Get-FileHash -LiteralPath $saved).Hash}

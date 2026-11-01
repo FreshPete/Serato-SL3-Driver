@@ -6,7 +6,9 @@ from pathlib import Path
 import struct
 import tempfile
 import unittest
+from unittest.mock import patch
 from tests.test_selection_probe_evidence import owner
+from tests import rate_io_fixtures as io_fixtures
 
 ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('rate_probe_evidence_validator',ROOT/'scripts/validate-rate-host-probe.py')
@@ -40,19 +42,20 @@ def stages():
         'helper_unload.enter','helper_unload.return']
 
 class RateProbeEvidenceTests(unittest.TestCase):
-    def validate(self,r,q,native=None,markers=None):
+    def validate(self,r,q,native=None,markers=None,recording=True):
         with tempfile.TemporaryDirectory() as temporary:
             folder=Path(temporary)
             for name,value in (('probe.json',r),('request.json',q)):(folder/name).write_text(json.dumps(value),encoding='utf-8')
             if native is not None:
                 path=folder/'worker-1.tsv.rate';path.mkdir();(path/'rate.json').write_text(json.dumps(native),encoding='utf-8')
+                if recording:(path/'rate-io.jsonl').write_text(io_fixtures.text(io_fixtures.recording()),encoding='utf-8')
                 (folder/'worker-1.tsv').write_text(''.join(f'{n}\t123\t{s}\n' for n,s in enumerate(markers or stages())),encoding='ascii')
             return v.probe(folder,SHA,native is None)
 
     def native(self):
         o=v.decode_wire(wire(),44100)['observation']
         return dict(o,schema='sl3.rate-diagnostic.v2',phase='finished',utc='2026-11-01T21:00:00Z',last_io_retired=True,
-            redirect_closed=False,audio_submissions=0,alternate_changes=0,automatic_rollback=False,error='')
+            redirect_closed=False,audio_submissions=0,alternate_changes=0,automatic_rollback=False,error='',rate_io_schema='sl3.rate-io.v2',rate_io_file='rate-io.jsonl')
 
     def test_change_noop_and_decoder_envelope_not_evidence(self):
         for target in (44100,48000):
@@ -106,6 +109,17 @@ class RateProbeEvidenceTests(unittest.TestCase):
             with self.subTest(key=key),self.assertRaises(ValueError):self.validate(r,q,bad)
         r['expected_initial_rate_hz']=q['expected_initial_rate_hz']=None
         with self.assertRaises(ValueError):self.validate(r,q,native)
+
+    def test_current_native_gate_requires_replayable_recording_and_pid(self):
+        r,q=records();r['simulated']=q['simulated']=False;native=self.native()
+        for key in ('rate_io_schema','rate_io_file'):
+            bad=copy.deepcopy(native);bad.pop(key)
+            with self.subTest(key=key),self.assertRaises(ValueError):self.validate(r,q,bad)
+        with self.assertRaises(OSError):self.validate(r,q,native,recording=False)
+        rows=io_fixtures.recording();rows[0]['pid']=124
+        with patch.object(io_fixtures,'recording',return_value=rows),self.assertRaises(ValueError):self.validate(r,q,native)
+        rows=io_fixtures.recording()[:-1]
+        with patch.object(io_fixtures,'recording',return_value=rows),self.assertRaises(ValueError):self.validate(r,q,native)
 
     def test_synthetic_native_journal_rejects_extra_or_wrong_operations(self):
         r,q=records();r['simulated']=q['simulated']=False

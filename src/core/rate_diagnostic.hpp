@@ -2,6 +2,7 @@
 #include "core/rate_selection.hpp"
 
 namespace sl3::control {
+enum class DiagnosticError {none,invalid_target,deadline,cancelled,transfer,transaction};
 // A reply decision is acceptance by the bounded exchange, not verification of
 // the requested clock. A mismatching supported getter is still a reply.
 enum class RateIoDecision {write_retired,notification,reply,exchange_failure,cancelled,deadline,transfer_failure};
@@ -25,8 +26,9 @@ public:
     // these decisions and persists them after the bounded transaction returns.
     // Observing a frame cannot promote late/cancelled data to accepted evidence.
     virtual void observed(const RateIoObservation&) noexcept{}
+    virtual void transaction_started(std::uint64_t,unsigned) noexcept{}
+    virtual void transaction_finished(std::uint64_t,DiagnosticError) noexcept{}
 };
-enum class DiagnosticError {none,invalid_target,deadline,cancelled,transfer,transaction};
 struct RateDiagnosticResult {
     DiagnosticError error=DiagnosticError::none;
     RateError transaction_error=RateError::none;

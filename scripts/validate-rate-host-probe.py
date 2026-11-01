@@ -99,6 +99,7 @@ def probe(folder,worker_sha,simulated=False):
         require(record['last_io_retired'] is True and record['redirect_closed'] is False,'Held native record must retire I/O without claiming final release')
         for key in o:require(record[key]==o[key] and type(record[key]) is type(o[key]),'Native/wire rate observation differs: '+key)
         native['observationSha256']=digest(record_path)
+        native['rateIo']=rate.recording_result(record_path,record,native['workerPid'],required=True)
     return {'valid':True,'scope':'Recorded intent/rate result/owner consistency only; not a traced experiment, security/recovery, physical audio or ASIO/Serato pass',
         'simulated':simulated,'workerSha256':worker_sha.lower(),'targetRateHz':target,'outcome':outcome,
         'requestRecordSha256':digest(folder/'request.json'),'probeRecordSha256':digest(folder/'probe.json'),'nativeJournal':native,

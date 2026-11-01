@@ -1,0 +1,176 @@
+{
+  "schema": "sl3.rate-io-replay-verification.v1",
+  "createdUtc": "2026-11-01T22:21:31.319019+00:00",
+  "tests": {
+    "python": 392,
+    "focusedRecordingAndNativeProbe": 19,
+    "focusedRole": 8,
+    "releaseNative": 51,
+    "debugNative": 51,
+    "sdkFreeNative": 33,
+    "cppWriterSyntheticFixtures": [
+      {
+        "configuration": "Release",
+        "recordingSha256": "f3f2f6fc6e2c84213557346d7ece74d78fd7cfe7543302b00cb73028c96999a0",
+        "pidMatched": true,
+        "syntheticTransfers": true
+      },
+      {
+        "configuration": "Debug",
+        "recordingSha256": "ca306d93b580051a6790055cc426468c6bc73d1aff8ad1a5067934fa8620b14b",
+        "pidMatched": true,
+        "syntheticTransfers": true
+      }
+    ],
+    "staleRawUtcCannotBorrowCurrentSummaryWindow": true
+  },
+  "recordingContract": {
+    "schema": "sl3.rate-io.v2",
+    "maximumRows": 47,
+    "maximumRowBytes": 2048,
+    "boundedReadWithOverflowByte": true,
+    "exactTransactionOriginAndFinishBufferedWithoutIO": true,
+    "rawV1NotSilentlyUpgraded": true,
+    "requiredCurrentNativeHostRecording": true,
+    "pidSummaryAndDigestAgreementRequired": true,
+    "requiredTracedRawUtcWindow": true,
+    "nativeTraceDependencies": 24,
+    "prefixCannotQualifyCompletedSummary": true,
+    "failedOperationCanRemainConsistentWithoutPass": true,
+    "newUsbCommands": 0,
+    "newRetriesOrRateRestoration": false
+  },
+  "legacyNativeSummary": {
+    "recordSha256": "80c7b5a17b0aa66b9063302b61f14e188abfdf57e91a78a05bf0cc1db111564b",
+    "result": {
+      "valid": true,
+      "scope": "Native result consistency only",
+      "verifiedRateHz": 48000
+    },
+    "currentWorkerPhysicalPass": false
+  },
+  "initialRoleTestImportFailed": true,
+  "testFailureReason": "Fixture update introduced an indentation error in the role-test module; corrected before successful eight-test role run and full suite.",
+  "nativeImageSha256": {
+    "Release": {
+      "sl3_host_probe.exe": "b124849408f8fcb2c3ce740a08ff8b9be24389df7c087798b3d638bb9e3a2ef0",
+      "sl3_usbdk.exe": "16253dceadb51359c13a2a4759e281b0eee25396ae5618852e705433489c1658",
+      "sl3_rate_selection_tests.exe": "760a7d13d1388bf22ebdd7edd02b0221a5f910a606ff32da5f504f6645b700ff"
+    },
+    "Debug": {
+      "sl3_host_probe.exe": "1395e6d4a6e2d0f08e3be922872e14ade8e6001b2bbf5055b59e1e96bb726dd6",
+      "sl3_usbdk.exe": "ce5607a31d135884b3edbcc9f090ff490721c0145d1cc615644de186b1f352f8",
+      "sl3_rate_selection_tests.exe": "3bc785f6dc410f6fce9f692abd5b4ce62535993b4a0677dda6fbb8c29b298159"
+    }
+  },
+  "rateScriptInputSha256": {
+    "validate-rate-host-probe.py": "cfc83d201f1a045329b943ad04ade619a89e8a10a73fb00bc2d03984dba9f16b",
+    "validate-usbdk-capture.py": "e909291b7e7d6bc4995179477f24fe0338593f3857967e14185f0ad11d2136d4",
+    "validate-rate-io.py": "b49427103f4ea1a61a04a1207d22df350d760ee476979e546331e2de08ddedb4",
+    "export-usbdk-physical-checkpoint.py": "36f9afb6badb95b2566a6413ed236ab10fba1af6634e5a946f957004e52b84be",
+    "validate-controls-host-probe.py": "6176896488250b02217e1068bb58e075e5153ddf9321e06a820bcd3b3951181f",
+    "test-rate-host-probe.py": "7e61db116f025e20e1c5207967efe288bac10e4cf764f3772e2fcf200eb75003",
+    "validate-usbdk-rate.py": "ccb58637d00f7a27211ec3fe47bad0e736572a3b834cc70a14349bf541ef165b",
+    "capture-controls-user-context.ps1": "3a8a1e241ac9ea7452e8ed145e51c5bb29f9ce86c81f6f72dd262f28b4888655",
+    "read-startup-journal.ps1": "0a515c935e6106bd999009a4c027eb543281a5c53d411b74cbe69409f3c75105",
+    "test-controls-host-probe.py": "4ab1db8c5dcd448c552e30cfcd8a2a8c7cbcaceb81a6baa25aae162fa8706ac1",
+    "inspect-process.psm1": "fd76680e42127feeb4d8da952b5e04a49b48d3bb6df159b9c77a236a3c8f0752",
+    "prepare-usbdk-lifecycle-trace.py": "fee895320e0e01c971c569d392661d3683c7e10de6ac15456b49db83643f3042",
+    "test-controls-host-traced.ps1": "e39bfa28700ca195cda2bca14dc8b3d21cb62c84abe307ff85a7348805343e76",
+    "capture-usb-startup.ps1": "4d51f8d01e345d42158cf7d0e504e0bf34dac85290ea9da5e276a657e659fba5",
+    "controls-usb-identity.py": "44aae2391c7fd0e67f8518a9849966c3756dd89e490d6e319c9f8e68a82a099a",
+    "validate-usb-state-capture.py": "ae0023a0ae2ce1e3e0d1d5340a0ffdc4894c5df575d5b57439a77de6f3c9a472",
+    "test-rate-user-probe.ps1": "69b0322bc00016cff200e991418e2592810c4cf1b90411fbd30ec3025c0f8756",
+    "validate-rate-user-probe.py": "0aaac1dc95b73dec73881436f7e53a94b628e84ed9eaa305248d5e40b10b0fdf",
+    "test-controls-user-probe.ps1": "54f97fa214d5659eddb1d4dbe5927782ccb172bc820e978ad15a6e60438cee30",
+    "supervise-usb-identity.py": "d36c13b7063fec9bc482e61ec1131f53b9f1e5d224656abda1ee356e4144b8a4",
+    "collect-windows-state.ps1": "4028449556933a6c3ca970dfcb4f143a330847266a8e7dd58668f9b590eb1f66",
+    "observe-sl3-usb-identity.py": "238aa772ef466832a6d63b020eab357b014a2eb998a1fb2662dd1a988c6e43ea",
+    "validate-controls-user-probe.py": "74d2f24e565628e00f882d83d11ac20b43941008618b51ed08e541b16c4af065",
+    "preflight-usbdk.ps1": "92a83517b40db12535c7b233a4f728498d37f77dae708ddca35a6bd567818887",
+    "start-rate-trace.ps1": "cd0e1987b19036ec44c1db051d26cc8a6567b0afa98917d1e9a00a76e4e298b5",
+    "prepare-rate-trace.py": "4201c509c85367f8a4b4dbe478cec002b0f09e3566c64556d7a4c04a7e0dd9c7"
+  },
+  "sourceSha256": {
+    "scripts/build-native.ps1": "042df0f149cb63383907dbd2df56bacf910baa2e112000f9f6fa79cac2d822b6",
+    "scripts/prepare-rate-trace.py": "4201c509c85367f8a4b4dbe478cec002b0f09e3566c64556d7a4c04a7e0dd9c7",
+    "scripts/test-rate-user-probe.ps1": "69b0322bc00016cff200e991418e2592810c4cf1b90411fbd30ec3025c0f8756",
+    "scripts/validate-rate-host-probe.py": "cfc83d201f1a045329b943ad04ade619a89e8a10a73fb00bc2d03984dba9f16b",
+    "scripts/validate-rate-user-probe.py": "0aaac1dc95b73dec73881436f7e53a94b628e84ed9eaa305248d5e40b10b0fdf",
+    "scripts/validate-usbdk-rate.py": "ccb58637d00f7a27211ec3fe47bad0e736572a3b834cc70a14349bf541ef165b",
+    "src/core/rate_diagnostic.cpp": "8bd8bd2a07f53b820ea6b51852b4eee94ee93ddcd6daf0609b3f41edd5f25944",
+    "src/core/rate_diagnostic.hpp": "1202a6f67365563998dec858eea2cabf17cffb88da15080b6fb786e947737c94",
+    "src/windows/rate_io_log.hpp": "2e9180a62b93a6e0388ceb7dcca47fc14dbb9d29fe5e8ba41736abc7243eeca0",
+    "src/windows/usbdk_main.cpp": "86936ede6ec8446a33cff6cd9f038ebc61c33448d8fe79f59351345b4c25c3c8",
+    "tests/native/rate_selection_tests.cpp": "a7497c1a83964f5960284bb671554b1896092d7fdc43a09ef407fe1e59c6d748",
+    "tests/test_rate_probe_evidence.py": "ea134ec31654bc3f27a379997fdac93bdaac41fb50d42c1e8540953d6820f2a0",
+    "tests/test_rate_user_probe.py": "5fbd9006842474110bd75c5f2cb3e9d75010241365f7a27fa77c141af45962f1",
+    "scripts/validate-rate-io.py": "b49427103f4ea1a61a04a1207d22df350d760ee476979e546331e2de08ddedb4",
+    "tests/rate_io_fixtures.py": "cc0dbcef5302228ccfbfd2c6f85199744d02e1a5bbb2e40eb0a951b23a352094",
+    "tests/test_rate_io_evidence.py": "b77c260a1cf2496b37f65818a4a637b374f6f996db0d75ec83a3014ec19bf7ae"
+  },
+  "buildManifestSha256": {
+    "artifacts/build/native/native-build-Release.json": "d4aa77e6894e9d0d4f43815b0f8250939ce82b7eb390a442b170ba39177a22d5",
+    "artifacts/build/native/native-build-Debug.json": "8994567f835fe3fb4271058832258a69c84dc906f35e8bc6598bb1d03083082a",
+    "artifacts/build/native-without-sdk/native-build-Release.json": "c84c636ad97079d7f369ee3227267befb470925c654a59aebbed949ad281cd85"
+  },
+  "privateLogSha256": {
+    "rate-io-replay-debug-20261101.log": "602622ca3c682d7409f807ad83dff57313e94a3de4af36078163f0467180f352",
+    "rate-io-replay-python-suite-20261101.log": "b9720286649ab5d0045698d2199477da97bd1f862a506b42cb052e78895ea0e6",
+    "rate-io-replay-release-20261101.log": "76e8490e589154389fa46bd9d1c9cfa0c29f3f7ffb95222ebfc2a7d24e0d5755",
+    "rate-io-replay-release-checked-20261101.log": "7c0357c80152cd3b84935173a0593241a1ff71729b4aad621e060fb04b942371",
+    "rate-io-replay-release-final-20261101.log": "ccc6b0dc7807d3424d9168483144cc77f840cfc717ebd1dc47754a55ce37399a",
+    "rate-io-replay-role-tests-20261101.log": "2e8bb2812495c637a0c03bd59be57d4466849e6e7c02f9cb3113108708cae292",
+    "rate-io-replay-role-tests-final-20261101.log": "f96b3f29270924b46b7ad3c9655c62acd5555a375c8204bb8f804f3f61471df4",
+    "rate-io-replay-sdkfree-20261101.log": "53d5325109556df20afc452d7d1947757733db1192dccbf941f07d1c5e559acb",
+    "rate-io-replay-targeted-20261101.log": "4f656b2d08ecefd7bb3212626f2dd863458f0b34b74538c20f09639247aa9f43",
+    "rate-io-replay-targeted-checked-20261101.log": "6db976c7f2390f2eb2b78af70eb9b5bed812fa6dde0245a83bdf89cce3c8ec8d",
+    "rate-io-replay-targeted-final-20261101.log": "75432c8fb8f0714b5199bd82197783612ed5726631d64f6b7cb51bc74a87a458"
+  },
+  "disarmedUnitPlans": [
+    {
+      "path": "analysis/rate-trace-unit-54c2a761584d42ceab50a003783972f4",
+      "planSha256": "99c50b72ebbd6adda1e452b13c82c7fa4d820ff5db0aa47759c7806c7695dec3",
+      "disarmSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067"
+    },
+    {
+      "path": "analysis/rate-trace-unit-563f1186aa6b4dcaa40e8927511f8361",
+      "planSha256": "29ee80100d6f497c918b58ac9823428893b00c4bc42d45aac8577f55b06f843e",
+      "disarmSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067"
+    },
+    {
+      "path": "analysis/rate-trace-unit-5800b13038a54a2faedbcecf8507c5f9",
+      "planSha256": "c99f0887b6548e16d0fe33bc48c7826af4d8a8ff1e441af57d78a1e26a664bfa",
+      "disarmSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067"
+    },
+    {
+      "path": "analysis/rate-trace-unit-6053828dc5544db382e650777082fda7",
+      "planSha256": "f0c090a2b312d3dcbfff05d41c87b497f73ca2a3b0c9090517e0ac9d24135d95",
+      "disarmSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067"
+    },
+    {
+      "path": "analysis/rate-trace-unit-71306d4ea8b24de38c1574b3b16402a9",
+      "planSha256": "d3e7421b78c87bad3a90bbbdff06b6fe9d12ef55564fbb394eafd35def88ec59",
+      "disarmSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067"
+    }
+  ],
+  "checkpoint": {
+    "path": "artifacts/build/checkpoints/rate-io-replay-20261101",
+    "files": 278,
+    "bytes": 21387633,
+    "manifestSha256": "7840bd626727c9f7bd96c5db73bbb2049b6a8307dd1dd41f056b0d8742e466f8"
+  },
+  "limits": {
+    "positiveNativeRecordingCollected": false,
+    "cppEmitterUsesSyntheticCpuTransferFacts": true,
+    "independentUsbPayloadCorrelationVerified": false,
+    "physicalAcquisition": false,
+    "physicalRateSelection": false,
+    "traceSourceStarted": false,
+    "uacLaunch": false,
+    "securityTrustBindingRegistrationOrFirmwareChanges": false,
+    "productionAsioRateSetterImplemented": false,
+    "currentSeratoOrDvsVerified": false,
+    "previousScopePlanStillDisarmed": true
+  }
+}

@@ -1,5 +1,7 @@
 # SL3 rebuild goal — working checkpoint
 
+**Rate I/O replay gate, 1 November:** [raw v2 replay](rate-io-replay.md) now checks exact transaction timing, requests, responses and acceptance against the summary. Current native host and traced tests require a complete recording, PID/digest agreement and fresh UTC window. Synthetic and actual-writer fixture checks pass without USB. Historical summaries retain their earlier scope; positive native collection, production ASIO rate selection and current Serato remain unfinished.
+
 **Raw rate I/O recording, 1 November:** the [bounded recorder](rate-io-recording.md) now preserves raw request/reply/status facts and separate acceptance decisions, including late and failed data. Decision buffering performs no I/O on the runner boundary; no extra USB command or timeout extension was added. Software coverage is offline only. Recording replay/qualification and positive native collection remain unfinished; changed native inputs require fresh attended plans.
 
 **Shared held-rate trace preparation, 1 November:** the [rate-specific split-role runner, frozen plan and single-use launcher](held-rate-trace.md) now bind a reviewed clock pair to one normal-token rate probe and separate bounded administrator collection. Qualification requires fresh collector identity, separate operation/cleanup evidence and twelve seconds after retirement. Actual inert/refusal checks and synthetic composition pass; no elevated/physical launch ran. Unit plans and the old Scope/image plan remain disarmed.

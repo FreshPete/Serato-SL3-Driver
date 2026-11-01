@@ -1,5 +1,7 @@
 # Preserve raw rate-control I/O separately from acceptance
 
+**Later checkpoint:** [raw v2 parsing, replay and required host/trace gates](rate-io-replay.md) are now implemented. V2 adds the exact transaction timing origin missing from v1; the emission-only results below retain their checkpoint scope. No positive native recording has been collected.
+
 The native bounded rate adapter now creates a fresh `rate-io.jsonl` next to `rate.json`. It records each rate transaction's request intent, retired adapter return and the bounded runner's separate decision. This covers the transaction's initial getter, optional setter/acknowledgement and verification getter. Acquisition's earlier standalone getter remains covered by the existing startup journal, not this new recording.
 
 ## What is retained

@@ -7,6 +7,7 @@ import subprocess
 import tempfile
 import unittest
 import uuid
+from tests import rate_io_fixtures as io_fixtures
 from unittest.mock import patch
 from tests import test_selection_user_probe as selection_fixtures
 from tests import test_rate_probe_evidence as rate_fixtures
@@ -63,6 +64,7 @@ class RateUserTests(unittest.TestCase):
         save(folder,'probe/probe.json',result);save(folder,'probe/request.json',request)
         native=rate_fixtures.RateProbeEvidenceTests().native();native['utc']='2026-10-30T23:00:07+00:00'
         save(folder,'probe/worker-1.tsv.rate/rate.json',native)
+        (folder/'probe/worker-1.tsv.rate/rate-io.jsonl').write_text(io_fixtures.text(io_fixtures.recording(pid=2002)),encoding='utf-8')
         (folder/'probe/worker-1.tsv').write_text(''.join(f'{i+100}\t2002\t{s}\n' for i,s in enumerate(rate_fixtures.stages())),encoding='ascii')
         save(folder,'probe-validation.json',v.selected.probe(folder/'probe',worker))
         for name in ('context.json','admitted-context.json'):
@@ -73,7 +75,7 @@ class RateUserTests(unittest.TestCase):
         record.update(schema='sl3.rate-user.traced-run.v1',targetHz=44100,expectedInitialHz=48000,traceSeconds=60,rateRestorationVerified=False,**bound)
         for name,key in [('intent.json','intentRecordSha256'),('context.json','contextSha256'),('admitted-context.json','admittedContextSha256'),
             ('launch-admission.json','launchAdmissionSha256'),('probe/request.json','requestRecordSha256'),('probe/probe.json','probeRecordSha256'),
-            ('probe-validation.json','probeValidationSha256'),('probe/worker-1.tsv.rate/rate.json','nativeRateRecordSha256')]:record[key]=v.digest(folder/name)
+            ('probe-validation.json','probeValidationSha256'),('probe/worker-1.tsv.rate/rate.json','nativeRateRecordSha256'),('probe/worker-1.tsv.rate/rate-io.jsonl','rateIoRecordSha256')]:record[key]=v.digest(folder/name)
         save(folder,'run.json',record)
         return folder,bound,record,worker,probe
 
@@ -99,17 +101,33 @@ class RateUserTests(unittest.TestCase):
             folder,bound,record,worker,probe=self.fixture(Path(temporary))
             for key,value in [('rateRestorationVerified',True),('targetHz',48000),('expectedInitialHz',44100),('traceSeconds',20),
                 ('probeCompletedUtc','2026-10-30T23:00:49+00:00'),('probeStartedUtc','2026-10-30T23:00:09+00:00'),
-                ('traceCleanupConfirmed',False),('probeTimedOut',True),('nativeRateRecordSha256','0'*64),('launchAdmissionSha256','0'*64)]:
+                ('traceCleanupConfirmed',False),('probeTimedOut',True),('nativeRateRecordSha256','0'*64),('rateIoRecordSha256','0'*64),('launchAdmissionSha256','0'*64)]:
                 bad=copy.deepcopy(record);bad[key]=value;save(folder,'run.json',bad)
                 with patch.object(v,'build_contract',return_value=bound),self.subTest(key=key),self.assertRaises(ValueError):v.validate(folder,worker,probe)
             save(folder,'run.json',record)
             native=v.read(folder/'probe/worker-1.tsv.rate/rate.json');native['utc']='2026-10-30T22:00:00+00:00'
-            save(folder,'probe/worker-1.tsv.rate/rate.json',native);record['nativeRateRecordSha256']=v.digest(folder/'probe/worker-1.tsv.rate/rate.json');save(folder,'run.json',record)
+            save(folder,'probe/worker-1.tsv.rate/rate.json',native)
+            record['nativeRateRecordSha256']=v.digest(folder/'probe/worker-1.tsv.rate/rate.json');save(folder,'run.json',record)
             with patch.object(v,'build_contract',return_value=bound),self.assertRaises(ValueError):v.validate(folder,worker,probe)
+
+    def test_stale_raw_recording_cannot_borrow_current_summary_window(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            folder,bound,record,worker,probe=self.fixture(Path(temporary))
+            rows=io_fixtures.recording(pid=2002)
+            for row in rows:
+                if row['event']=='header':row['utc']='2026-10-30T22:00:00Z'
+                if row['event']=='end':row['submitted_utc']=row['completed_utc']='2026-10-30T22:00:00Z'
+            path=folder/'probe/worker-1.tsv.rate/rate-io.jsonl';path.write_text(io_fixtures.text(rows),encoding='utf-8')
+            # A standalone replay has no host-lifetime claim. Rebind its saved
+            # hashes, then require the traced validator to catch stale UTC.
+            saved=v.selected.probe(folder/'probe',worker);save(folder,'probe-validation.json',saved)
+            record['rateIoRecordSha256']=v.digest(path);record['probeValidationSha256']=v.digest(folder/'probe-validation.json');save(folder,'run.json',record)
+            with patch.object(v,'build_contract',return_value=bound),self.assertRaisesRegex(ValueError,'Raw recording timestamp'):
+                v.validate(folder,worker,probe)
 
     def test_current_build_and_actual_inert_launcher_then_disarm(self):
         build=v.read(v.BUILD);worker=build['usbdk']['executableSha256'];probe=build['hostProbe']['executableSha256']
-        bound=v.build_contract(worker,probe);self.assertEqual(set(bound['runnerInputs']),set(v.RUNNER_INPUTS));self.assertEqual(len(v.RUNNER_INPUTS),23)
+        bound=v.build_contract(worker,probe);self.assertEqual(set(bound['runnerInputs']),set(v.RUNNER_INPUTS));self.assertEqual(len(v.RUNNER_INPUTS),24)
         for mutation in ('missing-pin','wrong-source','unprepared'):
             bad=copy.deepcopy(build)
             if mutation=='missing-pin':bad['hostProbe']['rateSelection']['traceScriptInputs'].pop('test-rate-user-probe.ps1')

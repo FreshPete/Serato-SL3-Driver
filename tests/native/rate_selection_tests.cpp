@@ -107,6 +107,9 @@ struct FakeIo final:RateIo {
     std::uint64_t clock=1000;unsigned elapsed=1,operations=0,fail_at=99,cancel_at=99,short_at=99;
     unsigned current=44100,command=0,notifications=0,notifications_per_reply=3,setters=0;
     std::array<RateIoObservation,15> observations{};unsigned observed_count=0,observer_delay_ms=0;
+    std::uint64_t transaction_start=0,transaction_end=0;unsigned transaction_budget=0;DiagnosticError transaction_error=DiagnosticError::none;
+    void transaction_started(std::uint64_t t,unsigned b) noexcept override{transaction_start=t;transaction_budget=b;}
+    void transaction_finished(std::uint64_t t,DiagnosticError e) noexcept override{transaction_end=t;transaction_error=e;}
     void observed(const RateIoObservation& o) noexcept override{
         if(observed_count>=observations.size() || o.sequence!=observed_count)std::terminate();
         observations[observed_count++]=o;clock+=observer_delay_ms;
@@ -208,6 +211,7 @@ void grants(){
 }
 void recording_decisions(){
     FakeIo io;const auto result=checked_diagnose(48000,io);
+    require(io.transaction_start==1000 && io.transaction_budget==3000 && io.transaction_end>=io.transaction_start && io.transaction_error==result.error,"Exact transaction origin and end reason retained without I/O");
     require(result.error==DiagnosticError::none && io.observed_count==io.operations && io.observed_count==15,"One bounded observation per retired adapter return");
     unsigned writes=0,notifications=0,replies=0;
     for(unsigned i=0;i<io.observed_count;++i){
@@ -238,6 +242,19 @@ void recording_decisions(){
         "Time consumed by observation cannot admit a later I/O beyond the transaction deadline");}
 }
 #ifdef _WIN32
+void emit_recording_fixture(const std::filesystem::path& path){
+    // Synthetic CPU/filesystem fixture for the independent Python decoder.
+    // It never constructs a native device, loads a helper or submits USB I/O.
+    FakeIo io;const auto result=checked_diagnose(44100,io);require(result.error==DiagnosticError::none,"Synthetic no-op recording");
+    sl3::diagnostic::RateIoLog log(path,44100,"2026-10-30T23:00:07Z");
+    sl3::diagnostic::RateNativeFacts facts;facts.invoked=facts.api_attempted=facts.api_accepted=facts.terminal=true;
+    strcpy_s(facts.submitted_utc.data(),facts.submitted_utc.size(),"2026-10-30T23:00:07Z");
+    strcpy_s(facts.completed_utc.data(),facts.completed_utc.size(),"2026-10-30T23:00:07Z");
+    for(unsigned n=0;n<io.observed_count;++n){const auto& o=io.observations[n];facts.adapter_timeout_ms=o.timeout_ms;
+        log.begin(o.output,o.timeout_ms,o.started_ms,o.frame);log.end(o,facts);}
+    log.transaction(io.transaction_start,io.transaction_budget,io.transaction_end,result.error);
+    for(unsigned n=0;n<io.observed_count;++n)log.decided(io.observations[n]);
+}
 void native_recording_file(){
     using namespace sl3::diagnostic;
     const auto path=std::filesystem::temp_directory_path()/(L"SL3RateIo-"+std::to_wstring(GetCurrentProcessId())+L"-"+std::to_wstring(GetTickCount64())+L".jsonl");
@@ -246,11 +263,11 @@ void native_recording_file(){
     const RateIoObservation sent{0,true,100,10,12,true,64,request,RateIoDecision::write_retired};
     const RateIoObservation short_reply{1,false,300,13,15,true,63,input,RateIoDecision::transfer_failure};
     {RateIoLog log(path,48000,"2026-11-01T21:00:00Z");log.begin(true,100,10,request);log.end(sent,native);
-     log.begin(false,300,13,Frame{});log.end(short_reply,native);log.decided(sent);log.decided(short_reply);}
+     log.begin(false,300,13,Frame{});log.end(short_reply,native);log.transaction(10,3000,16,DiagnosticError::transfer);log.decided(sent);log.decided(short_reply);}
     std::vector<std::string> lines;{std::ifstream in(path);for(std::string line;std::getline(in,line);)lines.push_back(line);}
-    require(lines.size()==7 && lines[0].find("sl3.rate-io.v1")!=std::string::npos && lines[1].find("\"event\":\"begin\"")!=std::string::npos,"Fresh header and bounded append-only records written");
+    require(lines.size()==8 && lines[0].find("sl3.rate-io.v2")!=std::string::npos && lines[1].find("\"event\":\"begin\"")!=std::string::npos,"Fresh header and bounded append-only records written");
     require(lines[3].find("\"frame_hex\":null")!=std::string::npos && lines[4].find("\"bytes\":63")!=std::string::npos &&
-        lines[4].find("decision")==std::string::npos && lines[5].find("write_retired")!=std::string::npos && lines[6].find("transfer_failure")!=std::string::npos,
+        lines[4].find("decision")==std::string::npos && lines[6].find("write_retired")!=std::string::npos && lines[7].find("transfer_failure")!=std::string::npos,
         "Raw short frame and post-transaction decisions have distinct records; no fabricated input before read");
     bool refused=false;try{RateIoLog duplicate(path,48000,"2026-11-01T21:00:00Z");}catch(const std::runtime_error&){refused=true;}
     require(refused,"An existing I/O recording is never overwritten");
@@ -285,7 +302,12 @@ void diagnostics(){
     {FakeIo io;const auto result=checked_diagnose(96000,io);require(result.error==DiagnosticError::invalid_target && !io.operations,"Invalid diagnostic target performs no I/O");}
 }
 }
-int main(){try{success();failures();diagnostics();wire();grants();recording_decisions();
+int main(int argc,char** argv){try{
+#ifdef _WIN32
+if(argc==3 && std::string(argv[1])=="--emit-recording"){emit_recording_fixture(std::filesystem::path(argv[2]));return 0;}
+#endif
+if(argc!=1)return 2;
+success();failures();diagnostics();wire();grants();recording_decisions();
 #ifdef _WIN32
 native_recording_file();
 #endif

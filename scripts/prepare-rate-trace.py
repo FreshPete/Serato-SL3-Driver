@@ -24,7 +24,7 @@ def runtime():
     require(sha(ROOT/'scripts/build-native.ps1')==build['buildScriptSha256'].lower(),'Build runner changed')
     for name,digest in build['inputs'].items():require(sha(ROOT/name)==digest.lower(),'Native build input changed: '+name)
     feature=build['hostProbe']['rateSelection'];require(feature['testsPassed'] is True and feature['physicalRateChangeTested'] is False and feature['traceRunnerPrepared'] is True and feature['traceLauncherPrepared'] is True,'Rate trace source not prepared')
-    pins=feature['traceScriptInputs'];require(len(pins)==23,'Rate runtime dependencies missing')
+    pins=feature['traceScriptInputs'];require(len(pins)==24,'Rate runtime dependencies missing')
     for name,digest in pins.items():require(sha(ROOT/'scripts'/name)==digest.lower(),'Rate dependency changed: '+name)
     launchers=feature['traceLauncherInputs']
     require(set(launchers)=={'prepare-rate-trace.py','start-rate-trace.ps1'},'Rate launcher dependencies missing')

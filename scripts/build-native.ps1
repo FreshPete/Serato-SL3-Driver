@@ -122,7 +122,7 @@ try {
     if($WithAsioComponent){
         $record.hostProbe.rateSelection=[ordered]@{testsPassed=$true;mode='--select-rate';nativeRequiresReviewedInitialRate=$true
             maximumAcquisitions=1;maximumSelections=1;audioStarts=0;physicalRateChangeTested=$false;sharedTraceImplemented=$false;scriptInputs=@{}}
-        foreach($name in @('test-rate-host-probe.py','validate-rate-host-probe.py','validate-usbdk-rate.py','validate-controls-host-probe.py',
+        foreach($name in @('test-rate-host-probe.py','validate-rate-host-probe.py','validate-usbdk-rate.py','validate-rate-io.py','validate-controls-host-probe.py',
                           'export-usbdk-physical-checkpoint.py','validate-usbdk-capture.py')){
             $record.hostProbe.rateSelection.scriptInputs[$name]=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot $name)).Hash
         }
@@ -136,7 +136,7 @@ try {
             'export-usbdk-physical-checkpoint.py','validate-usbdk-capture.py','prepare-usbdk-lifecycle-trace.py',
             'observe-sl3-usb-identity.py','supervise-usb-identity.py','controls-usb-identity.py','capture-controls-user-context.ps1',
             'test-controls-user-probe.ps1','inspect-process.psm1','validate-controls-user-probe.py','validate-usb-state-capture.py',
-            'test-rate-host-probe.py','validate-rate-host-probe.py','validate-usbdk-rate.py','test-rate-user-probe.ps1','validate-rate-user-probe.py')){
+            'test-rate-host-probe.py','validate-rate-host-probe.py','validate-usbdk-rate.py','test-rate-user-probe.ps1','validate-rate-user-probe.py','validate-rate-io.py')){
             $record.hostProbe.rateSelection.traceScriptInputs[$name]=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot $name)).Hash
         }
         $record.hostProbe.rateSelection.traceLauncherInputs=@{}

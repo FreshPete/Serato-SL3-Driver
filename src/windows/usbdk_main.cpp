@@ -282,6 +282,9 @@ struct NativeRateIo final:sl3::control::RateIo {
     Device& device;std::ofstream& report;const std::filesystem::path& output;unsigned target;
     sl3::diagnostic::RateIoLog log;sl3::diagnostic::RateNativeFacts facts{};
     std::array<sl3::control::RateIoObservation,15> observations{};unsigned observed_count=0,saved_decisions=0;
+    bool transaction_seen=false,transaction_done=false,transaction_saved=false;
+    std::uint64_t transaction_start=0,transaction_finish=0;unsigned transaction_budget=0;
+    sl3::control::DiagnosticError transaction_error=sl3::control::DiagnosticError::none;
     bool possible=false,retired=true;unsigned transfers=0,setter_attempts=0;std::array<char,512> error{};
     NativeRateIo(Device& d,std::ofstream& r,const std::filesystem::path& p,unsigned hz):device(d),report(r),output(p),target(hz),log(p/L"rate-io.jsonl",hz,utc_now()){}
     std::uint64_t now_ms() noexcept override{return GetTickCount64();}
@@ -290,6 +293,10 @@ struct NativeRateIo final:sl3::control::RateIo {
         if(result && result->setter_attempts!=setter_attempts)throw std::runtime_error("Rate setter attempt accounting differs");
         if(result){
             if(observed_count!=transfers)throw std::runtime_error("Rate observation count differs");
+            if(transaction_seen && !transaction_saved){
+                if(!transaction_done || transaction_error!=result->error)throw std::runtime_error("Rate transaction recording differs");
+                log.transaction(transaction_start,transaction_budget,transaction_finish,transaction_error);transaction_saved=true;
+            }
             for(;saved_decisions<observed_count;++saved_decisions)log.decided(observations[saved_decisions]);
         }
         report.close();report.open(output/L"rate.json",std::ios::trunc);
@@ -297,7 +304,7 @@ struct NativeRateIo final:sl3::control::RateIo {
               <<",\"target_rate_hz\":"<<target<<",\"device_may_have_changed\":"<<(possible?"true":"false")
               <<",\"last_io_retired\":"<<(retired?"true":"false")<<",\"control_transfer_attempts\":"<<transfers
               <<",\"redirect_closed\":"<<(closed?"true":"false")<<",\"audio_submissions\":0,\"alternate_changes\":0,\"automatic_rollback\":false"
-              <<",\"rate_io_schema\":\"sl3.rate-io.v1\",\"rate_io_file\":\"rate-io.jsonl\""
+              <<",\"rate_io_schema\":\"sl3.rate-io.v2\",\"rate_io_file\":\"rate-io.jsonl\""
               <<",\"setter_attempts\":"<<setter_attempts;
         if(result)report<<",\"diagnostic_error\":"<<unsigned(result->error)<<",\"transaction_error\":"<<unsigned(result->transaction_error)
                         <<",\"exchange_error\":"<<unsigned(result->exchange_error)<<",\"initial_rate_hz\":"<<result->initial_rate_hz
@@ -310,6 +317,12 @@ struct NativeRateIo final:sl3::control::RateIo {
     void observed(const sl3::control::RateIoObservation& observation) noexcept override{
         if(observed_count>=observations.size() || observation.sequence!=observed_count)fail_stop();
         observations[observed_count++]=observation; // Fixed storage only; no I/O on the decision boundary.
+    }
+    void transaction_started(std::uint64_t tick,unsigned budget) noexcept override{
+        if(transaction_seen)fail_stop();transaction_seen=true;transaction_start=tick;transaction_budget=budget;
+    }
+    void transaction_finished(std::uint64_t tick,sl3::control::DiagnosticError error_code) noexcept override{
+        if(!transaction_seen || transaction_done)fail_stop();transaction_done=true;transaction_finish=tick;transaction_error=error_code;
     }
     bool transfer(bool output_frame,sl3::control::Frame& frame,unsigned timeout,std::size_t& bytes) noexcept override{
         Transfer request(device);facts={};facts.invoked=true;const auto started=GetTickCount64();

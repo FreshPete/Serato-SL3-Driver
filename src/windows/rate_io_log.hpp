@@ -19,7 +19,7 @@ struct RateNativeFacts {
 // after the transaction, without claiming target verification, device release,
 // ETW correlation or physical clock measurement.
 class RateIoLog final {
-    HANDLE file_=INVALID_HANDLE_VALUE;unsigned attempts_=0,decisions_=0;bool active_=false,output_=false;
+    HANDLE file_=INVALID_HANDLE_VALUE;unsigned attempts_=0,decisions_=0;bool active_=false,output_=false,transaction_=false;
     static const char* decision(control::RateIoDecision d) noexcept {
         switch(d){
         case control::RateIoDecision::write_retired:return "write_retired";
@@ -51,7 +51,7 @@ public:
         file_=CreateFileW(path.c_str(),GENERIC_WRITE,FILE_SHARE_READ,nullptr,CREATE_NEW,FILE_ATTRIBUTE_NORMAL|FILE_FLAG_WRITE_THROUGH,nullptr);
         if(file_==INVALID_HANDLE_VALUE)failed("Create fresh rate I/O recording");
         try{
-            std::ostringstream line;line<<"{\"schema\":\"sl3.rate-io.v1\",\"event\":\"header\",\"pid\":"<<GetCurrentProcessId()
+            std::ostringstream line;line<<"{\"schema\":\"sl3.rate-io.v2\",\"event\":\"header\",\"pid\":"<<GetCurrentProcessId()
                 <<",\"target_rate_hz\":"<<target<<",\"utc\":";stamp(line,utc.c_str());line<<"}\n";append(line.str());
         }catch(...){CloseHandle(file_);file_=INVALID_HANDLE_VALUE;throw;}
     }
@@ -81,9 +81,17 @@ public:
             line<<"}\n";append(line.str());active_=false;
         }catch(...){fail_stop();}
     }
+    void transaction(std::uint64_t start,unsigned budget,std::uint64_t finished,control::DiagnosticError error) noexcept {
+        try{
+            if(active_ || transaction_ || decisions_)fail_stop();
+            std::ostringstream line;line<<"{\"event\":\"transaction\",\"started_ms\":"<<start<<",\"budget_ms\":"<<budget
+                <<",\"finished_ms\":"<<finished<<",\"diagnostic_error\":"<<unsigned(error)<<"}\n";
+            append(line.str());transaction_=true;
+        }catch(...){fail_stop();}
+    }
     void decided(const control::RateIoObservation& o) noexcept {
         try{
-            if(active_ || o.sequence!=decisions_ || decisions_>=attempts_)fail_stop();
+            if(active_ || !transaction_ || o.sequence!=decisions_ || decisions_>=attempts_)fail_stop();
             std::ostringstream line;line<<std::boolalpha<<"{\"event\":\"decision\",\"sequence\":"<<decisions_++
                 <<",\"output\":"<<o.output<<",\"runner_started_ms\":"<<o.started_ms<<",\"runner_completed_ms\":"<<o.completed_ms
                 <<",\"transferred\":"<<o.transferred<<",\"bytes\":"<<o.bytes<<",\"decision\":\""<<decision(o.decision)<<"\"}\n";

@@ -14,7 +14,7 @@ selected=module('rate_trace_operation',ROOT/'scripts/validate-rate-host-probe.py
 base=user.base
 read,digest,require,utc=user.read,user.digest,user.require,user.utc
 RUNNER_INPUTS=(*base.RUNNER_INPUTS,'test-rate-host-probe.py','validate-rate-host-probe.py','validate-usbdk-rate.py',
-    'test-rate-user-probe.ps1','validate-rate-user-probe.py')
+    'test-rate-user-probe.ps1','validate-rate-user-probe.py','validate-rate-io.py')
 BUILD=ROOT/'artifacts/build/native/native-build-Release.json'
 
 def local(folder):
@@ -99,7 +99,7 @@ def validate(folder,worker_sha,probe_sha):
     for name,key in (('intent.json','intentRecordSha256'),('context.json','contextSha256'),('admitted-trace.json','admittedTraceSha256'),
                      ('admitted-context.json','admittedContextSha256'),('collector-process.json','collectorProcessSha256'),
                      ('before-state.json','beforeStateSha256'),('after-state.json','afterStateSha256'),('trace/capture.json','traceRecordSha256'),
-                     ('probe/request.json','requestRecordSha256'),('probe/probe.json','probeRecordSha256'),('probe-validation.json','probeValidationSha256'),('probe/worker-1.tsv.rate/rate.json','nativeRateRecordSha256')):
+                     ('probe/request.json','requestRecordSha256'),('probe/probe.json','probeRecordSha256'),('probe-validation.json','probeValidationSha256'),('probe/worker-1.tsv.rate/rate.json','nativeRateRecordSha256'),('probe/worker-1.tsv.rate/rate-io.jsonl','rateIoRecordSha256')):
         require(digest(folder/name).lower()==record[key].lower(),'Rate file binding differs: '+name)
     for key in ('beforeStateSha256','afterStateSha256','traceRecordSha256'):require(context[key].lower()==record[key].lower(),'Collector snapshot binding differs')
     before,after=read(folder/'before-state.json'),read(folder/'after-state.json')
@@ -117,6 +117,9 @@ def validate(folder,worker_sha,probe_sha):
     require(utc(record['probeStartedUtc'])<=utc(native_rate['utc'])<=utc(record['probeCompletedUtc']),'Native rate observation is outside probe lifetime')
     result=selected.probe(folder/'probe',worker_sha)
     data=read(folder/'probe/probe.json')
+    io=result['nativeJournal']['rateIo']
+    for at in (io['createdUtc'],io['firstSubmittedUtc'],io['lastCompletedUtc']):
+        require(at is not None and utc(record['probeStartedUtc'])<=utc(at)<=utc(record['probeCompletedUtc']),'Raw recording timestamp is outside probe lifetime')
     require(result==read(folder/'probe-validation.json'),'Saved selection validation differs')
     require(result['targetRateHz']==intent['targetHz'] and data['expected_initial_rate_hz']==intent['expectedInitialHz'],
         'Rate selection differs from reviewed target/initial clock')

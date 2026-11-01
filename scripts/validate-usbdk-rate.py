@@ -16,6 +16,17 @@ spec.loader.exec_module(capture)
 digest, read_json, require, integer, utc = capture.digest, capture.read_json, capture.require, capture.integer, capture.utc
 
 
+def recording_result(path,result,expected_pid=None,required=False):
+    declared=('rate_io_schema' in result or 'rate_io_file' in result)
+    require(declared or not required,'Required rate I/O recording is missing')
+    if not declared:return None
+    require(result.get('rate_io_schema')=='sl3.rate-io.v2' and result.get('rate_io_file')=='rate-io.jsonl',
+        'Expected canonical replayable rate I/O v2 reference')
+    spec=importlib.util.spec_from_file_location('rate_io_replay',Path(__file__).with_name('validate-rate-io.py'))
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    return module.validate(Path(path).with_name('rate-io.jsonl'),result,expected_pid)
+
+
 def state_contract(state):
     keys = ("secureBoot", "deviceGuard", "hvciRegistry", "devices", "asio", "application")
     require(all(key in state for key in keys), "Incomplete recovery snapshot")
@@ -78,7 +89,9 @@ def observation_fields(r,expected_target=None):
 
 
 def observation_result(path,expected_target=None):
-    return observation_fields(read_json(Path(path)),expected_target)
+    result=observation_fields(read_json(Path(path)),expected_target)
+    recording_result(path,result)
+    return result
 
 
 def native_result(path, expected_target=None):
@@ -103,6 +116,7 @@ def native_result(path, expected_target=None):
     require(integer(total) and total == writes + reads and total <= 15, "Control attempt count mismatch")
     require(result.get("device_may_have_changed") is changed, "Possible device effect contradicts transaction path")
     utc(result.get("utc"))
+    recording_result(path,result)
     return result
 
 
