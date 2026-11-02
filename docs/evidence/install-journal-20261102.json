@@ -1,0 +1,200 @@
+{
+  "schema": "sl3.install-journal-verification.v1",
+  "createdUtc": "2026-11-02T02:15:07.368894+00:00",
+  "cases": [
+    {
+      "name": "default",
+      "passed": true
+    },
+    {
+      "name": "plan",
+      "passed": true
+    },
+    {
+      "name": "no-cli-mutation",
+      "passed": true
+    },
+    {
+      "name": "same-process-exclusive-lock",
+      "passed": true
+    },
+    {
+      "name": "real-competing-process-refused",
+      "passed": true
+    },
+    {
+      "name": "flushed-journal-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "closed-writer-refuses-append",
+      "passed": true
+    },
+    {
+      "name": "persistent-lock-file-reused-after-close",
+      "passed": true
+    },
+    {
+      "name": "process-death-retains-flushed-prefix",
+      "passed": true
+    },
+    {
+      "name": "process-death-releases-lock",
+      "passed": true
+    },
+    {
+      "name": "foreign-lock-preserved",
+      "passed": true
+    },
+    {
+      "name": "production-refuses-normal-token",
+      "passed": true
+    },
+    {
+      "name": "invalid-action-before-write",
+      "passed": true
+    },
+    {
+      "name": "invalid-bindings-before-write",
+      "passed": true
+    },
+    {
+      "name": "changed-record-hash-refused",
+      "passed": true
+    },
+    {
+      "name": "reordered-records-refused",
+      "passed": true
+    },
+    {
+      "name": "duplicated-record-refused",
+      "passed": true
+    },
+    {
+      "name": "malformed-complete-line-refused",
+      "passed": true
+    },
+    {
+      "name": "incomplete-tail-reported-not-replayed",
+      "passed": true
+    },
+    {
+      "name": "incomplete-header-refused",
+      "passed": true
+    },
+    {
+      "name": "oversized-tail-refused",
+      "passed": true
+    },
+    {
+      "name": "same-byte-journal-replacement-refused",
+      "passed": true
+    },
+    {
+      "name": "flush-failure-propagates",
+      "passed": true
+    },
+    {
+      "name": "failed-writer-poisoned",
+      "passed": true
+    },
+    {
+      "name": "partial-write-propagates",
+      "passed": true
+    },
+    {
+      "name": "actual-file-torn-tail-preserved",
+      "passed": true
+    },
+    {
+      "name": "actual-owned-cleanup-with-flushed-journal",
+      "passed": true
+    },
+    {
+      "name": "recovery-journal-survives-stage-removal",
+      "passed": true
+    },
+    {
+      "name": "actual-interrupted-cleanup-exact-partial",
+      "passed": true
+    },
+    {
+      "name": "interrupted-cleanup-has-external-recovery-prefix",
+      "passed": true
+    },
+    {
+      "name": "actual-journal-failure-prevents-cleanup-mutation",
+      "passed": true
+    }
+  ],
+  "privateTestIndexSha256": "234b7a9f9316a28b1474d4623b83128912ca9acf04967deb8944e7db96aa52d0",
+  "retainedFilesVerified": 45,
+  "sourceSha256": {
+    "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad",
+    "scripts/test-asio-install-journal.py": "687390bea097295a8f370e95db538b5e0994e2ba25db8f0286f150fcb6a78ddc",
+    "scripts/asio-file-stage.py": "a03a8cc237142f0fdfaa39f34ba7157833b81b87ad26b538d21576a09e537281"
+  },
+  "observations": {
+    "sameAndSeparateProcessExclusionPassed": true,
+    "abruptExitFlushedPrefixRetained": true,
+    "abruptExitLockReleaseObserved": true,
+    "lockContentsNotRewritten": true,
+    "foreignLockPreserved": true,
+    "actualFileTornTailRetainedWithoutReplay": true,
+    "flushErrorsPoisonWriter": true,
+    "completeCleanupRecoveryJournalOutsideRemovedStage": true,
+    "interruptedCleanupAbsentFiles": [
+      "sl3_asio.dll"
+    ],
+    "journalFailurePreventedFirstCleanupDeletion": true,
+    "reviewBundleAndPlannedLocationsUnchanged": true
+  },
+  "unchangedPriorBaseline": {
+    "cleanupCasesPassed": 26,
+    "stagingCasesPassed": 24,
+    "ancestorCasesPassed": 16,
+    "sourcesStillMatchPriorReport": true,
+    "rerunForJournal": false
+  },
+  "nativeBaseline": [
+    {
+      "configuration": "Release",
+      "priorTestsPassed": 59,
+      "rerunForJournal": false,
+      "sourcePinsStillMatch": true,
+      "manifestSha256": "09fa39a717a9b024981b9a2e9da0406234e91fedd17b3370bac04c7dbfab1a87",
+      "ctestLogSha256": "7d1dd0d5f95b6a03fea0b02c1fdb57a4cc9550dedbaac5f480063dfa5c990d5c"
+    },
+    {
+      "configuration": "Debug",
+      "priorTestsPassed": 59,
+      "rerunForJournal": false,
+      "sourcePinsStillMatch": true,
+      "manifestSha256": "d97f2b1855391de1412473897c8d4d5cd7f9fe40d91afb0f78eb5b0fa4151c92",
+      "ctestLogSha256": "70452b9868b2e84da6aca20160944a63a05d857d86ab2bbccb3ac078572d9df1"
+    }
+  ],
+  "limits": {
+    "productionOperationExecuted": false,
+    "machineRegistrationWritten": false,
+    "elevationRequested": false,
+    "hostAclsChanged": false,
+    "privilegesChanged": false,
+    "deviceAccess": false,
+    "binaryPayloadExecuted": false,
+    "powerLossDurabilityTested": false,
+    "automaticRecoveryReplayImplemented": false,
+    "completeInstallerImplemented": false,
+    "callerHashPinsIndependentlyVerifiedByJournal": false,
+    "physicalAudioTested": false,
+    "measuredTimingVerified": false,
+    "currentSeratoAdmissionTested": false,
+    "currentDvsTested": false
+  },
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/install-journal-20261102",
+    "files": 795,
+    "manifestSha256": "0d023b26e7435012d473291b88c320b37a44cc3654d0526b80691072d1108bd8",
+    "selfReferentialPublicEvidenceExcluded": true
+  }
+}

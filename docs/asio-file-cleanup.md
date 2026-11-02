@@ -78,7 +78,9 @@ The native C++ source pins still match the prior 59-test Release/Debug builds;
 those unchanged builds were not rerun. See the
 [verification record](evidence/file-cleanup-20261102.json).
 
-Protected installation/removal, serialized durable recovery, runtime dependency
-checks and ordinary-user write-denial proof remain unfinished. Genuine native
+[Installer exclusion and flushed journal primitives](asio-install-journal.md) now
+have workspace process/file/cleanup coverage. Protected installation/removal,
+full recovery integration, runtime dependency checks and ordinary-user
+write-denial proof remain unfinished. Genuine native
 audio/timing and physical analogue validation, current Serato admission and
 two-deck DVS remain unproved. macOS remains deferred.
