@@ -103,3 +103,6 @@ startup content and channel results before choosing any settling policy or
 attempting nonsilent output/loopback. Measured native timing, output mapping,
 protected deployment, current Serato admission and actual two-deck DVS remain
 separate unfinished requirements.
+
+
+The later [input recording diagnostic](input-record-probe.md) adds longer callback-prefix PCM with a separate record schema and validator/WAV export. This tone tool still requires its original finite `capture.json` schema; the new result must not be relabelled as that older capture. Longer recordings can already use the marker/WAV path, while a tone-analysis adapter and an attended known source remain separate work.

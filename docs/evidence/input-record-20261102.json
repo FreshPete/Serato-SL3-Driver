@@ -1,0 +1,157 @@
+{
+  "schema": "sl3.input-record-verification.v1",
+  "builds": [
+    {
+      "configuration": "Release",
+      "testsPassed": 64,
+      "manifestSha256": "69d67c27a836802c14c40a75dd40bf0f8e27e2f169d62e07b2435d8bc62a2c78",
+      "ctestLogSha256": "f29d5dc8386e76f3375e7e9c099afe5112d1bca9aaa8c1f859be6e3c671c01f9",
+      "allNativeSourcePinsMatch": true,
+      "recorderCoreTestSha256": "589debb04087fedc8630145e6f3c818434b32be42a41b2ed1bc759c02661c09a",
+      "recordingProbeIncluded": true,
+      "physicalNativeRun": false,
+      "selectedNativePayloadUnchanged": {
+        "sl3_usbdk.exe": true,
+        "sl3_asio.dll": true,
+        "sl3_broker_scope_probe.exe": true
+      }
+    },
+    {
+      "configuration": "Debug",
+      "testsPassed": 64,
+      "manifestSha256": "b3d8988208b10a012222d6a14942256900ec512ffb9ac598c3577af4c02b3fd4",
+      "ctestLogSha256": "8056bb5e20c8b1cd6e793235e2ebde843f85332061b78fa20b8d2782d30f66ce",
+      "allNativeSourcePinsMatch": true,
+      "recorderCoreTestSha256": "35205c4aa9bf9358a4b35038f2117d2787640ac2a3baa12d0abc29416ff8762c",
+      "recordingProbeIncluded": true,
+      "physicalNativeRun": false,
+      "selectedNativePayloadUnchanged": {
+        "sl3_usbdk.exe": true,
+        "sl3_asio.dll": true,
+        "sl3_broker_scope_probe.exe": true
+      }
+    },
+    {
+      "configuration": "Release-no-SDK",
+      "testsPassed": 39,
+      "manifestSha256": "77671b7bdee1dc70fd78b17688c18b77f4be8beab8fc25d6ca1d4c3a9324aaac",
+      "ctestLogSha256": "4029b6d78ca3790cee3340aff63cfc64d98b4598c1a236cbfcf72ea4f9647c45",
+      "allNativeSourcePinsMatch": true,
+      "recorderCoreTestSha256": "23e7fcfb3325d270ce49721d769a301bf7ca4d94db9ff4d794a8de2efc5babe4",
+      "recordingProbeIncluded": false,
+      "physicalNativeRun": false
+    }
+  ],
+  "simulatedRecordingRuns": [
+    {
+      "configuration": "Release",
+      "directory": "tests/results/local/input-record-software-a0y82d2s",
+      "indexSha256": "600ae5e5cf855709537397a6065b804c49f96bc8686ee1b06f4a206c6b8cbf13",
+      "cliCasesPassed": 18,
+      "nativeDiagnosticSha256": "58118e13077e1d3b38793f7c659b4786a925c50c41bc54ec6b851596b7f950a0",
+      "simulatedDiagnosticSha256": "b23961d0bbb7c2058ac41402f5d4f6f935ae803c9e560e3a4f77a456d0dad559",
+      "fixtureSha256": "6a5fc8b71e788784fb7f2f67d46109a48d2604289aaa6c2975959277e0cd46a9",
+      "independentPrefixRevalidation": [
+        {
+          "rateHz": 48000,
+          "frames": 144000,
+          "pcmSha256": "d195fc89c0de7c0bfd77ac9a50e1288e78e03d13b9de02f110dd41a98cabf1f4",
+          "resultSha256": "58c3c601978dee388354da9887254d564e417fbb09cd6d389d4ad2bcddbc521d",
+          "trailingCallbacksNotRecorded": 311
+        },
+        {
+          "rateHz": 44100,
+          "frames": 132352,
+          "pcmSha256": "57163662971b02d81aa86293c981313c813c27c5ff2cc470134427d928088e8c",
+          "resultSha256": "22f68d2799b33cf31c54bb6c975ceeba41f7de18e5e4e5b3a5f613d6de7d463d",
+          "trailingCallbacksNotRecorded": 242
+        }
+      ],
+      "physicalNativeRun": false
+    },
+    {
+      "configuration": "Debug",
+      "directory": "tests/results/local/input-record-software-jy2_b8g_",
+      "indexSha256": "839f627f0b02bfbf556d105764c11dc8556114fcca23eb6c39538157988665cd",
+      "cliCasesPassed": 18,
+      "nativeDiagnosticSha256": "adff310915ca52bf8fcbc21fdb5555210ee821528cbbfc476bb46851d1feb70a",
+      "simulatedDiagnosticSha256": "cf94d48440781e5098bfe8e35f572ce65f358bad805a00028699b7ab17a511a7",
+      "fixtureSha256": "9c8a854583959e431174dab645ba7c41aa258e5b5350265ebe830df199844e02",
+      "independentPrefixRevalidation": [
+        {
+          "rateHz": 48000,
+          "frames": 144000,
+          "pcmSha256": "d195fc89c0de7c0bfd77ac9a50e1288e78e03d13b9de02f110dd41a98cabf1f4",
+          "resultSha256": "11cc6ac1e255c296549ea188ae0b6a9eeee8f5e5906c6e00ca8a76168b6db643",
+          "trailingCallbacksNotRecorded": 49
+        },
+        {
+          "rateHz": 44100,
+          "frames": 132352,
+          "pcmSha256": "57163662971b02d81aa86293c981313c813c27c5ff2cc470134427d928088e8c",
+          "resultSha256": "8336ec61640d82a06460281cac7ae22d9191411886cb0e4f928fcee557a23624",
+          "trailingCallbacksNotRecorded": 47
+        }
+      ],
+      "physicalNativeRun": false
+    }
+  ],
+  "evidenceUnitTests": {
+    "passed": 9,
+    "logSha256": "84d7497f76144182a25857b3e4a7f7117917c092485becd356ee936894f48095",
+    "syntheticNativeGrammarIsPhysicalEvidence": false
+  },
+  "existingMarkerIntegration": {
+    "reportSha256": "eac0221f092b926fb6ee62071e61c5f7d2650176b7ffb0763169868cbebe533e",
+    "syntheticSource": true,
+    "frames": 144000,
+    "wavPreservesPcmBytes": true,
+    "fakeInputRejectedAsMarkerRoute": true,
+    "deviceAccess": false
+  },
+  "localSourceSha256": {
+    "CMakeLists.txt": "419be3f2c7021b43d968a2c156cf47bfde2cc903e21d72a83286b7fa414fc8a6",
+    "scripts/build-native.ps1": "d6e51f0b70da3ffebfa03363af0c0d99f1d7105938f8ec91a6f6886caf4240e2",
+    "scripts/test-input-record-probe.py": "0a55944985654508efd330505c8226e8a18f152e875070b91061e992dea694c8",
+    "scripts/validate-input-record-probe.py": "2482e873065efa334cc426883fad473a00c22736213b83fd40c028a8495f990e",
+    "scripts/analyse-audio-markers.py": "56ba76ccf5483b9300d339d0ec271d7748ea1906801192312b63d29d246d291c",
+    "src/core/input_recorder.hpp": "0c77d818d47b9e9c6d7625b1843472c48e2de27364f998e8792270142db51ff3",
+    "src/windows/input_record_probe_main.cpp": "590a36c1bc35dd99ec195d106a9c9c2ce24a43de10646ecdf60e88829802f082",
+    "tests/native/input_recorder_tests.cpp": "a080463fced2c17df706cb4176ec8ea17e463eb0cb458281190de5a86e68d7b2",
+    "tests/native/session_fake_backend.hpp": "3b0fe5d4f67b5f0ed7224cdcf1d7487db8c2875232cac958c46834ad0685862c",
+    "tests/test_input_record_evidence.py": "eea90d439cfb14748365c68f9674f149e6f8e62ea78815a1b53d68db823752ae"
+  },
+  "publishedSourceSha256": {
+    "CMakeLists.txt": "419be3f2c7021b43d968a2c156cf47bfde2cc903e21d72a83286b7fa414fc8a6",
+    "scripts/build-native.ps1": "d6e51f0b70da3ffebfa03363af0c0d99f1d7105938f8ec91a6f6886caf4240e2",
+    "scripts/test-input-record-probe.py": "0a55944985654508efd330505c8226e8a18f152e875070b91061e992dea694c8",
+    "scripts/validate-input-record-probe.py": "2482e873065efa334cc426883fad473a00c22736213b83fd40c028a8495f990e",
+    "scripts/analyse-audio-markers.py": "56ba76ccf5483b9300d339d0ec271d7748ea1906801192312b63d29d246d291c",
+    "src/core/input_recorder.hpp": "0c77d818d47b9e9c6d7625b1843472c48e2de27364f998e8792270142db51ff3",
+    "src/windows/input_record_probe_main.cpp": "590a36c1bc35dd99ec195d106a9c9c2ce24a43de10646ecdf60e88829802f082",
+    "tests/native/input_recorder_tests.cpp": "a080463fced2c17df706cb4176ec8ea17e463eb0cb458281190de5a86e68d7b2",
+    "tests/native/session_fake_backend.hpp": "3b0fe5d4f67b5f0ed7224cdcf1d7487db8c2875232cac958c46834ad0685862c",
+    "tests/test_input_record_evidence.py": "eea90d439cfb14748365c68f9674f149e6f8e62ea78815a1b53d68db823752ae"
+  },
+  "nativeRecordingTracedRunnerPrepared": false,
+  "oldTracePlansRequireFreshPins": true,
+  "physicalNativeRecordingRun": false,
+  "nonzeroOutputEnabled": false,
+  "timingProfileWritten": false,
+  "latencyMeasured": false,
+  "physicalMappingVerified": false,
+  "kernelQuiescenceVerified": false,
+  "reopenReadinessVerified": false,
+  "seratoAdmissionVerified": false,
+  "driverOrBindingChanged": false,
+  "securityChanged": false,
+  "deploymentBundleRefreshed": false,
+  "goalComplete": false,
+  "limits": [
+    "The prefix is rounded to whole 128-frame banks; trailing callbacks are explicitly outside the recording window. No startup frames are trimmed by the collector.",
+    "Successful native journal grammar is unrun on hardware; its synthetic fixture does not attest physical provenance.",
+    "The shared collector does not yet admit/guard the new recording scenario; prepare its own traced runner with process inventory and fresh pins before a physical launch.",
+    "Worker and ASIO/broker payloads above remain byte-identical, but full build/source manifests changed. Historical checkpoints and deployment bundles retain their versions.",
+    "WAV rate/frame counts and software observations do not measure the physical clock, USB continuity, analogue mapping or latency."
+  ]
+}

@@ -19,6 +19,8 @@ try {
     foreach($required in @('sl3_rate_selection_tests','sl3_control_frames_tests','sl3_core_tests','sl3_playback_tests','sl3_audio_bridge_tests','sl3_duplex_tests','sl3_continuous_tests','sl3_usbdk_stream_tests','sl3_session_tests','sl3_usbdk_rejects_stream_modes','sl3_worker_process_tests','sl3_mailbox_tests','sl3_audio_ring_tests','sl3_worker_protocol_tests','sl3_usbdk_rejects_worker_capture','sl3_capture_plan','sl3_capture_rejects_modes','sl3_usbdk_plan','sl3_usbdk_rejects_modes','sl3_usbdk_rejects_duplex_capture')){
         if($required -notin $testNames){throw "Required native test is missing: $required"}
     }
+    if('sl3_input_recorder_tests' -notin $testNames){throw 'Required PCM prefix recorder test missing'}
+    if($WithAsioComponent){foreach($name in @('sl3_input_record_probe_plan','sl3_input_record_probe_lifecycle')){if($name -notin $testNames){throw "Required input recording probe test missing: $name"}}}
     if('sl3_timer_verification_tests' -notin $testNames){throw 'Required timer-verification test is missing'}
     if('sl3_redirect_owner_tests' -notin $testNames){throw 'Required interprocess redirect ownership test is missing'}
     if('sl3_retained_broker_tests' -notin $testNames){throw 'Required separate-client retained broker test is missing'}
@@ -79,6 +81,13 @@ try {
     $record.redirectOwner=[ordered]@{softwareTestsPassed=$true;testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_redirect_owner_tests.exe")).Hash
         nativeOpenGuardConnected=$true;globalObject=$true;nonWaiting=$true;retainedAcrossAudioStop=$true
         physicalOverlapTested=$false;kernelDetachmentVerified=$false;safeSuccessiveAcquisitionVerified=$false}
+    $record.inputRecorder=[ordered]@{softwareTestsPassed=$true;testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_input_recorder_tests.exe")).Hash;fixedCallbackPrefix=$true;callbackAllocationTestsPassed=$true;physicalRecordingRun=$false}
+    if($WithAsioComponent){$record.inputRecordProbe=[ordered]@{planAndSimulatedRecordingPassed=$true
+        executableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_input_record_probe.exe")).Hash
+        simulatedExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_input_record_probe_simulated.exe")).Hash
+        testScriptSha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'test-input-record-probe.py')).Hash
+        validatorSha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'validate-input-record-probe.py')).Hash
+        simulatedFullPrefixBytesVerified=$true;nominalMilliseconds=3000;outputPayload='zero PCM only';physicalNativeRun=$false;tracedRunnerPrepared=$false}}
     $record.ctestLogSha256=(Get-FileHash -LiteralPath $ctestLog).Hash
     $record.buildScriptSha256=(Get-FileHash -LiteralPath $PSCommandPath).Hash
     $record.brokerScopeProbe=[ordered]@{planAndSimulatedLifecyclePassed=$true

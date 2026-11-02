@@ -16,7 +16,14 @@ public:
         if(mode_==L"partial-start" && i==1)return false;
         slots_[i].sequence=next_++;slots_[i].pending=true;slots_[i].cancelled=false;return true;
     }
-    bool submit_output(unsigned i,const AudioBlock&,bool) noexcept override {slots_[i].pending=true;slots_[i].cancelled=false;return true;}
+    bool submit_output(unsigned i,const AudioBlock& block,bool) noexcept override {
+        if(mode_==L"recording-zero-output"){
+            std::size_t frames=0;for(unsigned p=0;p<block.packet_count && p<64;++p)frames+=block.frames_per_packet[p];
+            if(block.packet_count>64 || frames*18>block.pcm.size())return false;
+            for(std::size_t n=0;n<frames*18;++n)if(block.pcm[n])return false;
+        }
+        slots_[i].pending=true;slots_[i].cancelled=false;return true;
+    }
     StreamPoll poll(unsigned i,StreamInput* input) noexcept override {
         if(mode_==L"hang-poll")Sleep(INFINITE);
         if(mode_==L"retained")return StreamPoll::unproven;

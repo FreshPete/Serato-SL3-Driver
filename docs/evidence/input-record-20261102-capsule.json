@@ -1,0 +1,14 @@
+{
+  "schema": "sl3.input-record-capsule.v1",
+  "directory": "artifacts/build/checkpoints/input-record-20261102",
+  "files": 993,
+  "manifestSha256": "723e807cfeedb9d4387aeed6027b99f709a8344b8e276cf9a5fc712f389a5dc2",
+  "verificationSha256": "f619c0053fb5ea5e9724dede065ea5a4909ef1771f99c6b9fdbae5c4249ed94b",
+  "includesVendorBinaries": false,
+  "includesPrivateSdkSource": false,
+  "includesOwnBuiltDiagnosticImages": true,
+  "includesSyntheticPcmAndWav": true,
+  "physicalNativeRecordingRun": false,
+  "earlyFailedKindRejectionExpectationRetained": true,
+  "nativeRecordingTracedRunnerPrepared": false
+}
