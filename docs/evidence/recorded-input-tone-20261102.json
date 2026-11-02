@@ -1,0 +1,148 @@
+{
+  "schema": "sl3.recorded-input-tone-verification.v1",
+  "scope": "Offline saved-prefix numerical analysis; no physical acquisition or source validation",
+  "sources": {
+    "scripts/analyse-input-tone.py": {
+      "localSha256": "a48f1ffefe411e5e9792e6ba399ebe87b918522081802fa0344c7725bedb8767",
+      "gitLfSha256": "a48f1ffefe411e5e9792e6ba399ebe87b918522081802fa0344c7725bedb8767"
+    },
+    "scripts/analyse-capture-pcm.py": {
+      "localSha256": "f70e84e7c2a8285e79c897ba289bf8b55a534072e1229e6289b376788065eb90",
+      "gitLfSha256": "f70e84e7c2a8285e79c897ba289bf8b55a534072e1229e6289b376788065eb90"
+    },
+    "scripts/validate-input-record-probe.py": {
+      "localSha256": "2482e873065efa334cc426883fad473a00c22736213b83fd40c028a8495f990e",
+      "gitLfSha256": "2482e873065efa334cc426883fad473a00c22736213b83fd40c028a8495f990e"
+    },
+    "tests/test_input_tone_recording.py": {
+      "localSha256": "b85702aa0642dce1c8e276a7de67fbeffde2b860c63256abcdf87e0508d62a40",
+      "gitLfSha256": "b85702aa0642dce1c8e276a7de67fbeffde2b860c63256abcdf87e0508d62a40"
+    },
+    "tests/test_input_tone.py": {
+      "localSha256": "e52c98be96c3010fea844b8b9ec5dfdd710e8cc266d29be8fe7d6f03ce7fe31a",
+      "gitLfSha256": "e52c98be96c3010fea844b8b9ec5dfdd710e8cc266d29be8fe7d6f03ce7fe31a"
+    },
+    "tests/test_capture_pcm.py": {
+      "localSha256": "ec3396e662e1f3f5d42fca8e66bbe103b4f2c7e27e989d2ee48834c0f9c40007",
+      "gitLfSha256": "ec3396e662e1f3f5d42fca8e66bbe103b4f2c7e27e989d2ee48834c0f9c40007"
+    },
+    "tests/test_input_record_evidence.py": {
+      "localSha256": "eea90d439cfb14748365c68f9674f149e6f8e62ea78815a1b53d68db823752ae",
+      "gitLfSha256": "eea90d439cfb14748365c68f9674f149e6f8e62ea78815a1b53d68db823752ae"
+    }
+  },
+  "tests": [
+    {
+      "suite": "legacy-and-recorded-tone",
+      "passed": 28,
+      "privateLogSha256": "53bce41a9279f68ea7ec2f9e1637a6da6ad8f417068394bb4aed7c0108d5be3f"
+    },
+    {
+      "suite": "finite-pcm-regression",
+      "passed": 12,
+      "privateLogSha256": "202aecfc65a6ee1a3e293b00742c38319bdf47d09f4eecd2b22253d13f6c491d"
+    },
+    {
+      "suite": "record-validator-regression",
+      "passed": 9,
+      "privateLogSha256": "40b3bcbb107749bbb7656a0fec2bbc65917019c7b829a1f1a88a5922d0091ea0"
+    }
+  ],
+  "testTotal": 49,
+  "savedSimulatedCliRuns": [
+    {
+      "configuration": "Release",
+      "rateHz": 48000,
+      "frames": 144000,
+      "sourceIndexSha256": "600ae5e5cf855709537397a6065b804c49f96bc8686ee1b06f4a206c6b8cbf13",
+      "recordingRecordSha256": "58c3c601978dee388354da9887254d564e417fbb09cd6d389d4ad2bcddbc521d",
+      "pcmSha256": "d195fc89c0de7c0bfd77ac9a50e1288e78e03d13b9de02f110dd41a98cabf1f4",
+      "declarationSha256": "5f570b70924a03d48bd0d22e1fb9a4da6388ef180f4e012eec0e9beb3580f020",
+      "analysisSha256": "fdf395a8585a737787c8d90e10f3e3020f4ca66705a0972f425d1adf08483a72",
+      "sourcesUnchanged": true,
+      "maximumExplainedCentredEnergyFraction": 3.3869059601343565e-07,
+      "minimumResidualRmsCode": 4835243.140229511,
+      "simulated": true,
+      "analogueSignalVerified": false,
+      "latencyMeasured": false
+    },
+    {
+      "configuration": "Release",
+      "rateHz": 44100,
+      "frames": 132352,
+      "sourceIndexSha256": "600ae5e5cf855709537397a6065b804c49f96bc8686ee1b06f4a206c6b8cbf13",
+      "recordingRecordSha256": "22f68d2799b33cf31c54bb6c975ceeba41f7de18e5e4e5b3a5f613d6de7d463d",
+      "pcmSha256": "57163662971b02d81aa86293c981313c813c27c5ff2cc470134427d928088e8c",
+      "declarationSha256": "1d1b68732ab02eca2f78e28d4c7f7c1a6a6e7668a59cbea2dd8a897c397f2199",
+      "analysisSha256": "957f6a2f901ecada0113efa05b50b960afaa1fe315be61bc545ee376d9f530b3",
+      "sourcesUnchanged": true,
+      "maximumExplainedCentredEnergyFraction": 7.439306289880321e-07,
+      "minimumResidualRmsCode": 4834223.547353832,
+      "simulated": true,
+      "analogueSignalVerified": false,
+      "latencyMeasured": false
+    },
+    {
+      "configuration": "Debug",
+      "rateHz": 48000,
+      "frames": 144000,
+      "sourceIndexSha256": "839f627f0b02bfbf556d105764c11dc8556114fcca23eb6c39538157988665cd",
+      "recordingRecordSha256": "11cc6ac1e255c296549ea188ae0b6a9eeee8f5e5906c6e00ca8a76168b6db643",
+      "pcmSha256": "d195fc89c0de7c0bfd77ac9a50e1288e78e03d13b9de02f110dd41a98cabf1f4",
+      "declarationSha256": "b4ae124d30b1cf8704a85d4e2775497789ff54269096ac083c358ce4d4d7c44b",
+      "analysisSha256": "4958532fb8a618172ffb69f94590d1ae08603c82e9223dcc94e79f0dc44b6625",
+      "sourcesUnchanged": true,
+      "maximumExplainedCentredEnergyFraction": 3.3869059601343565e-07,
+      "minimumResidualRmsCode": 4835243.140229511,
+      "simulated": true,
+      "analogueSignalVerified": false,
+      "latencyMeasured": false
+    },
+    {
+      "configuration": "Debug",
+      "rateHz": 44100,
+      "frames": 132352,
+      "sourceIndexSha256": "839f627f0b02bfbf556d105764c11dc8556114fcca23eb6c39538157988665cd",
+      "recordingRecordSha256": "8336ec61640d82a06460281cac7ae22d9191411886cb0e4f928fcee557a23624",
+      "pcmSha256": "57163662971b02d81aa86293c981313c813c27c5ff2cc470134427d928088e8c",
+      "declarationSha256": "062d07707cd30aa7e96df146e31f7d3eee179fffc7d915c9a4b2e067c5ba3376",
+      "analysisSha256": "ec0bec04965757f940f4ca91d9c24bbcc6cd26eab84ea782f74669c2aa278ac0",
+      "sourcesUnchanged": true,
+      "maximumExplainedCentredEnergyFraction": 7.439306289880321e-07,
+      "minimumResidualRmsCode": 4834223.547353832,
+      "simulated": true,
+      "analogueSignalVerified": false,
+      "latencyMeasured": false
+    }
+  ],
+  "privateIntegrationSha256": "94cbb6a1adcccfa3791d830cfb1f22d8c083ad017b8437810be8dc32060dcd50",
+  "nativeBuilds": [
+    {
+      "configuration": "Release",
+      "manifestSha256": "69d67c27a836802c14c40a75dd40bf0f8e27e2f169d62e07b2435d8bc62a2c78",
+      "unchangedInputPinsVerified": 146
+    },
+    {
+      "configuration": "Debug",
+      "manifestSha256": "b3d8988208b10a012222d6a14942256900ec512ffb9ac598c3577af4c02b3fd4",
+      "unchangedInputPinsVerified": 146
+    }
+  ],
+  "priorRecordingVerificationSha256": "f619c0053fb5ea5e9724dede065ea5a4909ef1771f99c6b9fdbae5c4249ed94b",
+  "deviceAccess": false,
+  "playbackRequested": false,
+  "physicalNativeRecordingRun": false,
+  "analogueSignalVerified": false,
+  "physicalMappingVerified": false,
+  "usbContinuityVerified": false,
+  "latencyMeasured": false,
+  "timingProfileGenerated": false,
+  "seratoAdmissionVerified": false,
+  "twoDeckDvsVerified": false,
+  "remaining": [
+    "Dedicated traced input-recording runner with process guards and fresh plan",
+    "Attended known-source wiring/control-state experiment and actual native recording",
+    "Physical output mapping, analogue levels, timing/latency and stable reopening",
+    "Protected deployment and genuine current Serato integration/two-deck DVS; Mac deferred"
+  ]
+}

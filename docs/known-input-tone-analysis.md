@@ -105,4 +105,22 @@ protected deployment, current Serato admission and actual two-deck DVS remain
 separate unfinished requirements.
 
 
-The later [input recording diagnostic](input-record-probe.md) adds longer callback-prefix PCM with a separate record schema and validator/WAV export. This tone tool still requires its original finite `capture.json` schema; the new result must not be relabelled as that older capture. Longer recordings can already use the marker/WAV path, while a tone-analysis adapter and an attended known source remain separate work.
+## Three-second recorded-prefix input
+
+The [input recording diagnostic](input-record-probe.md) can now feed this analyser directly using `--recording`. This separate mode first runs the existing recorder validator, including the native journal when applicable. It requires the complete successful three-second whole-bank prefix: 132352 frames at 44.1 kHz or 144000 at 48 kHz. Failed/partial recordings are refused. The original `--capture` schema and 32 ms limits remain unchanged.
+
+For this mode the declaration uses `schema: "sl3.recorded-input-tone-declaration.v1"`, replaces `captureRecordSha256` with `recordingRecordSha256` (the hash of `result.json`), and adds `workerSha256` matching the independently reviewed worker hash. All other declaration fields above remain required; `pcmSha256` binds `input.pcm`. For a simulated recording, both `--simulated` and `evidenceKind: "synthetic"` are required. An operator statement cannot relabel a known simulation.
+
+```powershell
+.venv/Scripts/python.exe scripts/analyse-input-tone.py `
+  --recording <saved-recording-directory> `
+  --worker-sha256 <reviewed-lowercase-worker-hash> `
+  --declaration <recorded-tone-declaration.json> `
+  --output <fresh-analysis-directory>
+```
+
+Add `--simulated` only for simulated input. The new output schema is `sl3.recorded-input-tone-analysis.v1`. It includes the original validator result, input/worker/declaration/source hashes, `fullRecordedPrefixStatistics`, `fullRecordedPrefixFit` and four `callbackWindowFits`. Window boundaries are predetermined whole callback banks at `floor(i * recordedCallbacks / 4) * 128`, for i=0..4. These are structural callback windows, not reconstructed USB packet windows. They partition the saved prefix exactly once; trailing callbacks counted by the recorder have no PCM in this analysis. No sample is trimmed, replaced or normalised. Integer full-prefix statistics retain exact centred energy even when squared sums exceed signed 64-bit range. Too-short windows remain ineligible; the full fit must still contain three cycles.
+
+The recorder is validated again after fitting, and the declaration is rechecked before writing. Existing output is preserved. A native-shaped record and operator declaration still do not independently attest to physical source/wiring state, continuity or latency. No tone-fit threshold grants physical approval.
+
+Nine new recorded-prefix tests plus the original nineteen tone tests pass. They cover both rates, exact window coverage, signed extrema, large full-scale sums, a retained startup spike, inadequate window cycles, declaration/worker/kind binding, in-analysis source mutation and actual CLI source/output preservation. The twelve PCM and nine recorder-validator regressions also pass (49 checks total). Four actual CLI runs read prior Release/Debug simulated recorder outputs at both rates; their packet-pattern bytes correctly leave nearly all energy outside the declared 1 kHz sine fit. These runs are explicitly synthetic and emit no audio. [Verification](evidence/recorded-input-tone-20261102.json) binds the tests and private reports. An attended known source and the dedicated traced recorder runner remain required.

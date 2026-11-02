@@ -1,0 +1,8 @@
+{
+  "schema": "sl3.selected-evidence-capsule-reference.v1",
+  "capsuleName": "recorded-input-tone-20261102",
+  "files": 39,
+  "manifestSha256": "a5f935bf20bb645b0a22022bf7bde71016880d69b92e4a1a039fd92103ec1a9c",
+  "verificationSha256": "a36fd052e3845fc009e58bb277058bfd86f823dc4fd170a2627f05fb2098919f",
+  "scope": "Private selected-source capsule; original simulated input PCM retained in the separately bound input-record checkpoint"
+}
