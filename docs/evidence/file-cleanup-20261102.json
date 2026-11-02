@@ -1,0 +1,359 @@
+{
+  "schema": "sl3.file-cleanup-verification.v1",
+  "createdUtc": "2026-11-02T02:10:02.815711+00:00",
+  "suites": [
+    {
+      "suite": "cleanup",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "no-public-removal-command",
+          "passed": true
+        },
+        {
+          "name": "no-public-test-policy-override",
+          "passed": true
+        },
+        {
+          "name": "normal-token-production-refusal",
+          "passed": true
+        },
+        {
+          "name": "complete-owned-cleanup",
+          "passed": true
+        },
+        {
+          "name": "wrong-receipt-hash",
+          "passed": true
+        },
+        {
+          "name": "production-rejects-user-owned-stage",
+          "passed": true
+        },
+        {
+          "name": "changed-payload",
+          "passed": true
+        },
+        {
+          "name": "extra-file",
+          "passed": true
+        },
+        {
+          "name": "missing-file",
+          "passed": true
+        },
+        {
+          "name": "hardlink",
+          "passed": true
+        },
+        {
+          "name": "same-byte-new-file-identity",
+          "passed": true
+        },
+        {
+          "name": "identity-rechecked-through-delete-handle",
+          "passed": true
+        },
+        {
+          "name": "delete-handles-deny-concurrent-writer",
+          "passed": true
+        },
+        {
+          "name": "receipt-for-different-root",
+          "passed": true
+        },
+        {
+          "name": "active-reader-refuses-before-deletion",
+          "passed": true
+        },
+        {
+          "name": "reader-release-allows-cleanup",
+          "passed": true
+        },
+        {
+          "name": "unexpected-write-ace",
+          "passed": true
+        },
+        {
+          "name": "fixture-acl-restored",
+          "passed": true
+        },
+        {
+          "name": "journal-failure-before-mutation",
+          "passed": true
+        },
+        {
+          "name": "journal-failure-truthful-partial",
+          "passed": true
+        },
+        {
+          "name": "late-foreign-file-preserved",
+          "passed": true
+        },
+        {
+          "name": "nonempty-final-directory-preserved",
+          "passed": true
+        },
+        {
+          "name": "image-section-blocks-deletion",
+          "passed": true
+        },
+        {
+          "name": "released-image-allows-cleanup",
+          "passed": true
+        }
+      ],
+      "indexSha256": "497ec2baa373eab9da61e3dc69777c5bc23f361e2f1616de028d073265ebce2c",
+      "retainedFilesVerified": 207
+    },
+    {
+      "suite": "stagingRegression",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "elevation-gate",
+          "passed": true
+        },
+        {
+          "name": "read-only-production-check",
+          "passed": true
+        },
+        {
+          "name": "native-known-folders",
+          "passed": true
+        },
+        {
+          "name": "actual-user-policy-stage",
+          "passed": true
+        },
+        {
+          "name": "actual-stage-inspection",
+          "passed": true
+        },
+        {
+          "name": "production-rejects-test-descriptor",
+          "passed": true
+        },
+        {
+          "name": "existing-destination",
+          "passed": true
+        },
+        {
+          "name": "source-manifest-hash",
+          "passed": true
+        },
+        {
+          "name": "missing-parent",
+          "passed": true
+        },
+        {
+          "name": "source-writer-sharing",
+          "passed": true
+        },
+        {
+          "name": "interrupted-copy",
+          "passed": true
+        },
+        {
+          "name": "changed-payload",
+          "passed": true
+        },
+        {
+          "name": "restored-payload",
+          "passed": true
+        },
+        {
+          "name": "extra-file",
+          "passed": true
+        },
+        {
+          "name": "hardlink",
+          "passed": true
+        },
+        {
+          "name": "receipt-hash",
+          "passed": true
+        },
+        {
+          "name": "same-byte-file-replacement",
+          "passed": true
+        },
+        {
+          "name": "unexpected-write-ace",
+          "passed": true
+        },
+        {
+          "name": "test-acl-restored",
+          "passed": true
+        },
+        {
+          "name": "receipt-in-different-directory",
+          "passed": true
+        },
+        {
+          "name": "different-root-restored",
+          "passed": true
+        },
+        {
+          "name": "positive-stage-final",
+          "passed": true
+        }
+      ],
+      "indexSha256": "eaa2b1d581b63997c216da3905147c30e42b11310b63d5c93886dda7910ce41e",
+      "retainedFilesVerified": 40
+    },
+    {
+      "suite": "ancestorRegression",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "readonly-inspect",
+          "passed": true
+        },
+        {
+          "name": "object-access-checks",
+          "passed": true
+        },
+        {
+          "name": "protected-child-opens-denied",
+          "passed": true
+        },
+        {
+          "name": "delete-child-control",
+          "passed": true
+        },
+        {
+          "name": "fixture-acls-restored",
+          "passed": true
+        },
+        {
+          "name": "junction-empty",
+          "passed": true
+        },
+        {
+          "name": "junction-nonempty",
+          "passed": true
+        },
+        {
+          "name": "junction-calibration-scope",
+          "passed": true
+        },
+        {
+          "name": "anchor-refuses-delete-child",
+          "passed": true
+        },
+        {
+          "name": "anchor-refuses-write-dacl",
+          "passed": true
+        },
+        {
+          "name": "anchor-refuses-write-owner",
+          "passed": true
+        },
+        {
+          "name": "anchor-refuses-generic-all",
+          "passed": true
+        },
+        {
+          "name": "ordinary-directory-still-refused",
+          "passed": true
+        },
+        {
+          "name": "host-snapshot-unchanged",
+          "passed": true
+        }
+      ],
+      "indexSha256": "37072efacc6f184a6c9d79823c5a2fd266af70cc1248e8f2f94fc055c841b99e",
+      "retainedFilesVerified": 7
+    }
+  ],
+  "sourceSha256": {
+    "scripts/asio-file-stage.py": "a03a8cc237142f0fdfaa39f34ba7157833b81b87ad26b538d21576a09e537281",
+    "scripts/test-asio-file-cleanup.py": "a752691cc46fe493361b44868731dc4493ffa3d8ec5e37e3c868d6a8a05dc0e7",
+    "scripts/test-asio-file-stage.py": "c83cd3a8e7f56306b72227d80105f0b4b41e5b26304f1440cd7ebe251763e451",
+    "scripts/test-asio-ancestor-rights.py": "221dc23a354a569b9562953877a6ed14fa95ebcbb3cb4266e629d8e28bfe982d",
+    "scripts/inspect-asio-ancestor-rights.py": "3814c4bf5c7b44d180dff5303b28b9126f584ab51e520dde4d755b127d5a8526",
+    "scripts/prepare-asio-deployment.py": "942d9e9d7b018ac6c04b046e3463b3342768c38318efc3cc9b71ef64aa58c22c",
+    "scripts/asio-registry.py": "f0b1009fe0a3cee39acc30e295dddeac9171082d8d7029f404a302d0114b7bbf"
+  },
+  "observations": {
+    "completeStageFilesRemovedAndObservedAbsent": 14,
+    "directoryRemovedAndObservedAbsent": true,
+    "allDeleteHandlesHeldBeforeMutation": true,
+    "postPreflightIdenticalByteReplacementRefused": true,
+    "concurrentWriterRefused": true,
+    "readerSharingViolation": 32,
+    "imageSectionDeletionError": 5,
+    "imageSectionUnmappedThenCleanupPassed": true,
+    "journalFailureObservedAbsentFiles": [
+      "sl3_asio.dll"
+    ],
+    "lateForeignBeforeReceiptObservedAbsentCount": 12,
+    "lateForeignAfterReceiptObservedAbsentCount": 14,
+    "unknownDataPreserved": true,
+    "fixtureAclsRestoredAndInspected": true,
+    "ancestorJunctionTagsRemovedAndRechecked": true
+  },
+  "nativeBaseline": [
+    {
+      "configuration": "Release",
+      "priorTestsPassed": 59,
+      "rerunForCleanup": false,
+      "sourcePinsStillMatch": true,
+      "manifestSha256": "09fa39a717a9b024981b9a2e9da0406234e91fedd17b3370bac04c7dbfab1a87",
+      "ctestLogSha256": "7d1dd0d5f95b6a03fea0b02c1fdb57a4cc9550dedbaac5f480063dfa5c990d5c"
+    },
+    {
+      "configuration": "Debug",
+      "priorTestsPassed": 59,
+      "rerunForCleanup": false,
+      "sourcePinsStillMatch": true,
+      "manifestSha256": "d97f2b1855391de1412473897c8d4d5cd7f9fe40d91afb0f78eb5b0fa4151c92",
+      "ctestLogSha256": "70452b9868b2e84da6aca20160944a63a05d857d86ab2bbccb3ac078572d9df1"
+    }
+  ],
+  "limits": {
+    "productionStageExecuted": false,
+    "productionCleanupExecuted": false,
+    "liveRegistrationRemovalGuardsPositivelyTested": false,
+    "serializedDurableInstallerImplemented": false,
+    "machineRegistrationWritten": false,
+    "plannedInstallAndPointerLocationsChanged": false,
+    "binaryPayloadExecuted": false,
+    "imageSectionMappedWithoutExecution": true,
+    "elevationRequested": false,
+    "hostAclsChanged": false,
+    "deviceAccess": false,
+    "physicalAudioTested": false,
+    "measuredTimingVerified": false,
+    "currentSeratoAdmissionTested": false,
+    "currentSeratoDvsTested": false
+  },
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/file-cleanup-20261102",
+    "files": 1006,
+    "manifestSha256": "2573839ca1901cda488ff319b18ca1e36e8dfc561fc029f840248f72a1a37926",
+    "selfReferentialPublicEvidenceExcluded": true
+  }
+}

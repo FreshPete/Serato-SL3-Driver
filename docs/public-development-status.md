@@ -4,6 +4,8 @@ This is an engineering investigation and source snapshot, not a working replacem
 
 ## Findings and implementation
 
+**Owned staged-file cleanup, 2 November:** [the cleanup primitive](asio-file-cleanup.md) now validates all fourteen files through exclusive deletion handles, records partial outcomes and preserves unknown data. All 26 cleanup cases, 24 staging regressions and 16 ancestor-review regressions pass. Reader and mapped-image refusals are tested without payload execution. Production removal and its serialized durable-journal installer remain unperformed; physical audio and current Serato/DVS remain unfinished.
+
 **Volume-anchor correction, 2 November:** [the ACL review](asio-volume-anchor-review.md) separates a native trusted NTFS drive root from ordinary writable ancestors. Read-only production preflight now passes without changing host ACLs. All 16 access/junction review cases and 24 staging regressions pass; dangerous anchor grants and ordinary writable directories remain refused. Elevated staging, protected install/uninstall, actual audio and current Serato/DVS remain unfinished.
 
 **File staging and ancestor refusal, 2 November:** [the stager](asio-file-staging.md) now captures verified bytes through held handles, creates explicit protected descriptors, and validates file identities/ACLs with recovery intent. All 24 workspace file tests and rerun 26-package/26-registry cases pass. Test ownership is explicitly refused as production protection. Read-only production preflight currently refuses a `C:\` ancestor ACE; its policy needs review, and no host ACL or Program Files staging changed. Installation, real audio and current Serato/DVS remain unfinished.

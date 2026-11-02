@@ -1,4 +1,4 @@
-"""Explicit new-directory file staging. No registration, process launch or USB."""
+"""Explicit owned file staging/cleanup. No registration, process launch or USB."""
 import argparse
 from contextlib import contextmanager, ExitStack
 import ctypes
@@ -52,6 +52,10 @@ class Handle:
     def __enter__(self):
         return self.value
     def __exit__(self, *ignored):
+        self.close()
+    def close(self):
+        if self.value is None:
+            return
         value = self.value; self.value = None
         check(api('kernel32.dll', 'CloseHandle', W.BOOL, [W.HANDLE])(value))
 
@@ -368,6 +372,117 @@ def production_destination(plan):
     return base, destination
 
 
+class CleanupFailure(RuntimeError):
+    def __init__(self, report):
+        self.report = report
+        super().__init__(report['error'])
+
+
+def absent(path):
+    attributes = api('kernel32.dll', 'GetFileAttributesW', W.DWORD, [W.LPCWSTR])(str(path))
+    error = ctypes.get_last_error()
+    return attributes == 0xffffffff and error in (2, 3)
+
+
+def mark_delete(handle):
+    disposition = W.BOOL(True)
+    check(api('kernel32.dll', 'SetFileInformationByHandle', W.BOOL, [W.HANDLE, W.DWORD, P, W.DWORD])(
+        handle, 4, ctypes.byref(disposition), ctypes.sizeof(disposition)))
+
+
+def remove_stage(destination, expected, policy=PRODUCTION, journal=None):
+    """Trusted-caller cleanup primitive, not a registry/device uninstaller."""
+    report = {'schema': 'sl3.file-stage-cleanup.v1', 'successful': False, 'directory': str(destination),
+              'stageRecordSha256': expected, 'productionPolicy': policy == PRODUCTION,
+              'deleteMarkedFiles': [], 'absentObservedFiles': [], 'directoryDeletionMarked': False,
+              'directoryAbsentObserved': False, 'registryWritten': False, 'deviceAccess': False,
+              'binaryPayloadExecuted': False, 'error': ''}
+    try:
+        # Full package/plan/descriptor validation first. Then revalidate all
+        # identities, bytes and ACLs through the very handles that can delete.
+        inspect_stage(destination, expected, policy)
+        module = reader()
+        with ExitStack() as stack:
+            stack.enter_context(pinned_parents(destination))
+            root_owner = open_file(destination, True, access=0x30081, share=3)
+            root_handle = stack.enter_context(root_owner)
+            root = inspect_policy(root_handle, policy, True)['file']
+            handles = {}
+            def lock(name):
+                owner = open_file(destination/name, access=0x80010000, share=0)
+                handle = stack.enter_context(owner); handles[name] = (owner, handle)
+                return handle
+            receipt_handle = lock('stage-record.json')
+            inspect_policy(receipt_handle, policy, False)
+            raw = read_handle(receipt_handle, module.LIMIT)
+            require(hashlib.sha256(raw).hexdigest() == expected, 'Cleanup receipt changed after inspection')
+            record = module.record(raw)
+            require(record['directory']['identity'] == root['identity'] and Path(root['path']) == destination and
+                    record['policy'] == policy.record(), 'Cleanup root identity/policy changed')
+            expected_names = set(record['files']) | {'stage-record.json', 'stage-intent.json'}
+            require({p.name for p in destination.iterdir()} == expected_names, 'Cleanup inventory changed')
+            require(set(record['files']) == module.REQUIRED | {'bundle-manifest.json'}, 'Cleanup receipt inventory mismatch')
+            metadata = dict(record['files']); metadata['stage-intent.json'] = record['intent']
+            for name, details in metadata.items():
+                handle = lock(name); file = inspect_policy(handle, policy, False)['file']
+                data = read_handle(handle, module.LIMIT)
+                require(file['identity'] == details['identity'] and len(data) == details['bytes'] and
+                        hashlib.sha256(data).hexdigest() == details['sha256'], 'Cleanup file identity/bytes changed: '+name)
+            # The caller can durably save this recovery record before mutation.
+            if journal is not None:
+                journal({'event': 'validated', 'directory': str(destination), 'stageRecord': record,
+                         'stageRecordSha256': expected})
+            priority = ['sl3_asio.dll', 'sl3_broker_controller.exe', 'sl3_usbdk.exe', 'UsbDkHelper.dll']
+            order = priority+sorted(set(record['files'])-set(priority))+['stage-intent.json', 'stage-record.json']
+            remaining = set(expected_names)
+            for name in order:
+                if journal is not None:
+                    journal({'event': 'before_delete', 'name': name})
+                require({p.name for p in destination.iterdir()} == remaining, 'Unknown/missing files appeared during cleanup')
+                owner, handle = handles[name]
+                inspect_policy(handle, policy, False)
+                mark_delete(handle); report['deleteMarkedFiles'].append(name)
+                owner.close()
+                require(absent(destination/name), 'Marked file absence not observed: '+name)
+                report['absentObservedFiles'].append(name); remaining.remove(name)
+                if journal is not None:
+                    journal({'event': 'deleted', 'name': name})
+            if journal is not None:
+                journal({'event': 'before_directory_delete', 'directory': str(destination)})
+            require(not list(destination.iterdir()), 'Directory gained unknown data; preserve it')
+            inspect_policy(root_handle, policy, True)
+            mark_delete(root_handle); report['directoryDeletionMarked'] = True
+            root_owner.close()
+            report['directoryAbsentObserved'] = absent(destination)
+            require(report['directoryAbsentObserved'], 'Directory deletion marked but absence not observed')
+        report['successful'] = True
+        return report
+    except Exception as error:
+        report['error'] = str(error)
+        report['stageRecordStillPresent'] = (destination/'stage-record.json').exists()
+        report['intentStillPresent'] = (destination/'stage-intent.json').exists()
+        raise CleanupFailure(report) from error
+
+
+def remove_production_stage(destination, expected, journal):
+    require(elevated(), 'Production cleanup requires an explicitly elevated token; no UAC is requested automatically')
+    require(ctypes.sizeof(P) == 8, 'Native x64 installer process required')
+    require(callable(journal), 'Privileged caller must provide a durable recovery journal before cleanup')
+    inspect_stage(destination, expected, PRODUCTION)
+    module = reader()
+    with open_file(destination/'deployment-plan.json') as handle:
+        plan = module.record(read_handle(handle, module.LIMIT))
+    # Removing a stage is not permission to leave a live registration dangling.
+    spec = importlib.util.spec_from_file_location('sl3_cleanup_registry_reader', Path(__file__).with_name('asio-registry.py'))
+    registry = importlib.util.module_from_spec(spec); spec.loader.exec_module(registry)
+    import winreg
+    with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, '', 0, registry.READ) as root:
+        require(registry.inspect(root, plan)['allAbsent'], 'Live project registration remains; refuse file cleanup')
+    with winreg.OpenKey(winreg.HKEY_CURRENT_USER, '', 0, registry.READ) as root:
+        require(not registry.inspect_overlay(root, plan)['present'], 'Current-user COM overlay remains; refuse file cleanup')
+    return remove_stage(destination, expected, PRODUCTION, journal)
+
+
 def volume_anchor(handle, file):
     path = Path(file['path'])
     if path != Path(path.anchor):
@@ -470,5 +585,8 @@ def main(argv=None):
 if __name__ == '__main__':
     try:
         main()
+    except CleanupFailure as error:
+        print(json.dumps(error.report))
+        print(str(error), file=sys.stderr); sys.exit(1)
     except Exception as error:
         print(str(error), file=sys.stderr); sys.exit(1)

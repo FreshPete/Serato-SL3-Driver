@@ -115,7 +115,7 @@ C++ source/builds did not change, so the prior 59-test Release/Debug checkpoints
 retain their original scope and were not rerun.
 
 See [the verification record](evidence/file-staging-20261102.json). Elevated production staging, ordinary-user write-denial proof, the
-serialized privileged install/uninstall wrapper, runtime checks and owned file
-cleanup remain unfinished. Genuine timing/native and physical audio, current
+serialized privileged install/uninstall wrapper, runtime checks remain unfinished. [Owned file cleanup](asio-file-cleanup.md)
+now has workspace coverage; production cleanup is still unperformed. Genuine timing/native and physical audio, current
 Serato/DVS admission and the later macOS work remain unproved. No firmware or
 device operation ran in these tests.
