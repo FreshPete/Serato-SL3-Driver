@@ -16,6 +16,9 @@ struct DriverScope {
 // Strict UTF-8 records, absolute paths, locked bytes and SHA256 bindings only.
 // This verifies consistency, not the truth/quality of a timing measurement.
 DriverConfiguration load_driver_configuration(const std::filesystem::path&);
+// Direct configuration, or one fixed locator -> mutable pointer -> immutable
+// broker configuration. No search, environment expansion, recursion or fallback.
+DriverConfiguration load_driver_entry_configuration(const std::filesystem::path&);
 std::filesystem::path production_configuration_path();
 std::unique_ptr<DriverFacade> make_native_asio_facade();
 std::shared_ptr<DriverScope> make_native_asio_scope();

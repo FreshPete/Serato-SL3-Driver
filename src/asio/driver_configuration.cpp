@@ -1,5 +1,6 @@
 #include "asio/driver_configuration.hpp"
 #include <algorithm>
+#include <array>
 #include <charconv>
 #include <limits>
 #include <stdexcept>
@@ -24,6 +25,12 @@ struct File {
         if(GetFileType(handle)!=FILE_TYPE_DISK || !GetFileSizeEx(handle,&size) || size.QuadPart<=0 || size.QuadPart>maximum){
             CloseHandle(handle);handle=INVALID_HANDLE_VALUE;throw std::runtime_error("Invalid ASIO configuration file size/type");
         }
+        try{
+            std::array<wchar_t,32768> final{};
+            const auto n=GetFinalPathNameByHandleW(handle,final.data(),DWORD(final.size()),FILE_NAME_NORMALIZED|VOLUME_NAME_DOS);
+            if(n<=4 || n>=final.size() || std::wstring(final.data(),4)!=L"\\\\?\\")throw std::runtime_error("Resolve local ASIO configuration file");
+            local_path(std::filesystem::path(std::wstring(final.data()+4,n-4)));
+        }catch(...){CloseHandle(handle);handle=INVALID_HANDLE_VALUE;throw;}
     }
     ~File(){if(handle!=INVALID_HANDLE_VALUE)CloseHandle(handle);}
     File(const File&)=delete;File& operator=(const File&)=delete;
@@ -105,6 +112,37 @@ DriverConfiguration load_driver_configuration(const std::filesystem::path& locat
     }
     result.files=std::move(files);return result;
 }
+DriverConfiguration load_driver_entry_configuration(const std::filesystem::path& location){
+    auto files=std::make_shared<Files>();const auto bytes=locked_text(*files,location);
+    const std::string prefix="SL3-ASIO-LOCATOR-";
+    if(bytes.compare(0,prefix.size(),prefix)!=0){
+        // Preserve the explicit direct formats. A malformed locator cannot
+        // reach this branch or fall back to a private worker configuration.
+        auto result=load_driver_configuration(location);files->external.push_back(result.files);result.files=files;return result;
+    }
+    const auto locator=record(bytes,{"SL3-ASIO-LOCATOR-1","session_pointer=","broker=","broker_sha256=","worker_sha256="});
+    if(!locator[0].empty())throw std::invalid_argument("Unknown ASIO locator version");
+    const auto broker_path=path(locator[2]);const auto broker_hash=hash(locator[3]);const auto worker_hash=hash(locator[4]);
+    pin_hash(*files,broker_path,broker_hash,256*1024*1024);
+    // Keep the mutable pointer locked only while resolving it. Existing
+    // objects retain the selected immutable records and exact process object,
+    // so a later pointer replacement cannot redirect an attached client.
+    File pointer(path(locator[1]),65536);
+    const auto selected=record(pointer.text(),{"SL3-ASIO-SESSION-POINTER-1","configuration=","configuration_sha256="});
+    if(!selected[0].empty())throw std::invalid_argument("Unknown ASIO session pointer version");
+    const auto configuration=path(selected[1]);pin_hash(*files,configuration,hash(selected[2]),65536);
+    const auto config=record(locked_text(*files,configuration),{"SL3-ASIO-BROKER-CONFIG-1","worker=","worker_sha256=","helper=","timing_record=","timing_record_sha256=","broker=","broker_sha256=","session_record=","session_record_sha256="});
+    if(!config[0].empty() || hash(config[2])!=worker_hash || hash(config[7])!=broker_hash)
+        throw std::invalid_argument("ASIO session does not match locator worker/broker pins");
+    File anchor(broker_path,256*1024*1024),actual(path(config[6]),256*1024*1024);
+    BY_HANDLE_FILE_INFORMATION first{},second{};
+    if(!GetFileInformationByHandle(anchor.handle,&first) || !GetFileInformationByHandle(actual.handle,&second) ||
+       first.dwVolumeSerialNumber!=second.dwVolumeSerialNumber || first.nFileIndexHigh!=second.nFileIndexHigh || first.nFileIndexLow!=second.nFileIndexLow)
+        throw std::invalid_argument("ASIO session broker differs from locator file identity");
+    auto result=load_driver_configuration(configuration);
+    if(!result.broker)throw std::invalid_argument("ASIO locator requires a broker session");
+    files->external.push_back(result.files);result.files=std::move(files);return result;
+}
 std::filesystem::path production_configuration_path(){
     HMODULE module=nullptr;
     if(!GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS|GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
@@ -114,12 +152,12 @@ std::filesystem::path production_configuration_path(){
     return std::filesystem::path(std::wstring(buffer.data(),count)).parent_path()/L"sl3-asio.conf";
 }
 std::unique_ptr<DriverFacade> make_native_asio_facade(){
-    auto config=load_driver_configuration(production_configuration_path());
+    auto config=load_driver_entry_configuration(production_configuration_path());
     if(config.broker)return std::make_unique<DriverFacade>(*config.broker,config.latency,config.files);
     return std::make_unique<DriverFacade>(config.worker,config.latency,config.files);
 }
 std::shared_ptr<DriverScope> make_native_asio_scope(){
-    auto config=load_driver_configuration(production_configuration_path());
+    auto config=load_driver_entry_configuration(production_configuration_path());
     if(config.broker)return std::make_shared<DriverScope>(DriverScope{std::make_shared<DriverOwner>(*config.broker,config.files),config.latency});
     return std::make_shared<DriverScope>(DriverScope{std::make_shared<DriverOwner>(config.worker,config.files),config.latency});
 }

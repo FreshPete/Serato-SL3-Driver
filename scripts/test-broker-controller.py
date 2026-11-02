@@ -99,7 +99,18 @@ def main():
             else:
                 raise AssertionError('Published configuration must stay write locked')
             require('SL3-ASIO-BROKER-CONFIG-1' in published.read_text(), 'Separate reviewed broker format')
-            response = call([client, '--published', published, library, mode])
+            entry = published
+            if mode in ('ordinary-sta', 'ordinary-mta'):
+                deployment = root/f'{name}-deployment'; deployment.mkdir()
+                pointer = root/f'{name}-current-session.txt'
+                publication = json.loads(call([native, '--publish-pointer', '--config', published, '--pointer', pointer]).stdout)
+                require(publication['pointerPublished'] and not publication['replaced'] and not publication['deviceAccess'] and not publication['deviceReadinessVerified'], 'Explicit pointer publication changes metadata only')
+                original_pointer = pointer.read_bytes()
+                call([native, '--publish-pointer', '--config', published, '--pointer', pointer], expected=1)
+                require(pointer.read_bytes() == original_pointer and not Path(str(pointer)+'.pending').exists(), 'Publisher refuses existing pointer without changing bytes')
+                entry = deployment/'sl3-asio.conf'
+                entry.write_text(f'SL3-ASIO-LOCATOR-1\nsession_pointer={pointer}\nbroker={simulated}\nbroker_sha256={sha(simulated)}\nworker_sha256={sha(worker)}\n', encoding='utf-8')
+            response = call([client, '--published', entry, library, mode])
             (output/'asio-client-stdout.txt').write_text(response.stdout, encoding='utf-8')
             (output/'asio-client-stderr.txt').write_text(response.stderr, encoding='utf-8')
             if mode.startswith('ordinary'):
@@ -116,6 +127,11 @@ def main():
             if mode.startswith('ordinary'):
                 require(audit.count('rate') == 8 and audit.count('begin') == 4 and audit.count('end') == 4, 'Three ordinary COM objects/four SDK streams retain one worker')
             require(call([native, '--stop', '--config', published], expected=1).returncode == 1, 'Stale process record refused after exit')
+            if entry != published:
+                call([client, '--published', entry, library, mode], expected=1)  # Stale locator cannot reconnect.
+                refused_pointer = root/f'{name}-stale-pointer.txt'
+                call([native, '--publish-pointer', '--config', published, '--pointer', refused_pointer], expected=1)
+                require(not refused_pointer.exists() and not Path(str(refused_pointer)+'.pending').exists(), 'Stale broker refusal publishes no pointer')
             cases.append({'name': name, 'passed': True, 'kind': 'simulated', 'activation': mode})
         finally:
             if proc.poll() is None:
@@ -161,6 +177,10 @@ def main():
     for extra in (['--simulate'], ['--input', str(normal)], ['--limit-ms', '0']):
         call([native, '--run', '--input', normal, '--output', root/'invalid-output', '--limit-ms', '1000', *extra], expected=1)
         require(not (root/'invalid-output').exists(), 'Malformed/duplicate flags create no context')
+    no_pointer = root/'refused-private-pointer.txt'
+    call([native, '--publish-pointer', '--config', normal, '--pointer', no_pointer], expected=1)
+    require(not no_pointer.exists() and not Path(str(no_pointer)+'.pending').exists(), 'Private-worker configuration cannot be published as a broker pointer')
+    call([native, '--publish-pointer', '--config', normal, '--pointer', no_pointer, '--replace', 'true'], expected=1)
     cases.append({'name': 'refusal-guards', 'passed': True, 'deviceAccess': False})
     call(command(native, normal, root/'zero-limit-output', 0), expected=1)
     require(not (root/'zero-limit-output').exists(), 'Invalid lifetime refuses before context/device access')

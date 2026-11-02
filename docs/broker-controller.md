@@ -34,9 +34,11 @@ acquisition.
 
 The controller does not register or copy an ASIO DLL, modify an installed Serato
 file, create a Windows service, request elevation, set a rate or modify firmware.
-The produced `sl3-asio.conf` is a session artifact, not an installation. A reviewed
-deployment workflow still needs to place configuration beside the intended DLL
-and perform its separate activation/registration steps.
+The produced `sl3-asio.conf` is a session artifact, not an installation. The [session locator](asio-session-locator.md) now connects an adjacent stable
+record to per-session configuration through an explicitly published pointer.
+Protected staging, pointer replacement and installation/registration remain
+unfinished. The metadata-only `--publish-pointer --config ABS --pointer ABS`
+command creates a new owner-only pointer without opening the device.
 
 ## Publication and lifetime
 

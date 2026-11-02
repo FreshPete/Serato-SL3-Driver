@@ -132,7 +132,7 @@ static void run(const std::filesystem::path& self,const std::filesystem::path& f
 int wmain(int argc,wchar_t** argv){
     try{
         if(argc==5 && std::wstring(argv[1])==L"--published"){
-            const auto config=load_driver_configuration(std::filesystem::absolute(argv[2]));
+            const auto config=load_driver_entry_configuration(std::filesystem::absolute(argv[2]));
             require(config.broker && config.broker->kind==session::Kind::native && config.latency.rate_hz==48000 && config.latency.buffer_frames==128 &&
                 config.latency.input_extra_frames==7 && config.latency.output_extra_frames==11,"Published native-only record with synthetic test profile");
             const std::wstring mode=argv[4];require(mode==L"ordinary" || mode==L"ordinary-sta" || mode==L"ordinary-mta" || mode==L"blocked","Published fixture mode");

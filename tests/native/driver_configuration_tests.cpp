@@ -1,5 +1,6 @@
 #include "asio/driver_configuration.hpp"
 #include "asio/com_identity.hpp"
+#include "com_activation_fixture.hpp"
 #include "iasiodrv.h"
 #include "windows/broker_record.hpp"
 #include "windows/broker_pipe.hpp"
@@ -16,6 +17,7 @@ static std::string digest(const std::filesystem::path& path){return sl3::worker:
 struct Fixture {
     std::filesystem::path folder=std::filesystem::temp_directory_path()/(L"SL3Config-"+std::to_wstring(GetCurrentProcessId())+L"-"+std::to_wstring(GetTickCount64()));
     std::filesystem::path config=folder/L"sl3-asio.conf",timing=folder/L"timing.txt",measurement=folder/L"measurement-\u6d4b\u91cf.txt",dll=folder/L"sl3-native-provider-test.dll",session=folder/L"broker-session.txt",audit=folder/L"broker-audit.txt";
+    std::filesystem::path target=folder/L"live-session.conf",pointer=folder/L"current-session.txt",image_copy=folder/L"other-broker.exe";
     std::string worker_hash,worker_path,helper_path,timing_text,config_text;
     Fixture(const std::filesystem::path& worker,const std::filesystem::path& helper){
         require(std::filesystem::create_directory(folder),"Create unique temporary configuration folder");
@@ -30,7 +32,7 @@ struct Fixture {
         "\ntiming_record="+timing.u8string()+"\ntiming_record_sha256="+digest(timing)+"\n";write(config,config_text);}
     void replace_timing(const std::string& from,const std::string& to){auto value=timing_text;const auto at=value.find(from);require(at!=std::string::npos,"Test mutation field exists");value.replace(at,from.size(),to);write(timing,value);
         auto config_value=config_text;config_value.replace(config_value.find("timing_record_sha256=")+21,64,digest(timing));write(config,config_value);}
-    ~Fixture(){for(const auto& item:{dll,config,timing,measurement,session,audit}){std::error_code error;std::filesystem::remove(item,error);}std::error_code error;std::filesystem::remove(folder,error);}
+    ~Fixture(){for(const auto& item:{dll,config,timing,measurement,session,audit,target,pointer,image_copy}){std::error_code error;std::filesystem::remove(item,error);}std::error_code error;std::filesystem::remove(folder,error);}
 };
 static bool locked(const std::filesystem::path& path){
     const auto handle=CreateFileW(path.c_str(),GENERIC_WRITE,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);
@@ -38,7 +40,7 @@ static bool locked(const std::filesystem::path& path){
 }
 static void records(Fixture& fixture){
     {
-        const auto config=load_driver_configuration(fixture.config);
+        const auto config=load_driver_entry_configuration(fixture.config);
         require(config.worker.kind==sl3::session::Kind::native && config.worker.lifetime==DeviceLifetime::retained && config.worker.sha256==fixture.worker_hash && config.latency.rate_hz==48000 && config.latency.buffer_frames==128 &&
             config.latency.input_extra_frames==7 && config.latency.output_extra_frames==11,"Strict config binds only native mode and exact timing profile");
         for(const auto& item:{fixture.config,fixture.timing,fixture.measurement,config.worker.executable,config.worker.helper})require(locked(item),"All reviewed bytes remain write/delete locked");
@@ -68,20 +70,67 @@ static void records(Fixture& fixture){
     fixture.reset();
     const auto adjacent=production_configuration_path();require(adjacent.is_absolute() && adjacent.filename()==L"sl3-asio.conf" && adjacent.parent_path()==std::filesystem::path([]{std::vector<wchar_t> value(32768);const auto n=GetModuleFileNameW(nullptr,value.data(),DWORD(value.size()));return std::wstring(value.data(),n);}()).parent_path(),"Configuration follows containing module, not working directory");
 }
-static void production_abi(Fixture& fixture,const std::filesystem::path& source){
+static void production_abi(Fixture& fixture,const std::filesystem::path& source,bool activate_com=false){
+    std::unique_ptr<sl3::test::ComApartment> apartment;std::unique_ptr<sl3::test::ComActivation> activation;
     if(!std::filesystem::exists(fixture.dll))require(std::filesystem::copy_file(source,fixture.dll),"Copy production DLL into isolated test folder");
     else require(digest(source)==digest(fixture.dll),"Reuse only identical isolated production DLL bytes");
+    if(activate_com){apartment=std::make_unique<sl3::test::ComApartment>(COINIT_APARTMENTTHREADED);activation=std::make_unique<sl3::test::ComActivation>(fixture.dll);}
     const auto module=LoadLibraryExW(fixture.dll.c_str(),nullptr,LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR|LOAD_LIBRARY_SEARCH_SYSTEM32);require(module!=nullptr,"Load isolated production ASIO DLL");
     using GetClass=HRESULT(__stdcall*)(REFCLSID,REFIID,void**);using CanUnload=HRESULT(__stdcall*)();
     const auto get=reinterpret_cast<GetClass>(GetProcAddress(module,"DllGetClassObject"));const auto unload=reinterpret_cast<CanUnload>(GetProcAddress(module,"DllCanUnloadNow"));
     require(get && unload && !GetProcAddress(module,"sl3_test_configure") && !GetProcAddress(module,"sl3_test_configure_broker") && !GetProcAddress(module,"DllRegisterServer"),"Production exports exclude test provider and registration");
     IClassFactory* factory=nullptr;require(get(sl3::asio::driver_clsid,IID_IClassFactory,reinterpret_cast<void**>(&factory))==S_OK,"Production COM factory");
-    IASIO* device=nullptr;require(factory->CreateInstance(nullptr,sl3::asio::driver_clsid,reinterpret_cast<void**>(&device))==S_OK,"Production IASIO object");
+    IASIO* device=nullptr;const auto result=activate_com?CoCreateInstance(sl3::asio::driver_clsid,nullptr,CLSCTX_INPROC_SERVER,sl3::asio::driver_clsid,reinterpret_cast<void**>(&device)):
+        factory->CreateInstance(nullptr,sl3::asio::driver_clsid,reinterpret_cast<void**>(&device));
+    require(result==S_OK,"Production IASIO object through selected activation path");
     require(device->init(nullptr)==ASIOFalse,"Production rejects truthful simulated-kind worker before clock/device access");
     char message[124]{};device->getErrorMessage(message);
     require(std::string(message).find("worker/clock inspection failed")!=std::string::npos && locked(fixture.config),"Actual native provider consumed adjacent config and retained its lease, then failed handshake");
     long input=77,output=78;require(device->getChannels(&input,&output)==ASE_NotPresent && input==77 && output==78,"Production rejection never publishes ASIO readiness");
     device->Release();factory->Release();require(unload()==S_OK && FreeLibrary(module) && !locked(fixture.config),"Production failure releases COM/module/configuration ownership");
+    if(activate_com)CoFreeUnusedLibrariesEx(0,0);
+}
+static void locator_records(Fixture& f,const std::filesystem::path& image,const std::string& session_text){
+    write(f.target,session_text);
+    const auto pointer_text="SL3-ASIO-SESSION-POINTER-1\nconfiguration="+f.target.u8string()+"\nconfiguration_sha256="+digest(f.target)+"\n";
+    const auto locator="SL3-ASIO-LOCATOR-1\nsession_pointer="+f.pointer.u8string()+"\nbroker="+image.u8string()+"\nbroker_sha256="+digest(image)+"\nworker_sha256="+f.worker_hash+"\n";
+    write(f.pointer,pointer_text);write(f.config,locator);
+    {
+        const auto selected=load_driver_entry_configuration(f.config);
+        require(selected.broker && selected.broker->worker_sha256==f.worker_hash,"Locator selects native-only broker configuration");
+        for(const auto& file:{f.config,f.target,f.session,f.timing,f.measurement,image})require(locked(file),"Locator, target and reviewed identities remain pinned");
+        require(!locked(f.pointer),"Mutable pointer lease ends after resolution");
+        const auto endpoint=selected.broker->endpoint;const auto server=selected.broker->server->handle();
+        write(f.pointer,"Changed pointer after resolution\n");
+        require(selected.broker->endpoint==endpoint && selected.broker->server->handle()==server && WaitForSingleObject(server,0)==WAIT_TIMEOUT,
+                "Pointer change cannot redirect existing attachment/process reference");
+        rejects([&]{load_driver_entry_configuration(f.config);});write(f.pointer,pointer_text);
+    }
+    require(!locked(f.config) && !locked(f.target),"Locator and target leases retire");
+    for(const auto& malformed:{pointer_text+"extra=1\n",pointer_text.substr(0,pointer_text.size()-1),std::string("\xef\xbb\xbf")+pointer_text,
+                              std::string("SL3-ASIO-SESSION-POINTER-2\nconfiguration=")+f.target.u8string()+"\nconfiguration_sha256="+digest(f.target)+"\n",
+                              std::string("SL3-ASIO-SESSION-POINTER-1\nconfiguration=relative.conf\nconfiguration_sha256=")+digest(f.target)+"\n"}){
+        write(f.pointer,malformed);rejects([&]{load_driver_entry_configuration(f.config);});
+    }
+    write(f.pointer,pointer_text);
+    for(const auto& key:{"broker_sha256=","worker_sha256="}){
+        auto bad=locator;bad.replace(bad.find(key)+std::string(key).size(),64,std::string(64,'0'));write(f.config,bad);
+        rejects([&]{load_driver_entry_configuration(f.config);});
+    }
+    for(const auto& bad:{locator+"extra=1\n",locator.substr(0,locator.size()-1),std::string("\xef\xbb\xbf")+locator}){
+        write(f.config,bad);rejects([&]{load_driver_entry_configuration(f.config);});
+    }
+    write(f.config,locator);auto mismatch=pointer_text;mismatch.replace(mismatch.find("configuration_sha256=")+21,64,std::string(64,'0'));
+    write(f.pointer,mismatch);rejects([&]{load_driver_entry_configuration(f.config);});write(f.pointer,pointer_text);
+    require(std::filesystem::copy_file(image,f.image_copy),"Distinct broker image with identical bytes");
+    auto wrong_identity=locator;wrong_identity.replace(wrong_identity.find("broker=")+7,image.u8string().size(),f.image_copy.u8string());write(f.config,wrong_identity);
+    rejects([&]{load_driver_entry_configuration(f.config);});write(f.config,locator);
+    // No pointer/locator chaining, cycles or private-worker fallback.
+    write(f.pointer,"SL3-ASIO-SESSION-POINTER-1\nconfiguration="+f.config.u8string()+"\nconfiguration_sha256="+digest(f.config)+"\n");
+    rejects([&]{load_driver_entry_configuration(f.config);});
+    write(f.target,f.config_text);write(f.pointer,"SL3-ASIO-SESSION-POINTER-1\nconfiguration="+f.target.u8string()+"\nconfiguration_sha256="+digest(f.target)+"\n");
+    rejects([&]{load_driver_entry_configuration(f.config);});
+    write(f.target,session_text);write(f.pointer,pointer_text);
 }
 static void broker_records(Fixture& f,const std::filesystem::path& worker,const std::filesystem::path& library){
     f.reset();sl3::worker::BrokerListener listener;
@@ -101,6 +150,7 @@ static void broker_records(Fixture& f,const std::filesystem::path& worker,const 
         auto bad=text;const auto start=bad.find(key)+std::string(key).size();bad.replace(start,64,std::string(64,'0'));write(f.config,bad);rejects([&]{load_driver_configuration(f.config);});
     }
     write(f.config,text);
+    locator_records(f,image,text);
     struct Event {HANDLE value=CreateEventW(nullptr,TRUE,FALSE,nullptr);~Event(){if(value)CloseHandle(value);}} ready,stop;
     require(ready.value && stop.value,"Broker configuration test events");
     auto server=std::async(std::launch::async,[&]{
@@ -114,7 +164,7 @@ static void broker_records(Fixture& f,const std::filesystem::path& worker,const 
         const auto final=owner.close();return rejected && !final.failed && final.device.device_released && final.process.process_exited && final.process.job_empty;
     });
     require(WaitForSingleObject(ready.value,8000)==WAIT_OBJECT_0,"Simulated broker ready");
-    production_abi(f,library);
+    production_abi(f,library,true);
     require(server.get(),"Actual production DLL consumed broker record and refused simulated kind before client admission");
     std::ifstream audit(f.audit);std::vector<std::string> lines;for(std::string line;std::getline(audit,line);)lines.push_back(line);
     require(lines==std::vector<std::string>({"acquire","rate","release"}),"Native-only production rejection issues no client clock/audio operation");
@@ -123,6 +173,6 @@ static void broker_records(Fixture& f,const std::filesystem::path& worker,const 
 int wmain(int argc,wchar_t** argv){
     try{require(argc==4,"Simulated fixture, reviewed helper and production DLL paths required");Fixture fixture(argv[1],argv[2]);records(fixture);production_abi(fixture,argv[3]);broker_records(fixture,argv[1],argv[3]);
         require(!GetModuleHandleW(L"UsbDkHelper.dll10") && !GetModuleHandleW(L"UsbDkHelper.dll"),"Helper never loaded in test host");
-        std::cout<<"Strict configuration/hash/profile bindings, held file leases and actual production ASIO provider rejection of simulated worker passed; synthetic records only, no physical USB\n";
+        std::cout<<"Strict direct/locator/pointer configuration/hash/profile bindings, held file leases and actual production ASIO provider rejection of simulated worker passed; synthetic records only, no physical USB\n";
     }catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}
 }

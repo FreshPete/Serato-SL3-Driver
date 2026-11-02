@@ -1,5 +1,7 @@
 # SL3 rebuild progress for the owner's return
 
+**Stable DLL session locator, 2 November:** [the production locator](asio-session-locator.md) now binds an adjacent stable record to one explicit pointer and a hash-pinned immutable broker configuration, with exact broker file/process identity and no fallback. The controller can publish a new owner-only pointer without device access. Actual production COM refusal and simulated STA/MTA audio through this path are tested. Installation, pointer replacement, genuine timing/native audio and current Serato/DVS remain unfinished.
+
 **Windows COM activation, 2 November:** [the new activation tests](asio-com-activation.md) exercise Windows `CoCreateInstance` in STA and MTA apartments without registration. Production objects truthfully refuse absent configuration; separate simulated DLL clients run three objects/four callback streams on one retained owner in each apartment. Deployment, genuine measured timing, positive native audio and current Serato/DVS remain unfinished.
 
 **Explicit controller/publication, 2 November:** [the controller](broker-controller.md) now defaults to plan-only and can publish immutable records after one reviewed acquisition, retain clients through ordinary ASIO object lifetimes, and stop by a validated request or explicit ceiling. Actual simulated controller/record/COM/callback lifecycle checks pass, including failure and native-kind refusal. No configuration was installed and no positive native run occurred; real timing/audio, deployment and current Serato/DVS remain unfinished.

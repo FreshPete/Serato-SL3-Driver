@@ -1,0 +1,166 @@
+{
+  "schema": "sl3.session-locator-verification.v1",
+  "createdUtc": "2026-11-02T00:27:41.385559+00:00",
+  "builds": [
+    {
+      "configuration": "Release",
+      "testsPassed": 59,
+      "manifestSha256": "e6f23ad0a683bc495f351cdf5833db37b0ffd0cec1d075cede71e99665fde9c8",
+      "productionDllSha256": "e0b42a25a7335a32bfc31665d76c746187964d9a700cb822b6d77c73c53a8fa4",
+      "nativeControllerPublisherSha256": "226c32d6b0e38dfe81f15858eaedf13c8eaa587db3f859c9ec92927b86d126df",
+      "testScriptSha256": "3890ae84e29c7b4bb8259a625fa34e298e7352085d37e69f2b857fba47282ba0",
+      "logSha256": "ba5295ab3ea1455a431cc19a7626faea6e6d0382b76939931d5b4544f414a331"
+    },
+    {
+      "configuration": "Debug",
+      "testsPassed": 59,
+      "manifestSha256": "bbf0ccfd49aaa5c89b57aef6ad8db195177909f838ff9345b86ab8dcade9d91e",
+      "productionDllSha256": "ebcc1c6c0d25d3089c314bb66947d28032f6831c3097abe02cb4beb7003c95c0",
+      "nativeControllerPublisherSha256": "62a08c0b94a91a198cae25af6918cae26a3f1c2b268286840a575d813ddb2cb2",
+      "testScriptSha256": "3890ae84e29c7b4bb8259a625fa34e298e7352085d37e69f2b857fba47282ba0",
+      "logSha256": "3c96d9ff0802f1c11b2838acac93d58360dae519f903e00c49167b5e4a2c2095"
+    }
+  ],
+  "controllerLifecycles": [
+    {
+      "configuration": "Release",
+      "path": "artifacts/build/native/controller-lifecycle-artifacts/6218ceb4778a4a00a0f196ee930367be",
+      "indexSha256": "5b4997740eef1e484b43105bffdcc10ed54689e7b10719142807875f45cead16",
+      "cases": [
+        {
+          "name": "ordinary-session",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "ordinary"
+        },
+        {
+          "name": "com-sta-session",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "ordinary-sta"
+        },
+        {
+          "name": "com-mta-session",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "ordinary-mta"
+        },
+        {
+          "name": "blocked-client",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "blocked"
+        },
+        {
+          "name": "lifetime-limit",
+          "passed": true,
+          "kind": "simulated"
+        },
+        {
+          "name": "wrong-rate",
+          "passed": true,
+          "positiveNativeRun": false
+        },
+        {
+          "name": "native-kind-refusal",
+          "passed": true,
+          "positiveNativeRun": false
+        },
+        {
+          "name": "refusal-guards",
+          "passed": true,
+          "deviceAccess": false
+        }
+      ],
+      "allFileHashesMatch": true,
+      "locatorPointerRecordsVerified": true
+    },
+    {
+      "configuration": "Debug",
+      "path": "artifacts/build/native/controller-lifecycle-artifacts/5904eed6a3a84fa6981463cc80997097",
+      "indexSha256": "090a437e94dce96f13298afd5c4af7eb4af166ea42bf2a40cf5ea6bef72302ae",
+      "cases": [
+        {
+          "name": "ordinary-session",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "ordinary"
+        },
+        {
+          "name": "com-sta-session",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "ordinary-sta"
+        },
+        {
+          "name": "com-mta-session",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "ordinary-mta"
+        },
+        {
+          "name": "blocked-client",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "blocked"
+        },
+        {
+          "name": "lifetime-limit",
+          "passed": true,
+          "kind": "simulated"
+        },
+        {
+          "name": "wrong-rate",
+          "passed": true,
+          "positiveNativeRun": false
+        },
+        {
+          "name": "native-kind-refusal",
+          "passed": true,
+          "positiveNativeRun": false
+        },
+        {
+          "name": "refusal-guards",
+          "passed": true,
+          "deviceAccess": false
+        }
+      ],
+      "allFileHashesMatch": true,
+      "locatorPointerRecordsVerified": true
+    }
+  ],
+  "implemented": {
+    "fixedAdjacentLocator": true,
+    "explicitMutablePointer": true,
+    "immutableConfigurationHash": true,
+    "brokerAndWorkerPins": true,
+    "exactBrokerFileIdentity": true,
+    "liveProcessBinding": true,
+    "selectedRecordsRetained": true,
+    "pointerReleasedAfterResolution": true,
+    "resolvedLocalPathChecked": true,
+    "createNewOwnerOnlyPointerPublisher": true,
+    "existingPointerPreserved": true,
+    "stalePointerAndPublicationRefused": true,
+    "productionComSimulatedKindRefusal": true,
+    "simulatedStaMtaStreams": true,
+    "recursiveFallback": false,
+    "automaticReconnect": false
+  },
+  "limits": {
+    "pointerReplacementImplemented": false,
+    "installed": false,
+    "registryChanged": false,
+    "positiveNativeRun": false,
+    "physicalAudioTested": false,
+    "measurementTruthVerified": false,
+    "currentSeratoAdmissionTested": false,
+    "securityPolicyChanged": false
+  },
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/session-locator-20261102",
+    "files": 994,
+    "manifestSha256": "15c8bdb0d542bdb8398ee88e4ea1be04e09f03abce8d20741abd9eb63dbc932d",
+    "selfReferentialPublicEvidenceExcluded": true
+  }
+}

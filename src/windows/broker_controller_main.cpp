@@ -129,6 +129,22 @@ int stop(const std::filesystem::path& file){
     Handle event;event.value=OpenEventW(EVENT_MODIFY_STATE,FALSE,stop_name(config.broker->endpoint).c_str());require(event.value && SetEvent(event.value),"Request known controller stop");
     std::cout<<"{\"schema\":\"sl3.broker-controller-stop.v1\",\"stopRequested\":true,\"deviceReleasedVerified\":false}\n";return 0;
 }
+int publish_pointer(const std::filesystem::path& source,const std::filesystem::path& destination){
+    auto config=asio::load_driver_configuration(source);require(config.broker.has_value(),"Pointer publication requires an immutable broker configuration");
+    ReadFileLease source_pin(source);const auto digest=Process::executable_sha256(source);
+    Handle token;require(OpenProcessToken(GetCurrentProcess(),TOKEN_QUERY,&token.value)!=FALSE,"Read publisher token");
+    TOKEN_ELEVATION elevation{};DWORD bytes=0;
+    require(GetTokenInformation(token.value,TokenElevation,&elevation,sizeof(elevation),&bytes) && !elevation.TokenIsElevated,"Pointer publisher requires an ordinary non-elevated user");
+    local(destination);Handle parent;
+    parent.value=CreateFileW(destination.parent_path().c_str(),GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE,nullptr,OPEN_EXISTING,FILE_FLAG_BACKUP_SEMANTICS,nullptr);
+    require(parent.value!=INVALID_HANDLE_VALUE,"Pin existing session pointer directory");final_local(parent.value);
+    require(!std::filesystem::exists(destination) && !std::filesystem::exists(std::filesystem::path(destination.native()+L".pending")),"Session pointer and pending path must be new; existing bytes are preserved");
+    require(WaitForSingleObject(config.broker->server->handle(),0)==WAIT_TIMEOUT,"Session pointer requires a still-live bound broker");
+    const auto text="SL3-ASIO-SESSION-POINTER-1\nconfiguration="+source.u8string()+"\nconfiguration_sha256="+digest+"\n";
+    const auto published=write_new(destination,text);
+    std::cout<<"{\"schema\":\"sl3.broker-session-pointer-publication.v1\",\"pointerPublished\":true,\"configurationSha256\":"<<json_string(digest)
+        <<",\"replaced\":false,\"deviceAccess\":false,\"deviceReadinessVerified\":false}\n";return 0;
+}
 }
 int wmain(int argc,wchar_t** argv){
     try{
@@ -138,6 +154,7 @@ int wmain(int argc,wchar_t** argv){
         require(argc>=2,"Controller mode required");std::map<std::wstring,std::wstring> args;
         for(int n=2;n<argc;n+=2){require(n+1<argc && args.emplace(argv[n],argv[n+1]).second,"Duplicate/incomplete controller option");}
         if(std::wstring(argv[1])==L"--run"){require(args.size()==3 && args.count(L"--input") && args.count(L"--output") && args.count(L"--limit-ms"),"Run requires input/output/limit-ms only");return run(std::filesystem::path(args.at(L"--input")),std::filesystem::path(args.at(L"--output")),limit(args.at(L"--limit-ms")));}
+        if(std::wstring(argv[1])==L"--publish-pointer"){require(args.size()==2 && args.count(L"--config") && args.count(L"--pointer"),"Pointer publication requires config/pointer only");return publish_pointer(std::filesystem::path(args.at(L"--config")),std::filesystem::path(args.at(L"--pointer")));}
         if(std::wstring(argv[1])==L"--stop"){require(args.size()==1 && args.count(L"--config"),"Stop requires config only");return stop(std::filesystem::path(args.at(L"--config")));}
         throw std::invalid_argument("Unknown controller mode");
     }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}
