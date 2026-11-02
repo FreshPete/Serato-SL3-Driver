@@ -99,3 +99,12 @@ along with attended production installation/removal and ordinary-user write-deni
 proof. Native/physical analogue audio, measured timing, legitimate current Serato
 admission and two-deck DVS remain unproved; macOS is deferred. The full goal stays
 active and incomplete.
+
+## Use after an interrupted install abort
+
+[Install-abort recovery](asio-install-recovery.md) can now persist a new uninstall
+journal with the original completed stage and a fresh all-absent registration
+snapshot before file deletion. If that cleanup stops, this file-recovery API
+accepts the **new recovery journal** with its separately reviewed hash and the
+original bundle. The original install journal is preserved and is not itself
+an uninstall snapshot. This composition does not recover interrupted copies.
