@@ -133,3 +133,12 @@ The native C++ build did not change at this checkpoint; its preceding Release
 and Debug runs each passed 59 tests. No physical or installed-ASIO proof follows
 from packaging. Retained hashes and cases are in
 [the verification record](evidence/deployment-preparation-20261102.json).
+
+## Later runtime and installation coordination
+
+[Runtime/import admission and the install coordinator](asio-runtime-install.md)
+now have 17 runtime and 20 isolated installer checks, including a composed
+install/remove round trip. The original bundle remains byte-identical and its
+README retains the scope of its preparation checkpoint. No protected production
+installation or package-code activation has run; bootstrap, complete recovery
+and native/physical/current-Serato validation remain unfinished.

@@ -1,5 +1,7 @@
 # SL3 rebuild progress for the owner's return
 
+**Runtime-gated installation coordination, 2 November:** [the runtime/install work](asio-runtime-install.md) now resolves 330 direct symbols across 15 dependency names to nine native System32 files. All 17 runtime and 20 workspace/private-HKCU installer cases pass, including a composed install/remove round trip. Only system dependencies are loaded; no package code executes. Protected-base bootstrap, interrupted-state recovery, actual production deployment/activation, physical audio and current Serato/DVS remain unfinished.
+
 **Serialized owned removal, 2 November:** [the removal coordinator](asio-uninstall.md) now binds reviewed stage/package pins and composes the lock/journal, registry deletion and file cleanup. All 20 workspace/private-HKCU cases pass, including conflict preservation and exact partial results. The private registry namespace is removed and verified absent. No production deployment/activation ran; automatic interrupted-state recovery, the install path, real audio and current Serato/DVS remain unfinished.
 
 **Installer exclusion and recovery journal, 2 November:** [the new primitives](asio-install-journal.md) now pass 31 actual Windows workspace cases, including cross-process exclusion, abrupt-exit lock release, flushed records, torn-tail reporting and complete/interrupted cleanup. No machine deployment or automatic replay runs. Full installer/recovery integration, physical audio and current Serato/DVS remain unfinished.

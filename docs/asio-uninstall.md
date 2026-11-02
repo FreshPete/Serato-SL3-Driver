@@ -76,7 +76,8 @@ See the [verification record](evidence/uninstall-20261102.json).
 
 Automatic reconciliation of partially removed registry keys, stage absence with
 an uncommitted completion record and other interrupted states remains unfinished.
-The complete install path, runtime dependency admission, protected production
-tests and ordinary-user write-denial proof also remain unfinished. Native/physical
+[Runtime-gated staging/registration coordination](asio-runtime-install.md) now
+has actual workspace/private-registry coverage. Protected-base bootstrap,
+production tests and ordinary-user write-denial proof remain unfinished. Native/physical
 audio, measured timing, current Serato admission and two-deck DVS remain unproved;
 macOS is deferred. No firmware or security-policy change is required by this work.
