@@ -1,0 +1,186 @@
+{
+  "schema": "sl3.deployment-preparation-verification.v1",
+  "createdUtc": "2026-11-02T00:50:12.488815+00:00",
+  "preparationTests": {
+    "cases": [
+      {
+        "name": "default",
+        "passed": true,
+        "expectedExit": 0
+      },
+      {
+        "name": "plan",
+        "passed": true,
+        "expectedExit": 0
+      },
+      {
+        "name": "prepare",
+        "passed": true,
+        "expectedExit": 0
+      },
+      {
+        "name": "verify",
+        "passed": true,
+        "expectedExit": 0
+      },
+      {
+        "name": "existing-output",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "build-hash",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "helper-hash",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "install-scope",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "debug-build",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "missing-asio",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "source-pin",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "ctest-hash",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "missing-coverage",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "controller-kind-collision",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "controller-payload-hash",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "actual-fixture-exports",
+        "passed": true
+      },
+      {
+        "name": "payload-tamper",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "extra-file",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "missing-file",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "duplicate-json",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "retarget-registry",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "unsafe-acl",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "retarget-install-scope",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "retarget-locator",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "verify-manifest-hash",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "unsupported-options",
+        "passed": true,
+        "expectedExit": 1
+      }
+    ],
+    "indexPath": "artifacts/build/deployment-tests/93b62978896f439fa367f66298c3ed18/index.json",
+    "indexSha256": "81614ca5a0f0bdf29f83dae37104918bc007315c5db2a1a5ad45f38a5587238b",
+    "allFileHashesMatch": true,
+    "plannedDestinationsRemainAbsent": true,
+    "logSha256": "fc1f2ee09421c9481ff008a75fcc69c7d3618751a8b99d188eff2814e4071f0f"
+  },
+  "positiveBundle": {
+    "path": "artifacts/build/deployment-bundles/93b62978896f439fa367f66298c3ed18",
+    "manifestSha256": "f3724800005e95b724a1d069d563fb2a662fbfb0b92aabf2da32b0f79c1f8fc4",
+    "payloadFiles": 11,
+    "builderSha256": "1fd93290e67c00ed73e25436a2ea28a7fc179c61727eb7c8fe212d8595de1106",
+    "testScriptSha256": "ce3f1217b1e4f313c2bcfa43337a7edeafb3b6d54f1c13fb197ba282b1616059",
+    "packageId": "243ce6f332ad73fe51d1502c44a9e5d006e8bd0f9d0fc90806d23c29b200544a"
+  },
+  "nativeBaseline": [
+    {
+      "configuration": "Release",
+      "testsPassedAtPriorCheckpoint": 59,
+      "rerunForPackaging": false,
+      "sourcePinsStillMatch": true,
+      "manifestSha256": "09fa39a717a9b024981b9a2e9da0406234e91fedd17b3370bac04c7dbfab1a87",
+      "ctestLogSha256": "7d1dd0d5f95b6a03fea0b02c1fdb57a4cc9550dedbaac5f480063dfa5c990d5c"
+    },
+    {
+      "configuration": "Debug",
+      "testsPassedAtPriorCheckpoint": 59,
+      "rerunForPackaging": false,
+      "sourcePinsStillMatch": true,
+      "manifestSha256": "d97f2b1855391de1412473897c8d4d5cd7f9fe40d91afb0f78eb5b0fa4151c92",
+      "ctestLogSha256": "70452b9868b2e84da6aca20160944a63a05d857d86ab2bbccb3ac078572d9df1"
+    }
+  ],
+  "limits": {
+    "installed": false,
+    "aclApplied": false,
+    "registryWritten": false,
+    "binaryPayloadExecuted": false,
+    "deviceAccess": false,
+    "privilegedInstallerImplemented": false,
+    "ownedEntryUninstallImplemented": false,
+    "physicalAudioTested": false,
+    "measurementTruthVerified": false,
+    "currentSeratoAdmissionTested": false
+  },
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/deployment-preparation-20261102",
+    "files": 908,
+    "manifestSha256": "24067ded0a8f4811d5cd8664677351af3b39d46a7787f17e2d4760bc5f339b44",
+    "selfReferentialPublicEvidenceExcluded": true
+  }
+}

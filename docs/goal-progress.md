@@ -1,5 +1,7 @@
 # SL3 rebuild goal — working checkpoint
 
+**Verified local deployment bundle, 2 November:** [the package builder](asio-deployment-bundle.md) now prepares exact reviewed Release binaries, a locator, licences, dependency metadata and a constrained x64 registration/ACL plan. Its 26 preparation/verification/refusal cases pass; planned install and pointer paths remain absent. No registration, ACL application, binary execution or device access runs. Protected install/uninstall, real timing/native audio and current Serato/DVS remain unfinished.
+
 **Explicit pointer withdrawal, 2 November:** [reviewed hash-based withdrawal](asio-pointer-withdrawal.md) now removes only an exclusively opened, current-user-owned typed pointer. Create-new publication can then reuse its path. Actual COM/simulated audio continues across withdrawal/republication with one acquisition; stale-pointer cleanup and refusal guards are tested. Installation, genuine timing/native audio and current Serato/DVS remain unfinished; no physical or security changes ran.
 
 **Stable DLL session locator, 2 November:** [the production locator](asio-session-locator.md) now binds an adjacent stable record to one explicit pointer and a hash-pinned immutable broker configuration, with exact broker file/process identity and no fallback. The controller can publish a new owner-only pointer without device access. Actual production COM refusal and simulated STA/MTA audio through this path are tested. Installation, pointer replacement, genuine timing/native audio and current Serato/DVS remain unfinished.
