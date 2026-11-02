@@ -1,0 +1,278 @@
+{
+  "schema": "sl3.usb-helper-service-binding.v1",
+  "status": "static_receiver_identification",
+  "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "priorUsbArrivalEvidenceSha256": "7d018af5beaa3cb0f1111d3f2c79cff3369bdacec7e9e80f828f98794a3d9f50",
+  "instructionFacts": [
+    {
+      "va": "0x14070ffcb",
+      "bytes": "e8b00f2501",
+      "instruction": "call 0x141960f80"
+    },
+    {
+      "va": "0x14070ffe0",
+      "bytes": "41ffd0",
+      "instruction": "call r8"
+    },
+    {
+      "va": "0x14070ffe7",
+      "bytes": "e8940f2501",
+      "instruction": "call 0x141960f80"
+    },
+    {
+      "va": "0x14070fffc",
+      "bytes": "41ffd0",
+      "instruction": "call r8"
+    },
+    {
+      "va": "0x141960f89",
+      "bytes": "488d0dd0b86c02",
+      "instruction": "lea rcx, [rip + 0x26cb8d0]"
+    },
+    {
+      "va": "0x141960f90",
+      "bytes": "e80bf6ffff",
+      "instruction": "call 0x1419605a0"
+    },
+    {
+      "va": "0x141960f95",
+      "bytes": "488b05bcb86c02",
+      "instruction": "mov rax, qword ptr [rip + 0x26cb8bc]"
+    },
+    {
+      "va": "0x1419605a6",
+      "bytes": "488bd9",
+      "instruction": "mov rbx, rcx"
+    },
+    {
+      "va": "0x1419605b3",
+      "bytes": "ff151f1ddd00",
+      "instruction": "call qword ptr [rip + 0xdd1d1f]"
+    },
+    {
+      "va": "0x1419605c4",
+      "bytes": "837c244000",
+      "instruction": "cmp dword ptr [rsp + 0x40], 0"
+    },
+    {
+      "va": "0x1419605c9",
+      "bytes": "7465",
+      "instruction": "je 0x141960630"
+    },
+    {
+      "va": "0x1419605dd",
+      "bytes": "e87e040000",
+      "instruction": "call 0x141960a60"
+    },
+    {
+      "va": "0x1419605e2",
+      "bytes": "488b10",
+      "instruction": "mov rdx, qword ptr [rax]"
+    },
+    {
+      "va": "0x1419605e5",
+      "bytes": "48c70000000000",
+      "instruction": "mov qword ptr [rax], 0"
+    },
+    {
+      "va": "0x1419605f3",
+      "bytes": "4889155ec26c02",
+      "instruction": "mov qword ptr [rip + 0x26cc25e], rdx"
+    },
+    {
+      "va": "0x141960626",
+      "bytes": "ff15dc1cdd00",
+      "instruction": "call qword ptr [rip + 0xdd1cdc]"
+    },
+    {
+      "va": "0x141960a6f",
+      "bytes": "393ddbbd6c02",
+      "instruction": "cmp dword ptr [rip + 0x26cbddb], edi"
+    },
+    {
+      "va": "0x141960a75",
+      "bytes": "7530",
+      "instruction": "jne 0x141960aa7"
+    },
+    {
+      "va": "0x141960a77",
+      "bytes": "b9e8000000",
+      "instruction": "mov ecx, 0xe8"
+    },
+    {
+      "va": "0x141960a8e",
+      "bytes": "e8fd3a0200",
+      "instruction": "call 0x141984590"
+    },
+    {
+      "va": "0x141960a93",
+      "bytes": "488bf8",
+      "instruction": "mov rdi, rax"
+    },
+    {
+      "va": "0x141960a99",
+      "bytes": "48893b",
+      "instruction": "mov qword ptr [rbx], rdi"
+    },
+    {
+      "va": "0x141960aa7",
+      "bytes": "b938000000",
+      "instruction": "mov ecx, 0x38"
+    },
+    {
+      "va": "0x141960abe",
+      "bytes": "e81df20100",
+      "instruction": "call 0x14197fce0"
+    },
+    {
+      "va": "0x141960ac3",
+      "bytes": "488bf8",
+      "instruction": "mov rdi, rax"
+    },
+    {
+      "va": "0x141960ac9",
+      "bytes": "48893b",
+      "instruction": "mov qword ptr [rbx], rdi"
+    },
+    {
+      "va": "0x1419845aa",
+      "bytes": "e801c1fdff",
+      "instruction": "call 0x1419606b0"
+    },
+    {
+      "va": "0x1419845b0",
+      "bytes": "488d0501cd6401",
+      "instruction": "lea rax, [rip + 0x164cd01]"
+    },
+    {
+      "va": "0x1419845b7",
+      "bytes": "498906",
+      "instruction": "mov qword ptr [r14], rax"
+    },
+    {
+      "va": "0x14197fce9",
+      "bytes": "e8c209feff",
+      "instruction": "call 0x1419606b0"
+    },
+    {
+      "va": "0x14197fcee",
+      "bytes": "488d05d30c6501",
+      "instruction": "lea rax, [rip + 0x1650cd3]"
+    },
+    {
+      "va": "0x14197fcf5",
+      "bytes": "488903",
+      "instruction": "mov qword ptr [rbx], rax"
+    },
+    {
+      "va": "0x14197fcf8",
+      "bytes": "488bc3",
+      "instruction": "mov rax, rbx"
+    }
+  ],
+  "priorArrivalInstructionChecks": 208,
+  "types": [
+    {
+      "vtable": "0x142fd12b8",
+      "locator": "0x1433c02c0",
+      "type": ".?AVRLMAuthorization@authorization@serato@@",
+      "slots": {
+        "0x90": "0x14198f450",
+        "0xa0": "0x14198a130"
+      }
+    },
+    {
+      "vtable": "0x142fd09c8",
+      "locator": "0x1433c00f8",
+      "type": ".?AVJWTAuthorization@authorization@serato@@",
+      "slots": {
+        "0x90": "0x141983630",
+        "0xa0": "0x141982ba0"
+      }
+    },
+    {
+      "vtable": "0x142e86360",
+      "locator": "0x143310b30",
+      "type": ".?AVDriverAPI@driver@device@serato@@",
+      "slots": {
+        "0x90": "0x1404a4550",
+        "0xa0": "0x1404a4540"
+      }
+    }
+  ],
+  "completeFocusedFunctions": [
+    {
+      "start": "0x141960f80",
+      "endExclusive": "0x141960fa1",
+      "bytesSha256": "3e02c9066bc24289977cc4eae740d38317d1318bf4f03f3fc41be670ce7febfd"
+    },
+    {
+      "start": "0x1419605a0",
+      "endExclusive": "0x14196063c",
+      "bytesSha256": "b21d1359d6d2ad509c85dc043662cdce1e34986c5d72acd03c23914ce72e7554"
+    },
+    {
+      "start": "0x141960a60",
+      "endExclusive": "0x141960ad7",
+      "bytesSha256": "e99bed9f591a676af8b181a8e1f2cb15137f6829860be421312530236edd1f0d"
+    },
+    {
+      "start": "0x141984590",
+      "endExclusive": "0x141984777",
+      "bytesSha256": "274c83e37290016f84c33c74a3bd349f19a005f3086afee396fcb59b3ad0ad57"
+    },
+    {
+      "start": "0x14197fce0",
+      "endExclusive": "0x14197fd09",
+      "bytesSha256": "fd7b07976a4d82aab46912a9dc6c0df1b27944af8a475dccc8935b8fd9e917b8"
+    }
+  ],
+  "privateFocusedReportSha256": "3317e1a37fcc837b69f95b5de27c484c35a529bcd62cf8733cc044c4adbaf22f",
+  "sources": {
+    "scripts/export-serato-authorization-service.py": {
+      "localSha256": "6b090731688f59cc70e711ba31931b0b3d7ae846ef122fe9265fe0c97caa3720",
+      "gitLfSha256": "6b090731688f59cc70e711ba31931b0b3d7ae846ef122fe9265fe0c97caa3720"
+    },
+    "scripts/export-serato-usb-arrival.py": {
+      "localSha256": "6b8e64efa24afbeeab4ad52c26bb4811f1d8a5ebf5955dbfa3e70eee0ed1e2de",
+      "gitLfSha256": "6b8e64efa24afbeeab4ad52c26bb4811f1d8a5ebf5955dbfa3e70eee0ed1e2de"
+    },
+    "scripts/export-serato-clock-handshake-evidence.py": {
+      "localSha256": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+      "gitLfSha256": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20"
+    }
+  },
+  "binding": {
+    "accessor": "0x141960f80",
+    "initializer": "0x1419605a0",
+    "factory": "0x141960a60",
+    "pointerGlobal": "0x14402c858",
+    "onceState": "0x14402c860",
+    "selectorGlobal": "0x14402c850",
+    "zeroSelectorType": "RLMAuthorization",
+    "nonzeroSelectorType": "JWTAuthorization"
+  },
+  "conclusion": "The USB helper calls an authorization-namespace service, not DriverAPI; equal slot offsets do not identify equal receivers or meanings",
+  "helperResultBoundary": "Service slot +0x90 result is sent in 0x693; helper returns stored +0x70 OR +0x71, not the direct service Boolean",
+  "actualBackendObserved": false,
+  "authorizationSemanticsExhausted": false,
+  "accountOrLicenseQueried": false,
+  "authorizationChangedOrEmulated": false,
+  "historicalRaneControlReplacementEstablished": false,
+  "applicationExecuted": false,
+  "installedApplicationModified": false,
+  "deviceAccess": false,
+  "currentSeratoAdmissionVerified": false,
+  "twoDeckDvsVerified": false,
+  "deploymentApproved": false,
+  "remaining": [
+    "Actual permitted service result for genuine SL3 and complete state-message delivery",
+    "Source/meaning of all 0x692 updates and any later service-pointer mutation",
+    "Current resource parsing/admission, NONE/control contract, measured native audio/deployment and real DVS"
+  ],
+  "limits": [
+    "Names establish RTTI identity, not full entitlement semantics or a claim that purchasing a license admits SL3",
+    "Factory branch is static; live selector/account/backend state was not read",
+    "No service response, token, account state, key, identity or policy is substituted"
+  ]
+}

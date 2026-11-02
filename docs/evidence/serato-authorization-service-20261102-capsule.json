@@ -1,0 +1,8 @@
+{
+  "schema": "sl3.selected-evidence-capsule-reference.v1",
+  "capsuleName": "serato-authorization-service-20261102",
+  "files": 25,
+  "manifestSha256": "4bb8c94d424bf288f3aa5a3e5016a02db9bba7c381aa9fde1b3c108508dfa16d",
+  "verificationSha256": "fa3181032f31753d4cdfd5833e8628a915eccb8f093adc772d676fe954b6364f",
+  "privateRevalidationSha256": "385ba2337785ffe14d395b4d98a3c7b5f6c1a88c31400cba9fbde8f765fd3a0b"
+}

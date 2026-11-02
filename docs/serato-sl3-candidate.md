@@ -67,3 +67,5 @@ At this descriptor checkpoint no current resource writer/provider had been imple
 Installed executable/archive, registry, driver binding/trust, normal security, firmware and account state were not modified. No UAC prompt, SL3 acquisition, audio, Serato or Phase execution ran. Genuine current SL3 admission and actual two-deck DVS remain required; the Windows goal stays active and Mac is deferred.
 
 The later [candidate selection check](serato-sl3-selection.md) connects the recorded zero USB revision to parser defaults and duplicate rules, including the separate empty `midi_name` field. Its predictions remain conditional; archive loading and actual chosen-descriptor observation are unverified.
+
+The later [authorization-service receiver proof](serato-authorization-service.md) identifies the helper's +0xa0/+0x90 receiver as RLMAuthorization or JWTAuthorization, distinct from DriverAPI. It does not query account state, establish a permitted service result or validate current SL3/audio/DVS.
