@@ -10,7 +10,7 @@ The native software checks pass **64/64 Release**, **64/64 Debug** and **39/39 w
 
 [The read-only broker scope diagnostic](docs/broker-scope-probe.md) now exercises three independent client processes over one retained simulated worker, without a timing profile or audio capability. The server rejects audio starts in this mode; its [dedicated single-approval trace workflow](docs/broker-scope-trace.md) is now prepared and checked offline. Native physical broker validation still requires an attended run.
 
-[Current HID task tracing](docs/serato-hid-task.md) now identifies descriptor-specific verification and notification flow. It supplies no demonstrated generic-ASIO admission hook or working SL3/DVS result.
+[Current HID task tracing](docs/serato-hid-task.md) identifies descriptor-specific verification. Its [notification receiver](docs/serato-wireless-notification.md) now leads to wireless-deck handling and additional primary-manager/state gates, consistent with Phase remaining an accessory. No admitted SL3 or working current DVS result is established.
 
 [The finite input recording diagnostic](docs/input-record-probe.md) now preserves a nominal three-second six-channel callback prefix with zero output. Both-rate simulated recordings match every expected PCM byte and export unchanged to WAV for offline marker analysis. Its [distinct single-approval traced workflow](docs/input-record-trace.md) is now prepared offline; an attended native run remains unperformed.
 

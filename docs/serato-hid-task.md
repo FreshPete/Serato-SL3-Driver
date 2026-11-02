@@ -32,7 +32,7 @@ The no-response branch subtracts the saved timestamp from `timeGetTime()` and us
 
 `140628ce0` checks the started byte and task pointer, calls task virtual slot +0x28 with true, then clears the task pointer. This does not independently prove thread retirement, cancellation completion or kernel quiescence.
 
-Setter `140627b60` exchanges the supplied Boolean into the second object's byte +0x8e. When the resulting byte is nonzero, it performs another existing VID/PID/revision descriptor lookup and conditionally builds an object with constructor argument 0x2e3 and field +8 equal to 5, then passes it to a sink's virtual slot +0x58. Two complete helper leaves establish the Boolean load and address identity used by that exchange. The downstream event receiver and its relation to primary-device admission are **not established**. A local success byte, this notification and actual audio/DVS success must remain separate claims.
+Setter `140627b60` exchanges the supplied Boolean into the second object's byte +0x8e. When the resulting byte is nonzero, it performs another existing VID/PID/revision descriptor lookup and conditionally builds an object with constructor argument 0x2e3 and field +8 equal to 5, then passes it to a sink's virtual slot +0x58. Two complete helper leaves establish the Boolean load and address identity used by that exchange. [Later subscriber/handler tracing](serato-wireless-notification.md) identifies wireless-deck handling and an additional primary-manager/state condition. Actual event delivery and successful primary-device admission remain unverified. A local success byte, this notification and actual audio/DVS success must remain separate claims.
 
 ## Reproduction and scope
 

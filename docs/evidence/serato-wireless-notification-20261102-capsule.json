@@ -1,0 +1,8 @@
+{
+  "schema": "sl3.selected-evidence-capsule-reference.v1",
+  "capsuleName": "serato-wireless-notification-20261102",
+  "files": 25,
+  "manifestSha256": "a01f225ad6d9a5992ac379d74db930013c3cc6ec7cad9e8c8f5aa8f9d55e4758",
+  "verificationSha256": "bee28d9c16b428ba3431e8e2fe88cbf607e4d5d8d63f870379ae5a4e755416f1",
+  "privateRevalidationSha256": "9b621abeb502bb8139acdf7f34ea5000594671ff6d905265410814c2ada6eed5"
+}
