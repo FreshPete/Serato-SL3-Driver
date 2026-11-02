@@ -2,6 +2,8 @@
 
 Current queue updated 2 November 2026. Do not repeat installation or rapid reopening to reproduce an already-recorded failure. Sections T01 onward retain historical experiments and preparation; the queue below supersedes their older next-step statements. See the [requirement audit](completion-audit.md) for the full outstanding scope and build/physical-evidence separation.
 
+A [fresh one-page attended packet](next-attended-packet.md) is now prepared and passes default preflight. Its cached PnP mapping is port 4 with `strmdrv`/Code 39; it is not armed or a readiness result.
+
 ## Current supervised queue
 
 The [InputRecord trace workflow](input-record-trace.md) is now prepared offline for a later owner-present known-input experiment. It requests one acquisition and no rate setter; choose the explicit expected rate from an established observation. Its preparation does not supersede the recovery/readiness investigation below or arm a hardware test.

@@ -1,0 +1,73 @@
+{
+  "schema": "sl3.attended-return-packet.v1",
+  "date": "2026-11-02",
+  "scope": "Cached Windows PnP recheck and preparation/default-only validation; no live device/probe/collector execution",
+  "cachedPnp": {
+    "source": "Get-PnpDevice and Get-PnpDeviceProperty",
+    "snapshotSha256": "f3f4fcd7ecca240e97c7940de546ef06e3764c39df0d7066badf5a279fec3b26",
+    "presentSl3Nodes": 1,
+    "service": "strmdrv",
+    "problemCode": 39,
+    "port": 4,
+    "rootHubInstanceSha256": "efc0ef3a32747b8721b617a66a31ecc7c9f2e4c1390d41267ee8b4fbb7179785",
+    "usbStreamingOrReadinessEstablished": false,
+    "newCodeIntegrityCauseEstablished": false
+  },
+  "collectorPlan": {
+    "path": "analysis/logging-batch-return-20261102/controls-image.json",
+    "sha256": "a0066fcd23951969a40223227023109d85ee2d7c51be71ed0ad250145295b3d5",
+    "traceSeconds": 20,
+    "buildManifestSha256": "cba386dfe34d45765d63a8167de92c70bc668e75a3eb1a78ab09ca9de20e03df",
+    "nativeImages": {
+      "sl3_host_probe.exe": "bfef24eccd7d6474f65f91f9c596d65d41450cee2cd3b5f6233c84fa5c63a5d1",
+      "sl3_usbdk.exe": "790521dcd5120bd0eaf2c2036c501d8f00c49f95b9d557f0d075939b8b451b22"
+    },
+    "collectorPreparationPassed": true,
+    "defaultLauncherPreflightPassed": true
+  },
+  "observerPlan": {
+    "path": "analysis/hub-port-observer-return-20261102/plan.json",
+    "sha256": "e680a8f36430b2360926a5732ff08d88fa26b3a6cfa1039bef8983921cc47c48",
+    "sampleSeconds": 18,
+    "intervalSeconds": 0.25,
+    "waitSeconds": 90,
+    "preparationPassed": true,
+    "defaultJobValidationPassed": true
+  },
+  "noLaunchRecordCreated": true,
+  "futureContextAbsent": true,
+  "runtimeRolesStarted": false,
+  "approvalPromptRequested": false,
+  "deviceAccessByThisPreparation": false,
+  "traceStarted": false,
+  "audioPlayed": false,
+  "rateChanged": false,
+  "securityOrTrustChanged": false,
+  "firmwareChanged": false,
+  "intendedAttendedScope": {
+    "redirects": 1,
+    "queries": "Observed rate and complete audio-control table",
+    "audioStarts": 0,
+    "rateSetters": 0,
+    "successiveAcquisition": false,
+    "administratorLaunches": 1,
+    "requiresOwnerRecoveryAvailability": true
+  },
+  "admissionGranted": false,
+  "safeReopeningVerified": false,
+  "physicalAudioVerified": false,
+  "currentSeratoAdmissionVerified": false,
+  "twoDeckDvsVerified": false,
+  "remaining": [
+    "Owner-present one-acquisition control/port/image trace and recovery",
+    "Prove readiness before a successive acquisition",
+    "Current-worker known-input and measured analogue/profile tests",
+    "Protected ASIO/archive deployment and actual current Serato/DVS tests"
+  ],
+  "limits": [
+    "Cached PnP properties are not direct descriptor/USB/audio observations.",
+    "Code 39 does not by itself prove a new Code Integrity event or its current cause.",
+    "Prepared commands may become stale after source, installed-image, connection or port changes.",
+    "Preparation/default checks do not arm a trace or admit hardware I/O."
+  ]
+}

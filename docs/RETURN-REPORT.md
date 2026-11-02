@@ -1,5 +1,7 @@
 # SL3 rebuild progress for the owner's return
 
+**Next attended packet refreshed, 2 November:** [The unarmed control/port/image packet](next-attended-packet.md) now binds the current Release build and cached port-4 PnP mapping. Windows still reports `strmdrv`/Code 39. Collector and observer default preflights pass; no probe, trace, UAC prompt or acquisition ran. Working recovery/readiness, current-worker audio and actual Serato/DVS remain required.
+
 **General ASIO log reader built, 2 November:** [The offline decoder/analyzer](asio-general-trace-analysis.md) now reads completed logs beyond the fixed fixture sequence. Release/Debug archived decodes reproduce the original JSONL exactly; nine model tests and four native refusal cases pass. Host identity, current Serato admission and physical audio/DVS remain unverified. Production audio sources/images are unchanged.
 
 **USB component completion narrowed, 2 November:** [Original-byte checks](serato-usb-completion.md) bind the discovered identity-record attachment, acquired-count increment, equality test and internal completion-byte store before the minimum-version gate. With a present descriptor, the conditional no-MIDI/no-HID/required-USB projection expects one component. This is aggregation metadata, not audio readiness or admitted SL3/DVS. No app, device or authorization operation ran.

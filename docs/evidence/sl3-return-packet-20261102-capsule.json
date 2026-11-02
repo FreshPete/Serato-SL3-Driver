@@ -1,0 +1,12 @@
+{
+  "schema": "sl3.private-checkpoint-summary.v1",
+  "checkpoint": "sl3-return-packet-20261102",
+  "fileCount": 21,
+  "manifestSha256": "1371f94d5eaa9ae2ca39395033034132314d50d63343000ef3878d666936274e",
+  "evidenceSha256": "e5115838d8aa04d869b485fcc66edd7655c9e1cc3e5866f44920287ef8b865a4",
+  "runtimeRolesStarted": false,
+  "deviceAccessByPreparation": false,
+  "rawPnpIdentifiersPublished": false,
+  "vendorResourcesIncluded": false,
+  "scope": "Unarmed attended packet, default preflights and cached PnP snapshot; no new physical validation"
+}
