@@ -32,3 +32,5 @@ Both configurations passed default-off and missing-log-directory fallback tests,
 The earlier [external private-capture checkpoint](asio-private-trace.md) remains historical evidence in its capsule. Current source changes require new build/capture manifests; old source-bound results do not validate against this image. The refreshed descriptor/archive/deployment bundles use the `20261102-owned-trace` suffix. Their XML/archive hypothesis bytes are unchanged and remain private and undeployed.
 
 Next attended work remains safe recovery/reacquisition verification, then the reviewed read-only control/port trace. A later approved current-Serato session can opt in to these logs to establish which ASIO methods it actually calls. No claim of host admission, measured latency, analogue channel mapping or two-deck DVS follows from this checkpoint.
+
+The later [general read-only decoder and analyzer](asio-general-trace-analysis.md) can inspect completed logs without requiring the fixed eight-call fixture sequence. It reports incomplete pairs and raw method outcomes while keeping source-host identity, Serato admission and physical audio/DVS unverified.

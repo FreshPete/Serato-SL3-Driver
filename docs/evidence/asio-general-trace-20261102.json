@@ -1,0 +1,319 @@
+{
+  "schema": "sl3.asio-general-trace-verification.v1",
+  "date": "2026-11-02",
+  "scope": "Read-only decoding of archived own unavailable-DLL ETLs plus generic selected-call analysis; no live host or device run",
+  "sources": {
+    "diagnostics/asio-decode/CMakeLists.txt": {
+      "localSha256": "5d1a35a0a2809846b9c49c49d70fa8e06b02e995952653fcb0553c64e91c25a3",
+      "gitLfSha256": "554ed328523697eab69a78c913f27f7937507ee28de823f3debc307e1bce8368"
+    },
+    "diagnostics/asio-decode/decode.cpp": {
+      "localSha256": "cda57f415732530c771bab9b4ec08d830e32d71ea54c68f5f301ffcd8991c733",
+      "gitLfSha256": "1ec7497d482b6a3105de26e2ba68b96ddc72bc938f685324f6a2aca00073b219"
+    },
+    "scripts/build-asio-trace-decoder.ps1": {
+      "localSha256": "e5c1b9df9f9adaff41639f93fc74e81993f72bece340b0ff669ab2b339834d57",
+      "gitLfSha256": "24bcaeadf24dd732f96d3a603117a1495ea49c75954b8461b9dbe13ad42ca079"
+    },
+    "scripts/analyse-asio-call-log.py": {
+      "localSha256": "78f2bcb4680dab02ae9fa147c6985c2d0e3891a1d0562f2a3ac20b1603227dc8",
+      "gitLfSha256": "78f2bcb4680dab02ae9fa147c6985c2d0e3891a1d0562f2a3ac20b1603227dc8"
+    },
+    "tests/test_asio_call_analysis.py": {
+      "localSha256": "e1060ddd2dbd2431b5e002ea6b7f42c98ada57509aec9f1938c8b4f99602726b",
+      "gitLfSha256": "e1060ddd2dbd2431b5e002ea6b7f42c98ada57509aec9f1938c8b4f99602726b"
+    },
+    "src/asio/call_trace.hpp": {
+      "localSha256": "0401cc52fadb4215ab39909f03d152a9cabb9011719ca1e5b69324584bb64079",
+      "gitLfSha256": "0401cc52fadb4215ab39909f03d152a9cabb9011719ca1e5b69324584bb64079"
+    },
+    "scripts/validate-asio-private-trace.py": {
+      "localSha256": "41b11be0b916993b8aeaa18051920fe49387a048bf1e9a4faa87b1ea60d09365",
+      "gitLfSha256": "0bd741a7eb80f051b7b404313d49cb16df40a649f45eed7f022ab53334368c14"
+    }
+  },
+  "decoderBuilds": {
+    "Release": {
+      "manifestSha256": "4195406df119dd573cde88eca8ac815549f349fd96470084c4dbb7535392f607",
+      "executableSha256": "e6fe96f8e4363c28ac5704cadeaa269be738593194387d0b0fe5d1eada9d6c91",
+      "inputPins": 4,
+      "planAndRefusalTestsPassed": true,
+      "requiresAsioSdk": false
+    },
+    "Debug": {
+      "manifestSha256": "ac22b6861fb5b35faab3876d5b7578ca5b60ab2d54dc2fe264ebb385c789f5e2",
+      "executableSha256": "d7a9ee14c8662e4a44f53f8ceb05ed5920503f61396b4bc7d65d97e0e9af150f",
+      "inputPins": 4,
+      "planAndRefusalTestsPassed": true,
+      "requiresAsioSdk": false
+    }
+  },
+  "archivedDecodes": {
+    "Release": {
+      "schema": "sl3.asio-call-analysis.v1",
+      "scope": "Selected own-provider calls in one completed ETL; host identity unverified",
+      "build": "production",
+      "recordCount": 16,
+      "pairedCalls": 8,
+      "completedCalls": 8,
+      "abandonedCalls": 0,
+      "unterminatedBegins": [],
+      "orphanTerminals": [],
+      "callIdGaps": [],
+      "moduleCallBudgetReached": false,
+      "sessionMetadataComplete": true,
+      "sessionStopStatus": 0,
+      "reportedEventsLost": 0,
+      "reportedBuffersLost": 0,
+      "observedPairsComplete": true,
+      "methods": {
+        "class_object": {
+          "paired": 1,
+          "abandoned": 0,
+          "returnedErrors": 0,
+          "rawResults": {
+            "0": 1
+          }
+        },
+        "name": {
+          "paired": 1,
+          "abandoned": 0,
+          "returnedErrors": 0,
+          "rawResults": {
+            "0": 1
+          }
+        },
+        "version": {
+          "paired": 1,
+          "abandoned": 0,
+          "returnedErrors": 0,
+          "rawResults": {
+            "1": 1
+          }
+        },
+        "init": {
+          "paired": 1,
+          "abandoned": 0,
+          "returnedErrors": 1,
+          "rawResults": {
+            "0": 1
+          }
+        },
+        "channels": {
+          "paired": 1,
+          "abandoned": 0,
+          "returnedErrors": 1,
+          "rawResults": {
+            "-1000": 1
+          }
+        },
+        "buffer_size": {
+          "paired": 1,
+          "abandoned": 0,
+          "returnedErrors": 1,
+          "rawResults": {
+            "-1000": 1
+          }
+        },
+        "get_rate": {
+          "paired": 1,
+          "abandoned": 0,
+          "returnedErrors": 1,
+          "rawResults": {
+            "-1000": 1
+          }
+        },
+        "error_message": {
+          "paired": 1,
+          "abandoned": 0,
+          "returnedErrors": 0,
+          "rawResults": {
+            "0": 1
+          }
+        }
+      },
+      "actualEtwCaptureDecoded": true,
+      "sourceHostIdentityVerified": false,
+      "wholeHostSequenceVerified": false,
+      "seratoCaptureVerified": false,
+      "physicalAudioVerified": false,
+      "currentSeratoAdmissionVerified": false,
+      "twoDeckDvsVerified": false,
+      "provenance": {
+        "etlSha256": "447261aead8eb5a378674f4ea2ab31d393148220b16b9e58324421b30db1d3df",
+        "sessionSha256": "a522d8e87d1f1603312a6c01531f7b94dcf60a7615f3e6284ee7bfa4ae2d9980",
+        "decodedJsonlSha256": "de225073ed6e90c76c101412f9f96a2be1c56fdfb917cf1d1c7e40bac5a5f91c",
+        "decoderRunSha256": "218b1dbae85a1c57e9824d10eee77cb09e404ef74357674eeceee279bca7ee61"
+      },
+      "jsonlByteIdenticalToOriginalDecoder": true,
+      "sourceUnavailableFixtureProvenanceVerified": true,
+      "analysisSha256": "09a6f5d53eb632e715a87964812e0eb2c0f7b98e7d4a383dd386047dc3076d07"
+    },
+    "Debug": {
+      "schema": "sl3.asio-call-analysis.v1",
+      "scope": "Selected own-provider calls in one completed ETL; host identity unverified",
+      "build": "production",
+      "recordCount": 16,
+      "pairedCalls": 8,
+      "completedCalls": 8,
+      "abandonedCalls": 0,
+      "unterminatedBegins": [],
+      "orphanTerminals": [],
+      "callIdGaps": [],
+      "moduleCallBudgetReached": false,
+      "sessionMetadataComplete": true,
+      "sessionStopStatus": 0,
+      "reportedEventsLost": 0,
+      "reportedBuffersLost": 0,
+      "observedPairsComplete": true,
+      "methods": {
+        "class_object": {
+          "paired": 1,
+          "abandoned": 0,
+          "returnedErrors": 0,
+          "rawResults": {
+            "0": 1
+          }
+        },
+        "name": {
+          "paired": 1,
+          "abandoned": 0,
+          "returnedErrors": 0,
+          "rawResults": {
+            "0": 1
+          }
+        },
+        "version": {
+          "paired": 1,
+          "abandoned": 0,
+          "returnedErrors": 0,
+          "rawResults": {
+            "1": 1
+          }
+        },
+        "init": {
+          "paired": 1,
+          "abandoned": 0,
+          "returnedErrors": 1,
+          "rawResults": {
+            "0": 1
+          }
+        },
+        "channels": {
+          "paired": 1,
+          "abandoned": 0,
+          "returnedErrors": 1,
+          "rawResults": {
+            "-1000": 1
+          }
+        },
+        "buffer_size": {
+          "paired": 1,
+          "abandoned": 0,
+          "returnedErrors": 1,
+          "rawResults": {
+            "-1000": 1
+          }
+        },
+        "get_rate": {
+          "paired": 1,
+          "abandoned": 0,
+          "returnedErrors": 1,
+          "rawResults": {
+            "-1000": 1
+          }
+        },
+        "error_message": {
+          "paired": 1,
+          "abandoned": 0,
+          "returnedErrors": 0,
+          "rawResults": {
+            "0": 1
+          }
+        }
+      },
+      "actualEtwCaptureDecoded": true,
+      "sourceHostIdentityVerified": false,
+      "wholeHostSequenceVerified": false,
+      "seratoCaptureVerified": false,
+      "physicalAudioVerified": false,
+      "currentSeratoAdmissionVerified": false,
+      "twoDeckDvsVerified": false,
+      "provenance": {
+        "etlSha256": "dfe31832e08a2fb113b479e6f5314a933ad38a2dfdadd440e3487524cdf00ab2",
+        "sessionSha256": "5e73db7edb311accd0c564aa64ce9c42537db6d5aaef9375abdfc0cb3120dd35",
+        "decodedJsonlSha256": "1551d2ff0fbe42e67c54079b6b6520f7f52e41f56c9ec22467b0291522707ea5",
+        "decoderRunSha256": "cd87bf03e984b47c74f70635eb54dd27f252295c8772ae603cfcf8cffc944ec8"
+      },
+      "jsonlByteIdenticalToOriginalDecoder": true,
+      "sourceUnavailableFixtureProvenanceVerified": true,
+      "analysisSha256": "5737c32d7486fb60f58ed31ffbd7b18c2e208cdb29401f27f268b3107596d789"
+    }
+  },
+  "modelTestsPassed": 9,
+  "nativeNegativeCases": 4,
+  "deviceAccessByDecoder": false,
+  "seratoExecutedByDecoder": false,
+  "newTraceControllerStarted": false,
+  "productionAudioSourceModified": false,
+  "installedApplicationModified": false,
+  "physicalAudioVerified": false,
+  "currentSeratoAdmissionVerified": false,
+  "twoDeckDvsVerified": false,
+  "limits": [
+    "Only the selected own-provider methods, not every ASIO call or full host execution.",
+    "Provider GUID, payload build label and PID do not authenticate the source host or module.",
+    "Production DLL captures are unavailable-state first-party fixtures, not Serato or physical audio.",
+    "Host timing fields are not hardware latency; zero timing remains indeterminate.",
+    "One module ordinal stream is assumed; ambiguous duplicate IDs and mixed builds are refused."
+  ],
+  "negativeResults": {
+    "schema": "sl3.asio-etl-decoder-negatives.v1",
+    "toolSha256": "e6fe96f8e4363c28ac5704cadeaa269be738593194387d0b0fe5d1eada9d6c91",
+    "etlSha256": "447261aead8eb5a378674f4ea2ab31d393148220b16b9e58324421b30db1d3df",
+    "results": [
+      {
+        "case": "wrong-pid",
+        "refused": true,
+        "childRetired": true,
+        "exitCode": 1
+      },
+      {
+        "case": "invalid-pid",
+        "refused": true,
+        "childRetired": true,
+        "exitCode": 1
+      },
+      {
+        "case": "overwrite",
+        "refused": true,
+        "childRetired": true,
+        "exitCode": 1
+      },
+      {
+        "case": "corrupt-etl",
+        "refused": true,
+        "childRetired": true,
+        "exitCode": 1
+      }
+    ],
+    "existingOutputPreserved": true,
+    "inputPreserved": true,
+    "deviceAccessByDecoder": false,
+    "seratoExecutedByDecoder": false
+  },
+  "nativeUnchanged": {
+    "Release": {
+      "manifestSha256": "cba386dfe34d45765d63a8167de92c70bc668e75a3eb1a78ab09ca9de20e03df",
+      "sourcePins": 149,
+      "dllSha256": "31fb37915a845082637be14aa0ad22200e4d2506dc1d2ad2b18f4bf3920784ec",
+      "testsRerun": false
+    },
+    "Debug": {
+      "manifestSha256": "9061bf628763784c5467734bc4dc06eceb676e26c0eaa7a8e3c316a14070e5b9",
+      "sourcePins": 149,
+      "dllSha256": "5346291ae9a27d061f07828402d1b92261672d5ef89b89be75e1638e92e3ced6",
+      "testsRerun": false
+    }
+  }
+}

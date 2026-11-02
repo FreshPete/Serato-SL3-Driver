@@ -1,0 +1,11 @@
+{
+  "schema": "sl3.private-checkpoint-summary.v1",
+  "checkpoint": "asio-general-trace-20261102",
+  "fileCount": 56,
+  "manifestSha256": "da4825f3d9250523952168a4dd89518834f09ff33d7b0cc8e81c28d34e8f4c7f",
+  "evidenceSha256": "79ddb82450e3ee2f7132d8ce1b5aebce59f6b4a781468338995c26cbe909c23a",
+  "vendorResourcesIncluded": false,
+  "privateSdkContentsIncluded": false,
+  "rawEtlsPublished": false,
+  "scope": "Independent offline decoder/analyzer, own binaries, archived own ETLs and private result records; no new host/device run"
+}
