@@ -1,4 +1,42 @@
-# Requirement audit — 1 November 2026
+# Requirement audit — 2 November 2026
+
+**The full Windows/current-Serato/two-deck-DVS objective remains incomplete.** This review checks current sources and files against the requested end state; it does not substitute passing software tests, decoded records or an offline descriptor for operational compatibility. Mac remains deferred until Windows works. [Machine-readable checks](evidence/requirements-review-20261102.json).
+
+## Current software and installation facts
+
+Release/Debug manifests each record 65 software tests and bind 149 current source inputs; the SDK-free manifest records 39 tests and 146 inputs. All manifest `inputs` entries were rechecked without rerunning those suites. The current Release worker is `790521dcd5120bd0eaf2c2036c501d8f00c49f95b9d557f0d075939b8b451b22`, and the Release ASIO DLL is `31fb37915a845082637be14aa0ad22200e4d2506dc1d2ad2b18f4bf3920784ec`. Historical hardware evidence must retain its own worker identities.
+
+Read-only checks at the named x64 HKLM/HKCU ASIO and project CLSID paths found all four absent. This covers those paths, not every possible configuration or installation location. The installed original Serato executable remains `66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265`; original `userio_resources.bin` remains `872fc4fdad2eab2ddd34387d2d3c04dd9731c84798d9fdc7bd05ca54e1567db8`. Neither file was executed or modified by the review.
+
+The [cached PnP evidence](evidence/sl3-return-packet-20261102.json) separately records original `strmdrv`/Code 39 and port 4. It supplies no fresh USB readiness result or new CI-cause diagnosis. Future operational windows still need their own security/device/recovery observations.
+
+## End-state requirements still outstanding
+
+| Requirement | Evidence now and its limit | Required next proof/work |
+| --- | --- | --- |
+| Normal Secure Boot/code integrity and recoverable transport | Historical enabled-window evidence and signed UsbDk; cached original-driver Code 39 | Fresh checks during each future operational window; no security weakening |
+| Genuine clock/rate/control and routing behavior | Recorded getter/setting observations with archived workers; guarded control codec and IPC | Current-worker physical control/routing/readback and clock behavior |
+| Bounded continuous capture/playback with correct samples | Native simulated suites, archived finite input/silent output and raw-byte preservation audit | Current-worker simultaneous nonzero playback/capture and sample continuity |
+| Physical channel/deck/jack mapping and levels | Six logical stream channels and offline markers/packing | Known analogue source, verified wiring and controlled mapping/levels |
+| User-mode ASIO/control integration | Production COM/ASIO and simulated retained/broker lifetimes; own unavailable-state trace fixtures | Measured profile, production configuration/registration and physical host behavior |
+| Safe stop/reopen/reconnect and reboot recovery | Historical second-open stall, release timeout mapping and unarmed corrected observation packet | Demonstrated readiness/repair and ten recovery cycles; stop success is insufficient |
+| Genuine current Serato SL3 descriptor/control/admission | Original-binary analysis and private schema-valid/additive archive hypothesis; original install intact | Approved actual parsing/selection, legitimate service/control path and ASIO/audio operation |
+| Working two-deck DVS and Phase option | Recovered DVS fields and accessory requirements | Actual admitted primary interface, legitimate entitlement, signal/motion/calibration/scratch/pitch tests |
+| Measured latency and four-hour stability | Bounded timing/analysis tools only | Numerical acceptance target, real round-trip measurements and four-hour stability |
+| Reproducible replacement deployment/removal/recovery | Prepared source-bound ASIO/archive transactions and isolated recovery tests | Protected production deployment, positive activation and removal/recovery tests |
+| macOS Tahoe route after Windows | Legacy architecture and route research; owner deferred implementation | Windows first, then actual target-specific implementation/signing/deployment/hardware validation |
+
+The [unarmed attended packet](next-attended-packet.md) is current against these frozen inputs. Its future context and launch record are absent. No probe, trace or application role is running from that packet. The next hardware action needs the owner available for one administrator launch and possible recovery; that availability has not been established for another run. No new UAC prompt is requested while the owner is away.
+
+Independent offline work has supplied bounded transport/control/ASIO software, resource/selection hypotheses and logging/analysis tools. The remaining decision points need real observations: readiness across the original-stack startup timeout, known analogue signals, a measured profile and an actual current-Serato session. Automatic reset/reopen, altered security policy, a guessed timing profile, a fabricated service/device response or trimming unexplained samples would not establish the requested end state.
+
+The [current resource hypothesis](serato-sl3-candidate.md), [recoverable archive transaction](serato-archive-deployment.md), [general ASIO log reader](asio-general-trace-analysis.md) and [saved PCM origin audit](capture-origin-and-original-copy.md) are reviewable preparation with explicit limits. Protected deployment is not performed or granted by this review. No firmware, signing-policy, account or device-identity change is selected.
+
+## Historical 1 November audit
+
+The text below retains that checkpoint's original hashes, test counts and queue. Any use of “current” in this historical section refers to 1 November, not the present build. Its physical results remain scoped to their recorded versions.
+
+### Original audit
 
 The complete Windows 11/current Serato/two-deck DVS objective is **not achieved**. This audit keeps build success, bounded silent hardware results and application admission separate. macOS remains deferred by the owner's instruction until Windows works.
 

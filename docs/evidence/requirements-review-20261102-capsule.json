@@ -1,0 +1,13 @@
+{
+  "schema": "sl3.private-checkpoint-summary.v1",
+  "checkpoint": "requirements-review-20261102",
+  "fileCount": 19,
+  "manifestSha256": "0530c2fdc5cd031dad22e2122a59d95c58afd77d57ea980181c740eea5686840",
+  "evidenceSha256": "1d81ebfb5da58f580e24de5f1ed3cf6319751ec4a42be05496e9f9f83529e6d1",
+  "vendorExecutablesIncluded": false,
+  "privateSdkContentsIncluded": false,
+  "rawPnpIdentifiersPublished": false,
+  "goalAchieved": false,
+  "newPhysicalTest": false,
+  "scope": "Current requirement/status correction and named read-only file/registry/process checks; historical physical proof stays separate"
+}

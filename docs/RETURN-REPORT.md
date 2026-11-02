@@ -1,5 +1,7 @@
 # SL3 rebuild progress for the owner's return
 
+**Full requirement review refreshed, 2 November:** [The current audit](completion-audit.md) now replaces stale 50-test/current-worker statements with verified 65/65/39 manifest records and exact current images. The named rebuilt x64 ASIO/CLSID registrations remain absent; installed original Serato files match. All operational Windows/audio/Serato/DVS requirements retain their missing proof. The unarmed attended packet is the next external step; no hardware, app or policy action ran.
+
 **Saved PCM source bytes checked, 2 November:** [Both archived captures reconstruct exactly](capture-origin-and-original-copy.md) from saved registered packet slices. Their large prefix peaks exist in those files and survive the selected original-style three-byte copy. Six new and twelve PCM regression tests pass. The eight raw buffers match an earlier 2 November checkpoint, but capture-time raw hashes are unavailable. Startup cause, ADC validity and physical/current Serato/DVS remain unverified. No packing or discard policy changed.
 
 **Next attended packet refreshed, 2 November:** [The unarmed control/port/image packet](next-attended-packet.md) now binds the current Release build and cached port-4 PnP mapping. Windows still reports `strmdrv`/Code 39. Collector and observer default preflights pass; no probe, trace, UAC prompt or acquisition ran. Working recovery/readiness, current-worker audio and actual Serato/DVS remain required.

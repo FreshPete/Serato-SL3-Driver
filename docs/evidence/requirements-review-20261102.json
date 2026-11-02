@@ -1,0 +1,181 @@
+{
+  "schema": "sl3.requirements-review.v1",
+  "date": "2026-11-02",
+  "goalAchieved": false,
+  "softwareCountsArePhysicalProof": false,
+  "nativeBuilds": {
+    "Release": {
+      "manifestSha256": "cba386dfe34d45765d63a8167de92c70bc668e75a3eb1a78ab09ca9de20e03df",
+      "recordedTestCount": 65,
+      "coreTestsRecordedPassed": true,
+      "sourceInputsVerified": 149,
+      "testsRerun": false,
+      "sl3_asio.dllSha256": "31fb37915a845082637be14aa0ad22200e4d2506dc1d2ad2b18f4bf3920784ec",
+      "sl3_usbdk.exeSha256": "790521dcd5120bd0eaf2c2036c501d8f00c49f95b9d557f0d075939b8b451b22",
+      "workerImageMatchesManifest": true
+    },
+    "Debug": {
+      "manifestSha256": "9061bf628763784c5467734bc4dc06eceb676e26c0eaa7a8e3c316a14070e5b9",
+      "recordedTestCount": 65,
+      "coreTestsRecordedPassed": true,
+      "sourceInputsVerified": 149,
+      "testsRerun": false,
+      "sl3_asio.dllSha256": "5346291ae9a27d061f07828402d1b92261672d5ef89b89be75e1638e92e3ced6",
+      "sl3_usbdk.exeSha256": "6c269485b8457915280dea5b9f6e75bccab2fd46ee371bf47fa6071b4ab11954",
+      "workerImageMatchesManifest": true
+    },
+    "SDK-free": {
+      "manifestSha256": "7def410ec2690c008c814f7496de5e6c8ed3bc4b90a540d70f1d986635551485",
+      "recordedTestCount": 39,
+      "coreTestsRecordedPassed": true,
+      "sourceInputsVerified": 146,
+      "testsRerun": false
+    }
+  },
+  "requirements": [
+    {
+      "id": "normal_windows_security",
+      "requirement": "Normal Secure Boot/code integrity and recoverable transport",
+      "state": "incomplete",
+      "evidenceScope": "Historical enabled-window evidence and signed UsbDk; cached original-driver Code 39",
+      "remaining": "Fresh checks during each future operational window; no security weakening"
+    },
+    {
+      "id": "clock_control",
+      "requirement": "Genuine clock/rate/control and routing behavior",
+      "state": "incomplete",
+      "evidenceScope": "Recorded getter/setting observations with archived workers; guarded control codec and IPC",
+      "remaining": "Current-worker physical control/routing/readback and clock behavior"
+    },
+    {
+      "id": "pcm_transport",
+      "requirement": "Bounded continuous capture/playback with correct samples",
+      "state": "incomplete",
+      "evidenceScope": "Native simulated suites, archived finite input/silent output and raw-byte preservation audit",
+      "remaining": "Current-worker simultaneous nonzero playback/capture and sample continuity"
+    },
+    {
+      "id": "physical_channels",
+      "requirement": "Physical channel/deck/jack mapping and levels",
+      "state": "incomplete",
+      "evidenceScope": "Six logical stream channels and offline markers/packing",
+      "remaining": "Known analogue source, verified wiring and controlled mapping/levels"
+    },
+    {
+      "id": "asio_host",
+      "requirement": "User-mode ASIO/control integration",
+      "state": "incomplete",
+      "evidenceScope": "Production COM/ASIO and simulated retained/broker lifetimes; own unavailable-state trace fixtures",
+      "remaining": "Measured profile, production configuration/registration and physical host behavior"
+    },
+    {
+      "id": "recovery",
+      "requirement": "Safe stop/reopen/reconnect and reboot recovery",
+      "state": "incomplete",
+      "evidenceScope": "Historical second-open stall, release timeout mapping and unarmed corrected observation packet",
+      "remaining": "Demonstrated readiness/repair and ten recovery cycles; stop success is insufficient"
+    },
+    {
+      "id": "current_serato",
+      "requirement": "Genuine current Serato SL3 descriptor/control/admission",
+      "state": "incomplete",
+      "evidenceScope": "Original-binary analysis and private schema-valid/additive archive hypothesis; original install intact",
+      "remaining": "Approved actual parsing/selection, legitimate service/control path and ASIO/audio operation"
+    },
+    {
+      "id": "two_deck_dvs",
+      "requirement": "Working two-deck DVS and Phase option",
+      "state": "incomplete",
+      "evidenceScope": "Recovered DVS fields and accessory requirements",
+      "remaining": "Actual admitted primary interface, legitimate entitlement, signal/motion/calibration/scratch/pitch tests"
+    },
+    {
+      "id": "latency_stability",
+      "requirement": "Measured latency and four-hour stability",
+      "state": "incomplete",
+      "evidenceScope": "Bounded timing/analysis tools only",
+      "remaining": "Numerical acceptance target, real round-trip measurements and four-hour stability"
+    },
+    {
+      "id": "installation",
+      "requirement": "Reproducible replacement deployment/removal/recovery",
+      "state": "incomplete",
+      "evidenceScope": "Prepared source-bound ASIO/archive transactions and isolated recovery tests",
+      "remaining": "Protected production deployment, positive activation and removal/recovery tests"
+    },
+    {
+      "id": "mac_after_windows",
+      "requirement": "macOS Tahoe route after Windows",
+      "state": "incomplete",
+      "evidenceScope": "Legacy architecture and route research; owner deferred implementation",
+      "remaining": "Windows first, then actual target-specific implementation/signing/deployment/hardware validation"
+    }
+  ],
+  "registryCheck": {
+    "schema": "sl3.registry-readonly.v1",
+    "utc": "2026-11-02T10:29:22.4175029Z",
+    "processBits": 64,
+    "checks": [
+      {
+        "path": "HKLM:\\SOFTWARE\\ASIO\\SL3 Rebuild Development",
+        "exists": false
+      },
+      {
+        "path": "HKCU:\\SOFTWARE\\ASIO\\SL3 Rebuild Development",
+        "exists": false
+      },
+      {
+        "path": "HKLM:\\SOFTWARE\\Classes\\CLSID\\{5A551CD0-F83E-48EB-8B9D-8614E07852FE}",
+        "exists": false
+      },
+      {
+        "path": "HKCU:\\SOFTWARE\\Classes\\CLSID\\{5A551CD0-F83E-48EB-8B9D-8614E07852FE}",
+        "exists": false
+      }
+    ],
+    "registryModified": false
+  },
+  "registryRecordSha256": "eda346cff48e3ccd78282ef4c732d0e024cf396bdc000363018ad1cac6ede568",
+  "currentPacket": {
+    "collectorPlanSha256": "a0066fcd23951969a40223227023109d85ee2d7c51be71ed0ad250145295b3d5",
+    "observerPlanSha256": "e680a8f36430b2360926a5732ff08d88fa26b3a6cfa1039bef8983921cc47c48",
+    "futureContextAbsent": true,
+    "launchRecordAbsent": true,
+    "armed": false,
+    "readinessAdmitted": false
+  },
+  "installedFiles": {
+    "Serato DJ Pro.exe": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+    "userio_resources.bin": "872fc4fdad2eab2ddd34387d2d3c04dd9731c84798d9fdc7bd05ca54e1567db8"
+  },
+  "cachedPnpEvidenceSha256": "e5115838d8aa04d869b485fcc66edd7655c9e1cc3e5866f44920287ef8b865a4",
+  "newNativeTestsRun": false,
+  "deviceAccess": false,
+  "seratoExecuted": false,
+  "registryOrPolicyModified": false,
+  "firmwareModified": false,
+  "nextRequiredExternalStep": "Owner-attended one-acquisition control/port/image trace with recovery availability",
+  "limits": [
+    "No process-name query proves owner presence or absence.",
+    "Registry observations cover the four named x64 HKLM/HKCU paths, not every installation/configuration location.",
+    "PnP state is from the separately dated cached-property snapshot; no new USB readiness observation was made.",
+    "Static analysis and unavailable/simulated fixtures are not application or physical-audio validation."
+  ],
+  "selectedProcessCheck": {
+    "schema": "sl3.selected-process-readonly.v1",
+    "utc": "2026-11-02T10:31:23.5328960Z",
+    "selectedNames": [
+      "sl3_usbdk",
+      "sl3_host_probe",
+      "sl3_scope_probe",
+      "sl3_broker_scope_probe",
+      "sl3_broker_controller",
+      "Serato DJ Pro"
+    ],
+    "matches": [],
+    "scope": "Selected process names only; not all jobs or ETW sessions",
+    "ownerPresenceInferred": false,
+    "processesModified": false
+  },
+  "selectedProcessRecordSha256": "7d751fffec57c88e0fc9c0562472d4bdc18744e4dfbbe0ec348239d9aa18e038"
+}

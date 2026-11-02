@@ -1,10 +1,20 @@
-# SL3 rebuild status — 1 November 2026
+# SL3 rebuild status — 2 November 2026
 
-**Compatibility remains incomplete; no replacement driver release is available.** The [public checkpoint](docs/public-development-status.md) separates physical observations, software tests and remaining work. Read the [return report](docs/RETURN-REPORT.md) for detailed evidence.
+**Compatibility is not restored. No replacement driver release is available.** The [requirement audit](docs/completion-audit.md) and [return report](docs/RETURN-REPORT.md) separate implemented software, archived physical evidence and remaining validation.
 
-The native Release metadata-probe checkpoint passes 50/50 checks. The new scope trace integration is work in progress: plan-only output has been checked, but no physical scope run or elevated launcher test has occurred. No current-build audio, safe successive acquisition, analogue/latency, deployed ASIO, current Serato or DVS pass is claimed. Windows is first; macOS is deferred. Signing enforcement is not being disabled.
+The current native manifests record **65/65 Release**, **65/65 Debug** and **39/39 SDK-free** software checks. Their 149/149/146 source inputs and current SDK-facing DLL identities were rechecked; tests were not rerun for this status review. The Release worker is `790521dcd5120bd0eaf2c2036c501d8f00c49f95b9d557f0d075939b8b451b22`. Earlier hardware results remain bound to their archived worker versions and cannot qualify this image.
+
+An original ASIO/COM facade, retained worker/broker lifetimes, guarded control IPC and bounded capture/playback are implemented with software coverage. Optional DLL-owned ASIO logging and its offline decoder pass first-party unavailable-state tests. Registered-buffer audits preserve the archived PCM bytes. None demonstrates current Serato loading this driver, actual analogue audio, measured latency, safe repeated acquisition or two-deck DVS.
+
+Read-only checks found no rebuilt ASIO/CLSID registration at the four named x64 HKLM/HKCU locations. Installed Serato's original executable and userio archive hashes still match. The separately dated cached PnP snapshot reports the original `strmdrv`/Code 39 entry on port 4; it is not a USB readiness observation. No registry, binding, trust or security policy was changed.
+
+The [next attended packet](docs/next-attended-packet.md) is prepared, passes its default preflights and remains unarmed. The next required measurement is one control acquisition/release with ordinary-user port observation and USB/image tracing, with the owner available for the single administrator prompt and recovery. Readiness repair, current-worker known-input/output and timing measurements, protected deployment, actual Serato admission/audio and real DVS remain outstanding. Windows is first; Mac remains deferred. The full goal is active and incomplete.
+
+[Machine-readable review](docs/evidence/requirements-review-20261102.json) binds the current hashes, named registry checks, unarmed packet and remaining end-state requirements. Further simulations or logging fixtures cannot replace those physical/application measurements.
 
 ## Earlier checkpoint records
+
+1 November metadata-probe checkpoint: the then-current Release build recorded 50/50 checks and scope-trace integration was still in progress. That source/build checkpoint is historical.
 
 The dated entries below preserve their original evidence and implementation state. Superseded statements about missing features, test counts or hardware status are historical; use the current report/audit for resume instructions.
 
