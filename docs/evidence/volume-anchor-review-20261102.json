@@ -1,0 +1,286 @@
+{
+  "schema": "sl3.volume-anchor-review-verification.v1",
+  "createdUtc": "2026-11-02T01:56:41.648951+00:00",
+  "suites": [
+    {
+      "suite": "ancestorReview",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "readonly-inspect",
+          "passed": true
+        },
+        {
+          "name": "object-access-checks",
+          "passed": true
+        },
+        {
+          "name": "protected-child-opens-denied",
+          "passed": true
+        },
+        {
+          "name": "delete-child-control",
+          "passed": true
+        },
+        {
+          "name": "fixture-acls-restored",
+          "passed": true
+        },
+        {
+          "name": "junction-empty",
+          "passed": true
+        },
+        {
+          "name": "junction-nonempty",
+          "passed": true
+        },
+        {
+          "name": "junction-calibration-scope",
+          "passed": true
+        },
+        {
+          "name": "anchor-refuses-delete-child",
+          "passed": true
+        },
+        {
+          "name": "anchor-refuses-write-dacl",
+          "passed": true
+        },
+        {
+          "name": "anchor-refuses-write-owner",
+          "passed": true
+        },
+        {
+          "name": "anchor-refuses-generic-all",
+          "passed": true
+        },
+        {
+          "name": "ordinary-directory-still-refused",
+          "passed": true
+        },
+        {
+          "name": "host-snapshot-unchanged",
+          "passed": true
+        }
+      ],
+      "indexPath": "artifacts/build/ancestor-policy-tests/df43a7e616c145eaa26c13cc4891a0ae/index.json",
+      "indexSha256": "37072efacc6f184a6c9d79823c5a2fd266af70cc1248e8f2f94fc055c841b99e",
+      "allFileHashesMatch": true,
+      "logSha256": "3ae4dc34661b2b1ef309547fde93cff77f31051157b05cc9f9b379e696e7be64"
+    },
+    {
+      "suite": "stagingRegression",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "elevation-gate",
+          "passed": true
+        },
+        {
+          "name": "read-only-production-check",
+          "passed": true
+        },
+        {
+          "name": "native-known-folders",
+          "passed": true
+        },
+        {
+          "name": "actual-user-policy-stage",
+          "passed": true
+        },
+        {
+          "name": "actual-stage-inspection",
+          "passed": true
+        },
+        {
+          "name": "production-rejects-test-descriptor",
+          "passed": true
+        },
+        {
+          "name": "existing-destination",
+          "passed": true
+        },
+        {
+          "name": "source-manifest-hash",
+          "passed": true
+        },
+        {
+          "name": "missing-parent",
+          "passed": true
+        },
+        {
+          "name": "source-writer-sharing",
+          "passed": true
+        },
+        {
+          "name": "interrupted-copy",
+          "passed": true
+        },
+        {
+          "name": "changed-payload",
+          "passed": true
+        },
+        {
+          "name": "restored-payload",
+          "passed": true
+        },
+        {
+          "name": "extra-file",
+          "passed": true
+        },
+        {
+          "name": "hardlink",
+          "passed": true
+        },
+        {
+          "name": "receipt-hash",
+          "passed": true
+        },
+        {
+          "name": "same-byte-file-replacement",
+          "passed": true
+        },
+        {
+          "name": "unexpected-write-ace",
+          "passed": true
+        },
+        {
+          "name": "test-acl-restored",
+          "passed": true
+        },
+        {
+          "name": "receipt-in-different-directory",
+          "passed": true
+        },
+        {
+          "name": "different-root-restored",
+          "passed": true
+        },
+        {
+          "name": "positive-stage-final",
+          "passed": true
+        }
+      ],
+      "indexPath": "artifacts/build/file-stage-tests/5a61b4b1e2bb4809b920f598b7bdaaff/index.json",
+      "indexSha256": "de6917c49c4bcd85942f2edcf785308022821c89fac79254111ddd6ecab7af3b",
+      "allFileHashesMatch": true,
+      "logSha256": "8bee483259b232d00b7f70cb816073b1aa7a243e8c708cd9edc8eec169f0ff0b"
+    }
+  ],
+  "sourceHashes": {
+    "scripts/asio-file-stage.py": "ca1dc5ac211904c2e05603af793a03a9b7abb7ebab1d08693820d126df02b718",
+    "scripts/inspect-asio-ancestor-rights.py": "3814c4bf5c7b44d180dff5303b28b9126f584ab51e520dde4d755b127d5a8526",
+    "scripts/test-asio-ancestor-rights.py": "221dc23a354a569b9562953877a6ed14fa95ebcbb3cb4266e629d8e28bfe982d"
+  },
+  "observations": {
+    "ancestorRights": [
+      {
+        "path": "C:\\",
+        "currentTokenObjectAclAllows": {
+          "writeDataOrAddFile": true,
+          "appendDataOrAddDirectory": true,
+          "writeEa": true,
+          "writeAttributes": true,
+          "deleteThisObject": true,
+          "deleteChildren": false,
+          "writeDacl": false,
+          "writeOwner": false
+        },
+        "predicateAccepted": true,
+        "nativeNtfsAnchor": true
+      },
+      {
+        "path": "C:\\Program Files",
+        "currentTokenObjectAclAllows": {
+          "writeDataOrAddFile": false,
+          "appendDataOrAddDirectory": false,
+          "writeEa": false,
+          "writeAttributes": false,
+          "deleteThisObject": false,
+          "deleteChildren": false,
+          "writeDacl": false,
+          "writeOwner": false
+        },
+        "predicateAccepted": true,
+        "nativeNtfsAnchor": false
+      }
+    ],
+    "symbolicLinkPrivilegePresent": false,
+    "tokenElevated": false,
+    "junctionCalibration": [
+      {
+        "name": "junction-empty",
+        "setSucceeded": true,
+        "winerror": 0,
+        "sourceNonempty": false
+      },
+      {
+        "name": "junction-nonempty",
+        "setSucceeded": false,
+        "winerror": 145,
+        "sourceNonempty": true
+      }
+    ],
+    "privateJunctionTagsRemovedAndRechecked": true,
+    "hostDescriptorsAndAccessSnapshotsEqual": true,
+    "readOnlyProductionPreflightPassed": true,
+    "heldHandleVolumeGuidAndSerialMatched": true
+  },
+  "policy": {
+    "softwarePredicateCorrected": true,
+    "nativeTrustedNtfsDriveRootOnly": true,
+    "rootDeleteChildWriteDaclOwnerGenericAllStillRefused": true,
+    "ordinaryWritableDirectoriesStillRefused": true,
+    "trustsNormalAdministratorControlledOsVolumeNamespace": true
+  },
+  "nativeBaseline": [
+    {
+      "configuration": "Release",
+      "priorNativeTestsPassed": 59,
+      "rerunForAncestorReview": false,
+      "sourcePinsStillMatch": true,
+      "manifestSha256": "09fa39a717a9b024981b9a2e9da0406234e91fedd17b3370bac04c7dbfab1a87",
+      "ctestLogSha256": "7d1dd0d5f95b6a03fea0b02c1fdb57a4cc9550dedbaac5f480063dfa5c990d5c"
+    },
+    {
+      "configuration": "Debug",
+      "priorNativeTestsPassed": 59,
+      "rerunForAncestorReview": false,
+      "sourcePinsStillMatch": true,
+      "manifestSha256": "d97f2b1855391de1412473897c8d4d5cd7f9fe40d91afb0f78eb5b0fa4151c92",
+      "ctestLogSha256": "70452b9868b2e84da6aca20160944a63a05d857d86ab2bbccb3ac078572d9df1"
+    }
+  ],
+  "limits": {
+    "hostAclsChanged": false,
+    "privateFixtureAclsRestored": true,
+    "privilegesChanged": false,
+    "productionStageExecuted": false,
+    "machineRegistrationApplied": false,
+    "volumeRootReparseMutationTested": false,
+    "otherReparseTagsTested": false,
+    "physicalAudioTested": false,
+    "measurementTruthVerified": false,
+    "currentSeratoAdmissionTested": false
+  },
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/volume-anchor-review-20261102",
+    "files": 805,
+    "manifestSha256": "a82bc7062099c6d4f35d488c0de1566dcd626dd4736c832a26a1eab66bc88450",
+    "selfReferentialPublicEvidenceExcluded": true
+  }
+}

@@ -7,7 +7,9 @@ current-user-owned descriptor in the workspace. That descriptor is explicitly
 refused by production inspection; it is not proof of administrator-owned
 installation protection.
 
-The production preflight currently **refuses an ancestor ACL on this host**.
+The initial checkpoint **refused an ancestor ACL on this host**. The later
+[volume-anchor review](asio-volume-anchor-review.md) corrects that software
+predicate; read-only production preflight now passes.
 No Program Files directory, live registration, trust setting or security policy
 was changed. Protected installation and uninstall remain unfinished.
 
@@ -29,8 +31,8 @@ The explicit `--stage-production` route requires an already elevated native x64
 process; it does not launch UAC. It uses the fixed administrator-owned policy,
 requires a new destination, and verifies the existing project base or creates it
 with that policy. There is no test-policy/destination override on the CLI.
-**The elevated positive path has not run.** Its current ancestor-policy gate
-refuses this host before staging. This is a file-copy component, not the complete
+**The elevated positive path has not run.** The original ancestor-policy refusal is resolved by the later volume-anchor
+review, without changing the host ACL. This is a file-copy component, not the complete
 installer or an instruction to register the writable review bundle.
 
 ## Captured bytes and exact ownership
@@ -74,21 +76,19 @@ contract. Production inspection additionally requires the planned installed
 DLL location and protected base/ancestor checks. It refuses a current-user test
 descriptor rather than treating a test result as production protection.
 
-## Observed ancestor refusal
+## Initial ancestor refusal (superseded)
 
-The read-only check currently rejects an effective Authenticated Users ACE on
+The initial read-only check rejected an effective Authenticated Users ACE on
 `C:\` with mask `0x1301bf`. The existing Program Files descriptor is separately
 readable and has TrustedInstaller ownership. The conservative check examines
-the full ancestor chain, and the current result is a **policy refusal needing
+the full ancestor chain, and that result was a **policy refusal needing
 review**, not a conclusion that Windows' current root ACL must be changed.
 Neither the predicate nor the host ACL was relaxed to obtain a pass.
 
-The implementation distinguishes inherited-only ACEs and permits read/execute
-entries, but the correct treatment of a writable volume anchor versus protected
-existing descendants still needs authoritative review. This refusal remains
-visible in test diagnostics and the verification record. It must be resolved
-before a production staging test can be called ready. No change to drive-root
-permissions is proposed or performed by this checkpoint.
+The original refusal remains visible in its historical verification record.
+The later volume-anchor review records native access checks, private filesystem
+experiments, the corrected policy and its explicit platform-trust assumptions.
+No change to drive-root permissions was proposed or performed.
 
 Microsoft documents creation-time descriptors in
 [CreateDirectoryW](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createdirectoryw),
@@ -114,8 +114,7 @@ absent; its live planned machine/current-user entries remain unchanged. Native
 C++ source/builds did not change, so the prior 59-test Release/Debug checkpoints
 retain their original scope and were not rerun.
 
-See [the verification record](evidence/file-staging-20261102.json). Ancestor-policy
-review, elevated production staging, ordinary-user write-denial proof, the
+See [the verification record](evidence/file-staging-20261102.json). Elevated production staging, ordinary-user write-denial proof, the
 serialized privileged install/uninstall wrapper, runtime checks and owned file
 cleanup remain unfinished. Genuine timing/native and physical audio, current
 Serato/DVS admission and the later macOS work remain unproved. No firmware or

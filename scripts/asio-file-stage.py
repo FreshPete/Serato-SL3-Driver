@@ -368,20 +368,51 @@ def production_destination(plan):
     return base, destination
 
 
-def safe_parent(handle, trusted):
-    data = security_info(handle)
+def volume_anchor(handle, file):
+    path = Path(file['path'])
+    if path != Path(path.anchor):
+        return None
+    name = ctypes.create_unicode_buffer(64)
+    check(api('kernel32.dll', 'GetVolumeNameForVolumeMountPointW', W.BOOL, [W.LPCWSTR, W.LPWSTR, W.DWORD])(
+        str(path), name, len(name)))
+    require(name.value.startswith('\\\\?\\Volume{') and name.value.endswith('}\\'), 'Native volume GUID required')
+    actual = ctypes.create_unicode_buffer(32768)
+    count = api('kernel32.dll', 'GetFinalPathNameByHandleW', W.DWORD, [W.HANDLE, W.LPWSTR, W.DWORD, W.DWORD])(
+        handle, actual, len(actual), 1)  # VOLUME_NAME_GUID
+    require(0 < count < len(actual) and actual.value.casefold() == name.value.casefold(), 'Mount namespace differs from held volume-root handle')
+    fs = ctypes.create_unicode_buffer(32); flags = W.DWORD(); serial = W.DWORD()
+    check(api('kernel32.dll', 'GetVolumeInformationW', W.BOOL,
+              [W.LPCWSTR, W.LPWSTR, W.DWORD, ctypes.POINTER(W.DWORD), ctypes.POINTER(W.DWORD), ctypes.POINTER(W.DWORD), W.LPWSTR, W.DWORD])(
+        name.value, None, 0, ctypes.byref(serial), None, ctypes.byref(flags), fs, len(fs)))
+    require(fs.value.upper() == 'NTFS' and flags.value & 8 and serial.value == file['identity']['volume'],
+            'Held NTFS volume anchor with persistent ACLs required')
+    return {'volumeGuid': name.value, 'fileSystem': fs.value, 'persistentAcls': True, 'heldHandleGuidAndSerialMatched': True}
+
+
+def validate_ancestor_acl(file, data, trusted, anchor):
     require(data['owner'] in trusted and not data['nullDacl'], 'Installation ancestor owner/DACL is not trusted')
-    # Creating a new child alone does not allow replacing a protected existing
-    # ancestor. Write-data/reparse, delete, write-ACL/owner and generic writes do.
-    mutation = 0x50000000 | 0x2 | 0x10 | 0x40 | 0x100 | 0x10000 | 0x40000 | 0x80000
+    if anchor is not None:
+        # A native drive root is the trusted OS volume anchor, not a directory
+        # entry below an attacker-writable parent. Preserve child replacement
+        # and ACL/owner checks; do not equate its own Modify rights with rights
+        # on the protected Program Files object. Other ancestors stay strict.
+        require(Path(file['path']) == Path(Path(file['path']).anchor), 'Anchor exception only at a drive root')
+        mutation = 0x10000000 | 0x40 | 0x40000 | 0x80000
+    else:
+        mutation = 0x50000000 | 0x2 | 0x10 | 0x40 | 0x100 | 0x10000 | 0x40000 | 0x80000
     for ace in data['aces']:
         if ace['type'] == 1 or ace['flags'] & 8:
             continue
         sid = data['owner'] if ace['sid'] in ('S-1-3-0', 'S-1-3-4') else ace['sid']
         require(sid in trusted or not ace['mask'] & mutation,
-                'Untrusted write/replacement rights on installation ancestor '+information(handle, True)['path']+
+                'Untrusted write/replacement rights on installation ancestor '+file['path']+
                 ': '+sid+' mask 0x'+format(ace['mask'], 'x'))
-    return data
+    return {'path': file['path'], 'security': data, 'volumeAnchor': anchor, 'untrustedMutationMask': mutation}
+
+
+def safe_parent(handle, trusted):
+    file = information(handle, True)
+    return validate_ancestor_acl(file, security_info(handle), trusted, volume_anchor(handle, file))
 
 
 def check_production(bundle, expected):
@@ -390,13 +421,13 @@ def check_production(bundle, expected):
         base, destination = production_destination(module.record(payload['deployment-plan.json']))
         trusted = {SYSTEM, ADMINS, account_sid('NT SERVICE\\TrustedInstaller')}
         handles = stack.enter_context(pinned_parents(base))
-        for handle in handles:
-            safe_parent(handle, trusted)
+        ancestor_checks = [safe_parent(handle, trusted) for handle in handles]
         if base.exists():
             handle = stack.enter_context(open_file(base, True, access=0x20080, share=3))
             inspect_policy(handle, PRODUCTION, True)
         require(not destination.exists(), 'Production destination must be new')
         return {'checked': True, 'destination': str(destination), 'parentPolicyObservedSafe': True,
+                'ancestorChecks': ancestor_checks,
                 'tokenElevated': elevated(), 'filesWritten': False, 'registryWritten': False,
                 'productionStageExecuted': False, 'deviceAccess': False}
 
