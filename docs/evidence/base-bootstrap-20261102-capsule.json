@@ -1,0 +1,14 @@
+{
+  "schema": "sl3.base-bootstrap-capsule.v1",
+  "directory": "artifacts/build/checkpoints/base-bootstrap-20261102",
+  "files": 1000,
+  "manifestSha256": "3571fff4bc9c8d9dc737c616aa9923b63c48260deef409c9ae2368631b6f5fa8",
+  "verificationSha256": "6a4b8ad45ff008ffb17ef6ec9cf5f68ce41f7dcca67a7e4ee96c314420854b56",
+  "includesVendorBinaries": false,
+  "includesPrivateSdk": false,
+  "fullFixtureBinaryBytesDuplicated": false,
+  "fixtureBinaryHashesRetainedInTestIndices": true,
+  "testsPassed": 88,
+  "productionBootstrapOrRecoveryExecuted": false,
+  "deviceAccess": false
+}

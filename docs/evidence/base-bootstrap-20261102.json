@@ -1,0 +1,108 @@
+{
+  "schema": "sl3.base-bootstrap-verification.v1",
+  "suites": [
+    {
+      "name": "base-bootstrap-tests-last.json",
+      "cases": 20,
+      "directory": "artifacts/build/base-bootstrap-tests/fe118b775201454fb578234a47d928a0",
+      "indexSha256": "90a83dfb033a6b059615d8602b9a40b424d06c9b6f6c4dc4026cbb0aa8593525",
+      "logSha256": "73940041b194fbb20950c9c44cc6dedf7bc8c9474532bb26e7f703b530449038",
+      "sourceAndFixtureHashesMatch": true,
+      "productionOperationExecuted": false,
+      "nonElevated": true,
+      "deviceAccess": false,
+      "privateRegistryNamespaceRemoved": null
+    },
+    {
+      "name": "install-base-tests-last.json",
+      "cases": 17,
+      "directory": "artifacts/build/install-base-tests/1b29cc5275c84b3882771f4727319a9f",
+      "indexSha256": "8d981030273d59ace7a841569ec7a899f59f9ef04e674583b258e77f680b0946",
+      "logSha256": "1c0c44f49474cd1b66ebab403166a7070ccedac453ee9ff4157baf9cf1878cf8",
+      "sourceAndFixtureHashesMatch": true,
+      "productionOperationExecuted": false,
+      "nonElevated": true,
+      "deviceAccess": false,
+      "privateRegistryNamespaceRemoved": null
+    },
+    {
+      "name": "install-tests-last.json",
+      "cases": 20,
+      "directory": "artifacts/build/install-tests/67338ed291ae4688b28928781dbbeb0a",
+      "indexSha256": "c617f1211cf26d5f0b178da08ab0af2bc16d151615261310fe5f0e46a05cc9d5",
+      "logSha256": "af67aa2f8b4076e0fd5cc89d57abd9ca6b36c92e671c060fcf3257b80bf8558d",
+      "sourceAndFixtureHashesMatch": true,
+      "productionOperationExecuted": false,
+      "nonElevated": true,
+      "deviceAccess": false,
+      "privateRegistryNamespaceRemoved": true
+    },
+    {
+      "name": "install-journal-tests-last.json",
+      "cases": 31,
+      "directory": "artifacts/build/install-journal-tests/7c5891d4d62444549e8e717722d954e3",
+      "indexSha256": "d58162f2e47604bbeb67b9b1c657c44efc43194e9fb582242dfdf425659b2880",
+      "logSha256": "40e80a92a00eba3c5b711640e3cd2e8e6b474ea3fe9c81cc27112dad10330602",
+      "sourceAndFixtureHashesMatch": true,
+      "productionOperationExecuted": false,
+      "nonElevated": true,
+      "deviceAccess": false,
+      "privateRegistryNamespaceRemoved": null
+    }
+  ],
+  "totalChecksPassed": 88,
+  "localSourceSha256": {
+    "scripts/asio-file-stage.py": "9675ca854e2b52f3af3029e1c772b87f36afed7d99d24d8c65c3fdf944cd5fc9",
+    "scripts/asio-install-base.py": "5de3e3b1a674d61c8e1da570a24af9998aac9143933817928da7f4079b03b6d2",
+    "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad",
+    "scripts/asio-install.py": "a5110d99b554f7c7fecdbe07d7e81ad87b708f26a6372b95c3aa92bdbc92d666",
+    "scripts/asio-registry.py": "f0b1009fe0a3cee39acc30e295dddeac9171082d8d7029f404a302d0114b7bbf",
+    "scripts/asio-runtime-check.py": "f7e3d3ee2a9f68a446361854717bc889882328cc721fa6613f5fef2e0498b354",
+    "scripts/asio-uninstall.py": "5210818b800a6a0d8531aadc8dd955499476ae1b3fb65b98cfe0c79565fc61d7",
+    "scripts/test-asio-base-bootstrap.py": "eeb01e3700c0d5f3ea6400a403406785bfd193be85fd8c72534823d57b292d3d",
+    "scripts/test-asio-install-base.py": "21cc9317fe9942b4a1c85df204185fb2220a75295004c7b49ce22c5471db9536",
+    "scripts/test-asio-install-journal.py": "687390bea097295a8f370e95db538b5e0994e2ba25db8f0286f150fcb6a78ddc",
+    "scripts/test-asio-install.py": "cc03ec846d33c3d00792370427bfdbbc189ea983c0f12a820f2e41ffb6d19669"
+  },
+  "publishedSourceSha256": {
+    "scripts/asio-file-stage.py": "9675ca854e2b52f3af3029e1c772b87f36afed7d99d24d8c65c3fdf944cd5fc9",
+    "scripts/asio-install-base.py": "5de3e3b1a674d61c8e1da570a24af9998aac9143933817928da7f4079b03b6d2",
+    "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad",
+    "scripts/asio-install.py": "a5110d99b554f7c7fecdbe07d7e81ad87b708f26a6372b95c3aa92bdbc92d666",
+    "scripts/asio-registry.py": "f0b1009fe0a3cee39acc30e295dddeac9171082d8d7029f404a302d0114b7bbf",
+    "scripts/asio-runtime-check.py": "f7e3d3ee2a9f68a446361854717bc889882328cc721fa6613f5fef2e0498b354",
+    "scripts/asio-uninstall.py": "5210818b800a6a0d8531aadc8dd955499476ae1b3fb65b98cfe0c79565fc61d7",
+    "scripts/test-asio-base-bootstrap.py": "eeb01e3700c0d5f3ea6400a403406785bfd193be85fd8c72534823d57b292d3d",
+    "scripts/test-asio-install-base.py": "21cc9317fe9942b4a1c85df204185fb2220a75295004c7b49ce22c5471db9536",
+    "scripts/test-asio-install-journal.py": "687390bea097295a8f370e95db538b5e0994e2ba25db8f0286f150fcb6a78ddc",
+    "scripts/test-asio-install.py": "cc03ec846d33c3d00792370427bfdbbc189ea983c0f12a820f2e41ffb6d19669"
+  },
+  "nativeBuilds": [
+    {
+      "configuration": "Release",
+      "manifestSha256": "fcaa554bb47220c76f5de75d8986f832925edac40339477a5cd34c4d6011d9d8",
+      "nativeInputsAndTracePinsUnchanged": true,
+      "testsRerunThisCheckpoint": false
+    },
+    {
+      "configuration": "Debug",
+      "manifestSha256": "fa83db703adc96ebafbd07ef9b765ef816e8fd5b8ddbf69708f314b3c89dc07d",
+      "nativeInputsAndTracePinsUnchanged": true,
+      "testsRerunThisCheckpoint": false
+    }
+  ],
+  "productionBootstrapOrRecoveryExecuted": false,
+  "productionBaseAndAncestorsUnchanged": true,
+  "fixturePolicyIsProductionProtection": false,
+  "packageBinaryExecuted": false,
+  "driverOrBindingChanged": false,
+  "securitySettingsChanged": false,
+  "deviceAccess": false,
+  "physicalCompatibilityVerified": false,
+  "currentSeratoAdmissionVerified": false,
+  "creationToWitnessGapRecovered": false,
+  "atomicBootstrapVerified": false,
+  "powerLossDurabilityVerified": false,
+  "scope": "Actual ordinary-token workspace bootstrap/delete/journal faults plus private-HKCU installer regression; no protected production bootstrap or audio/application operation.",
+  "remaining": "Unwitnessed creation gaps remain preserved. Nonempty bases use their separate installer recovery. Protected deployment, real native/analogue audio and timing, reliable reopening and current Serato/two-deck DVS remain unverified."
+}

@@ -30,11 +30,7 @@ one call succeeds and the other receives error 183. The losing caller does not
 silently reopen or repair the winner's directory. A later explicit retry can
 verify and reuse it.
 
-There is no durable transaction journal before this initially absent directory
-exists. A crash after creation can therefore leave an empty protected base.
-No payload or registration is written by preparation; later attempts must verify
-the base before reuse. This is not atomic bootstrap or power-loss durability
-proof. Existing protected contents are not removed or inferred owned.
+The later [bootstrap journal](asio-base-bootstrap.md) now records an absent-base preparation header in a protected sibling file before creation, then the verified new directory identity before installation continues. Explicit recovery can remove that witnessed directory while it is empty. A crash between kernel creation and the persisted identity record remains unwitnessed and preserved. Existing contents are never claimed owned or removed; atomic bootstrap and power-loss durability remain unproved. The checks below describe the earlier preparation checkpoint, with current verification in the bootstrap report.
 
 ## Directory sharing correction
 
