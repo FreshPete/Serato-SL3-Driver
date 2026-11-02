@@ -22,6 +22,7 @@ EXPECTED = {
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path)
+    parser.add_argument('--candidate', type=Path, default=Path('analysis/sl3-descriptor-candidate-20261102'))
     args = parser.parse_args()
     if args.output:
         c.require(not args.output.exists(), 'Fresh evidence output required')
@@ -31,7 +32,7 @@ def main():
         c.require(c.digest(raw) == sha, 'Prior evidence changed: '+name)
         reports[name] = c.parsed(raw)
     context = c.source_context()
-    folder = ROOT/'analysis/sl3-descriptor-candidate-20261102'
+    folder = c.location(args.candidate)
     xml = c.read(folder/c.XML_NAME, 65536)
     expected_xml = c.candidate_bytes(context['history'], c.schema_device_order(context['schemaBytes']))
     c.require(xml == expected_xml, 'Candidate XML differs')
@@ -96,6 +97,7 @@ def main():
     sources = ['scripts/export-serato-sl3-selection.py', 'scripts/supervise-usb-identity.py', 'scripts/observe-sl3-usb-identity.py',
                'scripts/prepare-serato-sl3-candidate.py', 'scripts/export-serato-clock-handshake-evidence.py']
     report = {'schema': 'sl3.candidate-selection-analysis.v1', 'status': 'conditional_static_prediction',
+              'candidateBundle': folder.relative_to(ROOT).as_posix(), 'candidateManifestSha256': c.digest(c.read(folder/'candidate.json')),
               'applicationSha256': a.sha, 'candidateSha256': c.digest(xml), 'priorEvidenceSha256': EXPECTED,
               'sources': {p: {'localSha256': c.digest(c.read(ROOT/p)), 'gitLfSha256': c.digest(c.read(ROOT/p).replace(b'\r\n', b'\n'))} for p in sources},
               'newInstructionFacts': facts, 'inheritedSelectionInstructionChecks': len(inherited),

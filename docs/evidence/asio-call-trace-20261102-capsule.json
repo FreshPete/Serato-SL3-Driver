@@ -1,0 +1,9 @@
+{
+  "schema": "sl3.selected-evidence-capsule-reference.v1",
+  "capsuleName": "asio-call-trace-20261102",
+  "files": 76,
+  "manifestSha256": "61c92e7c3df98d371fa36025406f41e665d189ef890ff9cfeb266d89bbda5fd4",
+  "verificationSha256": "99dd8d2de782069b5b261c7eade444f96362d5253bf62b11f40f0c2ded8ebd99",
+  "firstPartyTestedImagesPreserved": true,
+  "vendorResourcesAndPrivateSdkIncluded": false
+}

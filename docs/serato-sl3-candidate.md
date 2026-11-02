@@ -71,3 +71,5 @@ The later [candidate selection check](serato-sl3-selection.md) connects the reco
 The later [authorization-service receiver proof](serato-authorization-service.md) identifies the helper's +0xa0/+0x90 receiver as RLMAuthorization or JWTAuthorization, distinct from DriverAPI. It does not query account state, establish a permitted service result or validate current SL3/audio/DVS.
 
 The later [attended archive-test package](serato-archive-deployment.md) now prepares a source-bound review bundle and tested temporary-file transaction engine. Its default read-only Plan passes on the original installation. Protected install/rollback and application acceptance have not run or been approved.
+
+After the [ASIO call-tracing build](asio-call-tracing.md), the current source-bound bundle is `analysis/sl3-descriptor-candidate-20261102-asio-trace-final/`. The original XML bytes/hash are unchanged; earlier manifests are historical and refused against current source/build pins.

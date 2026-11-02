@@ -1,4 +1,5 @@
 #include "asio/com_identity.hpp"
+#include "asio/call_trace.hpp"
 #include "asio/scope_interface.hpp"
 #include "iasiodrv.h"
 #include <atomic>
@@ -17,6 +18,8 @@ std::shared_ptr<sl3::asio::DriverScope> make_test_asio_scope();
 
 namespace {
 std::atomic<ULONG> objects{0},locks{0};
+namespace trace=sl3::asio::trace;
+std::int64_t rate_bits(double value) noexcept {std::int64_t bits=0;static_assert(sizeof(bits)==sizeof(value));std::memcpy(&bits,&value,sizeof(bits));return bits;}
 struct ObjectLease {
     ObjectLease() noexcept {objects.fetch_add(1);}
     ~ObjectLease(){objects.fetch_sub(1);}
@@ -27,6 +30,7 @@ struct ObjectLease {
 class Device final:public IASIO {
     ObjectLease lease_;
     std::atomic<ULONG> references_{1};
+    const std::uint64_t trace_id_=trace::next_instance.fetch_add(1,std::memory_order_relaxed);
     std::shared_ptr<sl3::asio::DriverScope> bound_scope_;
     std::unique_ptr<sl3::asio::DriverFacade> facade_;
     const char* configuration_error_="Reviewed isolated audio configuration is absent; device unavailable.";
@@ -46,6 +50,7 @@ public:
         return remaining;
     }
     ASIOBool init(void*) noexcept override {
+        trace::Call call(trace::Operation::init,trace_id_);
         try{
             if(!facade_){
                 if(bound_scope_)facade_=std::make_unique<sl3::asio::DriverFacade>(bound_scope_->owner,bound_scope_->latency);
@@ -57,35 +62,39 @@ public:
 #endif
                 }
             }
-            return facade_?facade_->init():ASIOFalse;
+            return call.finish(facade_?facade_->init():ASIOFalse);
         }catch(const std::bad_alloc&){configuration_error_="ASIO configuration allocation failed; device unavailable.";}
         catch(...){configuration_error_="ASIO configuration is missing, invalid or inconsistent; device unavailable.";}
-        return ASIOFalse;
+        return call.finish(ASIOFalse);
     }
     void getDriverName(char* name) noexcept override {
+        trace::Call call(trace::Operation::name,trace_id_);
         constexpr char value[]="SL3 Rebuild Development";
         if(name)std::memcpy(name,value,sizeof(value));
+        call.finish(0);
     }
-    long getDriverVersion() noexcept override {return 1;}
+    long getDriverVersion() noexcept override {trace::Call call(trace::Operation::version,trace_id_);return call.finish(1L);}
     void getErrorMessage(char* message) noexcept override {
-        if(facade_){facade_->getErrorMessage(message);return;}
+        trace::Call call(trace::Operation::error,trace_id_);
+        if(facade_){facade_->getErrorMessage(message);call.finish(0);return;}
         if(message)std::snprintf(message,124,"%s",configuration_error_);
+        call.finish(0);
     }
-    ASIOError start() noexcept override {return facade_?facade_->start():ASE_NotPresent;}
-    ASIOError stop() noexcept override {return facade_?facade_->stop():ASE_NotPresent;}
-    ASIOError getChannels(long* a,long* b) noexcept override {return facade_?facade_->getChannels(a,b):ASE_NotPresent;}
-    ASIOError getLatencies(long* a,long* b) noexcept override {return facade_?facade_->getLatencies(a,b):ASE_NotPresent;}
-    ASIOError getBufferSize(long* a,long* b,long* c,long* d) noexcept override {return facade_?facade_->getBufferSize(a,b,c,d):ASE_NotPresent;}
-    ASIOError canSampleRate(ASIOSampleRate rate) noexcept override {return facade_?facade_->canSampleRate(rate):ASE_NotPresent;}
-    ASIOError getSampleRate(ASIOSampleRate* rate) noexcept override {return facade_?facade_->getSampleRate(rate):ASE_NotPresent;}
-    ASIOError setSampleRate(ASIOSampleRate rate) noexcept override {return facade_?facade_->setSampleRate(rate):ASE_NotPresent;}
-    ASIOError getClockSources(ASIOClockSource* clocks,long* count) noexcept override {return facade_?facade_->getClockSources(clocks,count):ASE_NotPresent;}
-    ASIOError setClockSource(long index) noexcept override {return facade_?facade_->setClockSource(index):ASE_NotPresent;}
+    ASIOError start() noexcept override {trace::Call call(trace::Operation::start,trace_id_);return call.finish(facade_?facade_->start():ASE_NotPresent);}
+    ASIOError stop() noexcept override {trace::Call call(trace::Operation::stop,trace_id_);return call.finish(facade_?facade_->stop():ASE_NotPresent);}
+    ASIOError getChannels(long* a,long* b) noexcept override {trace::Call call(trace::Operation::channels,trace_id_);return call.finish(facade_?facade_->getChannels(a,b):ASE_NotPresent);}
+    ASIOError getLatencies(long* a,long* b) noexcept override {trace::Call call(trace::Operation::latencies,trace_id_);return call.finish(facade_?facade_->getLatencies(a,b):ASE_NotPresent);}
+    ASIOError getBufferSize(long* a,long* b,long* c,long* d) noexcept override {trace::Call call(trace::Operation::buffer_size,trace_id_);return call.finish(facade_?facade_->getBufferSize(a,b,c,d):ASE_NotPresent);}
+    ASIOError canSampleRate(ASIOSampleRate rate) noexcept override {trace::Call call(trace::Operation::can_rate,trace_id_,rate_bits(rate));return call.finish(facade_?facade_->canSampleRate(rate):ASE_NotPresent);}
+    ASIOError getSampleRate(ASIOSampleRate* rate) noexcept override {trace::Call call(trace::Operation::get_rate,trace_id_);return call.finish(facade_?facade_->getSampleRate(rate):ASE_NotPresent);}
+    ASIOError setSampleRate(ASIOSampleRate rate) noexcept override {trace::Call call(trace::Operation::set_rate,trace_id_,rate_bits(rate));return call.finish(facade_?facade_->setSampleRate(rate):ASE_NotPresent);}
+    ASIOError getClockSources(ASIOClockSource* clocks,long* count) noexcept override {trace::Call call(trace::Operation::clocks,trace_id_);return call.finish(facade_?facade_->getClockSources(clocks,count):ASE_NotPresent);}
+    ASIOError setClockSource(long index) noexcept override {trace::Call call(trace::Operation::set_clock,trace_id_,index);return call.finish(facade_?facade_->setClockSource(index):ASE_NotPresent);}
     ASIOError getSamplePosition(ASIOSamples* position,ASIOTimeStamp* time) noexcept override {return facade_?facade_->getSamplePosition(position,time):ASE_NotPresent;}
     ASIOError getChannelInfo(ASIOChannelInfo* info) noexcept override {return facade_?facade_->getChannelInfo(info):ASE_NotPresent;}
-    ASIOError createBuffers(ASIOBufferInfo* info,long channels,long frames,ASIOCallbacks* cb) noexcept override {return facade_?facade_->createBuffers(info,channels,frames,cb):ASE_NotPresent;}
-    ASIOError disposeBuffers() noexcept override {return facade_?facade_->disposeBuffers():ASE_NotPresent;}
-    ASIOError controlPanel() noexcept override {return facade_?facade_->controlPanel():ASE_NotPresent;}
+    ASIOError createBuffers(ASIOBufferInfo* info,long channels,long frames,ASIOCallbacks* cb) noexcept override {trace::Call call(trace::Operation::create_buffers,trace_id_,channels,frames);return call.finish(facade_?facade_->createBuffers(info,channels,frames,cb):ASE_NotPresent);}
+    ASIOError disposeBuffers() noexcept override {trace::Call call(trace::Operation::dispose_buffers,trace_id_);return call.finish(facade_?facade_->disposeBuffers():ASE_NotPresent);}
+    ASIOError controlPanel() noexcept override {trace::Call call(trace::Operation::panel,trace_id_);return call.finish(facade_?facade_->controlPanel():ASE_NotPresent);}
     ASIOError future(long selector,void* option) noexcept override {return facade_?facade_->future(selector,option):ASE_NotPresent;}
     ASIOError outputReady() noexcept override {return facade_?facade_->outputReady():ASE_NotPresent;}
 
@@ -169,13 +178,14 @@ public:
 };
 }
 STDAPI DllGetClassObject(REFCLSID clsid,REFIID iid,void** result) {
-    if(!result)return E_POINTER;
+    trace::Call call(trace::Operation::class_object,0);
+    if(!result)return call.finish(E_POINTER);
     *result=nullptr;
-    if(clsid!=sl3::asio::driver_clsid)return CLASS_E_CLASSNOTAVAILABLE;
+    if(clsid!=sl3::asio::driver_clsid)return call.finish(CLASS_E_CLASSNOTAVAILABLE);
     auto* factory=new(std::nothrow) Factory;
-    if(!factory)return E_OUTOFMEMORY;
+    if(!factory)return call.finish(E_OUTOFMEMORY);
     const auto status=factory->QueryInterface(iid,result);
-    factory->Release();return status;
+    factory->Release();return call.finish(status);
 }
 STDAPI DllCanUnloadNow() {
 #ifdef SL3_ASIO_SESSION_FIXTURE

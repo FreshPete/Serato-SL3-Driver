@@ -17,16 +17,16 @@ The original licensed local application/extracted files and prepared descriptor 
 ```powershell
 # Inspect the proposed result without writing an archive bundle.
 .venv/Scripts/python.exe scripts/prepare-serato-sl3-archive.py `
-  --candidate analysis/sl3-descriptor-candidate-20261102
+  --candidate analysis/sl3-descriptor-candidate-20261102-asio-trace-final
 
 # Create a fresh offline project-local bundle. Existing directories are refused.
 .venv/Scripts/python.exe scripts/prepare-serato-sl3-archive.py `
-  --candidate analysis/sl3-descriptor-candidate-20261102 `
+  --candidate analysis/sl3-descriptor-candidate-20261102-asio-trace-final `
   --prepare analysis/sl3-archive-candidate-NAME
 
 # Rebuild independently and compare exact archive and manifest bytes/claims.
 .venv/Scripts/python.exe scripts/prepare-serato-sl3-archive.py `
-  --candidate analysis/sl3-descriptor-candidate-20261102 `
+  --candidate analysis/sl3-descriptor-candidate-20261102-asio-trace-final `
   --validate analysis/sl3-archive-candidate-NAME
 ```
 
@@ -45,3 +45,5 @@ No UAC, application execution, driver/device acquisition, audio, registry/trust/
 The later [candidate selection check](serato-sl3-selection.md) connects the recorded zero USB revision to parser defaults and duplicate rules, including the separate empty `midi_name` field. Its predictions remain conditional; archive loading and actual chosen-descriptor observation are unverified.
 
 The later [attended archive-test package](serato-archive-deployment.md) now prepares a source-bound review bundle and tested temporary-file transaction engine. Its default read-only Plan passes on the original installation. Protected install/rollback and application acceptance have not run or been approved.
+
+The current source-bound archive bundle after the [native tracing build](asio-call-tracing.md) is `analysis/sl3-archive-candidate-20261102-asio-trace-final/`. Archive bytes are unchanged; its new manifest binds the current DLL/build. Older manifests remain preserved and are refused against current sources.

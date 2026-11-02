@@ -28,10 +28,11 @@ def location(path):
     return path
 
 
-def construct():
-    candidate = Path('analysis/sl3-descriptor-candidate-20261102')
+def construct(candidate, archive_bundle):
+    candidate = c.location(candidate)
     archive, manifest = a.prepare(candidate)
-    original_bundle = ROOT/'analysis/sl3-archive-candidate-20261102'
+    original_bundle = a.location(archive_bundle)
+    c.require(original_bundle.is_dir() and {p.name for p in original_bundle.iterdir()} == {a.ARCHIVE, 'archive-candidate.json'}, 'Exact reviewed archive bundle required')
     c.require(c.read(original_bundle/a.ARCHIVE) == archive and
               c.parsed(c.read(original_bundle/'archive-candidate.json')) == manifest, 'Reviewed archive bundle differs')
     c.require(c.digest(c.read(TARGET)) == manifest['originalArchiveSha256'], 'Installed archive is not the original')
@@ -46,6 +47,7 @@ def construct():
     template = c.read(ROOT/TEMPLATE).decode('utf-8-sig')
     sources = {p: c.digest(c.read(ROOT/p)) for p in [CORE, TEMPLATE, 'scripts/prepare-serato-archive-deployment.py']}
     plan = {'schema': 'sl3.attended-archive-deployment-plan.v1', 'status': 'prepared_not_executed',
+            'descriptorBundle': candidate.relative_to(ROOT).as_posix(), 'archiveBundle': original_bundle.relative_to(ROOT).as_posix(),
             'target': str(TARGET), 'originalArchiveSha256': manifest['originalArchiveSha256'],
             'candidateArchiveSha256': manifest['archiveSha256'], 'originalApplicationSha256': manifest['sourceSha256']['artifacts/extracted/Serato DJ Pro 5.0.0/tree/PFiles64/Serato/Serato DJ Pro/Serato DJ Pro.exe'],
             'originalExecutableSignature': signature, 'sourceSha256': sources,
@@ -82,6 +84,8 @@ def construct():
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--descriptor', type=Path, default=Path('analysis/sl3-descriptor-candidate-20261102'))
+    parser.add_argument('--archive', type=Path, default=Path('analysis/sl3-archive-candidate-20261102'))
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument('--prepare', type=Path)
     mode.add_argument('--validate', type=Path)
@@ -89,7 +93,7 @@ def main():
     path = location(args.prepare or args.validate) if args.prepare or args.validate else None
     if args.prepare:
         c.require(not path.exists() and path.parent.is_dir(), 'Fresh bundle required')
-    files = construct()
+    files = construct(args.descriptor, args.archive)
     if args.prepare:
         path.mkdir()
         for name, raw in files.items():

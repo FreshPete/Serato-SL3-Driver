@@ -1,0 +1,247 @@
+{
+  "schema": "sl3.asio-call-trace-verification.v1",
+  "date": "2026-11-02",
+  "sources": {
+    "CMakeLists.txt": {
+      "localSha256": "4839e8d8d899f4db01a9375d0859c9d3a3311d97797c3a8f2cbb8c21fb7193fa",
+      "gitLfSha256": "4839e8d8d899f4db01a9375d0859c9d3a3311d97797c3a8f2cbb8c21fb7193fa"
+    },
+    "scripts/build-native.ps1": {
+      "localSha256": "7679c68b3512d9914593d6196cb241d32471e24f3f73a5e685abc27e3b8feaa7",
+      "gitLfSha256": "7679c68b3512d9914593d6196cb241d32471e24f3f73a5e685abc27e3b8feaa7"
+    },
+    "scripts/prepare-serato-archive-deployment.py": {
+      "localSha256": "f42302a122a6ea5dc15df7e50b664f64ba039f1a8f01bb69b387963686f494be",
+      "gitLfSha256": "f42302a122a6ea5dc15df7e50b664f64ba039f1a8f01bb69b387963686f494be"
+    },
+    "src/asio/com_server.cpp": {
+      "localSha256": "6e9d2c75c50c6b0ad4011b8b498c89ae41ed5a36efd2ee424198ce3709ee736e",
+      "gitLfSha256": "91d8d78b97b4276daf7cfdda1ae02a18d42dd15338554614b462b0944ea7dd5b"
+    },
+    "src/asio/call_trace.hpp": {
+      "localSha256": "0401cc52fadb4215ab39909f03d152a9cabb9011719ca1e5b69324584bb64079",
+      "gitLfSha256": "0401cc52fadb4215ab39909f03d152a9cabb9011719ca1e5b69324584bb64079"
+    },
+    "tests/native/asio_call_trace_tests.cpp": {
+      "localSha256": "caeed01b890370da8de398cd8f44f9ba032d3118aa844f553e3f704698ce8df4",
+      "gitLfSha256": "caeed01b890370da8de398cd8f44f9ba032d3118aa844f553e3f704698ce8df4"
+    },
+    "scripts/export-serato-sl3-selection.py": {
+      "localSha256": "1693c353f494d637e1e81d3a1300c519918d0ec63164f61881164a5996dd863f",
+      "gitLfSha256": "1693c353f494d637e1e81d3a1300c519918d0ec63164f61881164a5996dd863f"
+    }
+  },
+  "builds": [
+    {
+      "configuration": "Release",
+      "buildDirectory": "native",
+      "testsPassed": 65,
+      "manifestSha256": "882588b48677b565e0067d651b53fdc67fa6b01a02a4b0f77faa4b64a36339e5",
+      "nativeSourcePinsVerified": 148,
+      "buildLogSha256": "e2f7791e18f953f97eca401213fb540a555ce4d3c89f914e5d2054c70729c355",
+      "physicalAudioTested": false,
+      "traceAndLauncherPinsVerified": 63,
+      "images": {
+        "sl3_asio.dll": "8d36a8521f1d68722223ca2de29a702937922696e576530669c2eac6dbaed3ff",
+        "sl3_usbdk.exe": "790521dcd5120bd0eaf2c2036c501d8f00c49f95b9d557f0d075939b8b451b22",
+        "sl3_input_record_probe.exe": "58118e13077e1d3b38793f7c659b4786a925c50c41bc54ec6b851596b7f950a0",
+        "sl3_broker_scope_probe.exe": "99d36f376e788b2569095675a2d8df1a72ece788723fa694d687f2fa721c713c",
+        "sl3_asio_call_trace_tests.exe": "d559e0789ff329c92b2b1182fbb89c0ad9499f040929f2026eced25c402d5f74"
+      },
+      "productionExports": [
+        "DllCanUnloadNow",
+        "DllGetClassObject"
+      ],
+      "fixtureBuildLabelPresent": true,
+      "productionBuildLabelPresent": true,
+      "callTrace": {
+        "implemented": true,
+        "testsPassed": true,
+        "providerGuid": "953df2f7-5f98-4895-a57a-73c0188c4321",
+        "maximumCallsPerModule": 4096,
+        "callbackPathsInstrumented": false,
+        "manifestInstalled": false,
+        "traceSessionStarted": false,
+        "actualEtwCaptureTested": false,
+        "physicalAudioTested": false,
+        "testExecutableSha256": "D559E0789FF329C92B2B1182FBB89C0AD9499F040929F2026ECED25C402D5F74"
+      }
+    },
+    {
+      "configuration": "Debug",
+      "buildDirectory": "native",
+      "testsPassed": 65,
+      "manifestSha256": "9d668187fa1daf0125e9e2e7e2328b14f05d07acbe0efa55c8049deedad1639a",
+      "nativeSourcePinsVerified": 148,
+      "buildLogSha256": "7cb48dc930023ed4b363399ddbf93ff05cb613e841255efb174402f6f4677411",
+      "physicalAudioTested": false,
+      "traceAndLauncherPinsVerified": 63,
+      "images": {
+        "sl3_asio.dll": "0c756c91453fc36b6e31ff28f4aa2f106a14f4cb4526460a1794a928131e5dde",
+        "sl3_usbdk.exe": "6c269485b8457915280dea5b9f6e75bccab2fd46ee371bf47fa6071b4ab11954",
+        "sl3_input_record_probe.exe": "adff310915ca52bf8fcbc21fdb5555210ee821528cbbfc476bb46851d1feb70a",
+        "sl3_broker_scope_probe.exe": "8205196719a23663051e152cc8224fd8d8a26e7a9c4916fb6761b6bab6a8380a",
+        "sl3_asio_call_trace_tests.exe": "519398cc83e3407eca39254bc7e37e6d64295e0d644bf01284b5e45aa9e94eea"
+      },
+      "productionExports": [
+        "DllCanUnloadNow",
+        "DllGetClassObject"
+      ],
+      "fixtureBuildLabelPresent": true,
+      "productionBuildLabelPresent": true,
+      "callTrace": {
+        "implemented": true,
+        "testsPassed": true,
+        "providerGuid": "953df2f7-5f98-4895-a57a-73c0188c4321",
+        "maximumCallsPerModule": 4096,
+        "callbackPathsInstrumented": false,
+        "manifestInstalled": false,
+        "traceSessionStarted": false,
+        "actualEtwCaptureTested": false,
+        "physicalAudioTested": false,
+        "testExecutableSha256": "519398CC83E3407ECA39254BC7E37E6D64295E0D644BF01284B5E45AA9E94EEA"
+      }
+    },
+    {
+      "configuration": "Release",
+      "buildDirectory": "native-asio-call-trace-no-sdk",
+      "testsPassed": 39,
+      "manifestSha256": "70adf414d6cf23f97e6df2f96cb3d0894bbfeedd8c047a53635779d57a718cab",
+      "nativeSourcePinsVerified": 145,
+      "buildLogSha256": "8a65e7bf77f47aa84cb5338d47a62186adcb1419fd0ecc342604289155ff50f2",
+      "physicalAudioTested": false
+    }
+  ],
+  "provider": {
+    "guid": "953df2f7-5f98-4895-a57a-73c0188c4321",
+    "keyword": 1,
+    "level": 4,
+    "schema": "sl3.asio-call.v1",
+    "maximumCallsPerModule": 4096,
+    "maximumRecordsPerModule": 8192,
+    "bodyFormat": "UTF-16 JSON string via EventWriteString",
+    "callbackPathsInstrumented": false,
+    "manifestInstalled": false,
+    "actualEtwCaptureTested": false,
+    "traceSessionStarted": false
+  },
+  "nativeTraceTests": {
+    "realProviderRegistrationOnly": true,
+    "payloadBackendInjected": true,
+    "parallelThreads": 8,
+    "parallelCallsPaired": 128,
+    "disabledDropPairingFormattingTimingAndSaturationTested": true
+  },
+  "refreshCliTests": {
+    "schema": "sl3.asio-trace-refresh-cli-tests.v1",
+    "cases": [
+      {
+        "case": "descriptor-validate",
+        "passed": true,
+        "exitCode": 0,
+        "stdoutSha256": "537ac3e94b0ba3e8c503eda13a6b5f3ed81adc6cc76efd4076d49e59372de251",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "case": "archive-validate",
+        "passed": true,
+        "exitCode": 0,
+        "stdoutSha256": "1edb3cf0ce53dc54c42a16331427d90e97d017d44fcdd93dbe23cd5706553024",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "case": "deployment-validate",
+        "passed": true,
+        "exitCode": 0,
+        "stdoutSha256": "00e291a5be7b487fe4bf864529565c814147d24d8769b557b809fcf83db60e79",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "case": "old-descriptor-refused",
+        "passed": true,
+        "exitCode": 1,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "9b850f842ef6e0f2d71ef12ced510ab984d150b277f215af2c4dcaca9b61e9d5"
+      },
+      {
+        "case": "old-deployment-refused",
+        "passed": true,
+        "exitCode": 1,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "b5e8a303068e4be5f9602018a603d8a85a2c9c8e7c830b5e90fa21c34b10295e"
+      },
+      {
+        "case": "plan",
+        "passed": true,
+        "exitCode": 0,
+        "stdoutSha256": "9e1292394ebcb68d0a6af980568d8ca114bfb5d3e0fab863a661e97c36386115",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "case": "overwrite-refused",
+        "passed": true,
+        "exitCode": 1,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "887a362fbc39f839eb072be6af41d0aa50a6b8d8c9b776f2aa0596a3623106d6"
+      }
+    ],
+    "hypothesisXmlAndArchiveBytesUnchanged": true,
+    "descriptorBundle": "analysis/sl3-descriptor-candidate-20261102-asio-trace-final",
+    "archiveBundle": "analysis/sl3-archive-candidate-20261102-asio-trace-final",
+    "deploymentBundle": "analysis/sl3-archive-deployment-20261102-asio-trace-final",
+    "protectedInstallOrRollbackExecuted": false,
+    "applicationExecuted": false,
+    "deviceAccess": false
+  },
+  "refreshCliReportSha256": "ec14a6c6b18810d9a8c794afdf31beaaa318ae8c8e5faf3493cff4fe3a185795",
+  "readOnlyPreflightToken": {
+    "schema": "sl3.readonly-preflight-token.v1",
+    "elevated": false,
+    "automaticElevationUsed": false
+  },
+  "refreshedDescriptorManifestSha256": "545381cc1359a4ae70bd21bf79baa1da8527e99490fdf802ca10a4a53404b4a9",
+  "refreshedArchiveManifestSha256": "79b1d093086cdec9c169bd68d6158962d0aad10e3bed68f107ee61bb20bd382d",
+  "refreshedDeploymentProvenance": {
+    "schema": "sl3.archive-deployment-bundle.v1",
+    "files": {
+      "candidate-userio_resources.bin": "e05486b1c4c17f298834ddad2afb04da95e88c196a464bc3f1e4b88bf39c2cb1",
+      "serato-archive-file-transaction.ps1": "5a3001d590acc5311faa689e55f88b53ef1bd9e905c868ad8ef87480fbf4c40e",
+      "deployment-plan.json": "f5a64391a42b2d6bdfc1f32940a05ed52ff50cce80cde63735aff75be3968f7d",
+      "archive-test.ps1": "999a016aa85d9c2cbd202330cf9d72ef5a723e5a1b80256a146b8a9ae7ca496d"
+    },
+    "vendorResourceArchiveForPrivateLocalTestOnly": true,
+    "installExecuted": false,
+    "deploymentApproved": false
+  },
+  "hypothesisXmlSha256": "2a2b0828e75e622d0e485b6a051370a53c341d22ce02381798f1a2597a91649e",
+  "hypothesisArchiveSha256": "e05486b1c4c17f298834ddad2afb04da95e88c196a464bc3f1e4b88bf39c2cb1",
+  "installedOriginalAppAndArchiveUnchanged": true,
+  "protectedInstallOrRollbackExecuted": false,
+  "applicationExecuted": false,
+  "deviceAccess": false,
+  "firmwareModified": false,
+  "securityPolicyModified": false,
+  "authorizationModified": false,
+  "currentSeratoAdmissionVerified": false,
+  "twoDeckDvsVerified": false,
+  "deploymentApproved": false,
+  "remaining": [
+    "Actual bounded ETW session/capture/decoding with PID/module/image provenance and loss accounting",
+    "Measured native ASIO deployment/profile, stable reopening, physical mapping/levels/latency",
+    "Resource integrity/parsing/selection, legitimate service readiness and NONE/control hypothesis",
+    "Protected install/rollback and real current Serato two-deck DVS; Mac deferred"
+  ],
+  "currentSelectionProjection": {
+    "reportSha256": "d4929a60c38f8d57b58928fd1e683a083dd6ba2b47861cea04a761b75e2d6987",
+    "candidateBundle": "analysis/sl3-descriptor-candidate-20261102-asio-trace-final",
+    "candidateManifestSha256": "545381cc1359a4ae70bd21bf79baa1da8527e99490fdf802ca10a4a53404b4a9",
+    "conditionalPrediction": {
+      "primaryNumericLookupAtRecordedRevision": "First parsed candidate exact match before later stub",
+      "aggregationRegistration": "Earlier same-triple candidate with empty midi_name suppresses later stub",
+      "aggregationLookupAtRecordedRevision": "Candidate exact match if registered as projected",
+      "identityChangeNeededForRecordedRevision": false
+    },
+    "actualChosenDescriptorObserved": false,
+    "applicationExecuted": false
+  }
+}

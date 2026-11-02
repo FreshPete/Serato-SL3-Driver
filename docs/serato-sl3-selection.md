@@ -35,10 +35,15 @@ No revision, VID/PID, device response, firmware or other product identity is fab
 
 ```powershell
 # Validate saved inputs and inspect the deterministic report; no new USB query.
-.venv/Scripts/python.exe scripts/export-serato-sl3-selection.py
+.venv/Scripts/python.exe scripts/export-serato-sl3-selection.py `
+  --candidate analysis/sl3-descriptor-candidate-20261102-asio-trace-final
 
 # Save at a fresh path; an existing output is refused before analysis.
-.venv/Scripts/python.exe scripts/export-serato-sl3-selection.py --output analysis/sl3-selection-NAME.json
+.venv/Scripts/python.exe scripts/export-serato-sl3-selection.py `
+  --candidate analysis/sl3-descriptor-candidate-20261102-asio-trace-final `
+  --output analysis/sl3-selection-NAME.json
 ```
 
 The actual exporter run completed, a second report was byte-identical after console newline normalization, and no-overwrite refusal preserved the original report. These are static/file verification results, not new native or physical tests. Runtime archive trust/parsing, actual selection, control/service semantics, measured ASIO timing/deployment and real current two-deck DVS remain unfinished. Mac stays deferred.
+
+The [new ASIO build](asio-call-tracing.md) has a freshly revalidated selection projection for the current explicit candidate bundle; the generator now records its exact manifest hash. The committed report above preserves the original checkpoint. Neither projection is a captured application selection.
