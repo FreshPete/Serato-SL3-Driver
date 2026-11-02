@@ -1,0 +1,137 @@
+{
+  "schema": "sl3.usbdk-rollback-verification.v1",
+  "createdUtc": "2026-11-02T04:33:56.565663+00:00",
+  "evidenceSha256": "9c95b173bcf312e3e5b841dd96a9e65655859f6344f8c59c160707cc4cfd1cb0",
+  "instructionFacts": 77,
+  "focusedFunctions": 5,
+  "wppGuidReferences": 6,
+  "newOfflineTestsPassed": 7,
+  "lifecycleRegressionTestsPassed": 4,
+  "suites": [
+    {
+      "suite": "rollback",
+      "cases": [
+        "test_actual_binary_contract_has_failure_specific_reset_arguments",
+        "test_actual_cli_rejects_output_outside_direct_analysis_scope",
+        "test_actual_prepare_new_only_and_historical_decoder_unchanged",
+        "test_architecture_dependent_format_rejected",
+        "test_exact_two_formats_and_identical_architecture_repetitions",
+        "test_missing_wrong_guid_source_and_metadata_rejected",
+        "test_truncated_invalid_and_unbounded_formats_rejected"
+      ],
+      "testsPassed": 7,
+      "exitCode": 0,
+      "logSha256": "e8898073699c4f8183ba87aa1b174c675051e674dd9417eeae606784cbffe814"
+    },
+    {
+      "suite": "lifecycle-regression",
+      "cases": [
+        "test_additional_formats_require_invariant_inventory_and_driver_guid",
+        "test_missing_duplicate_wrong_caller_and_target_rejected",
+        "test_ordered_caller_linked_messages_do_not_admit_readiness",
+        "test_reversed_stage_time_is_rejected"
+      ],
+      "testsPassed": 4,
+      "exitCode": 0,
+      "logSha256": "e6b67533bdf5d44d0beb8ce0f76d98eea17c8a2b5fbac013c45b2bd1f0d9920a"
+    }
+  ],
+  "sourceSha256": {
+    "scripts/export-usbdk-rollback-contract.py": "bb3022e45a3ab5c3342b88ece18c729a2f2f208ad6c250549165b731c4e1740d",
+    "scripts/prepare-usbdk-lifecycle-trace.py": "fee895320e0e01c971c569d392661d3683c7e10de6ac15456b49db83643f3042",
+    "scripts/export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+    "scripts/ghidra/FocusedDecompile.java": "54383ff3d55f0bb97c2a2e1129fa712eb237c7a2126420c627bb08d8c33672d6",
+    "tests/test_usbdk_rollback.py": "90ed6c3ab50e85cfff452081e7f922238fa28abb34a7196bb1783d5c6cc41cac",
+    "tests/test_attended_port_lifecycle.py": "3dadd13134be1e98ee85e617948f811b95fc8e6a3831b05e8b79831148371297",
+    "scripts/analyse-attended-port-lifecycle.py": "09135e58035817fe87a5b2292d5045fee15a4e9bfa5d2e77ff49269bf3683965"
+  },
+  "publishedSourceSha256": {
+    "scripts/export-usbdk-rollback-contract.py": "bb3022e45a3ab5c3342b88ece18c729a2f2f208ad6c250549165b731c4e1740d",
+    "scripts/prepare-usbdk-lifecycle-trace.py": "fee895320e0e01c971c569d392661d3683c7e10de6ac15456b49db83643f3042",
+    "scripts/export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+    "scripts/ghidra/FocusedDecompile.java": "54383ff3d55f0bb97c2a2e1129fa712eb237c7a2126420c627bb08d8c33672d6",
+    "tests/test_usbdk_rollback.py": "90ed6c3ab50e85cfff452081e7f922238fa28abb34a7196bb1783d5c6cc41cac",
+    "tests/test_attended_port_lifecycle.py": "3dadd13134be1e98ee85e617948f811b95fc8e6a3831b05e8b79831148371297",
+    "scripts/analyse-attended-port-lifecycle.py": "09135e58035817fe87a5b2292d5045fee15a4e9bfa5d2e77ff49269bf3683965"
+  },
+  "byteIdenticalRegeneration": true,
+  "readOnlyImport": {
+    "exitCode": 0,
+    "additionalLibrariesLoaded": 0,
+    "temporaryProjectObservedAbsent": true,
+    "automaticWholeProgramAnalysis": false,
+    "logSha256": "c6d09896e10592b30003a8bd13d6157509f964e49f20e320eb281f25c4370356"
+  },
+  "offlineReplay": {
+    "schema": "sl3.usbdk-rollback-offline-replay.v1",
+    "counts": {
+      "events": 10504,
+      "lost": 0,
+      "formatErrors": 0,
+      "unknown": 0
+    },
+    "usbDkRecords": 21,
+    "selectedStagesMatchPriorEvidence": true,
+    "rollbackErrorMessagesObserved": 0,
+    "newErrorPayloadFormatsExercised": false,
+    "missingErrorsProveNoRollback": false,
+    "originalExperimentPassed": false,
+    "physicalRetestPerformed": false,
+    "originalDecoderAndEtlUnchanged": true,
+    "tracefmtSha256": "ee71d8bb412ef0383bcc887d1ba3ea6fdabaf214183a3fb2a36ed2d699ebbe62",
+    "decoderSha256": "6ddce059479d48bbe068aaca436298289f4ee712151a18465169db0d862802fc",
+    "originalEtlSha256": "35e2b56c16b4a422d49166df94954893424e33a523a1a208e5f4b6e3269bcfb1",
+    "messagesSha256": "1fb9450a516882460643b39235a6442d4f79ee4a503af02d48ccffc18a58d941",
+    "summarySha256": "cfa27eac7a0bbe1095c85c5c9cf818f611ef239ed4b2ce7cbd7c5a5f2e9f5597",
+    "extraFormatIds": [
+      34,
+      35
+    ]
+  },
+  "offlineReplayReportSha256": "67a455ef5d89a803df407a1550dcbb76e6299d82893d81a800f9a76e1ac138d1",
+  "nativeBaseline": [
+    {
+      "configuration": "Release",
+      "priorTestsPassed": 59,
+      "sourcePinsStillMatch": true,
+      "rerunForStaticAnalysis": false,
+      "manifestSha256": "09fa39a717a9b024981b9a2e9da0406234e91fedd17b3370bac04c7dbfab1a87",
+      "ctestLogSha256": "7d1dd0d5f95b6a03fea0b02c1fdb57a4cc9550dedbaac5f480063dfa5c990d5c"
+    },
+    {
+      "configuration": "Debug",
+      "priorTestsPassed": 59,
+      "sourcePinsStillMatch": true,
+      "rerunForStaticAnalysis": false,
+      "manifestSha256": "d97f2b1855391de1412473897c8d4d5cd7f9fe40d91afb0f78eb5b0fa4151c92",
+      "ctestLogSha256": "70452b9868b2e84da6aca20160944a63a05d857d86ab2bbccb3ac078572d9df1"
+    }
+  ],
+  "previousSoftwareCheckpoints": {
+    "installerAndRecoveryPassingChecks": 334,
+    "inputToneAndPcmPassingChecks": 31,
+    "sourcePinsStillMatch": true,
+    "rerunForStaticAddition": false
+  },
+  "limits": {
+    "deviceAccess": false,
+    "driverOrHelperExecuted": false,
+    "driverModified": false,
+    "tracingSessionStarted": false,
+    "baselineDecoderOrCapturePlanChanged": false,
+    "newErrorPayloadFormatsLiveExercised": false,
+    "historicalStallCauseProven": false,
+    "entireCancellationPathExhausted": false,
+    "kernelQuiescenceFromWorkerExitProven": false,
+    "reacquisitionRepairVerified": false,
+    "physicalAudioTested": false,
+    "currentSeratoAdmissionVerified": false,
+    "currentDvsTested": false
+  },
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/usbdk-rollback-20261102",
+    "files": 814,
+    "manifestSha256": "f0242806abf854de96c263225b2252f294192d066b1632f9d0a7de95d569fd2f",
+    "selfReferentialVerificationExcluded": true
+  }
+}

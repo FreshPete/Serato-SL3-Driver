@@ -1,5 +1,7 @@
 # UsbDk detachment and the next reopen diagnostic
 
+**2 November binary/source update:** [failed-start rollback](usbdk-rollback-contract.md) now has checked released-binary arguments: attachment/handle failure enables another reset, while initial-reset failure does not. A separate offline two-format supplement leaves the historical 32-format decoder and capture plans unchanged. No new hardware operation, causal stall diagnosis or readiness repair is claimed.
+
 **1 November offline update:** [the saved 16:40Z experiment now has decoded lifecycle evidence](attended-port-lifecycle-20261101.md). UsbDk reports successful exact-SL3 detachment/removal, followed by the original stack's startup timeout on the same physical port. All 21 UsbDk records decode without unknown formats. This advances the earlier source-only limits below but establishes no successive-open readiness condition.
 
 The [native retained test](retained-physical-test.md) passes within one acquired connection. Current Serato can [release and recreate ASIO objects](serato-asio-object-lifetime.md), so separate acquisitions still need a defensible startup/recovery path. The earlier second-redirect stall is not resolved by the retained test.
