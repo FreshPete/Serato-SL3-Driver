@@ -128,9 +128,9 @@ class BrokerConnection {
     HANDLE pipe_;RetainedBroker& owner_;Handle client_;std::uint64_t lease_=0;
     std::shared_ptr<const void> audio_reference_;
     bool accepted_=false;
-    std::string* diagnostic_;
+    std::string* diagnostic_;BrokerAccess access_;
 public:
-    BrokerConnection(BrokerListener& listener,RetainedBroker& owner,std::string* diagnostic):pipe_(listener.state_->pipe.value),owner_(owner),diagnostic_(diagnostic){}
+    BrokerConnection(BrokerListener& listener,RetainedBroker& owner,std::string* diagnostic,BrokerAccess access):pipe_(listener.state_->pipe.value),owner_(owner),diagnostic_(diagnostic),access_(access){}
     ~BrokerConnection(){if(accepted_)DisconnectNamedPipe(pipe_);}
     BrokerServeResult run(HANDLE stop){
         Handle event;event.value=CreateEventW(nullptr,TRUE,FALSE,nullptr);if(!event.value)fail("Create broker accept event");
@@ -180,6 +180,8 @@ public:
                 if(!state.client_attached){lease_=0;return BrokerServeResult::detached;}
                 const auto frame=read(pipe_,50,client_.value);if(!frame)continue;
                 if(frame->sequence!=sequence++ || !sequence || frame->status)throw std::runtime_error("Broker request sequence/status mismatch");
+                if(access_==BrokerAccess::metadata_only && frame->opcode!=unsigned(Op::clock) && frame->opcode!=unsigned(Op::detach))
+                    throw std::runtime_error("Metadata-only broker refuses audio/control operation");
                 device_session::Snapshot result;
                 if(frame->opcode==unsigned(Op::start)){
                     if(frame->bytes.size()<8)throw std::runtime_error("Missing client mapping reference");
@@ -215,11 +217,11 @@ public:
         }
     }
 };
-BrokerServeResult serve_broker_client(BrokerListener& listener,RetainedBroker& owner,HANDLE stop,std::string* diagnostic){
+BrokerServeResult serve_broker_client(BrokerListener& listener,RetainedBroker& owner,HANDLE stop,std::string* diagnostic,BrokerAccess access){
     if(diagnostic)diagnostic->clear();
     if(!stop)throw std::invalid_argument("Explicit broker stop event required");
     if(WaitForSingleObject(stop,0)!=WAIT_TIMEOUT)return BrokerServeResult::stopped;
-    BrokerConnection connection(listener,owner,diagnostic);return connection.run(stop);
+    BrokerConnection connection(listener,owner,diagnostic,access);return connection.run(stop);
 }
 
 struct BrokerClient::State {

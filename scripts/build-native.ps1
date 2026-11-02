@@ -24,6 +24,7 @@ try {
     if('sl3_retained_broker_tests' -notin $testNames){throw 'Required separate-client retained broker test is missing'}
     if('sl3_broker_pipe_tests' -notin $testNames){throw 'Required authenticated broker pipe/process tests are missing'}
     if('sl3_broker_record_tests' -notin $testNames){throw 'Required pinned broker record/process binding tests are missing'}
+    foreach($name in @('sl3_broker_scope_probe_plan','sl3_broker_scope_probe_lifecycle')){if($name -notin $testNames){throw "Required read-only broker diagnostic test missing: $name"}}
     foreach($required in @('sl3_driver_timer_query_tests','sl3_driver_timer_io_tests','sl3_usbdk_timer_plan',
         'sl3_usbdk_rejects_timer_without_challenge','sl3_usbdk_rejects_timer_malformed_challenge',
         'sl3_usbdk_rejects_timer_conflict','sl3_usbdk_rejects_unused_timer_challenge')){
@@ -80,6 +81,12 @@ try {
         physicalOverlapTested=$false;kernelDetachmentVerified=$false;safeSuccessiveAcquisitionVerified=$false}
     $record.ctestLogSha256=(Get-FileHash -LiteralPath $ctestLog).Hash
     $record.buildScriptSha256=(Get-FileHash -LiteralPath $PSCommandPath).Hash
+    $record.brokerScopeProbe=[ordered]@{planAndSimulatedLifecyclePassed=$true
+        executableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_broker_scope_probe.exe")).Hash
+        simulatedExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_broker_scope_probe_simulated.exe")).Hash
+        testScriptSha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'test-broker-scope-probe.py')).Hash
+        simulatedClientProcesses=3;simulatedClockReads=7;simulatedAcquisitions=1;audioStarts=0
+        serverRejectsAudio=$true;timingProfileRequired=$false;asioConfigurationPublished=$false;physicalNativeRun=$false}
     $record.retainedBroker=[ordered]@{separateClientProcessTestsPassed=$true
         testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_retained_broker_tests.exe")).Hash
         simulatedClients=2;simulatedAcquisitions=1;simulatedStreams=2;simulatedClockReads=6

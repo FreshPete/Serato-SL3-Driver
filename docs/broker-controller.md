@@ -129,3 +129,11 @@ checkpoint are in `docs/evidence/broker-controller-20261102.json`.
 Native attended testing, real timing and audio measurement, deployment, and the
 separate current-Serato audio/API/DVS admission path remain unfinished. Windows
 remains first; macOS is deferred.
+
+## Timing-free diagnostic boundary
+
+The separate [read-only broker scope probe](broker-scope-probe.md) now tests
+three independent clock-only clients without loading a timing profile. It cannot
+start audio through its restricted server and publishes no ASIO configuration.
+The production controller's measured-profile requirement remains unchanged.
+Simulation/pre-device guards pass; no positive native broker test has run.

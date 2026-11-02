@@ -1,0 +1,598 @@
+{
+  "schema": "sl3.broker-scope-verification.v1",
+  "createdUtc": "2026-11-02T04:49:59.659014+00:00",
+  "builds": [
+    {
+      "configuration": "Release",
+      "testsPassed": 61,
+      "manifestSha256": "29491ea98d9ddaf5f8e7bba10f1ff83ee131043b61982eaccd8e321ede979ca7",
+      "ctestLogSha256": "c821268a0e0999b36b697b9cd02bf2e6dcd37ad74672905c074a85b1a1ec2f4a",
+      "nativeDiagnosticSha256": "99d36f376e788b2569095675a2d8df1a72ece788723fa694d687f2fa721c713c",
+      "simulatedDiagnosticSha256": "5cf9d03adc2654eed21a00b2d52d252b71984430e2a2114c634f08b9f259b383",
+      "sourcePinsMatch": true,
+      "physicalNativeRun": false
+    },
+    {
+      "configuration": "Debug",
+      "testsPassed": 61,
+      "manifestSha256": "00510fa54d5bfd1262b08a1bb108551853581790b8471918b6f1da806df341b4",
+      "ctestLogSha256": "1b655c14f0dbab655a70f128f8ea54cfbe71a1b7c33fa74659e817c4eefbc9f8",
+      "nativeDiagnosticSha256": "8205196719a23663051e152cc8224fd8d8a26e7a9c4916fb6761b6bab6a8380a",
+      "simulatedDiagnosticSha256": "8ddeb439f6cea6e816ded6965323ff51b3cf65309f2065ea69f5518f4ca07e09",
+      "sourcePinsMatch": true,
+      "physicalNativeRun": false
+    },
+    {
+      "configuration": "Release-no-SDK",
+      "testsPassed": 38,
+      "manifestSha256": "fc80ff128a4b8c010a87b4328ed3c7754bda27d14592e40bd38ad6d3135cc0e2",
+      "ctestLogSha256": "1dbc1fd92f69cffe0b24f88eb65692a985699ea2a75e31dec0bd3bf0b258dd83",
+      "nativeDiagnosticSha256": "158079a0632b44078f78d0e2e4fe9a869b49d3fb01c1b8a0e52238ef0d3be4d2",
+      "simulatedDiagnosticSha256": "f4f9fc301d99263fcfa4faad2788b79ff2bb7a99480f8c15836f034bc691f0a1",
+      "sourcePinsMatch": true,
+      "physicalNativeRun": false
+    }
+  ],
+  "simulatedDiagnosticRuns": [
+    {
+      "indexSha256": "0a683da505f28fa8b0c6d6e3a29d6d9d75981a7a682d40c7fa622e3a4ed6561c",
+      "nativeDiagnosticSha256": "99d36f376e788b2569095675a2d8df1a72ece788723fa694d687f2fa721c713c",
+      "cases": [
+        {
+          "name": "sl3_broker_scope_probe.exe-default",
+          "passed": true
+        },
+        {
+          "name": "sl3_broker_scope_probe.exe-explicit-plan",
+          "passed": true
+        },
+        {
+          "name": "sl3_broker_scope_probe_simulated.exe-default",
+          "passed": true
+        },
+        {
+          "name": "sl3_broker_scope_probe_simulated.exe-explicit-plan",
+          "passed": true
+        },
+        {
+          "name": "three-client-clock-only-roundtrip",
+          "passed": true
+        },
+        {
+          "name": "output-reuse-refused",
+          "passed": true
+        },
+        {
+          "name": "stale-record-after-owner-exit-refused",
+          "passed": true
+        },
+        {
+          "name": "fail-acquire",
+          "passed": true
+        },
+        {
+          "name": "fail-rate-refresh",
+          "passed": true
+        },
+        {
+          "name": "native-kind-refusal-before-acquire",
+          "passed": true
+        },
+        {
+          "name": "preflight-guard-0",
+          "passed": true
+        },
+        {
+          "name": "preflight-guard-1",
+          "passed": true
+        },
+        {
+          "name": "preflight-guard-2",
+          "passed": true
+        },
+        {
+          "name": "preflight-guard-3",
+          "passed": true
+        },
+        {
+          "name": "preflight-guard-4",
+          "passed": true
+        }
+      ],
+      "clients": 3,
+      "clockReads": 7,
+      "acquisitions": 1,
+      "audioStarts": 0,
+      "validatedFromSavedActualSimulatedRun": true
+    },
+    {
+      "indexSha256": "2ff0d768c59a0689de79799d6c1b1f4c4c4b800129f3c0aec133199c0cdb6fe7",
+      "nativeDiagnosticSha256": "8205196719a23663051e152cc8224fd8d8a26e7a9c4916fb6761b6bab6a8380a",
+      "cases": [
+        {
+          "name": "sl3_broker_scope_probe.exe-default",
+          "passed": true
+        },
+        {
+          "name": "sl3_broker_scope_probe.exe-explicit-plan",
+          "passed": true
+        },
+        {
+          "name": "sl3_broker_scope_probe_simulated.exe-default",
+          "passed": true
+        },
+        {
+          "name": "sl3_broker_scope_probe_simulated.exe-explicit-plan",
+          "passed": true
+        },
+        {
+          "name": "three-client-clock-only-roundtrip",
+          "passed": true
+        },
+        {
+          "name": "output-reuse-refused",
+          "passed": true
+        },
+        {
+          "name": "stale-record-after-owner-exit-refused",
+          "passed": true
+        },
+        {
+          "name": "fail-acquire",
+          "passed": true
+        },
+        {
+          "name": "fail-rate-refresh",
+          "passed": true
+        },
+        {
+          "name": "native-kind-refusal-before-acquire",
+          "passed": true
+        },
+        {
+          "name": "preflight-guard-0",
+          "passed": true
+        },
+        {
+          "name": "preflight-guard-1",
+          "passed": true
+        },
+        {
+          "name": "preflight-guard-2",
+          "passed": true
+        },
+        {
+          "name": "preflight-guard-3",
+          "passed": true
+        },
+        {
+          "name": "preflight-guard-4",
+          "passed": true
+        }
+      ],
+      "clients": 3,
+      "clockReads": 7,
+      "acquisitions": 1,
+      "audioStarts": 0,
+      "validatedFromSavedActualSimulatedRun": true
+    },
+    {
+      "indexSha256": "caa1c802b481eb716aab67798e5017742d6e4da60e0cd188f4be901ead89322b",
+      "nativeDiagnosticSha256": "158079a0632b44078f78d0e2e4fe9a869b49d3fb01c1b8a0e52238ef0d3be4d2",
+      "cases": [
+        {
+          "name": "sl3_broker_scope_probe.exe-default",
+          "passed": true
+        },
+        {
+          "name": "sl3_broker_scope_probe.exe-explicit-plan",
+          "passed": true
+        },
+        {
+          "name": "sl3_broker_scope_probe_simulated.exe-default",
+          "passed": true
+        },
+        {
+          "name": "sl3_broker_scope_probe_simulated.exe-explicit-plan",
+          "passed": true
+        },
+        {
+          "name": "three-client-clock-only-roundtrip",
+          "passed": true
+        },
+        {
+          "name": "output-reuse-refused",
+          "passed": true
+        },
+        {
+          "name": "stale-record-after-owner-exit-refused",
+          "passed": true
+        },
+        {
+          "name": "fail-acquire",
+          "passed": true
+        },
+        {
+          "name": "fail-rate-refresh",
+          "passed": true
+        },
+        {
+          "name": "native-kind-refusal-before-acquire",
+          "passed": true
+        },
+        {
+          "name": "preflight-guard-0",
+          "passed": true
+        },
+        {
+          "name": "preflight-guard-1",
+          "passed": true
+        },
+        {
+          "name": "preflight-guard-2",
+          "passed": true
+        },
+        {
+          "name": "preflight-guard-3",
+          "passed": true
+        },
+        {
+          "name": "preflight-guard-4",
+          "passed": true
+        }
+      ],
+      "clients": 3,
+      "clockReads": 7,
+      "acquisitions": 1,
+      "audioStarts": 0,
+      "validatedFromSavedActualSimulatedRun": true
+    }
+  ],
+  "evidenceValidatorTests": {
+    "passingTests": 7,
+    "cases": [
+      "test_audio_readiness_timing_and_forced_retirement_flags_refused",
+      "test_client_type_creation_rate_and_retirement_mismatches_refused",
+      "test_extra_configuration_and_wrong_audit_refused",
+      "test_missing_partial_wrong_worker_and_extra_audio_native_journal_refused",
+      "test_simulated_records_keep_physical_provenance_false",
+      "test_typed_native_grammar_is_not_physical_attestation",
+      "test_wrong_hash_kind_and_failed_result_refused"
+    ],
+    "logSha256": "0968cf8f13275e1daf351a36b7c3b5ef46fae51a4fadfead1f5867a8ae671d72"
+  },
+  "localSourceSha256": {
+    "src/asio/queue_pump.hpp": "d23676cea12545e17ace1037deaa529061a2d1ca6c83f8e9557af1de6906cb3f",
+    "tests/native/retained_broker_tests.cpp": "82a6175f7abfd43a288e4a3f1a7f3ef036b87b42cc2d1a0aaea794544cc78c2d",
+    "tests/native/device_session_fixture.cpp": "b32d2a1a0a2c663db9c9c7fa0b3a714529d93e98f78fe8a9529cb2c679cce1cc",
+    "src/core/audio_controls.hpp": "a0d7edfdf467f8879c4c357d23840de6aa4d0a7e61dfb49ec38d5c67f3900a56",
+    "src/windows/redirect_owner.hpp": "0f98d35d3f65d0cb3b34311cf6d7d9f703750b5653950ebbf65857cff4b7648c",
+    "src/core/playback.cpp": "e8006a992a70ba9226e74d5e6ce49ca1d54f6214410fbd12a0c994a1ca32119b",
+    "src/core/playback.hpp": "b56a303b0259c57b5999b2e80bcf260fe53575c158d224eec4ea01ed8e56454b",
+    "src/windows/stream_session.hpp": "fcf213861640bef2984b4f73d709249ebef592674504014b590cb380306e1f5f",
+    "src/windows/heartbeat.cpp": "10d36fea22aabc05fa44af71f3283c83d3ab4d5f9f1563fdf662ad2fa8b337e6",
+    "src/windows/process_wait.hpp": "80993a7934285e38268491767ec16a09db54e2186f7918e6a9d5bf2d8b20b15a",
+    "tests/native/session_fixture.cpp": "2d88ec1a66fc4378a9886e16735a2420dc3a9cf52b71afb59b3e66c17b3820f7",
+    "src/asio/audio_owner.hpp": "bb12d03255812bd55686bdd66fd450fa6fd8623fe6c65ba7ea0fddbb4062d952",
+    "tests/native/broker_pipe_tests.cpp": "94e238a8f80fc1aa333b951443c4e9e9e5709b7059f35a7996915c97656dee2e",
+    "src/core/device_session_protocol.hpp": "427fa749803ece57ec4596766a141b67be7646a52c84daf285e69f2ddd5155f4",
+    "src/core/audio_bridge.hpp": "b43c7407f13ce72a9d10ef75b1023248876a3177dd23ac7d4e7d6bd2b98c2c5d",
+    "src/core/rate_diagnostic.cpp": "8bd8bd2a07f53b820ea6b51852b4eee94ee93ddcd6daf0609b3f41edd5f25944",
+    "tests/native/driver_configuration_tests.cpp": "6ee9e64de07aeff6742a3829d5fc85b31af213911063fcf182a31154df31c0c0",
+    "src/windows/worker_process.hpp": "ec8e92629ba73694fff28b661288177eb20b96cef4c07595190cd34bb2a76e05",
+    "src/core/worker_protocol.hpp": "96a7e20ffbdf789dfb85255a8a66028e07eb040dc7d6f0ecbd4475bbae0509c4",
+    "tests/native/usbdk_stream_tests.cpp": "3f02900a6b5341f2e3bced6492969e822e56e029ef21d3d6b6c17559753a232c",
+    "src/asio/host_session.cpp": "bc9c93084e4df5d10114bf19e086e1ae2f46773be6b25b627bc43f1aa1d1c9b8",
+    "src/windows/control_baseline.hpp": "c2dc0a704b767693fe50b1919c18093efc99df95b9db87a31de0e0696976fb0d",
+    "src/windows/broker_record.cpp": "25041ae52afcc8e74406f4630e006524903043caa0f114ec8085affd722fc2c2",
+    "tests/native/asio_queue_tests.cpp": "7bb83ff02f442e231616b6fb462190c8bf85cb486cc6f8abaa2ea9cb3190cc6a",
+    "tests/native/worker_fixture.cpp": "60571f46cd35a04766dc7dac8459662911257fb8da520975cd877321bafdb2d9",
+    "src/windows/driver_timer_io.hpp": "8b98abe1967ec21813c46cf762afc3a927c19b1c8d119f118b78f5dd2f296ac5",
+    "src/windows/rate_io_log.hpp": "2e9180a62b93a6e0388ceb7dcca47fc14dbb9d29fe5e8ba41736abc7243eeca0",
+    "src/asio/audio_owner.cpp": "c128411ceba8ec2bf0e5f7224079f11218975a901d6647d66534d3339bc56b46",
+    "src/core/session_protocol.cpp": "cded85c90a50f765cac7c5a44c8592f2cea3f71b5c5836b892220b67b609c20d",
+    "src/core/worker_protocol.cpp": "97584c60519909039bea1a94fa56d67f789d1d0754f90a007bfc48fedc398803",
+    "src/core/continuous.hpp": "2c5b080e134631193891ac2faad80c43ab0f3ff5091cfc4307b36d6ede968295",
+    "src/windows/audio_ring.hpp": "414607684c324fb09fa1f11efa515067c721c8cdccecbe444e6b9901502506d0",
+    "src/windows/broker_record.hpp": "7218877717ac776f7bad878db642e55b1ac6d4dd11dbbf432d32c78b11b75bb7",
+    "tests/native/device_session_tests.cpp": "60db362622e2887c42661af1546135dfba92fbb3d84ae33aecde83aef2b0f9bd",
+    "src/asio/broker_session.cpp": "c21349db46b0f9efa59e1d6b343652fb7b5ca2162406d0ad85e388e70130e7d5",
+    "tests/native/asio_session_fixture.def": "f3716e4b197ca6482bdfa3d1388202ee254cb362d0ece0f4b6395c9062fa10aa",
+    "src/core/audio_bridge.cpp": "6289660d879dfab69af7edb6166f3a7c7ab45371c6766bcf3e1169255ab71435",
+    "tests/native/asio_com_tests.cpp": "0bdaf855acc4b5014d60120d514cbb6b8eb3f53494b56c7224e6c64c7bbd7fd9",
+    "src/core/audio_control_selection_wire.hpp": "c634bde00e663637364ce266312de2efe21c7c17ef3cbb3084516adc0e49002d",
+    "src/windows/device_session.cpp": "30b88d2cccca3e2810b0045ef786932b2f1dcda7ab31c00fd8328f86d18e435d",
+    "src/windows/heartbeat.hpp": "89adc21515d19c0d958daa2e3ce89702f31af06134da32a92ee3ef9427b99a15",
+    "src/windows/mailbox_layout.hpp": "efd59eb3cdf03641a0b60ae820b04a8a476e432734a959ea72136612b065470b",
+    "src/asio/buffer_set.hpp": "03f097b32d942e551283e005d2206a57d8b0d8ed2fe740b524435dfaccd1ca72",
+    "src/windows/broker_pipe.hpp": "561dcfd3ff37a777fc716fb4ec8f964c30d061af266d4062c868948b559cf636",
+    "src/asio/scope_interface.hpp": "7d6949e962e1809badc8a9487d9f8aae77e3444b1857d42fe543451a6e3696d2",
+    "src/core/control_frames.cpp": "e7b7fa17fcdd7027adde67b96cf46385049d4cca989b53c13ac32756270b53e3",
+    "src/windows/broker_scope_probe_main.cpp": "e94785180d238a0e6cd8ed814af2e182baf5a77c57567152f59a7615278b5d08",
+    "tests/native/playback_tests.cpp": "90a8d63d3cab5795d3199b1d7e5dd2ef22fa9978f85c37937606f4bf32e36b18",
+    "CMakeLists.txt": "ce960553334e5337a4186ffa09a41b61feecfab7c83813df674dc995dcd4fe9c",
+    "tests/native/worker_process_tests.cpp": "c643732877470f115443c27afff9659a71adbb342690e20920ba51c87659b66f",
+    "src/core/control_frames.hpp": "bb133b6e0272347a36b80e30a7e1c6939095133ca4ca1eccb2f84bedf692e2af",
+    "src/core/duplex.cpp": "d15a169e365de5897f7168369969e765f8d7d01227b3461ec8f4917077d3bf2d",
+    "src/core/rate_selection.hpp": "d87c9c8e0ababe724f523f917f3f4d64cf90dbbc44725ac063aa5ff5080925bd",
+    "tests/native/audio_bridge_tests.cpp": "1a5af82c40885b247ae95741f486d62951179d0aa21e7e288918331cf5c9e57b",
+    "src/windows/retained_broker.hpp": "faf827cb32d9a31e8595d12d85321b5f6ec4ba5a2d1041a2c595deaac510245a",
+    "src/windows/retained_broker.cpp": "ecb1cd7400d032c30c70ee2bafeb2f0c0e877b77d1ec634ceb4d3d17e270ed5a",
+    "src/windows/mailbox.hpp": "5462d3b4a0bc8e182f5a970c8c7d44e563ade18b7044525f27bbd8cbc7a958e8",
+    "src/windows/worker_process.cpp": "4191f7614d8df20c47a317c2b30942874919ad125d6da0297c4f0137233be0e5",
+    "src/core/timer_verification.hpp": "79df9844d5031b4d7d03600917070e9b7516a9c7dc31ebb97ff0d2ba962bcefa",
+    "src/asio/queue_pump.cpp": "d992a00414ddf48473e8be3379cbff22a16efe0ad6fdf7e80fb8209b0e008169",
+    "tests/native/com_activation_fixture.hpp": "4d39d83c53364b5ad0914d36650cd065c8348042149cd8c6427804ef203f293b",
+    "src/asio/com_identity.hpp": "358f892e11f17308d37fdcb8c82ceea0171a3421d8472ac675f9e012783904ac",
+    "src/core/rate_test_grant.hpp": "7b2f714cad08548fca977bfbf13dc80ede25790b46b9d87b4f397f0f38e7b466",
+    "tests/native/rate_selection_tests.cpp": "a7497c1a83964f5960284bb671554b1896092d7fdc43a09ef407fe1e59c6d748",
+    "tests/native/mailbox_tests.cpp": "c8705fe6fd3696693a0aa996532677849ca2d4435854fcd8c31590ee1cee300b",
+    "src/asio/com_server.cpp": "decb770d0840f0f08069d94673c53f00737f0e336675ffd1d7e003114668cd07",
+    "third_party/usbdk/README.md": "605c7faa50a802736c21ac03d362c8962445168cdcdb9edce54c3d82e62b3b9d",
+    "src/windows/diagnostic.hpp": "5659a28562d9b06d6d0b5c08eb94f5542bd32e319a6a27f71c1b8f4090f9cc71",
+    "src/windows/control_transfer_io.hpp": "30fe6ab81e11760f5d8d33592823758d91addd291fcc5f926e06533a926dc6c8",
+    "src/asio/host_session.hpp": "74e3974289330012493eefb8e55d33b154e32277dd69eb971091171326afbd9e",
+    "src/core/session_protocol.hpp": "a991e30b72a063606c18dd7f975b714bedfd1c537881d700ce4e38c04ee46a85",
+    "src/core/timer_verification.cpp": "e2b21f044646b8b38ddc0dcfb9ed85e1730bb0ea5f9a7a006c56f77543785f02",
+    "src/core/driver_timer_query.hpp": "3f7d77666a274e77b73a0ebc5f87967b3f24645fab531eb9b094e7eda546ffea",
+    "src/asio/buffer_set.cpp": "3b38534b2e014ce8d66b13053da96bedfc7c6850a21800182d4271d6b791c491",
+    "src/core/control_test_target.hpp": "1599d258d18a37801e547f2a3872133e58aad8a078dd3218d081d1671a9f8310",
+    "tests/native/continuous_tests.cpp": "1e22409ac59e2b9aebda28083d1e29da879422322d0f9e62fd5dce1bc6b1f2b0",
+    "tests/native/driver_timer_io_tests.cpp": "841331309008a591aa608fb34a87c9a996bcd37e9f29ba31fa4b8f2834a81e42",
+    "src/core/rate_selection_wire.hpp": "8ba179e60600eb44078875ba8372702191cb2e6348287988d5f76b06bee025cd",
+    "src/core/device_session_protocol.cpp": "6434057d8d6e8eaa378a4920984df1dafba5a3ed313c4b2bb1f8c41ed95a7f1d",
+    "src/windows/scope_probe_main.cpp": "9eff651ed259e9016c36616d105f2abb8558c9efd5643791e7a9fe46dc554463",
+    "tests/native/retained_host_tests.cpp": "a5649fe6c0538b2143de351a43b5a51838b294335d2149da719999f1463a5992",
+    "src/windows/host_probe_main.cpp": "4ed4195936dce5a9f7b2c15b2b9fe0ae58df8299b0d8f7ab435930a9ccb333a4",
+    "src/core/audio_block.hpp": "0c74b31d35bb08491ca92a570f786491fdb159689fb8c0a3971148fc8f8e8b66",
+    "tests/native/asio_session_provider.cpp": "824158baf6d599046e4a361d52f4aaf64fe00d51c2535b0afb577cf86b004291",
+    "third_party/usbdk/UsbDkHelper.h": "09cad2056278cd9dd5d74e66ec0115569662b6643ebc28660eeab3f089a0020c",
+    "src/windows/control_selection_diagnostic.hpp": "8ee6740f0b637b2c0773f42cba8c708cc31122ef3eb9a51dc4f3386a8003a456",
+    "tests/native/audio_pattern.hpp": "80f47cd01d32a8a73635bbf8ed3d7b55ed9ecb1f2745289881c9a879972d41cb",
+    "src/core/continuous.cpp": "2655516933b8fa6dce7123014fabbc6db79a442303f80d6dc70dc0804c34d69d",
+    "src/windows/startup_journal.hpp": "f391804857092750996b97abf8237df2835c89d34f975b6df73d602ff3501eba",
+    "src/asio/sl3_asio.def": "5e364b9442615e09244cb1b261ffa63afe3c0cff6dfcb8ffb12bfa0c3101807d",
+    "tests/native/asio_buffer_tests.cpp": "836427bdd4f97c52a2e61932066f1d7ec0dabd3813b60e8ae1c21c6a7800e371",
+    "src/asio/driver_facade.cpp": "2f185171405d7e8792bb2de23c9a5aaadbaed99007bfba4ca8db487d94cafc61",
+    "tests/native/device_presence_tests.cpp": "49a6e928d4f8ddc6ca942725894931d8e8e146073a1273e48d46275dfbd14b88",
+    "tests/native/startup_journal_tests.cpp": "25f188c1c2b26989caa24dd2b5918e0ec14501a9d23964e6c7f850508f5f364e",
+    "third_party/usbdk/UsbDkData.h": "8f0a0f4f10d2d6fb371e48c7c9e82af890ca75601ec4e5143949a42402d8cb83",
+    "tests/native/host_session_tests.cpp": "efec1d3a182f810b9dd57ea6f99e6ebcdeb95b975e7b341076ff6ffeaa878948",
+    "src/windows/continuous_peer.hpp": "9b13a6beeafe3915de433f033d63521bf4394f6ae43c3c0521be6e314ab42a24",
+    "src/core/audio_control_selection_io.hpp": "25170a7ab1555933334a824ec1b34b9b395724b26a66dd389b0ae6fcaad3caed",
+    "src/core/audio_controls_query.hpp": "5f64e5e06f07a9ab3a5ac8afb56e938f341ba5b1fec955e32e0e0ad3c2eb4b63",
+    "src/windows/usbdk_stream.hpp": "76ff7b84f5cb984710f7dca43352d8405e563911c39f3fb4ac92fe2327fc81f5",
+    "third_party/usbdk/LICENSE": "09e8a9bcec8067104652c168685ab0931e7868f9c8284b66f5ae6edae5f1130b",
+    "src/asio/driver_session.hpp": "31699313742161f89eed922c306b7a4e2cbbfad19c46f5bc0e623822901ed1c1",
+    "src/core/capture.cpp": "f16b23870b216a581fb21425f58586fc46de13a9af520953c870bfaae5420cd3",
+    "tests/native/duplex_tests.cpp": "0c200fdec05a5c25069a0d3a2f66948f318a8a5ea3b8e22231e5ce90cf1a72e5",
+    "src/windows/usbdk_main.cpp": "86936ede6ec8446a33cff6cd9f038ebc61c33448d8fe79f59351345b4c25c3c8",
+    "tests/native/session_tests.cpp": "6d34eee65c4662092670790c0300919489817ecaf2118e643bab0a68d9746515",
+    "tests/native/audio_ring_tests.cpp": "4175f197d2c3b8f0f0fa472c8679b84b711b8b0da9610e02f6e6b10c1b7e08dd",
+    "tests/native/broker_asio_tests.cpp": "d7730962922ab1a64de512a2c0a25a217c9a3aa0120b3ecc785b6da55348683f",
+    "tests/native/driver_facade_tests.cpp": "0f278fb13199447cba5ce4627994a6286504eeb6643d4c31add498835ecea54c",
+    "src/core/device_presence.hpp": "878d7a4203bd34ac964a3417fa6682f1920c3aaad8dd6b38d0214bdd69936e76",
+    "src/core/duplex.hpp": "20e32a03c471a0751ccb3ee90dbd49252bfa87e387c45a9be03ff185011819dc",
+    "tests/native/worker_protocol_tests.cpp": "5d600e2ff7cc8ee493d5d319fe06335de6497b985683c374e68f8bac77781792",
+    "src/windows/broker_pipe.cpp": "f2b3df6a44f282d14520733bddb7c520e45f3141246f65990e2a6626e3393040",
+    "tests/native/control_frames_tests.cpp": "b302bf5791adaa1d1a44ed7235f1dbee3ef2fd019cf7691b67b9690df2a8c2b0",
+    "tests/native/broker_record_tests.cpp": "b7c8f2337910ef8882aa9845faa238b985fd5d1c2ba584697a11863387061723",
+    "src/windows/capture_main.cpp": "e8df087cacd40f500e6a89fe4eb85acb1ed2fd79d81034d7ff26bd37a0c52bea",
+    "tests/native/timer_verification_tests.cpp": "6c08ac3cea4d0599fa7df67e64c8a6e79630c1c9b5fff6b70b3d058d218548ab",
+    "src/core/rate_selection.cpp": "93448884ed841c19a2fd48dda41d2fea36c144e65443349ff3de31872cb11802",
+    "src/windows/mailbox.cpp": "87c5b891c8f2c369c2bb2ef0028e2411000f2b428adf45bfb7ddde153b33c7e2",
+    "src/asio/driver_session.cpp": "52f216d630f179450bdf196cbf5701cfebb8b8cac9486f741e58fcfe1612740c",
+    "src/core/audio_control_selection.hpp": "4bfcd11e112f0a7dbb47d5fae39607f4cedae64fb8d7f1c406de4a6a1c9ccb04",
+    "tests/native/asio_session_tests.cpp": "db5cc1b59030a233aa067b125106455a121a0fdfcf2cb7880dd15b5dbcfc578b",
+    "src/core/rate_diagnostic.hpp": "1202a6f67365563998dec858eea2cabf17cffb88da15080b6fb786e947737c94",
+    "tests/native/asio_activation_tests.cpp": "9c86ba8c4cfe7f3f044fe38e9104d0eae4bf640b013565975eee3d69526aa3e1",
+    "src/windows/stream_session.cpp": "aaa16bc1f66ac21fced0ff1575b7c8329b8925279b885f7aafe55c66615ded8b",
+    "tests/native/control_transfer_io_tests.hpp": "ad951fcb9da47ac7e53660633fbcad2965476f6f2d3f4e0b4a2aee9ddb4cce2c",
+    "tests/native/audio_owner_dll.cpp": "96cdced14d73f1a705c83e49fbdea746a25885860722b1c409c81a48d6ee22a2",
+    "tests/native/session_fake_backend.hpp": "feb6b0a3c395823488b635831c8ed0c64f0a95fbfc11fe780e92fcf02510e9c2",
+    "tests/native/audio_owner_tests.cpp": "b12d4b7710aa3aa6ce13344d0d22c7cc34cf05a2910794266fc1fa7f3f248a3b",
+    "src/windows/broker_controller_main.cpp": "d9f889025a21237e8c5b3056b198b2be4c64ede593523d7f2381967b5b485dde",
+    "src/windows/usbdk_stream.cpp": "8cbe30c777c0a9a3a9faf3e758fea023772f8f1aed8f6bc07b18ac96cc31fe16",
+    "src/core/capture.hpp": "b6215776fe4f5b88678e69970d7b9b0e4c810fa2dcf8549d1f2fa045b23073e3",
+    "src/asio/driver_facade.hpp": "65b663e500ac5c8e1f4c0f8dfcda18c12b94f155dc5a0b5e71d5f70c7aa68c2f",
+    "src/windows/device_session.hpp": "331567305154af84f450180e7b6af6fe8b4c93ea5890cb17472dc14bf8a7d17f",
+    "src/windows/sl3_fixture.hpp": "f926d9ee87f0d9f02124d9514d50584f47235150180155d3a97dd3acc73bc9f1",
+    "tests/native/redirect_owner_tests.cpp": "6b487c1d304111b4f604eb1367679702e8001aae08c57c632b3aa0da3ae26c70",
+    "tests/native/capture_tests.cpp": "cf54d91f245ea476fc704361483d53836861b4786f96839f9bf5e280f5935428",
+    "tests/native/driver_timer_query_tests.cpp": "d4ef969d349f6c8b239b7c0ea729cd8d96dade757c82ea3b13cadc5c04d357ed",
+    "src/asio/driver_configuration.cpp": "f75e901de0f3dfa5ef93acfb3d02c9b71fc3b6c6be73d4bcaf96320d1a843b1a",
+    "src/asio/driver_configuration.hpp": "65b5260755cdf57e6749a8a5d61cce8ad423d908b2317d0998368c4e839d96c4",
+    "scripts/build-native.ps1": "d0eb2c663338c5f02006d18b2473e585b59e3a1869e5ddf46010bf1b71140edc",
+    "scripts/test-broker-scope-probe.py": "f02faba33caa6c2f12b6a150ddead51169853caebaf78358c991a75bef548345",
+    "scripts/validate-broker-scope-probe.py": "5343ec25af015429e51a5a368a1f65dce944ef133e276a8a61ae53af10da347b",
+    "tests/test_broker_scope_evidence.py": "b19e9a0770e1548f3d5401e28b4074e166b47eedf13f97853963c43de614e8ff"
+  },
+  "publishedSourceSha256": {
+    "src/asio/queue_pump.hpp": "d23676cea12545e17ace1037deaa529061a2d1ca6c83f8e9557af1de6906cb3f",
+    "tests/native/retained_broker_tests.cpp": "82a6175f7abfd43a288e4a3f1a7f3ef036b87b42cc2d1a0aaea794544cc78c2d",
+    "tests/native/device_session_fixture.cpp": "b32d2a1a0a2c663db9c9c7fa0b3a714529d93e98f78fe8a9529cb2c679cce1cc",
+    "src/core/audio_controls.hpp": "a0d7edfdf467f8879c4c357d23840de6aa4d0a7e61dfb49ec38d5c67f3900a56",
+    "src/windows/redirect_owner.hpp": "0f98d35d3f65d0cb3b34311cf6d7d9f703750b5653950ebbf65857cff4b7648c",
+    "src/core/playback.cpp": "e8006a992a70ba9226e74d5e6ce49ca1d54f6214410fbd12a0c994a1ca32119b",
+    "src/core/playback.hpp": "b56a303b0259c57b5999b2e80bcf260fe53575c158d224eec4ea01ed8e56454b",
+    "src/windows/stream_session.hpp": "f17be3baa4f721dfdddefcb10c9ef9b493e4e71160c0bcc8fa525646bab2a0e3",
+    "src/windows/heartbeat.cpp": "10d36fea22aabc05fa44af71f3283c83d3ab4d5f9f1563fdf662ad2fa8b337e6",
+    "src/windows/process_wait.hpp": "80993a7934285e38268491767ec16a09db54e2186f7918e6a9d5bf2d8b20b15a",
+    "tests/native/session_fixture.cpp": "7c7454295a45ba77d5b97cc5011cf918612aa3c7d9ca858490c3a7150ea6344d",
+    "src/asio/audio_owner.hpp": "bcecd86cc309cf41221ab6ad9982fdc99dcbd47eab7fd7df421d15e7c5c3d059",
+    "tests/native/broker_pipe_tests.cpp": "94e238a8f80fc1aa333b951443c4e9e9e5709b7059f35a7996915c97656dee2e",
+    "src/core/device_session_protocol.hpp": "f6413302ba01ef834f86118b4137fe12cd9351428832d69a77b9d23f76051a86",
+    "src/core/audio_bridge.hpp": "b43c7407f13ce72a9d10ef75b1023248876a3177dd23ac7d4e7d6bd2b98c2c5d",
+    "src/core/rate_diagnostic.cpp": "8bd8bd2a07f53b820ea6b51852b4eee94ee93ddcd6daf0609b3f41edd5f25944",
+    "tests/native/driver_configuration_tests.cpp": "d78c04dc307596cfb010efb47a534abfb0bbf0c75fb27a00b3e12c57eff74bd3",
+    "src/windows/worker_process.hpp": "ec8e92629ba73694fff28b661288177eb20b96cef4c07595190cd34bb2a76e05",
+    "src/core/worker_protocol.hpp": "96a7e20ffbdf789dfb85255a8a66028e07eb040dc7d6f0ecbd4475bbae0509c4",
+    "tests/native/usbdk_stream_tests.cpp": "3f02900a6b5341f2e3bced6492969e822e56e029ef21d3d6b6c17559753a232c",
+    "src/asio/host_session.cpp": "1c2c493ce58ca4bea976593311198ad9ede62500c92257a33a9bc2780502329b",
+    "src/windows/control_baseline.hpp": "c2dc0a704b767693fe50b1919c18093efc99df95b9db87a31de0e0696976fb0d",
+    "src/windows/broker_record.cpp": "25041ae52afcc8e74406f4630e006524903043caa0f114ec8085affd722fc2c2",
+    "tests/native/asio_queue_tests.cpp": "7bb83ff02f442e231616b6fb462190c8bf85cb486cc6f8abaa2ea9cb3190cc6a",
+    "tests/native/worker_fixture.cpp": "60571f46cd35a04766dc7dac8459662911257fb8da520975cd877321bafdb2d9",
+    "src/windows/driver_timer_io.hpp": "8b98abe1967ec21813c46cf762afc3a927c19b1c8d119f118b78f5dd2f296ac5",
+    "src/windows/rate_io_log.hpp": "0c9df08805b5fc2c0e0d90d855aa1722c9a6a12390cb12b3d42648dfb3f1242a",
+    "src/asio/audio_owner.cpp": "2cbb6714f8d1bf917b3a0eba83abb60609016cb3dd6d6918a4b791dcdfaaa998",
+    "src/core/session_protocol.cpp": "3c9241a076da90ec0c333675c8f7a46e23768aa20a0cd969c14f6f7f32325e5a",
+    "src/core/worker_protocol.cpp": "97584c60519909039bea1a94fa56d67f789d1d0754f90a007bfc48fedc398803",
+    "src/core/continuous.hpp": "2c5b080e134631193891ac2faad80c43ab0f3ff5091cfc4307b36d6ede968295",
+    "src/windows/audio_ring.hpp": "414607684c324fb09fa1f11efa515067c721c8cdccecbe444e6b9901502506d0",
+    "src/windows/broker_record.hpp": "7218877717ac776f7bad878db642e55b1ac6d4dd11dbbf432d32c78b11b75bb7",
+    "tests/native/device_session_tests.cpp": "5d759a7755ad384b61cb8028f6183930e754748b8c5e9e9b23a53f47bf443ef3",
+    "src/asio/broker_session.cpp": "c21349db46b0f9efa59e1d6b343652fb7b5ca2162406d0ad85e388e70130e7d5",
+    "tests/native/asio_session_fixture.def": "f3716e4b197ca6482bdfa3d1388202ee254cb362d0ece0f4b6395c9062fa10aa",
+    "src/core/audio_bridge.cpp": "6289660d879dfab69af7edb6166f3a7c7ab45371c6766bcf3e1169255ab71435",
+    "tests/native/asio_com_tests.cpp": "6ca5810c5c7957e05d83ae3e67a25e89adf7a3d019015203e7b057ef1aa6e1f0",
+    "src/core/audio_control_selection_wire.hpp": "c634bde00e663637364ce266312de2efe21c7c17ef3cbb3084516adc0e49002d",
+    "src/windows/device_session.cpp": "5247ecce9a332192f19f82933e487b43d4f2ecf52e0c5f6e1c086e971e5b6a8d",
+    "src/windows/heartbeat.hpp": "89adc21515d19c0d958daa2e3ce89702f31af06134da32a92ee3ef9427b99a15",
+    "src/windows/mailbox_layout.hpp": "efd59eb3cdf03641a0b60ae820b04a8a476e432734a959ea72136612b065470b",
+    "src/asio/buffer_set.hpp": "03f097b32d942e551283e005d2206a57d8b0d8ed2fe740b524435dfaccd1ca72",
+    "src/windows/broker_pipe.hpp": "561dcfd3ff37a777fc716fb4ec8f964c30d061af266d4062c868948b559cf636",
+    "src/asio/scope_interface.hpp": "7d6949e962e1809badc8a9487d9f8aae77e3444b1857d42fe543451a6e3696d2",
+    "src/core/control_frames.cpp": "e7b7fa17fcdd7027adde67b96cf46385049d4cca989b53c13ac32756270b53e3",
+    "src/windows/broker_scope_probe_main.cpp": "e94785180d238a0e6cd8ed814af2e182baf5a77c57567152f59a7615278b5d08",
+    "tests/native/playback_tests.cpp": "90a8d63d3cab5795d3199b1d7e5dd2ef22fa9978f85c37937606f4bf32e36b18",
+    "CMakeLists.txt": "173a4de2386aac449c6c70a1318b33f497ec2875b1b14a734884d05075a511df",
+    "tests/native/worker_process_tests.cpp": "c643732877470f115443c27afff9659a71adbb342690e20920ba51c87659b66f",
+    "src/core/control_frames.hpp": "bb133b6e0272347a36b80e30a7e1c6939095133ca4ca1eccb2f84bedf692e2af",
+    "src/core/duplex.cpp": "d15a169e365de5897f7168369969e765f8d7d01227b3461ec8f4917077d3bf2d",
+    "src/core/rate_selection.hpp": "d87c9c8e0ababe724f523f917f3f4d64cf90dbbc44725ac063aa5ff5080925bd",
+    "tests/native/audio_bridge_tests.cpp": "1a5af82c40885b247ae95741f486d62951179d0aa21e7e288918331cf5c9e57b",
+    "src/windows/retained_broker.hpp": "faf827cb32d9a31e8595d12d85321b5f6ec4ba5a2d1041a2c595deaac510245a",
+    "src/windows/retained_broker.cpp": "ecb1cd7400d032c30c70ee2bafeb2f0c0e877b77d1ec634ceb4d3d17e270ed5a",
+    "src/windows/mailbox.hpp": "5462d3b4a0bc8e182f5a970c8c7d44e563ade18b7044525f27bbd8cbc7a958e8",
+    "src/windows/worker_process.cpp": "4191f7614d8df20c47a317c2b30942874919ad125d6da0297c4f0137233be0e5",
+    "src/core/timer_verification.hpp": "79df9844d5031b4d7d03600917070e9b7516a9c7dc31ebb97ff0d2ba962bcefa",
+    "src/asio/queue_pump.cpp": "d992a00414ddf48473e8be3379cbff22a16efe0ad6fdf7e80fb8209b0e008169",
+    "tests/native/com_activation_fixture.hpp": "79b50bee714e8699fd8d2f32358356962d2e80ee302b1c26bf250a03d362e4c4",
+    "src/asio/com_identity.hpp": "358f892e11f17308d37fdcb8c82ceea0171a3421d8472ac675f9e012783904ac",
+    "src/core/rate_test_grant.hpp": "7b2f714cad08548fca977bfbf13dc80ede25790b46b9d87b4f397f0f38e7b466",
+    "tests/native/rate_selection_tests.cpp": "b8542d44f2ebc0e1a428ce07951126351005db24b99202cdcb03ce9474d67d8d",
+    "tests/native/mailbox_tests.cpp": "c8705fe6fd3696693a0aa996532677849ca2d4435854fcd8c31590ee1cee300b",
+    "src/asio/com_server.cpp": "3c580c12b1179b17cb193ed02edbe88bd46634123b585f6a8afbf10beb713b44",
+    "third_party/usbdk/README.md": "605c7faa50a802736c21ac03d362c8962445168cdcdb9edce54c3d82e62b3b9d",
+    "src/windows/diagnostic.hpp": "5659a28562d9b06d6d0b5c08eb94f5542bd32e319a6a27f71c1b8f4090f9cc71",
+    "src/windows/control_transfer_io.hpp": "30fe6ab81e11760f5d8d33592823758d91addd291fcc5f926e06533a926dc6c8",
+    "src/asio/host_session.hpp": "802a555504f986262c68c973754a82c6a1bbbf2c1e99fdf965fb6f38d760b89d",
+    "src/core/session_protocol.hpp": "536b7fc1176e74221617f4b0a7697b1d4fad1d8fa1d460185bca04b39ffd9a61",
+    "src/core/timer_verification.cpp": "e2b21f044646b8b38ddc0dcfb9ed85e1730bb0ea5f9a7a006c56f77543785f02",
+    "src/core/driver_timer_query.hpp": "3f7d77666a274e77b73a0ebc5f87967b3f24645fab531eb9b094e7eda546ffea",
+    "src/asio/buffer_set.cpp": "3b38534b2e014ce8d66b13053da96bedfc7c6850a21800182d4271d6b791c491",
+    "src/core/control_test_target.hpp": "1599d258d18a37801e547f2a3872133e58aad8a078dd3218d081d1671a9f8310",
+    "tests/native/continuous_tests.cpp": "1e22409ac59e2b9aebda28083d1e29da879422322d0f9e62fd5dce1bc6b1f2b0",
+    "tests/native/driver_timer_io_tests.cpp": "841331309008a591aa608fb34a87c9a996bcd37e9f29ba31fa4b8f2834a81e42",
+    "src/core/rate_selection_wire.hpp": "8ba179e60600eb44078875ba8372702191cb2e6348287988d5f76b06bee025cd",
+    "src/core/device_session_protocol.cpp": "d1e872de9737397dc304e648097ad75e833c4b1ec9a0aeff563f9633987bcf46",
+    "src/windows/scope_probe_main.cpp": "9eff651ed259e9016c36616d105f2abb8558c9efd5643791e7a9fe46dc554463",
+    "tests/native/retained_host_tests.cpp": "76c9ba268f37ba2e333db5c736331270de5bc3acd68a71c7326f9a47a20b7172",
+    "src/windows/host_probe_main.cpp": "f35df01f49053b605a6ddb78053fafbea0abb888ba77e3d95e5e85dfed695198",
+    "src/core/audio_block.hpp": "0c74b31d35bb08491ca92a570f786491fdb159689fb8c0a3971148fc8f8e8b66",
+    "tests/native/asio_session_provider.cpp": "824158baf6d599046e4a361d52f4aaf64fe00d51c2535b0afb577cf86b004291",
+    "third_party/usbdk/UsbDkHelper.h": "09cad2056278cd9dd5d74e66ec0115569662b6643ebc28660eeab3f089a0020c",
+    "src/windows/control_selection_diagnostic.hpp": "8ee6740f0b637b2c0773f42cba8c708cc31122ef3eb9a51dc4f3386a8003a456",
+    "tests/native/audio_pattern.hpp": "80f47cd01d32a8a73635bbf8ed3d7b55ed9ecb1f2745289881c9a879972d41cb",
+    "src/core/continuous.cpp": "2655516933b8fa6dce7123014fabbc6db79a442303f80d6dc70dc0804c34d69d",
+    "src/windows/startup_journal.hpp": "f391804857092750996b97abf8237df2835c89d34f975b6df73d602ff3501eba",
+    "src/asio/sl3_asio.def": "5e364b9442615e09244cb1b261ffa63afe3c0cff6dfcb8ffb12bfa0c3101807d",
+    "tests/native/asio_buffer_tests.cpp": "836427bdd4f97c52a2e61932066f1d7ec0dabd3813b60e8ae1c21c6a7800e371",
+    "src/asio/driver_facade.cpp": "45f4edf9790ce230b13526145ebf0bd8eebd1ec573e772e639605d9a96f4f38c",
+    "tests/native/device_presence_tests.cpp": "49a6e928d4f8ddc6ca942725894931d8e8e146073a1273e48d46275dfbd14b88",
+    "tests/native/startup_journal_tests.cpp": "25f188c1c2b26989caa24dd2b5918e0ec14501a9d23964e6c7f850508f5f364e",
+    "third_party/usbdk/UsbDkData.h": "8f0a0f4f10d2d6fb371e48c7c9e82af890ca75601ec4e5143949a42402d8cb83",
+    "tests/native/host_session_tests.cpp": "9407bb3ea87a8b1d45ceab6975a7974160e05626452c14f9af5cbcced5af812f",
+    "src/windows/continuous_peer.hpp": "9b13a6beeafe3915de433f033d63521bf4394f6ae43c3c0521be6e314ab42a24",
+    "src/core/audio_control_selection_io.hpp": "25170a7ab1555933334a824ec1b34b9b395724b26a66dd389b0ae6fcaad3caed",
+    "src/core/audio_controls_query.hpp": "5f64e5e06f07a9ab3a5ac8afb56e938f341ba5b1fec955e32e0e0ad3c2eb4b63",
+    "src/windows/usbdk_stream.hpp": "76ff7b84f5cb984710f7dca43352d8405e563911c39f3fb4ac92fe2327fc81f5",
+    "third_party/usbdk/LICENSE": "09e8a9bcec8067104652c168685ab0931e7868f9c8284b66f5ae6edae5f1130b",
+    "src/asio/driver_session.hpp": "31699313742161f89eed922c306b7a4e2cbbfad19c46f5bc0e623822901ed1c1",
+    "src/core/capture.cpp": "f16b23870b216a581fb21425f58586fc46de13a9af520953c870bfaae5420cd3",
+    "tests/native/duplex_tests.cpp": "0c200fdec05a5c25069a0d3a2f66948f318a8a5ea3b8e22231e5ce90cf1a72e5",
+    "src/windows/usbdk_main.cpp": "86936ede6ec8446a33cff6cd9f038ebc61c33448d8fe79f59351345b4c25c3c8",
+    "tests/native/session_tests.cpp": "d6d56954da05ddc6cde404685d97c38cffaba7c5460abbd761ee48273c2e14d8",
+    "tests/native/audio_ring_tests.cpp": "4175f197d2c3b8f0f0fa472c8679b84b711b8b0da9610e02f6e6b10c1b7e08dd",
+    "tests/native/broker_asio_tests.cpp": "0fa2d2e15f2f7fc8b5e54c2a0a8506f90bb89db9c5aef8aa19985e74d5c47338",
+    "tests/native/driver_facade_tests.cpp": "901d879963991b139cf13389b0771d293b94f67ea8d2ccb235f5bd5f3e451a6a",
+    "src/core/device_presence.hpp": "878d7a4203bd34ac964a3417fa6682f1920c3aaad8dd6b38d0214bdd69936e76",
+    "src/core/duplex.hpp": "20e32a03c471a0751ccb3ee90dbd49252bfa87e387c45a9be03ff185011819dc",
+    "tests/native/worker_protocol_tests.cpp": "5d600e2ff7cc8ee493d5d319fe06335de6497b985683c374e68f8bac77781792",
+    "src/windows/broker_pipe.cpp": "f2b3df6a44f282d14520733bddb7c520e45f3141246f65990e2a6626e3393040",
+    "tests/native/control_frames_tests.cpp": "b302bf5791adaa1d1a44ed7235f1dbee3ef2fd019cf7691b67b9690df2a8c2b0",
+    "tests/native/broker_record_tests.cpp": "b7c8f2337910ef8882aa9845faa238b985fd5d1c2ba584697a11863387061723",
+    "src/windows/capture_main.cpp": "c8f9abc6738e65a22bc8689ed98003a940ba7bf8f44f56f9c43c17f211181fbe",
+    "tests/native/timer_verification_tests.cpp": "6c08ac3cea4d0599fa7df67e64c8a6e79630c1c9b5fff6b70b3d058d218548ab",
+    "src/core/rate_selection.cpp": "93448884ed841c19a2fd48dda41d2fea36c144e65443349ff3de31872cb11802",
+    "src/windows/mailbox.cpp": "87c5b891c8f2c369c2bb2ef0028e2411000f2b428adf45bfb7ddde153b33c7e2",
+    "src/asio/driver_session.cpp": "52f216d630f179450bdf196cbf5701cfebb8b8cac9486f741e58fcfe1612740c",
+    "src/core/audio_control_selection.hpp": "4bfcd11e112f0a7dbb47d5fae39607f4cedae64fb8d7f1c406de4a6a1c9ccb04",
+    "tests/native/asio_session_tests.cpp": "110dd64abd0cac5dfaf5159bfd6530505ce39bb70be97461e222bf219f58c109",
+    "src/core/rate_diagnostic.hpp": "1202a6f67365563998dec858eea2cabf17cffb88da15080b6fb786e947737c94",
+    "tests/native/asio_activation_tests.cpp": "50ee963d60a34009fb874ac524b2a56009a94fe8dd91aaf6b4af44ca38d3c20d",
+    "src/windows/stream_session.cpp": "d24e66aee51d6cee77736316ec8caf8369da90a84620b0da4c85c6de91488c13",
+    "tests/native/control_transfer_io_tests.hpp": "ad951fcb9da47ac7e53660633fbcad2965476f6f2d3f4e0b4a2aee9ddb4cce2c",
+    "tests/native/audio_owner_dll.cpp": "96cdced14d73f1a705c83e49fbdea746a25885860722b1c409c81a48d6ee22a2",
+    "tests/native/session_fake_backend.hpp": "123991562dfcae3c2ade3aaf2c30a2aa201b58e4101b7abc501c219cda822e04",
+    "tests/native/audio_owner_tests.cpp": "b12d4b7710aa3aa6ce13344d0d22c7cc34cf05a2910794266fc1fa7f3f248a3b",
+    "src/windows/broker_controller_main.cpp": "1546ea1e7000b088af1f183f616eb934a838393016773c7fae7f1be973e65e06",
+    "src/windows/usbdk_stream.cpp": "8cbe30c777c0a9a3a9faf3e758fea023772f8f1aed8f6bc07b18ac96cc31fe16",
+    "src/core/capture.hpp": "b6215776fe4f5b88678e69970d7b9b0e4c810fa2dcf8549d1f2fa045b23073e3",
+    "src/asio/driver_facade.hpp": "0e8f21d88e7e284e213abf7604a000b3a8566f0d94455dc6c320761852a21e9a",
+    "src/windows/device_session.hpp": "78e9724b6c149b0571babc582ecccf95edc83e294bef26b9f88dfe1594e8dcfe",
+    "src/windows/sl3_fixture.hpp": "f1af47a5aa403b6ea916e0597bcbe08682ed2c5f5f4a292fcfcd062f5c9c4857",
+    "tests/native/redirect_owner_tests.cpp": "6b487c1d304111b4f604eb1367679702e8001aae08c57c632b3aa0da3ae26c70",
+    "tests/native/capture_tests.cpp": "cf54d91f245ea476fc704361483d53836861b4786f96839f9bf5e280f5935428",
+    "tests/native/driver_timer_query_tests.cpp": "d4ef969d349f6c8b239b7c0ea729cd8d96dade757c82ea3b13cadc5c04d357ed",
+    "src/asio/driver_configuration.cpp": "f75e901de0f3dfa5ef93acfb3d02c9b71fc3b6c6be73d4bcaf96320d1a843b1a",
+    "src/asio/driver_configuration.hpp": "65b5260755cdf57e6749a8a5d61cce8ad423d908b2317d0998368c4e839d96c4",
+    "scripts/build-native.ps1": "efaec3ef527a58f5fe7cf873bac6629adc51fe805762a528f7f0190e88cb291c",
+    "scripts/test-broker-scope-probe.py": "f02faba33caa6c2f12b6a150ddead51169853caebaf78358c991a75bef548345",
+    "scripts/validate-broker-scope-probe.py": "5343ec25af015429e51a5a368a1f65dce944ef133e276a8a61ae53af10da347b",
+    "tests/test_broker_scope_evidence.py": "b19e9a0770e1548f3d5401e28b4074e166b47eedf13f97853963c43de614e8ff"
+  },
+  "sourceHashScope": "Native manifests pin local source bytes; publication hashes bind Git LF bytes. ASIO SDK files stay private.",
+  "observations": {
+    "nativeWorkerBinaryUnchanged": true,
+    "asioAndBrokerLinkedBinariesChanged": true,
+    "serverSideMetadataModeRejectsAudioBeforeStart": true,
+    "threeActualClientProcessIdentitiesPerRun": true,
+    "oneWorkerAcquisitionAndSevenGettersPerSimulatedRun": true,
+    "noTimingProfileNeededForDiagnostic": true,
+    "productionControllerTimingRequirementUnchanged": true,
+    "allActualSimulatedOutputsPassOfflineValidator": true,
+    "nativeKindRefusedBeforeAcquire": true
+  },
+  "priorInstallerCheckpoint": {
+    "checksPassedAtPriorCheckpoint": 334,
+    "pythonSourcePinsStillMatch": true,
+    "reviewedOldBundleNotUpgraded": true,
+    "newPayloadInstallationTestsRerun": false
+  },
+  "limits": {
+    "physicalNativeBrokerRun": false,
+    "nativeJournalGrammarUsesSyntheticTestsOnly": true,
+    "deviceAccessDuringTests": false,
+    "helperLoadedInProbe": false,
+    "audioStartedByDiagnostic": false,
+    "timingProfileGenerated": false,
+    "asioConfigurationPublished": false,
+    "newDeploymentBundleCreated": false,
+    "dedicatedTracedRunnerImplemented": false,
+    "kernelQuiescenceVerified": false,
+    "safeReopenVerified": false,
+    "physicalAudioVerified": false,
+    "measuredTimingVerified": false,
+    "protectedDeploymentExecuted": false,
+    "currentSeratoAdmissionVerified": false,
+    "currentDvsTested": false
+  },
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/broker-scope-20261102",
+    "files": 902,
+    "manifestSha256": "e04a1623929908c13ae28923f92d5132f89a7dcca84c3281a694c0497e86396e",
+    "selfReferentialVerificationExcluded": true
+  }
+}

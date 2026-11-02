@@ -76,6 +76,13 @@ static int client(int argc,wchar_t** argv){
     if(mode==L"wrong-worker"){rejects([&]{BrokerClient wrong(endpoint,server.value,session::Kind::simulated,std::string(64,'0'));});return 0;}
     BrokerClient broker(endpoint,server.value,session::Kind::simulated,worker_hash);
     if(mode==L"die-idle")ExitProcess(0);
+    if(mode==L"clock-only"){
+        require(broker.clock()==48000,"Metadata-only fresh clock");
+        require(broker.detach().phase==ds::Phase::ready,"Metadata-only detach");return 0;
+    }
+    if(mode==L"metadata-start-refused"){
+        auto audio=Mailbox::create();rejects([&]{broker.start(*audio,{48000,8,1000,200});});return 0;
+    }
     require(broker.clock()==48000,"Pipe fresh clock");auto audio=Mailbox::create();const auto name=audio->name();
     require(broker.start(*audio,{48000,8,1000,200}).phase==ds::Phase::running,"Pipe starts stream");
     if(mode==L"die-running")ExitProcess(0);
@@ -94,15 +101,15 @@ struct Harness {
     std::vector<std::string> diagnostics;
     std::string worker_hash;
     std::filesystem::path audit=std::filesystem::temp_directory_path()/(listener.name().substr(listener.name().size()-32)+L"-pipe-audit.txt");
-    explicit Harness(const std::filesystem::path& worker):worker_hash(Process::executable_sha256(worker)){
+    explicit Harness(const std::filesystem::path& worker,BrokerAccess access=BrokerAccess::audio):worker_hash(Process::executable_sha256(worker)){
         require(!std::filesystem::exists(audit),"Fresh pipe audit");stop.value=CreateEventW(nullptr,TRUE,FALSE,nullptr);require(stop.value!=nullptr,"Controller stop event");
-        thread=std::thread([this,worker]{
+        thread=std::thread([this,worker,access]{
             try{
                 BrokerSpec spec;spec.executable=worker;spec.sha256=Process::executable_sha256(worker);spec.kind=session::Kind::simulated;spec.fixture_mode=L"audit:"+audit.native();
                 RetainedBroker owner(spec);require(owner.open(),"Fixture broker owner opened");
                 {std::lock_guard<std::mutex> lock(mutex);ready=true;condition.notify_all();}
                 while(WaitForSingleObject(stop.value,0)==WAIT_TIMEOUT){
-                    std::string diagnostic;const auto result=serve_broker_client(listener,owner,stop.value,&diagnostic);
+                    std::string diagnostic;const auto result=serve_broker_client(listener,owner,stop.value,&diagnostic,access);
                     if(!diagnostic.empty()){
                         std::cerr<<"Fixture broker connection: "<<diagnostic<<'\n';
                         std::lock_guard<std::mutex> lock(mutex);diagnostics.push_back(diagnostic);
@@ -142,6 +149,11 @@ static void positive(const std::filesystem::path& worker,const std::filesystem::
         std::count(rows.begin(),rows.end(),"rate")==7 && std::count(rows.begin(),rows.end(),"begin")==2 && std::count(rows.begin(),rows.end(),"end")==2,"Real pipe/process lifetime and audio audit");
 }
 static void negatives(const std::filesystem::path& worker,const std::filesystem::path& self){
+    {Harness h(worker,BrokerAccess::metadata_only);run_client(h,self,L"clock-only",1);h.served(1);h.finish();const auto rows=h.lines();
+        require(!h.final.failed && std::count(rows.begin(),rows.end(),"begin")==0,"Read-only metadata lifecycle");}
+    {Harness h(worker,BrokerAccess::metadata_only);run_client(h,self,L"metadata-start-refused",1);h.served(1);h.finish();const auto rows=h.lines();
+        require(h.final.failed && std::count(rows.begin(),rows.end(),"begin")==0,"Metadata server refuses audio before worker start");
+        require(std::any_of(h.diagnostics.begin(),h.diagnostics.end(),[](const std::string& d){return d.find("Metadata-only broker")!=std::string::npos;}),"Read-only refusal reason");}
     {Harness h(worker);run_client(h,self,L"delayed-detach",1);h.served(1);run_client(h,self,L"normal",2);h.served(2);h.finish();require(!h.final.failed,"Delayed detach reply/ack retires connection before replacement");}
     for(const auto mode:{L"bad-magic",L"oversized",L"bad-proof",L"wrong-kind",L"wrong-worker"}){
         Harness h(worker);run_client(h,self,mode,1);h.served(1);h.finish();const auto rows=h.lines();

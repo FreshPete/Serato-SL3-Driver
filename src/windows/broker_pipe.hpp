@@ -16,10 +16,12 @@ private:
     friend class BrokerConnection;
 };
 enum class BrokerServeResult {no_client,detached,rejected,owner_failed,stopped};
+enum class BrokerAccess {audio,metadata_only};
 // Single control thread. Stop event belongs to the explicit owner/controller.
 // Accept is bounded; connected idle waits poll liveness/stop at 50 ms. Closing
 // an active owner never certifies retirement of callbacks in the client process.
-BrokerServeResult serve_broker_client(BrokerListener&,RetainedBroker&,HANDLE stop_event,std::string* diagnostic=nullptr);
+BrokerServeResult serve_broker_client(BrokerListener&,RetainedBroker&,HANDLE stop_event,std::string* diagnostic=nullptr,
+                                     BrokerAccess access=BrokerAccess::audio);
 
 class BrokerClient final {
 public:
