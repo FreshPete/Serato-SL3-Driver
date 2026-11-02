@@ -1,0 +1,78 @@
+{
+  "schema": "sl3.serato-path-callers-verification.v1",
+  "createdUtc": "2026-11-02T03:21:51.140615+00:00",
+  "evidenceSha256": "609b04b948b1fe5a3b1bd483995f0d21339323cc5dddf8da110763e8edac42cf",
+  "identifiedDirectAccessorSites": 7,
+  "focusedFunctions": 7,
+  "checkedInstructions": 50,
+  "osImportSites": 5,
+  "crtExitThunks": 2,
+  "byteIdenticalRegeneration": true,
+  "originalAndInstalledExecutableMatch": true,
+  "sourceSha256": {
+    "scripts/export-serato-path-callers.py": "bbc215b47f5d435afde72d0bc7745a7de02159b5a5b01396938debc37bf68ec1",
+    "scripts/pe-navigate.py": "2a94d277d33f91ad4939b07f01aece6d9ad7a89f4f2ac895301953d4cc4ee93e",
+    "scripts/export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+    "scripts/ghidra/FocusedDecompile.java": "54383ff3d55f0bb97c2a2e1129fa712eb237c7a2126420c627bb08d8c33672d6"
+  },
+  "newFacts": {
+    "gpuPreferenceKeyAndReadApiVerified": true,
+    "twoRegGetValueCallsUseRegSzFlags": true,
+    "fourStringCleanupBoundToCrtExitRegistration": true,
+    "secondPathComponentArgumentChecked": true
+  },
+  "analysisProcesses": {
+    "freshReadOnlyImports": 2,
+    "automaticWholeProgramAnalysis": false,
+    "additionalFilesLoaded": 0,
+    "bothProcessExitCodes": 0,
+    "temporaryProjectsObservedAbsent": true
+  },
+  "nativeBaseline": [
+    {
+      "configuration": "Release",
+      "priorTestsPassed": 59,
+      "sourcePinsStillMatch": true,
+      "rerunForStaticAnalysis": false,
+      "manifestSha256": "09fa39a717a9b024981b9a2e9da0406234e91fedd17b3370bac04c7dbfab1a87",
+      "ctestLogSha256": "7d1dd0d5f95b6a03fea0b02c1fdb57a4cc9550dedbaac5f480063dfa5c990d5c"
+    },
+    {
+      "configuration": "Debug",
+      "priorTestsPassed": 59,
+      "sourcePinsStillMatch": true,
+      "rerunForStaticAnalysis": false,
+      "manifestSha256": "d97f2b1855391de1412473897c8d4d5cd7f9fe40d91afb0f78eb5b0fa4151c92",
+      "ctestLogSha256": "70452b9868b2e84da6aca20160944a63a05d857d86ab2bbccb3ac078572d9df1"
+    }
+  ],
+  "previousSoftwareCheckpoint": {
+    "distinctChecksPassed": 228,
+    "sourcePinsStillMatch": true,
+    "rerunForStaticAnalysis": false
+  },
+  "limits": {
+    "directScanConfinedToValidatedRel32CallsInUnwindRanges": true,
+    "allIndirectLeafCallersExamined": false,
+    "allStateWritesExamined": false,
+    "allIndirectCalleesProvedReadOnly": false,
+    "vendorRegistryCallsExecuted": false,
+    "applicationExecuted": false,
+    "applicationOrArchiveModified": false,
+    "accountInspected": false,
+    "resourceOverrideInstalled": false,
+    "externalSl3DescriptorRegistrationEstablished": false,
+    "currentSeratoAdmissionVerified": false,
+    "deviceAccess": false,
+    "physicalAudioTested": false,
+    "measuredTimingVerified": false,
+    "currentDvsTested": false
+  },
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/serato-path-callers-publish-20261102",
+    "files": 781,
+    "manifestSha256": "5eb10b4720ce215d38de33e77d0f26bf61b864a1129702ee65223eecdb1c99d2",
+    "selfReferentialVerificationExcluded": true
+  },
+  "publishedEvidenceUsesLfOnly": true
+}

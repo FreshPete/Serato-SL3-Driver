@@ -178,3 +178,11 @@ bounded assembly and report/archive hashes. Focused reports, vendor binaries
 and the vendor archive remain in ignored local analysis/artifact directories.
 The report hashes record this analysis snapshot; they do not claim complete
 control-flow recovery or runtime confirmation.
+
+## Later module-path caller checks
+
+[Seven identified direct accessor sites](serato-path-callers.md) now have fresh
+argument/import and lifecycle evidence. They include a Windows UserGpuPreferences
+query and CRT cleanup callback. This supplies no demonstrated resource-root setter
+or external device-profile registration, and does not exhaust indirect/leaf
+callers or all state writes. No registry operation or vendor code was executed.

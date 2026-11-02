@@ -1,0 +1,410 @@
+{
+  "schema": "sl3.serato-path-callers.v1",
+  "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "installedMatches": true,
+  "accessorVA": "0x14083dfe0",
+  "identifiedDirectCallers": [
+    {
+      "call_va": "0x1404a84fa",
+      "range": [
+        "0x1404a84c0",
+        "0x1404a8ab8"
+      ]
+    },
+    {
+      "call_va": "0x1404a9ca0",
+      "range": [
+        "0x1404a9c30",
+        "0x1404a9d94"
+      ]
+    },
+    {
+      "call_va": "0x14153f868",
+      "range": [
+        "0x14153f830",
+        "0x14153fed6"
+      ]
+    },
+    {
+      "call_va": "0x14153f9f6",
+      "range": [
+        "0x14153f830",
+        "0x14153fed6"
+      ]
+    },
+    {
+      "call_va": "0x14153fc91",
+      "range": [
+        "0x14153f830",
+        "0x14153fed6"
+      ]
+    },
+    {
+      "call_va": "0x141cb2362",
+      "range": [
+        "0x141cb2330",
+        "0x141cb25f4"
+      ]
+    },
+    {
+      "call_va": "0x141cb4c72",
+      "range": [
+        "0x141cb4c40",
+        "0x141cb4f04"
+      ]
+    }
+  ],
+  "navigationSha256": "ee28fd9631427f76af5712d9426256eb22878df02ea9e72ea15c553f147cf768",
+  "checkedInstructions": [
+    {
+      "va": "0x1404a84fa",
+      "bytes": "e8e15a3900",
+      "assembly": "call 0x14083dfe0"
+    },
+    {
+      "va": "0x1404a9ca0",
+      "bytes": "e83b433900",
+      "assembly": "call 0x14083dfe0"
+    },
+    {
+      "va": "0x14153f868",
+      "bytes": "e873e72fff",
+      "assembly": "call 0x14083dfe0"
+    },
+    {
+      "va": "0x14153f9f6",
+      "bytes": "e8e5e52fff",
+      "assembly": "call 0x14083dfe0"
+    },
+    {
+      "va": "0x14153fc91",
+      "bytes": "e84ae32fff",
+      "assembly": "call 0x14083dfe0"
+    },
+    {
+      "va": "0x141cb2362",
+      "bytes": "e879bcb8fe",
+      "assembly": "call 0x14083dfe0"
+    },
+    {
+      "va": "0x141cb4c72",
+      "bytes": "e86993b8fe",
+      "assembly": "call 0x14083dfe0"
+    },
+    {
+      "va": "0x1404a84ff",
+      "bytes": "488bf0",
+      "assembly": "mov rsi, rax"
+    },
+    {
+      "va": "0x1404a8502",
+      "bytes": "4883781000",
+      "assembly": "cmp qword ptr [rax + 0x10], 0"
+    },
+    {
+      "va": "0x1404a9ca5",
+      "bytes": "488bd0",
+      "assembly": "mov rdx, rax"
+    },
+    {
+      "va": "0x1404a9ca8",
+      "bytes": "488d4c2440",
+      "assembly": "lea rcx, [rsp + 0x40]"
+    },
+    {
+      "va": "0x1404a9cad",
+      "bytes": "e8de958001",
+      "assembly": "call 0x141cb3290"
+    },
+    {
+      "va": "0x14153f86d",
+      "bytes": "4c396810",
+      "assembly": "cmp qword ptr [rax + 0x10], r13"
+    },
+    {
+      "va": "0x14153f94a",
+      "bytes": "c74424281f000200",
+      "assembly": "mov dword ptr [rsp + 0x28], 0x2001f"
+    },
+    {
+      "va": "0x14153f957",
+      "bytes": "4533c9",
+      "assembly": "xor r9d, r9d"
+    },
+    {
+      "va": "0x14153f95a",
+      "bytes": "4533c0",
+      "assembly": "xor r8d, r8d"
+    },
+    {
+      "va": "0x14153f964",
+      "bytes": "48c7c101000080",
+      "assembly": "mov rcx, 0xffffffff80000001"
+    },
+    {
+      "va": "0x14153f9fb",
+      "bytes": "488378180f",
+      "assembly": "cmp qword ptr [rax + 0x18], 0xf"
+    },
+    {
+      "va": "0x14153fa02",
+      "bytes": "488b00",
+      "assembly": "mov rax, qword ptr [rax]"
+    },
+    {
+      "va": "0x14153fa05",
+      "bytes": "488bd0",
+      "assembly": "mov rdx, rax"
+    },
+    {
+      "va": "0x14153fa08",
+      "bytes": "488d4db8",
+      "assembly": "lea rcx, [rbp - 0x48]"
+    },
+    {
+      "va": "0x14153fa0c",
+      "bytes": "e80fa7bb00",
+      "assembly": "call 0x1420fa120"
+    },
+    {
+      "va": "0x14153fa12",
+      "bytes": "4c8d45b8",
+      "assembly": "lea r8, [rbp - 0x48]"
+    },
+    {
+      "va": "0x14153fa16",
+      "bytes": "488bd3",
+      "assembly": "mov rdx, rbx"
+    },
+    {
+      "va": "0x14153fa19",
+      "bytes": "488d4c2470",
+      "assembly": "lea rcx, [rsp + 0x70]"
+    },
+    {
+      "va": "0x14153fa1e",
+      "bytes": "e8fd080000",
+      "assembly": "call 0x141540320"
+    },
+    {
+      "va": "0x14153fc96",
+      "bytes": "488bd0",
+      "assembly": "mov rdx, rax"
+    },
+    {
+      "va": "0x14153fc99",
+      "bytes": "488bcf",
+      "assembly": "mov rcx, rdi"
+    },
+    {
+      "va": "0x14153fc9c",
+      "bytes": "e81f1df6fe",
+      "assembly": "call 0x1404a19c0"
+    },
+    {
+      "va": "0x141cb2367",
+      "bytes": "488bd8",
+      "assembly": "mov rbx, rax"
+    },
+    {
+      "va": "0x141cb236a",
+      "bytes": "488bd0",
+      "assembly": "mov rdx, rax"
+    },
+    {
+      "va": "0x141cb2371",
+      "bytes": "e88a200000",
+      "assembly": "call 0x141cb4400"
+    },
+    {
+      "va": "0x141cb2377",
+      "bytes": "488d5340",
+      "assembly": "lea rdx, [rbx + 0x40]"
+    },
+    {
+      "va": "0x141cb237f",
+      "bytes": "e87c0f7ffe",
+      "assembly": "call 0x1404a3300"
+    },
+    {
+      "va": "0x141540379",
+      "bytes": "33d2",
+      "assembly": "xor edx, edx"
+    },
+    {
+      "va": "0x14154037b",
+      "bytes": "41b902000000",
+      "assembly": "mov r9d, 2"
+    },
+    {
+      "va": "0x141540381",
+      "bytes": "488bcd",
+      "assembly": "mov rcx, rbp"
+    },
+    {
+      "va": "0x1415403fe",
+      "bytes": "41b902000000",
+      "assembly": "mov r9d, 2"
+    },
+    {
+      "va": "0x141540404",
+      "bytes": "4d8bc6",
+      "assembly": "mov r8, r14"
+    },
+    {
+      "va": "0x141540407",
+      "bytes": "33d2",
+      "assembly": "xor edx, edx"
+    },
+    {
+      "va": "0x141540409",
+      "bytes": "488bcd",
+      "assembly": "mov rcx, rbp"
+    },
+    {
+      "va": "0x14083e098",
+      "bytes": "e8839d8d01",
+      "assembly": "call 0x142117e20"
+    },
+    {
+      "va": "0x142117e24",
+      "bytes": "e8b7ffffff",
+      "assembly": "call 0x142117de0"
+    },
+    {
+      "va": "0x142117df3",
+      "bytes": "e8e6870000",
+      "assembly": "call 0x1421205de"
+    },
+    {
+      "va": "0x142117dfa",
+      "bytes": "488bd3",
+      "assembly": "mov rdx, rbx"
+    },
+    {
+      "va": "0x142117e04",
+      "bytes": "e8cf870000",
+      "assembly": "call 0x1421205d8"
+    },
+    {
+      "va": "0x1425e234b",
+      "bytes": "e8f019ecfd",
+      "assembly": "call 0x1404a3d40"
+    },
+    {
+      "va": "0x1425e2357",
+      "bytes": "e8e419ecfd",
+      "assembly": "call 0x1404a3d40"
+    },
+    {
+      "va": "0x1425e2363",
+      "bytes": "e8d819ecfd",
+      "assembly": "call 0x1404a3d40"
+    },
+    {
+      "va": "0x1425e2373",
+      "bytes": "e9c819ecfd",
+      "assembly": "jmp 0x1404a3d40"
+    }
+  ],
+  "checkedImports": [
+    {
+      "va": "0x14153f96b",
+      "import": "RegCreateKeyExW",
+      "bytes": "ff152f6e1f01"
+    },
+    {
+      "va": "0x14153fb3b",
+      "import": "RegCloseKey",
+      "bytes": "ff1517251f01"
+    },
+    {
+      "va": "0x141540384",
+      "import": "RegGetValueW",
+      "bytes": "ff151e641f01"
+    },
+    {
+      "va": "0x14154040c",
+      "import": "RegGetValueW",
+      "bytes": "ff1596631f01"
+    },
+    {
+      "va": "0x1404a9c92",
+      "import": "GetModuleFileNameW",
+      "bytes": "ff1548892802"
+    }
+  ],
+  "checkedExitThunks": [
+    {
+      "va": "0x1421205d8",
+      "import": "_register_onexit_function",
+      "bytes": "ff25fa676100"
+    },
+    {
+      "va": "0x1421205de",
+      "import": "_crt_atexit",
+      "bytes": "ff2574676100"
+    }
+  ],
+  "gpuQuery": {
+    "functionVA": "0x14153f830",
+    "hive": "HKEY_CURRENT_USER",
+    "key": "Software\\Microsoft\\DirectX\\UserGpuPreferences",
+    "requestedKeyAccess": "0x2001f",
+    "queryHelperVA": "0x141540320",
+    "queryFlags": 2,
+    "valueNameSource": "module path string through 0x1420fa120",
+    "regGetValueCalls": 2,
+    "queriedNamespaceIsGpuPreferences": true
+  },
+  "secondPathBuilder": {
+    "functionVA": "0x141cb2330",
+    "componentOffset": "0x40",
+    "directoryPartHelper": "0x141cb4400"
+  },
+  "cleanupCallback": {
+    "functionVA": "0x1425e2340",
+    "registrationArgumentVA": "0x14083e091",
+    "registrationWrapper": "0x142117e20",
+    "stateAddresses": [
+      "0x143fe88c0",
+      "0x143fe88a0",
+      "0x143fe8880",
+      "0x143fe8860"
+    ]
+  },
+  "focusedReports": [
+    {
+      "reportSha256": "96f96e21d5fd690a286ce7fca63d6c7673ee095507c98ded325c3da84a9fb2ff",
+      "logSha256": "e7f2c59d5ca44e0c1b0f97362815341d8d983ae45939bf38e457f2b263633409",
+      "functions": 5
+    },
+    {
+      "reportSha256": "6fe35d21952ee1729cefccccf4df845aa05ab37f866a5a9c07328eea366c2261",
+      "logSha256": "ae81b6d78f95936fa501c4affd0e513fd1436806570d47178a752345a512df36",
+      "functions": 2
+    }
+  ],
+  "focusedFunctionCount": 7,
+  "sourceSha256": {
+    "scripts/export-serato-path-callers.py": "bbc215b47f5d435afde72d0bc7745a7de02159b5a5b01396938debc37bf68ec1",
+    "scripts/pe-navigate.py": "2a94d277d33f91ad4939b07f01aece6d9ad7a89f4f2ac895301953d4cc4ee93e",
+    "scripts/export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+    "scripts/ghidra/FocusedDecompile.java": "54383ff3d55f0bb97c2a2e1129fa712eb237c7a2126420c627bb08d8c33672d6"
+  },
+  "applicationExecuted": false,
+  "applicationModified": false,
+  "vendorRegistryCallsExecuted": false,
+  "accountInspected": false,
+  "deviceAccess": false,
+  "externalDescriptorRegistrationEstablished": false,
+  "currentSeratoAdmissionVerified": false,
+  "limits": [
+    "Direct-call candidates cover E8 rel32 calls validated within recovered unwind ranges; leaf/indirect callers are not exhausted.",
+    "RIP/data reference navigation is pattern-scoped, not a complete state-writer inventory.",
+    "Checked argument use is not a proof that every indirect callee is read-only.",
+    "Focused Ghidra completion describes requested functions, not full ABI/control-flow or runtime validation.",
+    "RegCreateKeyExW could create its branch if the vendor application executes this path; this analysis invokes none of it.",
+    "No resource override, archive/app modification, support-value change or handshake fallback was selected."
+  ]
+}
