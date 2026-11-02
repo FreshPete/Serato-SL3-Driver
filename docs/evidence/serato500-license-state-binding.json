@@ -1,0 +1,468 @@
+{
+  "schema": "sl3.license-readiness-property-binding.v1",
+  "status": "conditional_static_contract",
+  "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "instructionFacts": [
+    {
+      "va": "0x141538ca6",
+      "bytes": "4c8be9",
+      "instruction": "mov r13, rcx"
+    },
+    {
+      "va": "0x141538cb4",
+      "bytes": "33db",
+      "instruction": "xor ebx, ebx"
+    },
+    {
+      "va": "0x141538cbc",
+      "bytes": "4d8d7540",
+      "instruction": "lea r14, [r13 + 0x40]"
+    },
+    {
+      "va": "0x141538cc0",
+      "bytes": "4c89742458",
+      "instruction": "mov qword ptr [rsp + 0x58], r14"
+    },
+    {
+      "va": "0x141538cd4",
+      "bytes": "488d05cd8ba101",
+      "instruction": "lea rax, [rip + 0x1a18bcd]"
+    },
+    {
+      "va": "0x141538cdb",
+      "bytes": "49894500",
+      "instruction": "mov qword ptr [r13], rax"
+    },
+    {
+      "va": "0x141538cdf",
+      "bytes": "488d05f28ba101",
+      "instruction": "lea rax, [rip + 0x1a18bf2]"
+    },
+    {
+      "va": "0x141538ce6",
+      "bytes": "498906",
+      "instruction": "mov qword ptr [r14], rax"
+    },
+    {
+      "va": "0x141538d1d",
+      "bytes": "498db5c8000000",
+      "instruction": "lea rsi, [r13 + 0xc8]"
+    },
+    {
+      "va": "0x141538d4a",
+      "bytes": "4d8db500010000",
+      "instruction": "lea r14, [r13 + 0x100]"
+    },
+    {
+      "va": "0x141538ea7",
+      "bytes": "66899988020000",
+      "instruction": "mov word ptr [rcx + 0x288], bx"
+    },
+    {
+      "va": "0x141538f01",
+      "bytes": "4533c9",
+      "instruction": "xor r9d, r9d"
+    },
+    {
+      "va": "0x141538f04",
+      "bytes": "41b892060000",
+      "instruction": "mov r8d, 0x692"
+    },
+    {
+      "va": "0x141538f0e",
+      "bytes": "488b7c2458",
+      "instruction": "mov rdi, qword ptr [rsp + 0x58]"
+    },
+    {
+      "va": "0x141538f13",
+      "bytes": "488bcf",
+      "instruction": "mov rcx, rdi"
+    },
+    {
+      "va": "0x141538f16",
+      "bytes": "e8d51c0100",
+      "instruction": "call 0x14154abf0"
+    },
+    {
+      "va": "0x141538f1b",
+      "bytes": "488bd0",
+      "instruction": "mov rdx, rax"
+    },
+    {
+      "va": "0x141538f1e",
+      "bytes": "488bce",
+      "instruction": "mov rcx, rsi"
+    },
+    {
+      "va": "0x141538f21",
+      "bytes": "e8ca100100",
+      "instruction": "call 0x141549ff0"
+    },
+    {
+      "va": "0x141538f43",
+      "bytes": "4533c9",
+      "instruction": "xor r9d, r9d"
+    },
+    {
+      "va": "0x141538f46",
+      "bytes": "41b893060000",
+      "instruction": "mov r8d, 0x693"
+    },
+    {
+      "va": "0x141538f5b",
+      "bytes": "498bce",
+      "instruction": "mov rcx, r14"
+    },
+    {
+      "va": "0x141538f5e",
+      "bytes": "e88d100100",
+      "instruction": "call 0x141549ff0"
+    },
+    {
+      "va": "0x14154ac09",
+      "bytes": "410fb6f9",
+      "instruction": "movzx edi, r9b"
+    },
+    {
+      "va": "0x14154ac0d",
+      "bytes": "418bf0",
+      "instruction": "mov esi, r8d"
+    },
+    {
+      "va": "0x14154ac4c",
+      "bytes": "448bc7",
+      "instruction": "mov r8d, edi"
+    },
+    {
+      "va": "0x14154ac60",
+      "bytes": "8bd6",
+      "instruction": "mov edx, esi"
+    },
+    {
+      "va": "0x14154ac65",
+      "bytes": "e8963f3100",
+      "instruction": "call 0x14185ec00"
+    },
+    {
+      "va": "0x14154ac71",
+      "bytes": "498b4d08",
+      "instruction": "mov rcx, qword ptr [r13 + 8]"
+    },
+    {
+      "va": "0x14154ac94",
+      "bytes": "498bd5",
+      "instruction": "mov rdx, r13"
+    },
+    {
+      "va": "0x14154ac97",
+      "bytes": "ff5040",
+      "instruction": "call qword ptr [rax + 0x40]"
+    },
+    {
+      "va": "0x14154acb2",
+      "bytes": "89742420",
+      "instruction": "mov dword ptr [rsp + 0x20], esi"
+    },
+    {
+      "va": "0x14154acc3",
+      "bytes": "e838efffff",
+      "instruction": "call 0x141549c00"
+    },
+    {
+      "va": "0x14153b292",
+      "bytes": "33f6",
+      "instruction": "xor esi, esi"
+    },
+    {
+      "va": "0x14153b294",
+      "bytes": "4038b188020000",
+      "instruction": "cmp byte ptr [rcx + 0x288], sil"
+    },
+    {
+      "va": "0x14153b29b",
+      "bytes": "750e",
+      "instruction": "jne 0x14153b2ab"
+    },
+    {
+      "va": "0x14153b29d",
+      "bytes": "4038b189020000",
+      "instruction": "cmp byte ptr [rcx + 0x289], sil"
+    },
+    {
+      "va": "0x14153b2a4",
+      "bytes": "7505",
+      "instruction": "jne 0x14153b2ab"
+    },
+    {
+      "va": "0x14153b2a6",
+      "bytes": "4032ff",
+      "instruction": "xor dil, dil"
+    },
+    {
+      "va": "0x14153b2ab",
+      "bytes": "40b701",
+      "instruction": "mov dil, 1"
+    },
+    {
+      "va": "0x14153b2ae",
+      "bytes": "4881c1c8000000",
+      "instruction": "add rcx, 0xc8"
+    },
+    {
+      "va": "0x14153b2b5",
+      "bytes": "4533c0",
+      "instruction": "xor r8d, r8d"
+    },
+    {
+      "va": "0x14153b2b8",
+      "bytes": "400fb6d7",
+      "instruction": "movzx edx, dil"
+    },
+    {
+      "va": "0x14153b2bc",
+      "bytes": "e86f0c0100",
+      "instruction": "call 0x14154bf30"
+    },
+    {
+      "va": "0x14153b504",
+      "bytes": "3a9188020000",
+      "instruction": "cmp dl, byte ptr [rcx + 0x288]"
+    },
+    {
+      "va": "0x14153b50c",
+      "bytes": "889188020000",
+      "instruction": "mov byte ptr [rcx + 0x288], dl"
+    },
+    {
+      "va": "0x14153b512",
+      "bytes": "e869fdffff",
+      "instruction": "call 0x14153b280"
+    },
+    {
+      "va": "0x14153b47d",
+      "bytes": "4181e893060000",
+      "instruction": "sub r8d, 0x693"
+    },
+    {
+      "va": "0x14153b484",
+      "bytes": "741f",
+      "instruction": "je 0x14153b4a5"
+    },
+    {
+      "va": "0x14153b486",
+      "bytes": "4183f801",
+      "instruction": "cmp r8d, 1"
+    },
+    {
+      "va": "0x14153b4a0",
+      "bytes": "e9fb000000",
+      "instruction": "jmp 0x14153b5a0"
+    },
+    {
+      "va": "0x14153b48a",
+      "bytes": "754e",
+      "instruction": "jne 0x14153b4da"
+    },
+    {
+      "va": "0x14153b492",
+      "bytes": "ff5010",
+      "instruction": "call qword ptr [rax + 0x10]"
+    },
+    {
+      "va": "0x14153b495",
+      "bytes": "0fb6d0",
+      "instruction": "movzx edx, al"
+    },
+    {
+      "va": "0x14153b498",
+      "bytes": "488bcb",
+      "instruction": "mov rcx, rbx"
+    },
+    {
+      "va": "0x14153b4ab",
+      "bytes": "ff5010",
+      "instruction": "call qword ptr [rax + 0x10]"
+    },
+    {
+      "va": "0x14153b4ae",
+      "bytes": "488d8b00010000",
+      "instruction": "lea rcx, [rbx + 0x100]"
+    },
+    {
+      "va": "0x14153b4bb",
+      "bytes": "e8700a0100",
+      "instruction": "call 0x14154bf30"
+    },
+    {
+      "va": "0x14154bf54",
+      "bytes": "4c8d412c",
+      "instruction": "lea r8, [rcx + 0x2c]"
+    },
+    {
+      "va": "0x14154bf58",
+      "bytes": "413a10",
+      "instruction": "cmp dl, byte ptr [r8]"
+    },
+    {
+      "va": "0x14154bf3c",
+      "bytes": "48833900",
+      "instruction": "cmp qword ptr [rcx], 0"
+    },
+    {
+      "va": "0x14154bf40",
+      "bytes": "0f8484000000",
+      "instruction": "je 0x14154bfca"
+    },
+    {
+      "va": "0x14154bf46",
+      "bytes": "4883790800",
+      "instruction": "cmp qword ptr [rcx + 8], 0"
+    },
+    {
+      "va": "0x14154bf4b",
+      "bytes": "747d",
+      "instruction": "je 0x14154bfca"
+    },
+    {
+      "va": "0x14154bf4d",
+      "bytes": "4883791000",
+      "instruction": "cmp qword ptr [rcx + 0x10], 0"
+    },
+    {
+      "va": "0x14154bf52",
+      "bytes": "7476",
+      "instruction": "je 0x14154bfca"
+    },
+    {
+      "va": "0x14154bf5d",
+      "bytes": "3b4130",
+      "instruction": "cmp eax, dword ptr [rcx + 0x30]"
+    },
+    {
+      "va": "0x14154bf60",
+      "bytes": "7468",
+      "instruction": "je 0x14154bfca"
+    },
+    {
+      "va": "0x14154bf78",
+      "bytes": "488d5318",
+      "instruction": "lea rdx, [rbx + 0x18]"
+    },
+    {
+      "va": "0x14154bf62",
+      "bytes": "418810",
+      "instruction": "mov byte ptr [r8], dl"
+    },
+    {
+      "va": "0x14154bf65",
+      "bytes": "894130",
+      "instruction": "mov dword ptr [rcx + 0x30], eax"
+    },
+    {
+      "va": "0x14154bfa1",
+      "bytes": "488b0b",
+      "instruction": "mov rcx, qword ptr [rbx]"
+    },
+    {
+      "va": "0x14154bfa7",
+      "bytes": "4c8b5260",
+      "instruction": "mov r10, qword ptr [rdx + 0x60]"
+    },
+    {
+      "va": "0x14154bfbe",
+      "bytes": "4c8b4308",
+      "instruction": "mov r8, qword ptr [rbx + 8]"
+    },
+    {
+      "va": "0x14154bfc2",
+      "bytes": "488b5310",
+      "instruction": "mov rdx, qword ptr [rbx + 0x10]"
+    },
+    {
+      "va": "0x14154bfc6",
+      "bytes": "41ffd2",
+      "instruction": "call r10"
+    }
+  ],
+  "types": [
+    {
+      "table": "0x142f518a8",
+      "offset": 0,
+      "locator": "0x1433ae180",
+      "type": ".?AVLicenseController@dj@serato@@"
+    },
+    {
+      "table": "0x142f518d8",
+      "offset": 64,
+      "locator": "0x1433ae208",
+      "type": ".?AVLicenseController@dj@serato@@"
+    }
+  ],
+  "preservedConstructorRegisters": [
+    {
+      "start": "0x141538cb6",
+      "endExclusive": "0x141538ea7",
+      "register": "bh"
+    },
+    {
+      "start": "0x141538d24",
+      "endExclusive": "0x141538f21",
+      "register": "esi"
+    }
+  ],
+  "privateFocusedReportSha256": {
+    "serato500-license-state-20261102-decompile.json": "3cd2c167006e8af23aa287c2b319a2bdf2dec797b00b1e9db2144da29cddb07b",
+    "serato500-license-state-updates-20261102-decompile.json": "42ae48f17697d09b298af8f1e48f2c0d1bb8b03d2c78b4c7949ff638c5e8406a"
+  },
+  "priorStateConsumerProofSha256": "7d018af5beaa3cb0f1111d3f2c79cff3369bdacec7e9e80f828f98794a3d9f50",
+  "priorArrivalInstructionChecks": 208,
+  "sources": {
+    "scripts/export-serato-license-state-binding.py": {
+      "localSha256": "3fe3eec8d756e8da76835d8472dd823ba18da7bd5feb2be2f4061a871ff63f64",
+      "gitLfSha256": "3fe3eec8d756e8da76835d8472dd823ba18da7bd5feb2be2f4061a871ff63f64"
+    },
+    "scripts/export-serato-usb-arrival.py": {
+      "localSha256": "6b8e64efa24afbeeab4ad52c26bb4811f1d8a5ebf5955dbfa3e70eee0ed1e2de",
+      "gitLfSha256": "6b8e64efa24afbeeab4ad52c26bb4811f1d8a5ebf5955dbfa3e70eee0ed1e2de"
+    },
+    "scripts/export-serato-clock-handshake-evidence.py": {
+      "localSha256": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+      "gitLfSha256": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20"
+    }
+  },
+  "properties": {
+    "0x692": {
+      "controllerOffset": "0xc8",
+      "constructorValue": false,
+      "updatedValue": "Boolean OR of LicenseController +0x288 and +0x289"
+    },
+    "0x693": {
+      "controllerOffset": "0x100",
+      "constructorValue": false,
+      "selectedUpdate": "Message 0x693 low byte through virtual +0x10"
+    }
+  },
+  "selectedRoutes": {
+    "firstFlag": "Setter 0x14153b500 changes +0x288 and calls updater when different",
+    "secondFlag": "Handler message 0x694 forwards low byte to leaf 0x14153b5a0, changing +0x289 and calling updater when different",
+    "propertyNotification": "0x14154bf30 requires three non-null bindings; changed byte/secondary value reaches bound virtual +0x60"
+  },
+  "usbHelperConclusion": "Stored manager bytes originate in application message state; a true OR is not evidence of USB clock/ASIO readiness",
+  "allFlagProducersExhausted": false,
+  "initialPropertyConstructionProvesMessageDelivery": false,
+  "liveLicenseStateQueried": false,
+  "authorizationChangedOrEmulated": false,
+  "applicationExecuted": false,
+  "deviceAccess": false,
+  "currentSeratoAdmissionVerified": false,
+  "twoDeckDvsVerified": false,
+  "deploymentApproved": false,
+  "remaining": [
+    "Meaning/provenance of every input flag, actual allowed state and complete bus delivery/timing",
+    "Resource load/selection, NONE control semantics, measured ASIO/protected deployment and physical current audio/DVS"
+  ],
+  "limits": [
+    "LicenseController RTTI identifies the owner, not a particular product entitlement or purchase remedy",
+    "No flag, message, account, key, token, hardware identity or policy was substituted"
+  ]
+}

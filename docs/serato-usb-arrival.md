@@ -59,3 +59,5 @@ Fresh focused ranges are `14213dd20:14213ddbb`, `14213ddc0:14213eeca`, `1421de89
 Both native builds' input, trace/launcher and selected binary hashes remain unchanged; native tests were not rerun for this static-only checkpoint. No Serato/Phase/hardware execution, USB acquisition, audio, approval prompt, protected installation, driver/binding/trust/security or account operation ran. Physical levels/mapping/timing, stable reopening, protected Windows deployment, genuine current SL3 admission/control/audio and real two-deck DVS remain unverified. Mac is deferred.
 
 The later [authorization-service receiver proof](serato-authorization-service.md) identifies the helper's +0xa0/+0x90 receiver as RLMAuthorization or JWTAuthorization, distinct from DriverAPI. It does not query account state, establish a permitted service result or validate current SL3/audio/DVS.
+
+The later [LicenseController property proof](serato-license-state-binding.md) identifies construction of 0x692/0x693 and a conditional 0x692 update from two controller flags. It does not query live licensing, establish every producer/delivery or demonstrate SL3/audio/DVS readiness.

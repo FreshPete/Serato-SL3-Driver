@@ -1,0 +1,8 @@
+{
+  "schema": "sl3.selected-evidence-capsule-reference.v1",
+  "capsuleName": "serato-license-state-binding-20261102",
+  "files": 23,
+  "manifestSha256": "e7431302bcb51e45afeea75e13bef86324f6cc85cd4cdea4ac3ed8f47c5815c2",
+  "verificationSha256": "32bfb312b5c8e89f743c6374b211ba7dc9d31e7bbd2c967b6e259237ffb876bb",
+  "privateRevalidationSha256": "1f5a0aa1e67d20a253e49f4e8ea6b45afae932c36a8a70f48273c55ae42317eb"
+}
