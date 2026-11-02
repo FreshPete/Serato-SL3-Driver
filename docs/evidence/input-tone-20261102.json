@@ -1,0 +1,215 @@
+{
+  "schema": "sl3.input-tone-verification.v1",
+  "createdUtc": "2026-11-02T04:25:19.231194+00:00",
+  "newSyntheticTestsPassed": 19,
+  "pcmRegressionTestsPassed": 12,
+  "suites": [
+    {
+      "suite": "input-tone",
+      "passingTests": 19,
+      "cases": [
+        "test_actual_cli_bad_declaration_writes_no_output",
+        "test_actual_cli_preserves_inputs_and_refuses_output_reuse",
+        "test_bounded_inputs",
+        "test_declaration_hashes_and_rate_must_bind_input",
+        "test_descriptions_and_provenance_required",
+        "test_deterministic_noise_energy_is_visible",
+        "test_existing_capture_faults_are_refused_before_fit",
+        "test_inverted_channel_phase_is_not_reported_as_latency",
+        "test_known_amplitude_dc_phase_and_six_channel_order",
+        "test_missing_unknown_and_duplicate_declaration_fields_refused",
+        "test_nonfinite_boolean_zero_and_aliasing_tones_refused",
+        "test_operator_declaration_does_not_verify_physical_signal",
+        "test_predetermined_request_windows_cover_all_frames_once",
+        "test_short_windows_are_ineligible_without_silent_trimming",
+        "test_silence_and_constant_dc_have_no_explained_energy_claim",
+        "test_startup_artefact_is_retained_in_full_and_first_request",
+        "test_too_few_full_capture_cycles_refused",
+        "test_variable_packet_lengths_define_request_windows",
+        "test_wrong_frequency_stays_in_residual"
+      ],
+      "exitCode": 0,
+      "logSha256": "54c3dc7de689015a1926718cda044835e82e701b09539826245e6b3b0d9d8712"
+    },
+    {
+      "suite": "pcm-regression",
+      "passingTests": 12,
+      "cases": [
+        "test_actual_cli_failure_creates_no_output",
+        "test_actual_cli_writes_new_files_and_refuses_reuse",
+        "test_all_six_signed_channels_and_byte_order",
+        "test_dc_and_centred_energy",
+        "test_descriptive_split_never_removes_samples",
+        "test_extremes_and_maximum_position",
+        "test_incomplete_or_empty_frames_refused",
+        "test_metadata_packet_faults_are_not_analysed_as_success",
+        "test_packet_order_and_full_coverage",
+        "test_record_failure_frame_count_and_rate_refused",
+        "test_silence_has_json_null_not_infinity",
+        "test_wav_is_interoperable_unspecified_layout_and_byte_exact"
+      ],
+      "exitCode": 0,
+      "logSha256": "5626f938c5d03ea9a53edf1aea4a6610c72ddb8c3eb4d4d2a202b4489f1c7c00"
+    }
+  ],
+  "localSourceSha256": {
+    "scripts/analyse-input-tone.py": "d808244e6230249146ca6e193afde862a36d0b0e7b82988bba6008039d59c6da",
+    "tests/test_input_tone.py": "e52c98be96c3010fea844b8b9ec5dfdd710e8cc266d29be8fe7d6f03ce7fe31a",
+    "scripts/analyse-capture-pcm.py": "f70e84e7c2a8285e79c897ba289bf8b55a534072e1229e6289b376788065eb90",
+    "tests/test_capture_pcm.py": "ec3396e662e1f3f5d42fca8e66bbe103b4f2c7e27e989d2ee48834c0f9c40007",
+    "scripts/requirements-analysis.txt": "5e2bd75f6a083cb2334e4c3a929ea6f8ae3bedbd66d4f2f7ecf26fd6c5a0fd72"
+  },
+  "publishedSourceSha256": {
+    "scripts/analyse-input-tone.py": "d808244e6230249146ca6e193afde862a36d0b0e7b82988bba6008039d59c6da",
+    "tests/test_input_tone.py": "e52c98be96c3010fea844b8b9ec5dfdd710e8cc266d29be8fe7d6f03ce7fe31a",
+    "scripts/analyse-capture-pcm.py": "f70e84e7c2a8285e79c897ba289bf8b55a534072e1229e6289b376788065eb90",
+    "tests/test_capture_pcm.py": "ec3396e662e1f3f5d42fca8e66bbe103b4f2c7e27e989d2ee48834c0f9c40007",
+    "scripts/requirements-analysis.txt": "5e2bd75f6a083cb2334e4c3a929ea6f8ae3bedbd66d4f2f7ecf26fd6c5a0fd72"
+  },
+  "sourceHashScope": "Local byte pins and Git LF-normalized publication byte pins are explicit.",
+  "numpyVersion": "2.3.4",
+  "solverDocumentation": "https://numpy.org/doc/2.3/reference/generated/numpy.linalg.lstsq.html",
+  "syntheticExamples": [
+    {
+      "name": "44100-clean",
+      "kind": "synthetic",
+      "inputRecordSha256": "e6dce8c2e31284054112ff7f6bec94d0aac39c644b7fe226305e7417e200b760",
+      "pcmSha256": "edaabafbd56ebc40c0148eb31b22b069724394b9c6c4938e593c72d9c3012292",
+      "declarationSha256": "f105819ae4460e9e9ca8267b1bc5203d19cc23fd3186be2c882fd868ae8f649d",
+      "analysisSha256": "7fddeaac27ce7d752d7ea8e31ea536a75708a2c1f25f7a39f0df8aaee9bc01ed",
+      "frames": 1280,
+      "channel0": {
+        "streamChannel": 0,
+        "fittedDcCode": 1000.0002226384468,
+        "sineAmplitudeCode": 1000000.0122846024,
+        "sinePeakDbfs": -18.473797898728648,
+        "phaseAtRetainedFrameZeroRadians": 1.1779890483820305e-09,
+        "residualRmsCode": 0.2810708746417991,
+        "residualRmsDbfs": -149.497481103079,
+        "observedAcRmsCode": 706803.1366293549,
+        "explainedCentredEnergyFraction": 0.9999999999998419
+      },
+      "channel0FullMaximum": 1000994,
+      "channel0RequestResidualRms": [
+        0.28398135244200273,
+        0.27426493244350353,
+        0.2818986174500943,
+        0.28261748312942175
+      ],
+      "physicalAudioVerified": false,
+      "playbackRequested": false
+    },
+    {
+      "name": "48000-clean",
+      "kind": "synthetic",
+      "inputRecordSha256": "e26c715356e8900f0cee96015bf4245dcd3d1617d0cfff66bf5fe624e7aac852",
+      "pcmSha256": "58b81f63d3d402d68e8bf2c7f12c1a0b93e22df6c8466f3dcdab186d2fb73802",
+      "declarationSha256": "cbe327c2ae1456f5a2676d4e23281fb5d5c746f4abf702a4922521456714b144",
+      "analysisSha256": "af3044a3fc92321cb2e079828496fcda1620bed54e8bc3367928c9594e8ffad6",
+      "frames": 1280,
+      "channel0": {
+        "streamChannel": 0,
+        "fittedDcCode": 999.9999306626636,
+        "sineAmplitudeCode": 999999.9673351083,
+        "sinePeakDbfs": -18.473798289155,
+        "phaseAtRetainedFrameZeroRadians": -1.46539356922425e-09,
+        "residualRmsCode": 0.2882894936133021,
+        "residualRmsDbfs": -149.27722169938838,
+        "observedAcRmsCode": 705929.2667659293,
+        "explainedCentredEnergyFraction": 0.9999999999998332
+      },
+      "channel0FullMaximum": 1001000,
+      "channel0RequestResidualRms": [
+        0.2877371064684099,
+        0.28900653962072764,
+        0.2884756465517312,
+        0.28773710634102495
+      ],
+      "physicalAudioVerified": false,
+      "playbackRequested": false
+    },
+    {
+      "name": "44100-startup-spike",
+      "kind": "synthetic",
+      "inputRecordSha256": "e6dce8c2e31284054112ff7f6bec94d0aac39c644b7fe226305e7417e200b760",
+      "pcmSha256": "cbcc33347c7a8ffee584b3e45fb6498a2bce5e5556498e40662f0a348ff1d464",
+      "declarationSha256": "186d2a635b3c0ab2354d3fc799fbb0bd400a03b357df8cd9097e4f1fe72256f8",
+      "analysisSha256": "af1d83a807c6de6e98da78dc27b4ac8a282a27b3b366281e66f76e1a528ba8b3",
+      "frames": 1280,
+      "channel0": {
+        "streamChannel": 0,
+        "fittedDcCode": 7541.577134491186,
+        "sineAmplitudeCode": 1000085.3528464491,
+        "sinePeakDbfs": -18.47305667166382,
+        "phaseAtRetainedFrameZeroRadians": 0.013082418444624554,
+        "residualRmsCode": 234166.31805830583,
+        "residualRmsDbfs": -31.083309459140626,
+        "observedAcRmsCode": 744640.9310327693,
+        "explainedCentredEnergyFraction": 0.9011093923696981
+      },
+      "channel0FullMaximum": 8388607,
+      "channel0RequestResidualRms": [
+        466745.8890794618,
+        0.27426493244350353,
+        0.2818986174500943,
+        0.28261748312942175
+      ],
+      "physicalAudioVerified": false,
+      "playbackRequested": false
+    }
+  ],
+  "syntheticExampleIndexSha256": "6d7eb63d38f843f2df213d8b7cfe9e1e5892253f385e82ae850929c740612b55",
+  "nativeBaseline": [
+    {
+      "configuration": "Release",
+      "priorTestsPassed": 59,
+      "sourcePinsStillMatch": true,
+      "rerunForOfflineAnalysisAddition": false,
+      "manifestSha256": "09fa39a717a9b024981b9a2e9da0406234e91fedd17b3370bac04c7dbfab1a87",
+      "ctestLogSha256": "7d1dd0d5f95b6a03fea0b02c1fdb57a4cc9550dedbaac5f480063dfa5c990d5c"
+    },
+    {
+      "configuration": "Debug",
+      "priorTestsPassed": 59,
+      "sourcePinsStillMatch": true,
+      "rerunForOfflineAnalysisAddition": false,
+      "manifestSha256": "d97f2b1855391de1412473897c8d4d5cd7f9fe40d91afb0f78eb5b0fa4151c92",
+      "ctestLogSha256": "70452b9868b2e84da6aca20160944a63a05d857d86ab2bbccb3ac078572d9df1"
+    }
+  ],
+  "priorSoftwareCheckpoint": {
+    "passingChecks": 334,
+    "sourcePinsStillMatch": true,
+    "rerunForOfflineAnalysisAddition": false
+  },
+  "observations": {
+    "syntheticCliExamplesRecomputedAndInputsUnchanged": true,
+    "allSixStreamChannelsFitted": true,
+    "fullStatisticsAndFitRetainAllSamples": true,
+    "fourPredeterminedRequestWindowsCoverAllFrames": true,
+    "variablePacketGeometryTested": true,
+    "startupSpikeRemainsInFullStatisticsAndResidual": true,
+    "operatorDeclarationCannotPromotePhysicalFlags": true,
+    "noPhysicalCaptureRelabelledAsKnownSource": true
+  },
+  "limits": {
+    "physicalKnownSourceCapturePerformed": false,
+    "deviceAccess": false,
+    "playbackRequested": false,
+    "timingProfileGenerated": false,
+    "analogueSignalVerified": false,
+    "physicalJackMappingVerified": false,
+    "physicalClockVerified": false,
+    "usbContinuityVerified": false,
+    "latencyMeasured": false,
+    "protectedDeploymentExecuted": false,
+    "currentSeratoAdmissionVerified": false,
+    "currentDvsTested": false
+  },
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/input-tone-20261102",
+    "files": 813,
+    "manifestSha256": "c097833a699559f47671ddd605852bcda2c945e6401ea2bfad5c5795c1185fab",
+    "selfReferentialVerificationExcluded": true
+  }
+}

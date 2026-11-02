@@ -36,3 +36,13 @@ Twelve focused software tests pass: signed extrema/endianness/all six channels, 
 Before interpreting analogue quality or enabling nonsilent/loopback experiments, record a known input, its wiring, line/phono state, controls and exact worker identity, then characterise the stored-prefix behaviour under the reviewed startup scenario. Investigate the original input-start handling and reproduce with a known signal before selecting any settling/discard policy. Do not silently trim these samples or extrapolate a duration from one post hoc split. Resolve the [release/readiness gate](sl3-release-port.md) before any successive-open experiment.
 
 Physical jack/routing/gain mapping, sample continuity, output signal tests, measured round-trip latency and DVS are still pending. These files are from the earlier archived capture worker; they do not validate the current worker, Serato session or a four-hour stability run. No new hardware/UAC/driver/trust/security/firmware operation occurred. The exact raw captures, analyses, WAVs and source/tests are retained in `artifacts/build/checkpoints/capture-pcm-20261101`.
+
+## Prepared known-input comparison
+
+The later [declared-tone analyser](known-input-tone-analysis.md) now fits all six
+channels and predetermined whole-request windows while preserving full statistics
+and every sample. Its 19 new synthetic checks and the 12 existing PCM regressions
+pass. It requires exact input hashes and recorded source/wiring/control statements;
+it produces no physical pass or timing profile. The archived captures above have
+not been reclassified as known-input measurements. A fresh attended test with a
+real documented source and established acquisition/readiness is still required.
