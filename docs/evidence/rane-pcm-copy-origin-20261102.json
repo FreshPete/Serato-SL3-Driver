@@ -1,0 +1,422 @@
+{
+  "schema": "sl3.original-pcm-copy-and-origin.v1",
+  "kernelSha256": "e8e992a8ece1a57eab337d815a406b9f815954176c03db545fcf6d951ec615f5",
+  "originalAsioSha256": "e3d88039547b70915b1a9bc9e3e3f7dba32aaa9bc3ce8fd51616565ea1734141",
+  "checkedKernelInstructions": [
+    {
+      "va": "0x13449",
+      "bytes": "80bf81c4020000",
+      "assembly": "cmp byte ptr [rdi + 0x2c481], 0"
+    },
+    {
+      "va": "0x13450",
+      "bytes": "0f859b000000",
+      "assembly": "jne 0x134f1"
+    },
+    {
+      "va": "0x13456",
+      "bytes": "4585db",
+      "assembly": "test r11d, r11d"
+    },
+    {
+      "va": "0x13459",
+      "bytes": "41b906000000",
+      "assembly": "mov r9d, 6"
+    },
+    {
+      "va": "0x1345f",
+      "bytes": "7432",
+      "assembly": "je 0x13493"
+    },
+    {
+      "va": "0x13461",
+      "bytes": "488d542478",
+      "assembly": "lea rdx, [rsp + 0x78]"
+    },
+    {
+      "va": "0x13466",
+      "bytes": "4d8bc1",
+      "assembly": "mov r8, r9"
+    },
+    {
+      "va": "0x13469",
+      "bytes": "488b0a",
+      "assembly": "mov rcx, qword ptr [rdx]"
+    },
+    {
+      "va": "0x1346c",
+      "bytes": "418b07",
+      "assembly": "mov eax, dword ptr [r15]"
+    },
+    {
+      "va": "0x1346f",
+      "bytes": "4983c703",
+      "assembly": "add r15, 3"
+    },
+    {
+      "va": "0x13473",
+      "bytes": "3301",
+      "assembly": "xor eax, dword ptr [rcx]"
+    },
+    {
+      "va": "0x13475",
+      "bytes": "25ffffff00",
+      "assembly": "and eax, 0xffffff"
+    },
+    {
+      "va": "0x1347a",
+      "bytes": "3101",
+      "assembly": "xor dword ptr [rcx], eax"
+    },
+    {
+      "va": "0x1347c",
+      "bytes": "488d4103",
+      "assembly": "lea rax, [rcx + 3]"
+    },
+    {
+      "va": "0x13480",
+      "bytes": "488902",
+      "assembly": "mov qword ptr [rdx], rax"
+    },
+    {
+      "va": "0x13483",
+      "bytes": "4883c208",
+      "assembly": "add rdx, 8"
+    },
+    {
+      "va": "0x13487",
+      "bytes": "4983e801",
+      "assembly": "sub r8, 1"
+    },
+    {
+      "va": "0x1348b",
+      "bytes": "75dc",
+      "assembly": "jne 0x13469"
+    },
+    {
+      "va": "0x1348d",
+      "bytes": "4183c3ff",
+      "assembly": "add r11d, -1"
+    },
+    {
+      "va": "0x13491",
+      "bytes": "75ce",
+      "assembly": "jne 0x13461"
+    },
+    {
+      "va": "0x134ca",
+      "bytes": "418b07",
+      "assembly": "mov eax, dword ptr [r15]"
+    },
+    {
+      "va": "0x134cd",
+      "bytes": "4983c703",
+      "assembly": "add r15, 3"
+    },
+    {
+      "va": "0x134d1",
+      "bytes": "3301",
+      "assembly": "xor eax, dword ptr [rcx]"
+    },
+    {
+      "va": "0x134d3",
+      "bytes": "25ffffff00",
+      "assembly": "and eax, 0xffffff"
+    },
+    {
+      "va": "0x134d8",
+      "bytes": "3101",
+      "assembly": "xor dword ptr [rcx], eax"
+    },
+    {
+      "va": "0x134da",
+      "bytes": "488d4103",
+      "assembly": "lea rax, [rcx + 3]"
+    }
+  ],
+  "originalAsioTypeStore": {
+    "va": "0x180010ddc",
+    "bytes": "c7471011000000",
+    "assembly": "mov dword ptr [rdi + 0x10], 0x11",
+    "asioType": 17
+  },
+  "selectedFunction": {
+    "start": "0x1301c",
+    "endExclusive": "0x1395f",
+    "imageBytesSha256": "50353ac5d3a66e84d16c00eb39cb3b2b5f70519b79a3d9994d6aec5a302b702c",
+    "completeFocusedReportSha256": "75eca4319a14e961f996b6f4d44bba9094a79ab9cd8ed157049c6832e043f957"
+  },
+  "selectedCopyContract": {
+    "channelsPerFrame": 6,
+    "bytesPerChannel": 3,
+    "bytesPerFrame": 18,
+    "mask": "0x00ffffff",
+    "store": "destination XOR ((source XOR destination) AND mask)",
+    "copiesSampleBitsUnchanged": true,
+    "preservesFourthDestinationByte": true,
+    "selectedModeCondition": "Complete-object byte +0x2c481 equals zero; no runtime mode asserted",
+    "entireStartupAndRoutingContractVerified": false
+  },
+  "historicalPhysicalReportSha256": "71ea0a16e843102d608deb0ded9f37adf4e680f0f11d0d22a0fe21328df20453",
+  "savedCaptures": [
+    {
+      "schema": "sl3.capture-byte-origin.v1",
+      "scope": "Saved source buffers and selected low-24-bit store model only",
+      "reportedRateHz": 44100,
+      "frames": 1411,
+      "packets": 256,
+      "registeredBytes": 32256,
+      "selectedBytes": 25398,
+      "ignoredPaddingBytes": 6858,
+      "exactPacketSlicesMatch": true,
+      "selectedOriginalStylePlanesMatch": true,
+      "sourceHighByteIndependenceChecked": true,
+      "destinationGuardPreserved": true,
+      "planeSha256": [
+        "b1c140cb8130c4a0df62c469c575ee2ca47c49d427b5aa34f02724f0609cc116",
+        "1f28c49ebed3c44ee87eb21813ea825213a1ff547e352b97230b6379eedab697",
+        "c0c25da78dd7e483a87492d756ed076e71b8a688e06e373ecce1add7fe119d1f",
+        "1b5cabd1c3feac1c8ddcbfdec2e699a50c173b45f514631cd4eb48e698cbf103",
+        "1eba99c78d749064585f95798d9def41fb6f99723538d2b0b5cf3812de94229f",
+        "f0b2a0b0e07b43d9c27845bcf36056c501a11dd2011ce9743fd4377ace099fba"
+      ],
+      "channelPeakOrigins": [
+        {
+          "streamChannel": 0,
+          "retainedFrame": 1,
+          "magnitudeCode": 7876993,
+          "signedCode": -7876993,
+          "request": 0,
+          "packet": 0,
+          "registeredByteOffset": 18,
+          "packedByteOffset": 18,
+          "sourceBytesMatch": true
+        },
+        {
+          "streamChannel": 1,
+          "retainedFrame": 3,
+          "magnitudeCode": 7831159,
+          "signedCode": 7831159,
+          "request": 0,
+          "packet": 0,
+          "registeredByteOffset": 57,
+          "packedByteOffset": 57,
+          "sourceBytesMatch": true
+        },
+        {
+          "streamChannel": 2,
+          "retainedFrame": 2,
+          "magnitudeCode": 7568891,
+          "signedCode": 7568891,
+          "request": 0,
+          "packet": 0,
+          "registeredByteOffset": 42,
+          "packedByteOffset": 42,
+          "sourceBytesMatch": true
+        },
+        {
+          "streamChannel": 3,
+          "retainedFrame": 6,
+          "magnitudeCode": 8386111,
+          "signedCode": 8386111,
+          "request": 0,
+          "packet": 1,
+          "registeredByteOffset": 153,
+          "packedByteOffset": 117,
+          "sourceBytesMatch": true
+        },
+        {
+          "streamChannel": 4,
+          "retainedFrame": 10,
+          "magnitudeCode": 8367222,
+          "signedCode": 8367222,
+          "request": 0,
+          "packet": 1,
+          "registeredByteOffset": 228,
+          "packedByteOffset": 192,
+          "sourceBytesMatch": true
+        },
+        {
+          "streamChannel": 5,
+          "retainedFrame": 7,
+          "magnitudeCode": 8232234,
+          "signedCode": 8232234,
+          "request": 0,
+          "packet": 1,
+          "registeredByteOffset": 177,
+          "packedByteOffset": 141,
+          "sourceBytesMatch": true
+        }
+      ],
+      "samplesDiscarded": 0,
+      "samplesReplaced": 0,
+      "captureTimeRegisteredHashesProvided": false,
+      "inputSignalKnown": false,
+      "physicalJackMappingVerified": false,
+      "startupCauseDiagnosed": false,
+      "continuityVerified": false,
+      "physicalAudioVerified": false,
+      "currentSeratoAdmissionVerified": false,
+      "twoDeckDvsVerified": false,
+      "sourceFiles": {
+        "capture.json": "2c2e8d18e31de9ca72fb202a330d44897ac3b74d98ab0ef5722cd124afb6c6ac",
+        "capture.pcm": "22aa87a0aced608d783879532b49649aeb4e9714a4ee74eeb0a00c73c1422d6a",
+        "registered-0.bin": "295676e3f5b3c97adf68ca51c9c9a53ffb7ecd15d95c93d9b0e57d33407a7402",
+        "registered-1.bin": "48799e5be8679ba4cef6ae5db1bf66892bb8b17e921b372d06f5cc2e30f6e82f",
+        "registered-2.bin": "c9ce809c1c0a4b85a1134ea534b3be6fa3d9d6c72a12d5e2bcd48e25d4ade268",
+        "registered-3.bin": "af80a029788dbf06c63a91b451fa15f7224d75e3cc84d0348dfa35c03695eae0"
+      },
+      "earlierCheckpointRawHashesMatched": 4
+    },
+    {
+      "schema": "sl3.capture-byte-origin.v1",
+      "scope": "Saved source buffers and selected low-24-bit store model only",
+      "reportedRateHz": 48000,
+      "frames": 1534,
+      "packets": 256,
+      "registeredBytes": 32256,
+      "selectedBytes": 27612,
+      "ignoredPaddingBytes": 4644,
+      "exactPacketSlicesMatch": true,
+      "selectedOriginalStylePlanesMatch": true,
+      "sourceHighByteIndependenceChecked": true,
+      "destinationGuardPreserved": true,
+      "planeSha256": [
+        "b477b4ca831c11d919c4f8dae9d342ef5cfacc0dbf64e256e5ecc53dbe92d141",
+        "18fd09954d138dcc0391e3156bfa9271c97ee9831ae06e9e0c18657f30041ada",
+        "23acce2ce63dd5983c88b47a9c73c4f704b480c5ce43d7dfd62f5a2c04fff8ea",
+        "2121feb5af8fcf65c49fa6c6e56e885a0bfcf223df3b543a5c949c5b48ecc92d",
+        "f3de46eaae6fc48c329a638e6bf8d8e3844dd3d238308eb66ba8c819cf77cb22",
+        "dffdfcced90054a20b15aa2338dc6cbb75399f9ad2a931e3dcfd726eaf114035"
+      ],
+      "channelPeakOrigins": [
+        {
+          "streamChannel": 0,
+          "retainedFrame": 5,
+          "magnitudeCode": 128511,
+          "signedCode": 128511,
+          "request": 0,
+          "packet": 1,
+          "registeredByteOffset": 126,
+          "packedByteOffset": 90,
+          "sourceBytesMatch": true
+        },
+        {
+          "streamChannel": 1,
+          "retainedFrame": 5,
+          "magnitudeCode": 165120,
+          "signedCode": 165120,
+          "request": 0,
+          "packet": 1,
+          "registeredByteOffset": 129,
+          "packedByteOffset": 93,
+          "sourceBytesMatch": true
+        },
+        {
+          "streamChannel": 2,
+          "retainedFrame": 829,
+          "magnitudeCode": 1806,
+          "signedCode": 1806,
+          "request": 2,
+          "packet": 10,
+          "registeredByteOffset": 1302,
+          "packedByteOffset": 14928,
+          "sourceBytesMatch": true
+        },
+        {
+          "streamChannel": 3,
+          "retainedFrame": 395,
+          "magnitudeCode": 1673,
+          "signedCode": -1673,
+          "request": 1,
+          "packet": 2,
+          "registeredByteOffset": 261,
+          "packedByteOffset": 7119,
+          "sourceBytesMatch": true
+        },
+        {
+          "streamChannel": 4,
+          "retainedFrame": 1305,
+          "magnitudeCode": 1587,
+          "signedCode": -1587,
+          "request": 3,
+          "packet": 25,
+          "registeredByteOffset": 3252,
+          "packedByteOffset": 23502,
+          "sourceBytesMatch": true
+        },
+        {
+          "streamChannel": 5,
+          "retainedFrame": 1327,
+          "magnitudeCode": 1953,
+          "signedCode": -1953,
+          "request": 3,
+          "packet": 29,
+          "registeredByteOffset": 3723,
+          "packedByteOffset": 23901,
+          "sourceBytesMatch": true
+        }
+      ],
+      "samplesDiscarded": 0,
+      "samplesReplaced": 0,
+      "captureTimeRegisteredHashesProvided": false,
+      "inputSignalKnown": false,
+      "physicalJackMappingVerified": false,
+      "startupCauseDiagnosed": false,
+      "continuityVerified": false,
+      "physicalAudioVerified": false,
+      "currentSeratoAdmissionVerified": false,
+      "twoDeckDvsVerified": false,
+      "sourceFiles": {
+        "capture.json": "302aa53d94e5169c2eb0223f9cc5cd08c47790cb1a0192a9c19b2128669ab8c0",
+        "capture.pcm": "9a88d9b240204cfdadca9e284aa72e1b6290c0901e6b06154a48ac9feae60827",
+        "registered-0.bin": "a824c066fec56a565f27de46273b7f51da89d1b5789b706af007cff561acecc4",
+        "registered-1.bin": "c45c26d76ff93179dcc203aee4e08a11bdb456585ed71d697e5e8e72efe7051b",
+        "registered-2.bin": "3474238dba904be4b8330c4b1ab9e1de0a68ba1f83e37acc477eda6de14b4dcd",
+        "registered-3.bin": "9263e9b4aa0b6dd32a19445c6aa9c37cf53ac09d86c3330c70d51708cbbcf246"
+      },
+      "earlierCheckpointRawHashesMatched": 4
+    }
+  ],
+  "modelTestsPassed": 6,
+  "earlierRawCheckpoint": {
+    "name": "com-activation-20261102",
+    "manifestSha256": "199a3b9eb6a9da511211b7a86e33140771c85f18ab2f79a8ca9a2b184022340b",
+    "registeredFilesMatched": 8,
+    "isContemporaneousCaptureTimeWitness": false
+  },
+  "localSourceSha256": {
+    "scripts/export-rane-pcm-copy-evidence.py": "281ddbebdf7b8352d2177298a7cb81f046bb009f5e5df2c9b4030eff17e5221f",
+    "scripts/audit-capture-origin.py": "ad3a6bbfdfcb0a1258cf9a459658bf2c5b4eb390791c1bb52c327cbff778d5dd",
+    "scripts/analyse-capture-pcm.py": "f70e84e7c2a8285e79c897ba289bf8b55a534072e1229e6289b376788065eb90",
+    "scripts/validate-asio-private-trace.py": "41b11be0b916993b8aeaa18051920fe49387a048bf1e9a4faa87b1ea60d09365",
+    "scripts/export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+    "tests/test_capture_origin.py": "f029cd34eb4882eecd5261db30a8dcb5a2440c43969feb1a47658f67a861ec3a"
+  },
+  "publishedSourceSha256": {
+    "scripts/export-rane-pcm-copy-evidence.py": "281ddbebdf7b8352d2177298a7cb81f046bb009f5e5df2c9b4030eff17e5221f",
+    "scripts/audit-capture-origin.py": "ad3a6bbfdfcb0a1258cf9a459658bf2c5b4eb390791c1bb52c327cbff778d5dd",
+    "scripts/analyse-capture-pcm.py": "f70e84e7c2a8285e79c897ba289bf8b55a534072e1229e6289b376788065eb90",
+    "scripts/validate-asio-private-trace.py": "0bd741a7eb80f051b7b404313d49cb16df40a649f45eed7f022ab53334368c14",
+    "scripts/export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+    "tests/test_capture_origin.py": "f029cd34eb4882eecd5261db30a8dcb5a2440c43969feb1a47658f67a861ec3a"
+  },
+  "vendorCodeExecuted": false,
+  "newPhysicalCapture": false,
+  "deviceAccess": false,
+  "audioPlayed": false,
+  "packingChanged": false,
+  "prefixDiscardPolicyAdded": false,
+  "startupCauseDiagnosed": false,
+  "physicalAudioVerified": false,
+  "currentSeratoAdmissionVerified": false,
+  "twoDeckDvsVerified": false,
+  "limits": [
+    "This verifies a selected original byte-copy path and models its low-24-bit stores; it does not execute the vendor driver.",
+    "Historical run/metadata/PCM hashes and all eight raw buffers in an earlier 2 November checkpoint match; that later checkpoint is not a capture-time raw-buffer witness.",
+    "Raw registered-buffer equality binds saved file bytes, not physical ADC provenance, input wiring or correct native DMA/continuity.",
+    "This scope does not newly attest pipe direction/source-pointer bindings or the runtime mode that selects the original copy.",
+    "Source peak values are preserved; neither a startup cause nor a trim/mute/gain policy follows.",
+    "Ring wrap, callback timing, mode selection, full routing and current-worker audio still require separate validation."
+  ]
+}

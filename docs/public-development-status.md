@@ -1,5 +1,7 @@
 # Public development checkpoint — 2 November 2026
 
+**Saved PCM source bytes checked, 2 November:** [Both archived captures reconstruct exactly](capture-origin-and-original-copy.md) from saved registered packet slices. Their large prefix peaks exist in those files and survive the selected original-style three-byte copy. Six new and twelve PCM regression tests pass. The eight raw buffers match an earlier 2 November checkpoint, but capture-time raw hashes are unavailable. Startup cause, ADC validity and physical/current Serato/DVS remain unverified. No packing or discard policy changed.
+
 **Next attended packet refreshed, 2 November:** [The unarmed control/port/image packet](next-attended-packet.md) now binds the current Release build and cached port-4 PnP mapping. Windows still reports `strmdrv`/Code 39. Collector and observer default preflights pass; no probe, trace, UAC prompt or acquisition ran. Working recovery/readiness, current-worker audio and actual Serato/DVS remain required.
 
 **General ASIO log reader built, 2 November:** [The offline decoder/analyzer](asio-general-trace-analysis.md) now reads completed logs beyond the fixed fixture sequence. Release/Debug archived decodes reproduce the original JSONL exactly; nine model tests and four native refusal cases pass. Host identity, current Serato admission and physical audio/DVS remain unverified. Production audio sources/images are unchanged.

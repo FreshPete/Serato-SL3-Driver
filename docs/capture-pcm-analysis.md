@@ -46,3 +46,5 @@ pass. It requires exact input hashes and recorded source/wiring/control statemen
 it produces no physical pass or timing profile. The archived captures above have
 not been reclassified as known-input measurements. A fresh attended test with a
 real documented source and established acquisition/readiness is still required.
+
+The later [raw-byte origin and selected original-copy audit](capture-origin-and-original-copy.md) reconstructs both packed captures exactly from saved registered slices and locates their peaks in those saved files. It does not provide a contemporaneous raw-buffer hash witness or diagnose the startup cause, and no samples or packing rules are changed.

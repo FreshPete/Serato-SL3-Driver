@@ -1,0 +1,13 @@
+{
+  "schema": "sl3.private-checkpoint-summary.v1",
+  "checkpoint": "rane-pcm-copy-origin-20261102",
+  "fileCount": 49,
+  "manifestSha256": "451139d4ed91426f99d6052da6d766fec412234fc5c531ecf442a0976b3f53cd",
+  "evidenceSha256": "e2ae61cda5ab0d91b415739b0ce4fdb1f8760b270211b6e45121c7ccb57b5790",
+  "vendorExecutablesIncluded": false,
+  "privateSdkContentsIncluded": false,
+  "rawAudioPublished": false,
+  "vendorPseudocodePublished": false,
+  "newPhysicalCapture": false,
+  "scope": "Selected original-copy verification and saved packet-byte origins; private raw captures and earlier checkpoint witnesses"
+}
