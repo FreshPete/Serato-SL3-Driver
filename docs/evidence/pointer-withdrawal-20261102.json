@@ -1,0 +1,212 @@
+{
+  "schema": "sl3.pointer-withdrawal-verification.v1",
+  "createdUtc": "2026-11-02T00:36:48.206544+00:00",
+  "builds": [
+    {
+      "configuration": "Release",
+      "testsPassed": 59,
+      "manifestSha256": "09fa39a717a9b024981b9a2e9da0406234e91fedd17b3370bac04c7dbfab1a87",
+      "productionDllSha256": "61980ff6bc91279685d4f1e9f3cdb6e6c1f277b1dcaef09aee3356c22a773000",
+      "nativeControllerSha256": "3008debce37068c3ad9a66b55aef1d75d0aa5bea48538ac34753db01cdfbb738",
+      "testScriptSha256": "8f3453d400c7be1cc177ee16a9012c0223a378793e796ad78d5298ca75f8ce2d",
+      "logSha256": "8bcb15079e3aa619044a3efbdd1eb3269276dbf06acf2993897f893e4416a13c"
+    },
+    {
+      "configuration": "Debug",
+      "testsPassed": 59,
+      "manifestSha256": "d97f2b1855391de1412473897c8d4d5cd7f9fe40d91afb0f78eb5b0fa4151c92",
+      "productionDllSha256": "423cabd075e7b3cb97f5bd251207a16b84762c0698123e0d39f5ba1a985ce021",
+      "nativeControllerSha256": "ca97ef5ad14d5d2957a0974045b70f52ecfd867b8328cd1b6c0772f15c2da66b",
+      "testScriptSha256": "8f3453d400c7be1cc177ee16a9012c0223a378793e796ad78d5298ca75f8ce2d",
+      "logSha256": "cf7dc7c3174ad711eaf7dca9e33704e1df0a8b99c96a16a5fe74a6f49b91c760"
+    }
+  ],
+  "controllerLifecycles": [
+    {
+      "configuration": "Release",
+      "path": "artifacts/build/native/controller-lifecycle-artifacts/9a92783c0c374e0595531caad1521b07",
+      "indexSha256": "c527f47cc51136a5bcc305f6cd63136ceeee86e76c8baa408b6fe819854c1e2f",
+      "cases": [
+        {
+          "name": "ordinary-session",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "ordinary"
+        },
+        {
+          "name": "com-sta-session",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "ordinary-sta"
+        },
+        {
+          "name": "com-mta-session",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "ordinary-mta"
+        },
+        {
+          "name": "com-live-withdrawal",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "ordinary-sta-withdrawal"
+        },
+        {
+          "name": "blocked-client",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "blocked"
+        },
+        {
+          "name": "lifetime-limit",
+          "passed": true,
+          "kind": "simulated"
+        },
+        {
+          "name": "wrong-rate",
+          "passed": true,
+          "positiveNativeRun": false
+        },
+        {
+          "name": "native-kind-refusal",
+          "passed": true,
+          "positiveNativeRun": false
+        },
+        {
+          "name": "pointer-withdrawal-guards",
+          "passed": true,
+          "deviceAccess": false
+        },
+        {
+          "name": "refusal-guards",
+          "passed": true,
+          "deviceAccess": false
+        }
+      ],
+      "allFileHashesMatch": true,
+      "withdrawalReceiptsVerified": [
+        "com-live-withdrawal-deployment/withdrawal-live.json",
+        "com-live-withdrawal-deployment/withdrawal-stale.json",
+        "pointer-withdrawal-guards/withdrawal.json"
+      ],
+      "liveWithdrawalAuditCounts": {
+        "acquire": 1,
+        "rate": 8,
+        "begin": 4,
+        "end": 4,
+        "release": 1
+      }
+    },
+    {
+      "configuration": "Debug",
+      "path": "artifacts/build/native/controller-lifecycle-artifacts/7e6f03dfe9724f7ab64206b325563c11",
+      "indexSha256": "50dc17920a2ba724aa8c441b30262cf3f9dbd9a72baf85d3ad69b687bb312570",
+      "cases": [
+        {
+          "name": "ordinary-session",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "ordinary"
+        },
+        {
+          "name": "com-sta-session",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "ordinary-sta"
+        },
+        {
+          "name": "com-mta-session",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "ordinary-mta"
+        },
+        {
+          "name": "com-live-withdrawal",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "ordinary-sta-withdrawal"
+        },
+        {
+          "name": "blocked-client",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "blocked"
+        },
+        {
+          "name": "lifetime-limit",
+          "passed": true,
+          "kind": "simulated"
+        },
+        {
+          "name": "wrong-rate",
+          "passed": true,
+          "positiveNativeRun": false
+        },
+        {
+          "name": "native-kind-refusal",
+          "passed": true,
+          "positiveNativeRun": false
+        },
+        {
+          "name": "pointer-withdrawal-guards",
+          "passed": true,
+          "deviceAccess": false
+        },
+        {
+          "name": "refusal-guards",
+          "passed": true,
+          "deviceAccess": false
+        }
+      ],
+      "allFileHashesMatch": true,
+      "withdrawalReceiptsVerified": [
+        "com-live-withdrawal-deployment/withdrawal-live.json",
+        "com-live-withdrawal-deployment/withdrawal-stale.json",
+        "pointer-withdrawal-guards/withdrawal.json"
+      ],
+      "liveWithdrawalAuditCounts": {
+        "acquire": 1,
+        "rate": 8,
+        "begin": 4,
+        "end": 4,
+        "release": 1
+      }
+    }
+  ],
+  "implemented": {
+    "explicitReviewedPointerHash": true,
+    "strictSharedPointerCodec": true,
+    "currentUserOwnerRequired": true,
+    "exclusiveReadDeleteHandle": true,
+    "regularSingleLinkRequired": true,
+    "deleteSameOpenedFileHandle": true,
+    "deletionMarkedAndAbsenceReportedSeparately": true,
+    "activeSimulatedComStreamContinues": true,
+    "missingPointerRefusesFreshClient": true,
+    "explicitCreateNewRepublication": true,
+    "stalePointerWithdrawal": true,
+    "wrongHashMalformedReaderHardlinkDirectorySizeRefusals": true
+  },
+  "limits": {
+    "atomicReplacement": false,
+    "automaticPublication": false,
+    "brokerStoppedByWithdrawal": false,
+    "differentOwnerNegativeExercised": false,
+    "reparsePointNegativeExercised": false,
+    "installed": false,
+    "registryChanged": false,
+    "positiveNativeRun": false,
+    "physicalAudioTested": false,
+    "differentNativeBrokerHandoffTested": false,
+    "measurementTruthVerified": false,
+    "currentSeratoAdmissionTested": false,
+    "securityPolicyChanged": false
+  },
+  "disarmedRatePlansPreserved": 11,
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/pointer-withdrawal-20261102",
+    "files": 1031,
+    "manifestSha256": "c0622c6238a1788fa5558c54e18e426821d409779765d199eeef51b1d0b9b70c",
+    "selfReferentialPublicEvidenceExcluded": true
+  }
+}

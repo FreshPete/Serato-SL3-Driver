@@ -40,7 +40,7 @@ but `CoCreateInstance` returned `0x8007007e` (module not found). Placing the roo
 manifest beside its file entries resolved that failure on this host. The final
 tests retain HRESULT diagnostics for future failures.
 
-The later [session-locator checkpoint](asio-session-locator.md) implements the stable locator and first-session pointer publication described below. Installation and safe pointer replacement are still pending.
+The later [session-locator checkpoint](asio-session-locator.md) implements the stable locator and first-session pointer publication described below. The later [withdrawal checkpoint](asio-pointer-withdrawal.md) adds explicit checked withdrawal and republication; installation is still pending.
 
 ## Deployment still to implement
 
@@ -61,7 +61,7 @@ A deployment implementation still needs to do the following:
    publishes to a new per-session directory, while the production DLL reads
    `sl3-asio.conf` beside itself. Registering a transient controller directory is
    not yet a reviewed deployment design. The stable, validated session-pointer mechanism is now implemented and
-   tested; protected staging and safe replacement remain to implement before
+   tested; explicit withdrawal/republication is also implemented. Protected staging remains to implement before
    installation.
 3. Add explicit x64 registration and uninstall operations with conflict detection
    and ownership checks. Preserve pre-existing entries; never overwrite another

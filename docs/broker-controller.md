@@ -36,9 +36,11 @@ The controller does not register or copy an ASIO DLL, modify an installed Serato
 file, create a Windows service, request elevation, set a rate or modify firmware.
 The produced `sl3-asio.conf` is a session artifact, not an installation. The [session locator](asio-session-locator.md) now connects an adjacent stable
 record to per-session configuration through an explicitly published pointer.
-Protected staging, pointer replacement and installation/registration remain
+Protected staging and installation/registration remain
 unfinished. The metadata-only `--publish-pointer --config ABS --pointer ABS`
 command creates a new owner-only pointer without opening the device.
+[Explicit withdrawal](asio-pointer-withdrawal.md) can remove an owned typed
+pointer by its reviewed hash, allowing a separate create-new publication.
 
 ## Publication and lifetime
 

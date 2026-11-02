@@ -13,6 +13,13 @@ struct DriverScope {
     std::shared_ptr<DriverOwner> owner;
     LatencyProfile latency;
 };
+struct SessionPointer {
+    std::filesystem::path configuration;
+    std::string sha256;
+};
+// Bounded syntax only; resolving a target applies the file/process policy.
+SessionPointer parse_session_pointer(const std::string&);
+std::string session_pointer_text(const std::filesystem::path&,const std::string& sha256);
 // Strict UTF-8 records, absolute paths, locked bytes and SHA256 bindings only.
 // This verifies consistency, not the truth/quality of a timing measurement.
 DriverConfiguration load_driver_configuration(const std::filesystem::path&);

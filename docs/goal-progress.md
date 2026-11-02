@@ -1,5 +1,7 @@
 # SL3 rebuild goal — working checkpoint
 
+**Explicit pointer withdrawal, 2 November:** [reviewed hash-based withdrawal](asio-pointer-withdrawal.md) now removes only an exclusively opened, current-user-owned typed pointer. Create-new publication can then reuse its path. Actual COM/simulated audio continues across withdrawal/republication with one acquisition; stale-pointer cleanup and refusal guards are tested. Installation, genuine timing/native audio and current Serato/DVS remain unfinished; no physical or security changes ran.
+
 **Stable DLL session locator, 2 November:** [the production locator](asio-session-locator.md) now binds an adjacent stable record to one explicit pointer and a hash-pinned immutable broker configuration, with exact broker file/process identity and no fallback. The controller can publish a new owner-only pointer without device access. Actual production COM refusal and simulated STA/MTA audio through this path are tested. Installation, pointer replacement, genuine timing/native audio and current Serato/DVS remain unfinished.
 
 **Windows COM activation, 2 November:** [the new activation tests](asio-com-activation.md) exercise Windows `CoCreateInstance` in STA and MTA apartments without registration. Production objects truthfully refuse absent configuration; separate simulated DLL clients run three objects/four callback streams on one retained owner in each apartment. Deployment, genuine measured timing, positive native audio and current Serato/DVS remain unfinished.

@@ -39,6 +39,12 @@ static bool locked(const std::filesystem::path& path){
     if(handle==INVALID_HANDLE_VALUE)return GetLastError()==ERROR_SHARING_VIOLATION;CloseHandle(handle);return false;
 }
 static void records(Fixture& fixture){
+    const auto unicode=fixture.folder/L"session-\u4f1a\u8bdd.conf";
+    const auto pointer=sl3::asio::parse_session_pointer(sl3::asio::session_pointer_text(unicode,fixture.worker_hash));
+    require(pointer.configuration==unicode && pointer.sha256==fixture.worker_hash,"Shared pointer codec round-trips UTF-8 path and hash without target I/O");
+    rejects([&]{sl3::asio::session_pointer_text("relative.conf",fixture.worker_hash);});
+    rejects([&]{sl3::asio::session_pointer_text(unicode,std::string(64,'A'));});
+    rejects([&]{sl3::asio::parse_session_pointer(std::string(65537,'x'));});
     {
         const auto config=load_driver_entry_configuration(fixture.config);
         require(config.worker.kind==sl3::session::Kind::native && config.worker.lifetime==DeviceLifetime::retained && config.worker.sha256==fixture.worker_hash && config.latency.rate_hz==48000 && config.latency.buffer_frames==128 &&

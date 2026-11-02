@@ -3,6 +3,9 @@
 #include "windows/broker_record.hpp"
 #include "windows/startup_journal.hpp"
 #include <sddl.h>
+#include <aclapi.h>
+#include <bcrypt.h>
+#include <array>
 #include <algorithm>
 #include <atomic>
 #include <charconv>
@@ -129,21 +132,62 @@ int stop(const std::filesystem::path& file){
     Handle event;event.value=OpenEventW(EVENT_MODIFY_STATE,FALSE,stop_name(config.broker->endpoint).c_str());require(event.value && SetEvent(event.value),"Request known controller stop");
     std::cout<<"{\"schema\":\"sl3.broker-controller-stop.v1\",\"stopRequested\":true,\"deviceReleasedVerified\":false}\n";return 0;
 }
-int publish_pointer(const std::filesystem::path& source,const std::filesystem::path& destination){
-    auto config=asio::load_driver_configuration(source);require(config.broker.has_value(),"Pointer publication requires an immutable broker configuration");
-    ReadFileLease source_pin(source);const auto digest=Process::executable_sha256(source);
+void ordinary_user(){
     Handle token;require(OpenProcessToken(GetCurrentProcess(),TOKEN_QUERY,&token.value)!=FALSE,"Read publisher token");
     TOKEN_ELEVATION elevation{};DWORD bytes=0;
-    require(GetTokenInformation(token.value,TokenElevation,&elevation,sizeof(elevation),&bytes) && !elevation.TokenIsElevated,"Pointer publisher requires an ordinary non-elevated user");
+    require(GetTokenInformation(token.value,TokenElevation,&elevation,sizeof(elevation),&bytes) && !elevation.TokenIsElevated,"Pointer commands require an ordinary non-elevated user");
+}
+int publish_pointer(const std::filesystem::path& source,const std::filesystem::path& destination){
+    auto config=asio::load_driver_configuration(source);require(config.broker.has_value(),"Pointer publication requires an immutable broker configuration");
+    ReadFileLease source_pin(source);const auto digest=Process::executable_sha256(source);ordinary_user();
     local(destination);Handle parent;
     parent.value=CreateFileW(destination.parent_path().c_str(),GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE,nullptr,OPEN_EXISTING,FILE_FLAG_BACKUP_SEMANTICS,nullptr);
     require(parent.value!=INVALID_HANDLE_VALUE,"Pin existing session pointer directory");final_local(parent.value);
     require(!std::filesystem::exists(destination) && !std::filesystem::exists(std::filesystem::path(destination.native()+L".pending")),"Session pointer and pending path must be new; existing bytes are preserved");
     require(WaitForSingleObject(config.broker->server->handle(),0)==WAIT_TIMEOUT,"Session pointer requires a still-live bound broker");
-    const auto text="SL3-ASIO-SESSION-POINTER-1\nconfiguration="+source.u8string()+"\nconfiguration_sha256="+digest+"\n";
+    const auto text=asio::session_pointer_text(source,digest);
     const auto published=write_new(destination,text);
     std::cout<<"{\"schema\":\"sl3.broker-session-pointer-publication.v1\",\"pointerPublished\":true,\"configurationSha256\":"<<json_string(digest)
         <<",\"replaced\":false,\"deviceAccess\":false,\"deviceReadinessVerified\":false}\n";return 0;
+}
+int withdraw_pointer(const std::filesystem::path& destination,const std::wstring& expected){
+    ordinary_user();local(destination);
+    require(expected.size()==64 && std::all_of(expected.begin(),expected.end(),[](wchar_t c){return (c>=L'0' && c<=L'9') || (c>=L'a' && c<=L'f');}),"Withdrawal requires exact lowercase pointer SHA256");
+    Handle parent;parent.value=CreateFileW(destination.parent_path().c_str(),GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE,nullptr,OPEN_EXISTING,FILE_FLAG_BACKUP_SEMANTICS,nullptr);
+    require(parent.value!=INVALID_HANDLE_VALUE,"Pin pointer withdrawal directory");final_local(parent.value);
+    Handle file;file.value=CreateFileW(destination.c_str(),GENERIC_READ|DELETE,0,nullptr,OPEN_EXISTING,FILE_FLAG_OPEN_REPARSE_POINT,nullptr);
+    require(file.value!=INVALID_HANDLE_VALUE,"Open pointer exclusively for reviewed withdrawal");final_local(file.value);
+    BY_HANDLE_FILE_INFORMATION info{};LARGE_INTEGER size{};
+    require(GetFileType(file.value)==FILE_TYPE_DISK && GetFileInformationByHandle(file.value,&info) &&
+        !(info.dwFileAttributes&(FILE_ATTRIBUTE_DIRECTORY|FILE_ATTRIBUTE_REPARSE_POINT)) && info.nNumberOfLinks==1 &&
+        GetFileSizeEx(file.value,&size) && size.QuadPart>0 && size.QuadPart<=65536,"Withdrawal requires one bounded regular pointer file, no reparse/hard links");
+    struct Owner {PSECURITY_DESCRIPTOR descriptor=nullptr;~Owner(){if(descriptor)LocalFree(descriptor);}} owner;
+    PSID sid=nullptr;require(GetSecurityInfo(file.value,SE_FILE_OBJECT,OWNER_SECURITY_INFORMATION,&sid,nullptr,nullptr,nullptr,&owner.descriptor)==ERROR_SUCCESS,"Read pointer file owner");
+    require(sid && IsValidSid(sid),"Pointer file must have a valid owner SID");
+    Handle token;require(OpenProcessToken(GetCurrentProcess(),TOKEN_QUERY,&token.value)!=FALSE,"Read pointer withdrawal owner token");
+    DWORD needed=0;GetTokenInformation(token.value,TokenUser,nullptr,0,&needed);std::vector<std::uint8_t> user(needed);
+    require(needed && GetTokenInformation(token.value,TokenUser,user.data(),needed,&needed) && EqualSid(sid,reinterpret_cast<TOKEN_USER*>(user.data())->User.Sid),"Pointer must be owned by current user");
+    std::string text(std::size_t(size.QuadPart),'\0');DWORD received=0;
+    require(ReadFile(file.value,text.data(),DWORD(text.size()),&received,nullptr) && received==text.size(),"Read exact held pointer bytes");
+    asio::parse_session_pointer(text); // No target resolution: stale pointers can be withdrawn.
+    struct Hash {BCRYPT_ALG_HANDLE algorithm{};BCRYPT_HASH_HANDLE value{};std::vector<UCHAR> storage;
+        ~Hash(){if(value)BCryptDestroyHash(value);if(algorithm)BCryptCloseAlgorithmProvider(algorithm,0);}} hash;
+    require(BCryptOpenAlgorithmProvider(&hash.algorithm,BCRYPT_SHA256_ALGORITHM,nullptr,0)>=0,"Open pointer SHA256 provider");
+    DWORD object_bytes=0,returned=0;
+    require(BCryptGetProperty(hash.algorithm,BCRYPT_OBJECT_LENGTH,reinterpret_cast<PUCHAR>(&object_bytes),sizeof(object_bytes),&returned,0)>=0,"Pointer hash object size");
+    hash.storage.resize(object_bytes);
+    require(BCryptCreateHash(hash.algorithm,&hash.value,hash.storage.data(),object_bytes,nullptr,0,0)>=0 &&
+        BCryptHashData(hash.value,reinterpret_cast<PUCHAR>(text.data()),ULONG(text.size()),0)>=0,"Hash exact held pointer bytes");
+    std::array<UCHAR,32> digest{};require(BCryptFinishHash(hash.value,digest.data(),ULONG(digest.size()),0)>=0,"Finish pointer SHA256");
+    constexpr char hex[]="0123456789abcdef";std::wstring actual;for(const auto byte:digest){actual+=wchar_t(hex[byte>>4]);actual+=wchar_t(hex[byte&15]);}
+    require(actual==expected,"Pointer bytes differ from explicitly reviewed withdrawal hash");
+    FILE_DISPOSITION_INFO disposition{};disposition.DeleteFile=TRUE;
+    require(SetFileInformationByHandle(file.value,FileDispositionInfo,&disposition,sizeof(disposition))!=FALSE,"Mark exact opened pointer for deletion");
+    const HANDLE retired=file.value;file.value=INVALID_HANDLE_VALUE;require(CloseHandle(retired)!=FALSE,"Close withdrawn pointer");
+    const auto attributes=GetFileAttributesW(destination.c_str());const auto error=GetLastError();
+    const bool absent=attributes==INVALID_FILE_ATTRIBUTES && (error==ERROR_FILE_NOT_FOUND || error==ERROR_PATH_NOT_FOUND);
+    std::cout<<"{\"schema\":\"sl3.broker-session-pointer-withdrawal.v1\",\"pointerDeletionMarked\":true,\"pointerAbsentObserved\":"<<std::boolalpha<<absent
+        <<",\"deviceAccess\":false,\"brokerStopped\":false,\"automaticPublication\":false}\n";return 0;
 }
 }
 int wmain(int argc,wchar_t** argv){
@@ -155,6 +199,7 @@ int wmain(int argc,wchar_t** argv){
         for(int n=2;n<argc;n+=2){require(n+1<argc && args.emplace(argv[n],argv[n+1]).second,"Duplicate/incomplete controller option");}
         if(std::wstring(argv[1])==L"--run"){require(args.size()==3 && args.count(L"--input") && args.count(L"--output") && args.count(L"--limit-ms"),"Run requires input/output/limit-ms only");return run(std::filesystem::path(args.at(L"--input")),std::filesystem::path(args.at(L"--output")),limit(args.at(L"--limit-ms")));}
         if(std::wstring(argv[1])==L"--publish-pointer"){require(args.size()==2 && args.count(L"--config") && args.count(L"--pointer"),"Pointer publication requires config/pointer only");return publish_pointer(std::filesystem::path(args.at(L"--config")),std::filesystem::path(args.at(L"--pointer")));}
+        if(std::wstring(argv[1])==L"--withdraw-pointer"){require(args.size()==2 && args.count(L"--pointer") && args.count(L"--sha256"),"Pointer withdrawal requires pointer/sha256 only");return withdraw_pointer(std::filesystem::path(args.at(L"--pointer")),args.at(L"--sha256"));}
         if(std::wstring(argv[1])==L"--stop"){require(args.size()==1 && args.count(L"--config"),"Stop requires config only");return stop(std::filesystem::path(args.at(L"--config")));}
         throw std::invalid_argument("Unknown controller mode");
     }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}

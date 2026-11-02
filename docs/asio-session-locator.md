@@ -81,10 +81,10 @@ false`: a live process and published metadata are not proof of device readiness.
 A broker that exits after publication produces a stale pointer, which the
 loader refuses. The pointer is retained for diagnosis after session exit.
 
-Explicit safe replacement/withdrawal of an old pointer remains to implement;
-there is no automatic cleanup, retry or second acquisition. The create-new
-publisher establishes a first-session deployment path, not a complete session
-switching or installation workflow.
+[Explicit reviewed withdrawal](asio-pointer-withdrawal.md) now permits a separate
+create-new publication at the same pointer path. It does not stop a broker or
+redirect an attached client. There is no automatic cleanup, atomic replacement,
+retry or second acquisition. Installation remains unfinished.
 
 ## Verification and remaining work
 
@@ -106,7 +106,7 @@ Existing-pointer preservation, stale-pointer refusal, refused stale publication
 and private-input refusal are checked. Positive audio/timing is synthetic.
 
 See [the verification record](evidence/session-locator-20261102.json).
-Installation/registration, protected deployment directories, pointer replacement,
+Installation/registration, protected deployment directories,
 genuine measured timing, native broker startup/analogue audio and
 [current Serato/DVS admission](current-serato-integration-decision.md) remain
 unfinished. No physical device or security settings were changed by these tests.

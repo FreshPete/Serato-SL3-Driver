@@ -1,6 +1,7 @@
 """Actual controller/publication/ASIO processes. Positive cases are simulated only."""
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -100,7 +101,7 @@ def main():
                 raise AssertionError('Published configuration must stay write locked')
             require('SL3-ASIO-BROKER-CONFIG-1' in published.read_text(), 'Separate reviewed broker format')
             entry = published
-            if mode in ('ordinary-sta', 'ordinary-mta'):
+            if mode in ('ordinary-sta', 'ordinary-mta', 'ordinary-sta-withdrawal'):
                 deployment = root/f'{name}-deployment'; deployment.mkdir()
                 pointer = root/f'{name}-current-session.txt'
                 publication = json.loads(call([native, '--publish-pointer', '--config', published, '--pointer', pointer]).stdout)
@@ -110,7 +111,32 @@ def main():
                 require(pointer.read_bytes() == original_pointer and not Path(str(pointer)+'.pending').exists(), 'Publisher refuses existing pointer without changing bytes')
                 entry = deployment/'sl3-asio.conf'
                 entry.write_text(f'SL3-ASIO-LOCATOR-1\nsession_pointer={pointer}\nbroker={simulated}\nbroker_sha256={sha(simulated)}\nworker_sha256={sha(worker)}\n', encoding='utf-8')
-            response = call([client, '--published', entry, library, mode])
+            if mode == 'ordinary-sta-withdrawal':
+                running = subprocess.Popen([str(x) for x in [client, '--published', entry, library, mode]], stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                           text=True, encoding='utf-8', creationflags=subprocess.CREATE_NO_WINDOW)
+                try:
+                    deadline = time.monotonic()+5
+                    while not (deployment/'client-running.txt').exists():
+                        require(running.poll() is None and proc.poll() is None, 'Both exact processes live before active withdrawal')
+                        require(time.monotonic() < deadline, 'Actual callback barrier deadline')
+                        time.sleep(.005)
+                    (deployment/'pointer-before-withdrawal.txt').write_bytes(original_pointer)
+                    receipt = json.loads(call([native, '--withdraw-pointer', '--pointer', pointer, '--sha256', sha(pointer)]).stdout)
+                    (deployment/'withdrawal-live.json').write_text(json.dumps(receipt, indent=2), encoding='utf-8')
+                    require(receipt['pointerDeletionMarked'] and receipt['pointerAbsentObserved'] and not receipt['deviceAccess'] and not receipt['brokerStopped'] and not pointer.exists(), 'Exact pointer withdrawal does not stop live broker')
+                    require(proc.poll() is None and running.poll() is None, 'Broker and callback host remain live after pointer withdrawal')
+                    call([client, '--published', entry, library, 'ordinary-sta'], expected=1)
+                    call([native, '--publish-pointer', '--config', published, '--pointer', pointer])
+                    require(pointer.read_bytes() == original_pointer, 'Explicit create-new publication after verified withdrawal')
+                    (deployment/'client-resume.txt').write_text('continue existing attachment\n', encoding='utf-8')
+                    stdout, stderr = running.communicate(timeout=10)
+                    require(running.returncode == 0, f'Existing COM/audio client must survive withdrawal/publication: {stdout} {stderr}')
+                    response = subprocess.CompletedProcess([], running.returncode, stdout, stderr)
+                finally:
+                    if running.poll() is None:
+                        running.kill(); running.communicate(timeout=5)
+            else:
+                response = call([client, '--published', entry, library, mode])
             (output/'asio-client-stdout.txt').write_text(response.stdout, encoding='utf-8')
             (output/'asio-client-stderr.txt').write_text(response.stderr, encoding='utf-8')
             if mode.startswith('ordinary'):
@@ -132,6 +158,10 @@ def main():
                 refused_pointer = root/f'{name}-stale-pointer.txt'
                 call([native, '--publish-pointer', '--config', published, '--pointer', refused_pointer], expected=1)
                 require(not refused_pointer.exists() and not Path(str(refused_pointer)+'.pending').exists(), 'Stale broker refusal publishes no pointer')
+                if mode == 'ordinary-sta-withdrawal':
+                    receipt = json.loads(call([native, '--withdraw-pointer', '--pointer', pointer, '--sha256', sha(pointer)]).stdout)
+                    (deployment/'withdrawal-stale.json').write_text(json.dumps(receipt, indent=2), encoding='utf-8')
+                    require(receipt['pointerAbsentObserved'] and not pointer.exists(), 'Stale pointer withdrawal does not need target process')
             cases.append({'name': name, 'passed': True, 'kind': 'simulated', 'activation': mode})
         finally:
             if proc.poll() is None:
@@ -141,6 +171,7 @@ def main():
     active('ordinary-session')
     active('com-sta-session', 'ordinary-sta')
     active('com-mta-session', 'ordinary-mta')
+    active('com-live-withdrawal', 'ordinary-sta-withdrawal')
     active('blocked-client', 'blocked')
 
     output = root/'lifetime-limit'
@@ -170,6 +201,35 @@ def main():
             require(final['kind'] == 'native' and not final['acquireAttempted'] and not final['acquired'] and not final['nativeDeviceAcquired'] and
                     not final['deviceReleasedVerified'], 'Native CLI refuses truthful simulated worker before acquisition; no native release inference')
         cases.append({'name': name, 'passed': True, 'positiveNativeRun': False})
+
+    guards = root/'pointer-withdrawal-guards'; guards.mkdir()
+    pointer = guards/'pointer.txt'
+    good = f'SL3-ASIO-SESSION-POINTER-1\nconfiguration={guards/"missing.conf"}\nconfiguration_sha256={"0"*64}\n'.encode('utf-8')
+    pointer.write_bytes(good)
+    def withdraw(path, digest=None, expected=1, extra=()):
+        return call([native, '--withdraw-pointer', '--pointer', path, '--sha256', digest or sha(path), *extra], expected=expected)
+    withdraw(pointer, 'f'*64)
+    withdraw(pointer, 'A'*64)
+    withdraw(pointer, extra=['--force', 'true'])
+    require(pointer.read_bytes() == good, 'Hash/option refusal preserves exact pointer')
+    with pointer.open('rb'):
+        withdraw(pointer)
+    require(pointer.read_bytes() == good, 'Exclusive-open refusal preserves a resolving reader')
+    alias = guards/'hardlink.txt'; os.link(pointer, alias)
+    withdraw(pointer)
+    require(pointer.read_bytes() == alias.read_bytes() == good, 'Hard-linked pointer refused without unlinking either name')
+    alias.unlink()
+    for bad in (b'not a pointer\n', b'', good+b'extra=1\n', b'\xef\xbb\xbf'+good, b'x'*65537):
+        pointer.write_bytes(bad); withdraw(pointer)
+        require(pointer.read_bytes() == bad, 'Malformed/type/size refusal preserves input bytes')
+    withdraw(guards, '0'*64)
+    require(guards.is_dir(), 'Directory withdrawal refused without removing it')
+    pointer.write_bytes(good)
+    receipt = json.loads(withdraw(pointer, expected=0).stdout)
+    (guards/'withdrawal.json').write_text(json.dumps(receipt, indent=2), encoding='utf-8')
+    require(receipt['pointerAbsentObserved'] and not pointer.exists(), 'Typed owned stale pointer removed by held handle')
+    withdraw(pointer, '0'*64)
+    cases.append({'name': 'pointer-withdrawal-guards', 'passed': True, 'deviceAccess': False})
 
     existing = root/'existing-output'; existing.mkdir(); (existing/'preserve.txt').write_text('preserve', encoding='utf-8')
     call(command(simulated, normal, existing), expected=1)

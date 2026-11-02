@@ -38,17 +38,23 @@ static void callback(long bank,ASIOBool direct){
 static void buffers(Host& h){ASIOCallbacks callbacks{};callbacks.bufferSwitch=callback;
     require(h.device->createBuffers(h.planes.data(),12,64,&callbacks)==ASE_InvalidMode,"Synthetic fixed profile refuses another buffer size");
     require(h.device->createBuffers(h.planes.data(),12,128,&callbacks)==ASE_OK,"Official SDK planes prepared");}
-static void cycles(Host& h){
+static void cycles(Host& h,const std::filesystem::path& pause={}){
     buffers(h);const auto stable=h.planes[0].buffers[0];
     for(unsigned cycle=0;cycle<2;++cycle){
         h.calls=0;ResetEvent(h.entered.value);require(h.device->start()==ASE_OK,"Actual IASIO start over broker");
+        if(cycle==0 && !pause.empty()){
+            const auto first=GetTickCount64()+2000;while(h.calls==0){require(GetTickCount64()<first,"First callback before pointer withdrawal barrier");Sleep(1);}
+            {std::ofstream marker(pause/L"client-running.txt");marker<<"actual simulated callback observed\n";require(bool(marker),"Write control-thread running marker");}
+            const auto resume=GetTickCount64()+5000;
+            while(!std::filesystem::exists(pause/L"client-resume.txt")){require(GetTickCount64()<resume,"Explicit pointer withdrawal/publication barrier");Sleep(1);}
+        }
         const auto deadline=GetTickCount64()+2000;
         while(h.calls<12){require(GetTickCount64()<deadline,"Several SDK callbacks completed over direct broker mapping");Sleep(1);}
         require(h.device->stop()==ASE_OK && !h.bad && h.calls>=12 && h.planes[0].buffers[0]==stable,"ASIO callback positions/reentry/stable planes and retained stop");
     }
     require(h.device->disposeBuffers()==ASE_OK,"Retired callback planes disposed");
 }
-static void ordinary(const std::filesystem::path& library,const std::wstring& endpoint,HANDLE server,bool blocked,const std::string& worker_hash={},bool activate_com=false){
+static void ordinary(const std::filesystem::path& library,const std::wstring& endpoint,HANDLE server,bool blocked,const std::string& worker_hash={},bool activate_com=false,const std::filesystem::path& pause={}){
     HMODULE module=LoadLibraryExW(library.c_str(),nullptr,LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR|LOAD_LIBRARY_SEARCH_SYSTEM32);require(module!=nullptr,"Load actual unregistered ASIO test DLL");
     using Configure=BOOL(*)(const wchar_t*,HANDLE);using GetClass=HRESULT(__stdcall*)(REFCLSID,REFIID,void**);using Unload=HRESULT(__stdcall*)();
     const auto configure=symbol<Configure>(module,"sl3_test_configure_broker");const auto get=symbol<GetClass>(module,"DllGetClassObject");const auto unload=symbol<Unload>(module,"DllCanUnloadNow");
@@ -67,7 +73,7 @@ static void ordinary(const std::filesystem::path& library,const std::wstring& en
             Host h;host=&h;create(h);long in=0,out=0;
             require(h.device->getChannels(&in,&out)==ASE_OK && in==6 && out==6,"Broker metadata on ordinary object");
             require(h.device->setSampleRate(44100)==ASE_NoClock && h.device->setSampleRate(48000)==ASE_OK,"ASIO remains observed-rate-only");
-            if(object)cycles(h); // Enumeration object followed by two audio objects.
+            if(object)cycles(h,object==1?pause:std::filesystem::path{}); // Enumeration object followed by two audio objects.
             require(h.device->Release()==0,"Ordinary object releases final reference");h.device=nullptr;
             require(unload()==S_OK,"No lingering COM object/scope after successful detach");
             // No parent-side served barrier or USB retry between these objects.
@@ -135,12 +141,12 @@ int wmain(int argc,wchar_t** argv){
             const auto config=load_driver_entry_configuration(std::filesystem::absolute(argv[2]));
             require(config.broker && config.broker->kind==session::Kind::native && config.latency.rate_hz==48000 && config.latency.buffer_frames==128 &&
                 config.latency.input_extra_frames==7 && config.latency.output_extra_frames==11,"Published native-only record with synthetic test profile");
-            const std::wstring mode=argv[4];require(mode==L"ordinary" || mode==L"ordinary-sta" || mode==L"ordinary-mta" || mode==L"blocked","Published fixture mode");
-            const bool activate_com=mode==L"ordinary-sta" || mode==L"ordinary-mta";
+            const std::wstring mode=argv[4];require(mode==L"ordinary" || mode==L"ordinary-sta" || mode==L"ordinary-mta" || mode==L"ordinary-sta-withdrawal" || mode==L"blocked","Published fixture mode");
+            const bool activate_com=mode==L"ordinary-sta" || mode==L"ordinary-mta" || mode==L"ordinary-sta-withdrawal";
             std::unique_ptr<sl3::test::ComApartment> apartment;std::unique_ptr<sl3::test::ComActivation> activation;
-            if(activate_com){apartment=std::make_unique<sl3::test::ComApartment>(mode==L"ordinary-sta"?COINIT_APARTMENTTHREADED:COINIT_MULTITHREADED);
+            if(activate_com){apartment=std::make_unique<sl3::test::ComApartment>(mode==L"ordinary-mta"?COINIT_MULTITHREADED:COINIT_APARTMENTTHREADED);
                 activation=std::make_unique<sl3::test::ComActivation>(std::filesystem::absolute(argv[3]));}
-            ordinary(std::filesystem::absolute(argv[3]),config.broker->endpoint,config.broker->server->handle(),mode==L"blocked",config.broker->worker_sha256,activate_com);
+            ordinary(std::filesystem::absolute(argv[3]),config.broker->endpoint,config.broker->server->handle(),mode==L"blocked",config.broker->worker_sha256,activate_com,mode==L"ordinary-sta-withdrawal"?std::filesystem::absolute(argv[2]).parent_path():std::filesystem::path{});
             if(activate_com)std::wcout<<L"CoCreateInstance "<<mode<<L": three objects/four simulated streams; one retained owner; no registration or USB\n";
             return 0;
         }

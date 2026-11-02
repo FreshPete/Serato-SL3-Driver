@@ -81,6 +81,16 @@ std::vector<std::string> record(const std::string& bytes,const std::vector<std::
     if(offset!=bytes.size())throw std::invalid_argument("Trailing ASIO record fields");return result;
 }
 }
+SessionPointer parse_session_pointer(const std::string& bytes){
+    if(bytes.size()>65536)throw std::invalid_argument("ASIO session pointer exceeds record limit");
+    const auto selected=record(bytes,{"SL3-ASIO-SESSION-POINTER-1","configuration=","configuration_sha256="});
+    if(!selected[0].empty())throw std::invalid_argument("Unknown ASIO session pointer version");
+    return {path(selected[1]),hash(selected[2])};
+}
+std::string session_pointer_text(const std::filesystem::path& configuration,const std::string& sha256){
+    auto text="SL3-ASIO-SESSION-POINTER-1\nconfiguration="+configuration.u8string()+"\nconfiguration_sha256="+sha256+"\n";
+    parse_session_pointer(text);return text;
+}
 DriverConfiguration load_driver_configuration(const std::filesystem::path& location){
     auto files=std::make_shared<Files>();
     const auto bytes=locked_text(*files,location);
@@ -128,9 +138,8 @@ DriverConfiguration load_driver_entry_configuration(const std::filesystem::path&
     // objects retain the selected immutable records and exact process object,
     // so a later pointer replacement cannot redirect an attached client.
     File pointer(path(locator[1]),65536);
-    const auto selected=record(pointer.text(),{"SL3-ASIO-SESSION-POINTER-1","configuration=","configuration_sha256="});
-    if(!selected[0].empty())throw std::invalid_argument("Unknown ASIO session pointer version");
-    const auto configuration=path(selected[1]);pin_hash(*files,configuration,hash(selected[2]),65536);
+    const auto selected=parse_session_pointer(pointer.text());
+    const auto configuration=selected.configuration;pin_hash(*files,configuration,selected.sha256,65536);
     const auto config=record(locked_text(*files,configuration),{"SL3-ASIO-BROKER-CONFIG-1","worker=","worker_sha256=","helper=","timing_record=","timing_record_sha256=","broker=","broker_sha256=","session_record=","session_record_sha256="});
     if(!config[0].empty() || hash(config[2])!=worker_hash || hash(config[7])!=broker_hash)
         throw std::invalid_argument("ASIO session does not match locator worker/broker pins");
