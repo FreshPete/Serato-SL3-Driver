@@ -114,7 +114,8 @@ def main():
 
     partial = folder/'partial'; calls = []
     def interrupt(event):
-        calls.append(event)
+        if event['event'] == 'before_file':
+            calls.append(event)
         if len(calls) == 2:
             raise OSError('Injected caller-journal interruption before second file')
     case('interrupted-copy', lambda: rejected(lambda: stage.stage_new(bundle, expected, partial, policy, interrupt)))

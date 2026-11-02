@@ -127,3 +127,13 @@ directory opens did not enforce the intended rename exclusion. The central
 wrapper now also requests FILE_LIST_DIRECTORY. Native positive/negative rename
 calibration and all 228 affected/new checks pass without host ACL changes. This
 supersedes the earlier assumption about those metadata-only directory pins.
+
+## Later copy-recovery witnesses
+
+The journalled writer now records the original directory identity, then each
+file identity before writing and completion after flush/readback. This includes
+intent and receipt, without changing their canonical schema or payload bytes.
+[Reviewed copy recovery](asio-copy-recovery.md) validates this exact staging
+prefix and can remove witnessed partial output with fresh absent registration.
+Unwitnessed create-to-journal gaps are preserved. The standalone staging route
+without a journal does not gain these witnesses or automatic recovery.

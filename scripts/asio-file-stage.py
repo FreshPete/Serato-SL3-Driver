@@ -283,41 +283,39 @@ def stage_new(bundle, expected, destination, policy, journal=None):
         intent = module.encoded({'schema': 'sl3.file-stage-intent.v1', 'packageId': manifest['packageId'],
                                  'bundleManifestSha256': expected, 'directory': root['file'], 'policy': policy.record(),
                                  'complete': False, 'plannedFiles': {name: {'sha256': hashlib.sha256(data).hexdigest(), 'bytes': len(data)} for name, data in payload.items()}})
-        with descriptor(policy.sddl(False)) as attributes:
-            with open_file(destination/'stage-intent.json', access=0xc0000000, create=1, security=attributes) as handle:
-                written = W.DWORD()
-                check(api('kernel32.dll', 'WriteFile', W.BOOL, [W.HANDLE, P, W.DWORD, ctypes.POINTER(W.DWORD), P])(
-                    handle, intent, len(intent), ctypes.byref(written), None))
-                require(written.value == len(intent), 'Complete intent write required')
-                check(api('kernel32.dll', 'FlushFileBuffers', W.BOOL, [W.HANDLE])(handle))
-                inspected = inspect_policy(handle, policy, False)
-                require(read_handle(handle, module.LIMIT) == intent, 'Intent readback mismatch')
-                record['intent'] = {'sha256': hashlib.sha256(intent).hexdigest(), 'bytes': len(intent),
-                                    'identity': inspected['file']['identity']}
-        for name, data in payload.items():
-            if journal is not None:
-                journal({'event': 'before_file', 'name': name})
+        if journal is not None:
+            journal({'event': 'stage_root_created', 'directory': root['file'],
+                     'packageId': manifest['packageId'], 'bundleManifestSha256': expected, 'policy': policy.record()})
+
+        def write_owned(name, data):
             with descriptor(policy.sddl(False)) as attributes:
                 with open_file(destination/name, access=0xc0000000, create=1, security=attributes) as handle:
+                    created = inspect_policy(handle, policy, False)['file']
+                    require(created['size'] == 0 and Path(created['path']) == destination/name, 'New empty stage file required')
+                    details = {'sha256': hashlib.sha256(data).hexdigest(), 'bytes': len(data), 'identity': created['identity']}
+                    # Witness identity before writing. The unavoidable create-to-
+                    # witness gap is preserved, never guessed during recovery.
+                    if journal is not None:
+                        journal({'event': 'stage_file_created', 'name': name, 'details': details})
                     written = W.DWORD()
                     check(api('kernel32.dll', 'WriteFile', W.BOOL, [W.HANDLE, P, W.DWORD, ctypes.POINTER(W.DWORD), P])(
                         handle, data, len(data), ctypes.byref(written), None))
                     require(written.value == len(data), 'Complete staged write required')
                     check(api('kernel32.dll', 'FlushFileBuffers', W.BOOL, [W.HANDLE])(handle))
-                    inspected = inspect_policy(handle, policy, False)
-                    digest = hashlib.sha256(read_handle(handle, module.LIMIT)).hexdigest()
-                    require(digest == hashlib.sha256(data).hexdigest(), 'Staged readback differs from captured bytes')
-                    record['files'][name] = {'sha256': digest, 'bytes': len(data), 'identity': inspected['file']['identity']}
+                    inspected = inspect_policy(handle, policy, False)['file']
+                    require(inspected['identity'] == created['identity'] and read_handle(handle, module.LIMIT) == data,
+                            'Staged readback/identity differs from captured bytes')
+                    if journal is not None:
+                        journal({'event': 'stage_file_completed', 'name': name, 'details': details})
+                    return details
+
+        record['intent'] = write_owned('stage-intent.json', intent)
+        for name, data in payload.items():
+            if journal is not None:
+                journal({'event': 'before_file', 'name': name})
+            record['files'][name] = write_owned(name, data)
         receipt = module.encoded(record)
-        with descriptor(policy.sddl(False)) as attributes:
-            with open_file(destination/'stage-record.json', access=0xc0000000, create=1, security=attributes) as handle:
-                written = W.DWORD()
-                check(api('kernel32.dll', 'WriteFile', W.BOOL, [W.HANDLE, P, W.DWORD, ctypes.POINTER(W.DWORD), P])(
-                    handle, receipt, len(receipt), ctypes.byref(written), None))
-                require(written.value == len(receipt), 'Complete stage receipt write required')
-                check(api('kernel32.dll', 'FlushFileBuffers', W.BOOL, [W.HANDLE])(handle))
-                inspect_policy(handle, policy, False)
-                require(read_handle(handle, module.LIMIT) == receipt, 'Stage receipt readback mismatch')
+        write_owned('stage-record.json', receipt)
         return {'staged': True, 'productionPolicy': policy == PRODUCTION, 'directory': str(destination),
                 'stageRecordSha256': hashlib.sha256(receipt).hexdigest(), 'registered': False, 'deviceAccess': False}
 

@@ -113,9 +113,11 @@ unchanged; no C++ rebuild was needed. See the
 remaining own entries with an intact stage. [Separate file recovery](asio-file-recovery.md)
 now covers partial file removal and absent-stage reconciliation. Protected-base
 preparation now has workspace coverage. [Interrupted-install abort recovery](asio-install-recovery.md)
-adds the complete-stage/partial-registration case; interrupted copies and the
-pre-stage journal gap remain unfinished, along with attended production deployment
-and ordinary-user write-denial proof.
+adds the complete-stage/partial-registration case. The later
+[journal-witnessed copy recovery](asio-copy-recovery.md) covers recorded staging
+identities, including the pre-stage-completion journal gap. Unwitnessed creation
+gaps, attended production deployment and ordinary-user write-denial proof remain
+unfinished.
 Runtime resolution does not establish the signed UsbDk filter's device readiness,
 a positive current native session, measured latency, analogue audio, legitimate
 current Serato admission or two-deck DVS. Those remain separate unproved parts of

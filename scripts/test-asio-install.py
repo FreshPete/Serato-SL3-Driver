@@ -146,7 +146,9 @@ def main():
             real_stage = s.stage_new; seen = []
             def interrupted_stage(bundle, digest, destination, policy, journal):
                 def callback(event):
-                    journal(event); seen.append(event)
+                    journal(event)
+                    if event['event'] == 'before_file':
+                        seen.append(event)
                     if len(seen) == 2:
                         raise OSError('Simulated interrupted copy')
                 return real_stage(bundle, digest, destination, policy, callback)

@@ -1,0 +1,1654 @@
+{
+  "schema": "sl3.copy-recovery-verification.v1",
+  "createdUtc": "2026-11-02T04:07:17.769958+00:00",
+  "newPassingChecks": 65,
+  "affectedRegressionChecksPassed": 269,
+  "allPassingChecksThisCheckpoint": 334,
+  "suites": [
+    {
+      "suite": "copy",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "no-mutation-cli",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-0",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-1",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-2",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-3",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-4",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-5",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-6",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-7",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-8",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-9",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-10",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-11",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-12",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-13",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-14",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-15",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-16",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-17",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-18",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-19",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-20",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-21",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-22",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-23",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-24",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-25",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-26",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-27",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-28",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-29",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-30",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-31",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-32",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-33",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-34",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-35",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-36",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-37",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-38",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-39",
+          "passed": true
+        },
+        {
+          "name": "recover-after-staging-event-40",
+          "passed": true
+        },
+        {
+          "name": "actual-partial-write-prefix-recovered",
+          "passed": true
+        },
+        {
+          "name": "unjournalled-directory-creation-preserved",
+          "passed": true
+        },
+        {
+          "name": "unjournalled-file-creation-preserved",
+          "passed": true
+        },
+        {
+          "name": "complete-stage-before-completion-journal-recovered",
+          "passed": true
+        },
+        {
+          "name": "journalled-complete-stage-preserved-for-install-recovery",
+          "passed": true
+        },
+        {
+          "name": "unknown-stage-data-preserved",
+          "passed": true
+        },
+        {
+          "name": "nonprefix-partial-file-preserved",
+          "passed": true
+        },
+        {
+          "name": "changed-completed-file-preserved",
+          "passed": true
+        },
+        {
+          "name": "same-prefix-new-file-identity-preserved",
+          "passed": true
+        },
+        {
+          "name": "hardlinked-partial-file-preserved",
+          "passed": true
+        },
+        {
+          "name": "any-current-registration-blocks-copy-recovery",
+          "passed": true
+        },
+        {
+          "name": "current-user-overlay-preserved",
+          "passed": true
+        },
+        {
+          "name": "wrong-journal-review-hash-refused",
+          "passed": true
+        },
+        {
+          "name": "wrong-bundle-review-hash-refused",
+          "passed": true
+        },
+        {
+          "name": "busy-survivor-blocks-all-deletion",
+          "passed": true
+        },
+        {
+          "name": "retry-after-busy-handle-release",
+          "passed": true
+        },
+        {
+          "name": "interrupted-recovery-reports-one-observed-deletion",
+          "passed": true
+        },
+        {
+          "name": "retry-rechecks-original-witnesses-and-current-survivors",
+          "passed": true
+        },
+        {
+          "name": "already-absent-stage-reconciled-without-recreation",
+          "passed": true
+        },
+        {
+          "name": "late-unknown-data-stops-first-deletion",
+          "passed": true
+        },
+        {
+          "name": "production-refuses-normal-token",
+          "passed": true
+        }
+      ],
+      "indexSha256": "5955e924a4f80f151f64b1b35bc0db33002a0ede58bea72b8abcf5bb447192e6",
+      "reportedSourceSha256": {
+        "scripts/asio-recover-copy.py": "1269cd647bc44f7a3f766bd24bf821266de2df76e5e6046c1aa6e0745def6d27",
+        "scripts/test-asio-recover-copy.py": "efcdd602e0172d559a14b8f1d0912cd601b79137cce12658ac7763f7511b120c",
+        "scripts/asio-file-stage.py": "9675ca854e2b52f3af3029e1c772b87f36afed7d99d24d8c65c3fdf944cd5fc9",
+        "scripts/asio-install.py": "a5110d99b554f7c7fecdbe07d7e81ad87b708f26a6372b95c3aa92bdbc92d666",
+        "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad",
+        "scripts/asio-registry.py": "f0b1009fe0a3cee39acc30e295dddeac9171082d8d7029f404a302d0114b7bbf",
+        "scripts/asio-runtime-check.py": "f7e3d3ee2a9f68a446361854717bc889882328cc721fa6613f5fef2e0498b354"
+      },
+      "logSha256": "530b563cc65dab69417d3b3ba2e11a7a893c0ed8c6dafc2c48773dcac1b377c6",
+      "exitCode": 0,
+      "reportedSourcePinsMatch": true
+    },
+    {
+      "suite": "stage",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "elevation-gate",
+          "passed": true
+        },
+        {
+          "name": "read-only-production-check",
+          "passed": true
+        },
+        {
+          "name": "native-known-folders",
+          "passed": true
+        },
+        {
+          "name": "actual-user-policy-stage",
+          "passed": true
+        },
+        {
+          "name": "actual-stage-inspection",
+          "passed": true
+        },
+        {
+          "name": "production-rejects-test-descriptor",
+          "passed": true
+        },
+        {
+          "name": "existing-destination",
+          "passed": true
+        },
+        {
+          "name": "source-manifest-hash",
+          "passed": true
+        },
+        {
+          "name": "missing-parent",
+          "passed": true
+        },
+        {
+          "name": "source-writer-sharing",
+          "passed": true
+        },
+        {
+          "name": "interrupted-copy",
+          "passed": true
+        },
+        {
+          "name": "changed-payload",
+          "passed": true
+        },
+        {
+          "name": "restored-payload",
+          "passed": true
+        },
+        {
+          "name": "extra-file",
+          "passed": true
+        },
+        {
+          "name": "hardlink",
+          "passed": true
+        },
+        {
+          "name": "receipt-hash",
+          "passed": true
+        },
+        {
+          "name": "same-byte-file-replacement",
+          "passed": true
+        },
+        {
+          "name": "unexpected-write-ace",
+          "passed": true
+        },
+        {
+          "name": "test-acl-restored",
+          "passed": true
+        },
+        {
+          "name": "receipt-in-different-directory",
+          "passed": true
+        },
+        {
+          "name": "different-root-restored",
+          "passed": true
+        },
+        {
+          "name": "positive-stage-final",
+          "passed": true
+        }
+      ],
+      "indexSha256": "fee6d7f6736d874d6d466dd1d850ea6716ae6576c194d9162f391537966ad987",
+      "reportedSourceSha256": {},
+      "logSha256": "057fc59c0c155894229440ae120895d7bd29cb12c43559247976c831d9a58f04",
+      "exitCode": 0,
+      "reportedSourcePinsMatch": true
+    },
+    {
+      "suite": "cleanup",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "no-public-removal-command",
+          "passed": true
+        },
+        {
+          "name": "no-public-test-policy-override",
+          "passed": true
+        },
+        {
+          "name": "normal-token-production-refusal",
+          "passed": true
+        },
+        {
+          "name": "complete-owned-cleanup",
+          "passed": true
+        },
+        {
+          "name": "wrong-receipt-hash",
+          "passed": true
+        },
+        {
+          "name": "production-rejects-user-owned-stage",
+          "passed": true
+        },
+        {
+          "name": "changed-payload",
+          "passed": true
+        },
+        {
+          "name": "extra-file",
+          "passed": true
+        },
+        {
+          "name": "missing-file",
+          "passed": true
+        },
+        {
+          "name": "hardlink",
+          "passed": true
+        },
+        {
+          "name": "same-byte-new-file-identity",
+          "passed": true
+        },
+        {
+          "name": "identity-rechecked-through-delete-handle",
+          "passed": true
+        },
+        {
+          "name": "delete-handles-deny-concurrent-writer",
+          "passed": true
+        },
+        {
+          "name": "receipt-for-different-root",
+          "passed": true
+        },
+        {
+          "name": "active-reader-refuses-before-deletion",
+          "passed": true
+        },
+        {
+          "name": "reader-release-allows-cleanup",
+          "passed": true
+        },
+        {
+          "name": "unexpected-write-ace",
+          "passed": true
+        },
+        {
+          "name": "fixture-acl-restored",
+          "passed": true
+        },
+        {
+          "name": "journal-failure-before-mutation",
+          "passed": true
+        },
+        {
+          "name": "journal-failure-truthful-partial",
+          "passed": true
+        },
+        {
+          "name": "late-foreign-file-preserved",
+          "passed": true
+        },
+        {
+          "name": "nonempty-final-directory-preserved",
+          "passed": true
+        },
+        {
+          "name": "image-section-blocks-deletion",
+          "passed": true
+        },
+        {
+          "name": "released-image-allows-cleanup",
+          "passed": true
+        }
+      ],
+      "indexSha256": "2b2de1e9131593209dad9a6171a0a8780634e223d604419294ed7cf9d44905f8",
+      "reportedSourceSha256": {},
+      "logSha256": "d4229cf8e540553eaad1ec66749d87660947c06b57ae601a520a415ed7fdbbe9",
+      "exitCode": 0,
+      "reportedSourcePinsMatch": true
+    },
+    {
+      "suite": "ancestor",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "readonly-inspect",
+          "passed": true
+        },
+        {
+          "name": "object-access-checks",
+          "passed": true
+        },
+        {
+          "name": "protected-child-opens-denied",
+          "passed": true
+        },
+        {
+          "name": "delete-child-control",
+          "passed": true
+        },
+        {
+          "name": "fixture-acls-restored",
+          "passed": true
+        },
+        {
+          "name": "junction-empty",
+          "passed": true
+        },
+        {
+          "name": "junction-nonempty",
+          "passed": true
+        },
+        {
+          "name": "junction-calibration-scope",
+          "passed": true
+        },
+        {
+          "name": "anchor-refuses-delete-child",
+          "passed": true
+        },
+        {
+          "name": "anchor-refuses-write-dacl",
+          "passed": true
+        },
+        {
+          "name": "anchor-refuses-write-owner",
+          "passed": true
+        },
+        {
+          "name": "anchor-refuses-generic-all",
+          "passed": true
+        },
+        {
+          "name": "ordinary-directory-still-refused",
+          "passed": true
+        },
+        {
+          "name": "host-snapshot-unchanged",
+          "passed": true
+        }
+      ],
+      "indexSha256": "37072efacc6f184a6c9d79823c5a2fd266af70cc1248e8f2f94fc055c841b99e",
+      "reportedSourceSha256": {},
+      "logSha256": "670e6c45e415e033ac05aa0fcb0e848a409729966cef7db6985c3f221cb730e8",
+      "exitCode": 0,
+      "reportedSourcePinsMatch": true
+    },
+    {
+      "suite": "base",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "no-production-mutation-cli",
+          "passed": true
+        },
+        {
+          "name": "actual-readonly-production-preflight",
+          "passed": true
+        },
+        {
+          "name": "new-explicit-policy-directory",
+          "passed": true
+        },
+        {
+          "name": "verified-base-reused-with-foreign-data-preserved",
+          "passed": true
+        },
+        {
+          "name": "raw-metadata-only-open-native-calibration",
+          "passed": true
+        },
+        {
+          "name": "retained-handle-refuses-base-rename",
+          "passed": true
+        },
+        {
+          "name": "consumer-failure-retains-base-for-explicit-retry",
+          "passed": true
+        },
+        {
+          "name": "missing-parent-not-created",
+          "passed": true
+        },
+        {
+          "name": "ordinary-foreign-descriptor-preserved",
+          "passed": true
+        },
+        {
+          "name": "file-in-base-slot-preserved",
+          "passed": true
+        },
+        {
+          "name": "different-expected-owner-refused",
+          "passed": true
+        },
+        {
+          "name": "different-expected-ace-list-refused",
+          "passed": true
+        },
+        {
+          "name": "production-refuses-normal-token",
+          "passed": true
+        },
+        {
+          "name": "actual-two-contender-create-race",
+          "passed": true
+        },
+        {
+          "name": "race-winner-policy-and-identity-rechecked",
+          "passed": true
+        }
+      ],
+      "indexSha256": "07fe63fd03d5c677f2cbb222b4919e9e8ced29920f162e1aeaab4596f5050198",
+      "reportedSourceSha256": {
+        "scripts/asio-install-base.py": "34e9d3f33f5701bed4f5e55486ee57204910ff5cddcc717d8ba3cb319799326b",
+        "scripts/test-asio-install-base.py": "21cc9317fe9942b4a1c85df204185fb2220a75295004c7b49ce22c5471db9536",
+        "scripts/asio-file-stage.py": "9675ca854e2b52f3af3029e1c772b87f36afed7d99d24d8c65c3fdf944cd5fc9",
+        "scripts/asio-install.py": "a5110d99b554f7c7fecdbe07d7e81ad87b708f26a6372b95c3aa92bdbc92d666"
+      },
+      "logSha256": "2b5a4a8e8b13c10ac1a3e7bef5c1918217be302c2e307890e1bf9ab7069856ee",
+      "exitCode": 0,
+      "reportedSourcePinsMatch": true
+    },
+    {
+      "suite": "runtime",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "explicit-check-requires-hash-and-bundle",
+          "passed": true
+        },
+        {
+          "name": "native-system-directory",
+          "passed": true
+        },
+        {
+          "name": "actual-reviewed-bundle-runtime-resolution",
+          "passed": true
+        },
+        {
+          "name": "actual-reviewed-bundle-cli",
+          "passed": true
+        },
+        {
+          "name": "wrong-bundle-hash-before-system-load",
+          "passed": true
+        },
+        {
+          "name": "changed-bundle-refused",
+          "passed": true
+        },
+        {
+          "name": "missing-system-dll-no-fallback",
+          "passed": true
+        },
+        {
+          "name": "missing-named-export-refused",
+          "passed": true
+        },
+        {
+          "name": "missing-ordinal-refused",
+          "passed": true
+        },
+        {
+          "name": "unsafe-import-path-refused",
+          "passed": true
+        },
+        {
+          "name": "non-system-directory-refused",
+          "passed": true
+        },
+        {
+          "name": "missing-api-contract-refused",
+          "passed": true
+        },
+        {
+          "name": "actual-present-ordinal-resolves",
+          "passed": true
+        },
+        {
+          "name": "local-import-needs-explicit-supported-gate",
+          "passed": true
+        },
+        {
+          "name": "first-party-pe-import-traversal-refused",
+          "passed": true
+        }
+      ],
+      "indexSha256": "25c35a7e59e4a145214bdfb984494157769e8e8b0a8ba95e9c1ba4a5b90b0e8d",
+      "reportedSourceSha256": {
+        "scripts/asio-runtime-check.py": "f7e3d3ee2a9f68a446361854717bc889882328cc721fa6613f5fef2e0498b354",
+        "scripts/test-asio-runtime-check.py": "e7c7d06313fcf8ba4db570bf927e1a936b28abb776909e3013b9ce740881f4dd",
+        "scripts/asio-file-stage.py": "9675ca854e2b52f3af3029e1c772b87f36afed7d99d24d8c65c3fdf944cd5fc9"
+      },
+      "logSha256": "664eba992bb209baa488d3ee1c981fb631e6577dc3a4f94a11aa02a33d327af4",
+      "exitCode": 0,
+      "reportedSourcePinsMatch": true
+    },
+    {
+      "suite": "install",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "no-machine-mutation-cli",
+          "passed": true
+        },
+        {
+          "name": "runtime-gated-stage-registration",
+          "passed": true
+        },
+        {
+          "name": "source-and-stage-leased-across-registration",
+          "passed": true
+        },
+        {
+          "name": "installation-completion-journal",
+          "passed": true
+        },
+        {
+          "name": "actual-isolated-install-remove-roundtrip",
+          "passed": true
+        },
+        {
+          "name": "wrong-bundle-hash-before-stage",
+          "passed": true
+        },
+        {
+          "name": "runtime-failure-prevents-all-mutations",
+          "passed": true
+        },
+        {
+          "name": "existing-destination-preserved",
+          "passed": true
+        },
+        {
+          "name": "foreign-registration-blocks-staging",
+          "passed": true
+        },
+        {
+          "name": "missing-shared-containers-preserved",
+          "passed": true
+        },
+        {
+          "name": "user-overlay-blocks-staging",
+          "passed": true
+        },
+        {
+          "name": "interrupted-copy-retains-intent-no-registration",
+          "passed": true
+        },
+        {
+          "name": "stage-journal-failure-blocks-registration",
+          "passed": true
+        },
+        {
+          "name": "registration-failure-rolls-back-own-keys-retains-stage",
+          "passed": true
+        },
+        {
+          "name": "post-stage-registration-conflict-preserves-both",
+          "passed": true
+        },
+        {
+          "name": "completion-journal-failure-does-not-certify-install",
+          "passed": true
+        },
+        {
+          "name": "competing-install-lock-blocks-staging",
+          "passed": true
+        },
+        {
+          "name": "production-refuses-normal-token",
+          "passed": true
+        }
+      ],
+      "indexSha256": "b4fe4cb2e0ba56239c8b739a7c04120fc02e310d7a558ffdfdb7da09705db785",
+      "reportedSourceSha256": {
+        "scripts/asio-install.py": "a5110d99b554f7c7fecdbe07d7e81ad87b708f26a6372b95c3aa92bdbc92d666",
+        "scripts/test-asio-install.py": "cc03ec846d33c3d00792370427bfdbbc189ea983c0f12a820f2e41ffb6d19669",
+        "scripts/asio-runtime-check.py": "f7e3d3ee2a9f68a446361854717bc889882328cc721fa6613f5fef2e0498b354",
+        "scripts/asio-uninstall.py": "5210818b800a6a0d8531aadc8dd955499476ae1b3fb65b98cfe0c79565fc61d7",
+        "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad",
+        "scripts/asio-file-stage.py": "9675ca854e2b52f3af3029e1c772b87f36afed7d99d24d8c65c3fdf944cd5fc9",
+        "scripts/asio-registry.py": "f0b1009fe0a3cee39acc30e295dddeac9171082d8d7029f404a302d0114b7bbf"
+      },
+      "logSha256": "e2289114bec23a7ef4504e6f90f959be0ae9c15483ef024909251ba0068e9513",
+      "exitCode": 0,
+      "reportedSourcePinsMatch": true
+    },
+    {
+      "suite": "journal",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "no-cli-mutation",
+          "passed": true
+        },
+        {
+          "name": "same-process-exclusive-lock",
+          "passed": true
+        },
+        {
+          "name": "real-competing-process-refused",
+          "passed": true
+        },
+        {
+          "name": "flushed-journal-roundtrip",
+          "passed": true
+        },
+        {
+          "name": "closed-writer-refuses-append",
+          "passed": true
+        },
+        {
+          "name": "persistent-lock-file-reused-after-close",
+          "passed": true
+        },
+        {
+          "name": "process-death-retains-flushed-prefix",
+          "passed": true
+        },
+        {
+          "name": "process-death-releases-lock",
+          "passed": true
+        },
+        {
+          "name": "foreign-lock-preserved",
+          "passed": true
+        },
+        {
+          "name": "production-refuses-normal-token",
+          "passed": true
+        },
+        {
+          "name": "invalid-action-before-write",
+          "passed": true
+        },
+        {
+          "name": "invalid-bindings-before-write",
+          "passed": true
+        },
+        {
+          "name": "changed-record-hash-refused",
+          "passed": true
+        },
+        {
+          "name": "reordered-records-refused",
+          "passed": true
+        },
+        {
+          "name": "duplicated-record-refused",
+          "passed": true
+        },
+        {
+          "name": "malformed-complete-line-refused",
+          "passed": true
+        },
+        {
+          "name": "incomplete-tail-reported-not-replayed",
+          "passed": true
+        },
+        {
+          "name": "incomplete-header-refused",
+          "passed": true
+        },
+        {
+          "name": "oversized-tail-refused",
+          "passed": true
+        },
+        {
+          "name": "same-byte-journal-replacement-refused",
+          "passed": true
+        },
+        {
+          "name": "flush-failure-propagates",
+          "passed": true
+        },
+        {
+          "name": "failed-writer-poisoned",
+          "passed": true
+        },
+        {
+          "name": "partial-write-propagates",
+          "passed": true
+        },
+        {
+          "name": "actual-file-torn-tail-preserved",
+          "passed": true
+        },
+        {
+          "name": "actual-owned-cleanup-with-flushed-journal",
+          "passed": true
+        },
+        {
+          "name": "recovery-journal-survives-stage-removal",
+          "passed": true
+        },
+        {
+          "name": "actual-interrupted-cleanup-exact-partial",
+          "passed": true
+        },
+        {
+          "name": "interrupted-cleanup-has-external-recovery-prefix",
+          "passed": true
+        },
+        {
+          "name": "actual-journal-failure-prevents-cleanup-mutation",
+          "passed": true
+        }
+      ],
+      "indexSha256": "df5840e2096cda9c239f0f6ddc8315dbc6e066fa345623621a985ceddf687c11",
+      "reportedSourceSha256": {
+        "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad",
+        "scripts/test-asio-install-journal.py": "687390bea097295a8f370e95db538b5e0994e2ba25db8f0286f150fcb6a78ddc",
+        "scripts/asio-file-stage.py": "9675ca854e2b52f3af3029e1c772b87f36afed7d99d24d8c65c3fdf944cd5fc9"
+      },
+      "logSha256": "c106738b48eeac43a557c7d8ff3163c83c8756710a4de1136cc7fa0c3d67cea1",
+      "exitCode": 0,
+      "reportedSourcePinsMatch": true
+    },
+    {
+      "suite": "uninstall",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "no-mutation-cli",
+          "passed": true
+        },
+        {
+          "name": "isolated-complete-uninstall",
+          "passed": true
+        },
+        {
+          "name": "complete-uninstall-retained-journal",
+          "passed": true
+        },
+        {
+          "name": "already-absent-registration-cleanup",
+          "passed": true
+        },
+        {
+          "name": "wrong-stage-hash-preserves-all",
+          "passed": true
+        },
+        {
+          "name": "changed-stage-before-registry-removal",
+          "passed": true
+        },
+        {
+          "name": "foreign-registration-preserved",
+          "passed": true
+        },
+        {
+          "name": "partial-registration-preserved",
+          "passed": true
+        },
+        {
+          "name": "current-user-overlay-blocks-removal",
+          "passed": true
+        },
+        {
+          "name": "busy-file-after-registration-removal-reports-partial",
+          "passed": true
+        },
+        {
+          "name": "busy-reader-release-resumes-absent-registration",
+          "passed": true
+        },
+        {
+          "name": "competing-transaction-preserves-state",
+          "passed": true
+        },
+        {
+          "name": "stage-outside-serialized-base-refused",
+          "passed": true
+        },
+        {
+          "name": "late-unknown-file-after-unregister-preserved",
+          "passed": true
+        },
+        {
+          "name": "journal-failure-before-registry-preserves-state",
+          "passed": true
+        },
+        {
+          "name": "interrupted-registry-removal-retains-files",
+          "passed": true
+        },
+        {
+          "name": "completion-journal-failure-keeps-honest-final-observations",
+          "passed": true
+        },
+        {
+          "name": "production-refuses-normal-token",
+          "passed": true
+        }
+      ],
+      "indexSha256": "dfce9024b24ecc4ef518dc39292a94a6fe62705d80526a3f6964688bf50aa7c8",
+      "reportedSourceSha256": {
+        "scripts/asio-uninstall.py": "5210818b800a6a0d8531aadc8dd955499476ae1b3fb65b98cfe0c79565fc61d7",
+        "scripts/test-asio-uninstall.py": "ed801e41589e43ae62bafb987f8fc28d446dafce86424832a11992cf352507f5",
+        "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad",
+        "scripts/asio-registry.py": "f0b1009fe0a3cee39acc30e295dddeac9171082d8d7029f404a302d0114b7bbf",
+        "scripts/asio-file-stage.py": "9675ca854e2b52f3af3029e1c772b87f36afed7d99d24d8c65c3fdf944cd5fc9"
+      },
+      "logSha256": "b4e81117da5c090ae036dea58b1bb0283deb1c857c7d44f26530ea1304dbe593",
+      "exitCode": 0,
+      "reportedSourcePinsMatch": true
+    },
+    {
+      "suite": "registry-recovery",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "no-mutation-cli",
+          "passed": true
+        },
+        {
+          "name": "recover-after-0-registry-deletions",
+          "passed": true
+        },
+        {
+          "name": "recover-after-1-registry-deletions",
+          "passed": true
+        },
+        {
+          "name": "recover-after-2-registry-deletions",
+          "passed": true
+        },
+        {
+          "name": "recover-after-3-registry-deletions",
+          "passed": true
+        },
+        {
+          "name": "wrong-reviewed-journal-hash-refused",
+          "passed": true
+        },
+        {
+          "name": "wrong-stage-hash-refused",
+          "passed": true
+        },
+        {
+          "name": "foreign-remaining-value-preserved",
+          "passed": true
+        },
+        {
+          "name": "foreign-remaining-child-preserved",
+          "passed": true
+        },
+        {
+          "name": "wrong-remaining-value-type-preserved",
+          "passed": true
+        },
+        {
+          "name": "current-user-overlay-preserved",
+          "passed": true
+        },
+        {
+          "name": "changed-stage-refused-before-registry-repair",
+          "passed": true
+        },
+        {
+          "name": "partially-removed-stage-refused-without-guessing",
+          "passed": true
+        },
+        {
+          "name": "same-byte-journal-new-identity-refused",
+          "passed": true
+        },
+        {
+          "name": "install-journal-cannot-authorize-uninstall-recovery",
+          "passed": true
+        },
+        {
+          "name": "active-installer-lock-preserves-state",
+          "passed": true
+        },
+        {
+          "name": "recovery-journal-failure-before-mutation",
+          "passed": true
+        },
+        {
+          "name": "interrupted-recovery-reports-exact-additional-deletion",
+          "passed": true
+        },
+        {
+          "name": "explicit-retry-uses-original-reviewed-journal-and-fresh-state",
+          "passed": true
+        },
+        {
+          "name": "production-refuses-normal-token",
+          "passed": true
+        }
+      ],
+      "indexSha256": "dae01db16ea5e0b3bd65ffa0dfbbb34857d764ddc76defd9605cf595a0bc04bd",
+      "reportedSourceSha256": {
+        "scripts/asio-recover-uninstall.py": "e5d54063cc005a7db353eb7418e43848f7e71b0deecc6306c0dafff856e279b8",
+        "scripts/test-asio-recover-uninstall.py": "5b46f6fbd95d6f033c3e5d9f4c68c5b06a3dc00415e6fc45af46002c295ebb5f",
+        "scripts/asio-uninstall.py": "5210818b800a6a0d8531aadc8dd955499476ae1b3fb65b98cfe0c79565fc61d7",
+        "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad",
+        "scripts/asio-file-stage.py": "9675ca854e2b52f3af3029e1c772b87f36afed7d99d24d8c65c3fdf944cd5fc9",
+        "scripts/asio-registry.py": "f0b1009fe0a3cee39acc30e295dddeac9171082d8d7029f404a302d0114b7bbf"
+      },
+      "logSha256": "5669505d5b56fdc40f980deabd335c4c52412faa7ecd70491c6e265d59e97452",
+      "exitCode": 0,
+      "reportedSourcePinsMatch": true
+    },
+    {
+      "suite": "file-recovery",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "no-mutation-cli",
+          "passed": true
+        },
+        {
+          "name": "recover-after-0-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-1-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-2-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-3-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-4-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-5-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-6-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-7-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-8-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-9-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-10-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-11-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-12-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-13-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-14-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-15-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "non-prefix-missing-files-recovered-from-fresh-state",
+          "passed": true
+        },
+        {
+          "name": "unknown-file-preserved-before-mutation",
+          "passed": true
+        },
+        {
+          "name": "changed-surviving-file-preserved",
+          "passed": true
+        },
+        {
+          "name": "same-byte-payload-replacement-preserved",
+          "passed": true
+        },
+        {
+          "name": "hardlinked-survivor-preserved",
+          "passed": true
+        },
+        {
+          "name": "active-reader-refuses-before-new-deletion",
+          "passed": true
+        },
+        {
+          "name": "remaining-registration-blocks-file-recovery",
+          "passed": true
+        },
+        {
+          "name": "user-overlay-blocks-file-recovery",
+          "passed": true
+        },
+        {
+          "name": "wrong-bundle-review-hash-refused",
+          "passed": true
+        },
+        {
+          "name": "wrong-journal-review-hash-refused",
+          "passed": true
+        },
+        {
+          "name": "wrong-stage-review-hash-refused",
+          "passed": true
+        },
+        {
+          "name": "recreated-empty-directory-preserved",
+          "passed": true
+        },
+        {
+          "name": "late-unknown-data-prevents-first-new-deletion",
+          "passed": true
+        },
+        {
+          "name": "recovery-failure-reports-one-new-deletion",
+          "passed": true
+        },
+        {
+          "name": "explicit-retry-rechecks-original-journal-and-current-survivors",
+          "passed": true
+        },
+        {
+          "name": "production-refuses-normal-token",
+          "passed": true
+        }
+      ],
+      "indexSha256": "c824a1c58973e8b3a303003fd35f3c4c4194544f97a68aaf8de52b52664da40b",
+      "reportedSourceSha256": {
+        "scripts/asio-recover-files.py": "f9f2d874b96522c1180d6bdeb6022d61a470b393f2d312965fe7414d31b3fbae",
+        "scripts/test-asio-recover-files.py": "9bf5565e6ffbdbe08e09f40b2749beb083726c299eb3f7958a2bac4ea9165f9b",
+        "scripts/asio-uninstall.py": "5210818b800a6a0d8531aadc8dd955499476ae1b3fb65b98cfe0c79565fc61d7",
+        "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad",
+        "scripts/asio-file-stage.py": "9675ca854e2b52f3af3029e1c772b87f36afed7d99d24d8c65c3fdf944cd5fc9",
+        "scripts/asio-registry.py": "f0b1009fe0a3cee39acc30e295dddeac9171082d8d7029f404a302d0114b7bbf"
+      },
+      "logSha256": "bd36f5fc7e43c35a758c11a9bc2bb5626b2b9a7c206401a0bbc01ccde7ded37c",
+      "exitCode": 0,
+      "reportedSourcePinsMatch": true
+    },
+    {
+      "suite": "install-recovery",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "no-mutation-cli",
+          "passed": true
+        },
+        {
+          "name": "recover-after-0-registration-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-1-registration-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-2-registration-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-3-registration-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-4-registration-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-5-registration-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-6-registration-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-7-registration-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-8-registration-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-9-registration-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-10-registration-boundary",
+          "passed": true
+        },
+        {
+          "name": "completed-install-preserved-for-normal-uninstall",
+          "passed": true
+        },
+        {
+          "name": "interrupted-copy-without-complete-stage-preserved",
+          "passed": true
+        },
+        {
+          "name": "unknown-registry-value-preserved",
+          "passed": true
+        },
+        {
+          "name": "same-text-wrong-registry-type-preserved",
+          "passed": true
+        },
+        {
+          "name": "unknown-registry-child-preserved",
+          "passed": true
+        },
+        {
+          "name": "unwitnessed-empty-key-preserved",
+          "passed": true
+        },
+        {
+          "name": "user-overlay-blocks-recovery",
+          "passed": true
+        },
+        {
+          "name": "unknown-stage-data-blocks-registry-deletion",
+          "passed": true
+        },
+        {
+          "name": "changed-stage-file-blocks-registry-deletion",
+          "passed": true
+        },
+        {
+          "name": "partial-stage-blocks-registry-deletion",
+          "passed": true
+        },
+        {
+          "name": "hardlinked-payload-preserved",
+          "passed": true
+        },
+        {
+          "name": "same-byte-new-identity-file-preserved",
+          "passed": true
+        },
+        {
+          "name": "wrong-journal-review-hash-refused",
+          "passed": true
+        },
+        {
+          "name": "wrong-stage-review-hash-refused",
+          "passed": true
+        },
+        {
+          "name": "competing-transaction-preserves-all-state",
+          "passed": true
+        },
+        {
+          "name": "journal-failure-before-first-delete-preserves-state",
+          "passed": true
+        },
+        {
+          "name": "failure-reports-one-additional-key-deletion",
+          "passed": true
+        },
+        {
+          "name": "explicit-retry-checks-original-and-fresh-remaining-state",
+          "passed": true
+        },
+        {
+          "name": "late-foreign-value-blocks-first-deletion",
+          "passed": true
+        },
+        {
+          "name": "busy-stage-refuses-file-removal-after-registry-removal",
+          "passed": true
+        },
+        {
+          "name": "busy-stage-explicit-retry-completes-after-handle-release",
+          "passed": true
+        },
+        {
+          "name": "interrupted-cleanup-retains-file-recovery-snapshot",
+          "passed": true
+        },
+        {
+          "name": "reviewed-new-recovery-journal-finishes-partial-files",
+          "passed": true
+        },
+        {
+          "name": "completion-journal-failure-does-not-certify-recovery",
+          "passed": true
+        },
+        {
+          "name": "file-recovery-reconciles-already-absent-stage",
+          "passed": true
+        },
+        {
+          "name": "late-overlay-blocks-first-file-deletion",
+          "passed": true
+        },
+        {
+          "name": "production-refuses-normal-token",
+          "passed": true
+        }
+      ],
+      "indexSha256": "1c4db90d606007287c7f41e66a0eb986d785484e17177ff3807def548a2b1314",
+      "reportedSourceSha256": {
+        "scripts/asio-recover-install.py": "4adaddd64656abca3a7418d35703b9a83b436a6b5d9023cbb2c5275fba11def9",
+        "scripts/test-asio-recover-install.py": "8fc56f91f5ce305b74775ddc8c5baed10e4af146be67ae428ea61208045408fc",
+        "scripts/asio-install.py": "a5110d99b554f7c7fecdbe07d7e81ad87b708f26a6372b95c3aa92bdbc92d666",
+        "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad",
+        "scripts/asio-file-stage.py": "9675ca854e2b52f3af3029e1c772b87f36afed7d99d24d8c65c3fdf944cd5fc9",
+        "scripts/asio-registry.py": "f0b1009fe0a3cee39acc30e295dddeac9171082d8d7029f404a302d0114b7bbf",
+        "scripts/asio-recover-files.py": "f9f2d874b96522c1180d6bdeb6022d61a470b393f2d312965fe7414d31b3fbae",
+        "scripts/asio-uninstall.py": "5210818b800a6a0d8531aadc8dd955499476ae1b3fb65b98cfe0c79565fc61d7",
+        "scripts/asio-runtime-check.py": "f7e3d3ee2a9f68a446361854717bc889882328cc721fa6613f5fef2e0498b354"
+      },
+      "logSha256": "f2cd4597a3d45fd4e03ee99e9a385d26742ec5cb086d36a7a64c32a2ef12cdab",
+      "exitCode": 0,
+      "reportedSourcePinsMatch": true
+    }
+  ],
+  "sourceSha256": {
+    "scripts/asio-recover-copy.py": "1269cd647bc44f7a3f766bd24bf821266de2df76e5e6046c1aa6e0745def6d27",
+    "scripts/test-asio-recover-copy.py": "efcdd602e0172d559a14b8f1d0912cd601b79137cce12658ac7763f7511b120c",
+    "scripts/asio-file-stage.py": "9675ca854e2b52f3af3029e1c772b87f36afed7d99d24d8c65c3fdf944cd5fc9",
+    "scripts/asio-install.py": "a5110d99b554f7c7fecdbe07d7e81ad87b708f26a6372b95c3aa92bdbc92d666",
+    "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad",
+    "scripts/asio-registry.py": "f0b1009fe0a3cee39acc30e295dddeac9171082d8d7029f404a302d0114b7bbf",
+    "scripts/asio-runtime-check.py": "f7e3d3ee2a9f68a446361854717bc889882328cc721fa6613f5fef2e0498b354",
+    "scripts/asio-install-base.py": "34e9d3f33f5701bed4f5e55486ee57204910ff5cddcc717d8ba3cb319799326b",
+    "scripts/test-asio-install-base.py": "21cc9317fe9942b4a1c85df204185fb2220a75295004c7b49ce22c5471db9536",
+    "scripts/test-asio-runtime-check.py": "e7c7d06313fcf8ba4db570bf927e1a936b28abb776909e3013b9ce740881f4dd",
+    "scripts/test-asio-install.py": "cc03ec846d33c3d00792370427bfdbbc189ea983c0f12a820f2e41ffb6d19669",
+    "scripts/asio-uninstall.py": "5210818b800a6a0d8531aadc8dd955499476ae1b3fb65b98cfe0c79565fc61d7",
+    "scripts/test-asio-install-journal.py": "687390bea097295a8f370e95db538b5e0994e2ba25db8f0286f150fcb6a78ddc",
+    "scripts/test-asio-uninstall.py": "ed801e41589e43ae62bafb987f8fc28d446dafce86424832a11992cf352507f5",
+    "scripts/asio-recover-uninstall.py": "e5d54063cc005a7db353eb7418e43848f7e71b0deecc6306c0dafff856e279b8",
+    "scripts/test-asio-recover-uninstall.py": "5b46f6fbd95d6f033c3e5d9f4c68c5b06a3dc00415e6fc45af46002c295ebb5f",
+    "scripts/asio-recover-files.py": "f9f2d874b96522c1180d6bdeb6022d61a470b393f2d312965fe7414d31b3fbae",
+    "scripts/test-asio-recover-files.py": "9bf5565e6ffbdbe08e09f40b2749beb083726c299eb3f7958a2bac4ea9165f9b",
+    "scripts/asio-recover-install.py": "4adaddd64656abca3a7418d35703b9a83b436a6b5d9023cbb2c5275fba11def9",
+    "scripts/test-asio-recover-install.py": "8fc56f91f5ce305b74775ddc8c5baed10e4af146be67ae428ea61208045408fc",
+    "scripts/inspect-asio-ancestor-rights.py": "3814c4bf5c7b44d180dff5303b28b9126f584ab51e520dde4d755b127d5a8526",
+    "scripts/prepare-asio-deployment.py": "942d9e9d7b018ac6c04b046e3463b3342768c38318efc3cc9b71ef64aa58c22c",
+    "scripts/test-asio-ancestor-rights.py": "221dc23a354a569b9562953877a6ed14fa95ebcbb3cb4266e629d8e28bfe982d",
+    "scripts/test-asio-deployment.py": "ce3f1217b1e4f313c2bcfa43337a7edeafb3b6d54f1c13fb197ba282b1616059",
+    "scripts/test-asio-file-cleanup.py": "a752691cc46fe493361b44868731dc4493ffa3d8ec5e37e3c868d6a8a05dc0e7",
+    "scripts/test-asio-file-stage.py": "ddcfd6addc6998f9131a4e990ccefb82c804f0bea5fdbdfea93f1a209c13d535",
+    "scripts/test-asio-registry.py": "bd46dd0eb7a5a8442c64b8603523ecb41aad85e9063a1b46e30c89a25348d967"
+  },
+  "changedExistingSources": [
+    "scripts/asio-file-stage.py",
+    "scripts/test-asio-file-stage.py",
+    "scripts/test-asio-install.py"
+  ],
+  "nativeBaseline": [
+    {
+      "configuration": "Release",
+      "priorTestsPassed": 59,
+      "sourcePinsStillMatch": true,
+      "rerunForPythonOnlyChange": false,
+      "manifestSha256": "09fa39a717a9b024981b9a2e9da0406234e91fedd17b3370bac04c7dbfab1a87",
+      "ctestLogSha256": "7d1dd0d5f95b6a03fea0b02c1fdb57a4cc9550dedbaac5f480063dfa5c990d5c"
+    },
+    {
+      "configuration": "Debug",
+      "priorTestsPassed": 59,
+      "sourcePinsStillMatch": true,
+      "rerunForPythonOnlyChange": false,
+      "manifestSha256": "d97f2b1855391de1412473897c8d4d5cd7f9fe40d91afb0f78eb5b0fa4151c92",
+      "ctestLogSha256": "70452b9868b2e84da6aca20160944a63a05d857d86ab2bbccb3ac078572d9df1"
+    }
+  ],
+  "observations": {
+    "actualPartialPrefixWriteFlushReadback": true,
+    "all41StagingEventBoundariesTested": true,
+    "stageCompletionJournalGapRecovered": true,
+    "unwitnessedRootAndFileCreationGapsPreserved": true,
+    "completedStageReceiptSchemaUnchanged": true,
+    "liveRegistrationSourceBundleAndPlannedLocationPresenceUnchanged": true,
+    "privateRegistryNamespacesObservedRemoved": true,
+    "affectedSuitesRunSequentially": true,
+    "cleanupRegressionMapsImageSectionWithoutExecution": true
+  },
+  "initialFailure": {
+    "reason": "A generic nonempty-file reader refused an empty newly created file. Corrected to use observed zero size for the bounded uncompleted-prefix check; completed-file exact-byte checks remain strict.",
+    "failedLogRetainedPrivately": true
+  },
+  "limits": {
+    "actualProcessTerminationTested": false,
+    "powerLossTested": false,
+    "arbitraryTrustedAdministratorConcurrencyTested": false,
+    "unwitnessedCreationGapsRecovered": false,
+    "initialBaseCreationGapRecovered": false,
+    "protectedProductionExecuted": false,
+    "ordinaryUserProductionWriteDenialVerified": false,
+    "installedAsioActivationTested": false,
+    "packageBinaryExecuted": false,
+    "deviceAccess": false,
+    "physicalAudioTested": false,
+    "measuredTimingVerified": false,
+    "currentSeratoAdmissionVerified": false,
+    "currentDvsTested": false
+  },
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/copy-recovery-publish-20261102",
+    "files": 1886,
+    "manifestSha256": "1b859cd7a880de8802fe77db8db24d1d42d96d30282c5ced3d45d048503a459b",
+    "selfReferentialVerificationExcluded": true
+  },
+  "publishedSourceSha256": {
+    "scripts/asio-recover-copy.py": "1269cd647bc44f7a3f766bd24bf821266de2df76e5e6046c1aa6e0745def6d27",
+    "scripts/test-asio-recover-copy.py": "efcdd602e0172d559a14b8f1d0912cd601b79137cce12658ac7763f7511b120c",
+    "scripts/asio-file-stage.py": "9675ca854e2b52f3af3029e1c772b87f36afed7d99d24d8c65c3fdf944cd5fc9",
+    "scripts/asio-install.py": "a5110d99b554f7c7fecdbe07d7e81ad87b708f26a6372b95c3aa92bdbc92d666",
+    "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad",
+    "scripts/asio-registry.py": "f0b1009fe0a3cee39acc30e295dddeac9171082d8d7029f404a302d0114b7bbf",
+    "scripts/asio-runtime-check.py": "f7e3d3ee2a9f68a446361854717bc889882328cc721fa6613f5fef2e0498b354",
+    "scripts/asio-install-base.py": "34e9d3f33f5701bed4f5e55486ee57204910ff5cddcc717d8ba3cb319799326b",
+    "scripts/test-asio-install-base.py": "21cc9317fe9942b4a1c85df204185fb2220a75295004c7b49ce22c5471db9536",
+    "scripts/test-asio-runtime-check.py": "e7c7d06313fcf8ba4db570bf927e1a936b28abb776909e3013b9ce740881f4dd",
+    "scripts/test-asio-install.py": "cc03ec846d33c3d00792370427bfdbbc189ea983c0f12a820f2e41ffb6d19669",
+    "scripts/asio-uninstall.py": "5210818b800a6a0d8531aadc8dd955499476ae1b3fb65b98cfe0c79565fc61d7",
+    "scripts/test-asio-install-journal.py": "687390bea097295a8f370e95db538b5e0994e2ba25db8f0286f150fcb6a78ddc",
+    "scripts/test-asio-uninstall.py": "ed801e41589e43ae62bafb987f8fc28d446dafce86424832a11992cf352507f5",
+    "scripts/asio-recover-uninstall.py": "e5d54063cc005a7db353eb7418e43848f7e71b0deecc6306c0dafff856e279b8",
+    "scripts/test-asio-recover-uninstall.py": "5b46f6fbd95d6f033c3e5d9f4c68c5b06a3dc00415e6fc45af46002c295ebb5f",
+    "scripts/asio-recover-files.py": "f9f2d874b96522c1180d6bdeb6022d61a470b393f2d312965fe7414d31b3fbae",
+    "scripts/test-asio-recover-files.py": "9bf5565e6ffbdbe08e09f40b2749beb083726c299eb3f7958a2bac4ea9165f9b",
+    "scripts/asio-recover-install.py": "4adaddd64656abca3a7418d35703b9a83b436a6b5d9023cbb2c5275fba11def9",
+    "scripts/test-asio-recover-install.py": "8fc56f91f5ce305b74775ddc8c5baed10e4af146be67ae428ea61208045408fc",
+    "scripts/inspect-asio-ancestor-rights.py": "bf6b232d776b1b658293f1125601356a75d6ad0a397f72f8bf8864c1f3272064",
+    "scripts/prepare-asio-deployment.py": "c846251d9fe910c395c0e4936ef6a645cf86f8b04f6ed05bd4aa74245f8e5aa2",
+    "scripts/test-asio-ancestor-rights.py": "9f8e18660ec79ee75178879c4bc1bb50a9437bf705e07519b982b9c3d6607c65",
+    "scripts/test-asio-deployment.py": "ce3f1217b1e4f313c2bcfa43337a7edeafb3b6d54f1c13fb197ba282b1616059",
+    "scripts/test-asio-file-cleanup.py": "a752691cc46fe493361b44868731dc4493ffa3d8ec5e37e3c868d6a8a05dc0e7",
+    "scripts/test-asio-file-stage.py": "ddcfd6addc6998f9131a4e990ccefb82c804f0bea5fdbdfea93f1a209c13d535",
+    "scripts/test-asio-registry.py": "bd46dd0eb7a5a8442c64b8603523ecb41aad85e9063a1b46e30c89a25348d967"
+  },
+  "sourceSha256Scope": "Local file bytes used during verification; publishedSourceSha256 binds Git LF-normalized source bytes.",
+  "lineEndingOnlyLocalDifferences": [
+    "scripts/inspect-asio-ancestor-rights.py",
+    "scripts/prepare-asio-deployment.py",
+    "scripts/test-asio-ancestor-rights.py"
+  ],
+  "prePublicationCheckpoint": {
+    "path": "artifacts/build/checkpoints/copy-recovery-20261102",
+    "files": 1885,
+    "manifestSha256": "7bbf34cbb37263e72d12648180012b3d0a28f24bc58d2d1c9af010c95f8d2ef3",
+    "selfReferentialVerificationExcluded": true
+  }
+}

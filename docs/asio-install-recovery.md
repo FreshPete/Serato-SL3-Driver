@@ -5,11 +5,13 @@ interrupted original install with a journalled, intact completed stage. It remov
 only witnessed own partial registration, then the verified stage. It does not
 finish registration, start a session or activate an ASIO component.
 
-This is one recovery phase in the full installer. Interrupted copies, failures
-before the stage-completion journal record and the initial base-creation gap
-remain unfinished. Existing state in those cases is preserved. Windows audio,
-protected production deployment, current Serato admission and two-deck DVS remain
-separate unverified requirements.
+This is one recovery phase in the full installer. The later
+[journal-witnessed copy recovery](asio-copy-recovery.md) separately handles
+interrupted staging, including a receipt written before stage-completion
+journalling. Objects created without a durable identity witness and the initial
+base-creation gap remain preserved and unfinished. Windows audio, protected
+production deployment, current Serato admission and two-deck DVS remain separate
+unverified requirements.
 
 ## Admission and mutation boundaries
 
