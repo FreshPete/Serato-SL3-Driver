@@ -12,6 +12,8 @@ The native software checks pass **64/64 Release**, **64/64 Debug** and **39/39 w
 
 [An offline genuine-SL3 XML candidate](docs/serato-sl3-candidate.md) now passes the current original schema and reproduces exactly. Its replacement control-path choice is an explicit unverified hypothesis; no provider or application modification is deployed.
 
+The [offline additive archive builder](docs/serato-sl3-archive.md) now preserves all 229 original resource members while adding our genuine-SL3 XML hypothesis. Original CRCs and codec inverses pass; it remains private and undeployed, with runtime Serato/audio/DVS unverified.
+
 [USB-only arrival tracing](docs/serato-usb-arrival.md) identifies a conditional event bridge, minimum-version check and message-updated state result. The unchanged SL3 remains discontinued; current eligibility, audio and DVS are unverified.
 
 [Primary-pointer tracing](docs/serato-primary-pointer.md) now identifies registered-instance selection and one conditional USB-only publisher. A selected pointer or notification remains separate from current SL3 admission, audio and DVS.

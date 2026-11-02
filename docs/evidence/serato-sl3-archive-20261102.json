@@ -1,0 +1,167 @@
+{
+  "schema": "sl3.offline-archive-verification.v1",
+  "date": "2026-11-02",
+  "status": "offline_hypothesis",
+  "archiveManifest": {
+    "schema": "sl3.offline-archive-candidate.v1",
+    "status": "offline_hypothesis",
+    "sourceSha256": {
+      "docs/evidence/serato-legacy-sl3-descriptors.json": "a63a02804e5a00cc1da48faff9c9bdfa962da0f1c3b09a7019d9eec0570fab3a",
+      "artifacts/extracted/Serato DJ Pro 2.5.5/tree/Serato/Serato DJ Pro/Serato DJ Pro.exe": "ba8641d0329fe0c955147d2b45f247eeea82ac0f812fe30a339834dbe0c0a503",
+      "artifacts/extracted/Serato DJ Pro 2.5.6/tree/Serato/Serato DJ Pro/Serato DJ Pro.exe": "3b04472cd5597fd56266e1c2c86dc298431b0026001aefe4b43aa3b909ee35c5",
+      "scripts/prepare-serato-sl3-candidate.py": "18afa2a477eef0295f8c9d11bcd547c332478683e41f324883c215e6a3f5e338",
+      "scripts/validate-descriptor-schema.ps1": "4061567b871df8c7a3f6cec240986239e150422b94805d79e99d5a129e2dfbcc",
+      "scripts/export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+      "scripts/inspect-serato-resource-archive.py": "5c8773f42f1bd55d3477cf75e94c8b84be09a066370c97608e1f42f3a7ef15f6",
+      "src/asio/com_server.cpp": "decb770d0840f0f08069d94673c53f00737f0e336675ffd1d7e003114668cd07",
+      "scripts/prepare-asio-deployment.py": "942d9e9d7b018ac6c04b046e3463b3342768c38318efc3cc9b71ef64aa58c22c",
+      "artifacts/build/native/native-build-Release.json": "eb3f66db44ac1de6cb29f54083b68a05c32c4f25913203eb8dad97657784f67c",
+      "artifacts/build/native/Release/sl3_asio.dll": "2c6a1fe18f9669b5e2ace2029783890cdd2ec7f1b4886296cad441e54da804fc",
+      "artifacts/extracted/Serato DJ Pro 5.0.0/tree/PFiles64/Serato/Serato DJ Pro/Serato DJ Pro.exe": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+      "artifacts\\extracted\\Serato DJ Pro 5.0.0\\tree\\PFiles64\\Serato\\Serato DJ Pro\\userio_resources.bin": "872fc4fdad2eab2ddd34387d2d3c04dd9731c84798d9fdc7bd05ca54e1567db8",
+      "docs/evidence/serato500-component-profiles.json": "7be2adee7c84b01a6bb3f4ce7d0d68b3d39807d0c4f3368147f73c078b1ff91c",
+      "docs/evidence/serato500-audio-routing.json": "f3ba996d564de88640c372a96086ff325dacc7213e85fe21c60664ef5a3c6840",
+      "docs/evidence/serato500-bank-adaptation.json": "f9fa0cd6ebf43e07c80dc5a82246155db4cd3f4090916ddd5a36ae8cf12f69e8",
+      "docs/evidence/serato500-endpoint-consumers.json": "7b13e381d224f772a6b2574d729f104728b841f9c7e557d21e43b3db423c3713",
+      "docs/evidence/serato500-output-routing.json": "fdb4e065fd5daceafdc2395c5c8944e1cc4e6fde726f67b679e7830cab578a2d",
+      "docs/evidence/serato500-primary-pointer.json": "ebb7f30213856cc6bb72643e86c54e1ea7f754b961cb40671c6a5fc3fc5872c2",
+      "docs/evidence/serato500-usb-arrival.json": "7d018af5beaa3cb0f1111d3f2c79cff3369bdacec7e9e80f828f98794a3d9f50",
+      "scripts/prepare-serato-sl3-archive.py": "efd96ea25f88af24145d455d8456d6659b376c0f5d098824e93cd6b13b94a19a"
+    },
+    "descriptorManifestSha256": "570161872f45e59d7fc827c9c9a9a6e0796cbd4c48ad68e49e0a21845fdb28b0",
+    "originalArchiveSha256": "872fc4fdad2eab2ddd34387d2d3c04dd9731c84798d9fdc7bd05ca54e1567db8",
+    "archiveSha256": "e05486b1c4c17f298834ddad2afb04da95e88c196a464bc3f1e4b88bf39c2cb1",
+    "archiveBytes": 2294524,
+    "schemaValidation": {
+      "schema": "sl3.xml-schema-validation.v1",
+      "valid": true,
+      "engine": ".NET XmlSchemaSet",
+      "externalResolution": false,
+      "knownSchemaDtdIgnored": true,
+      "errors": [],
+      "schemaSha256": "9e15093df616f9b9eac7f2f0fc1dbebfc55ce353415e22569fcfa00b98c1cc56",
+      "xmlSha256": "2a2b0828e75e622d0e485b6a051370a53c341d22ce02381798f1a2597a91649e"
+    },
+    "preservation": {
+      "originalMembers": 229,
+      "candidateMembers": 230,
+      "allOriginalEncryptedMembersUnchanged": true,
+      "allOriginalMemberCrcsPassed": true,
+      "allOriginalCodecInverseChecksPassed": true,
+      "originalPayloadSuffixSha256": "afbda9253b9c0d16b22198a28eefead981b0cb0cda75f389b90d17205ba3b8a8",
+      "indexSizeDelta": 56,
+      "originalMemberProofsSha256": "3fc239edda75216c4cc92073f7ff4e85c6780423efb5364b5e795bf8050cca75",
+      "candidateMember": "audio/audio_rane_sl3_rebuild.xml",
+      "candidateCrc32": 3177408179,
+      "candidateXmlSha256": "2a2b0828e75e622d0e485b6a051370a53c341d22ce02381798f1a2597a91649e"
+    },
+    "applicationExecuted": false,
+    "installedApplicationModified": false,
+    "installedArchiveModified": false,
+    "descriptorRegistered": false,
+    "driverInstalled": false,
+    "deviceAccess": false,
+    "audioPlayed": false,
+    "currentSeratoAdmissionVerified": false,
+    "twoDeckDvsVerified": false,
+    "deploymentApproved": false,
+    "integrityBoundary": "Offline CRC/byte preservation only; no runtime trust/signature or parser acceptance established",
+    "remaining": [
+      "Real provider load and duplicate descriptor precedence",
+      "NONE control/connection hypothesis and omitted legacy controls",
+      "Application integrity/signature checks and explicit install/rollback review",
+      "Measured native profile, driver deployment, physical audio and legitimate current Serato/DVS tests"
+    ]
+  },
+  "archiveManifestSha256": "cf6584360f0766a0ecfb43c5a02c38b824543f99c62ca89cbde2cc23241cb63b",
+  "sources": {
+    "scripts/prepare-serato-sl3-archive.py": {
+      "localSha256": "efd96ea25f88af24145d455d8456d6659b376c0f5d098824e93cd6b13b94a19a",
+      "gitLfSha256": "efd96ea25f88af24145d455d8456d6659b376c0f5d098824e93cd6b13b94a19a"
+    },
+    "tests/test_serato_sl3_archive.py": {
+      "localSha256": "2d7f19bd13272453609a3ad3a9dd0551555d5c4e26b38ee861d75f68ffb6fb4f",
+      "gitLfSha256": "2d7f19bd13272453609a3ad3a9dd0551555d5c4e26b38ee861d75f68ffb6fb4f"
+    },
+    "scripts/prepare-serato-sl3-candidate.py": {
+      "localSha256": "18afa2a477eef0295f8c9d11bcd547c332478683e41f324883c215e6a3f5e338",
+      "gitLfSha256": "18afa2a477eef0295f8c9d11bcd547c332478683e41f324883c215e6a3f5e338"
+    },
+    "scripts/validate-descriptor-schema.ps1": {
+      "localSha256": "4061567b871df8c7a3f6cec240986239e150422b94805d79e99d5a129e2dfbcc",
+      "gitLfSha256": "1393c6f5633af055e55cc3434f4978115b82610e00d7c11a24abf48596349739"
+    },
+    "scripts/inspect-serato-resource-archive.py": {
+      "localSha256": "5c8773f42f1bd55d3477cf75e94c8b84be09a066370c97608e1f42f3a7ef15f6",
+      "gitLfSha256": "5c8773f42f1bd55d3477cf75e94c8b84be09a066370c97608e1f42f3a7ef15f6"
+    },
+    "scripts/export-serato-clock-handshake-evidence.py": {
+      "localSha256": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+      "gitLfSha256": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20"
+    }
+  },
+  "unitTests": {
+    "passed": 7,
+    "logSha256": "afa460d8e175e3bdbe86ea6a39cb7253ddcaf12a65fcbd7f7ffd9a424a17238a"
+  },
+  "actualCliTests": {
+    "schema": "sl3.archive-candidate-cli-tests.v1",
+    "cases": [
+      {
+        "case": "validate",
+        "exitCode": 0,
+        "passed": true,
+        "stdoutSha256": "736651c73113c4df7f04cfa10cca746559ab7402a04cd6f5d9b68161a3026697",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "case": "repeat",
+        "exitCode": 0,
+        "passed": true,
+        "stdoutSha256": "736651c73113c4df7f04cfa10cca746559ab7402a04cd6f5d9b68161a3026697",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "case": "overwrite",
+        "exitCode": 1,
+        "passed": true,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "f3db84540aae0a9498ffbce86ee314813885e48ea169ac059a58ad4634ad9634"
+      },
+      {
+        "case": "plan",
+        "exitCode": 0,
+        "passed": true,
+        "stdoutSha256": "736651c73113c4df7f04cfa10cca746559ab7402a04cd6f5d9b68161a3026697",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "case": "tamper-bytes",
+        "exitCode": 1,
+        "passed": true,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "e453075f3eb416205affb198448d0d880d3ae8d789919ebe5afe24e2a560bae9"
+      },
+      {
+        "case": "tamper-claim",
+        "exitCode": 1,
+        "passed": true,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "e4187adedca88dd8e535c3dc155bb118e1be7159fa3e91324c80384a74de160a"
+      }
+    ],
+    "originalBundleUnchanged": true,
+    "repeatArchiveAndManifestByteIdentical": true,
+    "originalBundleSha256": {
+      "archive-candidate.json": "cf6584360f0766a0ecfb43c5a02c38b824543f99c62ca89cbde2cc23241cb63b",
+      "userio_resources.bin": "e05486b1c4c17f298834ddad2afb04da95e88c196a464bc3f1e4b88bf39c2cb1"
+    },
+    "applicationExecuted": false,
+    "deviceAccess": false
+  },
+  "cliReportSha256": "8aa14fda839810f08e2422d6e35093afd2da9ac4d9765fb9987980b24cdb05b0",
+  "installedOriginalExecutableAndArchiveMatch": true,
+  "priorDescriptorEvidenceSha256": "4863bd679c60fc07f27c87a088cc0bc1828a8329c479b9770585efe5fd88f799",
+  "newNativeTestsRun": false,
+  "generatedVendorArchivePublished": false
+}
