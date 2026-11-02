@@ -1,0 +1,161 @@
+{
+  "schema": "sl3.uninstall-verification.v1",
+  "createdUtc": "2026-11-02T02:20:25.566794+00:00",
+  "cases": [
+    {
+      "name": "default",
+      "passed": true
+    },
+    {
+      "name": "plan",
+      "passed": true
+    },
+    {
+      "name": "no-mutation-cli",
+      "passed": true
+    },
+    {
+      "name": "isolated-complete-uninstall",
+      "passed": true
+    },
+    {
+      "name": "complete-uninstall-retained-journal",
+      "passed": true
+    },
+    {
+      "name": "already-absent-registration-cleanup",
+      "passed": true
+    },
+    {
+      "name": "wrong-stage-hash-preserves-all",
+      "passed": true
+    },
+    {
+      "name": "changed-stage-before-registry-removal",
+      "passed": true
+    },
+    {
+      "name": "foreign-registration-preserved",
+      "passed": true
+    },
+    {
+      "name": "partial-registration-preserved",
+      "passed": true
+    },
+    {
+      "name": "current-user-overlay-blocks-removal",
+      "passed": true
+    },
+    {
+      "name": "busy-file-after-registration-removal-reports-partial",
+      "passed": true
+    },
+    {
+      "name": "busy-reader-release-resumes-absent-registration",
+      "passed": true
+    },
+    {
+      "name": "competing-transaction-preserves-state",
+      "passed": true
+    },
+    {
+      "name": "stage-outside-serialized-base-refused",
+      "passed": true
+    },
+    {
+      "name": "late-unknown-file-after-unregister-preserved",
+      "passed": true
+    },
+    {
+      "name": "journal-failure-before-registry-preserves-state",
+      "passed": true
+    },
+    {
+      "name": "interrupted-registry-removal-retains-files",
+      "passed": true
+    },
+    {
+      "name": "completion-journal-failure-keeps-honest-final-observations",
+      "passed": true
+    },
+    {
+      "name": "production-refuses-normal-token",
+      "passed": true
+    }
+  ],
+  "privateIndexSha256": "757ee4d0cae5dbfed572244886ca3e35f163b1588a475e304cf4096bbfe94b3b",
+  "retainedFilesVerified": 179,
+  "sourceSha256": {
+    "scripts/asio-uninstall.py": "5210818b800a6a0d8531aadc8dd955499476ae1b3fb65b98cfe0c79565fc61d7",
+    "scripts/test-asio-uninstall.py": "ed801e41589e43ae62bafb987f8fc28d446dafce86424832a11992cf352507f5",
+    "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad",
+    "scripts/asio-registry.py": "f0b1009fe0a3cee39acc30e295dddeac9171082d8d7029f404a302d0114b7bbf",
+    "scripts/asio-file-stage.py": "a03a8cc237142f0fdfaa39f34ba7157833b81b87ad26b538d21576a09e537281"
+  },
+  "observations": {
+    "privateRegistryNamespaceRemovedAndObservedAbsent": true,
+    "foreignRegistrationSiblingsPreserved": true,
+    "liveMachineAndCurrentUserRegistrationsUnchanged": true,
+    "reviewBundleAndPlannedLocationsUnchanged": true,
+    "journalActualPackageBundleStagePinsChecked": true,
+    "completeRemovalOwnRegistryKeys": 3,
+    "completeRemovalStageFiles": 14,
+    "busyReaderThenExplicitAbsentRegistryRetryPassed": true,
+    "interruptedRegistryDeletionCount": 1,
+    "interruptedRegistryRemovalStageFilesRetained": 14,
+    "lateForeignFilePreserved": true,
+    "preDeleteJournalFailurePreventedMutation": true,
+    "completionJournalFailureDidNotCertifySuccess": true
+  },
+  "unchangedPriorBaselines": {
+    "journalCases": 31,
+    "cleanupCases": 26,
+    "stagingCases": 24,
+    "ancestorCases": 16,
+    "sourcePinsStillMatch": true,
+    "rerunForCoordinator": false
+  },
+  "nativeBaseline": [
+    {
+      "configuration": "Release",
+      "priorTestsPassed": 59,
+      "sourcePinsStillMatch": true,
+      "rerunForRemovalCoordinator": false,
+      "manifestSha256": "09fa39a717a9b024981b9a2e9da0406234e91fedd17b3370bac04c7dbfab1a87",
+      "ctestLogSha256": "7d1dd0d5f95b6a03fea0b02c1fdb57a4cc9550dedbaac5f480063dfa5c990d5c"
+    },
+    {
+      "configuration": "Debug",
+      "priorTestsPassed": 59,
+      "sourcePinsStillMatch": true,
+      "rerunForRemovalCoordinator": false,
+      "manifestSha256": "d97f2b1855391de1412473897c8d4d5cd7f9fe40d91afb0f78eb5b0fa4151c92",
+      "ctestLogSha256": "70452b9868b2e84da6aca20160944a63a05d857d86ab2bbccb3ac078572d9df1"
+    }
+  ],
+  "limits": {
+    "productionOperationExecuted": false,
+    "machineRegistrationWritten": false,
+    "testRegistryUsesPlannedProgramFilesStrings": true,
+    "testStagesUseWorkspaceAndCurrentUserPolicy": true,
+    "installedAsioActivationTested": false,
+    "completeInstallPathImplemented": false,
+    "automaticInterruptedStateReconciliationImplemented": false,
+    "runtimeDependenciesAdmitted": false,
+    "elevationRequested": false,
+    "hostAclsChanged": false,
+    "privilegesChanged": false,
+    "binaryPayloadExecuted": false,
+    "deviceAccess": false,
+    "physicalAudioTested": false,
+    "measuredTimingVerified": false,
+    "currentSeratoAdmissionTested": false,
+    "currentDvsTested": false
+  },
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/uninstall-20261102",
+    "files": 933,
+    "manifestSha256": "18ac320ddd57dcf50d1ebff37a549cc2680fe6f78372a9c10b349509eca65495",
+    "selfReferentialPublicEvidenceExcluded": true
+  }
+}

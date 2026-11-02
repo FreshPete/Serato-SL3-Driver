@@ -82,9 +82,10 @@ deletion with all fourteen stage files retained. No payload code executes.
 The reviewed bundle and planned installation/profile locations remain unchanged.
 See the [verification record](evidence/install-journal-20261102.json).
 
-The complete wrapper still needs to bind reviewed package/stage pins, enforce
-runtime dependencies, hold this context across all file/registry operations,
-record final independently observed state and reconcile interrupted operations.
+[The removal coordinator](asio-uninstall.md) now binds actual reviewed pins,
+holds this context across registry/file removal and records final absence checks
+in workspace/private-registry tests. The install path, runtime dependency
+admission and interrupted-state reconciliation remain unfinished.
 There is no automatic rollback/replay implementation yet. Elevated production
 behaviour and ordinary-user write denial remain untested. Current native audio,
 measured timing, physical analogue audio and current Serato/two-deck DVS remain

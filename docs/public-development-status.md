@@ -4,6 +4,8 @@ This is an engineering investigation and source snapshot, not a working replacem
 
 ## Findings and implementation
 
+**Serialized owned removal, 2 November:** [the removal coordinator](asio-uninstall.md) now binds reviewed stage/package pins and composes the lock/journal, registry deletion and file cleanup. All 20 workspace/private-HKCU cases pass, including conflict preservation and exact partial results. The private registry namespace is removed and verified absent. No production deployment/activation ran; automatic interrupted-state recovery, the install path, real audio and current Serato/DVS remain unfinished.
+
 **Installer exclusion and recovery journal, 2 November:** [the new primitives](asio-install-journal.md) now pass 31 actual Windows workspace cases, including cross-process exclusion, abrupt-exit lock release, flushed records, torn-tail reporting and complete/interrupted cleanup. No machine deployment or automatic replay runs. Full installer/recovery integration, physical audio and current Serato/DVS remain unfinished.
 
 **Owned staged-file cleanup, 2 November:** [the cleanup primitive](asio-file-cleanup.md) now validates all fourteen files through exclusive deletion handles, records partial outcomes and preserves unknown data. All 26 cleanup cases, 24 staging regressions and 16 ancestor-review regressions pass. Reader and mapped-image refusals are tested without payload execution. Production removal and its serialized durable-journal installer remain unperformed; physical audio and current Serato/DVS remain unfinished.
