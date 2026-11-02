@@ -10,7 +10,7 @@ The native software checks pass **64/64 Release**, **64/64 Debug** and **39/39 w
 
 [The read-only broker scope diagnostic](docs/broker-scope-probe.md) now exercises three independent client processes over one retained simulated worker, without a timing profile or audio capability. The server rejects audio starts in this mode; its [dedicated single-approval trace workflow](docs/broker-scope-trace.md) is now prepared and checked offline. Native physical broker validation still requires an attended run.
 
-[The finite input recording diagnostic](docs/input-record-probe.md) now preserves a nominal three-second six-channel callback prefix with zero output. Both-rate simulated recordings match every expected PCM byte and export unchanged to WAV for offline marker analysis; an attended native traced run remains unperformed.
+[The finite input recording diagnostic](docs/input-record-probe.md) now preserves a nominal three-second six-channel callback prefix with zero output. Both-rate simulated recordings match every expected PCM byte and export unchanged to WAV for offline marker analysis. Its [distinct single-approval traced workflow](docs/input-record-trace.md) is now prepared offline; an attended native run remains unperformed.
 
 [UsbDk rollback checks](docs/usbdk-rollback-contract.md) now verify a failure-specific extra port cycle in the unchanged released binary and prepare two offline decoder formats. They do not diagnose the historical stall or establish a safe reopen delay; no new acquisition ran.
 

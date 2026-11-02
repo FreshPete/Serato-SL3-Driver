@@ -1,18 +1,21 @@
 #requires -Version 7.5
 param([switch]$Run,[ValidateRange(20,60)][int]$TraceSeconds=60,[string]$ContextDirectory='tests/results/local/user-controls-01',
-      [ValidateSet('Controls','Scope','BrokerScope')][string]$Scenario='Controls')
+      [ValidateSet('Controls','Scope','BrokerScope','InputRecord')][string]$Scenario='Controls',
+      [ValidateSet(0,44100,48000)][int]$ExpectedRate=0)
 # Normal-token ownership/getter diagnostic. The separate administrator owns tracing.
 $ErrorActionPreference='Stop';$root=Split-Path -Parent $PSScriptRoot
-$scopeProbe=($Scenario -eq 'Scope');$brokerScope=($Scenario -eq 'BrokerScope');$metadataProbe=($scopeProbe -or $brokerScope)
-if($metadataProbe -and $TraceSeconds -ne 60){throw 'Metadata scenario requires a sixty-second trace window'}
-$probeDeadline=if($metadataProbe){30000}else{40000}
+$scopeProbe=($Scenario -eq 'Scope');$brokerScope=($Scenario -eq 'BrokerScope');$inputRecord=($Scenario -eq 'InputRecord');$metadataProbe=($scopeProbe -or $brokerScope);$boundedProbe=($metadataProbe -or $inputRecord)
+if($inputRecord -and $ExpectedRate -eq 0){throw 'Input recording requires an explicit expected rate'}
+if(-not $inputRecord -and $ExpectedRate -ne 0){throw 'Expected rate belongs only to input recording'}
+if($boundedProbe -and $TraceSeconds -ne 60){throw 'Metadata scenario requires a sixty-second trace window'}
+$probeDeadline=if($boundedProbe){30000}else{40000}
 if($ContextDirectory -match '["\r\n]'){throw 'Invalid context path'}
 if(-not [IO.Path]::IsPathRooted($ContextDirectory)){$ContextDirectory=Join-Path $root $ContextDirectory}
 $ContextDirectory=[IO.Path]::GetFullPath($ContextDirectory)
 if($ContextDirectory.StartsWith('\\')){throw 'Local context directory required'}
 if(-not $Run){[ordered]@{planOnly=$true;deviceAccess=$false;role='non-elevated read-only probe';scenario=$Scenario;contextDirectory=$ContextDirectory
-    collectorWaitSeconds=90;probeDeadlineSeconds=($probeDeadline/1000);traceSeconds=$TraceSeconds;redirectsRequested=1;getters=$(if($brokerScope){@('seven rate 0x30 reads across one acquisition and three clients')}elseif($scopeProbe){@('three rate 0x30 reads')}else{@('rate 0x30','audio controls 0x32')})
-    audioStartAttempts=0;controlSetters=0;rateChanges=0;automaticRetry=$false;selfElevates=$false;securityChanges=$false}|ConvertTo-Json;return}
+    collectorWaitSeconds=90;probeDeadlineSeconds=($probeDeadline/1000);traceSeconds=$TraceSeconds;redirectsRequested=1;getters=$(if($inputRecord){@('one rate 0x30 read in single-open startup')}elseif($brokerScope){@('seven rate 0x30 reads across one acquisition and three clients')}elseif($scopeProbe){@('three rate 0x30 reads')}else{@('rate 0x30','audio controls 0x32')})
+    audioStartAttempts=$(if($inputRecord){1}else{0});expectedRate=$ExpectedRate;outputPayload=$(if($inputRecord){'zero PCM only'}else{'no audio'});controlSetters=0;rateChanges=0;automaticRetry=$false;selfElevates=$false;securityChanges=$false}|ConvertTo-Json;return}
 if(Test-Path -LiteralPath (Join-Path $ContextDirectory 'run.json')){throw 'Choose a fresh context; never retry a saved run'}
 Import-Module (Join-Path $PSScriptRoot 'inspect-process.psm1')
 $parent=Get-Sl3ProcessEvidence -ProcessId $PID -WithToken
@@ -20,25 +23,26 @@ $parentCheckedUtc=[datetime]::UtcNow.ToString('o')
 if($parent.elevated -ne $false){throw 'Run this role from a normal, non-elevated terminal'}
 $buildPath=Join-Path $root 'artifacts/build/native/native-build-Release.json'
 $build=Get-Content -LiteralPath $buildPath -Raw|ConvertFrom-Json
-$probe=Join-Path $root $(if($brokerScope){'artifacts/build/native/Release/sl3_broker_scope_probe.exe'}elseif($scopeProbe){'artifacts/build/native/Release/sl3_scope_probe.exe'}else{'artifacts/build/native/Release/sl3_host_probe.exe'})
+$probe=Join-Path $root $(if($inputRecord){'artifacts/build/native/Release/sl3_input_record_probe.exe'}elseif($brokerScope){'artifacts/build/native/Release/sl3_broker_scope_probe.exe'}elseif($scopeProbe){'artifacts/build/native/Release/sl3_scope_probe.exe'}else{'artifacts/build/native/Release/sl3_host_probe.exe'})
 $worker=Join-Path $root 'artifacts/build/native/Release/sl3_usbdk.exe'
 $helper=Join-Path $root 'artifacts/extracted/usbdk-msi/UsbDkHelper.dll10'
 $python=Join-Path $root '.venv/Scripts/python.exe'
 $validator=Join-Path $PSScriptRoot 'validate-controls-user-probe.py'
-$baseValidator=Join-Path $PSScriptRoot $(if($brokerScope){'validate-broker-scope-probe.py'}elseif($scopeProbe){'validate-scope-host-probe.py'}else{'validate-controls-host-probe.py'})
-$tested=if($brokerScope){$build.brokerScopeProbe}elseif($scopeProbe){$build.scopeProbe}else{$build.hostProbe.controls}
-$probeHash=if($brokerScope){$build.brokerScopeProbe.executableSha256}elseif($scopeProbe){$build.scopeProbe.executableSha256}else{$build.hostProbe.executableSha256}
-$passed=if($brokerScope){$tested.planAndSimulatedLifecyclePassed -and -not $tested.physicalNativeRun}elseif($scopeProbe){$tested.planAndSimulatedLifecyclePassed -and -not $tested.physicalScopeTested}else{$tested.simulatedLifecyclePassed -and -not $tested.nativeQueryRunDuringBuild}
+$baseValidator=Join-Path $PSScriptRoot $(if($inputRecord){'validate-input-record-probe.py'}elseif($brokerScope){'validate-broker-scope-probe.py'}elseif($scopeProbe){'validate-scope-host-probe.py'}else{'validate-controls-host-probe.py'})
+$tested=if($inputRecord){$build.inputRecordProbe}elseif($brokerScope){$build.brokerScopeProbe}elseif($scopeProbe){$build.scopeProbe}else{$build.hostProbe.controls}
+$probeHash=if($inputRecord){$build.inputRecordProbe.executableSha256}elseif($brokerScope){$build.brokerScopeProbe.executableSha256}elseif($scopeProbe){$build.scopeProbe.executableSha256}else{$build.hostProbe.executableSha256}
+$passed=if($inputRecord){$tested.planAndSimulatedRecordingPassed -and $tested.tracedRunnerPrepared -and -not $tested.physicalNativeRun}elseif($brokerScope){$tested.planAndSimulatedLifecyclePassed -and -not $tested.physicalNativeRun}elseif($scopeProbe){$tested.planAndSimulatedLifecyclePassed -and -not $tested.physicalScopeTested}else{$tested.simulatedLifecyclePassed -and -not $tested.nativeQueryRunDuringBuild}
 if(-not $passed -or
    (Get-FileHash -LiteralPath $probe).Hash -ne $probeHash -or
    (Get-FileHash -LiteralPath $worker).Hash -ne $build.usbdk.executableSha256){throw 'Probe/worker differs from tested build'}
 $pins=$tested.scriptInputs.PSObject.Properties
-$pinCount=if($metadataProbe){19}else{18}
+$pinCount=if($boundedProbe){19}else{18}
 if(@($pins).Count -ne $pinCount){throw 'Expected all reviewed split-role dependencies'}
 foreach($pin in $pins){if((Get-FileHash -LiteralPath (Join-Path $PSScriptRoot $pin.Name)).Hash -ne $pin.Value){throw "Reviewed dependency changed: $($pin.Name)"}}
 $plan=& $probe --plan|ConvertFrom-Json
 if($LASTEXITCODE -ne 0 -or $plan.simulated){throw 'Unexpected probe kind'}
-if($brokerScope){if(-not $plan.planOnly -or $plan.deviceAccess -or $plan.clients -ne 3 -or $plan.acquisitions -ne 1 -or $plan.audioAllowed -or $plan.requiresTimingProfile -or $plan.watchdogMs -ne 20000){throw 'Unexpected broker scope contract'}}
+if($inputRecord){if(-not $plan.planOnly -or $plan.deviceAccess -or $plan.nominalInputMilliseconds -ne 3000 -or $plan.maximumCollectionMilliseconds -ne 6000 -or $plan.audioOutputPayload -cne 'zero PCM only' -or -not $plan.oneAcquisitionRequested -or -not $plan.expectedRateRequired -or $plan.timingProfileWritten){throw 'Unexpected input recording contract'}}
+elseif($brokerScope){if(-not $plan.planOnly -or $plan.deviceAccess -or $plan.clients -ne 3 -or $plan.acquisitions -ne 1 -or $plan.audioAllowed -or $plan.requiresTimingProfile -or $plan.watchdogMs -ne 20000){throw 'Unexpected broker scope contract'}}
 elseif($scopeProbe){if(-not $plan.plan_only -or $plan.facade_objects -ne 3 -or $plan.acquisitions -ne 1 -or $plan.clock_reads -ne 3 -or $plan.audio_starts -ne 0 -or $plan.rate_setters -ne 0 -or $plan.requires_timing_profile){throw 'Unexpected scope probe contract'}}
 elseif($plan.device_access -or $plan.controls_inspection.audio -or $plan.controls_inspection.mode -ne '--controls'){throw 'Unexpected probe contract'}
 function Read-Json([string]$Name){Get-Content -LiteralPath (Join-Path $ContextDirectory $Name) -Raw|ConvertFrom-Json -DateKind String}
@@ -102,14 +106,15 @@ if($launchTrace.status -ne 'recording' -or $launchTrace.session -ne $trace.sessi
 }
 @{trace=$launchTrace;process=$launchProcess;checkedUtc=$launchCheckedUtc}|ConvertTo-Json -Depth 12|
     Set-Content -LiteralPath (Join-Path $ContextDirectory 'launch-admission.json')
-$record=[ordered]@{schema=$(if($brokerScope){'sl3.broker-scope.traced-run.v1'}elseif($scopeProbe){'sl3.scope-host.traced-run.v1'}else{'sl3.controls-host.traced-run.v1'});splitUserContext=$true;startedUtc=[datetime]::UtcNow.ToString('o');completed=$false;error=$null
+$record=[ordered]@{schema=$(if($inputRecord){'sl3.input-record.traced-run.v1'}elseif($brokerScope){'sl3.broker-scope.traced-run.v1'}elseif($scopeProbe){'sl3.scope-host.traced-run.v1'}else{'sl3.controls-host.traced-run.v1'});splitUserContext=$true;startedUtc=[datetime]::UtcNow.ToString('o');completed=$false;error=$null
     workerSha256=$build.usbdk.executableSha256;probeSha256=$probeHash;probeExitCode=$null;traceExitCode=$null
     traceCleanupConfirmed=$false;secureBootBefore=$true;secureBootAfter=$false;recoveryConfirmed=$false
     withUsbDkLifecycle=$true;withUsbIdentity=$false;driverChanges=$false;securityChanges=$false;asioRegistration=$false;automaticRetry=$false;traceSeconds=$TraceSeconds
     buildManifestSha256=(Get-FileHash -LiteralPath $buildPath).Hash;runnerInputs=$tested.scriptInputs
     parentImagePath=$parent.imagePath;probeImagePath=$probe;workerImagePath=$worker
     userProcesses=[ordered]@{parent=@{process=$parent;checkedUtc=$parentCheckedUtc}}}
-if($metadataProbe){$record.scenario=$Scenario}
+if($boundedProbe){$record.scenario=$Scenario}
+if($inputRecord){$record.expectedRateHz=$ExpectedRate}
 $record.launchAdmissionSha256=(Get-FileHash -LiteralPath (Join-Path $ContextDirectory 'launch-admission.json')).Hash
 foreach($pair in @(@('admitted-trace.json','admittedTraceSha256'),@('admitted-context.json','admittedContextSha256'),@('collector-process.json','collectorProcessSha256'))){
     $record[$pair[1]]=(Get-FileHash -LiteralPath (Join-Path $ContextDirectory $pair[0])).Hash
@@ -118,9 +123,11 @@ $child=$null;Save-Run
 try{
     if(([datetime]::UtcNow-[datetime]$launchCheckedUtc).TotalSeconds -gt 2){throw 'Collector launch observation expired before launch'}
     $record.probeStartedUtc=[datetime]::UtcNow.ToString('o');Save-Run
-    $probeMode=if($metadataProbe){'--run'}else{'--controls'}
-    $child=Child $probe @($probeMode,'--worker',(Quoted $worker),'--worker-sha256',$record.workerSha256.ToLowerInvariant(),
-        '--helper',(Quoted $helper),'--output',(Quoted (Join-Path $ContextDirectory 'probe'))) 'probe'
+    $probeMode=if($boundedProbe){'--run'}else{'--controls'}
+    $probeArguments=@($probeMode,'--worker',(Quoted $worker),'--worker-sha256',$record.workerSha256.ToLowerInvariant(),
+        '--helper',(Quoted $helper),'--output',(Quoted (Join-Path $ContextDirectory 'probe')))
+    if($inputRecord){$probeArguments+=@('--expected-rate',[string]$ExpectedRate)}
+    $child=Child $probe $probeArguments 'probe'
     $record.probePid=$child.Id
     try{$record.userProcesses.probe=@{process=(Get-Sl3ProcessEvidence -ProcessId $child.Id -WithToken);checkedUtc=[datetime]::UtcNow.ToString('o')}}
     catch{$record.tokenQueryError=$_.Exception.Message}
@@ -144,11 +151,11 @@ try{
     $child.WaitForExit();$record.probeExitCode=$child.ExitCode
     $record.probeCompletedUtc=[datetime]::UtcNow.ToString('o')
     if($child.ExitCode -ne 0){throw 'Controls probe failed; do not retry'}
-    $sampleArguments=if($metadataProbe){@((Join-Path $ContextDirectory 'probe'),'--worker-sha256',$record.workerSha256.ToLowerInvariant())}else{@('--probe',(Join-Path $ContextDirectory 'probe'),'--worker-sha256',$record.workerSha256)}
+    $sampleArguments=if($boundedProbe){@((Join-Path $ContextDirectory 'probe'),'--worker-sha256',$record.workerSha256.ToLowerInvariant())}else{@('--probe',(Join-Path $ContextDirectory 'probe'),'--worker-sha256',$record.workerSha256)}
     $sample=& $python $baseValidator @sampleArguments
     $sample|Set-Content -LiteralPath (Join-Path $ContextDirectory 'probe-validation.json')
     if($LASTEXITCODE -ne 0 -or ($sample|ConvertFrom-Json).valid -ne $true){throw 'Native sample/ownership validation failed'}
-    $record.probeRecordSha256=(Get-FileHash -LiteralPath (Join-Path $ContextDirectory $(if($brokerScope){'probe/result.json'}else{'probe/probe.json'}))).Hash
+    $record.probeRecordSha256=(Get-FileHash -LiteralPath (Join-Path $ContextDirectory $(if($brokerScope -or $inputRecord){'probe/result.json'}else{'probe/probe.json'}))).Hash
     $record.probeValidationSha256=(Get-FileHash -LiteralPath (Join-Path $ContextDirectory 'probe-validation.json')).Hash
     if($record.tokenQueryError -or -not $record.userProcesses.worker){throw 'Token evidence incomplete; native sample retained separately'}
 }catch{$record.error=$_.Exception.Message}
@@ -189,7 +196,7 @@ finally{
 }
 if($record.error){throw $record.error}
 $finalArguments=@('--run',$ContextDirectory,'--worker-sha256',$record.workerSha256,'--probe-sha256',$record.probeSha256)
-if($brokerScope){$finalArguments+='--broker-scope'}elseif($scopeProbe){$finalArguments+='--scope'}
+if($inputRecord){$finalArguments+='--input-record'}elseif($brokerScope){$finalArguments+='--broker-scope'}elseif($scopeProbe){$finalArguments+='--scope'}
 $result=& $python $validator @finalArguments
 $result|Set-Content -LiteralPath (Join-Path $ContextDirectory 'run-validation.json')
 if($LASTEXITCODE -ne 0 -or ($result|ConvertFrom-Json).valid -ne $true){

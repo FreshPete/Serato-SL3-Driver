@@ -1,0 +1,219 @@
+{
+  "schema": "sl3.input-record-trace-verification.v1",
+  "scope": "Offline trace runner preparation, synthetic composition and ordinary-token refusal only",
+  "builds": [
+    {
+      "configuration": "Release",
+      "testsPassed": 64,
+      "manifestSha256": "eb3f66db44ac1de6cb29f54083b68a05c32c4f25913203eb8dad97657784f67c",
+      "buildLogSha256": "7952dac61df64fe871dcf9e8981cd0642e1a06a52c8b6b535803f1c7720e228a",
+      "ctestLogSha256": "717ed071935feff24f8455b86abbdcc387aba452894c0f4fe0cff1f8e8b3dc43",
+      "allNativeInputPinsVerified": 146,
+      "traceDependencyCount": 19,
+      "traceLauncherCount": 2,
+      "selectedNativeImagesUnchanged": {
+        "sl3_usbdk.exe": true,
+        "sl3_input_record_probe.exe": true,
+        "sl3_asio.dll": true,
+        "sl3_broker_scope_probe.exe": true
+      }
+    },
+    {
+      "configuration": "Debug",
+      "testsPassed": 64,
+      "manifestSha256": "fd3d6599359ef4212a847c8ce16bd28108a46b09dded5b3e6dc0f5b6b177ee27",
+      "buildLogSha256": "485336412244bfc0fefe2f9dbcfaad08f4a3ec1f0d472f8d4109de9c3e293f22",
+      "ctestLogSha256": "cf58629929efdfe1e8c161b37a96a444dbe545f65ea96a20c8f1e9bd967557c0",
+      "allNativeInputPinsVerified": 146,
+      "traceDependencyCount": 19,
+      "traceLauncherCount": 2,
+      "selectedNativeImagesUnchanged": {
+        "sl3_usbdk.exe": true,
+        "sl3_input_record_probe.exe": true,
+        "sl3_asio.dll": true,
+        "sl3_broker_scope_probe.exe": true
+      }
+    }
+  ],
+  "pythonTests": [
+    {
+      "suite": "record-trace-plans-launcher-component",
+      "passed": 17,
+      "privateLogSha256": "d8fbc1ee1d97e636b9d7a8b25fcf28abd5b38f4bc7897baa892e051cc6688314"
+    },
+    {
+      "suite": "shared-runner-regressions",
+      "passed": 83,
+      "privateLogSha256": "9e44d2d851f660382bcade80b8abadbcf6d75c9e9761089d5ff5bf694c9dd8e3"
+    }
+  ],
+  "pythonTestTotal": 100,
+  "sources": {
+    "scripts/build-native.ps1": {
+      "localSha256": "7556f26070a62f67db58804808c4d75c515a98fb0eee789349d68dffcfb650af",
+      "gitLfSha256": "7556f26070a62f67db58804808c4d75c515a98fb0eee789349d68dffcfb650af"
+    },
+    "scripts/capture-controls-user-context.ps1": {
+      "localSha256": "6e15b878cb603901ffdfac96ea3c4cb1a880f9dedfdbe9aceaef40662f8e8960",
+      "gitLfSha256": "6e15b878cb603901ffdfac96ea3c4cb1a880f9dedfdbe9aceaef40662f8e8960"
+    },
+    "scripts/capture-usb-startup.ps1": {
+      "localSha256": "4d51f8d01e345d42158cf7d0e504e0bf34dac85290ea9da5e276a657e659fba5",
+      "gitLfSha256": "4d51f8d01e345d42158cf7d0e504e0bf34dac85290ea9da5e276a657e659fba5"
+    },
+    "scripts/collect-windows-state.ps1": {
+      "localSha256": "4028449556933a6c3ca970dfcb4f143a330847266a8e7dd58668f9b590eb1f66",
+      "gitLfSha256": "4028449556933a6c3ca970dfcb4f143a330847266a8e7dd58668f9b590eb1f66"
+    },
+    "scripts/controls-usb-identity.py": {
+      "localSha256": "44aae2391c7fd0e67f8518a9849966c3756dd89e490d6e319c9f8e68a82a099a",
+      "gitLfSha256": "44aae2391c7fd0e67f8518a9849966c3756dd89e490d6e319c9f8e68a82a099a"
+    },
+    "scripts/export-usbdk-physical-checkpoint.py": {
+      "localSha256": "36f9afb6badb95b2566a6413ed236ab10fba1af6634e5a946f957004e52b84be",
+      "gitLfSha256": "36f9afb6badb95b2566a6413ed236ab10fba1af6634e5a946f957004e52b84be"
+    },
+    "scripts/inspect-process.psm1": {
+      "localSha256": "fd76680e42127feeb4d8da952b5e04a49b48d3bb6df159b9c77a236a3c8f0752",
+      "gitLfSha256": "fd76680e42127feeb4d8da952b5e04a49b48d3bb6df159b9c77a236a3c8f0752"
+    },
+    "scripts/observe-sl3-usb-identity.py": {
+      "localSha256": "238aa772ef466832a6d63b020eab357b014a2eb998a1fb2662dd1a988c6e43ea",
+      "gitLfSha256": "238aa772ef466832a6d63b020eab357b014a2eb998a1fb2662dd1a988c6e43ea"
+    },
+    "scripts/preflight-usbdk.ps1": {
+      "localSha256": "92a83517b40db12535c7b233a4f728498d37f77dae708ddca35a6bd567818887",
+      "gitLfSha256": "92a83517b40db12535c7b233a4f728498d37f77dae708ddca35a6bd567818887"
+    },
+    "scripts/prepare-input-record-trace.py": {
+      "localSha256": "85f4ecd9226305035a3b1c106c8b0f602e55cacf60fdff0d9a024822e61593b6",
+      "gitLfSha256": "85f4ecd9226305035a3b1c106c8b0f602e55cacf60fdff0d9a024822e61593b6"
+    },
+    "scripts/prepare-usbdk-lifecycle-trace.py": {
+      "localSha256": "fee895320e0e01c971c569d392661d3683c7e10de6ac15456b49db83643f3042",
+      "gitLfSha256": "fee895320e0e01c971c569d392661d3683c7e10de6ac15456b49db83643f3042"
+    },
+    "scripts/read-startup-journal.ps1": {
+      "localSha256": "0a515c935e6106bd999009a4c027eb543281a5c53d411b74cbe69409f3c75105",
+      "gitLfSha256": "0a515c935e6106bd999009a4c027eb543281a5c53d411b74cbe69409f3c75105"
+    },
+    "scripts/start-input-record-trace.ps1": {
+      "localSha256": "9bde09c0d84c26c028c32210bf73fc422a490084d96d105802834fbf8d266561",
+      "gitLfSha256": "9bde09c0d84c26c028c32210bf73fc422a490084d96d105802834fbf8d266561"
+    },
+    "scripts/supervise-usb-identity.py": {
+      "localSha256": "d36c13b7063fec9bc482e61ec1131f53b9f1e5d224656abda1ee356e4144b8a4",
+      "gitLfSha256": "d36c13b7063fec9bc482e61ec1131f53b9f1e5d224656abda1ee356e4144b8a4"
+    },
+    "scripts/test-controls-host-probe.py": {
+      "localSha256": "4ab1db8c5dcd448c552e30cfcd8a2a8c7cbcaceb81a6baa25aae162fa8706ac1",
+      "gitLfSha256": "4ab1db8c5dcd448c552e30cfcd8a2a8c7cbcaceb81a6baa25aae162fa8706ac1"
+    },
+    "scripts/test-controls-host-traced.ps1": {
+      "localSha256": "e39bfa28700ca195cda2bca14dc8b3d21cb62c84abe307ff85a7348805343e76",
+      "gitLfSha256": "6d99453287fbbb742ddd39980bf4a6d13e57ebcf73a734a6711b37e0fc02b7c8"
+    },
+    "scripts/test-controls-user-probe.ps1": {
+      "localSha256": "49318ff1861dc005dc82e1854a852d53068263528b0c4ae3a1b779fcf75994e7",
+      "gitLfSha256": "49318ff1861dc005dc82e1854a852d53068263528b0c4ae3a1b779fcf75994e7"
+    },
+    "scripts/validate-controls-host-probe.py": {
+      "localSha256": "1966872066ff69ad9be49eb006e9219f12aefcfd749138f7b45f7c6d426ccaef",
+      "gitLfSha256": "1966872066ff69ad9be49eb006e9219f12aefcfd749138f7b45f7c6d426ccaef"
+    },
+    "scripts/validate-controls-user-probe.py": {
+      "localSha256": "4e946fe71322eecf6ad93f06e26607aad5f2bd72fe5cf1e67ff6f89ff56248c9",
+      "gitLfSha256": "4e946fe71322eecf6ad93f06e26607aad5f2bd72fe5cf1e67ff6f89ff56248c9"
+    },
+    "scripts/validate-input-record-probe.py": {
+      "localSha256": "2482e873065efa334cc426883fad473a00c22736213b83fd40c028a8495f990e",
+      "gitLfSha256": "2482e873065efa334cc426883fad473a00c22736213b83fd40c028a8495f990e"
+    },
+    "scripts/validate-usb-state-capture.py": {
+      "localSha256": "ae0023a0ae2ce1e3e0d1d5340a0ffdc4894c5df575d5b57439a77de6f3c9a472",
+      "gitLfSha256": "ae0023a0ae2ce1e3e0d1d5340a0ffdc4894c5df575d5b57439a77de6f3c9a472"
+    },
+    "scripts/validate-usbdk-capture.py": {
+      "localSha256": "e909291b7e7d6bc4995179477f24fe0338593f3857967e14185f0ad11d2136d4",
+      "gitLfSha256": "e909291b7e7d6bc4995179477f24fe0338593f3857967e14185f0ad11d2136d4"
+    },
+    "tests/test_broker_scope_trace_launcher.py": {
+      "localSha256": "cca79df2111da738ed25870d439e0519c7c78927ada891712c3965e5b0e7368e",
+      "gitLfSha256": "3abae5feef15bb3a07ee0222249126323f31b11867a898beb76c6d26c5b41f76"
+    },
+    "tests/test_controls_image_collection.py": {
+      "localSha256": "6e69fc72d53e04d5cd512f18ec9cf92731a4de465798507009589f6742176729",
+      "gitLfSha256": "6e69fc72d53e04d5cd512f18ec9cf92731a4de465798507009589f6742176729"
+    },
+    "tests/test_controls_image_launcher.py": {
+      "localSha256": "1bcfead920fe254102bb0192134df4ee10eb57d900ef3673d93860e11c656449",
+      "gitLfSha256": "1bcfead920fe254102bb0192134df4ee10eb57d900ef3673d93860e11c656449"
+    },
+    "tests/test_controls_probe_evidence.py": {
+      "localSha256": "da9f10240669027647312848e10287cb5dddbed1f7954251b2c0cf797afac02d",
+      "gitLfSha256": "bab829d490dd53218759c8a49dd6eaf087e162e373673da53417850768a70e74"
+    },
+    "tests/test_controls_user_probe.py": {
+      "localSha256": "a8c66b6bef9ab0bfff4d316adf54aa656b8ed3eba77548a6737accb5fcff5612",
+      "gitLfSha256": "a8c66b6bef9ab0bfff4d316adf54aa656b8ed3eba77548a6737accb5fcff5612"
+    },
+    "tests/test_input_record_evidence.py": {
+      "localSha256": "eea90d439cfb14748365c68f9674f149e6f8e62ea78815a1b53d68db823752ae",
+      "gitLfSha256": "eea90d439cfb14748365c68f9674f149e6f8e62ea78815a1b53d68db823752ae"
+    },
+    "tests/test_input_record_trace_evidence.py": {
+      "localSha256": "f5dd494a7f7b07bfe2a56464873792cdfe7cb6dbd164e311d4197fd9bf9f79a6",
+      "gitLfSha256": "f5dd494a7f7b07bfe2a56464873792cdfe7cb6dbd164e311d4197fd9bf9f79a6"
+    },
+    "tests/test_input_record_trace_launcher.py": {
+      "localSha256": "06900b36d784b0b0abc2f8037a4f257ca26ae937812dcbf97e8fa3a1f15122dc",
+      "gitLfSha256": "06900b36d784b0b0abc2f8037a4f257ca26ae937812dcbf97e8fa3a1f15122dc"
+    },
+    "tests/test_scope_image_collection.py": {
+      "localSha256": "2f411d1578bafb679814dd32434e357561aca6e897c131fb73a20c46fd5db39c",
+      "gitLfSha256": "2f411d1578bafb679814dd32434e357561aca6e897c131fb73a20c46fd5db39c"
+    },
+    "tests/test_scope_trace_launcher.py": {
+      "localSha256": "2b92b5dae68c216a482e6b9fca70b96690f55828df89abe5366ab50edd255413",
+      "gitLfSha256": "2b92b5dae68c216a482e6b9fca70b96690f55828df89abe5366ab50edd255413"
+    }
+  },
+  "planSchema": "sl3.input-record-trace.plan.v1",
+  "runSchema": "sl3.input-record.traced-run.v1",
+  "expectedRates": [
+    44100,
+    48000
+  ],
+  "rateSetterRequested": false,
+  "requestedAcquisitions": 1,
+  "requestedClockGetters": 1,
+  "requestedInputPrefixMilliseconds": 3000,
+  "requestedOutputPayload": "zero PCM only",
+  "traceSeconds": 60,
+  "outerProbeDeadlineSeconds": 30,
+  "requiredTraceSecondsAfterRetirement": 12,
+  "defaultInspectionCreatesProbeContext": false,
+  "ordinaryCollectorInvocationDenied": true,
+  "componentFixture": "Real synthetic recorder/native-journal validator with synthetic surrounding records and mocked trace statistics",
+  "userTokenFixture": "Synthetic admission/process records with mocked component for dispatch; no physical attestation",
+  "deviceAccess": false,
+  "uacPromptRequested": false,
+  "physicalNativeRecordingRun": false,
+  "nonzeroAudioRequested": false,
+  "driverChanges": false,
+  "securityChanges": false,
+  "asioRegistration": false,
+  "timingProfileGenerated": false,
+  "analogueSignalVerified": false,
+  "latencyMeasured": false,
+  "safeReopeningVerified": false,
+  "seratoAdmissionVerified": false,
+  "twoDeckDvsVerified": false,
+  "sdkFreeBuild": "Prior 39/39 result retained; not rerun for script-only changes",
+  "remaining": [
+    "Supervised port/recovery/readiness observations before choosing an attended acquisition",
+    "Fresh plan, owner-present native recording and known source/wiring/control state",
+    "Physical output mapping/levels, measured timing and stable reopening",
+    "Protected deployment and genuine current Serato/two-deck DVS; Mac deferred"
+  ]
+}

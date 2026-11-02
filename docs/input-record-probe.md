@@ -39,7 +39,7 @@ The optional `--wav-output NEW_FILE` wraps the validated bytes in a six-channel 
   --worker-sha256 <reviewed-lowercase-worker-hash> --wav-output <new-file.wav>
 ```
 
-No physical native recording was launched for this checkpoint. A native recording still needs a dedicated traced runner, a fresh plan, resting-device/readiness checks and owner availability for recovery. The runner must include this new executable in its before/after process guard; the existing controls/facade/broker-scope scenarios cannot qualify an input-recording run. The existing [supervised queue](next-tests.md) remains relevant; this executable does not automatically arm or retry a hardware test. Nonzero marker playback needs its own reviewed source/wiring/level experiment. Phase is not assumed to be a calibrated sine source.
+No physical native recording was launched for this checkpoint. The dedicated [InputRecord traced workflow](input-record-trace.md) is now prepared offline, with this executable in the before/after process guard. A native recording still needs a fresh plan, resting-device/readiness checks and owner availability for recovery; existing controls/facade/broker-scope scenarios cannot qualify it. The existing [supervised queue](next-tests.md) remains relevant; this executable does not automatically arm or retry a hardware test. Nonzero marker playback needs its own reviewed source/wiring/level experiment. Phase is not assumed to be a calibrated sine source.
 
 ## Verification
 

@@ -87,7 +87,7 @@ try {
         simulatedExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_input_record_probe_simulated.exe")).Hash
         testScriptSha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'test-input-record-probe.py')).Hash
         validatorSha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'validate-input-record-probe.py')).Hash
-        simulatedFullPrefixBytesVerified=$true;nominalMilliseconds=3000;outputPayload='zero PCM only';physicalNativeRun=$false;tracedRunnerPrepared=$false}}
+        simulatedFullPrefixBytesVerified=$true;nominalMilliseconds=3000;outputPayload='zero PCM only';physicalNativeRun=$false;tracedRunnerPrepared=$true}}
     $record.ctestLogSha256=(Get-FileHash -LiteralPath $ctestLog).Hash
     $record.buildScriptSha256=(Get-FileHash -LiteralPath $PSCommandPath).Hash
     $record.brokerScopeProbe=[ordered]@{planAndSimulatedLifecyclePassed=$true
@@ -138,6 +138,14 @@ try {
         $record.brokerScopeProbe.scriptInputs=[ordered]@{}
         foreach($name in @($record.hostProbe.controls.scriptInputs.Keys)+@('validate-broker-scope-probe.py')){
             $record.brokerScopeProbe.scriptInputs[$name]=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot $name)).Hash
+        }
+        $record.inputRecordProbe.scriptInputs=[ordered]@{}
+        foreach($name in @($record.hostProbe.controls.scriptInputs.Keys)+@('validate-input-record-probe.py')){
+            $record.inputRecordProbe.scriptInputs[$name]=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot $name)).Hash
+        }
+        $record.inputRecordProbe.traceLauncherInputs=[ordered]@{}
+        foreach($name in @('prepare-input-record-trace.py','start-input-record-trace.ps1')){
+            $record.inputRecordProbe.traceLauncherInputs[$name]=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot $name)).Hash
         }
         $record.brokerScopeProbe.traceLauncherInputs=[ordered]@{}
         foreach($name in @('prepare-broker-scope-trace.py','start-broker-scope-trace.ps1')){

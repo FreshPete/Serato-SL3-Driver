@@ -1,0 +1,7 @@
+{
+  "schema": "sl3.selected-evidence-capsule-reference.v1",
+  "capsuleName": "input-record-trace-20261102-final",
+  "files": 59,
+  "manifestSha256": "9b8901c34cd2fd60fa95563db9051d11f4cb244f9c593d9fb891b89dd43e7138",
+  "verificationSha256": "ba0226a7b67fe94b127b3e28b2d96a73d7745b8c102e573dd490644c50bc525a"
+}

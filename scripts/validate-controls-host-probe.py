@@ -148,12 +148,12 @@ def probe(folder, worker_sha, simulated=False):
             'probeRecordSha256': digest(folder/'probe.json'), 'nativeJournal': native_journal}
 
 
-def traced(folder, worker_sha, probe_sha, scope=False, broker_scope=False):
-    require(not (scope and broker_scope), 'Conflicting trace scenarios')
+def traced(folder, worker_sha, probe_sha, scope=False, broker_scope=False, input_record=False):
+    require(sum(bool(x) for x in (scope, broker_scope, input_record)) <= 1, 'Conflicting trace scenarios')
     require(re.fullmatch(r'[0-9a-fA-F]{64}', worker_sha) is not None and re.fullmatch(r'[0-9a-fA-F]{64}', probe_sha) is not None,
             'Invalid expected executable hashes')
     record = read(folder/'run.json')
-    schema='sl3.broker-scope.traced-run.v1' if broker_scope else ('sl3.scope-host.traced-run.v1' if scope else 'sl3.controls-host.traced-run.v1')
+    schema='sl3.input-record.traced-run.v1' if input_record else 'sl3.broker-scope.traced-run.v1' if broker_scope else ('sl3.scope-host.traced-run.v1' if scope else 'sl3.controls-host.traced-run.v1')
     require(record['schema'] == schema and record['completed'] is True and record['error'] is None,
             'Incomplete traced controls run')
     flags(record, ('traceCleanupConfirmed', 'secureBootBefore', 'secureBootAfter', 'recoveryConfirmed'),
@@ -161,7 +161,7 @@ def traced(folder, worker_sha, probe_sha, scope=False, broker_scope=False):
     require(record['probeExitCode'] == record['traceExitCode'] == 0 and type(record['probeExitCode']) is int
             and type(record['traceExitCode']) is int, 'Probe/trace failed')
     require(record['workerSha256'].lower() == worker_sha.lower() and record['probeSha256'].lower() == probe_sha.lower(), 'Executable identities differ')
-    inputs=RUNNER_INPUTS+('validate-broker-scope-probe.py',) if broker_scope else (RUNNER_INPUTS+('validate-scope-host-probe.py',) if scope else RUNNER_INPUTS)
+    inputs=RUNNER_INPUTS+('validate-input-record-probe.py',) if input_record else RUNNER_INPUTS+('validate-broker-scope-probe.py',) if broker_scope else (RUNNER_INPUTS+('validate-scope-host-probe.py',) if scope else RUNNER_INPUTS)
     require(set(record['runnerInputs']) == set(inputs), 'Missing/unexpected runner dependencies')
     for name, expected in record['runnerInputs'].items():
         require(type(expected) is str and re.fullmatch(r'[0-9a-fA-F]{64}', expected) is not None, 'Invalid runner hash')
@@ -186,7 +186,13 @@ def traced(folder, worker_sha, probe_sha, scope=False, broker_scope=False):
             'Probe outside USB trace window')
     etls = list((folder/'trace').glob('*.etl'))
     require(len(etls) == 1 and digest(etls[0]).lower() == record['etlSha256'].lower(), 'ETL binding differs')
-    if broker_scope:
+    if input_record:
+        spec=importlib.util.spec_from_file_location('input_record_component',ROOT/'scripts/validate-input-record-probe.py')
+        component=importlib.util.module_from_spec(spec);spec.loader.exec_module(component)
+        result=component.validate(folder/'probe',worker_sha.lower())
+        require(type(record.get('expectedRateHz')) is int and record['expectedRateHz']==result['rateHz'], 'Recorded input expected rate differs')
+        result['probeRecordSha256']=result['resultSha256']
+    elif broker_scope:
         spec=importlib.util.spec_from_file_location('broker_scope_component',ROOT/'scripts/validate-broker-scope-probe.py')
         component=importlib.util.module_from_spec(spec);spec.loader.exec_module(component)
         result=component.validate(folder/'probe',worker_sha.lower())

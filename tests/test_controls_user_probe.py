@@ -237,6 +237,27 @@ class UserControlsTests(unittest.TestCase):
                 with patch.object(v.base,'traced',return_value={'valid':True,'probe':{'nativeJournal':{'workerPid':2002}}}):
                     with self.subTest(key=key),self.assertRaises(ValueError):v.validate(folder,worker,probe,broker_scope=True)
 
+    def test_input_record_selects_own_image_pins_and_component(self):
+        # Synthetic surrounding records; component validation is mocked only here.
+        with tempfile.TemporaryDirectory() as temporary:
+            folder=Path(temporary);record,worker,_=self.saved_fixture(folder)
+            build=v.read(ROOT/'artifacts/build/native/native-build-Release.json')
+            image=str(ROOT/'artifacts/build/native/Release/sl3_input_record_probe.exe')
+            record.update(scenario='InputRecord',traceSeconds=60,schema='sl3.input-record.traced-run.v1',
+                          expectedRateHz=44100,probeImagePath=image,runnerInputs=build['inputRecordProbe']['scriptInputs'])
+            record['userProcesses']['probe']['process']['imagePath']=image
+            def save(value):(folder/'run.json').write_text(json.dumps(value),encoding='utf-8')
+            save(record);probe=build['inputRecordProbe']['executableSha256']
+            component={'valid':True,'probe':{'nativeJournal':{'workerPid':2002}}}
+            with patch.object(v.base,'traced',return_value=component) as underlying:
+                result=v.validate(folder,worker,probe,input_record=True)
+                self.assertTrue(result['nonElevatedParentProbeAndWorker'])
+                underlying.assert_called_once_with(folder,worker,probe,input_record=True)
+            for key,value in [('scenario','Controls'),('traceSeconds',20),('runnerInputs',build['scopeProbe']['scriptInputs'])]:
+                bad=copy.deepcopy(record);bad[key]=value;save(bad)
+                with patch.object(v.base,'traced',return_value=component):
+                    with self.subTest(key=key),self.assertRaises(ValueError):v.validate(folder,worker,probe,input_record=True)
+
     def test_final_record_mutations_fail(self):
         with tempfile.TemporaryDirectory() as temporary:
             folder = Path(temporary);record, worker, probe = self.saved_fixture(folder)
