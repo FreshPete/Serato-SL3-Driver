@@ -1,0 +1,177 @@
+{
+  "schema": "sl3.candidate-selection-analysis.v1",
+  "status": "conditional_static_prediction",
+  "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "candidateSha256": "2a2b0828e75e622d0e485b6a051370a53c341d22ce02381798f1a2597a91649e",
+  "priorEvidenceSha256": {
+    "serato500-descriptor-precedence.json": "90aa41ffa9f65fdf4f4f8a4061771a74cc2c978db6cc77365e6dbab34d465613",
+    "serato500-aggregation-selection.json": "b9762f6ab4096387858f26517d484e55a6774d6687ba7a6cf7112007d36225c2",
+    "serato500-usb-discovery.json": "45e91ca74e7716a99018948e0a4fd502b4453d45557bb453bf0aeecdd8390029",
+    "usb-identity-baseline-20261030.json": "9863fbe585c5f63f58900ee41ea6b60cc07da5748b3ce2c3acd6ca2fe8d649b5"
+  },
+  "sources": {
+    "scripts/export-serato-sl3-selection.py": {
+      "localSha256": "a6ed5f7ce82207e2a7dc120aa8c21f76058808b017828e53738f032d521866a9",
+      "gitLfSha256": "a6ed5f7ce82207e2a7dc120aa8c21f76058808b017828e53738f032d521866a9"
+    },
+    "scripts/supervise-usb-identity.py": {
+      "localSha256": "d36c13b7063fec9bc482e61ec1131f53b9f1e5d224656abda1ee356e4144b8a4",
+      "gitLfSha256": "d36c13b7063fec9bc482e61ec1131f53b9f1e5d224656abda1ee356e4144b8a4"
+    },
+    "scripts/observe-sl3-usb-identity.py": {
+      "localSha256": "238aa772ef466832a6d63b020eab357b014a2eb998a1fb2662dd1a988c6e43ea",
+      "gitLfSha256": "238aa772ef466832a6d63b020eab357b014a2eb998a1fb2662dd1a988c6e43ea"
+    },
+    "scripts/prepare-serato-sl3-candidate.py": {
+      "localSha256": "18afa2a477eef0295f8c9d11bcd547c332478683e41f324883c215e6a3f5e338",
+      "gitLfSha256": "18afa2a477eef0295f8c9d11bcd547c332478683e41f324883c215e6a3f5e338"
+    },
+    "scripts/export-serato-clock-handshake-evidence.py": {
+      "localSha256": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+      "gitLfSha256": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20"
+    }
+  },
+  "newInstructionFacts": [
+    {
+      "va": "0x1405c8365",
+      "bytes": "33ff",
+      "instruction": "xor edi, edi"
+    },
+    {
+      "va": "0x1405c83b1",
+      "bytes": "6689beac000000",
+      "instruction": "mov word ptr [rsi + 0xac], di"
+    },
+    {
+      "va": "0x1405c83b8",
+      "bytes": "488d15a9502502",
+      "instruction": "lea rdx, [rip + 0x22550a9]"
+    },
+    {
+      "va": "0x1405c83c2",
+      "bytes": "e8d9f95401",
+      "instruction": "call 0x141b17da0"
+    },
+    {
+      "va": "0x1405c83c7",
+      "bytes": "4885c0",
+      "instruction": "test rax, rax"
+    },
+    {
+      "va": "0x1405c83ca",
+      "bytes": "7427",
+      "instruction": "je 0x1405c83f3"
+    },
+    {
+      "va": "0x1405c83f3",
+      "bytes": "488d156e7d2302",
+      "instruction": "lea rdx, [rip + 0x2237d6e]"
+    },
+    {
+      "va": "0x1405c83fa",
+      "bytes": "488d8eb0000000",
+      "instruction": "lea rcx, [rsi + 0xb0]"
+    },
+    {
+      "va": "0x1405c8401",
+      "bytes": "e87afcedff",
+      "instruction": "call 0x1404a8080"
+    },
+    {
+      "va": "0x1405c8406",
+      "bytes": "488d156b502502",
+      "instruction": "lea rdx, [rip + 0x225506b]"
+    },
+    {
+      "va": "0x1405c8410",
+      "bytes": "e88bf95401",
+      "instruction": "call 0x141b17da0"
+    },
+    {
+      "va": "0x1405c8415",
+      "bytes": "4885c0",
+      "instruction": "test rax, rax"
+    },
+    {
+      "va": "0x1405c8418",
+      "bytes": "7421",
+      "instruction": "je 0x1405c843b"
+    },
+    {
+      "va": "0x1405c842f",
+      "bytes": "488d8eb0000000",
+      "instruction": "lea rcx, [rsi + 0xb0]"
+    },
+    {
+      "va": "0x1405c8436",
+      "bytes": "e845fcedff",
+      "instruction": "call 0x1404a8080"
+    },
+    {
+      "va": "0x1405c6ec9",
+      "bytes": "488d9178f9ffff",
+      "instruction": "lea rdx, [rcx - 0x688]"
+    },
+    {
+      "va": "0x1405c6ed3",
+      "bytes": "e828c4edff",
+      "instruction": "call 0x1404a3300"
+    }
+  ],
+  "inheritedSelectionInstructionChecks": 63,
+  "inheritedDiscoveryByteChecks": 90,
+  "savedObservationValidation": {
+    "valid": true,
+    "samples": 4,
+    "incomplete_samples": 0,
+    "changed_comparisons": 0,
+    "all_snapshots_complete": true,
+    "started_utc": "2026-10-30T23:28:51.928105+00:00",
+    "closed_utc": "2026-10-30T23:28:58.034046+00:00",
+    "application_coexistence_verified": false,
+    "device_recovery_verified": false
+  },
+  "recordedUsbIdentity": {
+    "vendor": 7365,
+    "product": 1,
+    "revision": 0,
+    "bus": 3,
+    "address": 1
+  },
+  "newPhysicalObservation": false,
+  "parserProjection": {
+    "bcd_device": 0,
+    "midi_name": "",
+    "identityNameSlot": "0x30",
+    "identityNameCompleteOffset": "0xb0",
+    "asioDriverName": "SL3 Rebuild Development",
+    "asioNameIsIdentityName": false
+  },
+  "conditionalPrediction": {
+    "primaryNumericLookupAtRecordedRevision": "First parsed candidate exact match before later stub",
+    "aggregationRegistration": "Earlier same-triple candidate with empty midi_name suppresses later stub",
+    "aggregationLookupAtRecordedRevision": "Candidate exact match if registered as projected",
+    "identityChangeNeededForRecordedRevision": false
+  },
+  "conditions": [
+    "Resource must load and full native descriptor parse must succeed",
+    "Default fields must remain unmodified at runtime",
+    "Resource-before-stub registration and matching stub identity must apply",
+    "Actual lookup must use the recorded revision and checked numeric/aggregation route"
+  ],
+  "counterexample": "For nonzero requested revision and both entries at zero in the primary vector, later stub wins an older-fallback tie; do not generalize this result",
+  "firmwareVersionInferred": false,
+  "currentRevisionAttested": false,
+  "actualChosenDescriptorObserved": false,
+  "applicationExecuted": false,
+  "installedApplicationModified": false,
+  "deviceAccess": false,
+  "currentSeratoAdmissionVerified": false,
+  "twoDeckDvsVerified": false,
+  "deploymentApproved": false,
+  "remaining": [
+    "Runtime trust/parsing/provider load and actual selection",
+    "NONE control semantics and service readiness",
+    "Measured ASIO profile/deployment, physical audio and legitimate current DVS"
+  ]
+}
