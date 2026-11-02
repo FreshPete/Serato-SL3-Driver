@@ -42,7 +42,7 @@ tests retain HRESULT diagnostics for future failures.
 
 The later [session-locator checkpoint](asio-session-locator.md) implements the stable locator and first-session pointer publication described below. The later [withdrawal checkpoint](asio-pointer-withdrawal.md) adds explicit checked withdrawal and republication; installation is still pending.
 
-The later [deployment-bundle checkpoint](asio-deployment-bundle.md) prepares verified payloads and the proposed locator/registry/ACL records. It does not apply them; protected staging and registration/uninstall are still pending.
+The later [deployment-bundle checkpoint](asio-deployment-bundle.md) prepares verified payloads and the proposed locator/registry/ACL records. It does not apply them. The later [registry engine](asio-registry-engine.md) supplies tested creation/removal primitives, while protected staging and the privileged wrapper are still pending.
 
 ## Deployment still to implement
 

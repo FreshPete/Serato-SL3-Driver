@@ -6,8 +6,9 @@ exact executable bytes, a stable locator for a proposed installation, licences,
 PE dependency metadata and an x64 registry plan. It does not install, register,
 apply ACLs, start a process or open the SL3.
 
-This is a review artifact, not a working-driver release. Protected staging and
-owned-entry registration/uninstall still need an implementation and validation.
+This is a review artifact, not a working-driver release. The later [registry-engine checkpoint](asio-registry-engine.md) implements and tests
+the registry core in a private namespace. Protected staging and the complete
+privileged install/uninstall wrapper remain unfinished.
 The native broker, real timing/audio and current Serato/DVS gates remain open.
 
 ## Commands

@@ -4,6 +4,8 @@ This is an engineering investigation and source snapshot, not a working replacem
 
 ## Findings and implementation
 
+**Real registry engine tests, 2 November:** [the new engine](asio-registry-engine.md) implements create-new own COM/ASIO entries, typed package ownership checks and conservative rollback/removal. Its 26 actual Windows registry cases pass in fresh private HKCU namespaces, which are removed and verified absent. The public CLI is plan/read-only inspection only; live planned HKLM entries and the current-user overlay remain unchanged. Protected installation, native/physical audio and current Serato/DVS remain unfinished.
+
 **Verified local deployment bundle, 2 November:** [the package builder](asio-deployment-bundle.md) now prepares exact reviewed Release binaries, a locator, licences, dependency metadata and a constrained x64 registration/ACL plan. Its 26 preparation/verification/refusal cases pass; planned install and pointer paths remain absent. No registration, ACL application, binary execution or device access runs. Protected install/uninstall, real timing/native audio and current Serato/DVS remain unfinished.
 
 **Explicit pointer withdrawal, 2 November:** [reviewed hash-based withdrawal](asio-pointer-withdrawal.md) now removes only an exclusively opened, current-user-owned typed pointer. Create-new publication can then reuse its path. Actual COM/simulated audio continues across withdrawal/republication with one acquisition; stale-pointer cleanup and refusal guards are tested. Installation, genuine timing/native audio and current Serato/DVS remain unfinished; no physical or security changes ran.

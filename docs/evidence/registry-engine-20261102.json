@@ -1,0 +1,195 @@
+{
+  "schema": "sl3.registry-engine-verification.v1",
+  "createdUtc": "2026-11-02T01:07:06.786378+00:00",
+  "tests": {
+    "cases": [
+      {
+        "name": "default-plan",
+        "passed": true
+      },
+      {
+        "name": "explicit-plan",
+        "passed": true
+      },
+      {
+        "name": "machine-inspect",
+        "passed": true
+      },
+      {
+        "name": "no-machine-write-cli",
+        "passed": true
+      },
+      {
+        "name": "round-trip",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "foreign-preexisting",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "missing-container",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "different-package-owner",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "ownership-marker",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "ownership-extra-value",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "ownership-extra-child",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "ownership-type",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "write-failure-1",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "write-failure-2",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "write-failure-3",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "write-failure-4",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "write-failure-5",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "write-failure-6",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "write-failure-7",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "create-race",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "rollback-preserves-mutation",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "late-create-conflict",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "deletion-race-1",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "deletion-race-2",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "concurrent-new-registration",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      },
+      {
+        "name": "wrong-key-plan",
+        "passed": true,
+        "temporaryRegistryWritten": true
+      }
+    ],
+    "indexPath": "artifacts/build/registry-tests/3488e6fb91cc4c9eb37d3bf0c83897f6/index.json",
+    "indexSha256": "7ff58ddffd45d706f6e089a73d03e45c1ae94d891fa7a3259ee07e76ce61021f",
+    "allFileHashesMatch": true,
+    "engineSha256": "f0b1009fe0a3cee39acc30e295dddeac9171082d8d7029f404a302d0114b7bbf",
+    "testScriptSha256": "bd46dd0eb7a5a8442c64b8603523ecb41aad85e9063a1b46e30c89a25348d967",
+    "logSha256": "4dd0ed1598d686a7b18bf82753263d18c4e096451004f8c84b15ad196018c1f8"
+  },
+  "scope": {
+    "temporaryHkcuRegistryWritten": true,
+    "privateNamespaceRemovedAndRechecked": true,
+    "livePlannedHklmEntriesUnchanged": true,
+    "liveCurrentUserOverlayUnchanged": true,
+    "machineMutationCliExposed": false,
+    "readOnlyMachinePreflightTested": true,
+    "actualCreateDispositionRaceTested": true,
+    "typedOwnerConflictsTested": true,
+    "partialRollbackAndRemovalReported": true,
+    "concurrentCreateNewWinnerTested": true
+  },
+  "nativeBaseline": [
+    {
+      "configuration": "Release",
+      "priorNativeTestsPassed": 59,
+      "rerunForRegistryEngine": false,
+      "sourcePinsStillMatch": true,
+      "manifestSha256": "09fa39a717a9b024981b9a2e9da0406234e91fedd17b3370bac04c7dbfab1a87",
+      "ctestLogSha256": "7d1dd0d5f95b6a03fea0b02c1fdb57a4cc9550dedbaac5f480063dfa5c990d5c"
+    },
+    {
+      "configuration": "Debug",
+      "priorNativeTestsPassed": 59,
+      "rerunForRegistryEngine": false,
+      "sourcePinsStillMatch": true,
+      "manifestSha256": "d97f2b1855391de1412473897c8d4d5cd7f9fe40d91afb0f78eb5b0fa4151c92",
+      "ctestLogSha256": "70452b9868b2e84da6aca20160944a63a05d857d86ab2bbccb3ac078572d9df1"
+    }
+  ],
+  "bundleBaseline": {
+    "manifestSha256": "f3724800005e95b724a1d069d563fb2a662fbfb0b92aabf2da32b0f79c1f8fc4",
+    "preparationCasesAtPriorCheckpoint": 26,
+    "preparationTestsRerun": false,
+    "builderUnchanged": true
+  },
+  "limits": {
+    "installed": false,
+    "machineRegistrationApplied": false,
+    "protectedAclApplied": false,
+    "privilegedInstallerWrapperImplemented": false,
+    "binaryPayloadExecuted": false,
+    "deviceAccess": false,
+    "crashRecoveryTested": false,
+    "crossProcessUninstallSerializationTested": false,
+    "physicalAudioTested": false,
+    "measurementTruthVerified": false,
+    "currentSeratoAdmissionTested": false
+  },
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/registry-engine-20261102",
+    "files": 791,
+    "manifestSha256": "59f708052e5b6670d09bb206ddcfaf46d000d58419a8b21a9c95247b03970983",
+    "selfReferentialPublicEvidenceExcluded": true
+  }
+}
