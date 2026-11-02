@@ -87,8 +87,8 @@ Program Files location while disposable stages use workspace/test policy. This
 does not establish installed ASIO activation or production protection. See the
 [verification record](evidence/registry-recovery-20261102.json).
 
-Recovery of partially removed file trees, absent stages with missing completion
-records, interrupted install/copy states and fixed-base bootstrap remains
-unfinished. Production deployment/write-denial proof, positive current native
+[Separate reviewed-bundle file recovery](asio-file-recovery.md) now covers
+partially removed trees and absent-stage reconciliation. Interrupted install/copy
+states and fixed-base bootstrap remain unfinished. Production deployment/write-denial proof, positive current native
 transport, physical analogue audio/measured timing and current Serato/two-deck
 DVS remain unproved. The full goal stays active; macOS remains deferred.

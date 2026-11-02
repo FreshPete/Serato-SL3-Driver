@@ -109,9 +109,10 @@ unchanged; no C++ rebuild was needed. See the
 [verification record](evidence/runtime-install-20261102.json).
 
 [Reviewed registry-removal recovery](asio-registry-recovery.md) now covers exact
-remaining own entries with an intact stage. Protected-base bootstrap, general
-file/install recovery, attended production installation/removal and ordinary-user
-write-denial proof remain unfinished.
+remaining own entries with an intact stage. [Separate file recovery](asio-file-recovery.md)
+now covers partial file removal and absent-stage reconciliation. Protected-base
+bootstrap, interrupted install/copy recovery, attended production deployment and
+ordinary-user write-denial proof remain unfinished.
 Runtime resolution does not establish the signed UsbDk filter's device readiness,
 a positive current native session, measured latency, analogue audio, legitimate
 current Serato admission or two-deck DVS. Those remain separate unproved parts of

@@ -76,8 +76,9 @@ See the [verification record](evidence/uninstall-20261102.json).
 
 [Explicit reviewed-journal registry recovery](asio-registry-recovery.md) now
 handles an intact stage with exact remaining own registry keys in workspace tests.
-Partially removed file trees, absent stages with an uncommitted completion record
-and other interrupted states remain unfinished.
+[Separate file-removal recovery](asio-file-recovery.md) now covers partially
+removed trees and absent-stage reconciliation using the reviewed original bundle
+and journal. Interrupted install/copy states remain unfinished.
 [Runtime-gated staging/registration coordination](asio-runtime-install.md) now
 has actual workspace/private-registry coverage. Protected-base bootstrap,
 production tests and ordinary-user write-denial proof remain unfinished. Native/physical

@@ -1,0 +1,332 @@
+{
+  "schema": "sl3.file-recovery-verification.v1",
+  "createdUtc": "2026-11-02T02:46:54.979443+00:00",
+  "cases": [
+    {
+      "name": "default",
+      "passed": true
+    },
+    {
+      "name": "plan",
+      "passed": true
+    },
+    {
+      "name": "no-mutation-cli",
+      "passed": true
+    },
+    {
+      "name": "recover-after-0-file-boundary",
+      "passed": true
+    },
+    {
+      "name": "recover-after-1-file-boundary",
+      "passed": true
+    },
+    {
+      "name": "recover-after-2-file-boundary",
+      "passed": true
+    },
+    {
+      "name": "recover-after-3-file-boundary",
+      "passed": true
+    },
+    {
+      "name": "recover-after-4-file-boundary",
+      "passed": true
+    },
+    {
+      "name": "recover-after-5-file-boundary",
+      "passed": true
+    },
+    {
+      "name": "recover-after-6-file-boundary",
+      "passed": true
+    },
+    {
+      "name": "recover-after-7-file-boundary",
+      "passed": true
+    },
+    {
+      "name": "recover-after-8-file-boundary",
+      "passed": true
+    },
+    {
+      "name": "recover-after-9-file-boundary",
+      "passed": true
+    },
+    {
+      "name": "recover-after-10-file-boundary",
+      "passed": true
+    },
+    {
+      "name": "recover-after-11-file-boundary",
+      "passed": true
+    },
+    {
+      "name": "recover-after-12-file-boundary",
+      "passed": true
+    },
+    {
+      "name": "recover-after-13-file-boundary",
+      "passed": true
+    },
+    {
+      "name": "recover-after-14-file-boundary",
+      "passed": true
+    },
+    {
+      "name": "recover-after-15-file-boundary",
+      "passed": true
+    },
+    {
+      "name": "non-prefix-missing-files-recovered-from-fresh-state",
+      "passed": true
+    },
+    {
+      "name": "unknown-file-preserved-before-mutation",
+      "passed": true
+    },
+    {
+      "name": "changed-surviving-file-preserved",
+      "passed": true
+    },
+    {
+      "name": "same-byte-payload-replacement-preserved",
+      "passed": true
+    },
+    {
+      "name": "hardlinked-survivor-preserved",
+      "passed": true
+    },
+    {
+      "name": "active-reader-refuses-before-new-deletion",
+      "passed": true
+    },
+    {
+      "name": "remaining-registration-blocks-file-recovery",
+      "passed": true
+    },
+    {
+      "name": "user-overlay-blocks-file-recovery",
+      "passed": true
+    },
+    {
+      "name": "wrong-bundle-review-hash-refused",
+      "passed": true
+    },
+    {
+      "name": "wrong-journal-review-hash-refused",
+      "passed": true
+    },
+    {
+      "name": "wrong-stage-review-hash-refused",
+      "passed": true
+    },
+    {
+      "name": "recreated-empty-directory-preserved",
+      "passed": true
+    },
+    {
+      "name": "late-unknown-data-prevents-first-new-deletion",
+      "passed": true
+    },
+    {
+      "name": "recovery-failure-reports-one-new-deletion",
+      "passed": true
+    },
+    {
+      "name": "explicit-retry-rechecks-original-journal-and-current-survivors",
+      "passed": true
+    },
+    {
+      "name": "production-refuses-normal-token",
+      "passed": true
+    }
+  ],
+  "privateIndexSha256": "f0f84ff7ecb67e7827a9e0502621caf05e66a7feedac8e3727ae10f59d0b3bda",
+  "retainedFilesVerified": 294,
+  "sourceSha256": {
+    "scripts/asio-recover-files.py": "f9f2d874b96522c1180d6bdeb6022d61a470b393f2d312965fe7414d31b3fbae",
+    "scripts/test-asio-recover-files.py": "9bf5565e6ffbdbe08e09f40b2749beb083726c299eb3f7958a2bac4ea9165f9b",
+    "scripts/asio-uninstall.py": "5210818b800a6a0d8531aadc8dd955499476ae1b3fb65b98cfe0c79565fc61d7",
+    "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad",
+    "scripts/asio-file-stage.py": "a03a8cc237142f0fdfaa39f34ba7157833b81b87ad26b538d21576a09e537281",
+    "scripts/asio-registry.py": "f0b1009fe0a3cee39acc30e295dddeac9171082d8d7029f404a302d0114b7bbf"
+  },
+  "boundaryObservations": [
+    {
+      "originalFileDeletions": 0,
+      "originalDirectoryAbsent": false,
+      "alreadyAbsentFiles": 0,
+      "newlyRemovedAndObservedAbsent": 14
+    },
+    {
+      "originalFileDeletions": 1,
+      "originalDirectoryAbsent": false,
+      "alreadyAbsentFiles": 1,
+      "newlyRemovedAndObservedAbsent": 13
+    },
+    {
+      "originalFileDeletions": 2,
+      "originalDirectoryAbsent": false,
+      "alreadyAbsentFiles": 2,
+      "newlyRemovedAndObservedAbsent": 12
+    },
+    {
+      "originalFileDeletions": 3,
+      "originalDirectoryAbsent": false,
+      "alreadyAbsentFiles": 3,
+      "newlyRemovedAndObservedAbsent": 11
+    },
+    {
+      "originalFileDeletions": 4,
+      "originalDirectoryAbsent": false,
+      "alreadyAbsentFiles": 4,
+      "newlyRemovedAndObservedAbsent": 10
+    },
+    {
+      "originalFileDeletions": 5,
+      "originalDirectoryAbsent": false,
+      "alreadyAbsentFiles": 5,
+      "newlyRemovedAndObservedAbsent": 9
+    },
+    {
+      "originalFileDeletions": 6,
+      "originalDirectoryAbsent": false,
+      "alreadyAbsentFiles": 6,
+      "newlyRemovedAndObservedAbsent": 8
+    },
+    {
+      "originalFileDeletions": 7,
+      "originalDirectoryAbsent": false,
+      "alreadyAbsentFiles": 7,
+      "newlyRemovedAndObservedAbsent": 7
+    },
+    {
+      "originalFileDeletions": 8,
+      "originalDirectoryAbsent": false,
+      "alreadyAbsentFiles": 8,
+      "newlyRemovedAndObservedAbsent": 6
+    },
+    {
+      "originalFileDeletions": 9,
+      "originalDirectoryAbsent": false,
+      "alreadyAbsentFiles": 9,
+      "newlyRemovedAndObservedAbsent": 5
+    },
+    {
+      "originalFileDeletions": 10,
+      "originalDirectoryAbsent": false,
+      "alreadyAbsentFiles": 10,
+      "newlyRemovedAndObservedAbsent": 4
+    },
+    {
+      "originalFileDeletions": 11,
+      "originalDirectoryAbsent": false,
+      "alreadyAbsentFiles": 11,
+      "newlyRemovedAndObservedAbsent": 3
+    },
+    {
+      "originalFileDeletions": 12,
+      "originalDirectoryAbsent": false,
+      "alreadyAbsentFiles": 12,
+      "newlyRemovedAndObservedAbsent": 2
+    },
+    {
+      "originalFileDeletions": 13,
+      "originalDirectoryAbsent": false,
+      "alreadyAbsentFiles": 13,
+      "newlyRemovedAndObservedAbsent": 1
+    },
+    {
+      "originalFileDeletions": 14,
+      "originalDirectoryAbsent": false,
+      "alreadyAbsentFiles": 14,
+      "newlyRemovedAndObservedAbsent": 0
+    },
+    {
+      "originalFileDeletions": 14,
+      "originalDirectoryAbsent": true,
+      "alreadyAbsentFiles": 14,
+      "newlyRemovedAndObservedAbsent": 0
+    }
+  ],
+  "observations": {
+    "newCompletionRecordsChecked": true,
+    "nonPrefixMissingFilesObserved": 3,
+    "nonPrefixCaseNewlyDeletedFiles": 11,
+    "originalReviewedJournalsRemainByteIdentical": true,
+    "sourceBundleUnchanged": true,
+    "foreignChangedIdenticalByteReplacementHardlinkAndBusyDataPreserved": true,
+    "registrationAndOverlayBlockFileRecovery": true,
+    "wrongReviewedHashesRefused": true,
+    "recreatedRootPreserved": true,
+    "lateUnknownDataPreserved": true,
+    "interruptedRecoveryAdditionalDeletionCount": 1,
+    "explicitRetryAlreadyAbsentFiles": 2,
+    "explicitRetryNewlyDeletedFiles": 12,
+    "privateRegistryNamespaceRemovedAndObservedAbsent": true,
+    "foreignSiblingsAndLiveRegistrationsUnchanged": true,
+    "plannedLocationsUnchanged": true
+  },
+  "identityScope": {
+    "originalDirectoryPayloadIntentIdentitiesRequiredWhenPresent": true,
+    "originalReceiptSelfIdentityRecorded": false,
+    "legacyReceiptRequiresCanonicalBytesPolicyTypeSingleLink": true
+  },
+  "unchangedPriorBaselines": {
+    "registryRecoveryCases": 22,
+    "runtimeCases": 17,
+    "installCoordinatorCases": 20,
+    "uninstallCoordinatorCases": 20,
+    "journalCases": 31,
+    "cleanupCases": 26,
+    "stagingCases": 24,
+    "ancestorCases": 16,
+    "helperSourcePinsStillMatch": true,
+    "rerunForNewFileRecoveryModule": false
+  },
+  "nativeBaseline": [
+    {
+      "configuration": "Release",
+      "priorTestsPassed": 59,
+      "sourcePinsStillMatch": true,
+      "rerunForFileRecovery": false,
+      "manifestSha256": "09fa39a717a9b024981b9a2e9da0406234e91fedd17b3370bac04c7dbfab1a87",
+      "ctestLogSha256": "7d1dd0d5f95b6a03fea0b02c1fdb57a4cc9550dedbaac5f480063dfa5c990d5c"
+    },
+    {
+      "configuration": "Debug",
+      "priorTestsPassed": 59,
+      "sourcePinsStillMatch": true,
+      "rerunForFileRecovery": false,
+      "manifestSha256": "d97f2b1855391de1412473897c8d4d5cd7f9fe40d91afb0f78eb5b0fa4151c92",
+      "ctestLogSha256": "70452b9868b2e84da6aca20160944a63a05d857d86ab2bbccb3ac078572d9df1"
+    }
+  ],
+  "limits": {
+    "productionOperationExecuted": false,
+    "machineRegistrationWritten": false,
+    "fileRecoveryWritesRegistry": false,
+    "interruptedInstallCopyRecoveryImplemented": false,
+    "protectedBaseBootstrapImplemented": false,
+    "testRegistrationUsesPlannedProgramFilesStrings": true,
+    "testStagesUseWorkspaceCurrentUserPolicy": true,
+    "installedAsioActivationTested": false,
+    "elevationRequested": false,
+    "hostAclsChanged": false,
+    "privilegesChanged": false,
+    "packageBinaryExecuted": false,
+    "deviceAccess": false,
+    "physicalAudioTested": false,
+    "measuredTimingVerified": false,
+    "currentSeratoAdmissionTested": false,
+    "currentDvsTested": false
+  },
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/file-recovery-20261102",
+    "files": 1062,
+    "manifestSha256": "4d4932465b6a7d0bd36a5e036493966a2777280abc7f3af6e645aa72c7afca77",
+    "selfReferentialPublicEvidenceExcluded": true
+  }
+}
