@@ -72,4 +72,4 @@ The later [authorization-service receiver proof](serato-authorization-service.md
 
 The later [attended archive-test package](serato-archive-deployment.md) now prepares a source-bound review bundle and tested temporary-file transaction engine. Its default read-only Plan passes on the original installation. Protected install/rollback and application acceptance have not run or been approved.
 
-After the [ASIO call-tracing build](asio-call-tracing.md), the current source-bound bundle is `analysis/sl3-descriptor-candidate-20261102-asio-trace-final/`. The original XML bytes/hash are unchanged; earlier manifests are historical and refused against current source/build pins.
+After the [ASIO call-tracing build](asio-call-tracing.md), the current source-bound bundle is `analysis/sl3-descriptor-candidate-20261102-owned-trace/`. The original XML bytes/hash are unchanged; earlier manifests are historical and refused against current source/build pins.

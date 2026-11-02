@@ -8,6 +8,8 @@
 #include <cstring>
 #include <filesystem>
 #include <iostream>
+#include <fstream>
+#include <iterator>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -105,14 +107,46 @@ int wmain(int argc,wchar_t** argv){
         if(argc==1 || (argc==2 && std::wstring(argv[1])==L"--plan")){
             std::cout<<"{\"schema\":\"sl3.asio-private-trace-plan.v1\",\"defaultPlanOnly\":true,\"deviceAccess\":false,\"seratoExecuted\":false}\n";return 0;
         }
-        require(argc==4 && std::wstring(argv[1])==L"--capture","Explicit --capture NEW_DIRECTORY ISOLATED_DLL required");
+        const bool owned=argc==4 && std::wstring(argv[1])==L"--self-capture";
+        const bool disabled=argc==4 && std::wstring(argv[1])==L"--self-disabled";
+        const bool refused=argc==4 && std::wstring(argv[1])==L"--self-refused";
+        require(argc==4 && (owned || disabled || refused || std::wstring(argv[1])==L"--capture"),"Explicit --capture or --self-capture NEW_DIRECTORY ISOLATED_DLL required");
         HANDLE token=nullptr;require(OpenProcessToken(GetCurrentProcess(),TOKEN_QUERY,&token)!=FALSE,"Read own token");TOKEN_ELEVATION elevation{};DWORD count=0;
         const bool queried=GetTokenInformation(token,TokenElevation,&elevation,sizeof(elevation),&count)!=FALSE;CloseHandle(token);
         require(queried && !elevation.TokenIsElevated,"Ordinary non-elevated fixture required");
         const auto directory=fs::absolute(argv[2]),dll=fs::absolute(argv[3]);require(!fs::exists(directory) && fs::create_directory(directory),"Fresh capture directory required");
+        if(disabled || refused){
+            const auto profile=directory/L"profile";
+            if(disabled)require(fs::create_directory(profile),"Fresh disabled profile");
+            require(SetEnvironmentVariableW(L"LOCALAPPDATA",profile.c_str()) &&
+                SetEnvironmentVariableW(L"SL3_ASIO_PRIVATE_TRACE",refused?L"1":nullptr),"Own fallback environment");
+            probe(dll);
+            require(!fs::exists(profile/L"SL3Rebuild"),"Disabled/refused logger has no trace side effects");
+            File result(directory/L"fallback.json");result.write("{\"schema\":\"sl3.asio-owned-fallback.v1\",\"ordinaryResultsPreserved\":true,\"dllUnloaded\":true,\"traceDirectoryCreated\":false,\"deviceAccess\":false,\"seratoExecuted\":false}\n");
+            std::cout<<"Optional logger fallback preserved unavailable ASIO results\n";return 0;
+        }
         const auto etl=directory/L"private.etl";ULONG lost=0,buffers_lost=0;
-        {Session session(etl);session.enable();probe(dll);session.stop();lost=session.properties->p.EventsLost;buffers_lost=session.properties->p.LogBuffersLost;
-            require(lost==0 && buffers_lost==0,"Private session reported loss");}
+        if(owned){
+            const auto profile=directory/L"profile";require(fs::create_directory(profile),"Fresh isolated profile");
+            require(SetEnvironmentVariableW(L"LOCALAPPDATA",profile.c_str()) && SetEnvironmentVariableW(L"SL3_ASIO_PRIVATE_TRACE",L"1"),"Own process opt-in environment");
+            probe(dll); // Factory released before device calls; final device release must stop logger.
+            const auto traces=profile/L"SL3Rebuild"/L"AsioTraces";
+            fs::path run;unsigned runs=0;for(const auto& entry:fs::directory_iterator(traces)){require(entry.is_directory(),"Only own run directory");run=entry.path();++runs;}
+            require(runs==1,"Exactly one driver-owned session");
+            std::ifstream marker(run/L"session.json",std::ios::binary);require(bool(marker),"Driver-owned stop marker required");
+            const std::string text((std::istreambuf_iterator<char>(marker)),std::istreambuf_iterator<char>());
+            const auto expected=std::string("{\"schema\":\"sl3.asio-owned-session.v1\",\"pid\":")+std::to_string(GetCurrentProcessId())+
+                ",\"stopStatus\":0,\"eventsLost\":0,\"buffersLost\":0,\"complete\":true,\"hardwareStateAssessed\":false}\n";
+            require(text==expected,"Driver-owned logger stopped without reported losses");
+            File copy(directory/L"session.json");copy.write(text);
+            unsigned found=0;for(const auto& entry:fs::directory_iterator(run))if(entry.path().filename().native().find(L"private.etl")==0){
+                require(fs::copy_file(entry.path(),etl),"Preserve completed driver-owned ETL");++found;}
+            require(found==1,"Exactly one driver-owned ETL");
+        }else{
+            require(SetEnvironmentVariableW(L"SL3_ASIO_PRIVATE_TRACE",nullptr)!=FALSE,"Disable own-DLL controller for external fixture");
+            Session session(etl);session.enable();probe(dll);session.stop();lost=session.properties->p.EventsLost;buffers_lost=session.properties->p.LogBuffersLost;
+            require(lost==0 && buffers_lost==0,"Private session reported loss");
+        }
         fs::path actual;unsigned matches=0;
         for(const auto& entry:fs::directory_iterator(directory))if(entry.path().filename().native().find(L"private.etl")==0){actual=entry.path();++matches;}
         require(matches==1,"Exactly one private ETL (optional process suffix) required");

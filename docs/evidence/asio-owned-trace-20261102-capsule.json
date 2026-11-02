@@ -1,0 +1,11 @@
+{
+  "schema": "sl3.private-checkpoint-summary.v1",
+  "checkpoint": "asio-owned-trace-20261102",
+  "fileCount": 92,
+  "manifestSha256": "3dc6528c08fd13e9b07ed2a16681afd3c72001ae1de1005ed5bd9f06ea61c935",
+  "evidenceSha256": "458305806357a0b15e564a839c0ac39cb1fd8e889a1a7cc9842872b07c31296f",
+  "vendorResourcesIncluded": false,
+  "privateSdkContentsIncluded": false,
+  "rawEtlsPublished": false,
+  "scope": "Private first-party sources, own images, actual own ETLs, fixtures and build logs; no Serato/hardware run"
+}

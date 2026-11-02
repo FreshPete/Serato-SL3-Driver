@@ -4,7 +4,7 @@ A private review bundle now contains the SL3 archive hypothesis, a source-bound 
 
 ## Package and read-only preflight
 
-The original reviewed bundle was `analysis/sl3-archive-deployment-20261102-reviewed/`; it and the preliminary bundle are now historical snapshots. The current bundle is `analysis/sl3-archive-deployment-20261102-asio-trace-final/`, refreshed against the [new native build](asio-call-tracing.md). Older generated manifests are refused against current sources. Both contain vendor resource data and stay private. The public repository supplies original tool source, tests and sanitized evidence rather than generated resource archives.
+The original reviewed bundle was `analysis/sl3-archive-deployment-20261102-reviewed/`; it and the preliminary bundle are now historical snapshots. The current bundle is `analysis/sl3-archive-deployment-20261102-owned-trace/`, refreshed against the [new native build](asio-owned-trace.md). Older generated manifests are refused against current sources. Both contain vendor resource data and stay private. The public repository supplies original tool source, tests and sanitized evidence rather than generated resource archives.
 
 The preparer independently reconstructs and validates the [additive archive](serato-sl3-archive.md), checks the exact saved bundle and all source bindings, verifies the installed original archive and queries the original executable's Windows Authenticode status. The observed executable status is **Valid**, signer thumbprint `A38279C93F7D1D669D0C367CAE3EC45ACF63F017`. Windows reports **UnknownError** with no signer for the original resource archive; that is not interpreted as proof that Serato performs no resource integrity checks. No executable signature, certificate store, security policy or authorization is changed.
 
@@ -34,16 +34,16 @@ From the repository root, prepare a **new** bundle or revalidate the reviewed on
 
 ```powershell
 .venv/Scripts/python.exe scripts/prepare-serato-archive-deployment.py `
-  --descriptor analysis/sl3-descriptor-candidate-20261102-asio-trace-final `
-  --archive analysis/sl3-archive-candidate-20261102-asio-trace-final `
+  --descriptor analysis/sl3-descriptor-candidate-20261102-owned-trace `
+  --archive analysis/sl3-archive-candidate-20261102-owned-trace `
   --prepare analysis/sl3-archive-deployment-NAME
 .venv/Scripts/python.exe scripts/prepare-serato-archive-deployment.py `
-  --descriptor analysis/sl3-descriptor-candidate-20261102-asio-trace-final `
-  --archive analysis/sl3-archive-candidate-20261102-asio-trace-final `
-  --validate analysis/sl3-archive-deployment-20261102-asio-trace-final
+  --descriptor analysis/sl3-descriptor-candidate-20261102-owned-trace `
+  --archive analysis/sl3-archive-candidate-20261102-owned-trace `
+  --validate analysis/sl3-archive-deployment-20261102-owned-trace
 
 # Read-only inspection; this is the only wrapper action exercised on Serato paths.
-pwsh -NoProfile -File analysis/sl3-archive-deployment-20261102-asio-trace-final/archive-test.ps1
+pwsh -NoProfile -File analysis/sl3-archive-deployment-20261102-owned-trace/archive-test.ps1
 ```
 
 For a later attended, reviewed test, the wrapper's explicit actions are `-Action Install`, `-Action Rollback` and `-Action Clean`. They require an already elevated launch; the wrapper never requests UAC. No such action is selected or approved by preparation. ASIO deployment/profile and the actual application/device test scope are separate prerequisites. The archive is not evidence of an accepted current descriptor, legitimate service result, implemented NONE control semantics, physical audio or DVS.

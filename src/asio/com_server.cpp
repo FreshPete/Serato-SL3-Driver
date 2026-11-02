@@ -1,5 +1,6 @@
 #include "asio/com_identity.hpp"
 #include "asio/call_trace.hpp"
+#include "asio/private_trace_session.hpp"
 #include "asio/scope_interface.hpp"
 #include "iasiodrv.h"
 #include <atomic>
@@ -29,13 +30,14 @@ struct ObjectLease {
 // separately built test DLL supplies its own explicitly simulated provider.
 class Device final:public IASIO {
     ObjectLease lease_;
+    std::shared_ptr<trace::PrivateSession> trace_session_;
     std::atomic<ULONG> references_{1};
     const std::uint64_t trace_id_=trace::next_instance.fetch_add(1,std::memory_order_relaxed);
     std::shared_ptr<sl3::asio::DriverScope> bound_scope_;
     std::unique_ptr<sl3::asio::DriverFacade> facade_;
     const char* configuration_error_="Reviewed isolated audio configuration is absent; device unavailable.";
 public:
-    explicit Device(std::shared_ptr<sl3::asio::DriverScope> scope={}):bound_scope_(std::move(scope)){}
+    explicit Device(std::shared_ptr<sl3::asio::DriverScope> scope={},std::shared_ptr<trace::PrivateSession> tracing={}):trace_session_(std::move(tracing)),bound_scope_(std::move(scope)){}
     HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid,void** result) noexcept override {
         if(!result)return E_POINTER;
         *result=nullptr;
@@ -102,6 +104,7 @@ public:
 
 class Factory final:public IClassFactory,public sl3::asio::DeviceScope {
     ObjectLease lease_;
+    std::shared_ptr<trace::PrivateSession> trace_session_;
     std::atomic<ULONG> references_{1};
     enum class ScopeState {unused,preparing,active,closed,failed};
     std::mutex scope_mutex_;
@@ -109,6 +112,7 @@ class Factory final:public IClassFactory,public sl3::asio::DeviceScope {
     bool created_=false;
     std::shared_ptr<sl3::asio::DriverScope> scope_;
 public:
+    explicit Factory(std::shared_ptr<trace::PrivateSession> tracing={}):trace_session_(std::move(tracing)){}
     HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid,void** result) noexcept override {
         if(!result)return E_POINTER;
         *result=nullptr;
@@ -135,7 +139,7 @@ public:
                 if(scope_state_==ScopeState::closed || scope_state_==ScopeState::failed)return E_UNEXPECTED;
                 created_=true;scope=scope_;
             }
-            object=new Device(std::move(scope));
+            object=new Device(std::move(scope),trace_session_);
         }catch(const std::bad_alloc&){return E_OUTOFMEMORY;}catch(...){return E_FAIL;}
         const auto status=object->QueryInterface(iid,result);
         object->Release();return status;
@@ -178,11 +182,13 @@ public:
 };
 }
 STDAPI DllGetClassObject(REFCLSID clsid,REFIID iid,void** result) {
+    ObjectLease activation;
+    auto tracing=trace::acquire_private_session();
     trace::Call call(trace::Operation::class_object,0);
     if(!result)return call.finish(E_POINTER);
     *result=nullptr;
     if(clsid!=sl3::asio::driver_clsid)return call.finish(CLASS_E_CLASSNOTAVAILABLE);
-    auto* factory=new(std::nothrow) Factory;
+    auto* factory=new(std::nothrow) Factory(tracing);
     if(!factory)return call.finish(E_OUTOFMEMORY);
     const auto status=factory->QueryInterface(iid,result);
     factory->Release();return call.finish(status);

@@ -36,11 +36,11 @@ No revision, VID/PID, device response, firmware or other product identity is fab
 ```powershell
 # Validate saved inputs and inspect the deterministic report; no new USB query.
 .venv/Scripts/python.exe scripts/export-serato-sl3-selection.py `
-  --candidate analysis/sl3-descriptor-candidate-20261102-asio-trace-final
+  --candidate analysis/sl3-descriptor-candidate-20261102-owned-trace
 
 # Save at a fresh path; an existing output is refused before analysis.
 .venv/Scripts/python.exe scripts/export-serato-sl3-selection.py `
-  --candidate analysis/sl3-descriptor-candidate-20261102-asio-trace-final `
+  --candidate analysis/sl3-descriptor-candidate-20261102-owned-trace `
   --output analysis/sl3-selection-NAME.json
 ```
 

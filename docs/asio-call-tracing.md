@@ -1,5 +1,7 @@
 # Optional ASIO activation and control-call tracing
 
+The later [DLL-owned opt-in controller](asio-owned-trace.md) can now start and retire a private session through normal factory/device leases. It is off by default; the provider and payload contract below remain unchanged.
+
 The rebuilt COM/ASIO DLL now has optional Windows ETW begin/end metadata for selected activation and control calls. A future attended current-Serato test can use this to distinguish a driver activation failure, an unavailable `init`, later metadata/buffer negotiation and a failed start. No actual Serato call sequence has been captured. The later [private fixture capture](asio-private-trace.md) now verifies a real ETW round trip for the own unavailable-state production DLL. This feature adds observability; it does not restore admission or prove physical audio.
 
 ## Provider and bounded behavior

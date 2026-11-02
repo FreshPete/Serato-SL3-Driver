@@ -6,13 +6,15 @@ Restore the physical Rane SL3 for current Serato DJ Pro and two-deck DVS. Window
 
 **Compatibility is not restored. There is no installable replacement driver release yet.** Windows 11 is the current focus; macOS work is deferred. Secure Boot and driver-signature enforcement remain enabled in the attended test evidence.
 
-The native software checks pass **64/64 Release**, **64/64 Debug** and **39/39 without the ASIO SDK**. Coverage includes a retained session-owner backend with separate simulated audio-client processes, COM/ASIO lifetimes and bounded rate-recording replay. Earlier physical tests demonstrate bounded capture, silent playback and control reads with their recorded worker versions; they do not demonstrate working analogue audio, safe repeated acquisition, measured latency, current Serato compatibility or two-deck DVS with this build.
+The native software checks pass **65/65 Release**, **65/65 Debug** and **39/39 without the ASIO SDK**. Coverage includes a retained session-owner backend with separate simulated audio-client processes, COM/ASIO lifetimes and bounded rate-recording replay. Earlier physical tests demonstrate bounded capture, silent playback and control reads with their recorded worker versions; they do not demonstrate working analogue audio, safe repeated acquisition, measured latency, current Serato compatibility or two-deck DVS with this build.
 
 [The read-only broker scope diagnostic](docs/broker-scope-probe.md) now exercises three independent client processes over one retained simulated worker, without a timing profile or audio capability. The server rejects audio starts in this mode; its [dedicated single-approval trace workflow](docs/broker-scope-trace.md) is now prepared and checked offline. Native physical broker validation still requires an attended run.
 
 [An offline genuine-SL3 XML candidate](docs/serato-sl3-candidate.md) now passes the current original schema and reproduces exactly. Its replacement control-path choice is an explicit unverified hypothesis; no provider or application modification is deployed.
 
 The [offline additive archive builder](docs/serato-sl3-archive.md) now preserves all 229 original resource members while adding our genuine-SL3 XML hypothesis. Original CRCs and codec inverses pass; it remains private and undeployed, with runtime Serato/audio/DVS unverified.
+
+[DLL-owned opt-in logging](docs/asio-owned-trace.md) now passes actual Release/Debug capture and default-off/failure fallback checks under an ordinary token. This prepares ASIO metadata capture without a separate elevated logger; current Serato execution and hardware validation remain unfinished.
 
 [Actual private ETW capture](docs/asio-private-trace.md) now verifies 16 events/eight complete call pairs from each Release/Debug production DLL under an ordinary token, with no device access or Serato launch. The first-party logging round trip works without UAC; current Serato capture and physical audio/DVS remain unverified.
 

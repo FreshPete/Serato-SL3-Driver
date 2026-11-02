@@ -64,6 +64,14 @@ def validate_rows(rows, summary, pid):
             'recordsConsistent':True,'actualEtwCaptureDecoded':False,'seratoCaptureVerified':False,'deviceAccess':False,'physicalAudioVerified':False,'currentSeratoAdmissionVerified':False,'twoDeckDvsVerified':False}
 
 
+def validate_owned_marker(marker,pid):
+    require(set(marker)=={'schema','pid','stopStatus','eventsLost','buffersLost','complete','hardwareStateAssessed'} and
+            marker['schema']=='sl3.asio-owned-session.v1' and type(marker['pid']) is int and marker['pid']==pid,
+            'Exact driver-owned stop marker required')
+    for field in ['stopStatus','eventsLost','buffersLost']:integer(marker[field],0,0)
+    require(marker['complete'] is True and marker['hardwareStateAssessed'] is False,'Driver-owned retirement without physical claims')
+
+
 def bounded(path,limit):
     require(path.is_file() and not path.is_symlink() and not path.is_junction(),'Regular fixture file required')
     with path.open('rb') as f:raw=f.read(limit+1)
@@ -92,13 +100,19 @@ def validate(folder):
                          (folder/'isolated/sl3_asio.dll',run['dllSha256'])]:
         require(hashlib.sha256(bounded(image,16*1024*1024)).hexdigest()==digest,'Actual image changed')
     etls=[p for p in run['files'] if re.fullmatch(r'capture/private\.etl(?:_[0-9]+)?',p)]
-    require(len(etls)==1 and set(run['files'])=={'capture/capture.json','capture/events.jsonl',etls[0]},'Exact result and raw ETL pins required')
+    mode=run.get('captureMode','external');require(mode in ['external','driver-owned'],'Known capture controller required')
+    expected={'capture/capture.json','capture/events.jsonl'}|set(etls)
+    if mode=='driver-owned':expected.add('capture/session.json')
+    require(len(etls)==1 and set(run['files'])==expected,'Exact result and raw ETL pins required')
     for name,digest in run['files'].items():
         require(hashlib.sha256(bounded(folder/name,8*1024*1024)).hexdigest()==digest,'Recorded capture file differs')
+    if mode=='driver-owned':
+        marker=parse(bounded(folder/'capture/session.json',65536))
+        validate_owned_marker(marker,run['pid'])
     rows=[parse(line) for line in bounded(folder/'capture/events.jsonl',1024*1024).splitlines()]
     result=validate_rows(rows,parse(bounded(folder/'capture/capture.json',65536)),run['pid'])
     result['runRecordSha256']=hashlib.sha256(journal).hexdigest();result['actualEtwCaptureDecoded']=True
-    result['firstPartyRunnerProvenanceVerified']=True;return result
+    result['firstPartyRunnerProvenanceVerified']=True;result['captureController']=mode;return result
 
 
 if __name__=='__main__':

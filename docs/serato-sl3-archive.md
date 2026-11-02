@@ -17,16 +17,16 @@ The original licensed local application/extracted files and prepared descriptor 
 ```powershell
 # Inspect the proposed result without writing an archive bundle.
 .venv/Scripts/python.exe scripts/prepare-serato-sl3-archive.py `
-  --candidate analysis/sl3-descriptor-candidate-20261102-asio-trace-final
+  --candidate analysis/sl3-descriptor-candidate-20261102-owned-trace
 
 # Create a fresh offline project-local bundle. Existing directories are refused.
 .venv/Scripts/python.exe scripts/prepare-serato-sl3-archive.py `
-  --candidate analysis/sl3-descriptor-candidate-20261102-asio-trace-final `
+  --candidate analysis/sl3-descriptor-candidate-20261102-owned-trace `
   --prepare analysis/sl3-archive-candidate-NAME
 
 # Rebuild independently and compare exact archive and manifest bytes/claims.
 .venv/Scripts/python.exe scripts/prepare-serato-sl3-archive.py `
-  --candidate analysis/sl3-descriptor-candidate-20261102-asio-trace-final `
+  --candidate analysis/sl3-descriptor-candidate-20261102-owned-trace `
   --validate analysis/sl3-archive-candidate-NAME
 ```
 
@@ -46,4 +46,4 @@ The later [candidate selection check](serato-sl3-selection.md) connects the reco
 
 The later [attended archive-test package](serato-archive-deployment.md) now prepares a source-bound review bundle and tested temporary-file transaction engine. Its default read-only Plan passes on the original installation. Protected install/rollback and application acceptance have not run or been approved.
 
-The current source-bound archive bundle after the [native tracing build](asio-call-tracing.md) is `analysis/sl3-archive-candidate-20261102-asio-trace-final/`. Archive bytes are unchanged; its new manifest binds the current DLL/build. Older manifests remain preserved and are refused against current sources.
+The current source-bound archive bundle after the [native tracing build](asio-owned-trace.md) is `analysis/sl3-archive-candidate-20261102-owned-trace/`. Archive bytes are unchanged; its new manifest binds the current DLL/build. Older manifests remain preserved and are refused against current sources.

@@ -17,6 +17,7 @@ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--configuration',choices=['Release','Debug'],default='Release');parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--driver-owned',action='store_true',help='Opt in to the isolated DLL-owned controller')
     args=parser.parse_args();folder=args.output.absolute()
     v.require(folder.parent.resolve()==(ROOT/'tests/results/local').resolve() and folder.name.startswith('asio-private-trace-') and
               not folder.exists() and not folder.is_symlink() and not folder.is_junction(),'Fresh direct local fixture directory required')
@@ -29,7 +30,7 @@ def main():
     source_hashes={p:sha(ROOT/p) for p in ['scripts/test-asio-private-trace.py','scripts/validate-asio-private-trace.py']}
     folder.mkdir();isolated=folder/'isolated';isolated.mkdir()
     with (isolated/'sl3_asio.dll').open('xb') as f:f.write(dll.read_bytes())
-    command=[str(exe),'--capture',str(folder/'capture'),str(isolated/'sl3_asio.dll')]
+    command=[str(exe),'--self-capture' if args.driver_owned else '--capture',str(folder/'capture'),str(isolated/'sl3_asio.dll')]
     child=subprocess.Popen(command,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     timed_out=False
     try:stdout,stderr=child.communicate(timeout=20)
@@ -39,7 +40,8 @@ def main():
         with (folder/name).open('xb') as f:f.write(raw)
     captured=['capture/capture.json','capture/events.jsonl']
     if (folder/'capture').is_dir():captured += [p.relative_to(folder).as_posix() for p in (folder/'capture').glob('private.etl*') if p.is_file()]
-    record={'schema':'sl3.asio-private-trace-run.v1','configuration':args.configuration,'pid':child.pid,'exitCode':child.returncode,
+    if args.driver_owned:captured.append('capture/session.json')
+    record={'captureMode':'driver-owned' if args.driver_owned else 'external','schema':'sl3.asio-private-trace-run.v1','configuration':args.configuration,'pid':child.pid,'exitCode':child.returncode,
             'childExited':child.poll() is not None,'timedOut':timed_out,'toolSha256':sha(exe),'dllSha256':sha(dll),
             'nativeManifestSha256':sha(native),'diagnosticManifestSha256':sha(build),
             'sourceSha256':source_hashes,

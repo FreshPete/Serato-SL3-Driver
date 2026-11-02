@@ -1,5 +1,7 @@
 # Real private ETW capture without an administrator prompt
 
+This records the earlier external-controller checkpoint. The subsequent [DLL-owned opt-in checkpoint](asio-owned-trace.md) changes the native image and diagnostic sources; its new source-bound captures supersede this checkpoint for the current build. The earlier evidence remains preserved in its capsule.
+
 The logging pipeline now has an actual Windows round trip: the Release and Debug production ASIO DLLs each emitted **16 ETW events**, decoded into **eight complete begin/end pairs**, under an ordinary user token. Both sessions stopped with zero reported losses and both child processes exited. These are first-party unavailable-state fixtures; no Serato session or physical audio/device operation ran. [Sanitized evidence](evidence/asio-private-trace-20261102.json).
 
 Microsoft documents [low-privilege private sessions in processes the user started](https://learn.microsoft.com/en-us/windows/win32/etw/configuring-and-starting-a-private-logger-session). This diagnostic uses `PRIVATE_LOGGER_MODE | PRIVATE_IN_PROC`, enabling only our provider in its own process. That closes the original capture/decoding gap for this scope. It does not provide cross-process access to Serato or a kernel/UsbDk WPP trace, and no group membership, elevation, security policy or signing setting changes.

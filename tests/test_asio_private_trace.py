@@ -23,6 +23,17 @@ def fixture():
 
 
 class TraceValidationTests(unittest.TestCase):
+    def test_owned_marker_requires_exact_retirement_and_loss_fields(self):
+        marker={'schema':'sl3.asio-owned-session.v1','pid':42,'stopStatus':0,'eventsLost':0,'buffersLost':0,
+                'complete':True,'hardwareStateAssessed':False}
+        v.validate_owned_marker(marker,42)
+        for key,value in [('pid',True),('pid',43),('stopStatus',5),('stopStatus',False),('eventsLost',1),
+                          ('buffersLost',1),('complete',False),('hardwareStateAssessed',True),('schema','other')]:
+            bad=dict(marker);bad[key]=value
+            with self.subTest(key=key,value=value),self.assertRaises(ValueError):v.validate_owned_marker(bad,42)
+        bad=dict(marker);bad['extra']=0
+        with self.assertRaises(ValueError):v.validate_owned_marker(bad,42)
+
     def test_consistent_model_cannot_become_actual_capture(self):
         rows,summary=fixture();r=v.validate_rows(rows,summary,42)
         self.assertTrue(r['recordsConsistent']);self.assertEqual(r['completePairs'],8)

@@ -1,5 +1,7 @@
 # Public development checkpoint — 2 November 2026
 
+**DLL-owned logging validated, 2 November:** [Explicit opt-in private ASIO logging](asio-owned-trace.md) now produces 16 real events/eight pairs in both Release and Debug without a separate elevated logger. Default-off and unavailable-directory fallbacks preserve ASIO results and unload. Seven model tests, five altered-marker checks and native 65/65 Release, 65/65 Debug, 39/39 SDK-free checks pass. Source-bound review bundles are refreshed; protected deployment, Serato execution and physical audio/DVS remain unperformed.
+
 This is an engineering investigation and source snapshot, not a working replacement-driver release. Windows 11 is the current target; macOS is deferred. The aim is independent audio, a usable ASIO driver and eventually current Serato DJ Pro with two-deck DVS. Each needs its own demonstration.
 
 ## Findings and implementation
