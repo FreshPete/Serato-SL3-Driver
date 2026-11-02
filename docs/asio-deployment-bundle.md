@@ -8,7 +8,10 @@ apply ACLs, start a process or open the SL3.
 
 This is a review artifact, not a working-driver release. The later [registry-engine checkpoint](asio-registry-engine.md) implements and tests
 the registry core in a private namespace. Protected staging and the complete
-privileged install/uninstall wrapper remain unfinished.
+privileged install/uninstall wrapper remain unfinished. The later
+[file-staging checkpoint](asio-file-staging.md) adds captured-byte verification
+and actual workspace ACL checks, while recording the current production
+ancestor-policy refusal.
 The native broker, real timing/audio and current Serato/DVS gates remain open.
 
 ## Commands

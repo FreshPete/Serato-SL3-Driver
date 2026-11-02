@@ -105,6 +105,8 @@ Earlier registration-free COM tests retain their separate scope.
 See [the verification record](evidence/registry-engine-20261102.json). The prior
 26-case package preparation tests and 59-test Release/Debug native checkpoints
 remain unchanged; those native tests were not rerun for this Python-only change.
-Protected file staging, the privileged wrapper, runtime checks, owned file
+The later [file-staging checkpoint](asio-file-staging.md) supplies tested workspace
+copy/ACL primitives but records a production ancestor-policy refusal.
+Production staging, the privileged wrapper, runtime checks, owned file
 cleanup, measured timing, native/physical audio and current Serato/DVS admission
 remain unfinished. No firmware, trust or security policy changed.

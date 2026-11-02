@@ -195,6 +195,16 @@ def verify(bundle, expected):
         require(not path.is_symlink() and not (getattr(path.stat(), 'st_file_attributes', 0) & 0x400), 'Reparse payload refused')
         data = read(path); require(len(data) == details['bytes'] and digest(data) == sha_value(details['sha256']), f'Payload changed: {name}')
         payload[name] = data
+    return verify_payloads(manifest, payload)
+
+
+def verify_payloads(manifest, payload):
+    """Verify captured bytes; privileged staging must not re-open source paths."""
+    require(manifest['schema'] == 'sl3.deployment-bundle.v1' and set(manifest['files']) == REQUIRED and set(payload) == REQUIRED, 'Bundle schema/inventory mismatch')
+    require(all(manifest[k] is False for k in ('installed', 'registryWritten', 'binaryExecuted', 'protectedInstallationCreated', 'physicalAudioTested', 'currentSeratoAdmissionTested')), 'Review bundle cannot claim installation or hardware validation')
+    for name, data in payload.items():
+        details = manifest['files'][name]
+        require(0 < len(data) <= LIMIT and len(data) == details['bytes'] and digest(data) == sha_value(details['sha256']), 'Captured payload hash/size mismatch: '+name)
     provenance = record(payload['provenance.json']); seed = provenance['identitySeed']
     require(provenance['schema'] == 'sl3.deployment-provenance.v1', 'Provenance schema mismatch')
     require(set(seed['payloadHashes']) == {'sl3_asio.dll', 'sl3_broker_controller.exe', 'sl3_usbdk.exe', 'UsbDkHelper.dll',

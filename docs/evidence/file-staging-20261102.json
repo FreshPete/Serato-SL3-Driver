@@ -1,0 +1,451 @@
+{
+  "schema": "sl3.file-staging-verification.v1",
+  "createdUtc": "2026-11-02T01:33:27.151243+00:00",
+  "suites": [
+    {
+      "suite": "fileStage",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "elevation-gate",
+          "passed": true
+        },
+        {
+          "name": "read-only-production-check",
+          "passed": true
+        },
+        {
+          "name": "native-known-folders",
+          "passed": true
+        },
+        {
+          "name": "actual-user-policy-stage",
+          "passed": true
+        },
+        {
+          "name": "actual-stage-inspection",
+          "passed": true
+        },
+        {
+          "name": "production-rejects-test-descriptor",
+          "passed": true
+        },
+        {
+          "name": "existing-destination",
+          "passed": true
+        },
+        {
+          "name": "source-manifest-hash",
+          "passed": true
+        },
+        {
+          "name": "missing-parent",
+          "passed": true
+        },
+        {
+          "name": "source-writer-sharing",
+          "passed": true
+        },
+        {
+          "name": "interrupted-copy",
+          "passed": true
+        },
+        {
+          "name": "changed-payload",
+          "passed": true
+        },
+        {
+          "name": "restored-payload",
+          "passed": true
+        },
+        {
+          "name": "extra-file",
+          "passed": true
+        },
+        {
+          "name": "hardlink",
+          "passed": true
+        },
+        {
+          "name": "receipt-hash",
+          "passed": true
+        },
+        {
+          "name": "same-byte-file-replacement",
+          "passed": true
+        },
+        {
+          "name": "unexpected-write-ace",
+          "passed": true
+        },
+        {
+          "name": "test-acl-restored",
+          "passed": true
+        },
+        {
+          "name": "receipt-in-different-directory",
+          "passed": true
+        },
+        {
+          "name": "different-root-restored",
+          "passed": true
+        },
+        {
+          "name": "positive-stage-final",
+          "passed": true
+        }
+      ],
+      "indexPath": "artifacts/build/file-stage-tests/e98fbee5f82d484e92f7cc7ade6c8388/index.json",
+      "indexSha256": "8de1f95d5b2e5de04e8fc6ce1c8802b514902bd917a40d3262cb57403a3e3025",
+      "allFileHashesMatch": true,
+      "logSha256": "de6cea61ca31eb38ee16bbe8775280dc82f5b009ebb018a17b4e1b615860b41e"
+    },
+    {
+      "suite": "package",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true,
+          "expectedExit": 0
+        },
+        {
+          "name": "plan",
+          "passed": true,
+          "expectedExit": 0
+        },
+        {
+          "name": "prepare",
+          "passed": true,
+          "expectedExit": 0
+        },
+        {
+          "name": "verify",
+          "passed": true,
+          "expectedExit": 0
+        },
+        {
+          "name": "existing-output",
+          "passed": true,
+          "expectedExit": 1
+        },
+        {
+          "name": "build-hash",
+          "passed": true,
+          "expectedExit": 1
+        },
+        {
+          "name": "helper-hash",
+          "passed": true,
+          "expectedExit": 1
+        },
+        {
+          "name": "install-scope",
+          "passed": true,
+          "expectedExit": 1
+        },
+        {
+          "name": "debug-build",
+          "passed": true,
+          "expectedExit": 1
+        },
+        {
+          "name": "missing-asio",
+          "passed": true,
+          "expectedExit": 1
+        },
+        {
+          "name": "source-pin",
+          "passed": true,
+          "expectedExit": 1
+        },
+        {
+          "name": "ctest-hash",
+          "passed": true,
+          "expectedExit": 1
+        },
+        {
+          "name": "missing-coverage",
+          "passed": true,
+          "expectedExit": 1
+        },
+        {
+          "name": "controller-kind-collision",
+          "passed": true,
+          "expectedExit": 1
+        },
+        {
+          "name": "controller-payload-hash",
+          "passed": true,
+          "expectedExit": 1
+        },
+        {
+          "name": "actual-fixture-exports",
+          "passed": true
+        },
+        {
+          "name": "payload-tamper",
+          "passed": true,
+          "expectedExit": 1
+        },
+        {
+          "name": "extra-file",
+          "passed": true,
+          "expectedExit": 1
+        },
+        {
+          "name": "missing-file",
+          "passed": true,
+          "expectedExit": 1
+        },
+        {
+          "name": "duplicate-json",
+          "passed": true,
+          "expectedExit": 1
+        },
+        {
+          "name": "retarget-registry",
+          "passed": true,
+          "expectedExit": 1
+        },
+        {
+          "name": "unsafe-acl",
+          "passed": true,
+          "expectedExit": 1
+        },
+        {
+          "name": "retarget-install-scope",
+          "passed": true,
+          "expectedExit": 1
+        },
+        {
+          "name": "retarget-locator",
+          "passed": true,
+          "expectedExit": 1
+        },
+        {
+          "name": "verify-manifest-hash",
+          "passed": true,
+          "expectedExit": 1
+        },
+        {
+          "name": "unsupported-options",
+          "passed": true,
+          "expectedExit": 1
+        }
+      ],
+      "indexPath": "artifacts/build/deployment-tests/2aebc171e6ad46d5ab86033fdd758094/index.json",
+      "indexSha256": "0d20291207b22b0337a783bf887fae0ca4e7557ad57fab450d311750e87ded4e",
+      "allFileHashesMatch": true,
+      "logSha256": "f44090e180d82ca278cddf41ee346a6694e814fb42436a2414e1d86f7e6655c4"
+    },
+    {
+      "suite": "registry",
+      "cases": [
+        {
+          "name": "default-plan",
+          "passed": true
+        },
+        {
+          "name": "explicit-plan",
+          "passed": true
+        },
+        {
+          "name": "machine-inspect",
+          "passed": true
+        },
+        {
+          "name": "no-machine-write-cli",
+          "passed": true
+        },
+        {
+          "name": "round-trip",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "foreign-preexisting",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "missing-container",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "different-package-owner",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "ownership-marker",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "ownership-extra-value",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "ownership-extra-child",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "ownership-type",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "write-failure-1",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "write-failure-2",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "write-failure-3",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "write-failure-4",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "write-failure-5",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "write-failure-6",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "write-failure-7",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "create-race",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "rollback-preserves-mutation",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "late-create-conflict",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "deletion-race-1",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "deletion-race-2",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "concurrent-new-registration",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        },
+        {
+          "name": "wrong-key-plan",
+          "passed": true,
+          "temporaryRegistryWritten": true
+        }
+      ],
+      "indexPath": "artifacts/build/registry-tests/1c1b78186fff47fcb89a534f6e37ca43/index.json",
+      "indexSha256": "666ada719aa6c0d8eab0fc49e2b7eb3c42214886f889e81181549770cc81a62a",
+      "allFileHashesMatch": true,
+      "logSha256": "75527b0de4fae5c22abfce8a7f96f337d75802e9aa9750056f0132e1df50db26"
+    }
+  ],
+  "sourceHashes": {
+    "scripts/asio-file-stage.py": "105398064c3902201f271d75d4308022dfe73de1331502356d4f742a0190c4f9",
+    "scripts/test-asio-file-stage.py": "c83cd3a8e7f56306b72227d80105f0b4b41e5b26304f1440cd7ebe251763e451",
+    "scripts/prepare-asio-deployment.py": "942d9e9d7b018ac6c04b046e3463b3342768c38318efc3cc9b71ef64aa58c22c"
+  },
+  "implemented": {
+    "capturedBytesVerifiedThroughHeldHandles": true,
+    "explicitProtectedCreationDescriptors": true,
+    "fileAndDirectoryIdentityChecked": true,
+    "exactOwnerDaclAceChecks": true,
+    "intentBeforePayload": true,
+    "completionOnlyAfterReadback": true,
+    "testDescriptorRejectedByProduction": true
+  },
+  "productionPreflight": {
+    "exit": 1,
+    "parentPolicyPassed": false,
+    "refusal": "Untrusted write/replacement rights on installation ancestor C:\\: S-1-5-11 mask 0x1301bf"
+  },
+  "nativeBaseline": [
+    {
+      "configuration": "Release",
+      "priorNativeTestsPassed": 59,
+      "rerunForFileStage": false,
+      "sourcePinsStillMatch": true,
+      "manifestSha256": "09fa39a717a9b024981b9a2e9da0406234e91fedd17b3370bac04c7dbfab1a87",
+      "ctestLogSha256": "7d1dd0d5f95b6a03fea0b02c1fdb57a4cc9550dedbaac5f480063dfa5c990d5c"
+    },
+    {
+      "configuration": "Debug",
+      "priorNativeTestsPassed": 59,
+      "rerunForFileStage": false,
+      "sourcePinsStillMatch": true,
+      "manifestSha256": "d97f2b1855391de1412473897c8d4d5cd7f9fe40d91afb0f78eb5b0fa4151c92",
+      "ctestLogSha256": "70452b9868b2e84da6aca20160944a63a05d857d86ab2bbccb3ac078572d9df1"
+    }
+  ],
+  "scope": {
+    "workspaceCurrentUserDescriptorTested": true,
+    "testFileExtraAceRestored": true,
+    "packageRegressionRerun": true,
+    "registryRegressionRerun": true,
+    "temporaryRegistryNamespaceRemovedAndRechecked": true,
+    "livePlannedRegistrationsUnchanged": true,
+    "productionStageExecuted": false,
+    "programFilesStageCreated": false,
+    "machineAncestorAclsModified": false,
+    "securityPoliciesChanged": false,
+    "binaryPayloadExecuted": false,
+    "deviceAccess": false
+  },
+  "remaining": {
+    "ancestorPolicyReviewRequired": true,
+    "elevatedProductionStageProved": false,
+    "ordinaryUserProductionWriteDenialProved": false,
+    "privilegedInstallUninstallWrapperComplete": false,
+    "ownedFileCleanupComplete": false,
+    "physicalAudioTested": false,
+    "measurementTruthVerified": false,
+    "currentSeratoAdmissionTested": false
+  },
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/file-staging-20261102",
+    "files": 992,
+    "manifestSha256": "c96f974ea7549300fec0c0cb164a99341abcb411e51742f7a516a3f25d4ac166",
+    "selfReferentialPublicEvidenceExcluded": true
+  }
+}

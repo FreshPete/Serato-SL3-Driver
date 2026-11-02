@@ -1,0 +1,443 @@
+"""Explicit new-directory file staging. No registration, process launch or USB."""
+import argparse
+from contextlib import contextmanager, ExitStack
+import ctypes
+from ctypes import wintypes as W
+from dataclasses import dataclass
+import hashlib
+import importlib.util
+import json
+from pathlib import Path
+import struct
+import sys
+import uuid
+
+SYSTEM = 'S-1-5-18'
+ADMINS = 'S-1-5-32-544'
+USERS = 'S-1-5-32-545'
+FULL = 0x1f01ff
+RX = 0x1200a9
+INVALID = ctypes.c_void_p(-1).value
+P = ctypes.c_void_p
+TOTAL_LIMIT = 64*1024*1024
+
+
+def require(value, message):
+    if not value:
+        raise ValueError(message)
+
+
+def api(dll, name, result, args):
+    function = getattr(ctypes.WinDLL(dll, use_last_error=True, winmode=0x800), name)
+    function.restype = result; function.argtypes = args
+    return function
+
+
+def check(value):
+    if not value:
+        raise ctypes.WinError(ctypes.get_last_error())
+    return value
+
+
+def free(pointer):
+    if pointer:
+        api('kernel32.dll', 'LocalFree', P, [P])(pointer)
+
+
+class Handle:
+    def __init__(self, value):
+        if value is None or value == INVALID:
+            raise ctypes.WinError(ctypes.get_last_error())
+        self.value = value
+    def __enter__(self):
+        return self.value
+    def __exit__(self, *ignored):
+        value = self.value; self.value = None
+        check(api('kernel32.dll', 'CloseHandle', W.BOOL, [W.HANDLE])(value))
+
+
+class Attributes(ctypes.Structure):
+    _fields_ = [('size', W.DWORD), ('descriptor', P), ('inherit', W.BOOL)]
+
+
+class Information(ctypes.Structure):
+    _fields_ = [('attributes', W.DWORD), ('created', W.FILETIME), ('accessed', W.FILETIME), ('written', W.FILETIME),
+                ('volume', W.DWORD), ('sizeHigh', W.DWORD), ('sizeLow', W.DWORD), ('links', W.DWORD),
+                ('indexHigh', W.DWORD), ('indexLow', W.DWORD)]
+
+
+@dataclass(frozen=True)
+class Policy:
+    owner: str
+    full: tuple
+    def aces(self, directory):
+        flags = 3 if directory else 0
+        return sorted([{'sid': sid, 'mask': FULL, 'flags': flags, 'type': 0} for sid in self.full]+
+                      [{'sid': USERS, 'mask': RX, 'flags': flags, 'type': 0}], key=lambda x: x['sid'])
+    def sddl(self, directory):
+        flags = 'OICI' if directory else ''
+        return 'O:'+self.owner+'D:P'+''.join(f'(A;{flags};0x{ace["mask"]:x};;;{ace["sid"]})' for ace in self.aces(directory))
+    def record(self):
+        return {'owner': self.owner, 'fullControlSids': list(self.full), 'usersReadExecute': True, 'protectedDacl': True}
+
+
+PRODUCTION = Policy(ADMINS, (SYSTEM, ADMINS))
+
+
+@contextmanager
+def descriptor(sddl):
+    pointer = P()
+    check(api('advapi32.dll', 'ConvertStringSecurityDescriptorToSecurityDescriptorW', W.BOOL,
+              [W.LPCWSTR, W.DWORD, ctypes.POINTER(P), ctypes.POINTER(W.DWORD)])(sddl, 1, ctypes.byref(pointer), None))
+    try:
+        yield Attributes(ctypes.sizeof(Attributes), pointer, False)
+    finally:
+        free(pointer)
+
+
+def sid_text(sid):
+    require(sid and api('advapi32.dll', 'IsValidSid', W.BOOL, [P])(sid), 'Valid SID required')
+    value = P()
+    check(api('advapi32.dll', 'ConvertSidToStringSidW', W.BOOL, [P, ctypes.POINTER(P)])(sid, ctypes.byref(value)))
+    try:
+        return ctypes.wstring_at(value)
+    finally:
+        free(value)
+
+
+def token_info(kind):
+    value = W.HANDLE(); needed = W.DWORD()
+    check(api('advapi32.dll', 'OpenProcessToken', W.BOOL, [W.HANDLE, W.DWORD, ctypes.POINTER(W.HANDLE)])(
+        api('kernel32.dll', 'GetCurrentProcess', W.HANDLE, [])(), 8, ctypes.byref(value)))
+    query = api('advapi32.dll', 'GetTokenInformation', W.BOOL, [W.HANDLE, W.DWORD, P, W.DWORD, ctypes.POINTER(W.DWORD)])
+    with Handle(value.value) as handle:
+        query(handle, kind, None, 0, ctypes.byref(needed))
+        require(0 < needed.value <= 65536, 'Bounded token information required')
+        buffer = ctypes.create_string_buffer(needed.value)
+        check(query(handle, kind, buffer, needed.value, ctypes.byref(needed)))
+        return buffer
+
+
+def user_sid():
+    buffer = token_info(1)
+    return sid_text(ctypes.cast(buffer, ctypes.POINTER(P))[0])
+
+
+def account_sid(name):
+    sid_bytes, domain_chars, kind = W.DWORD(), W.DWORD(), W.DWORD()
+    function = api('advapi32.dll', 'LookupAccountNameW', W.BOOL,
+                   [W.LPCWSTR, W.LPCWSTR, P, ctypes.POINTER(W.DWORD), W.LPWSTR, ctypes.POINTER(W.DWORD), ctypes.POINTER(W.DWORD)])
+    function(None, name, None, ctypes.byref(sid_bytes), None, ctypes.byref(domain_chars), ctypes.byref(kind))
+    require(0 < sid_bytes.value <= 1024 and domain_chars.value <= 1024, 'Bounded account SID required')
+    sid = ctypes.create_string_buffer(sid_bytes.value); domain = ctypes.create_unicode_buffer(max(1, domain_chars.value))
+    check(function(None, name, sid, ctypes.byref(sid_bytes), domain, ctypes.byref(domain_chars), ctypes.byref(kind)))
+    return sid_text(sid)
+
+
+def elevated():
+    return bool(struct.unpack('<I', token_info(20).raw[:4])[0])
+
+
+def known_folder(guid):
+    identifier = (ctypes.c_ubyte*16).from_buffer_copy(uuid.UUID(guid).bytes_le); value = P()
+    result = api('shell32.dll', 'SHGetKnownFolderPath', W.LONG, [P, W.DWORD, W.HANDLE, ctypes.POINTER(P)])(
+        identifier, 0, None, ctypes.byref(value))
+    require(result >= 0 and value.value, 'Windows known-folder resolution failed')
+    try:
+        return local(Path(ctypes.wstring_at(value)))
+    finally:
+        api('ole32.dll', 'CoTaskMemFree', None, [P])(value)
+
+
+def local(path):
+    require(path.is_absolute() and len(path.drive) == 2 and path.drive[1] == ':' and
+            ':' not in str(path)[2:] and '..' not in path.parts and len(str(path)) <= 240 and
+            not any(ord(c) < 32 for c in str(path)), 'Bounded absolute local drive path required')
+    require(api('kernel32.dll', 'GetDriveTypeW', W.UINT, [W.LPCWSTR])(path.anchor) == 3, 'Fixed drive required')
+    return path
+
+
+def open_file(path, directory=False, access=0x80000000, share=1, create=3, security=None):
+    local(path)
+    flags = 0x200000 | (0x2000000 if directory else 0)  # OPEN_REPARSE_POINT, BACKUP_SEMANTICS
+    value = api('kernel32.dll', 'CreateFileW', W.HANDLE,
+                [W.LPCWSTR, W.DWORD, W.DWORD, ctypes.POINTER(Attributes), W.DWORD, W.DWORD, W.HANDLE])(
+        str(path), access, share, ctypes.byref(security) if security is not None else None, create, flags, None)
+    return Handle(value)
+
+
+def information(handle, directory):
+    data = Information()
+    check(api('kernel32.dll', 'GetFileInformationByHandle', W.BOOL, [W.HANDLE, ctypes.POINTER(Information)])(handle, ctypes.byref(data)))
+    require(not data.attributes & 0x400 and bool(data.attributes & 0x10) == directory, 'Reparse point or wrong file type refused')
+    require(api('kernel32.dll', 'GetFileType', W.DWORD, [W.HANDLE])(handle) == 1, 'Disk file required')
+    buffer = ctypes.create_unicode_buffer(32768)
+    count = api('kernel32.dll', 'GetFinalPathNameByHandleW', W.DWORD, [W.HANDLE, W.LPWSTR, W.DWORD, W.DWORD])(handle, buffer, len(buffer), 0)
+    require(4 < count < len(buffer) and buffer.value.startswith('\\\\?\\'), 'Resolved local file path required')
+    path = local(Path(buffer.value[4:]))
+    return {'path': str(path), 'size': (data.sizeHigh << 32) | data.sizeLow, 'links': data.links,
+            'identity': {'volume': data.volume, 'high': data.indexHigh, 'low': data.indexLow}}
+
+
+def security_info(handle):
+    owner, dacl, sd = P(), P(), P()
+    code = api('advapi32.dll', 'GetSecurityInfo', W.DWORD,
+               [W.HANDLE, W.DWORD, W.DWORD, ctypes.POINTER(P), ctypes.POINTER(P), ctypes.POINTER(P), ctypes.POINTER(P), ctypes.POINTER(P)])(
+        handle, 1, 5, ctypes.byref(owner), None, ctypes.byref(dacl), None, ctypes.byref(sd))
+    if code:
+        raise ctypes.WinError(code)
+    try:
+        control = W.WORD(); revision = W.DWORD()
+        check(api('advapi32.dll', 'GetSecurityDescriptorControl', W.BOOL, [P, ctypes.POINTER(W.WORD), ctypes.POINTER(W.DWORD)])(
+            sd, ctypes.byref(control), ctypes.byref(revision)))
+        result = {'owner': sid_text(owner), 'protected': bool(control.value & 0x1000), 'nullDacl': not bool(dacl.value), 'aces': []}
+        if dacl.value:
+            data = (W.DWORD*3)()
+            check(api('advapi32.dll', 'GetAclInformation', W.BOOL, [P, P, W.DWORD, W.DWORD])(dacl, data, ctypes.sizeof(data), 2))
+            require(data[0] <= 64, 'ACL entry limit')
+            for n in range(data[0]):
+                ace = P(); check(api('advapi32.dll', 'GetAce', W.BOOL, [P, W.DWORD, ctypes.POINTER(P)])(dacl, n, ctypes.byref(ace)))
+                kind, flags, size, mask = struct.unpack('<BBHI', ctypes.string_at(ace, 8))
+                require(kind in (0, 1) and 20 <= size <= 1024, 'Unsupported ACL entry form')
+                result['aces'].append({'sid': sid_text(ace.value+8), 'mask': mask, 'flags': flags, 'type': kind})
+        result['aces'].sort(key=lambda x: (x['sid'], x['type'], x['mask'], x['flags']))
+        return result
+    finally:
+        free(sd)
+
+
+def inspect_policy(handle, policy, directory):
+    file = information(handle, directory); security = security_info(handle)
+    require(security['owner'] == policy.owner and security['protected'] and not security['nullDacl'] and
+            security['aces'] == policy.aces(directory), 'Owner/protected DACL/ACE policy mismatch')
+    require(directory or file['links'] == 1, 'Staged file must have one link')
+    return {'file': file, 'security': security}
+
+
+def read_handle(handle, maximum):
+    size = information(handle, False)['size']; require(0 < size <= maximum, 'Bounded nonempty file required')
+    check(api('kernel32.dll', 'SetFilePointerEx', W.BOOL, [W.HANDLE, ctypes.c_longlong, P, W.DWORD])(handle, 0, None, 0))
+    buffer = ctypes.create_string_buffer(size); received = W.DWORD()
+    check(api('kernel32.dll', 'ReadFile', W.BOOL, [W.HANDLE, P, W.DWORD, ctypes.POINTER(W.DWORD), P])(
+        handle, buffer, size, ctypes.byref(received), None))
+    require(received.value == size, 'Complete file read required')
+    return buffer.raw
+
+
+def reader():
+    spec = importlib.util.spec_from_file_location('sl3_stage_bundle_reader', Path(__file__).with_name('prepare-asio-deployment.py'))
+    module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+    return module
+
+
+def snapshot_bundle(bundle, expected, stack):
+    module = reader(); module.sha_value(expected)
+    directory = stack.enter_context(open_file(bundle, True, access=0x20080, share=3)); information(directory, True)
+    handle = stack.enter_context(open_file(bundle/'bundle-manifest.json'))
+    raw = read_handle(handle, module.LIMIT); require(hashlib.sha256(raw).hexdigest() == expected, 'Reviewed bundle manifest mismatch')
+    manifest = module.record(raw)
+    require(set(manifest['files']) == module.REQUIRED and {p.name for p in bundle.iterdir()} == module.REQUIRED | {'bundle-manifest.json'}, 'Exact source inventory required')
+    require(sum(item['bytes'] for item in manifest['files'].values()) <= TOTAL_LIMIT, 'Total stage payload limit')
+    payload = {}
+    for name in sorted(module.REQUIRED):
+        handle = stack.enter_context(open_file(bundle/name))
+        payload[name] = read_handle(handle, module.LIMIT)
+    module.verify_payloads(manifest, payload)
+    return module, manifest, payload | {'bundle-manifest.json': raw}
+
+
+@contextmanager
+def pinned_parents(path):
+    with ExitStack() as stack:
+        handles = []
+        for parent in reversed(path.parents):
+            handle = stack.enter_context(open_file(parent, True, access=0x20080, share=3))
+            data = information(handle, True)
+            require(Path(data['path']) == parent, 'Parent path resolves to a different location')
+            handles.append(handle)
+        yield handles
+
+
+def stage_new(bundle, expected, destination, policy, journal=None):
+    """Trusted-caller primitive. Production uses only the fixed policy below."""
+    local(destination)
+    with ExitStack() as stack:
+        module, manifest, payload = snapshot_bundle(bundle, expected, stack)
+        stack.enter_context(pinned_parents(destination))
+        with descriptor(policy.sddl(True)) as attributes:
+            check(api('kernel32.dll', 'CreateDirectoryW', W.BOOL, [W.LPCWSTR, ctypes.POINTER(Attributes)])(str(destination), ctypes.byref(attributes)))
+        directory = stack.enter_context(open_file(destination, True, access=0x20080, share=3))
+        root = inspect_policy(directory, policy, True)
+        require(Path(root['file']['path']) == destination, 'Staged directory identity/path mismatch')
+        record = {'schema': 'sl3.file-stage.v1', 'packageId': manifest['packageId'], 'bundleManifestSha256': expected,
+                  'directory': root['file'], 'policy': policy.record(), 'productionPolicy': policy == PRODUCTION,
+                  'files': {}, 'registered': False, 'binaryPayloadExecuted': False, 'deviceAccess': False}
+        intent = module.encoded({'schema': 'sl3.file-stage-intent.v1', 'packageId': manifest['packageId'],
+                                 'bundleManifestSha256': expected, 'directory': root['file'], 'policy': policy.record(),
+                                 'complete': False, 'plannedFiles': {name: {'sha256': hashlib.sha256(data).hexdigest(), 'bytes': len(data)} for name, data in payload.items()}})
+        with descriptor(policy.sddl(False)) as attributes:
+            with open_file(destination/'stage-intent.json', access=0xc0000000, create=1, security=attributes) as handle:
+                written = W.DWORD()
+                check(api('kernel32.dll', 'WriteFile', W.BOOL, [W.HANDLE, P, W.DWORD, ctypes.POINTER(W.DWORD), P])(
+                    handle, intent, len(intent), ctypes.byref(written), None))
+                require(written.value == len(intent), 'Complete intent write required')
+                check(api('kernel32.dll', 'FlushFileBuffers', W.BOOL, [W.HANDLE])(handle))
+                inspected = inspect_policy(handle, policy, False)
+                require(read_handle(handle, module.LIMIT) == intent, 'Intent readback mismatch')
+                record['intent'] = {'sha256': hashlib.sha256(intent).hexdigest(), 'bytes': len(intent),
+                                    'identity': inspected['file']['identity']}
+        for name, data in payload.items():
+            if journal is not None:
+                journal({'event': 'before_file', 'name': name})
+            with descriptor(policy.sddl(False)) as attributes:
+                with open_file(destination/name, access=0xc0000000, create=1, security=attributes) as handle:
+                    written = W.DWORD()
+                    check(api('kernel32.dll', 'WriteFile', W.BOOL, [W.HANDLE, P, W.DWORD, ctypes.POINTER(W.DWORD), P])(
+                        handle, data, len(data), ctypes.byref(written), None))
+                    require(written.value == len(data), 'Complete staged write required')
+                    check(api('kernel32.dll', 'FlushFileBuffers', W.BOOL, [W.HANDLE])(handle))
+                    inspected = inspect_policy(handle, policy, False)
+                    digest = hashlib.sha256(read_handle(handle, module.LIMIT)).hexdigest()
+                    require(digest == hashlib.sha256(data).hexdigest(), 'Staged readback differs from captured bytes')
+                    record['files'][name] = {'sha256': digest, 'bytes': len(data), 'identity': inspected['file']['identity']}
+        receipt = module.encoded(record)
+        with descriptor(policy.sddl(False)) as attributes:
+            with open_file(destination/'stage-record.json', access=0xc0000000, create=1, security=attributes) as handle:
+                written = W.DWORD()
+                check(api('kernel32.dll', 'WriteFile', W.BOOL, [W.HANDLE, P, W.DWORD, ctypes.POINTER(W.DWORD), P])(
+                    handle, receipt, len(receipt), ctypes.byref(written), None))
+                require(written.value == len(receipt), 'Complete stage receipt write required')
+                check(api('kernel32.dll', 'FlushFileBuffers', W.BOOL, [W.HANDLE])(handle))
+                inspect_policy(handle, policy, False)
+                require(read_handle(handle, module.LIMIT) == receipt, 'Stage receipt readback mismatch')
+        return {'staged': True, 'productionPolicy': policy == PRODUCTION, 'directory': str(destination),
+                'stageRecordSha256': hashlib.sha256(receipt).hexdigest(), 'registered': False, 'deviceAccess': False}
+
+
+def inspect_stage(destination, expected, policy=PRODUCTION):
+    local(destination); module = reader(); module.sha_value(expected)
+    with ExitStack() as stack:
+        stack.enter_context(pinned_parents(destination))
+        directory = stack.enter_context(open_file(destination, True, access=0x20080, share=3))
+        root = inspect_policy(directory, policy, True)['file']
+        handle = stack.enter_context(open_file(destination/'stage-record.json'))
+        inspect_policy(handle, policy, False); raw = read_handle(handle, module.LIMIT)
+        require(hashlib.sha256(raw).hexdigest() == expected, 'Stage receipt hash mismatch')
+        record = module.record(raw)
+        require(record['schema'] == 'sl3.file-stage.v1' and record['directory']['identity'] == root['identity'] and
+                Path(record['directory']['path']) == destination and record['policy'] == policy.record() and
+                record['productionPolicy'] == (policy == PRODUCTION) and
+                all(record[k] is False for k in ('registered', 'binaryPayloadExecuted', 'deviceAccess')), 'Stage receipt root/policy mismatch')
+        require(set(record['files']) == module.REQUIRED | {'bundle-manifest.json'} and
+                {p.name for p in destination.iterdir()} == set(record['files']) | {'stage-record.json', 'stage-intent.json'}, 'Staged inventory mismatch')
+        require(sum(item['bytes'] for item in record['files'].values()) <= TOTAL_LIMIT, 'Staged payload total limit')
+        payload = {}
+        for name, details in list(record['files'].items())+[('stage-intent.json', record['intent'])]:
+            handle = stack.enter_context(open_file(destination/name))
+            file = inspect_policy(handle, policy, False)['file']; data = read_handle(handle, module.LIMIT)
+            require(file['identity'] == details['identity'] and len(data) == details['bytes'] and
+                    hashlib.sha256(data).hexdigest() == details['sha256'], 'Staged file identity/bytes mismatch: '+name)
+            payload[name] = data
+        intent = module.record(payload.pop('stage-intent.json'))
+        require(intent['schema'] == 'sl3.file-stage-intent.v1' and intent['complete'] is False and
+                intent['directory']['identity'] == root['identity'] and intent['packageId'] == record['packageId'] and
+                intent['bundleManifestSha256'] == record['bundleManifestSha256'], 'Stage intent mismatch')
+        manifest_bytes = payload.pop('bundle-manifest.json')
+        require(hashlib.sha256(manifest_bytes).hexdigest() == record['bundleManifestSha256'], 'Staged bundle manifest mismatch')
+        manifest = module.record(manifest_bytes); module.verify_payloads(manifest, payload)
+        require(manifest['packageId'] == record['packageId'], 'Staged package identity mismatch')
+        plan = module.record(payload['deployment-plan.json']); matches = Path(plan['installationDirectory']) == destination
+        if policy == PRODUCTION:
+            require(matches, 'Production stage differs from registered DLL location')
+            base, planned = production_destination(plan)
+            trusted = {SYSTEM, ADMINS, account_sid('NT SERVICE\\TrustedInstaller')}
+            for handle in stack.enter_context(pinned_parents(base)):
+                safe_parent(handle, trusted)
+            handle = stack.enter_context(open_file(base, True, access=0x20080, share=3))
+            inspect_policy(handle, PRODUCTION, True)
+        return {'verified': True, 'productionPolicy': policy == PRODUCTION, 'plannedDestinationMatches': matches,
+                'files': len(record['files'])+2, 'registered': False, 'deviceAccess': False, 'binaryPayloadExecuted': False}
+
+
+def production_destination(plan):
+    program = known_folder('905e63b6-c1bf-494e-b29c-65b732d3d21a')
+    profile = known_folder('f1b32785-6fba-4fcf-9d55-7b8e7f157091')
+    base = program/'SL3 Rebuild'; destination = local(Path(plan['installationDirectory']))
+    pointer = local(Path(plan['pointerPath']))
+    require(destination.parent == base and pointer.is_relative_to(profile/'SL3Rebuild'), 'Native known-folder installation/profile scope mismatch')
+    return base, destination
+
+
+def safe_parent(handle, trusted):
+    data = security_info(handle)
+    require(data['owner'] in trusted and not data['nullDacl'], 'Installation ancestor owner/DACL is not trusted')
+    # Creating a new child alone does not allow replacing a protected existing
+    # ancestor. Write-data/reparse, delete, write-ACL/owner and generic writes do.
+    mutation = 0x50000000 | 0x2 | 0x10 | 0x40 | 0x100 | 0x10000 | 0x40000 | 0x80000
+    for ace in data['aces']:
+        if ace['type'] == 1 or ace['flags'] & 8:
+            continue
+        sid = data['owner'] if ace['sid'] in ('S-1-3-0', 'S-1-3-4') else ace['sid']
+        require(sid in trusted or not ace['mask'] & mutation,
+                'Untrusted write/replacement rights on installation ancestor '+information(handle, True)['path']+
+                ': '+sid+' mask 0x'+format(ace['mask'], 'x'))
+    return data
+
+
+def check_production(bundle, expected):
+    with ExitStack() as stack:
+        module, manifest, payload = snapshot_bundle(bundle, expected, stack)
+        base, destination = production_destination(module.record(payload['deployment-plan.json']))
+        trusted = {SYSTEM, ADMINS, account_sid('NT SERVICE\\TrustedInstaller')}
+        handles = stack.enter_context(pinned_parents(base))
+        for handle in handles:
+            safe_parent(handle, trusted)
+        if base.exists():
+            handle = stack.enter_context(open_file(base, True, access=0x20080, share=3))
+            inspect_policy(handle, PRODUCTION, True)
+        require(not destination.exists(), 'Production destination must be new')
+        return {'checked': True, 'destination': str(destination), 'parentPolicyObservedSafe': True,
+                'tokenElevated': elevated(), 'filesWritten': False, 'registryWritten': False,
+                'productionStageExecuted': False, 'deviceAccess': False}
+
+
+def stage_production(bundle, expected):
+    require(elevated(), 'Production staging requires an explicitly elevated token; no UAC is requested automatically')
+    require(ctypes.sizeof(P) == 8, 'Native x64 installer process required')
+    with ExitStack() as stack:
+        module, manifest, payload = snapshot_bundle(bundle, expected, stack)
+        base, destination = production_destination(module.record(payload['deployment-plan.json']))
+        trusted = {SYSTEM, ADMINS, account_sid('NT SERVICE\\TrustedInstaller')}
+        handles = stack.enter_context(pinned_parents(base))
+        for handle in handles:
+            safe_parent(handle, trusted)
+        require(not destination.exists(), 'Production destination must be new')
+        if not base.exists():
+            with descriptor(PRODUCTION.sddl(True)) as attributes:
+                check(api('kernel32.dll', 'CreateDirectoryW', W.BOOL, [W.LPCWSTR, ctypes.POINTER(Attributes)])(str(base), ctypes.byref(attributes)))
+        handle = stack.enter_context(open_file(base, True, access=0x20080, share=3))
+        inspect_policy(handle, PRODUCTION, True)
+        return stage_new(bundle, expected, destination, PRODUCTION)
+
+
+def main(argv=None):
+    argv = sys.argv[1:] if argv is None else argv
+    if not argv or argv == ['--plan']:
+        print(json.dumps({'schema': 'sl3.file-stage-plan.v1', 'planOnly': True, 'machineStageRequiresExplicitElevation': True,
+                          'filesWritten': False, 'registryWritten': False, 'deviceAccess': False})); return
+    parser = argparse.ArgumentParser(description=__doc__)
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument('--stage-production', action='store_true')
+    mode.add_argument('--check-production', action='store_true')
+    parser.add_argument('--bundle', type=Path, required=True)
+    parser.add_argument('--expected-bundle-sha256', required=True)
+    args = parser.parse_args(argv)
+    operation = stage_production if args.stage_production else check_production
+    print(json.dumps(operation(args.bundle, args.expected_bundle_sha256)))
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except Exception as error:
+        print(str(error), file=sys.stderr); sys.exit(1)
