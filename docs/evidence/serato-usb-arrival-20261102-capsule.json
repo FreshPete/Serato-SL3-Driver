@@ -1,0 +1,8 @@
+{
+  "schema": "sl3.selected-evidence-capsule-reference.v1",
+  "capsuleName": "serato-usb-arrival-20261102",
+  "files": 22,
+  "manifestSha256": "4eb6b04f0a800f51be6f317051cfc36d1918ad3d14b255a5b2d314e0555b313a",
+  "verificationSha256": "7d018af5beaa3cb0f1111d3f2c79cff3369bdacec7e9e80f828f98794a3d9f50",
+  "privateRevalidationSha256": "7c921fbb4f2cf7723680ca3a4c57e4c5a5f2c6ad92ba644f674b269eacf30d66"
+}

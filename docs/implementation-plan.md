@@ -101,3 +101,6 @@ Use the [new finite input recording diagnostic](input-record-probe.md) as a cand
 
 
 The [registered primary-pointer handoff](serato-primary-pointer.md) is now concrete: selection requires the exact descriptor instance already in PrimaryDeviceManager's vector, and one checked USB-only publisher passes its numeric-lookup result conditionally on kind zero and a helper Boolean. Continue tracing the producer's upstream eligibility/helper and genuine SL3 provider/control/audio contract. Do not treat an ASIO registry entry, equal allocation, state notification or stored pointer as current compatibility. No app/package modification is selected by this static checkpoint.
+
+
+The [conditional USB-only arrival bridge](serato-usb-arrival.md) now links a selected action-zero branch to DeviceManager's arrival message and resolves the downstream helper result to two message-updated state bytes. Continue genuine SL3 upstream eligibility/provider work and the service/backend/state contract. Preserve the legitimate minimum-version policy and separate local pointer/state results from actual audio/DVS. No firmware, descriptor, app or account change is selected by this checkpoint.

@@ -10,6 +10,8 @@ The native software checks pass **64/64 Release**, **64/64 Debug** and **39/39 w
 
 [The read-only broker scope diagnostic](docs/broker-scope-probe.md) now exercises three independent client processes over one retained simulated worker, without a timing profile or audio capability. The server rejects audio starts in this mode; its [dedicated single-approval trace workflow](docs/broker-scope-trace.md) is now prepared and checked offline. Native physical broker validation still requires an attended run.
 
+[USB-only arrival tracing](docs/serato-usb-arrival.md) identifies a conditional event bridge, minimum-version check and message-updated state result. The unchanged SL3 remains discontinued; current eligibility, audio and DVS are unverified.
+
 [Primary-pointer tracing](docs/serato-primary-pointer.md) now identifies registered-instance selection and one conditional USB-only publisher. A selected pointer or notification remains separate from current SL3 admission, audio and DVS.
 
 [Current HID task tracing](docs/serato-hid-task.md) identifies descriptor-specific verification. Its [notification receiver](docs/serato-wireless-notification.md) now leads to wireless-deck handling and additional primary-manager/state gates, consistent with Phase remaining an accessory. No admitted SL3 or working current DVS result is established.
