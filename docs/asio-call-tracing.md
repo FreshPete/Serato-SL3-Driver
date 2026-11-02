@@ -1,6 +1,6 @@
 # Optional ASIO activation and control-call tracing
 
-The rebuilt COM/ASIO DLL now has optional Windows ETW begin/end metadata for selected activation and control calls. A future attended current-Serato test can use this to distinguish a driver activation failure, an unavailable `init`, later metadata/buffer negotiation and a failed start. No actual Serato call sequence or ETW session has been captured yet. This feature adds observability; it does not restore admission or prove physical audio.
+The rebuilt COM/ASIO DLL now has optional Windows ETW begin/end metadata for selected activation and control calls. A future attended current-Serato test can use this to distinguish a driver activation failure, an unavailable `init`, later metadata/buffer negotiation and a failed start. No actual Serato call sequence has been captured. The later [private fixture capture](asio-private-trace.md) now verifies a real ETW round trip for the own unavailable-state production DLL. This feature adds observability; it does not restore admission or prove physical audio.
 
 ## Provider and bounded behavior
 
@@ -32,7 +32,7 @@ Only `phase=end` carries a completed API return value. Begin/abandoned result ze
 
 The starting QPC remains in both records; end elapsed ticks span the begin-record write and method body, before the end-record write. Invalid frequency cannot establish duration. Regressing counters are clamped to zero elapsed ticks; zero elapsed must therefore be treated as indeterminate rather than proof of a zero-time call. These are host control-call timings, not SL3 clock samples, callback jitter, end-to-end latency or a measured ASIO profile. Ordinals provide pairing/uniqueness, not cross-thread chronological order. A decoder must retain process and module-lifetime boundaries so IDs from a later load or fixture cannot be stitched into another session.
 
-A later attended collector must explicitly enable this provider before activation, bound the session/output, preserve process/image identities and ETW loss metadata, and decode the string events. It must keep production/fixture records separate and report unpaired or missing intervals. No collector launch, ETW recording, application call or physical test is claimed by this checkpoint. Registration and serialization tests alone do not validate actual capture/decoding.
+A later attended collector must explicitly enable this provider before activation, bound the session/output, preserve process/image identities and ETW loss metadata, and decode the string events. It must keep production/fixture records separate and report unpaired or missing intervals. The original build checkpoint did not record a trace. The later [private fixture proof](asio-private-trace.md) separately verifies actual own-process capture/decoding; Serato/cross-process and physical behavior remain unverified.
 
 ## Build verification
 
@@ -62,6 +62,6 @@ The deployment preparer now accepts explicit descriptor/archive bundles, avoidin
 pwsh -NoProfile -File analysis/sl3-archive-deployment-20261102-asio-trace-final/archive-test.ps1
 ```
 
-The seven actual refresh/preflight cases cover descriptor/archive/deployment validation, old descriptor/deployment refusal, the new read-only wrapper Plan and no-overwrite refusal. They preserve the original installed executable/archive. The refreshed package still does not install the ASIO driver or provide a measured native profile; the earlier ASIO deployment bundle remains a separate historical artifact. Protected install/rollback, actual ETW capture, stable device reopening, measured physical timing/mapping/levels and real current Serato/two-deck DVS remain required. Mac is deferred.
+The seven actual refresh/preflight cases cover descriptor/archive/deployment validation, old descriptor/deployment refusal, the new read-only wrapper Plan and no-overwrite refusal. They preserve the original installed executable/archive. The refreshed package still does not install the ASIO driver or provide a measured native profile; the earlier ASIO deployment bundle remains a separate historical artifact. Protected install/rollback, actual current-Serato ETW capture, stable device reopening, measured physical timing/mapping/levels and real current Serato/two-deck DVS remain required. Mac is deferred.
 
 The conditional selection exporter also accepts `--candidate` for a refreshed bundle and records its manifest hash. The current explicit candidate projection was revalidated without a new USB observation or application call; its static identity/default conclusions remain unchanged.

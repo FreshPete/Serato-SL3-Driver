@@ -1,0 +1,9 @@
+{
+  "schema": "sl3.selected-evidence-capsule-reference.v1",
+  "capsuleName": "asio-private-trace-20261102",
+  "files": 49,
+  "manifestSha256": "2b058a924ad28ecd6ef78d4857bbf626b63f96daea38affafbf9a794e04f0c38",
+  "verificationSha256": "7a360224a1b79d25b20f86def4a6abb6afe43a1a30d1f754d4430254e5828e7f",
+  "privateFirstPartyEtlsAndImagesPreserved": true,
+  "vendorResourcesAndPrivateSdkIncluded": false
+}

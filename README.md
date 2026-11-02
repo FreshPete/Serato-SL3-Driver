@@ -14,7 +14,9 @@ The native software checks pass **64/64 Release**, **64/64 Debug** and **39/39 w
 
 The [offline additive archive builder](docs/serato-sl3-archive.md) now preserves all 229 original resource members while adding our genuine-SL3 XML hypothesis. Original CRCs and codec inverses pass; it remains private and undeployed, with runtime Serato/audio/DVS unverified.
 
-[Bounded ASIO call tracing](docs/asio-call-tracing.md) now records selected activation/control metadata when an ETW session is enabled, with production/fixture separation and a per-module cap. Release/Debug 65/65 and SDK-free 39/39 pass. Fresh review bundles validate; actual ETW capture and current Serato/audio/DVS remain unverified.
+[Actual private ETW capture](docs/asio-private-trace.md) now verifies 16 events/eight complete call pairs from each Release/Debug production DLL under an ordinary token, with no device access or Serato launch. The first-party logging round trip works without UAC; current Serato capture and physical audio/DVS remain unverified.
+
+[Bounded ASIO call tracing](docs/asio-call-tracing.md) now records selected activation/control metadata when an ETW session is enabled, with production/fixture separation and a per-module cap. Release/Debug 65/65 and SDK-free 39/39 pass. Fresh review bundles validate; current Serato capture/audio/DVS remain unverified.
 
 [USB-only arrival tracing](docs/serato-usb-arrival.md) identifies a conditional event bridge, minimum-version check and message-updated state result. The unchanged SL3 remains discontinued; current eligibility, audio and DVS are unverified.
 
