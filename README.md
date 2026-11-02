@@ -8,6 +8,8 @@ Restore the physical Rane SL3 for current Serato DJ Pro and two-deck DVS. Window
 
 The native software checks pass **59/59 Release**, **59/59 Debug** and **36/36 without the ASIO SDK**. Coverage includes a retained session-owner backend with separate simulated audio-client processes, COM/ASIO lifetimes and bounded rate-recording replay. Earlier physical tests demonstrate bounded capture, silent playback and control reads with their recorded worker versions; they do not demonstrate working analogue audio, safe repeated acquisition, measured latency, current Serato compatibility or two-deck DVS with this build.
 
+[Current MIDI field-source checks](docs/serato-midi-field-sources.md) now name the processor-creation byte vector and product-derived MIDI identifier. This clarifies a current control requirement without supplying key values, a substitute handshake or admitted SL3/DVS behavior.
+
 [Journal-witnessed copy recovery](docs/asio-copy-recovery.md) now aborts incomplete staging from original file identities and verified bundle bytes. All 65 new checks and 269 affected regressions pass. Unwitnessed creation gaps are preserved; protected deployment, actual audio and current Serato/DVS remain unfinished.
 
 [Interrupted-install abort recovery](docs/asio-install-recovery.md) now handles witnessed partial registration with an intact completed stage, including journalled handoff to partial-file recovery. All 41 isolated checks pass; [journal-witnessed copy recovery](docs/asio-copy-recovery.md) separately handles interrupted staging. Unwitnessed creation gaps and protected production deployment remain unfinished.

@@ -36,6 +36,8 @@ The later [module-path caller checks](serato-path-callers.md) bind seven direct 
 
 [Scoped handshake-consumer tracing](serato-handshake-consumers.md) now proves how the primary descriptor reaches one MIDI response predicate, with an independent vector/pointer creation gate. Its current-kind 1/2 branches and separate HID kind-6 comparison do not supply a universal dispatcher, real SL3 protocol result or the removed textual driver-API route. No foreign kind, message template or reply is adopted.
 
+The later [MIDI field-source proof](serato-midi-field-sources.md) identifies that creation vector as `secret_serato_key` byte storage and the accompanying ID argument as product-derived/optionally overridden `midi_id`. It exports no key values or response messages. The earlier verified historical SL3 projection does not list the current vector property and uses `DRIVER_API`; it is not a complete contract for this current MIDI engine. Neither genuine admission nor all other control engines are established.
+
 ## Required integration decision
 
 The [complete historical startup-resource inventory](serato-cutoff-registration.md) now rules out a second scalar SL3 declaration in the checked 2.5.5/2.5.6 arrays: all 313 XMLs parse, each release has one SL3 entry, and that XML is unchanged. A separate literal Rane predicate selects product values 24–25 rather than 1. Neither finding locates a runtime exclusion mechanism or supplies current 5.0.0 registration. The new [explicit factory scope](factory-scope-controller.md) is an available project-owned in-process lifetime interface, but the inspected Serato backends do not request it. A genuine backend/interprocess integration and primary-device admission path remain required.

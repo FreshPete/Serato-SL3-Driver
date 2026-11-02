@@ -31,7 +31,7 @@ The new chain is:
 | Manager ownership | Setter `14060a8f0`, called at `140526aeb`, stores the processor at manager `+0x108`. |
 | Input callback type | `CMIDIInputManager` vtable `142823cc0`, slot `+0x18`, targets `140609900`. |
 | Callback to processor | That callback loads its `+0x108` member and calls processor `140603de0` at `140609d8a`. |
-| Kind argument | The processor reads its stored descriptor pointer, loads `+0x154` into ECX, another field `+0xd0` into EDX, and calls `1406042f0` at `140603ef9`. The second field's full meaning is not assigned. |
+| Kind argument | The processor reads its stored descriptor pointer, loads `+0x154` into ECX, another field `+0xd0` into EDX, and calls `1406042f0` at `140603ef9`. [Later field-source tracing](serato-midi-field-sources.md) identifies the second field as `midi_id`. |
 
 This establishes pointer/field provenance beyond merely finding the same numeric
 offset in an unrelated object. Static data flow still does not observe actual
@@ -42,9 +42,10 @@ runtime instances, connected hardware or indirect-callee behaviour.
 Before construction, callback `140525710` calls leaf `1405c7de0`. That exact
 18-byte function returns whether descriptor pointers at `+0x178` and `+0x180`
 differ. A false result skips the processor allocation/binding block. Additional
-pointer conditions also guard it. The XML key, element type and runtime contents
-of this vector are not established here; it is not assumed populated for an SL3.
-Changing a kind integer alone does not create this processor.
+pointer conditions also guard it. [Later source tracing](serato-midi-field-sources.md)
+identifies the XML property as `secret_serato_key` and its elements as bytes;
+actual runtime contents remain unobserved, and it is not assumed populated for
+an SL3. Changing a kind integer alone does not create this processor.
 
 For an incoming 32-bit kind at predicate `1406042f0`, checked instructions subtract
 one and branch on zero, then compare the remainder with one:

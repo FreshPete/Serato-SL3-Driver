@@ -1,0 +1,70 @@
+{
+  "schema": "sl3.serato-midi-fields-verification.v1",
+  "createdUtc": "2026-11-02T04:17:14.964331+00:00",
+  "evidenceSha256": "8fbeb191ebd822716a0990631b2781330d5feb32e0a23a13f1f7236eaeebafde",
+  "instructionFacts": 85,
+  "focusedFunctions": 5,
+  "boundedLeafBodies": 3,
+  "actualCrtImportSites": 5,
+  "byteIdenticalRegeneration": true,
+  "originalAndInstalledExecutableHashesMatch": true,
+  "sourceSha256": {
+    "scripts/export-serato-midi-field-sources.py": "06cf9362fc0b230b153782163ec9d1565be86840fe4cebb750daf57c931734cc",
+    "scripts/export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+    "scripts/ghidra/FocusedDecompile.java": "54383ff3d55f0bb97c2a2e1129fa712eb237c7a2126420c627bb08d8c33672d6"
+  },
+  "focusedLogSha256": "4fa2ed24b3f157c63a3b602353eddb715c063b5bef00577bc171891cb379caa1",
+  "readOnlyImport": {
+    "exitCode": 0,
+    "additionalLibrariesLoaded": 0,
+    "automaticWholeProgramAnalysis": false,
+    "temporaryProjectObservedAbsent": true
+  },
+  "previousSoftwareCheckpoint": {
+    "passingChecks": 334,
+    "sourcePinsStillMatch": true,
+    "rerunForStaticOnlyAddition": false
+  },
+  "nativeBaseline": [
+    {
+      "configuration": "Release",
+      "priorTestsPassed": 59,
+      "sourcePinsStillMatch": true,
+      "rerunForStaticOnlyAddition": false,
+      "manifestSha256": "09fa39a717a9b024981b9a2e9da0406234e91fedd17b3370bac04c7dbfab1a87",
+      "ctestLogSha256": "7d1dd0d5f95b6a03fea0b02c1fdb57a4cc9550dedbaac5f480063dfa5c990d5c"
+    },
+    {
+      "configuration": "Debug",
+      "priorTestsPassed": 59,
+      "sourcePinsStillMatch": true,
+      "rerunForStaticOnlyAddition": false,
+      "manifestSha256": "d97f2b1855391de1412473897c8d4d5cd7f9fe40d91afb0f78eb5b0fa4151c92",
+      "ctestLogSha256": "70452b9868b2e84da6aca20160944a63a05d857d86ab2bbccb3ac078572d9df1"
+    }
+  ],
+  "limits": {
+    "fieldNamesOnly": true,
+    "keyValuesOrProtocolMessagesExported": false,
+    "keyBearingXmlReadByNewVerifier": false,
+    "otherProductMaterialAdopted": false,
+    "growthSlowPathExhausted": false,
+    "missingValueAttributeStandaloneResultAssigned": false,
+    "allLaterDescriptorMutationsExhausted": false,
+    "allCurrentHandshakeEnginesExhausted": false,
+    "applicationExecuted": false,
+    "applicationOrArchiveModified": false,
+    "deviceAccess": false,
+    "currentSeratoAdmissionVerified": false,
+    "physicalAudioTested": false,
+    "measuredTimingVerified": false,
+    "currentDvsTested": false
+  },
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/serato-midi-fields-20261102",
+    "files": 801,
+    "manifestSha256": "889f2b45c4642dd8fd9b4a182922d580d663f6945c9984c311c110f921ff7a2a",
+    "selfReferentialVerificationExcluded": true
+  },
+  "publishedEvidenceUsesLfOnly": true
+}
