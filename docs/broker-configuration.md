@@ -107,6 +107,8 @@ labelled as such and are never installed as measured SL3 profiles.
 
 ## Remaining work
 
+**Later checkpoint:** [explicit controller publication and stop/lifetime handling](broker-controller.md) now have simulated process coverage. Positive native execution and deployment remain unperformed; the paragraphs below preserve this binding checkpoint's earlier boundary.
+
 The explicit controller/record publication lifecycle, native startup journal and
 deployment workflow are still unfinished. There is no installed broker service,
 automatic discovery, new production registration or positive native broker run.

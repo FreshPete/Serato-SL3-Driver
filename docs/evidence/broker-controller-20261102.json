@@ -1,0 +1,169 @@
+{
+  "schema": "sl3.broker-controller-verification.v1",
+  "createdUtc": "2026-11-02T00:09:22.823266+00:00",
+  "tests": {
+    "native": [
+      {
+        "build": "native",
+        "configuration": "Release",
+        "tests": 57,
+        "manifestSha256": "8fce8776282af6882c66da7a102b24f6fa7a08fc83bdd36fd23b2a5e358db2f5",
+        "controllerSha256": "af520cdf8bac19e63a18f66b9d0e76951e5fdaa43d316d05dfdb1ccdeb893b03",
+        "simulatedControllerSha256": "3e7b596330bd7f1b005acfb0df4cd631b1e52056dd8adfd9d7e51882ebb70813"
+      },
+      {
+        "build": "native",
+        "configuration": "Debug",
+        "tests": 57,
+        "manifestSha256": "8d370367800419c91b69bbc679794054cc798b5bc926e9e314f55a1364165220",
+        "controllerSha256": "532e45035c8cfff593e0e49d8ef96f84196caeae39a760add059d06bfb4478c9",
+        "simulatedControllerSha256": "6415382f4d2c6e2ed0020921b7013719f34b1d0e2cdd2c6c1ebdcc8d518905d9"
+      },
+      {
+        "build": "native-without-sdk",
+        "configuration": "Release",
+        "tests": 36,
+        "manifestSha256": "57544c08db569d481adc1e46ad511a0ee5526bd2ef6b00bf7bf233df50be401f"
+      }
+    ],
+    "python": 392,
+    "focusedNativeCases": 3,
+    "controllerLifecycles": [
+      {
+        "configuration": "Release",
+        "path": "artifacts/build/native/controller-lifecycle-artifacts/e2081f2a2c9b4baf8bb12b790a35bb93",
+        "indexSha256": "d118da41a276b0e6d680bcd75168cbbad36b976dac43c4c9295a8e4e234cafa5",
+        "cases": 6,
+        "allFileHashesMatch": true,
+        "nativePositiveRun": false
+      },
+      {
+        "configuration": "Debug",
+        "path": "artifacts/build/native/controller-lifecycle-artifacts/15a2d199e1f74547bc5664ce33558d77",
+        "indexSha256": "aec82f77bded74a5b0745671496c55cceff8108ca1e191241135007f4e0e6814",
+        "cases": 6,
+        "allFileHashesMatch": true,
+        "nativePositiveRun": false
+      }
+    ]
+  },
+  "implemented": {
+    "defaultPlanInert": true,
+    "explicitReviewedPrivateWorkerInput": true,
+    "freshOwnerOnlyOutputDirectory": true,
+    "requiredLifetimeMs": [
+      1000,
+      43200000
+    ],
+    "validatedStopRequest": true,
+    "atomicImmutablePublication": true,
+    "oneWorkerSession": true,
+    "nativeWorkerStartupJournalWired": true,
+    "acquisitionAttemptAndTypedSnapshotValidityReported": true,
+    "unobservedSnapshotDoesNotCertifyRelease": true,
+    "recordCleanupEvidencePreserved": true,
+    "automaticRestart": false
+  },
+  "positiveSoftwareScenario": {
+    "kind": "simulated",
+    "publishedRecordConsumedBySeparateHost": true,
+    "ordinaryComObjects": 3,
+    "sdkStreams": 4,
+    "acquisitions": 1,
+    "clockReads": 8,
+    "finalReleases": 1,
+    "stopAcknowledgementIsNotReleaseProof": true,
+    "workerAndJobRetirementVerifiedSeparately": true
+  },
+  "failureCoverage": [
+    "destructive blocked client",
+    "idle lifetime expiry",
+    "clock/profile mismatch before publication",
+    "truthful simulated kind refused by native CLI before acquisition",
+    "existing output preservation",
+    "invalid/duplicate flags",
+    "invalid lifetime",
+    "stale stop record"
+  ],
+  "scope": {
+    "nativePositiveRun": false,
+    "physicalAudioTested": false,
+    "timingPhysicallyMeasured": false,
+    "currentSeratoTested": false,
+    "installed": false,
+    "registrationChanged": false,
+    "securityChanged": false,
+    "driverBindingChanged": false,
+    "firmwareChanged": false,
+    "nativeWorkerStartupJournalCollected": false
+  },
+  "disarmedUnitPlans": [
+    {
+      "path": "analysis/rate-trace-unit-50abac114dd34fd4b5a3e507252d514f",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-54c2a761584d42ceab50a003783972f4",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-563f1186aa6b4dcaa40e8927511f8361",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-5800b13038a54a2faedbcecf8507c5f9",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-6053828dc5544db382e650777082fda7",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-71306d4ea8b24de38c1574b3b16402a9",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-9d4afeb51c624e8580a345116462cb10",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-afecef29a65f43a497db1c7bd17630b0",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-b2ae77261c934f54aa7246b0dbf75d86",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-c163f214f8be49588a7726609c1c1353",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    },
+    {
+      "path": "analysis/rate-trace-unit-e22299b204f7462eacb2fe31d5d82d7f",
+      "attemptedSha256": "b7b6d14b9c0f6b30c30df3bf5fa5f9164965f7582ec24410d2be789af3288067",
+      "deviceAccess": false
+    }
+  ],
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/broker-controller-20261102",
+    "files": 556,
+    "manifestSha256": "ec9474f1c639c1d98b601f8b4b79fff865394ddde0201c060246f1a289cfae6d"
+  },
+  "logs": {
+    "broker-controller-release-20261102.log": "418120712a584705a92be79275484aea031e778de8aa6533f1ec432132c09aa4",
+    "broker-controller-debug-20261101.log": "bfe72e6324c3309282795be36cf6e33302f707ad409fe19b2fe71e5b2480c5a6",
+    "broker-controller-sdkfree-20261101.log": "8e29fff7c5399f79795b7c9123c3ceb69eecbedce947a8d5739f377c8365cf8e",
+    "broker-controller-python-20261102.log": "e10f067269d48d72b72159e8f173723819b51330cde1b5f5e1f50eeafbc4934d",
+    "broker-controller-focused-20261101.log": "b935b920ec4e100fc0cbe1524895fa0f8ec5ddba95973c9670b805ff475b3b97"
+  }
+}

@@ -124,6 +124,7 @@ static void failures(const std::filesystem::path& worker,const std::filesystem::
     for(const auto mode:{L"fail-acquire",L"invalid-clock",L"hang-acquire"}){
         RetainedBroker owner(spec(worker,mode));require(!owner.open() && !owner.open(),"Failed acquisition never retries");
         const auto s=owner.report();require(s.failed && s.process.process_exited && s.process.job_empty,"Failed worker contained");
+        if(std::wstring(mode)==L"hang-acquire")require(s.acquire_attempted && !s.snapshot_valid,"Unanswered acquisition cannot certify default snapshot release/retirement");
     }
     RetainedBroker mismatch(spec(worker));require(mismatch.open(),"Open for rejected stream");Client client(self);
     const auto lease=mismatch.attach(client.process.process_handle());auto data=client.prepare();data.config.rate_hz=44100;

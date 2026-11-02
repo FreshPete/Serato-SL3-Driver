@@ -15,6 +15,8 @@ RetainedBroker::RetainedBroker(BrokerSpec spec):spec_(std::move(spec)){
         throw std::invalid_argument("Explicit broker worker kind required");
     if(spec_.kind==session::Kind::native && (!spec_.helper.is_absolute() || spec_.helper.native().find(L'\0')!=std::wstring::npos))
         throw std::invalid_argument("Absolute broker helper path required");
+    if(!spec_.startup_journal.empty() && (spec_.kind!=session::Kind::native || !spec_.startup_journal.is_absolute()))
+        throw std::invalid_argument("Startup journal requires an explicit native absolute path");
 }
 RetainedBroker::~RetainedBroker(){close();}
 void RetainedBroker::clear_client() noexcept {
@@ -33,9 +35,11 @@ Message RetainedBroker::call(ds::Command command,const std::vector<std::uint8_t>
     }catch(...){control_ok_=false;control_->close();seal();throw;}
 }
 ds::Snapshot RetainedBroker::snapshot(ds::Command command,const std::vector<std::uint8_t>& body){
+    state_.snapshot_valid=false;
     const auto reply=call(command,body);
     try{
         state_.device=ds::decode_snapshot(reply.bytes);
+        state_.snapshot_valid=true;
         if(reply.status || state_.device.failure!=session::Failure::none || state_.device.stream_fault!=StreamFault::none)
             throw std::runtime_error("Broker worker operation failed");
         return state_.device;
@@ -47,12 +51,14 @@ bool RetainedBroker::open() noexcept {
     state_.phase=BrokerPhase::sealed;
     try{
         control_=Mailbox::create();
-        const auto args=spec_.kind==session::Kind::native?
+        auto args=spec_.kind==session::Kind::native?
             std::vector<std::wstring>{L"--device-worker",L"--channel",control_->name(),L"--helper",spec_.helper.native()}:
             std::vector<std::wstring>{control_->name(),spec_.fixture_mode};
+        if(!spec_.startup_journal.empty()){args.push_back(L"--startup-log");args.push_back(spec_.startup_journal.native());}
         process_.launch(spec_.executable,spec_.sha256,args);control_ok_=true;
         const auto hello=call(ds::Command::hello);
         if(hello.status || ds::decode_hello(hello.bytes)!=spec_.kind)throw std::runtime_error("Broker worker kind mismatch");
+        state_.acquire_attempted=true;
         if(!ready(snapshot(ds::Command::acquire)))throw std::runtime_error("Broker did not acquire an idle device");
         state_.phase=BrokerPhase::idle;return true;
     }catch(...){seal();close();return false;}

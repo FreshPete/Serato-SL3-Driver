@@ -45,6 +45,12 @@ extern "C" __declspec(dllexport) BOOL sl3_test_configure_broker(const wchar_t* e
         broker=std::move(candidate);executable.clear();expected_hash.clear();audit_path.clear();retained=false;return TRUE;
     }catch(...){return FALSE;}
 }
+extern "C" __declspec(dllexport) BOOL sl3_test_configure_bound_broker(const wchar_t* endpoint,HANDLE server,const char* worker_hash) noexcept {
+    try{
+        if(!worker_hash || std::string(worker_hash).size()!=64 || !sl3_test_configure_broker(endpoint,server))return FALSE;
+        std::lock_guard<std::mutex> guard(configuration_mutex);broker->worker_sha256=worker_hash;return TRUE;
+    }catch(...){return FALSE;}
+}
 extern "C" __declspec(dllexport) BOOL sl3_test_configure_shared_owner_audit(const wchar_t* path,const char* hash,const wchar_t* audit) noexcept {
     try{
         if(!sl3_test_configure_retained_audit(path,hash,audit))return FALSE;

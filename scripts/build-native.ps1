@@ -35,6 +35,7 @@ try {
     if($WithAsioComponent -and 'sl3_asio_buffer_tests' -notin $testNames){throw 'Required SDK-facing ASIO test is missing'}
     if($WithAsioComponent -and 'sl3_asio_com_tests' -notin $testNames){throw 'Required ASIO COM DLL test is missing'}
     if($WithAsioComponent -and 'sl3_broker_asio_tests' -notin $testNames){throw 'Required broker-backed IASIO lifecycle test is missing'}
+    if($WithAsioComponent){foreach($required in @('sl3_broker_controller_plan','sl3_broker_controller_lifecycle')){if($required -notin $testNames){throw "Required broker controller check missing: $required"}}}
     if($WithAsioComponent -and 'sl3_asio_queue_tests' -notin $testNames){throw 'Required queue-to-SDK test is missing'}
     if($WithAsioComponent -and 'sl3_audio_owner_tests' -notin $testNames){throw 'Required audio-thread ownership test is missing'}
     if($WithAsioComponent -and 'sl3_host_session_tests' -notin $testNames){throw 'Required host-session control test is missing'}
@@ -90,7 +91,13 @@ try {
     $record.brokerRecord=[ordered]@{softwareTestsPassed=$true
         testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_broker_record_tests.exe")).Hash
         recordAndImagePinned=$true;processCreationIdentityChecked=$true;runtimeWorkerHashContract=$true
-        recordPublicationImplemented=$false;nativePositiveRun=$false}
+        recordPublicationImplemented=$WithAsioComponent.IsPresent;nativePositiveRun=$false}
+    if($WithAsioComponent){$record.brokerController=[ordered]@{planAndSimulatedLifecyclePassed=$true
+        executableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_broker_controller.exe")).Hash
+        simulatedExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_broker_controller_simulated.exe")).Hash
+        testScriptSha256=(Get-FileHash -LiteralPath (Join-Path $root 'scripts/test-broker-controller.py')).Hash
+        explicitLifetimeAndStop=$true;nativeStartupJournalWired=$true;atomicPublication=$true
+        nativePositiveRun=$false;installed=$false;registrationChanged=$false}}
     if($WithAsioComponent){$record.brokerAsio=[ordered]@{simulatedOrdinaryComLifecyclePassed=$true
         testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_broker_asio_tests.exe")).Hash
         ordinaryObjects=3;starts=4;acquisitions=1;freshClockReads=8;customFactoryScopeRequested=$false

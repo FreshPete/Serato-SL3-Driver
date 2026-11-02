@@ -1,4 +1,5 @@
 #include "asio/driver_facade.hpp"
+#include "asio/driver_configuration.hpp"
 #include "asio/com_identity.hpp"
 #include "windows/broker_pipe.hpp"
 #include "iasiodrv.h"
@@ -46,11 +47,12 @@ static void cycles(Host& h){
     }
     require(h.device->disposeBuffers()==ASE_OK,"Retired callback planes disposed");
 }
-static void ordinary(const std::filesystem::path& library,const std::wstring& endpoint,HANDLE server,bool blocked){
+static void ordinary(const std::filesystem::path& library,const std::wstring& endpoint,HANDLE server,bool blocked,const std::string& worker_hash={}){
     HMODULE module=LoadLibraryExW(library.c_str(),nullptr,LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR|LOAD_LIBRARY_SEARCH_SYSTEM32);require(module!=nullptr,"Load actual unregistered ASIO test DLL");
     using Configure=BOOL(*)(const wchar_t*,HANDLE);using GetClass=HRESULT(__stdcall*)(REFCLSID,REFIID,void**);using Unload=HRESULT(__stdcall*)();
     const auto configure=symbol<Configure>(module,"sl3_test_configure_broker");const auto get=symbol<GetClass>(module,"DllGetClassObject");const auto unload=symbol<Unload>(module,"DllCanUnloadNow");
-    require(configure(endpoint.c_str(),server),"Explicit simulated broker test configuration");
+    if(worker_hash.empty())require(configure(endpoint.c_str(),server),"Explicit simulated broker test configuration");
+    else {using ConfigureBound=BOOL(*)(const wchar_t*,HANDLE,const char*);require(symbol<ConfigureBound>(module,"sl3_test_configure_bound_broker")(endpoint.c_str(),server,worker_hash.c_str()),"Explicit simulated provider with reviewed record worker contract");}
     auto create=[&](Host& h){
         IClassFactory* factory=nullptr;require(get(driver_clsid,IID_IClassFactory,reinterpret_cast<void**>(&factory))==S_OK,"Fresh ordinary factory");
         const auto result=factory->CreateInstance(nullptr,driver_clsid,reinterpret_cast<void**>(&h.device));factory->Release();
@@ -125,6 +127,13 @@ static void run(const std::filesystem::path& self,const std::filesystem::path& f
 }
 int wmain(int argc,wchar_t** argv){
     try{
+        if(argc==5 && std::wstring(argv[1])==L"--published"){
+            const auto config=load_driver_configuration(std::filesystem::absolute(argv[2]));
+            require(config.broker && config.broker->kind==session::Kind::native && config.latency.rate_hz==48000 && config.latency.buffer_frames==128 &&
+                config.latency.input_extra_frames==7 && config.latency.output_extra_frames==11,"Published native-only record with synthetic test profile");
+            const std::wstring mode=argv[4];require(mode==L"ordinary" || mode==L"blocked","Published fixture mode");
+            ordinary(std::filesystem::absolute(argv[3]),config.broker->endpoint,config.broker->server->handle(),mode==L"blocked",config.broker->worker_sha256);return 0;
+        }
         if(argc==7 && std::wstring(argv[1])==L"--client"){
             Handle server;server.value=OpenProcess(SYNCHRONIZE|PROCESS_QUERY_LIMITED_INFORMATION,FALSE,DWORD(std::stoul(argv[3])));require(server.value!=nullptr,"Fixture-only parent reference");
             if(std::wstring(argv[5])==L"reports")reports(argv[2],server.value);else ordinary(std::filesystem::absolute(argv[4]),argv[2],server.value,std::wstring(argv[5])==L"blocked");return 0;

@@ -1,4 +1,4 @@
-# Public development checkpoint — 1 November 2026
+# Public development checkpoint — 2 November 2026
 
 This is an engineering investigation and source snapshot, not a working replacement-driver release. Windows 11 is the current target; macOS is deferred. The aim is independent audio, a usable ASIO driver and eventually current Serato DJ Pro with two-deck DVS. Each needs its own demonstration.
 
@@ -18,6 +18,8 @@ This is an engineering investigation and source snapshot, not a working replacem
 Detailed provenance and limits are in the [return report](RETURN-REPORT.md), [findings](findings.md), [metadata probe](metadata-scope-probe.md), [USB lifecycle analysis](attended-port-lifecycle-20261101.md), [resource comparison](serato-cutoff-registration.md) and [Serato integration decision](current-serato-integration-decision.md).
 
 ## Latest integration work
+
+The [explicit broker controller](broker-controller.md) now publishes immutable session/configuration records after acquisition, retains the reviewed session across actual simulated ASIO clients and supports validated stop/lifetime expiry. Default invocation is inert; publication, failure and stale-record behavior have process coverage. Installation and positive native operation remain unperformed.
 
 The [reviewed broker configuration](broker-configuration.md) now binds session-record/image hashes, exact live process creation identity and the runtime worker hash, retaining the timing/measurement gates. Actual production-DLL refusal of simulated kind passes. Explicit controller publication, deployment and native validation remain unfinished.
 

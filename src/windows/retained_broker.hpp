@@ -13,12 +13,14 @@ struct BrokerSpec {
     std::string sha256;
     session::Kind kind=session::Kind::native;
     std::wstring fixture_mode=L"normal";
+    std::filesystem::path startup_journal; // Explicit native controller diagnostics only.
 };
 enum class BrokerPhase {dormant,idle,leased,running,sealed,closed};
 struct BrokerReport {
     BrokerPhase phase=BrokerPhase::dormant;
     bool client_attached=false,client_alive=false,termination_requested=false;
     bool failed=false; // Sticky operation/ownership failure, including after clean final release.
+    bool acquire_attempted=false,snapshot_valid=false;
     DWORD client_pid=0;
     ProcessState process{};
     device_session::Snapshot device{}; // Last typed worker observation only.
