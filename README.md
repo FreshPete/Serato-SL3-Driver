@@ -14,6 +14,8 @@ The native software checks pass **65/65 Release**, **65/65 Debug** and **39/39 w
 
 The [offline additive archive builder](docs/serato-sl3-archive.md) now preserves all 229 original resource members while adding our genuine-SL3 XML hypothesis. Original CRCs and codec inverses pass; it remains private and undeployed, with runtime Serato/audio/DVS unverified.
 
+[USB component completion tracing](docs/serato-usb-completion.md) now binds identity-record attachment, component-count equality and an internal completion byte. These metadata checks narrow the genuine USB-only hypothesis; current admission, physical audio and DVS remain unverified.
+
 [DLL-owned opt-in logging](docs/asio-owned-trace.md) now passes actual Release/Debug capture and default-off/failure fallback checks under an ordinary token. This prepares ASIO metadata capture without a separate elevated logger; current Serato execution and hardware validation remain unfinished.
 
 [Actual private ETW capture](docs/asio-private-trace.md) now verifies 16 events/eight complete call pairs from each Release/Debug production DLL under an ordinary token, with no device access or Serato launch. The first-party logging round trip works without UAC; current Serato capture and physical audio/DVS remain unverified.

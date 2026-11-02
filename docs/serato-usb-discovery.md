@@ -103,3 +103,5 @@ The additional lifetime reports use the same focused script and are bound by fil
 The preceding observer checkpoint passed 89/89; [source/test/plan/log bindings](evidence/usb-identity-observer-build.json) preserve its scope. No native rebuild or physical observer result is included.
 
 The supervisor checkpoint passes the full 100-test Python suite. [Source, harmless-process tests, plan and log bindings](evidence/usb-identity-supervisor-build.json) preserve its scope; native binaries and earlier hardware evidence remain unchanged.
+
+The later [USB-completion proof](serato-usb-completion.md) follows a taken record into the composite shared-pointer member and acquired-count increment. Equal counts set an internal byte before a separate version predicate; none of these steps establishes physical audio readiness.

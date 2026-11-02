@@ -1,0 +1,14 @@
+{
+  "schema": "sl3.private-checkpoint-summary.v1",
+  "checkpoint": "serato-usb-completion-20261102-final",
+  "fileCount": 24,
+  "manifestSha256": "4ac9b9605ced86d4eb698011a4e1509b14b54321eb739c6698617aee2ed70618",
+  "evidenceSha256": "1fe4def06524341ba72a7a75416cbfed42cf4fedf53e5321e9f823b6e77882e3",
+  "checksSha256": "6a805c1243b5430c68e167d6ce212ea075f2e1f6fcf4364379a6d67252edf616",
+  "vendorExecutablesIncluded": false,
+  "privateSdkContentsIncluded": false,
+  "fullVendorPseudocodePublished": false,
+  "applicationExecuted": false,
+  "deviceAccess": false,
+  "scope": "Static original-byte USB aggregation handoff, descriptor-present count formula; private focused reports and unchanged native build metadata"
+}

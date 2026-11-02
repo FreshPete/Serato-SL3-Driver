@@ -59,3 +59,5 @@ The later [wireless notification proof](serato-wireless-notification.md) traces 
 
 
 The later [primary-pointer proof](serato-primary-pointer.md) identifies the selected pointer's exact registered-instance check and a conditional USB-only message producer. It supplies a concrete registration/connection handoff for further work, while preserving the existing support/component/helper/audio requirements. No admitted SL3, current ASIO open or actual DVS result is established by that pointer or notification.
+
+The later [USB component completion proof](serato-usb-completion.md) links the ordinary expected-count formula to discovered identity-record attachment and a local completion byte. This narrows the actual no-MIDI/no-HID USB route without interpreting aggregation completion as audio readiness or implementing the candidate NONE/control/service contract. Actual descriptor acceptance and genuine current audio/DVS remain required.

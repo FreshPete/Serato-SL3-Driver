@@ -8,7 +8,7 @@ The actual candidate is saved privately under `analysis/sl3-descriptor-candidate
 
 `scripts/prepare-serato-sl3-candidate.py` binds the sanitized historical descriptor evidence by its exact hash and checks the original 2.5.5/2.5.6 executable hashes. Both historical records must produce the same candidate. The selected historical XML digest is `314e81ffb5d052e53280903d543107c8223e99ff1f4e200311a2b3d90e49154c`. The generator reconstructs an allowlisted declaration from metadata; it does not redistribute the complete original XML or consume another product's description/key.
 
-It checks the installed/extracted current executable and archive identities, the current schema member CRC/hash, the Release ASIO DLL and all 146 recorded native build source pins. Its intended name is bound to both the original ASIO `getDriverName` source and the deployment planner's registry name, `SL3 Rebuild Development`. Actual installed driver enumeration/name uniqueness and protected deployment remain unverified.
+It checks the installed/extracted current executable and archive identities, the current schema member CRC/hash, the Release ASIO DLL and all 149 recorded native build source pins. Its intended name is bound to both the original ASIO `getDriverName` source and the deployment planner's registry name, `SL3 Rebuild Development`. Actual installed driver enumeration/name uniqueness and protected deployment remain unverified.
 
 The retained declarations include:
 
@@ -73,3 +73,5 @@ The later [authorization-service receiver proof](serato-authorization-service.md
 The later [attended archive-test package](serato-archive-deployment.md) now prepares a source-bound review bundle and tested temporary-file transaction engine. Its default read-only Plan passes on the original installation. Protected install/rollback and application acceptance have not run or been approved.
 
 After the [ASIO call-tracing build](asio-call-tracing.md), the current source-bound bundle is `analysis/sl3-descriptor-candidate-20261102-owned-trace/`. The original XML bytes/hash are unchanged; earlier manifests are historical and refused against current source/build pins.
+
+The later [USB-completion proof](serato-usb-completion.md) binds the identity-record attachment and local component-count equality. Its conditional one-component projection is not evidence that the NONE hypothesis, service state or audio admission works.

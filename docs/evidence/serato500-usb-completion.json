@@ -1,0 +1,453 @@
+{
+  "schema": "sl3.serato-usb-completion.v1",
+  "binarySha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "installedMatches": true,
+  "checkedInstructions": [
+    {
+      "va": "0x1421db981",
+      "bytes": "83fb01",
+      "assembly": "cmp ebx, 1"
+    },
+    {
+      "va": "0x1421db984",
+      "bytes": "0f85631d0000",
+      "assembly": "jne 0x1421dd6ed"
+    },
+    {
+      "va": "0x1421db993",
+      "bytes": "4533f6",
+      "assembly": "xor r14d, r14d"
+    },
+    {
+      "va": "0x1421db9c4",
+      "bytes": "e8d750a2fe",
+      "assembly": "call 0x140c00aa0"
+    },
+    {
+      "va": "0x1421db9ce",
+      "bytes": "0f84b6010000",
+      "assembly": "je 0x1421dbb8a"
+    },
+    {
+      "va": "0x1421db9e8",
+      "bytes": "ff5010",
+      "assembly": "call qword ptr [rax + 0x10]"
+    },
+    {
+      "va": "0x1421db9ee",
+      "bytes": "85c0",
+      "assembly": "test eax, eax"
+    },
+    {
+      "va": "0x1421db9f0",
+      "bytes": "400f95c7",
+      "assembly": "setne dil"
+    },
+    {
+      "va": "0x1421dba43",
+      "bytes": "ff5018",
+      "assembly": "call qword ptr [rax + 0x18]"
+    },
+    {
+      "va": "0x1421dba46",
+      "bytes": "0fb6f0",
+      "assembly": "movzx esi, al"
+    },
+    {
+      "va": "0x1421dba98",
+      "bytes": "ff5028",
+      "assembly": "call qword ptr [rax + 0x28]"
+    },
+    {
+      "va": "0x1421dba9b",
+      "bytes": "0fb6c8",
+      "assembly": "movzx ecx, al"
+    },
+    {
+      "va": "0x1421dba9e",
+      "bytes": "03cf",
+      "assembly": "add ecx, edi"
+    },
+    {
+      "va": "0x1421dbaa0",
+      "bytes": "03ce",
+      "assembly": "add ecx, esi"
+    },
+    {
+      "va": "0x1421dbaa2",
+      "bytes": "898c2498000000",
+      "assembly": "mov dword ptr [rsp + 0x98], ecx"
+    },
+    {
+      "va": "0x1421dbb8a",
+      "bytes": "e8414fa2fe",
+      "assembly": "call 0x140c00ad0"
+    },
+    {
+      "va": "0x1421dbb8f",
+      "bytes": "0fb6c0",
+      "assembly": "movzx eax, al"
+    },
+    {
+      "va": "0x1421dbb92",
+      "bytes": "89842498000000",
+      "assembly": "mov dword ptr [rsp + 0x98], eax"
+    },
+    {
+      "va": "0x1421dbb99",
+      "bytes": "e948ffffff",
+      "assembly": "jmp 0x1421dbae6"
+    },
+    {
+      "va": "0x140c0057d",
+      "bytes": "488b4138",
+      "assembly": "mov rax, qword ptr [rcx + 0x38]"
+    },
+    {
+      "va": "0x140c0058a",
+      "bytes": "488b4130",
+      "assembly": "mov rax, qword ptr [rcx + 0x30]"
+    },
+    {
+      "va": "0x140c0058e",
+      "bytes": "488902",
+      "assembly": "mov qword ptr [rdx], rax"
+    },
+    {
+      "va": "0x140c00591",
+      "bytes": "488b4138",
+      "assembly": "mov rax, qword ptr [rcx + 0x38]"
+    },
+    {
+      "va": "0x140c00595",
+      "bytes": "48894208",
+      "assembly": "mov qword ptr [rdx + 8], rax"
+    },
+    {
+      "va": "0x1421dbae6",
+      "bytes": "418bf6",
+      "assembly": "mov esi, r14d"
+    },
+    {
+      "va": "0x1421dbae9",
+      "bytes": "4489742458",
+      "assembly": "mov dword ptr [rsp + 0x58], r14d"
+    },
+    {
+      "va": "0x1421dc5f0",
+      "bytes": "ff5028",
+      "assembly": "call qword ptr [rax + 0x28]"
+    },
+    {
+      "va": "0x1421dc5f3",
+      "bytes": "84c0",
+      "assembly": "test al, al"
+    },
+    {
+      "va": "0x1421dc5f5",
+      "bytes": "7411",
+      "assembly": "je 0x1421dc608"
+    },
+    {
+      "va": "0x1421dc5fa",
+      "bytes": "e80157a0fe",
+      "assembly": "call 0x140be1d00"
+    },
+    {
+      "va": "0x1421dc5ff",
+      "bytes": "84c0",
+      "assembly": "test al, al"
+    },
+    {
+      "va": "0x1421dc601",
+      "bytes": "7505",
+      "assembly": "jne 0x1421dc608"
+    },
+    {
+      "va": "0x1421dc603",
+      "bytes": "40b701",
+      "assembly": "mov dil, 1"
+    },
+    {
+      "va": "0x1421dc608",
+      "bytes": "4032ff",
+      "assembly": "xor dil, dil"
+    },
+    {
+      "va": "0x1421dc652",
+      "bytes": "4084ff",
+      "assembly": "test dil, dil"
+    },
+    {
+      "va": "0x1421dc655",
+      "bytes": "0f848e020000",
+      "assembly": "je 0x1421dc8e9"
+    },
+    {
+      "va": "0x1421dc6cc",
+      "bytes": "e87f5a0000",
+      "assembly": "call 0x1421e2150"
+    },
+    {
+      "va": "0x1421dc743",
+      "bytes": "4883bc24c000000000",
+      "assembly": "cmp qword ptr [rsp + 0xc0], 0"
+    },
+    {
+      "va": "0x1421dc74c",
+      "bytes": "0f844e010000",
+      "assembly": "je 0x1421dc8a0"
+    },
+    {
+      "va": "0x1421dc85b",
+      "bytes": "498b1f",
+      "assembly": "mov rbx, qword ptr [r15]"
+    },
+    {
+      "va": "0x1421dc85e",
+      "bytes": "0f288424c0000000",
+      "assembly": "movaps xmm0, xmmword ptr [rsp + 0xc0]"
+    },
+    {
+      "va": "0x1421dc866",
+      "bytes": "660f7f8424a0020000",
+      "assembly": "movdqa xmmword ptr [rsp + 0x2a0], xmm0"
+    },
+    {
+      "va": "0x1421dc88a",
+      "bytes": "488d9424a0020000",
+      "assembly": "lea rdx, [rsp + 0x2a0]"
+    },
+    {
+      "va": "0x1421dc892",
+      "bytes": "488bcb",
+      "assembly": "mov rcx, rbx"
+    },
+    {
+      "va": "0x1421dc895",
+      "bytes": "e84652a2fe",
+      "assembly": "call 0x140c01ae0"
+    },
+    {
+      "va": "0x1421dc89a",
+      "bytes": "ffc6",
+      "assembly": "inc esi"
+    },
+    {
+      "va": "0x1421dc89c",
+      "bytes": "89742458",
+      "assembly": "mov dword ptr [rsp + 0x58], esi"
+    },
+    {
+      "va": "0x1421dc8ee",
+      "bytes": "3bb42498000000",
+      "assembly": "cmp esi, dword ptr [rsp + 0x98]"
+    },
+    {
+      "va": "0x1421dc8f5",
+      "bytes": "0f85e3050000",
+      "assembly": "jne 0x1421dcede"
+    },
+    {
+      "va": "0x1421dc8fe",
+      "bytes": "e89d41a2fe",
+      "assembly": "call 0x140c00aa0"
+    },
+    {
+      "va": "0x1421dc903",
+      "bytes": "84c0",
+      "assembly": "test al, al"
+    },
+    {
+      "va": "0x1421dc905",
+      "bytes": "0f84d8020000",
+      "assembly": "je 0x1421dcbe3"
+    },
+    {
+      "va": "0x1421dcbe3",
+      "bytes": "b201",
+      "assembly": "mov dl, 1"
+    },
+    {
+      "va": "0x1421dcbe5",
+      "bytes": "498b0f",
+      "assembly": "mov rcx, qword ptr [r15]"
+    },
+    {
+      "va": "0x1421dcbe8",
+      "bytes": "e853b59efe",
+      "assembly": "call 0x140bc8140"
+    },
+    {
+      "va": "0x1421dcbf0",
+      "bytes": "e8fb3ea2fe",
+      "assembly": "call 0x140c00af0"
+    },
+    {
+      "va": "0x1421dcbfa",
+      "bytes": "84c0",
+      "assembly": "test al, al"
+    },
+    {
+      "va": "0x1421dcbfc",
+      "bytes": "0f84a2010000",
+      "assembly": "je 0x1421dcda4"
+    },
+    {
+      "va": "0x140c01af4",
+      "bytes": "488b6a08",
+      "assembly": "mov rbp, qword ptr [rdx + 8]"
+    },
+    {
+      "va": "0x140c01afb",
+      "bytes": "488b1a",
+      "assembly": "mov rbx, qword ptr [rdx]"
+    },
+    {
+      "va": "0x140c01afe",
+      "bytes": "488bf9",
+      "assembly": "mov rdi, rcx"
+    },
+    {
+      "va": "0x140c01b12",
+      "bytes": "48895f20",
+      "assembly": "mov qword ptr [rdi + 0x20], rbx"
+    },
+    {
+      "va": "0x140c01b16",
+      "bytes": "488b5f28",
+      "assembly": "mov rbx, qword ptr [rdi + 0x28]"
+    },
+    {
+      "va": "0x140c01b1a",
+      "bytes": "48896f28",
+      "assembly": "mov qword ptr [rdi + 0x28], rbp"
+    }
+  ],
+  "completeHelperLeaves": [
+    {
+      "va": "0x140c00aa0",
+      "bytes": "48837930000f95c0c3",
+      "assembly": [
+        "cmp qword ptr [rcx + 0x30], 0",
+        "setne al",
+        "ret "
+      ]
+    },
+    {
+      "va": "0x140be1d00",
+      "bytes": "48837920000f95c0c3",
+      "assembly": [
+        "cmp qword ptr [rcx + 0x20], 0",
+        "setne al",
+        "ret "
+      ]
+    },
+    {
+      "va": "0x140bc8140",
+      "bytes": "885160c3",
+      "assembly": [
+        "mov byte ptr [rcx + 0x60], dl",
+        "ret "
+      ]
+    }
+  ],
+  "priorEvidence": [
+    {
+      "name": "serato500-usb-discovery.json",
+      "sha256": "45e91ca74e7716a99018948e0a4fd502b4453d45557bb453bf0aeecdd8390029",
+      "instructionBytesRechecked": 90
+    },
+    {
+      "name": "serato500-usb-arrival.json",
+      "sha256": "7d018af5beaa3cb0f1111d3f2c79cff3369bdacec7e9e80f828f98794a3d9f50",
+      "instructionBytesRechecked": 208
+    },
+    {
+      "name": "serato500-component-profiles.json",
+      "sha256": "7be2adee7c84b01a6bb3f4ce7d0d68b3d39807d0c4f3368147f73c078b1ff91c",
+      "instructionBytesRechecked": 49
+    }
+  ],
+  "focusedFunctions": [
+    {
+      "file": "serato500-usb-completion-20261102-decompile.json",
+      "sha256": "64899e80fa7cdeb0b0985af4d4c2c48fec463f59c88e9340b76c2748c870a525",
+      "start": "0x140c01ae0",
+      "endExclusive": "0x140c01bb8",
+      "imageBytesSha256": "52d7719e11425fc73e18d0a2aa9decea3dc71cafb47c3a7be2b4a09b8f379f63"
+    },
+    {
+      "file": "serato500-app-support-routing.json",
+      "sha256": "8254ea092d74cb619e1b9122e0931cc013ad2a6d526ab0dfce8d18080e8ee3c4",
+      "start": "0x1421db390",
+      "endExclusive": "0x1421dd9d3",
+      "imageBytesSha256": "8bbe21d2e9d6fa1674f0e8d36ad6638658dadf76fb3749446d798ca139ab3a13"
+    }
+  ],
+  "freshFocusedFunctions": 1,
+  "focusedLogSha256": "6d32bfc56b7279fd5ab911b251363a50e14980e57229e5d191739b48965921ce",
+  "temporaryProjectAbsent": true,
+  "ordinaryComponentBranch": {
+    "condition": "Composite descriptor member +0x30 present",
+    "expected": "nonzero MIDI direction + has HID + requires USB",
+    "expectedCountStackOffset": "0x98",
+    "acquiredCountRegister": "ESI",
+    "initialAcquiredCount": 0,
+    "absentDescriptorExpectedCount": "HID component presence only",
+    "descriptorAccessor": "0x140c00570",
+    "descriptorMember": "0x30",
+    "descriptorSharedOwnerMember": "0x38"
+  },
+  "usbAttachment": {
+    "requires": "requires USB and composite member +0x20 absent",
+    "recordTake": "0x1421e2150",
+    "recordMissSkipsAttachment": true,
+    "attachMethod": "0x140c01ae0",
+    "recordMember": "0x20",
+    "sharedOwnerMember": "0x28",
+    "incrementsAcquiredCount": 1,
+    "usbOpenOrClaimIdentifiedInSetter": false
+  },
+  "completionBranch": {
+    "requires": "Acquired count equals expected count",
+    "absentMember30Target": "0x1421dcbe3",
+    "setsCompositeByte": "0x60 = 1",
+    "nextPredicate": "0x140c00af0",
+    "nextPredicateIsPhysicalReadiness": false,
+    "supportRequirementStillIndependent": true
+  },
+  "sl3ConditionalProjection": {
+    "requiresPresentDescriptor": true,
+    "midiDirection": 0,
+    "hasHid": false,
+    "requiresUsb": true,
+    "expectedComponents": 1,
+    "meaning": "A matching identity record can contribute the USB component under this branch; other gates remain",
+    "actualCompositeOrCompletionObserved": false
+  },
+  "localSourceSha256": {
+    "scripts/export-serato-usb-completion.py": "a7d234cc78e6865bfb9609cc40739ce432cfecae6110b41d3589579893f53df2",
+    "scripts/export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+    "scripts/ghidra/FocusedDecompile.java": "54383ff3d55f0bb97c2a2e1129fa712eb237c7a2126420c627bb08d8c33672d6"
+  },
+  "publishedSourceSha256": {
+    "scripts/export-serato-usb-completion.py": "2fb10890f331d83759f5c6325267a535f888a6c1db0e76576b1f8f340543af8d",
+    "scripts/export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+    "scripts/ghidra/FocusedDecompile.java": "54383ff3d55f0bb97c2a2e1129fa712eb237c7a2126420c627bb08d8c33672d6"
+  },
+  "applicationExecuted": false,
+  "applicationModified": false,
+  "deviceAccess": false,
+  "authorizationModified": false,
+  "messageInjected": false,
+  "currentSeratoAdmissionVerified": false,
+  "audioOpened": false,
+  "twoDeckDvsVerified": false,
+  "limits": [
+    "Selected ordinary composite branch and USB-record handoff, not exhaustive control-flow or eligibility proof.",
+    "Internal completion byte is not a physical-audio, driver-policy or licensing result.",
+    "NONE/control/service semantics, actual descriptor parsing and runtime identity continuity remain unverified.",
+    "No descriptor, archive, account, security setting, firmware or hardware identity is changed."
+  ]
+}
