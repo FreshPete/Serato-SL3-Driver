@@ -1,0 +1,237 @@
+{
+  "schema": "sl3.archive-deployment-verification.v1",
+  "date": "2026-11-02",
+  "status": "prepared_not_executed",
+  "sources": {
+    "scripts/serato-archive-file-transaction.ps1": {
+      "localSha256": "5a3001d590acc5311faa689e55f88b53ef1bd9e905c868ad8ef87480fbf4c40e",
+      "gitLfSha256": "5a3001d590acc5311faa689e55f88b53ef1bd9e905c868ad8ef87480fbf4c40e"
+    },
+    "scripts/serato-archive-deployment-template.ps1": {
+      "localSha256": "cd981568e574fc6a6196b33f4a8abeb2414f2004270a6fbcd0793c2b5a5fd862",
+      "gitLfSha256": "cd981568e574fc6a6196b33f4a8abeb2414f2004270a6fbcd0793c2b5a5fd862"
+    },
+    "scripts/prepare-serato-archive-deployment.py": {
+      "localSha256": "84910daf234821992fde7c421101d2ce7f51da88cd1c41fb9081a8032a0090df",
+      "gitLfSha256": "84910daf234821992fde7c421101d2ce7f51da88cd1c41fb9081a8032a0090df"
+    },
+    "tests/test-serato-archive-file-transaction.ps1": {
+      "localSha256": "70bb6a6287cafa3b9479684372edc40d313730a777a0dc988e4b6f5da5e78c42",
+      "gitLfSha256": "70bb6a6287cafa3b9479684372edc40d313730a777a0dc988e4b6f5da5e78c42"
+    }
+  },
+  "fixtureTests": {
+    "schema": "sl3.archive-file-transaction-tests.v1",
+    "passed": 22,
+    "checks": [
+      "atomic-install-rollback-and-cleanup",
+      "wrong-candidate-refused",
+      "changed-target-preserved",
+      "busy-before-stage-refused",
+      "busy-after-stage-cancelled",
+      "verified-install-stage-resumes",
+      "rollback-busy-preserves-installed",
+      "verified-rollback-stage-resumes",
+      "unknown-backup-not-overwritten",
+      "partial-stage-preserved",
+      "derived-path-tampering-refused",
+      "stage-source-alias-refused",
+      "target-change-during-guard-refused",
+      "exclusive-stage-creation",
+      "locked-live-file-fails-with-original-retained",
+      "destination-acl-preserved",
+      "junction-parent-refused",
+      "identity-and-filename-validation",
+      "corrupt-backup-refuses-rollback-and-cleanup",
+      "missing-backup-refuses-rollback",
+      "busy-cleanup-preserves-restored-witnesses",
+      "ordinary-user-owned-deployment-path-refused"
+    ],
+    "realWindowsAtomicReplacements": true,
+    "fixtureOnly": true,
+    "installedApplicationModified": false,
+    "deviceAccess": false
+  },
+  "fixtureResultSha256": "efec240a3c4ec1a92f8d70f687e3be042a57dea913d111f29cad82b7642eb804",
+  "fixtureStderrEmpty": true,
+  "actualCliTests": {
+    "schema": "sl3.archive-deployment-cli-tests.v1",
+    "cases": [
+      {
+        "case": "validate",
+        "passed": true,
+        "exitCode": 0,
+        "stdoutSha256": "6477f8297f089425c983f68150c8a21ebbba08b8e843e7cb14f329cf24efbbee",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "case": "repeat",
+        "passed": true,
+        "exitCode": 0,
+        "stdoutSha256": "6477f8297f089425c983f68150c8a21ebbba08b8e843e7cb14f329cf24efbbee",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "case": "overwrite",
+        "passed": true,
+        "exitCode": 1,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "3d65f8bf40aef41e7635f56ed985e8e823f850f01d777dfb4416668415de581f"
+      },
+      {
+        "case": "tamper-core",
+        "passed": true,
+        "exitCode": 1,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "f6bb55a8b7c9e44f191704a1801662d06b1e6461158c0e9fd1fdd5194b8fe964"
+      },
+      {
+        "case": "tamper-candidate",
+        "passed": true,
+        "exitCode": 1,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "815ad39a2d932a979a11c7c62c24fb0bd92862a02a580e5d294d5d66f7be12eb"
+      },
+      {
+        "case": "tamper-plan",
+        "passed": true,
+        "exitCode": 1,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "c964be2de4fbb0068067b0cb386a8da3f402705ad205fe94dfaeb8a3ec995715"
+      }
+    ],
+    "positiveReadOnlyPlanPassed": true,
+    "positivePlanSha256": "9e1292394ebcb68d0a6af980568d8ca114bfb5d3e0fab863a661e97c36386115",
+    "bundleSha256": {
+      "archive-test.ps1": "43e562a16ef7b33e0d5db01105f06559c8a03c9cd6d662d293b2d9b007715303",
+      "candidate-userio_resources.bin": "e05486b1c4c17f298834ddad2afb04da95e88c196a464bc3f1e4b88bf39c2cb1",
+      "deployment-plan.json": "eede38a6d790b90c74d00f0759b8e8b1736ddc69cee45bb3151daca0973513cd",
+      "provenance.json": "2b53b47dd13a19c66f370ddecd6e3c79ac6de405d37c7d20b2b8febeae0a7202",
+      "serato-archive-file-transaction.ps1": "5a3001d590acc5311faa689e55f88b53ef1bd9e905c868ad8ef87480fbf4c40e"
+    },
+    "repeatBundleByteIdentical": true,
+    "originalBundleUnchanged": true,
+    "installOrRollbackExecutedOnSerato": false,
+    "applicationExecuted": false,
+    "deviceAccess": false
+  },
+  "cliReportSha256": "b26b265409d876d5fd925a8566b54801c7ebedb0f5cc80c7a2b6aeb5e67487b1",
+  "readOnlyPreflight": {
+    "schema": "sl3.archive-deployment-action.v1",
+    "action": "Plan",
+    "before": {
+      "schema": "sl3.archive-file-state.v1",
+      "state": "original",
+      "hashes": {
+        "Target": "872fc4fdad2eab2ddd34387d2d3c04dd9731c84798d9fdc7bd05ca54e1567db8",
+        "Stage": null,
+        "Backup": null,
+        "Retired": null
+      },
+      "applicationAcceptanceVerified": false,
+      "deviceAccess": false,
+      "audioPlayed": false
+    },
+    "after": {
+      "schema": "sl3.archive-file-state.v1",
+      "state": "original",
+      "hashes": {
+        "Target": "872fc4fdad2eab2ddd34387d2d3c04dd9731c84798d9fdc7bd05ca54e1567db8",
+        "Stage": null,
+        "Backup": null,
+        "Retired": null
+      },
+      "applicationAcceptanceVerified": false,
+      "deviceAccess": false,
+      "audioPlayed": false
+    },
+    "originalExecutableSignatureStatus": "Valid",
+    "seratoRunning": false,
+    "applicationExecuted": false,
+    "applicationAcceptanceVerified": false,
+    "deviceAccess": false,
+    "audioPlayed": false,
+    "authorizationModified": false,
+    "firmwareModified": false,
+    "securityPolicyModified": false
+  },
+  "readOnlyPreflightResultSha256": "9e1292394ebcb68d0a6af980568d8ca114bfb5d3e0fab863a661e97c36386115",
+  "preparedPlan": {
+    "schema": "sl3.attended-archive-deployment-plan.v1",
+    "status": "prepared_not_executed",
+    "target": "C:\\Program Files\\Serato\\Serato DJ Pro\\userio_resources.bin",
+    "originalArchiveSha256": "872fc4fdad2eab2ddd34387d2d3c04dd9731c84798d9fdc7bd05ca54e1567db8",
+    "candidateArchiveSha256": "e05486b1c4c17f298834ddad2afb04da95e88c196a464bc3f1e4b88bf39c2cb1",
+    "originalApplicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+    "originalExecutableSignature": {
+      "status": "Valid",
+      "thumbprint": "A38279C93F7D1D669D0C367CAE3EC45ACF63F017"
+    },
+    "sourceSha256": {
+      "scripts/serato-archive-file-transaction.ps1": "5a3001d590acc5311faa689e55f88b53ef1bd9e905c868ad8ef87480fbf4c40e",
+      "scripts/serato-archive-deployment-template.ps1": "cd981568e574fc6a6196b33f4a8abeb2414f2004270a6fbcd0793c2b5a5fd862",
+      "scripts/prepare-serato-archive-deployment.py": "84910daf234821992fde7c421101d2ce7f51da88cd1c41fb9081a8032a0090df"
+    },
+    "archiveManifestSha256": "cf6584360f0766a0ecfb43c5a02c38b824543f99c62ca89cbde2cc23241cb63b",
+    "sourceReadSetSha256": {
+      "docs/evidence/serato-legacy-sl3-descriptors.json": "a63a02804e5a00cc1da48faff9c9bdfa962da0f1c3b09a7019d9eec0570fab3a",
+      "artifacts/extracted/Serato DJ Pro 2.5.5/tree/Serato/Serato DJ Pro/Serato DJ Pro.exe": "ba8641d0329fe0c955147d2b45f247eeea82ac0f812fe30a339834dbe0c0a503",
+      "artifacts/extracted/Serato DJ Pro 2.5.6/tree/Serato/Serato DJ Pro/Serato DJ Pro.exe": "3b04472cd5597fd56266e1c2c86dc298431b0026001aefe4b43aa3b909ee35c5",
+      "scripts/prepare-serato-sl3-candidate.py": "18afa2a477eef0295f8c9d11bcd547c332478683e41f324883c215e6a3f5e338",
+      "scripts/validate-descriptor-schema.ps1": "4061567b871df8c7a3f6cec240986239e150422b94805d79e99d5a129e2dfbcc",
+      "scripts/export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+      "scripts/inspect-serato-resource-archive.py": "5c8773f42f1bd55d3477cf75e94c8b84be09a066370c97608e1f42f3a7ef15f6",
+      "src/asio/com_server.cpp": "decb770d0840f0f08069d94673c53f00737f0e336675ffd1d7e003114668cd07",
+      "scripts/prepare-asio-deployment.py": "942d9e9d7b018ac6c04b046e3463b3342768c38318efc3cc9b71ef64aa58c22c",
+      "artifacts/build/native/native-build-Release.json": "eb3f66db44ac1de6cb29f54083b68a05c32c4f25913203eb8dad97657784f67c",
+      "artifacts/build/native/Release/sl3_asio.dll": "2c6a1fe18f9669b5e2ace2029783890cdd2ec7f1b4886296cad441e54da804fc",
+      "artifacts/extracted/Serato DJ Pro 5.0.0/tree/PFiles64/Serato/Serato DJ Pro/Serato DJ Pro.exe": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+      "artifacts\\extracted\\Serato DJ Pro 5.0.0\\tree\\PFiles64\\Serato\\Serato DJ Pro\\userio_resources.bin": "872fc4fdad2eab2ddd34387d2d3c04dd9731c84798d9fdc7bd05ca54e1567db8",
+      "docs/evidence/serato500-component-profiles.json": "7be2adee7c84b01a6bb3f4ce7d0d68b3d39807d0c4f3368147f73c078b1ff91c",
+      "docs/evidence/serato500-audio-routing.json": "f3ba996d564de88640c372a96086ff325dacc7213e85fe21c60664ef5a3c6840",
+      "docs/evidence/serato500-bank-adaptation.json": "f9fa0cd6ebf43e07c80dc5a82246155db4cd3f4090916ddd5a36ae8cf12f69e8",
+      "docs/evidence/serato500-endpoint-consumers.json": "7b13e381d224f772a6b2574d729f104728b841f9c7e557d21e43b3db423c3713",
+      "docs/evidence/serato500-output-routing.json": "fdb4e065fd5daceafdc2395c5c8944e1cc4e6fde726f67b679e7830cab578a2d",
+      "docs/evidence/serato500-primary-pointer.json": "ebb7f30213856cc6bb72643e86c54e1ea7f754b961cb40671c6a5fc3fc5872c2",
+      "docs/evidence/serato500-usb-arrival.json": "7d018af5beaa3cb0f1111d3f2c79cff3369bdacec7e9e80f828f98794a3d9f50",
+      "scripts/prepare-serato-sl3-archive.py": "efd96ea25f88af24145d455d8456d6659b376c0f5d098824e93cd6b13b94a19a"
+    },
+    "replacement": "Windows File.Replace; same-directory flushed staging and atomic original backup; metadata errors are not ignored",
+    "rollback": "Original backup staged, atomically restored and independently hashed; displaced candidate retained until explicit cleanup",
+    "requiredCallerReview": [
+      "Attended approval of this exact bundle and action",
+      "Serato closed, no concurrent installer/update or privileged writer",
+      "Prepared ASIO profile/deployment and test scope remain separate prerequisites for audio",
+      "Runtime archive integrity/parser acceptance and authorization behavior remain unverified"
+    ],
+    "installExecuted": false,
+    "rollbackExecuted": false,
+    "protectedAclVerified": false,
+    "runtimeArchiveAccepted": false,
+    "currentSeratoAdmissionVerified": false,
+    "twoDeckDvsVerified": false,
+    "deviceAccess": false,
+    "applicationExecuted": false,
+    "securityPolicyModified": false,
+    "authorizationModified": false,
+    "firmwareModified": false,
+    "deploymentApproved": false
+  },
+  "installedOriginalExecutableAndArchiveUnchanged": true,
+  "protectedInstallExecuted": false,
+  "protectedRollbackExecuted": false,
+  "protectedAclPreservationVerified": false,
+  "runtimeResourceIntegrityAcceptanceVerified": false,
+  "currentSeratoAdmissionVerified": false,
+  "twoDeckDvsVerified": false,
+  "applicationExecuted": false,
+  "deviceAccess": false,
+  "deploymentApproved": false,
+  "generatedVendorResourceArchivePublished": false,
+  "remaining": [
+    "Attended review/approval and protected install/rollback validation, no concurrent privileged updater",
+    "Future protected staging owner/DACL acceptance; wrapper refuses rather than relaxes unexpected permissions",
+    "Actual resource integrity/parsing, legitimate service readiness, NONE/control contract and descriptor selection",
+    "Measured ASIO deployment/profile and physical mapping/levels/reopening/current DVS"
+  ]
+}

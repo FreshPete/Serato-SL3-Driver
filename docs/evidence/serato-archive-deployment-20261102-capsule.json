@@ -1,0 +1,8 @@
+{
+  "schema": "sl3.selected-evidence-capsule-reference.v1",
+  "capsuleName": "serato-archive-deployment-20261102",
+  "files": 50,
+  "manifestSha256": "240b2acf21c2d4b67fac0c76a34316965adb666a2a74530f918984772d2db605",
+  "verificationSha256": "bf82d31cfe90186f8c4b79d8c3d00a2d42158b1229d8f36251a30cf1ddfd9349",
+  "generatedVendorResourceArchivesIncluded": false
+}

@@ -69,3 +69,5 @@ Installed executable/archive, registry, driver binding/trust, normal security, f
 The later [candidate selection check](serato-sl3-selection.md) connects the recorded zero USB revision to parser defaults and duplicate rules, including the separate empty `midi_name` field. Its predictions remain conditional; archive loading and actual chosen-descriptor observation are unverified.
 
 The later [authorization-service receiver proof](serato-authorization-service.md) identifies the helper's +0xa0/+0x90 receiver as RLMAuthorization or JWTAuthorization, distinct from DriverAPI. It does not query account state, establish a permitted service result or validate current SL3/audio/DVS.
+
+The later [attended archive-test package](serato-archive-deployment.md) now prepares a source-bound review bundle and tested temporary-file transaction engine. Its default read-only Plan passes on the original installation. Protected install/rollback and application acceptance have not run or been approved.
