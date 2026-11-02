@@ -110,9 +110,11 @@ def state_observer(folder,trace):
     return validator.validate(folder/'trace',folder/'events.xml')
 
 
-def validate(folder, worker_sha, probe_sha, scope=False):
+def validate(folder, worker_sha, probe_sha, scope=False, broker_scope=False):
+    require(not (scope and broker_scope), 'Conflicting trace scenarios')
     admitted = admission(folder)
     record, context, trace = read(folder/'run.json'), read(folder/'context.json'), read(folder/'trace/capture.json')
+    if broker_scope:require(record.get('scenario')=='BrokerScope' and record['traceSeconds']==60,'Broker scope scenario/duration differs')
     if scope:require(record.get('scenario')=='Scope' and record['traceSeconds']==60,'Scope scenario/duration differs')
     require(record['splitUserContext'] is True and context['completed'] is True and context['error'] is None and
             context['probeLaunched'] is False and context['securityChanges'] is False and
@@ -152,20 +154,25 @@ def validate(folder, worker_sha, probe_sha, scope=False):
     for key, filename in (('beforeStateSha256', 'before-state.json'), ('afterStateSha256', 'after-state.json'),
                           ('traceRecordSha256', 'trace/capture.json')):
         require(context[key].lower() == digest(folder/filename).lower() == record[key].lower(), 'Collector snapshot binding differs')
-    result = base.traced(folder, worker_sha, probe_sha, scope=True) if scope else base.traced(folder, worker_sha, probe_sha)
+    result = base.traced(folder, worker_sha, probe_sha, broker_scope=True) if broker_scope else (base.traced(folder, worker_sha, probe_sha, scope=True) if scope else base.traced(folder, worker_sha, probe_sha))
     result['stateObserver']=state_observer(folder,trace)
     tokens(record, result['probe']['nativeJournal']['workerPid'])
+    if broker_scope:
+        session=(folder/'probe/broker-session.txt').read_text(encoding='ascii').splitlines()
+        observed=record['userProcesses']['probe']['process']
+        require(session[2]=='server_pid='+str(observed['pid']) and session[3]=='server_created='+observed['creationFileTimeUtc'],
+                'Broker session does not belong to observed probe process')
     build = read(ROOT/'artifacts/build/native/native-build-Release.json')
     require(record['buildManifestSha256'].lower() == digest(ROOT/'artifacts/build/native/native-build-Release.json').lower(),
             'Build manifest changed')
-    tested=build['scopeProbe'] if scope else build['hostProbe']['controls']
+    tested=build['brokerScopeProbe'] if broker_scope else (build['scopeProbe'] if scope else build['hostProbe']['controls'])
     require(record['runnerInputs'] == tested['scriptInputs'], 'Tested script set differs')
     require(build['usbdk']['executableSha256'].lower() == worker_sha.lower() and
-            (build['scopeProbe'] if scope else build['hostProbe'])['executableSha256'].lower() == probe_sha.lower(), 'Tested native build differs')
+            (build['brokerScopeProbe'] if broker_scope else (build['scopeProbe'] if scope else build['hostProbe']))['executableSha256'].lower() == probe_sha.lower(), 'Tested native build differs')
     for role, expected in (('worker', worker_sha), ('probe', probe_sha)):
         require(digest(Path(record[role+'ImagePath'])).lower() == expected.lower(), 'Native image changed')
     result.update(nonElevatedParentProbeAndWorker=True, collectorAdmission=admitted,
-                  scope=('Normal-token facade scope/clock, shared trace and selected recovery only; no COM, streaming or Serato/DVS claim' if scope else
+                  scope=('Normal-token broker metadata, three client processes, shared trace and selected recovery only; no streaming, COM or Serato/DVS claim' if broker_scope else 'Normal-token facade scope/clock, shared trace and selected recovery only; no COM, streaming or Serato/DVS claim' if scope else
                          'Normal-token controls/ownership, shared trace and selected recovery only; no streaming or Serato/DVS claim'))
     return result
 
@@ -177,11 +184,13 @@ def main():
     mode.add_argument('--run', type=Path)
     parser.add_argument('--worker-sha256')
     parser.add_argument('--probe-sha256')
-    parser.add_argument('--scope',action='store_true')
+    scenario=parser.add_mutually_exclusive_group()
+    scenario.add_argument('--scope',action='store_true')
+    scenario.add_argument('--broker-scope',action='store_true')
     args = parser.parse_args()
     require(args.admission or (args.worker_sha256 and args.probe_sha256), 'Native executable hashes required')
     if args.admission:result=admission(args.admission)
-    else:result=validate(args.run,args.worker_sha256,args.probe_sha256,scope=args.scope)
+    else:result=validate(args.run,args.worker_sha256,args.probe_sha256,scope=args.scope,broker_scope=args.broker_scope)
     print(json.dumps(result, indent=2))
 
 

@@ -1,0 +1,13 @@
+{
+  "schema": "sl3.broker-scope-trace-capsule.v1",
+  "directory": "artifacts/build/checkpoints/broker-scope-trace-20261102",
+  "files": 842,
+  "manifestSha256": "50d763ebf4538c4aeef815e836c59bee0d9858ba0c4e43801f83540d8fc92e18",
+  "includesVendorBinaries": false,
+  "includesPrivateSdk": false,
+  "includesOwnBuiltImages": true,
+  "purpose": "Preserve exact first-party sources, reports, unlaunched negative-test plans and private build/test outputs; not physical evidence.",
+  "localVerificationSha256": "748da5867f4707063dd2f3523f5f2a66f089c319fe731f231ae72b83f0fdf30a",
+  "publishedVerificationSha256": "9a8ec6ecf6f6c07e23be59bbec2ddde9cce34840e6b1c102326cced1b2daaeb8",
+  "verificationHashScope": "Local raw and Git LF-normalized verification bytes are recorded separately."
+}

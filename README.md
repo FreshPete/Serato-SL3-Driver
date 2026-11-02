@@ -8,7 +8,7 @@ Restore the physical Rane SL3 for current Serato DJ Pro and two-deck DVS. Window
 
 The native software checks pass **61/61 Release**, **61/61 Debug** and **38/38 without the ASIO SDK**. Coverage includes a retained session-owner backend with separate simulated audio-client processes, COM/ASIO lifetimes and bounded rate-recording replay. Earlier physical tests demonstrate bounded capture, silent playback and control reads with their recorded worker versions; they do not demonstrate working analogue audio, safe repeated acquisition, measured latency, current Serato compatibility or two-deck DVS with this build.
 
-[The read-only broker scope diagnostic](docs/broker-scope-probe.md) now exercises three independent client processes over one retained simulated worker, without a timing profile or audio capability. The server rejects audio starts in this mode; native physical broker validation still requires an attended traced run.
+[The read-only broker scope diagnostic](docs/broker-scope-probe.md) now exercises three independent client processes over one retained simulated worker, without a timing profile or audio capability. The server rejects audio starts in this mode; its [dedicated single-approval trace workflow](docs/broker-scope-trace.md) is now prepared and checked offline. Native physical broker validation still requires an attended run.
 
 [UsbDk rollback checks](docs/usbdk-rollback-contract.md) now verify a failure-specific extra port cycle in the unchanged released binary and prepare two offline decoder formats. They do not diagnose the historical stall or establish a safe reopen delay; no new acquisition ran.
 

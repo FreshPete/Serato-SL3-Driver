@@ -111,9 +111,4 @@ and prior hardware results retain their own historical versions; they are not
 implicitly upgraded. No new deployment bundle or installed configuration was
 created for this checkpoint.
 
-A future attended test still needs a dedicated traced runner, fresh plans/source
-pins and before/after recovery/security evidence. Existing controls/facade-scope
-validators cannot be reused as a broker-scope pass. Actual native broker IPC,
-analogue audio/timing, reliable reopening, protected deployment and genuine
-current Serato/two-deck DVS remain unverified; the full goal stays active and
-macOS remains deferred.
+A dedicated [traced runner](broker-scope-trace.md) now prepares fresh pinned single-use plans and keeps the broker scenario separate from facade scope. Its default inspection and refusal paths are tested offline; it has not launched a physical test. Actual native broker IPC, analogue audio/timing, reliable reopening, protected deployment and genuine current Serato/two-deck DVS remain unverified; the full goal stays active and macOS remains deferred.

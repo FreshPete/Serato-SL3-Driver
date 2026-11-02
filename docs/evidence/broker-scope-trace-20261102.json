@@ -1,0 +1,138 @@
+{
+  "schema": "sl3.broker-scope-trace-verification.v1",
+  "createdUtc": "2026-11-02T04:58:30.548157+00:00",
+  "builds": [
+    {
+      "configuration": "Release",
+      "testsPassed": 61,
+      "manifestSha256": "fcaa554bb47220c76f5de75d8986f832925edac40339477a5cd34c4d6011d9d8",
+      "ctestLogSha256": "3cf1c5b249b49b2f1b04d52ef8d9b909415facd431fe74eb63e217715681faea",
+      "scriptPinsVerified": 19,
+      "launcherPinsVerified": 2,
+      "nativeImages": {
+        "sl3_usbdk.exe": {
+          "sha256": "790521dcd5120bd0eaf2c2036c501d8f00c49f95b9d557f0d075939b8b451b22",
+          "unchangedFromPriorBrokerScopeBuild": true
+        },
+        "sl3_broker_scope_probe.exe": {
+          "sha256": "99d36f376e788b2569095675a2d8df1a72ece788723fa694d687f2fa721c713c",
+          "unchangedFromPriorBrokerScopeBuild": true
+        },
+        "sl3_asio.dll": {
+          "sha256": "2c6a1fe18f9669b5e2ace2029783890cdd2ec7f1b4886296cad441e54da804fc",
+          "unchangedFromPriorBrokerScopeBuild": true
+        }
+      },
+      "physicalNativeRun": false
+    },
+    {
+      "configuration": "Debug",
+      "testsPassed": 61,
+      "manifestSha256": "fa83db703adc96ebafbd07ef9b765ef816e8fd5b8ddbf69708f314b3c89dc07d",
+      "ctestLogSha256": "45a06104ca80adbb1666c050c52b1b6979ed6fba438a7545c19445aa28403579",
+      "scriptPinsVerified": 19,
+      "launcherPinsVerified": 2,
+      "nativeImages": {
+        "sl3_usbdk.exe": {
+          "sha256": "6c269485b8457915280dea5b9f6e75bccab2fd46ee371bf47fa6071b4ab11954",
+          "unchangedFromPriorBrokerScopeBuild": true
+        },
+        "sl3_broker_scope_probe.exe": {
+          "sha256": "8205196719a23663051e152cc8224fd8d8a26e7a9c4916fb6761b6bab6a8380a",
+          "unchangedFromPriorBrokerScopeBuild": true
+        },
+        "sl3_asio.dll": {
+          "sha256": "a2b5e88666ad7d10555544d67fe06490c32028a9040c37be22ef26c0f9cd235f",
+          "unchangedFromPriorBrokerScopeBuild": true
+        }
+      },
+      "physicalNativeRun": false
+    }
+  ],
+  "pythonChecks": {
+    "passed": 63,
+    "logSha256": "6eec82637b44ff113556890714333c69e07d0e421abc4e126df588df9e5155ae",
+    "modules": [
+      "tests.test_broker_scope_trace_launcher",
+      "tests.test_scope_trace_launcher",
+      "tests.test_controls_user_probe",
+      "tests.test_controls_probe_evidence",
+      "tests.test_broker_scope_evidence"
+    ],
+    "syntheticCompositionIsNativeEvidence": false
+  },
+  "unlaunchedTestPlans": [
+    {
+      "directory": "analysis/broker-scope-trace-test-6266285b40084d66b74648da33913624",
+      "planSha256": "3614158debee765064564a0db04cebf305d576b96d0a8fcb8335157fdb0b4787",
+      "noAttemptMarker": true,
+      "probeContextAbsent": true,
+      "collectorStartMarkerAbsent": true,
+      "collectorDenials": [
+        {
+          "sha256": "8ecdc75276f00bed83bf1433eecca0dea57d55e1f73b9160a0ad59ddf9bd3fc0",
+          "exitCode": 1,
+          "reason": "ordinary token refused"
+        }
+      ]
+    },
+    {
+      "directory": "analysis/broker-scope-trace-test-db7945f04a564e7e91669c862d8c00fe",
+      "planSha256": "61226f8cac7371c197a6be08784aebe826d50e87342e64f56c9ba0ad20071733",
+      "noAttemptMarker": true,
+      "probeContextAbsent": true,
+      "collectorStartMarkerAbsent": true,
+      "collectorDenials": [
+        {
+          "sha256": "8bdb0b3e779ff05ad1c8a509cfa20689d4b0b403980834e37468ac01b280751f",
+          "exitCode": 1,
+          "reason": "ordinary token refused"
+        }
+      ]
+    }
+  ],
+  "localSourceSha256": {
+    "scripts/build-native.ps1": "87d4de81b0ca4928c0fea09fdffb0be8e7a0460a6264c3c737f34d130a327603",
+    "scripts/capture-controls-user-context.ps1": "a96e5021912d7cc61ad90cc76b370c006c2120c8325b86c54be669082da5a33c",
+    "scripts/test-controls-user-probe.ps1": "9f85b0d4267a37fde794e3c944fae10b0344ad09d539267d32dec04564835a8d",
+    "scripts/validate-controls-host-probe.py": "6cd3a6fa856cd9c68a609c182792218d2c0eae0f4ce7c6029dfa65916a2e0fed",
+    "scripts/validate-controls-user-probe.py": "c4bf9f5d162e8d8468101dc68ad3d0c84c0d24c5a0244ed84abcd3a0753f2956",
+    "scripts/prepare-broker-scope-trace.py": "6d9626c4ebe80fc3fef028928753f1ea4e21347399d529d36c0bc45806dcaf8d",
+    "scripts/start-broker-scope-trace.ps1": "0570a9eadde71dfcd764f336959cce205e07097fc679a173a8e3122df358ea45",
+    "scripts/validate-broker-scope-probe.py": "5343ec25af015429e51a5a368a1f65dce944ef133e276a8a61ae53af10da347b",
+    "tests/test_broker_scope_trace_launcher.py": "cca79df2111da738ed25870d439e0519c7c78927ada891712c3965e5b0e7368e",
+    "tests/test_controls_user_probe.py": "bc80fc3035490cd33eee7748c795a70a9d187402274d5d0fde8d3ac4bf45191f",
+    "tests/test_scope_trace_launcher.py": "2b92b5dae68c216a482e6b9fca70b96690f55828df89abe5366ab50edd255413",
+    "tests/test_controls_probe_evidence.py": "da9f10240669027647312848e10287cb5dddbed1f7954251b2c0cf797afac02d",
+    "tests/test_broker_scope_evidence.py": "b19e9a0770e1548f3d5401e28b4074e166b47eedf13f97853963c43de614e8ff"
+  },
+  "publishedSourceSha256": {
+    "scripts/build-native.ps1": "09200fb7f11e10733c036e5b3c95b49036f418b90f80236cc136c730648cecee",
+    "scripts/capture-controls-user-context.ps1": "56030696d2dd4b53c3ea1e6ccb7ada9cc1b40d34683d053262bcdd6c8f61fdaa",
+    "scripts/test-controls-user-probe.ps1": "f9f125878aca0c09330c2aedc343c945fa43a6499f5d27708ec07ca47456f829",
+    "scripts/validate-controls-host-probe.py": "65b0dfaa309c3dfce7fbc8393bbe3c26b2ffdc19740ae3babfe169168f610373",
+    "scripts/validate-controls-user-probe.py": "ee9e36f361c43bad3cc70b743b5616f40370967ad574df3ef5c55b189e3bf796",
+    "scripts/prepare-broker-scope-trace.py": "abf7cd605932444bbff2678fcc257e7d8d80ba224f61ba535324e54334897137",
+    "scripts/start-broker-scope-trace.ps1": "327eea3292877efde277984593612be0fb1d3c3fbf55564d6bd8eaad8712c2cf",
+    "scripts/validate-broker-scope-probe.py": "5343ec25af015429e51a5a368a1f65dce944ef133e276a8a61ae53af10da347b",
+    "tests/test_broker_scope_trace_launcher.py": "3abae5feef15bb3a07ee0222249126323f31b11867a898beb76c6d26c5b41f76",
+    "tests/test_controls_user_probe.py": "deb6cfcb6a77fbafdb6b5d0bdcefbb4d03a003c26cf39b5fbcac7187a82ea3d2",
+    "tests/test_scope_trace_launcher.py": "2b92b5dae68c216a482e6b9fca70b96690f55828df89abe5366ab50edd255413",
+    "tests/test_controls_probe_evidence.py": "bab829d490dd53218759c8a49dd6eaf087e162e373673da53417850768a70e74",
+    "tests/test_broker_scope_evidence.py": "b19e9a0770e1548f3d5401e28b4074e166b47eedf13f97853963c43de614e8ff"
+  },
+  "sourceHashScope": "Local raw bytes and Git LF-normalized publication bytes are recorded separately. Prior checkpoints retain their original source/runtime hashes.",
+  "nativeDeviceTestRun": false,
+  "uacPromptRequested": false,
+  "audioStarted": false,
+  "driverOrBindingChanged": false,
+  "securityChanged": false,
+  "asioRegistered": false,
+  "deploymentBundleRefreshed": false,
+  "physicalAudioVerified": false,
+  "kernelQuiescenceVerified": false,
+  "reopenReadinessVerified": false,
+  "seratoAdmissionVerified": false,
+  "goalComplete": false,
+  "nextAttendedScope": "A fresh single-use BrokerScope plan after supervised resting/recovery checks; one acquisition and no retry. Existing port/stack recovery investigation remains relevant."
+}

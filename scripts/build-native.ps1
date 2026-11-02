@@ -126,6 +126,14 @@ try {
         foreach($name in @($record.hostProbe.controls.scriptInputs.Keys)+@('validate-scope-host-probe.py')){
             $record.scopeProbe.scriptInputs[$name]=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot $name)).Hash
         }
+        $record.brokerScopeProbe.scriptInputs=[ordered]@{}
+        foreach($name in @($record.hostProbe.controls.scriptInputs.Keys)+@('validate-broker-scope-probe.py')){
+            $record.brokerScopeProbe.scriptInputs[$name]=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot $name)).Hash
+        }
+        $record.brokerScopeProbe.traceLauncherInputs=[ordered]@{}
+        foreach($name in @('prepare-broker-scope-trace.py','start-broker-scope-trace.ps1')){
+            $record.brokerScopeProbe.traceLauncherInputs[$name]=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot $name)).Hash
+        }
         $record.scopeProbe.traceLauncherInputs=[ordered]@{}
         foreach($name in @('prepare-scope-trace.py','start-scope-trace.ps1')){
             $record.scopeProbe.traceLauncherInputs[$name]=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot $name)).Hash

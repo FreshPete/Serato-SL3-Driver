@@ -206,6 +206,37 @@ class UserControlsTests(unittest.TestCase):
                 with patch.object(v.base,'traced',return_value={'valid':True,'probe':{'nativeJournal':{'workerPid':2002}}}):
                     with self.subTest(key=key),self.assertRaises(ValueError):v.validate(folder,worker,probe,scope=True)
 
+    def test_broker_scope_selects_own_image_and_binds_server_creation_identity(self):
+        # Synthetic surrounding records; the component trace validator is mocked here.
+        with tempfile.TemporaryDirectory() as temporary:
+            folder=Path(temporary);record,worker,_=self.saved_fixture(folder)
+            build=v.read(ROOT/'artifacts/build/native/native-build-Release.json')
+            image=str(ROOT/'artifacts/build/native/Release/sl3_broker_scope_probe.exe')
+            record.update(scenario='BrokerScope',traceSeconds=60,schema='sl3.broker-scope.traced-run.v1',
+                          probeImagePath=image,runnerInputs=build['brokerScopeProbe']['scriptInputs'])
+            record['userProcesses']['probe']['process']['imagePath']=image
+            (folder/'run.json').write_text(json.dumps(record),encoding='utf-8')
+            (folder/'probe').mkdir()
+            process=record['userProcesses']['probe']['process']
+            session=['SL3-BROKER-SESSION-1','endpoint=fixture','server_pid='+str(process['pid']),
+                     'server_created='+process['creationFileTimeUtc'],'worker_sha256='+worker.lower()]
+            path=folder/'probe/broker-session.txt'
+            def save_session(value):path.write_text('\n'.join(value)+'\n',encoding='ascii')
+            save_session(session);probe=build['brokerScopeProbe']['executableSha256']
+            with patch.object(v.base,'traced',return_value={'valid':True,'probe':{'nativeJournal':{'workerPid':2002}}}) as underlying:
+                self.assertTrue(v.validate(folder,worker,probe,broker_scope=True)['nonElevatedParentProbeAndWorker'])
+                underlying.assert_called_once_with(folder,worker,probe,broker_scope=True)
+            for index,value in [(2,'server_pid=4000'),(3,'server_created=134379600000000001')]:
+                bad=session.copy();bad[index]=value;save_session(bad)
+                with patch.object(v.base,'traced',return_value={'valid':True,'probe':{'nativeJournal':{'workerPid':2002}}}):
+                    with self.subTest(index=index),self.assertRaisesRegex(ValueError,'observed probe'):
+                        v.validate(folder,worker,probe,broker_scope=True)
+            save_session(session)
+            for key,value in [('scenario','Scope'),('traceSeconds',20),('runnerInputs',build['scopeProbe']['scriptInputs'])]:
+                bad=copy.deepcopy(record);bad[key]=value;(folder/'run.json').write_text(json.dumps(bad),encoding='utf-8')
+                with patch.object(v.base,'traced',return_value={'valid':True,'probe':{'nativeJournal':{'workerPid':2002}}}):
+                    with self.subTest(key=key),self.assertRaises(ValueError):v.validate(folder,worker,probe,broker_scope=True)
+
     def test_final_record_mutations_fail(self):
         with tempfile.TemporaryDirectory() as temporary:
             folder = Path(temporary);record, worker, probe = self.saved_fixture(folder)

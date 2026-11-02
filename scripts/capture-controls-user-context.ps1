@@ -17,7 +17,7 @@ function Save-Context{$record|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (
 Save-Context
 try{
     & (Join-Path $PSScriptRoot 'collect-windows-state.ps1') -Output (Join-Path $ContextDirectory 'before-state.json')|Out-Null
-    $record.testProcessesBefore=@(Get-CimInstance Win32_Process -Filter "Name='sl3_usbdk.exe' OR Name='sl3_host_probe.exe' OR Name='sl3_scope_probe.exe'"|Select-Object ProcessId,Name)
+    $record.testProcessesBefore=@(Get-CimInstance Win32_Process -Filter "Name='sl3_usbdk.exe' OR Name='sl3_host_probe.exe' OR Name='sl3_scope_probe.exe' OR Name='sl3_broker_scope_probe.exe' OR Name='sl3_broker_controller.exe'"|Select-Object ProcessId,Name)
     if($record.testProcessesBefore.Count){throw 'A prior device-test process remains'}
     $before=Get-Content -LiteralPath (Join-Path $ContextDirectory 'before-state.json') -Raw|ConvertFrom-Json
     if($before.secureBoot -ne $true -or @($before.devices).Count -ne 1){throw 'Enabled Secure Boot and one resting SL3 required'}
@@ -31,7 +31,7 @@ finally{
     try{
         & (Join-Path $PSScriptRoot 'collect-windows-state.ps1') -Output (Join-Path $ContextDirectory 'after-state.json')|Out-Null
         $record.afterStateSha256=(Get-FileHash -LiteralPath (Join-Path $ContextDirectory 'after-state.json')).Hash
-        $record.testProcessesAfter=@(Get-CimInstance Win32_Process -Filter "Name='sl3_usbdk.exe' OR Name='sl3_host_probe.exe' OR Name='sl3_scope_probe.exe'"|Select-Object ProcessId,Name)
+        $record.testProcessesAfter=@(Get-CimInstance Win32_Process -Filter "Name='sl3_usbdk.exe' OR Name='sl3_host_probe.exe' OR Name='sl3_scope_probe.exe' OR Name='sl3_broker_scope_probe.exe' OR Name='sl3_broker_controller.exe'"|Select-Object ProcessId,Name)
         if($record.testProcessesAfter.Count){throw 'A device-test process remains after the trace'}
     }catch{if(-not $record.error){$record.error=$_.Exception.Message}}
     $record.completed=($null -eq $record.error);$record.completedUtc=[datetime]::UtcNow.ToString('o');Save-Context
