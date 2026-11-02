@@ -1,0 +1,237 @@
+{
+  "schema": "sl3.serato-candidate-verification.v1",
+  "date": "2026-11-02",
+  "status": "offline_hypothesis",
+  "sources": {
+    "scripts/prepare-serato-sl3-candidate.py": {
+      "localSha256": "18afa2a477eef0295f8c9d11bcd547c332478683e41f324883c215e6a3f5e338",
+      "gitLfSha256": "18afa2a477eef0295f8c9d11bcd547c332478683e41f324883c215e6a3f5e338"
+    },
+    "scripts/validate-descriptor-schema.ps1": {
+      "localSha256": "4061567b871df8c7a3f6cec240986239e150422b94805d79e99d5a129e2dfbcc",
+      "gitLfSha256": "1393c6f5633af055e55cc3434f4978115b82610e00d7c11a24abf48596349739"
+    },
+    "tests/test_serato_sl3_candidate.py": {
+      "localSha256": "213a3cc539b50266d2b17eb4cc7feff4a801dca7fc5a3771bfcc4716e6a8d3b2",
+      "gitLfSha256": "b1a4d15859df670afa1e04319fe72d2eeb7c7fba3834bc713ea62f2851f062d4"
+    },
+    "scripts/export-serato-clock-handshake-evidence.py": {
+      "localSha256": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+      "gitLfSha256": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20"
+    },
+    "scripts/inspect-serato-resource-archive.py": {
+      "localSha256": "5c8773f42f1bd55d3477cf75e94c8b84be09a066370c97608e1f42f3a7ef15f6",
+      "gitLfSha256": "5c8773f42f1bd55d3477cf75e94c8b84be09a066370c97608e1f42f3a7ef15f6"
+    },
+    "src/asio/com_server.cpp": {
+      "localSha256": "decb770d0840f0f08069d94673c53f00737f0e336675ffd1d7e003114668cd07",
+      "gitLfSha256": "3c580c12b1179b17cb193ed02edbe88bd46634123b585f6a8afbf10beb713b44"
+    },
+    "scripts/prepare-asio-deployment.py": {
+      "localSha256": "942d9e9d7b018ac6c04b046e3463b3342768c38318efc3cc9b71ef64aa58c22c",
+      "gitLfSha256": "c846251d9fe910c395c0e4936ef6a645cf86f8b04f6ed05bd4aa74245f8e5aa2"
+    }
+  },
+  "unitTests": {
+    "passed": 8,
+    "logSha256": "4bb65f2f520df434b9df81ac789349f2023f04b6828ae51c9f20e2be44076b5c"
+  },
+  "actualCliTests": {
+    "schema": "sl3.serato-candidate-cli-tests.v1",
+    "cases": [
+      {
+        "case": "validate",
+        "passed": true,
+        "exitCode": 0,
+        "stdoutSha256": "537ac3e94b0ba3e8c503eda13a6b5f3ed81adc6cc76efd4076d49e59372de251",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "case": "repeat",
+        "passed": true,
+        "exitCode": 0,
+        "stdoutSha256": "537ac3e94b0ba3e8c503eda13a6b5f3ed81adc6cc76efd4076d49e59372de251",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "case": "overwrite",
+        "passed": true,
+        "exitCode": 1,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "35e3d45b27f540116d8f100e7e1201aa832f89e7dda58746f4aa574a05ef3256"
+      },
+      {
+        "case": "plan",
+        "passed": true,
+        "exitCode": 0,
+        "stdoutSha256": "43cba67f7a7ac0d857bc3d037e060414f1417979a865e211c1fe2ba2cd003a9d",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "case": "tamper-identity",
+        "passed": true,
+        "exitCode": 1,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "77c0a27c3e700a4ad5946a891cf286ac5d89a0f0433e52846163fc60031317e6"
+      },
+      {
+        "case": "tamper-claim",
+        "passed": true,
+        "exitCode": 1,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "9b850f842ef6e0f2d71ef12ced510ab984d150b277f215af2c4dcaca9b61e9d5"
+      }
+    ],
+    "sameXmlAndManifestOnRepeat": true,
+    "originalBundleUnchanged": true,
+    "candidateSha256": "2a2b0828e75e622d0e485b6a051370a53c341d22ce02381798f1a2597a91649e",
+    "manifestSha256": "570161872f45e59d7fc827c9c9a9a6e0796cbd4c48ad68e49e0a21845fdb28b0",
+    "deviceAccess": false,
+    "applicationExecuted": false
+  },
+  "cliReportSha256": "508b0653a41e61bc5837eee7545dc6ff9484b40b088e9f113344a6eda988ad6d",
+  "nativeBaselineRevalidated": [
+    {
+      "configuration": "Release",
+      "manifestSha256": "eb3f66db44ac1de6cb29f54083b68a05c32c4f25913203eb8dad97657784f67c",
+      "nativeSourcePinsVerified": 146,
+      "traceAndLauncherPinsVerified": 63,
+      "selectedImages": {
+        "sl3_usbdk.exe": "790521dcd5120bd0eaf2c2036c501d8f00c49f95b9d557f0d075939b8b451b22",
+        "sl3_asio.dll": "2c6a1fe18f9669b5e2ace2029783890cdd2ec7f1b4886296cad441e54da804fc",
+        "sl3_input_record_probe.exe": "58118e13077e1d3b38793f7c659b4786a925c50c41bc54ec6b851596b7f950a0",
+        "sl3_broker_scope_probe.exe": "99d36f376e788b2569095675a2d8df1a72ece788723fa694d687f2fa721c713c"
+      },
+      "testsRerun": false
+    },
+    {
+      "configuration": "Debug",
+      "manifestSha256": "fd3d6599359ef4212a847c8ce16bd28108a46b09dded5b3e6dc0f5b6b177ee27",
+      "nativeSourcePinsVerified": 146,
+      "traceAndLauncherPinsVerified": 63,
+      "selectedImages": {
+        "sl3_usbdk.exe": "6c269485b8457915280dea5b9f6e75bccab2fd46ee371bf47fa6071b4ab11954",
+        "sl3_asio.dll": "a2b5e88666ad7d10555544d67fe06490c32028a9040c37be22ef26c0f9cd235f",
+        "sl3_input_record_probe.exe": "adff310915ca52bf8fcbc21fdb5555210ee821528cbbfc476bb46851d1feb70a",
+        "sl3_broker_scope_probe.exe": "8205196719a23663051e152cc8224fd8d8a26e7a9c4916fb6761b6bab6a8380a"
+      },
+      "testsRerun": false
+    }
+  ],
+  "candidateSha256": "2a2b0828e75e622d0e485b6a051370a53c341d22ce02381798f1a2597a91649e",
+  "historicalXmlSha256": "314e81ffb5d052e53280903d543107c8223e99ff1f4e200311a2b3d90e49154c",
+  "currentApplicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "contractEvidenceSha256": {
+    "component-profiles": "7be2adee7c84b01a6bb3f4ce7d0d68b3d39807d0c4f3368147f73c078b1ff91c",
+    "audio-routing": "f3ba996d564de88640c372a96086ff325dacc7213e85fe21c60664ef5a3c6840",
+    "bank-adaptation": "f9fa0cd6ebf43e07c80dc5a82246155db4cd3f4090916ddd5a36ae8cf12f69e8",
+    "endpoint-consumers": "7b13e381d224f772a6b2574d729f104728b841f9c7e557d21e43b3db423c3713",
+    "output-routing": "fdb4e065fd5daceafdc2395c5c8944e1cc4e6fde726f67b679e7830cab578a2d",
+    "primary-pointer": "ebb7f30213856cc6bb72643e86c54e1ea7f754b961cb40671c6a5fc3fc5872c2",
+    "usb-arrival": "7d018af5beaa3cb0f1111d3f2c79cff3369bdacec7e9e80f828f98794a3d9f50"
+  },
+  "schemaMetadata": {
+    "resource": "midi/MIDI.xsd",
+    "sha256": "9e15093df616f9b9eac7f2f0fc1dbebfc55ce353415e22569fcfa00b98c1cc56",
+    "crc32": 313368588
+  },
+  "schemaValidation": {
+    "schema": "sl3.xml-schema-validation.v1",
+    "valid": true,
+    "engine": ".NET XmlSchemaSet",
+    "externalResolution": false,
+    "knownSchemaDtdIgnored": true,
+    "errors": [],
+    "schemaSha256": "9e15093df616f9b9eac7f2f0fc1dbebfc55ce353415e22569fcfa00b98c1cc56",
+    "xmlSha256": "2a2b0828e75e622d0e485b6a051370a53c341d22ce02381798f1a2597a91649e"
+  },
+  "intentionalChanges": {
+    "handshake_type": {
+      "from": "HANDSHAKE_TYPE_DRIVER_API",
+      "to": "HANDSHAKE_TYPE_NONE",
+      "status": "Unverified control/connection hypothesis"
+    },
+    "win_audio_device_name": {
+      "from": "SL 3",
+      "to": "SL3 Rebuild Development"
+    },
+    "win_x64_driver_detection": {
+      "from": "SOFTWARE\\ASIO\\Rane SL 3",
+      "to": "SOFTWARE\\ASIO\\SL3 Rebuild Development"
+    },
+    "explicitCurrentDefaults": {
+      "has_hid": "false",
+      "use_legacy_portaudio": "true"
+    },
+    "otherDriverDetectionPlatforms": "Empty schema-required placeholders; only Windows x64 driver proposed",
+    "historicalFieldsOmittedWithoutReplacement": [
+      "has_faders",
+      "platter_resolution",
+      "provides_software_through"
+    ],
+    "fieldOrdering": "Current schema base/extension sequence rather than historical element order"
+  },
+  "preserved": {
+    "identity": "Rane SL3, VID 0x1CC5/PID 0x0001",
+    "midi_direction": "none",
+    "requires_usb": true,
+    "nominalRateHz": 48000,
+    "declaredDecks": 3,
+    "dvs_device": "DVS_DEVICE_YES",
+    "applicationFrameAlignment": 48,
+    "historicalMacStringsRetainedWithoutValidation": true
+  },
+  "logicalMaps": {
+    "input": {
+      "Deck3In": [
+        0,
+        1
+      ],
+      "Deck1In": [
+        2,
+        3
+      ],
+      "Deck2In": [
+        4,
+        5
+      ]
+    },
+    "output": {
+      "Deck3Out": [
+        0,
+        1
+      ],
+      "Deck1Out": [
+        2,
+        3
+      ],
+      "Deck2Out": [
+        4,
+        5
+      ]
+    },
+    "physicalMappingVerified": false
+  },
+  "remaining": [
+    "Current provider/container registration and integrity/signature/rollback design",
+    "Validate the genuine SL3 control contract behind the explicit NONE hypothesis; do not treat it as implemented DRIVER_API",
+    "Resolve service/state-message eligibility and unique actual ASIO selection",
+    "Measured native timing/profile, physical mapping/levels/reopening and protected driver deployment",
+    "Real current Serato admission, legitimate account/product behavior and two-deck DVS; Mac deferred"
+  ],
+  "schemaAcceptanceIsApplicationAcceptance": false,
+  "applicationExecuted": false,
+  "applicationModified": false,
+  "archiveModified": false,
+  "providerInstalled": false,
+  "descriptorRegistered": false,
+  "driverInstalled": false,
+  "deviceAccess": false,
+  "audioPlayed": false,
+  "firmwareModified": false,
+  "accountOrEntitlementModified": false,
+  "currentSeratoAdmissionVerified": false,
+  "twoDeckDvsVerified": false,
+  "deploymentApproved": false,
+  "manifestSha256": "570161872f45e59d7fc827c9c9a9a6e0796cbd4c48ad68e49e0a21845fdb28b0"
+}

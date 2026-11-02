@@ -104,3 +104,6 @@ The [registered primary-pointer handoff](serato-primary-pointer.md) is now concr
 
 
 The [conditional USB-only arrival bridge](serato-usb-arrival.md) now links a selected action-zero branch to DeviceManager's arrival message and resolves the downstream helper result to two message-updated state bytes. Continue genuine SL3 upstream eligibility/provider work and the service/backend/state contract. Preserve the legitimate minimum-version policy and separate local pointer/state results from actual audio/DVS. No firmware, descriptor, app or account change is selected by this checkpoint.
+
+
+The [offline genuine-SL3 candidate](serato-sl3-candidate.md) now provides concrete source-bound XML for review, with actual current-schema validation and deterministic/tamper tests. It preserves genuine identity/capability/routing metadata while declaring the DRIVER_API-to-NONE choice as an unverified control hypothesis. It is not an installed provider or compatibility result. Resolve omitted control/through behavior and service eligibility; any later container/package experiment needs exact integrity/signature/rollback handling before deployment. Continue physical timing/mapping/reopening and current Serato/two-deck DVS requirements independently.
