@@ -101,3 +101,8 @@ NuGet verification passes for the Microsoft author and NuGet repository signatur
 Run `python -m unittest discover -s tests -v`. The tests replay the captured physical descriptor fixture and reject malformed descriptor boundaries. Passing these parser tests does not validate streaming or DVS.
 
 `test-original-driver.ps1` defaults to preflight only. `-Install -RiskAccepted` explicitly runs the authentic vendor installer from an elevated terminal, verifies archive/setup hashes and signature, captures before/after state, requests normal visible UI and suppresses automatic reboot. No silent EULA acceptance is automated. The owner completed the interactive installation in the first session. Read next-tests.md before using it again.
+
+
+## Isolated focused PE input
+
+The [generic DriverAPI checkpoint](serato-generic-driver-fallback.md) used a fresh byte-identical PE copy in an otherwise empty private analysis directory, plus `-librarySearchPaths` pointing to a separate empty directory. Keep `-loader-loadLibraries false`, `-noanalysis` and `-readOnly`, verify the copied SHA against the original, and retain the successful log/project cleanup evidence. The explicit search path avoids unrelated application/system library paths during this focused import. It does not increase analysis coverage or validate runtime behavior. Do not publish the isolated vendor image or whole pseudocode.

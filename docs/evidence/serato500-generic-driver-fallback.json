@@ -1,0 +1,613 @@
+{
+  "schema": "sl3.serato-generic-driver-fallback.v1",
+  "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "installedMatches": true,
+  "legacyLiteralRetention": [
+    {
+      "version": "2.5.5",
+      "executableSha256": "ba8641d0329fe0c955147d2b45f247eeea82ac0f812fe30a339834dbe0c0a503",
+      "wholeExecutableBytePatternScan": [
+        {
+          "text": "RaneAsioSL3.dll",
+          "asciiTerminatedBytePatternHits": 0,
+          "utf16LeTerminatedBytePatternHits": 1,
+          "filenameAsciiCaseInsensitiveScan": true
+        },
+        {
+          "text": ".?AVRaneSL3API@driver@device@serato@@",
+          "asciiTerminatedBytePatternHits": 1,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_open",
+          "asciiTerminatedBytePatternHits": 1,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_close",
+          "asciiTerminatedBytePatternHits": 1,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_driver_timer",
+          "asciiTerminatedBytePatternHits": 1,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_get_usb_port_status",
+          "asciiTerminatedBytePatternHits": 1,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_get_audio_controls",
+          "asciiTerminatedBytePatternHits": 1,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_set_audio_controls",
+          "asciiTerminatedBytePatternHits": 1,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_set_thrustate_callback",
+          "asciiTerminatedBytePatternHits": 1,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        }
+      ]
+    },
+    {
+      "version": "2.5.6",
+      "executableSha256": "3b04472cd5597fd56266e1c2c86dc298431b0026001aefe4b43aa3b909ee35c5",
+      "wholeExecutableBytePatternScan": [
+        {
+          "text": "RaneAsioSL3.dll",
+          "asciiTerminatedBytePatternHits": 0,
+          "utf16LeTerminatedBytePatternHits": 1,
+          "filenameAsciiCaseInsensitiveScan": true
+        },
+        {
+          "text": ".?AVRaneSL3API@driver@device@serato@@",
+          "asciiTerminatedBytePatternHits": 1,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_open",
+          "asciiTerminatedBytePatternHits": 1,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_close",
+          "asciiTerminatedBytePatternHits": 1,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_driver_timer",
+          "asciiTerminatedBytePatternHits": 1,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_get_usb_port_status",
+          "asciiTerminatedBytePatternHits": 1,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_get_audio_controls",
+          "asciiTerminatedBytePatternHits": 1,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_set_audio_controls",
+          "asciiTerminatedBytePatternHits": 1,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_set_thrustate_callback",
+          "asciiTerminatedBytePatternHits": 1,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        }
+      ]
+    },
+    {
+      "version": "5.0.0",
+      "executableSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+      "wholeExecutableBytePatternScan": [
+        {
+          "text": "RaneAsioSL3.dll",
+          "asciiTerminatedBytePatternHits": 0,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": true
+        },
+        {
+          "text": ".?AVRaneSL3API@driver@device@serato@@",
+          "asciiTerminatedBytePatternHits": 0,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_open",
+          "asciiTerminatedBytePatternHits": 0,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_close",
+          "asciiTerminatedBytePatternHits": 0,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_driver_timer",
+          "asciiTerminatedBytePatternHits": 0,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_get_usb_port_status",
+          "asciiTerminatedBytePatternHits": 0,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_get_audio_controls",
+          "asciiTerminatedBytePatternHits": 0,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_set_audio_controls",
+          "asciiTerminatedBytePatternHits": 0,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        },
+        {
+          "text": "sl3_set_thrustate_callback",
+          "asciiTerminatedBytePatternHits": 0,
+          "utf16LeTerminatedBytePatternHits": 0,
+          "filenameAsciiCaseInsensitiveScan": false
+        }
+      ]
+    }
+  ],
+  "checkedInstructions": [
+    {
+      "va": "0x140bfe0a2",
+      "bytes": "488b07",
+      "assembly": "mov rax, qword ptr [rdi]"
+    },
+    {
+      "va": "0x140bfe0a5",
+      "bytes": "488d55b7",
+      "assembly": "lea rdx, [rbp - 0x49]"
+    },
+    {
+      "va": "0x140bfe0a9",
+      "bytes": "488bcf",
+      "assembly": "mov rcx, rdi"
+    },
+    {
+      "va": "0x140bfe0ac",
+      "bytes": "ff5048",
+      "assembly": "call qword ptr [rax + 0x48]"
+    },
+    {
+      "va": "0x140bfe0af",
+      "bytes": "488bd0",
+      "assembly": "mov rdx, rax"
+    },
+    {
+      "va": "0x140bfe0b2",
+      "bytes": "488bcb",
+      "assembly": "mov rcx, rbx"
+    },
+    {
+      "va": "0x140bfe0b5",
+      "bytes": "e816190000",
+      "assembly": "call 0x140bff9d0"
+    },
+    {
+      "va": "0x140bfe0ba",
+      "bytes": "488bf0",
+      "assembly": "mov rsi, rax"
+    },
+    {
+      "va": "0x140bff9eb",
+      "bytes": "488bf2",
+      "assembly": "mov rsi, rdx"
+    },
+    {
+      "va": "0x140bff9ee",
+      "bytes": "488bf9",
+      "assembly": "mov rdi, rcx"
+    },
+    {
+      "va": "0x140bff9fb",
+      "bytes": "488d055e692802",
+      "assembly": "lea rax, [rip + 0x228695e]"
+    },
+    {
+      "va": "0x140bffa02",
+      "bytes": "488901",
+      "assembly": "mov qword ptr [rcx], rax"
+    },
+    {
+      "va": "0x140bffa05",
+      "bytes": "c6410800",
+      "assembly": "mov byte ptr [rcx + 8], 0"
+    },
+    {
+      "va": "0x140bffa0b",
+      "bytes": "89690c",
+      "assembly": "mov dword ptr [rcx + 0xc], ebp"
+    },
+    {
+      "va": "0x140bffa0e",
+      "bytes": "48896948",
+      "assembly": "mov qword ptr [rcx + 0x48], rbp"
+    },
+    {
+      "va": "0x140bffa12",
+      "bytes": "48896950",
+      "assembly": "mov qword ptr [rcx + 0x50], rbp"
+    },
+    {
+      "va": "0x140bffa16",
+      "bytes": "48896958",
+      "assembly": "mov qword ptr [rcx + 0x58], rbp"
+    },
+    {
+      "va": "0x140bffa1a",
+      "bytes": "b928000000",
+      "assembly": "mov ecx, 0x28"
+    },
+    {
+      "va": "0x140bffa1f",
+      "bytes": "e8ec845101",
+      "assembly": "call 0x142117f10"
+    },
+    {
+      "va": "0x140bffa35",
+      "bytes": "48894750",
+      "assembly": "mov qword ptr [rdi + 0x50], rax"
+    },
+    {
+      "va": "0x140bffa48",
+      "bytes": "0f1006",
+      "assembly": "movups xmm0, xmmword ptr [rsi]"
+    },
+    {
+      "va": "0x140bffa4b",
+      "bytes": "0f114760",
+      "assembly": "movups xmmword ptr [rdi + 0x60], xmm0"
+    },
+    {
+      "va": "0x140bffa4f",
+      "bytes": "0f104e10",
+      "assembly": "movups xmm1, xmmword ptr [rsi + 0x10]"
+    },
+    {
+      "va": "0x140bffa53",
+      "bytes": "0f114f70",
+      "assembly": "movups xmmword ptr [rdi + 0x70], xmm1"
+    },
+    {
+      "va": "0x140bffa71",
+      "bytes": "488bc7",
+      "assembly": "mov rax, rdi"
+    },
+    {
+      "va": "0x140c00360",
+      "bytes": "89542410",
+      "assembly": "mov dword ptr [rsp + 0x10], edx"
+    },
+    {
+      "va": "0x140c00364",
+      "bytes": "53",
+      "assembly": "push rbx"
+    },
+    {
+      "va": "0x140c00365",
+      "bytes": "4883ec20",
+      "assembly": "sub rsp, 0x20"
+    },
+    {
+      "va": "0x140c00369",
+      "bytes": "4883c150",
+      "assembly": "add rcx, 0x50"
+    },
+    {
+      "va": "0x140c0036d",
+      "bytes": "488d542438",
+      "assembly": "lea rdx, [rsp + 0x38]"
+    },
+    {
+      "va": "0x140c00372",
+      "bytes": "418bd8",
+      "assembly": "mov ebx, r8d"
+    },
+    {
+      "va": "0x140c00375",
+      "bytes": "e826fc9bff",
+      "assembly": "call 0x1405bffa0"
+    },
+    {
+      "va": "0x140c0037a",
+      "bytes": "8918",
+      "assembly": "mov dword ptr [rax], ebx"
+    },
+    {
+      "va": "0x140c0037c",
+      "bytes": "b001",
+      "assembly": "mov al, 1"
+    },
+    {
+      "va": "0x140c0037e",
+      "bytes": "4883c420",
+      "assembly": "add rsp, 0x20"
+    },
+    {
+      "va": "0x140c00382",
+      "bytes": "5b",
+      "assembly": "pop rbx"
+    },
+    {
+      "va": "0x140c00383",
+      "bytes": "c3",
+      "assembly": "ret "
+    },
+    {
+      "va": "0x140c00240",
+      "bytes": "4883ec48",
+      "assembly": "sub rsp, 0x48"
+    },
+    {
+      "va": "0x140c00244",
+      "bytes": "488d5160",
+      "assembly": "lea rdx, [rcx + 0x60]"
+    },
+    {
+      "va": "0x140c00248",
+      "bytes": "488d4c2420",
+      "assembly": "lea rcx, [rsp + 0x20]"
+    },
+    {
+      "va": "0x140c0024d",
+      "bytes": "e8ae308aff",
+      "assembly": "call 0x1404a3300"
+    },
+    {
+      "va": "0x140c00252",
+      "bytes": "488bc8",
+      "assembly": "mov rcx, rax"
+    },
+    {
+      "va": "0x140c00255",
+      "bytes": "e876fdffff",
+      "assembly": "call 0x140bfffd0"
+    },
+    {
+      "va": "0x140c0025a",
+      "bytes": "4883c448",
+      "assembly": "add rsp, 0x48"
+    },
+    {
+      "va": "0x140c0025e",
+      "bytes": "c3",
+      "assembly": "ret "
+    }
+  ],
+  "priorContractInstructionsRechecked": 322,
+  "baseDriverApi": {
+    "constructor": "0x140bff9d0",
+    "vtable": "0x142e86360",
+    "locator": "0x143310b30",
+    "type": "DriverAPI",
+    "slots": [
+      {
+        "offset": "0x0",
+        "target": "0x140bf97f0"
+      },
+      {
+        "offset": "0x8",
+        "target": "0x1404a4540"
+      },
+      {
+        "offset": "0x10",
+        "target": "0x140bffb30"
+      },
+      {
+        "offset": "0x18",
+        "target": "0x140bfffc0"
+      },
+      {
+        "offset": "0x20",
+        "target": "0x140bfff40"
+      },
+      {
+        "offset": "0x28",
+        "target": "0x140c00360"
+      },
+      {
+        "offset": "0x30",
+        "target": "0x140c00260"
+      },
+      {
+        "offset": "0x38",
+        "target": "0x1404a4550"
+      },
+      {
+        "offset": "0x40",
+        "target": "0x1405da5d0"
+      },
+      {
+        "offset": "0x48",
+        "target": "0x140c00230"
+      },
+      {
+        "offset": "0x50",
+        "target": "0x140c00240"
+      },
+      {
+        "offset": "0x58",
+        "target": "0x140c00230"
+      },
+      {
+        "offset": "0x60",
+        "target": "0x1404a4980"
+      },
+      {
+        "offset": "0x68",
+        "target": "0x140bfffb0"
+      },
+      {
+        "offset": "0x70",
+        "target": "0x1404a67c0"
+      },
+      {
+        "offset": "0x78",
+        "target": "0x1404a67c0"
+      },
+      {
+        "offset": "0x80",
+        "target": "0x140c00310"
+      },
+      {
+        "offset": "0x88",
+        "target": "0x140be4810"
+      },
+      {
+        "offset": "0x90",
+        "target": "0x1404a4550"
+      },
+      {
+        "offset": "0x98",
+        "target": "0x1404a5de0"
+      },
+      {
+        "offset": "0xa0",
+        "target": "0x1404a4540"
+      },
+      {
+        "offset": "0xa8",
+        "target": "0x1404a5de0"
+      },
+      {
+        "offset": "0xb0",
+        "target": "0x140bfe1b0"
+      },
+      {
+        "offset": "0xb8",
+        "target": "0x140bfe1b0"
+      }
+    ],
+    "factoryDirectConstructionSites": [
+      "0x140bfc070",
+      "0x140bfcf94",
+      "0x140bfd1ae",
+      "0x140bfdfe1",
+      "0x140bfe0b5"
+    ],
+    "finalCheckedFactoryCall": "0x140bfe0b5",
+    "keyedValueContainerMember": "0x50",
+    "constructorStringMember": "0x60",
+    "keyedSetter": "0x140c00360",
+    "keyedGetter": "0x140bfff40",
+    "readinessStringWrapper": "0x140c00240",
+    "registryStringPredicate": "0x140bfffd0",
+    "constantTrueSlots": [
+      "0x8",
+      "0xa0"
+    ],
+    "constantFalseSlots": [
+      "0x38",
+      "0x90"
+    ],
+    "constructorDirectCallTargets": [
+      "0x142117f10",
+      "0x142118190"
+    ],
+    "transportCompletionInferredFromBooleans": false
+  },
+  "completeLeaves": [
+    {
+      "va": "0x1404a4540",
+      "bytes": "b001c3",
+      "instructions": [
+        "mov al, 1",
+        "ret "
+      ]
+    },
+    {
+      "va": "0x1404a4550",
+      "bytes": "32c0c3",
+      "instructions": [
+        "xor al, al",
+        "ret "
+      ]
+    },
+    {
+      "va": "0x1405da5d0",
+      "bytes": "8b410cc3",
+      "instructions": [
+        "mov eax, dword ptr [rcx + 0xc]",
+        "ret "
+      ]
+    },
+    {
+      "va": "0x140bfffc0",
+      "bytes": "83fa040f92c0c3",
+      "instructions": [
+        "cmp edx, 4",
+        "setb al",
+        "ret "
+      ]
+    }
+  ],
+  "focusedFunctions": 6,
+  "focusedReportSha256": "02c7b1f1ff7d19232358a6098d342fdfff546e2315f04ff1535c16110374df32",
+  "focusedLogSha256": "bd5a9081c4a195e91aa3e4bf07b6ea40b86db030a8314ac84fa95b6b7bf6a710",
+  "priorCurrentContractSha256": "85a8c55dacd06c01605908b4457b7b13474128b0ce31c6d4eb81318e98fcff7b",
+  "priorHistoricalNamedLoaderSha256": "4aa204c01f36826d2b02bd551d8e2f33de19872576eb8db2adec562f8cd28c08",
+  "localSourceSha256": {
+    "scripts/export-serato-generic-driver-fallback.py": "97992e69550414befb30395bd9edee19d9e22df525e795dec9b9964221d9922a",
+    "scripts/export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+    "scripts/export-serato-supported-evidence.py": "91278939497bb97d34accd706530c5979a6af6b0889aab5d1537bd54833115f9",
+    "scripts/export-serato256-sl3-api-path.py": "0c4a5db10644d73e21ff9aa16cea91de61cbe6fa4201a2316d8c13cec7ac4cdf",
+    "scripts/ghidra/FocusedDecompile.java": "54383ff3d55f0bb97c2a2e1129fa712eb237c7a2126420c627bb08d8c33672d6"
+  },
+  "publishedSourceSha256": {
+    "scripts/export-serato-generic-driver-fallback.py": "97992e69550414befb30395bd9edee19d9e22df525e795dec9b9964221d9922a",
+    "scripts/export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+    "scripts/export-serato-supported-evidence.py": "91278939497bb97d34accd706530c5979a6af6b0889aab5d1537bd54833115f9",
+    "scripts/export-serato256-sl3-api-path.py": "0c4a5db10644d73e21ff9aa16cea91de61cbe6fa4201a2316d8c13cec7ac4cdf",
+    "scripts/ghidra/FocusedDecompile.java": "54383ff3d55f0bb97c2a2e1129fa712eb237c7a2126420c627bb08d8c33672d6"
+  },
+  "applicationExecuted": false,
+  "applicationModified": false,
+  "deviceAccess": false,
+  "legacyDllLoaded": false,
+  "newCurrentExternalRegistrationRouteIdentified": false,
+  "currentSeratoAdmissionVerified": false,
+  "limits": [
+    "Literal absence is bounded to exact terminated ASCII/UTF-16LE byte patterns in these three original executables, not all modules or generated/encrypted strings.",
+    "The prior seven explicit Rane product matches exclude PID 1; all factory predicates, indirect dispatch and actual runtime entry remain outside a universal exclusion proof.",
+    "The checked base setter writes keyed integer state and returns true. Callbacks, subclasses and transitive callees are not universally exhausted; this is not USB-control completion.",
+    "Constant Boolean methods, key-based detection and generic ASIO availability do not establish primary hardware admission or DVS.",
+    "The genuine SL3 discontinued support path remains independent; no support value, identity, response, resource or account state is changed."
+  ]
+}

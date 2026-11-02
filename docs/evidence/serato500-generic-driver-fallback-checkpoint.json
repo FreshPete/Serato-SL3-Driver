@@ -1,0 +1,30 @@
+{
+  "schema": "sl3.serato-generic-driver-capsule.v1",
+  "directory": "artifacts/build/checkpoints/serato-generic-driver-20261102",
+  "files": 841,
+  "manifestSha256": "993f59ac7c242922f12c5a71155193f943af26f30cc8d6a628199ec834ee3756",
+  "verificationSha256": "c4712a6530d9dac9b66773dd4e3b6012845ab6754c30a7a259d5c33aaa9c02c4",
+  "revalidationSha256": "c7d48b7e3fea52f3b07685afaac343c649a39078bcdf1c58e34e32dda5e5b11e",
+  "byteIdenticalRegeneration": true,
+  "nativeBuilds": [
+    {
+      "configuration": "Release",
+      "manifestSha256": "fcaa554bb47220c76f5de75d8986f832925edac40339477a5cd34c4d6011d9d8",
+      "nativeInputsAndTracePinsUnchanged": true,
+      "testsRerunThisCheckpoint": false
+    },
+    {
+      "configuration": "Debug",
+      "manifestSha256": "fa83db703adc96ebafbd07ef9b765ef816e8fd5b8ddbf69708f314b3c89dc07d",
+      "nativeInputsAndTracePinsUnchanged": true,
+      "testsRerunThisCheckpoint": false
+    }
+  ],
+  "initialFailedLeafNavigationExportRetained": true,
+  "includesVendorBinaries": false,
+  "includesPrivateSdk": false,
+  "privateFocusedReportsRetained": true,
+  "applicationExecuted": false,
+  "deviceAccess": false,
+  "currentSeratoAdmissionVerified": false
+}
