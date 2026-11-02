@@ -35,7 +35,7 @@ The kind-6 branch passes the callback's preserved second argument to factory `14
 
 Checked stores retain the incoming connection at verifier `+0x20` and the second shared object at `+0x30`. Three complete four-byte getters read connection fields `+0x38`, `+0x3c` and `+0x40`. The constructor passes them as VID, PID and revision arguments to the previously verified [primary numeric lookup](serato-descriptor-precedence.md), `140505360`, and stores the returned descriptor at verifier `+0x40`. This is a separate lookup from the callback's incoming descriptor-shaped argument. Runtime equality, non-null lookup success and the actual chosen record are not established.
 
-The callback later calls method `140628c30` on the stored verifier. That method checks its started byte `+0x1c`, sets it once, creates another object through `1406282f0`, stores it at `+0x48` and calls its virtual slot `+0x20`. The worker body, its messages, failure/success semantics and any physical HID traffic remain untraced. No protocol reply or device identity is fabricated.
+The callback later calls method `140628c30` on the stored verifier. That method checks its started byte `+0x1c`, sets it once, creates another object through `1406282f0`, stores it at `+0x48` and calls its virtual slot `+0x20`. That checkpoint stopped at task construction. [Later task/state-flow tracing](serato-hid-task.md) identifies the concrete task, descriptor-data dependency, poll/retry branches and a conditional notification. Physical HID traffic, complete transport/scheduler semantics and downstream admission remain unverified. No protocol reply or device identity is fabricated.
 
 ## Consequence and reproduction
 

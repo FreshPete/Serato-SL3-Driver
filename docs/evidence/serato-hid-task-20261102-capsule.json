@@ -1,0 +1,8 @@
+{
+  "schema": "sl3.selected-evidence-capsule-reference.v1",
+  "capsuleName": "serato-hid-task-20261102",
+  "files": 19,
+  "manifestSha256": "68d899c244d0532c97aa2ff50f541d54282886b6ddebcb76859fc7c7bdba8435",
+  "verificationSha256": "10325f3dc77cc2726bd273ffc15d6ec841422a5d8189dde156bea25c3d47e98f",
+  "privateRevalidationSha256": "8ecd50bf50854b351713c7044f4304191315429d15fe7c4b26d72b4f9a3e30d2"
+}
