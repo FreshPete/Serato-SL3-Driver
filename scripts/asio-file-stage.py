@@ -163,6 +163,10 @@ def local(path):
 
 def open_file(path, directory=False, access=0x80000000, share=1, create=3, security=None):
     local(path)
+    if directory:
+        # Metadata-only directory opens do not enforce the intended delete-share
+        # exclusion against rename. Request FILE_LIST_DIRECTORY as a read lease.
+        access |= 1
     flags = 0x200000 | (0x2000000 if directory else 0)  # OPEN_REPARSE_POINT, BACKUP_SEMANTICS
     value = api('kernel32.dll', 'CreateFileW', W.HANDLE,
                 [W.LPCWSTR, W.DWORD, W.DWORD, ctypes.POINTER(Attributes), W.DWORD, W.DWORD, W.HANDLE])(

@@ -77,8 +77,9 @@ mutation. If completion recording fails after state was observed, overall succes
 remains false and those observations are reported separately.
 
 The production wrapper selects real HKLM/current-user roots and requires explicit
-elevation. It currently requires the protected fixed base to already exist;
-first-install base bootstrap remains unfinished. It does not create shared
+elevation. [Protected-base preparation](asio-install-base.md) now creates/verifies
+the fixed base after runtime/registry admission, retaining it through installation.
+This positive production branch remains unperformed. It does not create shared
 registry containers, alter an existing destination/descriptor, install a runtime,
 start a native session, write a session pointer, create a service or activate COM.
 
@@ -111,8 +112,8 @@ unchanged; no C++ rebuild was needed. See the
 [Reviewed registry-removal recovery](asio-registry-recovery.md) now covers exact
 remaining own entries with an intact stage. [Separate file recovery](asio-file-recovery.md)
 now covers partial file removal and absent-stage reconciliation. Protected-base
-bootstrap, interrupted install/copy recovery, attended production deployment and
-ordinary-user write-denial proof remain unfinished.
+preparation now has workspace coverage; interrupted install/copy recovery,
+attended production deployment and ordinary-user write-denial proof remain unfinished.
 Runtime resolution does not establish the signed UsbDk filter's device readiness,
 a positive current native session, measured latency, analogue audio, legitimate
 current Serato admission or two-deck DVS. Those remain separate unproved parts of

@@ -1,0 +1,1079 @@
+{
+  "schema": "sl3.install-base-verification.v1",
+  "createdUtc": "2026-11-02T03:05:34.780045+00:00",
+  "suites": [
+    {
+      "suite": "base",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "no-production-mutation-cli",
+          "passed": true
+        },
+        {
+          "name": "actual-readonly-production-preflight",
+          "passed": true
+        },
+        {
+          "name": "new-explicit-policy-directory",
+          "passed": true
+        },
+        {
+          "name": "verified-base-reused-with-foreign-data-preserved",
+          "passed": true
+        },
+        {
+          "name": "raw-metadata-only-open-native-calibration",
+          "passed": true
+        },
+        {
+          "name": "retained-handle-refuses-base-rename",
+          "passed": true
+        },
+        {
+          "name": "consumer-failure-retains-base-for-explicit-retry",
+          "passed": true
+        },
+        {
+          "name": "missing-parent-not-created",
+          "passed": true
+        },
+        {
+          "name": "ordinary-foreign-descriptor-preserved",
+          "passed": true
+        },
+        {
+          "name": "file-in-base-slot-preserved",
+          "passed": true
+        },
+        {
+          "name": "different-expected-owner-refused",
+          "passed": true
+        },
+        {
+          "name": "different-expected-ace-list-refused",
+          "passed": true
+        },
+        {
+          "name": "production-refuses-normal-token",
+          "passed": true
+        },
+        {
+          "name": "actual-two-contender-create-race",
+          "passed": true
+        },
+        {
+          "name": "race-winner-policy-and-identity-rechecked",
+          "passed": true
+        }
+      ],
+      "privateIndexSha256": "d475f906c8660bcd39dc2caa697d0181fbdf27224deb05fcc3316cca40fdaf0b",
+      "retainedFilesVerified": 12
+    },
+    {
+      "suite": "staging",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "elevation-gate",
+          "passed": true
+        },
+        {
+          "name": "read-only-production-check",
+          "passed": true
+        },
+        {
+          "name": "native-known-folders",
+          "passed": true
+        },
+        {
+          "name": "actual-user-policy-stage",
+          "passed": true
+        },
+        {
+          "name": "actual-stage-inspection",
+          "passed": true
+        },
+        {
+          "name": "production-rejects-test-descriptor",
+          "passed": true
+        },
+        {
+          "name": "existing-destination",
+          "passed": true
+        },
+        {
+          "name": "source-manifest-hash",
+          "passed": true
+        },
+        {
+          "name": "missing-parent",
+          "passed": true
+        },
+        {
+          "name": "source-writer-sharing",
+          "passed": true
+        },
+        {
+          "name": "interrupted-copy",
+          "passed": true
+        },
+        {
+          "name": "changed-payload",
+          "passed": true
+        },
+        {
+          "name": "restored-payload",
+          "passed": true
+        },
+        {
+          "name": "extra-file",
+          "passed": true
+        },
+        {
+          "name": "hardlink",
+          "passed": true
+        },
+        {
+          "name": "receipt-hash",
+          "passed": true
+        },
+        {
+          "name": "same-byte-file-replacement",
+          "passed": true
+        },
+        {
+          "name": "unexpected-write-ace",
+          "passed": true
+        },
+        {
+          "name": "test-acl-restored",
+          "passed": true
+        },
+        {
+          "name": "receipt-in-different-directory",
+          "passed": true
+        },
+        {
+          "name": "different-root-restored",
+          "passed": true
+        },
+        {
+          "name": "positive-stage-final",
+          "passed": true
+        }
+      ],
+      "privateIndexSha256": "a29326649a64df79c9ccc330a373d0f15cf543a0fec9fae67d575974c5eeea21",
+      "retainedFilesVerified": 40
+    },
+    {
+      "suite": "cleanup",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "no-public-removal-command",
+          "passed": true
+        },
+        {
+          "name": "no-public-test-policy-override",
+          "passed": true
+        },
+        {
+          "name": "normal-token-production-refusal",
+          "passed": true
+        },
+        {
+          "name": "complete-owned-cleanup",
+          "passed": true
+        },
+        {
+          "name": "wrong-receipt-hash",
+          "passed": true
+        },
+        {
+          "name": "production-rejects-user-owned-stage",
+          "passed": true
+        },
+        {
+          "name": "changed-payload",
+          "passed": true
+        },
+        {
+          "name": "extra-file",
+          "passed": true
+        },
+        {
+          "name": "missing-file",
+          "passed": true
+        },
+        {
+          "name": "hardlink",
+          "passed": true
+        },
+        {
+          "name": "same-byte-new-file-identity",
+          "passed": true
+        },
+        {
+          "name": "identity-rechecked-through-delete-handle",
+          "passed": true
+        },
+        {
+          "name": "delete-handles-deny-concurrent-writer",
+          "passed": true
+        },
+        {
+          "name": "receipt-for-different-root",
+          "passed": true
+        },
+        {
+          "name": "active-reader-refuses-before-deletion",
+          "passed": true
+        },
+        {
+          "name": "reader-release-allows-cleanup",
+          "passed": true
+        },
+        {
+          "name": "unexpected-write-ace",
+          "passed": true
+        },
+        {
+          "name": "fixture-acl-restored",
+          "passed": true
+        },
+        {
+          "name": "journal-failure-before-mutation",
+          "passed": true
+        },
+        {
+          "name": "journal-failure-truthful-partial",
+          "passed": true
+        },
+        {
+          "name": "late-foreign-file-preserved",
+          "passed": true
+        },
+        {
+          "name": "nonempty-final-directory-preserved",
+          "passed": true
+        },
+        {
+          "name": "image-section-blocks-deletion",
+          "passed": true
+        },
+        {
+          "name": "released-image-allows-cleanup",
+          "passed": true
+        }
+      ],
+      "privateIndexSha256": "8b33e8e1aee5e1fff60069a1b4eea9f68c5865f5b2fd58c9121a434c7f4205fc",
+      "retainedFilesVerified": 207
+    },
+    {
+      "suite": "ancestor",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "readonly-inspect",
+          "passed": true
+        },
+        {
+          "name": "object-access-checks",
+          "passed": true
+        },
+        {
+          "name": "protected-child-opens-denied",
+          "passed": true
+        },
+        {
+          "name": "delete-child-control",
+          "passed": true
+        },
+        {
+          "name": "fixture-acls-restored",
+          "passed": true
+        },
+        {
+          "name": "junction-empty",
+          "passed": true
+        },
+        {
+          "name": "junction-nonempty",
+          "passed": true
+        },
+        {
+          "name": "junction-calibration-scope",
+          "passed": true
+        },
+        {
+          "name": "anchor-refuses-delete-child",
+          "passed": true
+        },
+        {
+          "name": "anchor-refuses-write-dacl",
+          "passed": true
+        },
+        {
+          "name": "anchor-refuses-write-owner",
+          "passed": true
+        },
+        {
+          "name": "anchor-refuses-generic-all",
+          "passed": true
+        },
+        {
+          "name": "ordinary-directory-still-refused",
+          "passed": true
+        },
+        {
+          "name": "host-snapshot-unchanged",
+          "passed": true
+        }
+      ],
+      "privateIndexSha256": "37072efacc6f184a6c9d79823c5a2fd266af70cc1248e8f2f94fc055c841b99e",
+      "retainedFilesVerified": 7
+    },
+    {
+      "suite": "runtime",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "explicit-check-requires-hash-and-bundle",
+          "passed": true
+        },
+        {
+          "name": "native-system-directory",
+          "passed": true
+        },
+        {
+          "name": "actual-reviewed-bundle-runtime-resolution",
+          "passed": true
+        },
+        {
+          "name": "actual-reviewed-bundle-cli",
+          "passed": true
+        },
+        {
+          "name": "wrong-bundle-hash-before-system-load",
+          "passed": true
+        },
+        {
+          "name": "changed-bundle-refused",
+          "passed": true
+        },
+        {
+          "name": "missing-system-dll-no-fallback",
+          "passed": true
+        },
+        {
+          "name": "missing-named-export-refused",
+          "passed": true
+        },
+        {
+          "name": "missing-ordinal-refused",
+          "passed": true
+        },
+        {
+          "name": "unsafe-import-path-refused",
+          "passed": true
+        },
+        {
+          "name": "non-system-directory-refused",
+          "passed": true
+        },
+        {
+          "name": "missing-api-contract-refused",
+          "passed": true
+        },
+        {
+          "name": "actual-present-ordinal-resolves",
+          "passed": true
+        },
+        {
+          "name": "local-import-needs-explicit-supported-gate",
+          "passed": true
+        },
+        {
+          "name": "first-party-pe-import-traversal-refused",
+          "passed": true
+        }
+      ],
+      "privateIndexSha256": "5961eaf796fe99ead151471b162171a1e01483e2a01c2fb8740ce4173d997b06",
+      "retainedFilesVerified": 22
+    },
+    {
+      "suite": "installer",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "no-machine-mutation-cli",
+          "passed": true
+        },
+        {
+          "name": "runtime-gated-stage-registration",
+          "passed": true
+        },
+        {
+          "name": "source-and-stage-leased-across-registration",
+          "passed": true
+        },
+        {
+          "name": "installation-completion-journal",
+          "passed": true
+        },
+        {
+          "name": "actual-isolated-install-remove-roundtrip",
+          "passed": true
+        },
+        {
+          "name": "wrong-bundle-hash-before-stage",
+          "passed": true
+        },
+        {
+          "name": "runtime-failure-prevents-all-mutations",
+          "passed": true
+        },
+        {
+          "name": "existing-destination-preserved",
+          "passed": true
+        },
+        {
+          "name": "foreign-registration-blocks-staging",
+          "passed": true
+        },
+        {
+          "name": "missing-shared-containers-preserved",
+          "passed": true
+        },
+        {
+          "name": "user-overlay-blocks-staging",
+          "passed": true
+        },
+        {
+          "name": "interrupted-copy-retains-intent-no-registration",
+          "passed": true
+        },
+        {
+          "name": "stage-journal-failure-blocks-registration",
+          "passed": true
+        },
+        {
+          "name": "registration-failure-rolls-back-own-keys-retains-stage",
+          "passed": true
+        },
+        {
+          "name": "post-stage-registration-conflict-preserves-both",
+          "passed": true
+        },
+        {
+          "name": "completion-journal-failure-does-not-certify-install",
+          "passed": true
+        },
+        {
+          "name": "competing-install-lock-blocks-staging",
+          "passed": true
+        },
+        {
+          "name": "production-refuses-normal-token",
+          "passed": true
+        }
+      ],
+      "privateIndexSha256": "c0020da3acdb1f2c2d890150303b0fdf1521ef96790bc31ce9df3764ea137739",
+      "retainedFilesVerified": 94
+    },
+    {
+      "suite": "journal",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "no-cli-mutation",
+          "passed": true
+        },
+        {
+          "name": "same-process-exclusive-lock",
+          "passed": true
+        },
+        {
+          "name": "real-competing-process-refused",
+          "passed": true
+        },
+        {
+          "name": "flushed-journal-roundtrip",
+          "passed": true
+        },
+        {
+          "name": "closed-writer-refuses-append",
+          "passed": true
+        },
+        {
+          "name": "persistent-lock-file-reused-after-close",
+          "passed": true
+        },
+        {
+          "name": "process-death-retains-flushed-prefix",
+          "passed": true
+        },
+        {
+          "name": "process-death-releases-lock",
+          "passed": true
+        },
+        {
+          "name": "foreign-lock-preserved",
+          "passed": true
+        },
+        {
+          "name": "production-refuses-normal-token",
+          "passed": true
+        },
+        {
+          "name": "invalid-action-before-write",
+          "passed": true
+        },
+        {
+          "name": "invalid-bindings-before-write",
+          "passed": true
+        },
+        {
+          "name": "changed-record-hash-refused",
+          "passed": true
+        },
+        {
+          "name": "reordered-records-refused",
+          "passed": true
+        },
+        {
+          "name": "duplicated-record-refused",
+          "passed": true
+        },
+        {
+          "name": "malformed-complete-line-refused",
+          "passed": true
+        },
+        {
+          "name": "incomplete-tail-reported-not-replayed",
+          "passed": true
+        },
+        {
+          "name": "incomplete-header-refused",
+          "passed": true
+        },
+        {
+          "name": "oversized-tail-refused",
+          "passed": true
+        },
+        {
+          "name": "same-byte-journal-replacement-refused",
+          "passed": true
+        },
+        {
+          "name": "flush-failure-propagates",
+          "passed": true
+        },
+        {
+          "name": "failed-writer-poisoned",
+          "passed": true
+        },
+        {
+          "name": "partial-write-propagates",
+          "passed": true
+        },
+        {
+          "name": "actual-file-torn-tail-preserved",
+          "passed": true
+        },
+        {
+          "name": "actual-owned-cleanup-with-flushed-journal",
+          "passed": true
+        },
+        {
+          "name": "recovery-journal-survives-stage-removal",
+          "passed": true
+        },
+        {
+          "name": "actual-interrupted-cleanup-exact-partial",
+          "passed": true
+        },
+        {
+          "name": "interrupted-cleanup-has-external-recovery-prefix",
+          "passed": true
+        },
+        {
+          "name": "actual-journal-failure-prevents-cleanup-mutation",
+          "passed": true
+        }
+      ],
+      "privateIndexSha256": "2173ae60c0a69a37070d45627b629057d12add692ee1d3e1082032317808fb00",
+      "retainedFilesVerified": 45
+    },
+    {
+      "suite": "uninstaller",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "no-mutation-cli",
+          "passed": true
+        },
+        {
+          "name": "isolated-complete-uninstall",
+          "passed": true
+        },
+        {
+          "name": "complete-uninstall-retained-journal",
+          "passed": true
+        },
+        {
+          "name": "already-absent-registration-cleanup",
+          "passed": true
+        },
+        {
+          "name": "wrong-stage-hash-preserves-all",
+          "passed": true
+        },
+        {
+          "name": "changed-stage-before-registry-removal",
+          "passed": true
+        },
+        {
+          "name": "foreign-registration-preserved",
+          "passed": true
+        },
+        {
+          "name": "partial-registration-preserved",
+          "passed": true
+        },
+        {
+          "name": "current-user-overlay-blocks-removal",
+          "passed": true
+        },
+        {
+          "name": "busy-file-after-registration-removal-reports-partial",
+          "passed": true
+        },
+        {
+          "name": "busy-reader-release-resumes-absent-registration",
+          "passed": true
+        },
+        {
+          "name": "competing-transaction-preserves-state",
+          "passed": true
+        },
+        {
+          "name": "stage-outside-serialized-base-refused",
+          "passed": true
+        },
+        {
+          "name": "late-unknown-file-after-unregister-preserved",
+          "passed": true
+        },
+        {
+          "name": "journal-failure-before-registry-preserves-state",
+          "passed": true
+        },
+        {
+          "name": "interrupted-registry-removal-retains-files",
+          "passed": true
+        },
+        {
+          "name": "completion-journal-failure-keeps-honest-final-observations",
+          "passed": true
+        },
+        {
+          "name": "production-refuses-normal-token",
+          "passed": true
+        }
+      ],
+      "privateIndexSha256": "9b4b72708a03353a0c0d04ac17d5965ec1b548637a27747bc55f8e918fabea0c",
+      "retainedFilesVerified": 179
+    },
+    {
+      "suite": "registryRecovery",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "no-mutation-cli",
+          "passed": true
+        },
+        {
+          "name": "recover-after-0-registry-deletions",
+          "passed": true
+        },
+        {
+          "name": "recover-after-1-registry-deletions",
+          "passed": true
+        },
+        {
+          "name": "recover-after-2-registry-deletions",
+          "passed": true
+        },
+        {
+          "name": "recover-after-3-registry-deletions",
+          "passed": true
+        },
+        {
+          "name": "wrong-reviewed-journal-hash-refused",
+          "passed": true
+        },
+        {
+          "name": "wrong-stage-hash-refused",
+          "passed": true
+        },
+        {
+          "name": "foreign-remaining-value-preserved",
+          "passed": true
+        },
+        {
+          "name": "foreign-remaining-child-preserved",
+          "passed": true
+        },
+        {
+          "name": "wrong-remaining-value-type-preserved",
+          "passed": true
+        },
+        {
+          "name": "current-user-overlay-preserved",
+          "passed": true
+        },
+        {
+          "name": "changed-stage-refused-before-registry-repair",
+          "passed": true
+        },
+        {
+          "name": "partially-removed-stage-refused-without-guessing",
+          "passed": true
+        },
+        {
+          "name": "same-byte-journal-new-identity-refused",
+          "passed": true
+        },
+        {
+          "name": "install-journal-cannot-authorize-uninstall-recovery",
+          "passed": true
+        },
+        {
+          "name": "active-installer-lock-preserves-state",
+          "passed": true
+        },
+        {
+          "name": "recovery-journal-failure-before-mutation",
+          "passed": true
+        },
+        {
+          "name": "interrupted-recovery-reports-exact-additional-deletion",
+          "passed": true
+        },
+        {
+          "name": "explicit-retry-uses-original-reviewed-journal-and-fresh-state",
+          "passed": true
+        },
+        {
+          "name": "production-refuses-normal-token",
+          "passed": true
+        }
+      ],
+      "privateIndexSha256": "2c03d2792b4f61e2f9cc2feba7732f96141a16b16a77cd20ee9a6a93e733bb2f",
+      "retainedFilesVerified": 249
+    },
+    {
+      "suite": "fileRecovery",
+      "cases": [
+        {
+          "name": "default",
+          "passed": true
+        },
+        {
+          "name": "plan",
+          "passed": true
+        },
+        {
+          "name": "no-mutation-cli",
+          "passed": true
+        },
+        {
+          "name": "recover-after-0-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-1-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-2-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-3-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-4-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-5-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-6-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-7-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-8-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-9-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-10-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-11-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-12-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-13-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-14-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "recover-after-15-file-boundary",
+          "passed": true
+        },
+        {
+          "name": "non-prefix-missing-files-recovered-from-fresh-state",
+          "passed": true
+        },
+        {
+          "name": "unknown-file-preserved-before-mutation",
+          "passed": true
+        },
+        {
+          "name": "changed-surviving-file-preserved",
+          "passed": true
+        },
+        {
+          "name": "same-byte-payload-replacement-preserved",
+          "passed": true
+        },
+        {
+          "name": "hardlinked-survivor-preserved",
+          "passed": true
+        },
+        {
+          "name": "active-reader-refuses-before-new-deletion",
+          "passed": true
+        },
+        {
+          "name": "remaining-registration-blocks-file-recovery",
+          "passed": true
+        },
+        {
+          "name": "user-overlay-blocks-file-recovery",
+          "passed": true
+        },
+        {
+          "name": "wrong-bundle-review-hash-refused",
+          "passed": true
+        },
+        {
+          "name": "wrong-journal-review-hash-refused",
+          "passed": true
+        },
+        {
+          "name": "wrong-stage-review-hash-refused",
+          "passed": true
+        },
+        {
+          "name": "recreated-empty-directory-preserved",
+          "passed": true
+        },
+        {
+          "name": "late-unknown-data-prevents-first-new-deletion",
+          "passed": true
+        },
+        {
+          "name": "recovery-failure-reports-one-new-deletion",
+          "passed": true
+        },
+        {
+          "name": "explicit-retry-rechecks-original-journal-and-current-survivors",
+          "passed": true
+        },
+        {
+          "name": "production-refuses-normal-token",
+          "passed": true
+        }
+      ],
+      "privateIndexSha256": "db42185d0ef3085984779edef5ae37e6ab60cbfacacf2f177015e1cecfd0d6ef",
+      "retainedFilesVerified": 294
+    }
+  ],
+  "distinctPassingCases": 228,
+  "sourceSha256": {
+    "scripts/asio-install-base.py": "34e9d3f33f5701bed4f5e55486ee57204910ff5cddcc717d8ba3cb319799326b",
+    "scripts/test-asio-install-base.py": "21cc9317fe9942b4a1c85df204185fb2220a75295004c7b49ce22c5471db9536",
+    "scripts/asio-file-stage.py": "9937337418a24c444b0e8485a6ae9d2a809cb05c45cffcf7675ffcc725e336b9",
+    "scripts/asio-install.py": "a5110d99b554f7c7fecdbe07d7e81ad87b708f26a6372b95c3aa92bdbc92d666",
+    "scripts/asio-runtime-check.py": "f7e3d3ee2a9f68a446361854717bc889882328cc721fa6613f5fef2e0498b354",
+    "scripts/test-asio-runtime-check.py": "e7c7d06313fcf8ba4db570bf927e1a936b28abb776909e3013b9ce740881f4dd",
+    "scripts/test-asio-install.py": "a0944b30b1cbc8c276df255d0c1b8d4c3dfd319c6158798dc5d0d10ebff0eb71",
+    "scripts/asio-uninstall.py": "5210818b800a6a0d8531aadc8dd955499476ae1b3fb65b98cfe0c79565fc61d7",
+    "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad",
+    "scripts/asio-registry.py": "f0b1009fe0a3cee39acc30e295dddeac9171082d8d7029f404a302d0114b7bbf",
+    "scripts/test-asio-install-journal.py": "687390bea097295a8f370e95db538b5e0994e2ba25db8f0286f150fcb6a78ddc",
+    "scripts/test-asio-uninstall.py": "ed801e41589e43ae62bafb987f8fc28d446dafce86424832a11992cf352507f5",
+    "scripts/asio-recover-uninstall.py": "e5d54063cc005a7db353eb7418e43848f7e71b0deecc6306c0dafff856e279b8",
+    "scripts/test-asio-recover-uninstall.py": "5b46f6fbd95d6f033c3e5d9f4c68c5b06a3dc00415e6fc45af46002c295ebb5f",
+    "scripts/asio-recover-files.py": "f9f2d874b96522c1180d6bdeb6022d61a470b393f2d312965fe7414d31b3fbae",
+    "scripts/test-asio-recover-files.py": "9bf5565e6ffbdbe08e09f40b2749beb083726c299eb3f7958a2bac4ea9165f9b"
+  },
+  "intentionallyChangedExistingSources": [
+    "scripts/asio-file-stage.py",
+    "scripts/asio-install.py"
+  ],
+  "observations": {
+    "readOnlyProductionPreflightPassed": true,
+    "productionBaseAndAncestorSnapshotsEqual": true,
+    "rawMetadataOnlyAccess": "0x20080",
+    "rawMetadataRenameSucceededAndOriginalPathRestored": true,
+    "wrapperAddsFileListDirectory": "0x1",
+    "correctedRetainedRenameWinerror": 32,
+    "creationRaceWinnerCount": 1,
+    "creationRaceLoserWinerror": 183,
+    "raceWinnerIdentityAndPolicyRechecked": true,
+    "foreignContentsDescriptorsAndNonDirectoryPreserved": true,
+    "consumerExceptionTypePreservedAndBaseRetained": true,
+    "missingParentsNotCreated": true,
+    "sourceBundleAndOriginalJournalsUnchanged": true,
+    "privateRegistryNamespacesRemovedAndObservedAbsent": true,
+    "privateJunctionTagsRemovedAndRechecked": true,
+    "stagingAndRuntimeFinalRerunsWereStandalone": true
+  },
+  "initialFailures": {
+    "nativeRenameFailurePrivateLogSha256": "6adb9f377c0c443d62602afc84b997de855088b33ba452a60acc84f7bb6125c7",
+    "stagingOverlapPrivateLogSha256": "0f4d7c104c5c06ab7c5aaf6ee62094c1d3c1c77a0391cbcb646300885cbd4027",
+    "stagingOverlapWasSharedBundleReaderVersusWritableOpenFixture": true,
+    "neitherInitialFailureCertifiedPassed": true
+  },
+  "nativeBaseline": [
+    {
+      "configuration": "Release",
+      "priorTestsPassed": 59,
+      "sourcePinsStillMatch": true,
+      "rerunForPythonBaseLeaseChange": false,
+      "manifestSha256": "09fa39a717a9b024981b9a2e9da0406234e91fedd17b3370bac04c7dbfab1a87",
+      "ctestLogSha256": "7d1dd0d5f95b6a03fea0b02c1fdb57a4cc9550dedbaac5f480063dfa5c990d5c"
+    },
+    {
+      "configuration": "Debug",
+      "priorTestsPassed": 59,
+      "sourcePinsStillMatch": true,
+      "rerunForPythonBaseLeaseChange": false,
+      "manifestSha256": "d97f2b1855391de1412473897c8d4d5cd7f9fe40d91afb0f78eb5b0fa4151c92",
+      "ctestLogSha256": "70452b9868b2e84da6aca20160944a63a05d857d86ab2bbccb3ac078572d9df1"
+    }
+  ],
+  "limits": {
+    "productionPreparationExecuted": false,
+    "productionInstallEntryPositiveExecutionTested": false,
+    "machineRegistrationWritten": false,
+    "firstDirectoryCreationBeforeJournalCanLeaveEmptyBase": true,
+    "bootstrapPowerLossDurabilityTested": false,
+    "existingContentsClaimedOwned": false,
+    "existingDescriptorsRepaired": false,
+    "ordinaryUserProductionWriteDenialTested": false,
+    "interruptedInstallCopyRecoveryImplemented": false,
+    "elevationRequested": false,
+    "hostAclsChanged": false,
+    "privilegesChanged": false,
+    "packageBinaryExecuted": false,
+    "deviceAccess": false,
+    "physicalAudioTested": false,
+    "measuredTimingVerified": false,
+    "currentSeratoAdmissionTested": false,
+    "currentDvsTested": false
+  },
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/install-base-20261102",
+    "files": 1951,
+    "manifestSha256": "e460cae49c1a76bf25ac0869499fd7741d4c5618519e3007f9fd346509f42dc2",
+    "selfReferentialPublicEvidenceExcluded": true
+  }
+}

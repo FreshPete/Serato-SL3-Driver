@@ -119,3 +119,11 @@ serialized privileged install/uninstall wrapper, runtime checks remain unfinishe
 now has workspace coverage; production cleanup is still unperformed. Genuine timing/native and physical audio, current
 Serato/DVS admission and the later macOS work remain unproved. No firmware or
 device operation ran in these tests.
+
+## Later directory-lease correction
+
+[The protected-base tests](asio-install-base.md) exposed that metadata-only
+directory opens did not enforce the intended rename exclusion. The central
+wrapper now also requests FILE_LIST_DIRECTORY. Native positive/negative rename
+calibration and all 228 affected/new checks pass without host ACL changes. This
+supersedes the earlier assumption about those metadata-only directory pins.

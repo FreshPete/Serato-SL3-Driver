@@ -105,12 +105,23 @@ def install_production(bundle, expected):
     with ExitStack() as stack:
         module, manifest, payload = s.snapshot_bundle(bundle, expected, stack)
         base, destination = s.production_destination(module.record(payload['deployment-plan.json']))
-        # Bootstrap of the fixed protected base is a separate, unfinished step.
-        # Never silently create parents or relax an existing descriptor.
-        s.require(base.exists(), 'Reviewed protected installer base must already exist')
+        # Admission before the first base write; the coordinator repeats a fresh
+        # runtime check and registry preflight under its transaction afterward.
+        sibling('asio-runtime-check').check(bundle, expected)
+        plan = module.record(payload['deployment-plan.json']); registry = sibling('asio-registry')
+        s.require(not destination.exists(), 'New installation destination required')
         with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, '', 0, winreg.KEY_READ | winreg.KEY_WRITE | winreg.KEY_WOW64_64KEY) as root:
             with winreg.OpenKey(winreg.HKEY_CURRENT_USER, '', 0, winreg.KEY_READ | winreg.KEY_WOW64_64KEY) as overlay:
-                return install_owned(bundle, expected, base, destination, s.PRODUCTION, root, overlay)
+                s.require(registry.inspect(root, plan)['newRegistrationAllowed'] and
+                          not registry.inspect_overlay(overlay, plan)['present'], 'Registry/container/overlay conflict before base preparation')
+                with sibling('asio-install-base').prepared_base(base, s.PRODUCTION) as preparation:
+                    try:
+                        result = install_owned(bundle, expected, base, destination, s.PRODUCTION, root, overlay)
+                    except InstallFailure as error:
+                        error.report['basePreparation'] = preparation
+                        raise
+                    result['basePreparation'] = preparation
+                    return result
 
 
 if __name__ == '__main__':
