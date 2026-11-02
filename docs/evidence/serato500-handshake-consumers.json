@@ -1,0 +1,425 @@
+{
+  "schema": "sl3.serato-handshake-consumers.v1",
+  "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "installedMatches": true,
+  "checkedInstructions": [
+    {
+      "va": "0x1405c7fe0",
+      "bytes": "488bf1",
+      "assembly": "mov rsi, rcx"
+    },
+    {
+      "va": "0x1405c84e8",
+      "bytes": "89be54010000",
+      "assembly": "mov dword ptr [rsi + 0x154], edi"
+    },
+    {
+      "va": "0x1405c8550",
+      "bytes": "898e54010000",
+      "assembly": "mov dword ptr [rsi + 0x154], ecx"
+    },
+    {
+      "va": "0x140505229",
+      "bytes": "488bf0",
+      "assembly": "mov rsi, rax"
+    },
+    {
+      "va": "0x140505261",
+      "bytes": "488bc6",
+      "assembly": "mov rax, rsi"
+    },
+    {
+      "va": "0x140525a3f",
+      "bytes": "e86cf6fdff",
+      "assembly": "call 0x1405050b0"
+    },
+    {
+      "va": "0x140525a44",
+      "bytes": "4c8bf8",
+      "assembly": "mov r15, rax"
+    },
+    {
+      "va": "0x140526a73",
+      "bytes": "4d85ff",
+      "assembly": "test r15, r15"
+    },
+    {
+      "va": "0x140526a76",
+      "bytes": "0f84a1000000",
+      "assembly": "je 0x140526b1d"
+    },
+    {
+      "va": "0x140526a7c",
+      "bytes": "498bcf",
+      "assembly": "mov rcx, r15"
+    },
+    {
+      "va": "0x140526a7f",
+      "bytes": "e85c130a00",
+      "assembly": "call 0x1405c7de0"
+    },
+    {
+      "va": "0x140526a84",
+      "bytes": "84c0",
+      "assembly": "test al, al"
+    },
+    {
+      "va": "0x140526a86",
+      "bytes": "7468",
+      "assembly": "je 0x140526af0"
+    },
+    {
+      "va": "0x140526aa8",
+      "bytes": "b918000000",
+      "assembly": "mov ecx, 0x18"
+    },
+    {
+      "va": "0x140526aad",
+      "bytes": "e85e14bf01",
+      "assembly": "call 0x142117f10"
+    },
+    {
+      "va": "0x140526ac2",
+      "bytes": "488bd6",
+      "assembly": "mov rdx, rsi"
+    },
+    {
+      "va": "0x140526acd",
+      "bytes": "e81ef3f8ff",
+      "assembly": "call 0x1404b5df0"
+    },
+    {
+      "va": "0x140526ad2",
+      "bytes": "4c8bc0",
+      "assembly": "mov r8, rax"
+    },
+    {
+      "va": "0x140526ad5",
+      "bytes": "498bd7",
+      "assembly": "mov rdx, r15"
+    },
+    {
+      "va": "0x140526ad8",
+      "bytes": "488bcb",
+      "assembly": "mov rcx, rbx"
+    },
+    {
+      "va": "0x140526adb",
+      "bytes": "e860d20d00",
+      "assembly": "call 0x140603d40"
+    },
+    {
+      "va": "0x140526ae5",
+      "bytes": "488bd0",
+      "assembly": "mov rdx, rax"
+    },
+    {
+      "va": "0x140526ae8",
+      "bytes": "488bcf",
+      "assembly": "mov rcx, rdi"
+    },
+    {
+      "va": "0x140526aeb",
+      "bytes": "e8003e0e00",
+      "assembly": "call 0x14060a8f0"
+    },
+    {
+      "va": "0x140603d4c",
+      "bytes": "488911",
+      "assembly": "mov qword ptr [rcx], rdx"
+    },
+    {
+      "va": "0x140603d53",
+      "bytes": "488bf9",
+      "assembly": "mov rdi, rcx"
+    },
+    {
+      "va": "0x140603dc8",
+      "bytes": "488bc7",
+      "assembly": "mov rax, rdi"
+    },
+    {
+      "va": "0x14060a8fd",
+      "bytes": "48899108010000",
+      "assembly": "mov qword ptr [rcx + 0x108], rdx"
+    },
+    {
+      "va": "0x140609d57",
+      "bytes": "498b9d08010000",
+      "assembly": "mov rbx, qword ptr [r13 + 0x108]"
+    },
+    {
+      "va": "0x140609d5e",
+      "bytes": "4885db",
+      "assembly": "test rbx, rbx"
+    },
+    {
+      "va": "0x140609d61",
+      "bytes": "742d",
+      "assembly": "je 0x140609d90"
+    },
+    {
+      "va": "0x140609d82",
+      "bytes": "488d542460",
+      "assembly": "lea rdx, [rsp + 0x60]"
+    },
+    {
+      "va": "0x140609d87",
+      "bytes": "488bcb",
+      "assembly": "mov rcx, rbx"
+    },
+    {
+      "va": "0x140609d8a",
+      "bytes": "e851a0ffff",
+      "assembly": "call 0x140603de0"
+    },
+    {
+      "va": "0x140603e0f",
+      "bytes": "4c8be1",
+      "assembly": "mov r12, rcx"
+    },
+    {
+      "va": "0x140603ee4",
+      "bytes": "498b0c24",
+      "assembly": "mov rcx, qword ptr [r12]"
+    },
+    {
+      "va": "0x140603eed",
+      "bytes": "8b91d0000000",
+      "assembly": "mov edx, dword ptr [rcx + 0xd0]"
+    },
+    {
+      "va": "0x140603ef3",
+      "bytes": "8b8954010000",
+      "assembly": "mov ecx, dword ptr [rcx + 0x154]"
+    },
+    {
+      "va": "0x140603ef9",
+      "bytes": "e8f2030000",
+      "assembly": "call 0x1406042f0"
+    },
+    {
+      "va": "0x140604305",
+      "bytes": "83e901",
+      "assembly": "sub ecx, 1"
+    },
+    {
+      "va": "0x140604308",
+      "bytes": "0f84a4000000",
+      "assembly": "je 0x1406043b2"
+    },
+    {
+      "va": "0x14060430e",
+      "bytes": "83f901",
+      "assembly": "cmp ecx, 1"
+    },
+    {
+      "va": "0x140604311",
+      "bytes": "741d",
+      "assembly": "je 0x140604330"
+    },
+    {
+      "va": "0x140604316",
+      "bytes": "e8954eebff",
+      "assembly": "call 0x1404b91b0"
+    },
+    {
+      "va": "0x14060431b",
+      "bytes": "32c0",
+      "assembly": "xor al, al"
+    },
+    {
+      "va": "0x14054613a",
+      "bytes": "4d8bf0",
+      "assembly": "mov r14, r8"
+    },
+    {
+      "va": "0x140546ace",
+      "bytes": "498b06",
+      "assembly": "mov rax, qword ptr [r14]"
+    },
+    {
+      "va": "0x140546ad1",
+      "bytes": "83b85401000006",
+      "assembly": "cmp dword ptr [rax + 0x154], 6"
+    },
+    {
+      "va": "0x140546ad8",
+      "bytes": "0f858a010000",
+      "assembly": "jne 0x140546c68"
+    },
+    {
+      "va": "0x140546aea",
+      "bytes": "e831dbffff",
+      "assembly": "call 0x140544620"
+    },
+    {
+      "va": "0x140525cda",
+      "bytes": "415f",
+      "assembly": "pop r15"
+    },
+    {
+      "va": "0x140525cdc",
+      "bytes": "415e",
+      "assembly": "pop r14"
+    },
+    {
+      "va": "0x140525cde",
+      "bytes": "415d",
+      "assembly": "pop r13"
+    },
+    {
+      "va": "0x140525ce0",
+      "bytes": "415c",
+      "assembly": "pop r12"
+    },
+    {
+      "va": "0x140525ce2",
+      "bytes": "5f",
+      "assembly": "pop rdi"
+    },
+    {
+      "va": "0x140525ce3",
+      "bytes": "c3",
+      "assembly": "ret "
+    }
+  ],
+  "rttiTables": [
+    {
+      "table": "0x14281caa8",
+      "decoratedType": ".?AVControllerDescriptor@dj@serato@@",
+      "subobjectOffset": 0,
+      "slot": "0x8",
+      "target": "0x1405c7f90"
+    },
+    {
+      "table": "0x142823cc0",
+      "decoratedType": ".?AVCMIDIInputManager@@",
+      "subobjectOffset": 0,
+      "slot": "0x18",
+      "target": "0x140609900"
+    },
+    {
+      "table": "0x142810290",
+      "decoratedType": ".?AVHidManager@@",
+      "subobjectOffset": 16,
+      "slot": "0x8",
+      "target": "0x140546110"
+    }
+  ],
+  "currentKindMapAndStaticMidiBranchProjection": [
+    {
+      "kind": 0,
+      "name": "NONE",
+      "midiPredicateBranch": "default_false"
+    },
+    {
+      "kind": 1,
+      "name": "SERATO_DJ",
+      "midiPredicateBranch": "0x1406043b2"
+    },
+    {
+      "kind": 2,
+      "name": "NUMARK",
+      "midiPredicateBranch": "0x140604330"
+    },
+    {
+      "kind": 3,
+      "name": "VESTAX",
+      "midiPredicateBranch": "default_false"
+    },
+    {
+      "kind": 4,
+      "name": "NOVATION",
+      "midiPredicateBranch": "default_false"
+    },
+    {
+      "kind": 5,
+      "name": "AKAI",
+      "midiPredicateBranch": "default_false"
+    },
+    {
+      "kind": 6,
+      "name": "SERATO_DJ_HID",
+      "midiPredicateBranch": "default_false"
+    },
+    {
+      "kind": 7,
+      "name": "ATC_HID_PIR",
+      "midiPredicateBranch": "default_false"
+    }
+  ],
+  "descriptorProvenance": {
+    "primaryLookupCall": "0x140525a3f",
+    "processorConstructor": "0x140603d40",
+    "storedDescriptorOffset": "0x0",
+    "managerProcessorMember": "0x108",
+    "setterCall": "0x140526aeb",
+    "managerCallback": "0x140609900",
+    "processorCall": "0x140609d8a",
+    "kindRead": "0x140603ef3",
+    "splitConstructorUnwindRegions": [
+      [
+        "0x140603d40",
+        "0x140603d7f"
+      ],
+      [
+        "0x140603d7f",
+        "0x140603dc3"
+      ],
+      [
+        "0x140603dc3",
+        "0x140603dd1"
+      ]
+    ],
+    "descriptorRegisterPreservedUntilConstruction": true,
+    "priorLookupEvidenceCanonicalSha256": "34a97eed7cb5e9685104372aaaa0e08ebb57419372128b32ea4508af8720fc49"
+  },
+  "creationGate": {
+    "getter": "0x1405c7de0",
+    "getterBytes": "488b8180010000483981780100000f95c0c3",
+    "vectorBeginOffset": "0x178",
+    "vectorEndOffset": "0x180",
+    "requiresNonemptyVectorUnderThisBranch": true,
+    "additionalPointerConditionsExist": true,
+    "vectorXmlKeyAssigned": false
+  },
+  "midiPredicate": {
+    "function": "0x1406042f0",
+    "kind1Target": "0x1406043b2",
+    "kind2Target": "0x140604330",
+    "otherKindsReturnFalseAt": "0x14060431b",
+    "protocolResultVerified": false
+  },
+  "hidComparison": {
+    "function": "0x140546110",
+    "rttiType": "HidManager",
+    "incomingArgument": 3,
+    "pointeeFieldOffset": "0x154",
+    "comparedValue": 6,
+    "fullIncomingDescriptorProvenanceExhausted": false
+  },
+  "focusedReportSha256": "788e3592a82833a3362e74a7db96974c4ff848f04a063004ee562e55abbec803",
+  "focusedLogSha256": "79d7842939784cd5ad1c1c6d7e61b9f4d85fa72d5c81d35b164bbcec4884c19d",
+  "focusedFunctions": 4,
+  "sourceSha256": {
+    "scripts/export-serato-handshake-consumers.py": "66d812e49599b065daff9f4772d9d2589c1b05f1a28d1937656c92839d69080c",
+    "scripts/export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+    "scripts/ghidra/FocusedDecompile.java": "54383ff3d55f0bb97c2a2e1129fa712eb237c7a2126420c627bb08d8c33672d6"
+  },
+  "applicationExecuted": false,
+  "applicationModified": false,
+  "deviceAccess": false,
+  "authenticationMaterialExported": false,
+  "otherDeviceKindAdopted": false,
+  "handshakeReplyFabricated": false,
+  "currentSeratoAdmissionVerified": false,
+  "limits": [
+    "This is the scoped CMIDIInputManager response path, not a universal dispatcher or successful handshake.",
+    "The HID callback comparison is separately class-bound; all incoming descriptor provenance/callers remain unexamined.",
+    "Vector nonemptiness and further pointer conditions gate processor creation; kind alone does not create it.",
+    "No payload templates, keys or challenge/reply bytes are included in this report.",
+    "Other indirect/raw-USB handshake paths and all possible later mutations are not exhausted.",
+    "The unchanged genuine SL3 discontinued branch remains independent of these conditional consumers."
+  ]
+}

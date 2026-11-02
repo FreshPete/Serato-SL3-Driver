@@ -1,0 +1,55 @@
+{
+  "schema": "sl3.serato-handshake-consumers-verification.v1",
+  "createdUtc": "2026-11-02T03:49:34.826516+00:00",
+  "evidenceSha256": "58964d1d8c0af1bcab2e4f8b98dfc4fd09ca3bb7bea24b09858a0f67375ede64",
+  "checkedInstructions": 56,
+  "rttiTables": 3,
+  "focusedFunctions": 4,
+  "byteIdenticalRegeneration": true,
+  "originalAndInstalledExecutableMatch": true,
+  "sourceSha256": {
+    "scripts/export-serato-handshake-consumers.py": "66d812e49599b065daff9f4772d9d2589c1b05f1a28d1937656c92839d69080c",
+    "scripts/export-serato-clock-handshake-evidence.py": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+    "scripts/ghidra/FocusedDecompile.java": "54383ff3d55f0bb97c2a2e1129fa712eb237c7a2126420c627bb08d8c33672d6"
+  },
+  "temporaryProjectObservedAbsent": true,
+  "nativeBaseline": [
+    {
+      "configuration": "Release",
+      "sourcePinsStillMatch": true,
+      "rerunForStaticAnalysis": false,
+      "manifestSha256": "09fa39a717a9b024981b9a2e9da0406234e91fedd17b3370bac04c7dbfab1a87",
+      "ctestLogSha256": "7d1dd0d5f95b6a03fea0b02c1fdb57a4cc9550dedbaac5f480063dfa5c990d5c"
+    },
+    {
+      "configuration": "Debug",
+      "sourcePinsStillMatch": true,
+      "rerunForStaticAnalysis": false,
+      "manifestSha256": "d97f2b1855391de1412473897c8d4d5cd7f9fe40d91afb0f78eb5b0fa4151c92",
+      "ctestLogSha256": "70452b9868b2e84da6aca20160944a63a05d857d86ab2bbccb3ac078572d9df1"
+    }
+  ],
+  "previousSoftwareCheckpoint": {
+    "distinctChecksPassed": 228,
+    "sourcePinsStillMatch": true,
+    "rerunForStaticAnalysis": false
+  },
+  "limits": {
+    "applicationExecuted": false,
+    "deviceAccess": false,
+    "authenticationMaterialExported": false,
+    "universalHandshakeDispatcherEstablished": false,
+    "fullIncomingHidProvenanceExhausted": false,
+    "currentSeratoAdmissionVerified": false,
+    "physicalAudioTested": false,
+    "measuredTimingVerified": false,
+    "currentDvsTested": false
+  },
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/serato-handshake-consumers-20261102",
+    "files": 795,
+    "manifestSha256": "267d0b81be420f9d6015f1e1ace56424540e7dec5b60e08973a01d5adf9b020f",
+    "selfReferentialVerificationExcluded": true
+  },
+  "publishedEvidenceUsesLfOnly": true
+}

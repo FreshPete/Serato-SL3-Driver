@@ -34,6 +34,8 @@ The [current component-profile comparison](serato-component-profiles.md) adds a 
 
 The later [module-path caller checks](serato-path-callers.md) bind seven direct accessor sites, including the Windows per-app GPU-preference query and CRT cleanup callback. These sites establish no external SL3 profile registration route. Their limited direct/unwind scope does not prove universal absence of extensions or indirect state writers. The installed/original application hash remains unchanged and vendor registry calls were inspected as data only.
 
+[Scoped handshake-consumer tracing](serato-handshake-consumers.md) now proves how the primary descriptor reaches one MIDI response predicate, with an independent vector/pointer creation gate. Its current-kind 1/2 branches and separate HID kind-6 comparison do not supply a universal dispatcher, real SL3 protocol result or the removed textual driver-API route. No foreign kind, message template or reply is adopted.
+
 ## Required integration decision
 
 The [complete historical startup-resource inventory](serato-cutoff-registration.md) now rules out a second scalar SL3 declaration in the checked 2.5.5/2.5.6 arrays: all 313 XMLs parse, each release has one SL3 entry, and that XML is unchanged. A separate literal Rane predicate selects product values 24–25 rather than 1. Neither finding locates a runtime exclusion mechanism or supplies current 5.0.0 registration. The new [explicit factory scope](factory-scope-controller.md) is an available project-owned in-process lifetime interface, but the inspected Serato backends do not request it. A genuine backend/interprocess integration and primary-device admission path remain required.

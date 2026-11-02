@@ -167,3 +167,11 @@ examples. It does not claim complete control-flow recovery or runtime success.
 The [original driver-timer exchange and native control codec](native-control-frames.md)
 are now recovered/implemented separately. The exchange requires a real device
 reply; the codec supplies framing without fabricating or verifying that reply.
+
+## Later scoped consumer tracing
+
+[The current MIDI response path](serato-handshake-consumers.md) now has a checked
+descriptor-to-processor chain, nonempty-vector construction gate and branches for
+current kinds 1/2. A separate RTTI-bound HID callback compares 6, with fuller
+incoming provenance still unexhausted. This does not establish a universal
+dispatcher, historical driver-API restoration or an admitted SL3 handshake.
