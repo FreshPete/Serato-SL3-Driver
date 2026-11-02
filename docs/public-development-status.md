@@ -4,6 +4,8 @@ This is an engineering investigation and source snapshot, not a working replacem
 
 ## Findings and implementation
 
+**Interrupted registry-removal recovery, 2 November:** [reviewed-journal recovery](asio-registry-recovery.md) now finishes exact own partial registration removal with an intact stage. All 22 workspace/private-HKCU cases pass, including interruption/retry, foreign-state preservation and refusal of partially deleted files. Original journals remain unchanged and the test registry namespace is removed. General file/install recovery, protected deployment, real audio and current Serato/DVS remain unfinished.
+
 **Runtime-gated installation coordination, 2 November:** [the runtime/install work](asio-runtime-install.md) now resolves 330 direct symbols across 15 dependency names to nine native System32 files. All 17 runtime and 20 workspace/private-HKCU installer cases pass, including a composed install/remove round trip. Only system dependencies are loaded; no package code executes. Protected-base bootstrap, interrupted-state recovery, actual production deployment/activation, physical audio and current Serato/DVS remain unfinished.
 
 **Serialized owned removal, 2 November:** [the removal coordinator](asio-uninstall.md) now binds reviewed stage/package pins and composes the lock/journal, registry deletion and file cleanup. All 20 workspace/private-HKCU cases pass, including conflict preservation and exact partial results. The private registry namespace is removed and verified absent. No production deployment/activation ran; automatic interrupted-state recovery, the install path, real audio and current Serato/DVS remain unfinished.
