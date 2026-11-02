@@ -1,0 +1,28 @@
+{
+  "schema": "sl3.serato-hid-verifier-checkpoint.v1",
+  "directory": "artifacts/build/checkpoints/serato-hid-verifier-20261102",
+  "files": 838,
+  "manifestSha256": "1d2a095d897f5101d8225ca498334284d2b9f74c7052f821ddf9e91a64b86516",
+  "verificationSha256": "ae44188b3f0e7517340125626a32849760f4f96a210d18cacc2f0d3d171753f8",
+  "revalidationSha256": "0a124a022fa9d1b91343535e6196f6f831c339f3031d417abafa3a582210288d",
+  "byteIdenticalRegeneration": true,
+  "baselineBuilds": [
+    {
+      "configuration": "Release",
+      "manifestSha256": "fcaa554bb47220c76f5de75d8986f832925edac40339477a5cd34c4d6011d9d8",
+      "nativeInputsAndTracePinsUnchanged": true,
+      "testsNotRerunThisCheckpoint": true
+    },
+    {
+      "configuration": "Debug",
+      "manifestSha256": "fa83db703adc96ebafbd07ef9b765ef816e8fd5b8ddbf69708f314b3c89dc07d",
+      "nativeInputsAndTracePinsUnchanged": true,
+      "testsNotRerunThisCheckpoint": true
+    }
+  ],
+  "includesVendorBinaries": false,
+  "includesPrivateSdk": false,
+  "privateFocusedReportsRetained": true,
+  "applicationOrDeviceExecuted": false,
+  "physicalCompatibilityEstablished": false
+}

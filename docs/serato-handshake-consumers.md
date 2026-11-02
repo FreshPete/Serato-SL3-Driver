@@ -75,6 +75,8 @@ separate comparison is not promoted into the fully traced MIDI pointer chain or
 a universal HID connection rule. Runtime Phase/SL3 connection, actual selected
 descriptor and protocol success remain unobserved.
 
+The later [HID verifier investigation](serato-hid-verifier.md) now identifies the preceding control-section gate, conditionally resolves the concrete descriptor getter, binds the allocated verifier type and traces its separate primary numeric lookup. It still does not exhaust incoming descriptor provenance or establish protocol success.
+
 ## Reproduction and consequence
 
 Run `.venv/Scripts/python.exe scripts/export-serato-handshake-consumers.py`.
