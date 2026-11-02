@@ -56,3 +56,6 @@ Windows audio work can continue independently: the [prepared one-acquisition con
 
 
 The later [wireless notification proof](serato-wireless-notification.md) traces a concrete matching HID-success subscriber and branch through the current connection controller. Conditional descriptor getters identify wireless-device/deck fields, which the unchanged Phase accessory sets to true/two. Its follow-up helper requires a non-null pointer from PrimaryDeviceManager and other state/field gates. These static conditions reinforce the separation between an accessory and genuine primary SL3 admission; actual delivery, account/DVS state, audio routing and two-deck operation remain unverified. No application/profile/account change or Phase/device operation ran.
+
+
+The later [primary-pointer proof](serato-primary-pointer.md) identifies the selected pointer's exact registered-instance check and a conditional USB-only message producer. It supplies a concrete registration/connection handoff for further work, while preserving the existing support/component/helper/audio requirements. No admitted SL3, current ASIO open or actual DVS result is established by that pointer or notification.

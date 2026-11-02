@@ -1,0 +1,8 @@
+{
+  "schema": "sl3.selected-evidence-capsule-reference.v1",
+  "capsuleName": "serato-primary-pointer-20261102",
+  "files": 22,
+  "manifestSha256": "2edb3634f890336238edbb359be95e6a689aea3e3131c41ae785d257da237d69",
+  "verificationSha256": "ebb7f30213856cc6bb72643e86c54e1ea7f754b961cb40671c6a5fc3fc5872c2",
+  "privateRevalidationSha256": "d0129889ba02d5d4770475f9a86cead794e1b3f9185c4eea8bb5cc6b31324387"
+}
