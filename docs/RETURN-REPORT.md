@@ -1,5 +1,7 @@
 # SL3 rebuild progress for the owner's return
 
+**Windows COM activation, 2 November:** [the new activation tests](asio-com-activation.md) exercise Windows `CoCreateInstance` in STA and MTA apartments without registration. Production objects truthfully refuse absent configuration; separate simulated DLL clients run three objects/four callback streams on one retained owner in each apartment. Deployment, genuine measured timing, positive native audio and current Serato/DVS remain unfinished.
+
 **Explicit controller/publication, 2 November:** [the controller](broker-controller.md) now defaults to plan-only and can publish immutable records after one reviewed acquisition, retain clients through ordinary ASIO object lifetimes, and stop by a validated request or explicit ceiling. Actual simulated controller/record/COM/callback lifecycle checks pass, including failure and native-kind refusal. No configuration was installed and no positive native run occurred; real timing/audio, deployment and current Serato/DVS remain unfinished.
 
 **Reviewed broker record binding, 1 November:** [the production configuration path](broker-configuration.md) now pins an immutable session record and broker image, checks live PID/creation/file identity, and requires the actual worker hash in admission. The actual production DLL consumes this path and refuses a truthful simulated broker before client clock/audio operations. Record publication/controller lifecycle, installation, native audio/timing and current Serato/DVS remain unfinished; no hardware or security changes ran.

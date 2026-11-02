@@ -6,6 +6,8 @@ and closes on an explicit stop request or lifetime ceiling. The native entry
 point defaults to an inert plan. This checkpoint has **no positive native run,
 installation, registry change, physical audio or current Serato/DVS validation**.
 
+The later [COM activation checkpoint](asio-com-activation.md) adds STA/MTA `CoCreateInstance` clients to the software lifecycle checks; it does not install the component.
+
 ## Commands and scope
 
 `sl3_broker_controller.exe` with no arguments or `--plan` writes a JSON plan only:

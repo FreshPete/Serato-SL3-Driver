@@ -1,6 +1,7 @@
 #include "asio/driver_facade.hpp"
 #include "asio/driver_configuration.hpp"
 #include "asio/com_identity.hpp"
+#include "com_activation_fixture.hpp"
 #include "windows/broker_pipe.hpp"
 #include "iasiodrv.h"
 #include <algorithm>
@@ -47,15 +48,18 @@ static void cycles(Host& h){
     }
     require(h.device->disposeBuffers()==ASE_OK,"Retired callback planes disposed");
 }
-static void ordinary(const std::filesystem::path& library,const std::wstring& endpoint,HANDLE server,bool blocked,const std::string& worker_hash={}){
+static void ordinary(const std::filesystem::path& library,const std::wstring& endpoint,HANDLE server,bool blocked,const std::string& worker_hash={},bool activate_com=false){
     HMODULE module=LoadLibraryExW(library.c_str(),nullptr,LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR|LOAD_LIBRARY_SEARCH_SYSTEM32);require(module!=nullptr,"Load actual unregistered ASIO test DLL");
     using Configure=BOOL(*)(const wchar_t*,HANDLE);using GetClass=HRESULT(__stdcall*)(REFCLSID,REFIID,void**);using Unload=HRESULT(__stdcall*)();
     const auto configure=symbol<Configure>(module,"sl3_test_configure_broker");const auto get=symbol<GetClass>(module,"DllGetClassObject");const auto unload=symbol<Unload>(module,"DllCanUnloadNow");
     if(worker_hash.empty())require(configure(endpoint.c_str(),server),"Explicit simulated broker test configuration");
     else {using ConfigureBound=BOOL(*)(const wchar_t*,HANDLE,const char*);require(symbol<ConfigureBound>(module,"sl3_test_configure_bound_broker")(endpoint.c_str(),server,worker_hash.c_str()),"Explicit simulated provider with reviewed record worker contract");}
     auto create=[&](Host& h){
-        IClassFactory* factory=nullptr;require(get(driver_clsid,IID_IClassFactory,reinterpret_cast<void**>(&factory))==S_OK,"Fresh ordinary factory");
-        const auto result=factory->CreateInstance(nullptr,driver_clsid,reinterpret_cast<void**>(&h.device));factory->Release();
+        HRESULT result=E_FAIL;
+        if(activate_com)result=CoCreateInstance(driver_clsid,nullptr,CLSCTX_INPROC_SERVER,driver_clsid,reinterpret_cast<void**>(&h.device));
+        else {IClassFactory* factory=nullptr;require(get(driver_clsid,IID_IClassFactory,reinterpret_cast<void**>(&factory))==S_OK,"Fresh ordinary factory");
+            result=factory->CreateInstance(nullptr,driver_clsid,reinterpret_cast<void**>(&h.device));factory->Release();}
+        if(result!=S_OK)std::cerr<<"Create IASIO HRESULT 0x"<<std::hex<<static_cast<unsigned long>(result)<<std::dec<<"\n";
         require(result==S_OK && h.device->init(nullptr)==ASIOTrue,"Ordinary IASIO object initialized without custom scope");
     };
     if(!blocked){
@@ -68,7 +72,7 @@ static void ordinary(const std::filesystem::path& library,const std::wstring& en
             require(unload()==S_OK,"No lingering COM object/scope after successful detach");
             // No parent-side served barrier or USB retry between these objects.
         }
-        FreeLibrary(module);return;
+        FreeLibrary(module);if(activate_com)CoFreeUnusedLibrariesEx(0,0);return;
     }
     Host h;host=&h;h.block=true;create(h);buffers(h);require(h.device->start()==ASE_OK,"Start deliberately blocked callback");
     require(WaitForSingleObject(h.entered.value,2000)==WAIT_OBJECT_0,"Callback is executing before destruction");
@@ -131,8 +135,14 @@ int wmain(int argc,wchar_t** argv){
             const auto config=load_driver_configuration(std::filesystem::absolute(argv[2]));
             require(config.broker && config.broker->kind==session::Kind::native && config.latency.rate_hz==48000 && config.latency.buffer_frames==128 &&
                 config.latency.input_extra_frames==7 && config.latency.output_extra_frames==11,"Published native-only record with synthetic test profile");
-            const std::wstring mode=argv[4];require(mode==L"ordinary" || mode==L"blocked","Published fixture mode");
-            ordinary(std::filesystem::absolute(argv[3]),config.broker->endpoint,config.broker->server->handle(),mode==L"blocked",config.broker->worker_sha256);return 0;
+            const std::wstring mode=argv[4];require(mode==L"ordinary" || mode==L"ordinary-sta" || mode==L"ordinary-mta" || mode==L"blocked","Published fixture mode");
+            const bool activate_com=mode==L"ordinary-sta" || mode==L"ordinary-mta";
+            std::unique_ptr<sl3::test::ComApartment> apartment;std::unique_ptr<sl3::test::ComActivation> activation;
+            if(activate_com){apartment=std::make_unique<sl3::test::ComApartment>(mode==L"ordinary-sta"?COINIT_APARTMENTTHREADED:COINIT_MULTITHREADED);
+                activation=std::make_unique<sl3::test::ComActivation>(std::filesystem::absolute(argv[3]));}
+            ordinary(std::filesystem::absolute(argv[3]),config.broker->endpoint,config.broker->server->handle(),mode==L"blocked",config.broker->worker_sha256,activate_com);
+            if(activate_com)std::wcout<<L"CoCreateInstance "<<mode<<L": three objects/four simulated streams; one retained owner; no registration or USB\n";
+            return 0;
         }
         if(argc==7 && std::wstring(argv[1])==L"--client"){
             Handle server;server.value=OpenProcess(SYNCHRONIZE|PROCESS_QUERY_LIMITED_INFORMATION,FALSE,DWORD(std::stoul(argv[3])));require(server.value!=nullptr,"Fixture-only parent reference");

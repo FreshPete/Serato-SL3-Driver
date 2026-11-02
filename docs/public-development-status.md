@@ -4,6 +4,8 @@ This is an engineering investigation and source snapshot, not a working replacem
 
 ## Findings and implementation
 
+**Windows COM activation, 2 November:** [the new activation tests](asio-com-activation.md) exercise Windows `CoCreateInstance` in STA and MTA apartments without registration. Production objects truthfully refuse absent configuration; separate simulated DLL clients run three objects/four callback streams on one retained owner in each apartment. Deployment, genuine measured timing, positive native audio and current Serato/DVS remain unfinished.
+
 | Area | Established so far | Remaining boundary |
 | --- | --- | --- |
 | Original driver | Rane ASIO 1.3.5f2 installs, but this Windows host blocks its kernel driver under Code Integrity, reporting code 39. | No admitted original-driver revision has been established. Signing enforcement is being kept enabled. |

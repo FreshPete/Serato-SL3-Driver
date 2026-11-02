@@ -102,7 +102,7 @@ def main():
             response = call([client, '--published', published, library, mode])
             (output/'asio-client-stdout.txt').write_text(response.stdout, encoding='utf-8')
             (output/'asio-client-stderr.txt').write_text(response.stderr, encoding='utf-8')
-            if mode == 'ordinary':
+            if mode.startswith('ordinary'):
                 stop = json.loads(call([native, '--stop', '--config', published]).stdout)
                 require(stop['stopRequested'] is True and stop['deviceReleasedVerified'] is False, 'Stop is only a request')
                 final = finish_case(output, proc, 0)
@@ -113,16 +113,18 @@ def main():
                 require(not final['successful'] and final['failed'] and final['reason'] == 'owner_failure', 'Destructive client release preserves owner failure')
             audit = (output/'worker-audit.txt').read_text().splitlines()
             require(audit.count('acquire') == 1 and audit.count('release') == 1, 'No controller reacquisition loop')
-            if mode == 'ordinary':
+            if mode.startswith('ordinary'):
                 require(audit.count('rate') == 8 and audit.count('begin') == 4 and audit.count('end') == 4, 'Three ordinary COM objects/four SDK streams retain one worker')
             require(call([native, '--stop', '--config', published], expected=1).returncode == 1, 'Stale process record refused after exit')
-            cases.append({'name': name, 'passed': True, 'kind': 'simulated'})
+            cases.append({'name': name, 'passed': True, 'kind': 'simulated', 'activation': mode})
         finally:
             if proc.poll() is None:
                 proc.kill()
                 proc.communicate(timeout=5)
 
     active('ordinary-session')
+    active('com-sta-session', 'ordinary-sta')
+    active('com-mta-session', 'ordinary-mta')
     active('blocked-client', 'blocked')
 
     output = root/'lifetime-limit'

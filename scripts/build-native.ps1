@@ -33,6 +33,7 @@ try {
     if('sl3_startup_journal_tests' -notin $testNames){throw 'Required startup-journal test is missing'}
     if('sl3_device_session_tests' -notin $testNames -or 'sl3_usbdk_rejects_device_modes' -notin $testNames){throw 'Required retained-device worker tests are missing'}
     if($WithAsioComponent -and 'sl3_asio_buffer_tests' -notin $testNames){throw 'Required SDK-facing ASIO test is missing'}
+    if($WithAsioComponent){foreach($required in @('sl3_asio_activation_sta','sl3_asio_activation_mta')){if($required -notin $testNames){throw "Required Windows COM activation check missing: $required"}}}
     if($WithAsioComponent -and 'sl3_asio_com_tests' -notin $testNames){throw 'Required ASIO COM DLL test is missing'}
     if($WithAsioComponent -and 'sl3_broker_asio_tests' -notin $testNames){throw 'Required broker-backed IASIO lifecycle test is missing'}
     if($WithAsioComponent){foreach($required in @('sl3_broker_controller_plan','sl3_broker_controller_lifecycle')){if($required -notin $testNames){throw "Required broker controller check missing: $required"}}}
@@ -200,6 +201,7 @@ try {
         $record.asioComponent.testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_asio_buffer_tests.exe")).Hash
         $record.asioComponent.comDllSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_asio.dll")).Hash
         $record.asioComponent.comTestExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_asio_com_tests.exe")).Hash
+        $record.asioComponent.registrationFreeActivation=[ordered]@{staPassed=$true;mtaPassed=$true;productionUnavailableTested=$true;simulatedBrokerStreamsTested=$true;testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_asio_activation_tests.exe")).Hash;registryChanged=$false;installed=$false;physicalAudioTested=$false;seratoAdmissionTested=$false}
         $record.asioComponent.deviceInitializationAvailable=$false
         $record.asioComponent.queuePump=[ordered]@{testsPassed=$true;librarySha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_asio_queue.lib")).Hash;testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_asio_queue_tests.exe")).Hash;syntheticProcessBlocksTested=7200;physicalAudioTested=$false;continuousUsbSessionImplemented=$true;comDllConnected=$true}
         $record.asioComponent.nativeProvider=[ordered]@{implemented=$true;configurationInstalled=(Test-Path -LiteralPath (Join-Path $build "$Configuration/sl3-asio.conf"));librarySha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_driver_configuration.lib")).Hash;testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_driver_configuration_tests.exe")).Hash;productionDllRejectionTested=$true;measurementTruthVerified=$false;physicalNativeSessionTested=$false}

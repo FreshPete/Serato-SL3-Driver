@@ -1,0 +1,152 @@
+{
+  "schema": "sl3.com-activation-verification.v1",
+  "createdUtc": "2026-11-02T00:19:04.328258+00:00",
+  "builds": [
+    {
+      "configuration": "Release",
+      "testsPassed": 59,
+      "manifestSha256": "de46864adcdd7f06c0596bde18d481495c5567304caaab8270b48c319a3e7fe0",
+      "activationTestSha256": "d687521cb06468c2d49dcd8c260d7d42c644548479fbcee03207c1a89ede77e4",
+      "productionDllSha256": "211c840034e690b0b533ab978f3638949f7cafccde85621f88a0fbfc3804d07f",
+      "logSha256": "4e6b793b265ab632cb6952c92a45b1959644fadebe81b7c805bf9ab89be07b03"
+    },
+    {
+      "configuration": "Debug",
+      "testsPassed": 59,
+      "manifestSha256": "cbbbc272ca564759069368d0e57e77b338dce0cf5167d04299e4c5fab8982e9f",
+      "activationTestSha256": "9d0e22511b305710c810e6a236c6bd892e21766f96489709d4f8cb933213bf51",
+      "productionDllSha256": "abb8c182b205193e8dd8f309c7c04220427bf0550b91688e09c55ce7df078df5",
+      "logSha256": "49aec69d78bbb9c4348f8511ae3b03ab9208e78e9ebb30bea3aed2e3bc8ff8c6"
+    }
+  ],
+  "controllerLifecycles": [
+    {
+      "configuration": "Release",
+      "path": "artifacts/build/native/controller-lifecycle-artifacts/405bfd801f014324b4dff633713fdd7c",
+      "indexSha256": "b3d231d4570c185226dfcf93929e6cddf160c9285aabea49a1cae7a20e3cede4",
+      "cases": [
+        {
+          "name": "ordinary-session",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "ordinary"
+        },
+        {
+          "name": "com-sta-session",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "ordinary-sta"
+        },
+        {
+          "name": "com-mta-session",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "ordinary-mta"
+        },
+        {
+          "name": "blocked-client",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "blocked"
+        },
+        {
+          "name": "lifetime-limit",
+          "passed": true,
+          "kind": "simulated"
+        },
+        {
+          "name": "wrong-rate",
+          "passed": true,
+          "positiveNativeRun": false
+        },
+        {
+          "name": "native-kind-refusal",
+          "passed": true,
+          "positiveNativeRun": false
+        },
+        {
+          "name": "refusal-guards",
+          "passed": true,
+          "deviceAccess": false
+        }
+      ],
+      "allFileHashesMatch": true
+    },
+    {
+      "configuration": "Debug",
+      "path": "artifacts/build/native/controller-lifecycle-artifacts/c8aa02b7447c411580b9f40aa85a8342",
+      "indexSha256": "f0d2127d284590882796d4cea5620f681a84a899e414a015979cc375e0a908c9",
+      "cases": [
+        {
+          "name": "ordinary-session",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "ordinary"
+        },
+        {
+          "name": "com-sta-session",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "ordinary-sta"
+        },
+        {
+          "name": "com-mta-session",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "ordinary-mta"
+        },
+        {
+          "name": "blocked-client",
+          "passed": true,
+          "kind": "simulated",
+          "activation": "blocked"
+        },
+        {
+          "name": "lifetime-limit",
+          "passed": true,
+          "kind": "simulated"
+        },
+        {
+          "name": "wrong-rate",
+          "passed": true,
+          "positiveNativeRun": false
+        },
+        {
+          "name": "native-kind-refusal",
+          "passed": true,
+          "positiveNativeRun": false
+        },
+        {
+          "name": "refusal-guards",
+          "passed": true,
+          "deviceAccess": false
+        }
+      ],
+      "allFileHashesMatch": true
+    }
+  ],
+  "scope": {
+    "windowsCoCreateInstance": true,
+    "apartments": [
+      "STA",
+      "MTA"
+    ],
+    "productionUnavailableObjectsPerApartment": 3,
+    "simulatedObjectsPerApartment": 3,
+    "simulatedStreamsPerApartment": 4,
+    "acquisitionsPerSimulatedController": 1,
+    "registryChanged": false,
+    "installed": false,
+    "positiveNativeRun": false,
+    "physicalAudioTested": false,
+    "measuredTimingProfile": false,
+    "currentSeratoAdmissionTested": false,
+    "crossApartmentMarshalingTested": false
+  },
+  "privateCheckpoint": {
+    "path": "artifacts/build/checkpoints/com-activation-20261102",
+    "files": 7252,
+    "manifestSha256": "199a3b9eb6a9da511211b7a86e33140771c85f18ab2f79a8ca9a2b184022340b",
+    "selfReferentialPublicEvidenceExcluded": true
+  }
+}
