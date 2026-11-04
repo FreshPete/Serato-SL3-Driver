@@ -1,6 +1,7 @@
 """Read bounded host-probe observations; never opens a device or approves latency."""
 import argparse
 import hashlib
+import importlib.util
 import json
 import math
 from pathlib import Path
@@ -68,14 +69,43 @@ def analyse(report):
     }
 
 
+def analyse_recording(folder, worker_sha, simulated):
+    path = Path(__file__).with_name('validate-input-record-probe.py')
+    spec = importlib.util.spec_from_file_location('validate_input_record_probe', path)
+    recorder = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(recorder)
+    checked = recorder.validate(folder, worker_sha, simulated)
+    raw = recorder.read(folder/'result.json', 262144)
+    require(recorder.sha(raw) == checked['resultSha256'], 'Recording changed after validation')
+    rows = json.loads(raw)['rows']
+    result = analyse({
+        'schema': 'sl3.host-probe.v1', 'simulated': checked['simulated'], 'successful': True,
+        'reported_rate_hz': checked['rateHz'], 'bank_frames': 128,
+        'callback_counter_frequency': checked['counterFrequency'],
+        'callbacks': len(rows), 'first_frame': rows[0][0], 'last_frame': rows[-1][0],
+        'timing_records_dropped': 0, 'callback_timings': [row[:3] for row in rows],
+    })
+    trailing = checked['trailingCallbacksNotRecorded']
+    result.update(sourceSchema='sl3.input-record-probe.v1', probeRecordSha256=checked['resultSha256'],
+                  pcmSha256=checked['pcmSha256'], completeRecordedPrefixCoverage=True,
+                  trailingCallbacksNotRecorded=trailing, completeCallbackCoverage=trailing == 0)
+    return result
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('probe_json', type=Path)
+    parser.add_argument('probe', type=Path, help='Host probe JSON, or input recorder directory with --worker-sha256')
+    parser.add_argument('--worker-sha256', help='Reviewed worker SHA-256 for a finite input recording')
+    parser.add_argument('--simulated', action='store_true', help='Require simulated input recording evidence')
     args = parser.parse_args()
-    require(args.probe_json.stat().st_size <= 1024*1024, 'Oversized probe record')
-    raw = args.probe_json.read_bytes()
-    result = analyse(json.loads(raw.decode('utf-8-sig')))
-    result['probeRecordSha256'] = hashlib.sha256(raw).hexdigest()
+    if args.worker_sha256 is not None:
+        result = analyse_recording(args.probe, args.worker_sha256, args.simulated)
+    else:
+        require(not args.simulated, '--simulated requires --worker-sha256')
+        require(args.probe.stat().st_size <= 1024*1024, 'Oversized probe record')
+        raw = args.probe.read_bytes()
+        result = analyse(json.loads(raw.decode('utf-8-sig')))
+        result['probeRecordSha256'] = hashlib.sha256(raw).hexdigest()
     print(json.dumps(result, indent=2))
 
 

@@ -39,6 +39,15 @@ The optional `--wav-output NEW_FILE` wraps the validated bytes in a six-channel 
   --worker-sha256 <reviewed-lowercase-worker-hash> --wav-output <new-file.wav>
 ```
 
+To report software callback cadence from the same validated recording, run:
+
+```powershell
+.venv/Scripts/python.exe scripts/analyse-callback-timing.py <saved-directory> `
+  --worker-sha256 <reviewed-lowercase-worker-hash>
+```
+
+The report binds the PCM and result hashes and distinguishes full prefix coverage from callbacks after that prefix. Both saved simulated runs replayed successfully, with 1,034 callbacks at 44.1 kHz and 1,125 at 48 kHz. Use `--simulated` for those runs. The cadence report can identify callback stalls and batched publication. Measuring analogue latency still requires a separate reference signal and loopback experiment.
+
 No physical native recording was launched for this checkpoint. The dedicated [InputRecord traced workflow](input-record-trace.md) is now prepared offline, with this executable in the before/after process guard. A native recording still needs a fresh plan, resting-device/readiness checks and owner availability for recovery; existing controls/facade/broker-scope scenarios cannot qualify it. The existing [supervised queue](next-tests.md) remains relevant; this executable does not automatically arm or retry a hardware test. Nonzero marker playback needs its own reviewed source/wiring/level experiment. Phase is not assumed to be a calibrated sine source.
 
 ## Verification

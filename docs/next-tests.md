@@ -8,7 +8,7 @@ For that follow-up, recheck the PnP mapping and preserve the pre-launch topology
 
 ## Current supervised queue
 
-The [InputRecord trace workflow](input-record-trace.md) is now prepared offline for a later owner-present known-input experiment. It requests one acquisition and no rate setter; choose the explicit expected rate from an established observation. Its preparation does not supersede the recovery/readiness investigation below or arm a hardware test.
+The [InputRecord trace workflow](input-record-trace.md) has a separate, unarmed local plan at `analysis/input-record-trace-followup-20261104/input-record-trace.json`. Default inspection passed with the expected rate set to 44.1 kHz from the 4 November control read. It requests one acquisition and refuses a rate mismatch without changing the clock. After the recovery decision and once the known source and wiring are documented, use this packet for the input experiment if its runtime pins still match. The [callback cadence analyzer](input-record-probe.md#offline-validation-and-existing-marker-analysis) can then read the saved PCM evidence.
 
 The default build includes [overlapping redirect-owner exclusion](redirect-owner.md), the corrected startup marker and passed 48/48 tests plus its normal-token read-only preflight. The [16:40Z experiment](attended-port-controls-20261101.md) ran once and failed overall, while a separate offline reassessment validates its native control-only result. The [decoded lifecycle messages](attended-port-lifecycle-20261101.md) establish successful detachment/removal followed by the original stack's startup timeout. The current diagnostic corrections require fresh plans; all earlier preparation is superseded.
 
