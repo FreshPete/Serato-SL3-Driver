@@ -78,6 +78,10 @@ def validate(raw, challenge, cadence=False, silent_stream=False, tone=False):
                 'Original routing table differs')
         require(type(record.get('tone_frames_staged')) is int and
                 record['tone_frames_staged'] == record['observed_rate_hz'] * 65 // 100, 'Incomplete tone')
+        captured = record.get('loopback_pcm_bytes')
+        require(type(captured) is int and captured % 18 == 0 and
+                record['tone_frames_staged'] <= captured // 18 <= min(record['input_frames'], record['observed_rate_hz']),
+                'Incomplete or invalid loopback capture')
     for index, row in enumerate(rows):
         require(type(row) is dict and set(row) == fields and
                 all(type(value) is int for value in row.values()), 'Malformed cadence observation')
@@ -98,7 +102,8 @@ def validate(raw, challenge, cadence=False, silent_stream=False, tone=False):
         result.update(inputFrames=record['input_frames'], outputCompletions=record['output_completions'],
                       exchangesWithOutputProgress=count, analogueOutputVerified=False)
     if tone:
-        result.update(toneFramesStaged=record['tone_frames_staged'], originalControlTableMatched=True)
+        result.update(rateHz=record['observed_rate_hz'], toneFramesStaged=record['tone_frames_staged'], loopbackPcmBytes=captured,
+                      originalControlTableMatched=True)
     return result
 
 
@@ -113,6 +118,12 @@ def main():
     try:
         with args.record.open('rb') as stream:
             result = validate(stream.read(8193), args.challenge, args.cadence, args.silent_stream, args.tone)
+        if args.tone:
+            size = result['loopbackPcmBytes']
+            with args.record.with_name('loopback.pcm').open('rb') as stream:
+                pcm = stream.read(size + 1)
+            require(len(pcm) == size, 'Saved loopback PCM length differs')
+            result['loopbackPcmSha256'] = hashlib.sha256(pcm).hexdigest()
     except (OSError, ValueError, TypeError, AttributeError) as error:
         print(json.dumps({'valid': False, 'error': str(error)}))
         return 1

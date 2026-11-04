@@ -394,10 +394,14 @@ class CadenceAudioPeer final:public sl3::ContinuousPeer {
     std::array<sl3::AudioBlock,4> pending_{};
     unsigned read_=0,write_=0,count_=0;
     const std::atomic<bool>& tone_enabled_;
+    std::vector<std::uint8_t>& capture_;
+    std::size_t captured_bytes_=0;
     unsigned tone_frames_=0;
 public:
-    explicit CadenceAudioPeer(const std::atomic<bool>& tone_enabled):tone_enabled_(tone_enabled){}
+    CadenceAudioPeer(const std::atomic<bool>& tone_enabled,std::vector<std::uint8_t>& capture):
+        tone_enabled_(tone_enabled),capture_(capture){}
     unsigned tone_frames() const noexcept{return tone_frames_;}
+    std::size_t captured_bytes() const noexcept{return captured_bytes_;}
     sl3::StreamExchange publish_input(const sl3::AudioBlock& input) noexcept override {
         if(count_==pending_.size())return sl3::StreamExchange::full;
         auto& output=pending_[write_];
@@ -405,11 +409,16 @@ public:
         output.reported_rate_hz=input.reported_rate_hz;output.packet_count=input.packet_count;
         output.frames_per_packet=input.frames_per_packet;
         output.pcm.fill(0);
+        unsigned frames=0;
+        for(unsigned packet=0;packet<input.packet_count;++packet)frames+=input.frames_per_packet[packet];
+        const auto bytes=std::min<std::size_t>(frames*18,capture_.size()-captured_bytes_);
+        if(bytes){
+            std::memcpy(capture_.data()+captured_bytes_,input.pcm.data(),bytes);
+            captured_bytes_+=bytes;
+        }
         if(tone_enabled_){
             const auto rate=input.reported_rate_hz;
             const unsigned length=rate*65/100,fade=rate/100;
-            unsigned frames=0;
-            for(unsigned packet=0;packet<input.packet_count;++packet)frames+=input.frames_per_packet[packet];
             for(unsigned frame=0;frame<frames && tone_frames_<length;++frame,++tone_frames_){
                 const auto ramp=std::min({tone_frames_,length-1-tone_frames_,fade})/double(fade);
                 const auto sample=static_cast<std::uint32_t>(static_cast<std::int32_t>(265271.0*ramp*
@@ -448,6 +457,8 @@ int run_timer_diagnostic(Api& api,USB_DK_DEVICE_INFO& selected,const std::filesy
     std::atomic<std::uint64_t> observed_output_completions{0};
     std::thread audio;
     unsigned tone_frames=0,retired_tone_frames=0;
+    std::vector<std::uint8_t> loopback;
+    std::size_t loopback_bytes=0,retired_loopback_bytes=0;
     std::optional<sl3::control::AudioControlsSnapshot> controls_before,controls_after;
     auto save=[&](const char* phase){
         report.close();report.open(output/L"timer.json",std::ios::trunc);
@@ -468,7 +479,8 @@ int run_timer_diagnostic(Api& api,USB_DK_DEVICE_INFO& selected,const std::filesy
             <<",\"output_completions\":"<<stream_stats.output_completions
             <<",\"output_payload\":"<<quote(tone?"997 Hz on stream channels 1 and 2":"zero PCM only");
         if(tone){
-            report<<",\"tone_frames_staged\":"<<tone_frames<<",\"routing_setters\":0";
+            report<<",\"tone_frames_staged\":"<<tone_frames<<",\"routing_setters\":0"
+                  <<",\"loopback_pcm_bytes\":"<<loopback_bytes;
             auto write_table=[&](const char* name,const std::optional<sl3::control::AudioControlsSnapshot>& controls){
                 report<<','<<quote(name)<<':';
                 if(!controls){report<<"null";return;}
@@ -491,12 +503,13 @@ int run_timer_diagnostic(Api& api,USB_DK_DEVICE_INFO& selected,const std::filesy
                 controls_before=sl3::control::inspect_audio_controls(io).controls;
                 if(!controls_before || controls_before->raw[8]!=1)
                     throw std::runtime_error("Original control byte 8 does not match the playback hypothesis");
+                loopback.resize(static_cast<std::size_t>(rate)*18);
             }
             device.activate();
             alternate_attempts=static_cast<unsigned>(device.attempted.size());
             audio=std::thread([&]{
                 sl3::worker::UsbDkStreamBackend backend({api.read,api.write},device.redirect,device.system);
-                CadenceAudioPeer peer(tone_enabled);
+                CadenceAudioPeer peer(tone_enabled,loopback);
                 sl3::ContinuousStream stream(backend,peer);
                 if(stream.start({rate,8})){
                     while(!stop_audio && stream.step()==sl3::StreamState::running){
@@ -510,6 +523,7 @@ int run_timer_diagnostic(Api& api,USB_DK_DEVICE_INFO& selected,const std::filesy
                 while(stream.step()==sl3::StreamState::draining)std::this_thread::yield();
                 if(stream.state()==sl3::StreamState::retained)fail_stop();
                 retired_tone_frames=peer.tone_frames();
+                retired_loopback_bytes=peer.captured_bytes();
                 retired_stats=stream.stats();retired_fault=stream.fault();stream_finished=true;
             });
             const auto deadline=std::chrono::steady_clock::now()+std::chrono::seconds(1);
@@ -578,6 +592,15 @@ int run_timer_diagnostic(Api& api,USB_DK_DEVICE_INFO& selected,const std::filesy
     if(with_stream)save("before redirect release");
     closed=device.close();save(opened?"finished":"failed before usable redirect");
     if(!closed)fail_stop();
+    if(tone && retired_loopback_bytes){
+        std::ofstream pcm(output/L"loopback.pcm",std::ios::binary);
+        pcm.write(reinterpret_cast<const char*>(loopback.data()),static_cast<std::streamsize>(retired_loopback_bytes));
+        pcm.close();
+        if(!pcm){
+            error="Cannot persist loopback PCM";result.error=sl3::control::DriverTimerError::transfer;
+        }else loopback_bytes=retired_loopback_bytes;
+        save("finished");
+    }
     return opened && result.error==sl3::control::DriverTimerError::none && result.response && (!cadence || completed==10)?0:1;
 }
 using NativeControlDiagnostic=sl3::worker::ControlSelectionDiagnostic<Device,Transfer>;
