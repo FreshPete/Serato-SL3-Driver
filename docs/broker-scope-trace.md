@@ -22,6 +22,8 @@ The collector now checks for remaining broker-scope and broker-controller proces
 
 ## Verification and remaining work
 
+On 4 November the attended native run passed. Three successive ordinary-user client processes shared one retained UsbDk acquisition. The worker journal recorded seven clock reads at 44.1 kHz and one final release. The traced-run validator confirmed recovery to the selected baseline and reported 17,783 USB events with zero events or buffers lost. The run exercised read-only broker ownership across process lifetimes. Physical audio, independent reacquisition and Serato DVS still require separate validation.
+
 The accompanying [verification record](evidence/broker-scope-trace-20261102.json) records native build results, launcher/admission regression checks and source hashes. Launcher checks inspect a fresh plan, reject ordinary-token collector execution and verify that no probe context or attempted-run marker is created. Synthetic composition tests check dispatch, cross-scenario refusal and server creation-identity binding; their mocked component is explicitly not a native trace result.
 
 No attended native broker test, UAC prompt, device redirect, audio stream, protected installation or current Serato run occurred. The existing supervised recovery/port-observer queue remains relevant before selecting an attended acquisition. Native IPC, actual analogue audio/timing, stable repeated operation and current Serato/two-deck DVS remain unverified. macOS remains deferred.
