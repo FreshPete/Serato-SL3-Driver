@@ -25,7 +25,14 @@ static void run(const std::filesystem::path& self){
         require(!DeleteFileW(t.record.c_str()) && GetLastError()==ERROR_SHARING_VIOLATION,"Session record stays delete locked");
         binding.files.reset();require(!DeleteFileW(t.record.c_str()),"Wait reference itself retains record/image leases");
     }
-    write(t.record,text); // Successful write proves prior leases retired.
+    const auto timing=std::string(64,'c');
+    rejects([&]{bind_broker_record(t.record,record_hash,self,image,worker,timing);});
+    write(t.record,broker_record_text(t.listener.name(),worker,timing)); // Prior leases have retired.
+    const auto keepalive_hash=Process::executable_sha256(t.record);
+    require(bind_broker_record(t.record,keepalive_hash,self,image,worker,timing).endpoint==t.listener.name(),"Exact keepalive timing record binds");
+    rejects([&]{bind_broker_record(t.record,keepalive_hash,self,image,worker);});
+    rejects([&]{bind_broker_record(t.record,keepalive_hash,self,image,worker,std::string(64,'d'));});
+    write(t.record,text);
     rejects([&]{bind_broker_record(t.record,std::string(64,'0'),self,image,worker);});
     rejects([&]{bind_broker_record(t.record,record_hash,self,std::string(64,'0'),worker);});
     rejects([&]{bind_broker_record(t.record,record_hash,self,image,std::string(64,'b'));});

@@ -18,6 +18,8 @@ The later retained keepalive review bundle at `artifacts/build/deployment-bundle
 
 The [host callback loopback diagnostic](driver-timer-diagnostic.md#host-callback-loopback-diagnostic) builds against that unchanged worker. The 65-test Release suite passed after the probe build. The offline analyser recovered a synthetic offset of 432 frames on both channels and rejected truncated PCM. The physical callback loopback and separate directional allowances remain open.
 
+The later ASIO and controller build [binds keepalive operation to its reviewed timing record](asio-native-configuration.md). The six targeted configuration, broker and COM tests passed. The older review bundle still identifies its historical DLL and controller. A fresh deployment review is needed for the new binaries.
+
 ## 2 November software and requirement audit
 
 **The full Windows/current-Serato/two-deck-DVS objective remains incomplete.** This review checks current sources and files against the requested end state; it does not substitute passing software tests, decoded records or an offline descriptor for operational compatibility. Mac remains deferred until Windows works. [Machine-readable checks](evidence/requirements-review-20261102.json).

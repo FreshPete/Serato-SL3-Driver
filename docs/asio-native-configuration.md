@@ -57,6 +57,8 @@ fixed native pipeline. The provider checks the hashes of the timing record,
 measurement report, worker and helper before constructing a native facade.
 
 Read handles deny write/delete and remain retained through facade lifetime.
+
+`SL3-ASIO-TIMING-1` describes the original mode with playback keepalive disabled. `SL3-ASIO-TIMING-2` uses the same fields and describes the retained playback keepalive mode. The native controller requires an exact match between the timing version and its `--playback-keepalive on` option before it acquires the device. It publishes a version 2 broker session record that pins the exact timing record hash. The ASIO client refuses a version 2 profile against a private worker, a version 1 session, or a different version 2 timing record. The new format needs separately measured and reviewed timing evidence.
 Hashes are computed while those handles hold the same files stable; worker
 launch and the isolated native backend retain their existing independent hash,
 service and exact-device gates. The ASIO host does not load the helper. Missing,

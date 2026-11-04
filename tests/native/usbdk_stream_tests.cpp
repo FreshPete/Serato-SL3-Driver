@@ -164,13 +164,17 @@ static void preparation_and_sync(){
 }
 static void pipeline(){
     for(unsigned rate:{44100u,48000u})for(unsigned intervals:{8u,64u}){
-        Harness state;auto io=backend(state);auto host=Mailbox::create();auto worker=Mailbox::open(host->name());MailboxStreamPeer peer(*worker);
+        Harness state;
+        // Exercise a counter large enough to overflow a direct ticks-to-ns multiplication.
+        if(intervals==64)state.ticks=4ull*60*60*10000000-10000;
+        auto io=backend(state);auto host=Mailbox::create();auto worker=Mailbox::open(host->name());MailboxStreamPeer peer(*worker);
         ContinuousStream stream(*io,peer);require(stream.start({rate,intervals,20,2}),"Start actual adapter/engine/shared-queue software path");
         const auto allocated=allocations.load();AudioBlock data;
         for(unsigned n=0;n<500;++n){
             state.ticks+=1000;require(stream.step()==StreamState::running,"Native-boundary simulation keeps rearming");
             for(;;){const auto got=host->try_pop_audio(AudioDirection::input,data);if(got==AudioResult::empty)break;
                 require(got==AudioResult::ok && data.reported_rate_hz==rate && data.packet_count==intervals &&
+                        data.host_observation_ns==state.ticks*100 &&
                         host->try_push_audio(AudioDirection::output,data)==AudioResult::ok,"Copy exact completed input schedule/PCM through both checked queues");}
         }
         require(allocations.load()==allocated,"No C++ allocations in native adapter/engine/real shared queues after preparation");

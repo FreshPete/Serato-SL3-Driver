@@ -8,6 +8,7 @@ struct DriverConfiguration {
     std::optional<BrokerAttachment> broker;
     LatencyProfile latency;
     std::shared_ptr<const void> files;
+    std::string keepalive_timing_sha256;
 };
 struct DriverScope {
     std::shared_ptr<DriverOwner> owner;

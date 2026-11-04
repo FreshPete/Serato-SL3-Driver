@@ -52,6 +52,11 @@ static void records(Fixture& fixture){
         for(const auto& item:{fixture.config,fixture.timing,fixture.measurement,config.worker.executable,config.worker.helper})require(locked(item),"All reviewed bytes remain write/delete locked");
     }
     require(!locked(fixture.config) && !locked(fixture.timing),"Configuration lease releases file locks");
+    fixture.replace_timing("SL3-ASIO-TIMING-1","SL3-ASIO-TIMING-2");
+    require(load_driver_configuration(fixture.config).keepalive_timing_sha256==digest(fixture.timing),
+        "Keepalive profile binds exact timing bytes for the controller");
+    rejects([&]{load_driver_entry_configuration(fixture.config);});
+    fixture.reset();
     for(const auto& value:{fixture.config_text+"extra=1\n",fixture.config_text.substr(0,fixture.config_text.size()-1),std::string("\xef\xbb\xbf")+fixture.config_text,fixture.config_text+"\n"}){
         write(fixture.config,value);rejects([&]{load_driver_configuration(fixture.config);});
     }

@@ -84,6 +84,7 @@ std::string result(const RunEvidence& e,bool expired){
 int run(const std::filesystem::path& input,const std::filesystem::path& output,DWORD duration,bool keepalive){
     require(!keepalive || kind==session::Kind::native,"Playback keepalive requires the native controller");
     auto config=asio::load_driver_configuration(input);require(!config.broker,"Controller input must be reviewed private-worker format");
+    require(keepalive==!config.keepalive_timing_sha256.empty(),"Controller playback mode differs from reviewed timing profile");
     ReadFileLease source(input);const auto source_text=source.text();const auto image=self();auto image_pin=std::make_shared<ReadFileLease>(image,256*1024*1024);const auto image_hash=Process::executable_sha256(image);
     BrokerListener listener; // Requires an ordinary user before files/device access.
     local(output);require(!std::filesystem::exists(output),"Controller output directory must be new");
@@ -104,7 +105,7 @@ int run(const std::filesystem::path& input,const std::filesystem::path& output,D
         journal.mark("owner_open_begin");require(owner.open(),"Broker owner acquisition/handshake failed");evidence.acquired=true;journal.mark("owner_open_ready");
         require(owner.report().snapshot_valid && owner.report().device.rate_hz==config.latency.rate_hz,"Observed clock differs from reviewed timing profile");
         require(WaitForSingleObject(stop.value,0)==WAIT_TIMEOUT,"Controller stopped before publication");
-        const auto record=output/L"broker-session.txt";published.push_back(write_new(record,broker_record_text(listener.name(),owner.worker_sha256())));journal.mark("session_record_published");
+        const auto record=output/L"broker-session.txt";published.push_back(write_new(record,broker_record_text(listener.name(),owner.worker_sha256(),config.keepalive_timing_sha256)));journal.mark("session_record_published");
         auto native_config=source_text;const std::string header="SL3-ASIO-CONFIG-1";require(native_config.compare(0,header.size(),header)==0,"Controller input header changed");native_config.replace(0,header.size(),"SL3-ASIO-BROKER-CONFIG-1");
         native_config+="broker="+image.u8string()+"\nbroker_sha256="+image_hash+"\nsession_record="+record.u8string()+"\nsession_record_sha256="+Process::executable_sha256(record)+"\n";
         const auto consumer=output/L"sl3-asio.conf";published.push_back(write_new(consumer,native_config));

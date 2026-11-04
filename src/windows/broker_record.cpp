@@ -44,14 +44,17 @@ std::uint64_t number(const std::string& s){
     require(!s.empty() && s[0]!='0',"Noncanonical broker process identity");std::uint64_t value=0;
     const auto result=std::from_chars(s.data(),s.data()+s.size(),value);require(result.ec==std::errc{} && result.ptr==s.data()+s.size() && value,"Invalid broker process identity");return value;
 }
-std::vector<std::string> parse(const std::string& bytes){
+std::vector<std::string> parse(const std::string& bytes,bool keepalive){
     require(!bytes.empty() && bytes.back()=='\n' && bytes.find('\0')==std::string::npos,"Incomplete broker session record");
     std::vector<std::string> values;std::size_t offset=0;
-    for(const auto key:{"SL3-BROKER-SESSION-1","endpoint=","server_pid=","server_created=","worker_sha256="}){
+    const auto field=[&](const char* key){
         const auto end=bytes.find('\n',offset);require(end!=std::string::npos,"Missing broker session field");
         auto line=bytes.substr(offset,end-offset);if(!line.empty() && line.back()=='\r')line.pop_back();
         const std::string prefix(key);require(line.find('\r')==std::string::npos && line.compare(0,prefix.size(),prefix)==0,"Unexpected broker session field/order");values.push_back(line.substr(prefix.size()));offset=end+1;
-    }
+    };
+    field(keepalive?"SL3-BROKER-SESSION-2":"SL3-BROKER-SESSION-1");
+    for(const auto key:{"endpoint=","server_pid=","server_created=","worker_sha256="})field(key);
+    if(keepalive)field("keepalive_timing_sha256=");
     require(values[0].empty() && offset==bytes.size(),"Unknown/trailing broker session record fields");return values;
 }
 bool same_file(HANDLE a,HANDLE b){
@@ -59,17 +62,25 @@ bool same_file(HANDLE a,HANDLE b){
     return first.dwVolumeSerialNumber==second.dwVolumeSerialNumber && first.nFileIndexHigh==second.nFileIndexHigh && first.nFileIndexLow==second.nFileIndexLow;
 }
 }
-std::string broker_record_text(const std::wstring& name,const std::string& worker){
+std::string broker_record_text(const std::wstring& name,const std::string& worker,const std::string& keepalive_timing){
     require(endpoint(name) && hash(worker),"Invalid broker record endpoint/worker hash");std::string ascii;for(auto c:name)ascii+=static_cast<char>(c);
-    return "SL3-BROKER-SESSION-1\nendpoint="+ascii+"\nserver_pid="+std::to_string(GetCurrentProcessId())+
+    const bool keepalive=!keepalive_timing.empty();
+    require(!keepalive || hash(keepalive_timing),"Invalid keepalive timing hash");
+    auto result=std::string(keepalive?"SL3-BROKER-SESSION-2":"SL3-BROKER-SESSION-1")+"\nendpoint="+ascii+"\nserver_pid="+std::to_string(GetCurrentProcessId())+
         "\nserver_created="+std::to_string(created(GetCurrentProcess()))+"\nworker_sha256="+worker+"\n";
+    if(keepalive)result+="keepalive_timing_sha256="+keepalive_timing+"\n";
+    return result;
 }
 BrokerBinding bind_broker_record(const std::filesystem::path& record,const std::string& record_hash,
-                               const std::filesystem::path& image,const std::string& image_hash,const std::string& worker_hash){
+                               const std::filesystem::path& image,const std::string& image_hash,const std::string& worker_hash,
+                               const std::string& keepalive_timing){
     require(hash(record_hash) && hash(image_hash) && hash(worker_hash),"Broker binding requires lowercase SHA256 pins");
+    const bool keepalive=!keepalive_timing.empty();
+    require(!keepalive || hash(keepalive_timing),"Invalid expected keepalive timing hash");
     auto files=std::make_shared<Files>();auto input=std::make_unique<File>(record,4096);
-    require(Process::executable_sha256(record)==record_hash,"Broker session record hash mismatch");const auto values=parse(input->text());files->entries.push_back(std::move(input));
+    require(Process::executable_sha256(record)==record_hash,"Broker session record hash mismatch");const auto values=parse(input->text(),keepalive);files->entries.push_back(std::move(input));
     require(values[4]==worker_hash,"Broker session worker hash differs from reviewed configuration");
+    require(!keepalive || values[5]==keepalive_timing,"Broker keepalive timing differs from reviewed configuration");
     const std::wstring name(values[1].begin(),values[1].end());require(endpoint(name),"Invalid broker session endpoint");
     const auto pid=number(values[2]),time=number(values[3]);require(pid<=MAXDWORD,"Broker PID overflow");
     Handle process;process.value=OpenProcess(SYNCHRONIZE|PROCESS_QUERY_LIMITED_INFORMATION,FALSE,DWORD(pid));

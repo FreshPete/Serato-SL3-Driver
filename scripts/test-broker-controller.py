@@ -47,12 +47,12 @@ def main():
     measurement = root/'measurement.txt'
     measurement.write_text('SYNTHETIC CONTROLLER TEST ONLY. No physical measurement or approval.\n', encoding='utf-8')
 
-    def config(rate):
-        timing = root/f'timing-{rate}.txt'
-        timing.write_text(f'SL3-ASIO-TIMING-1\nreview=approved\nworker_sha256={sha(worker)}\nhelper_sha256={sha(helper)}\n'
+    def config(rate, version=1):
+        timing = root/f'timing-{rate}-v{version}.txt'
+        timing.write_text(f'SL3-ASIO-TIMING-{version}\nreview=approved\nworker_sha256={sha(worker)}\nhelper_sha256={sha(helper)}\n'
                           f'rate_hz={rate}\nbuffer_frames=128\nintervals=8\nrequests_per_direction=4\ninput_extra_frames=7\noutput_extra_frames=11\n'
                           f'measurement_file={measurement}\nmeasurement_sha256={sha(measurement)}\n', encoding='utf-8')
-        file = root/f'input-{rate}.conf'
+        file = root/f'input-{rate}-v{version}.conf'
         file.write_text(f'SL3-ASIO-CONFIG-1\nworker={worker}\nworker_sha256={sha(worker)}\nhelper={helper}\n'
                         f'timing_record={timing}\ntiming_record_sha256={sha(timing)}\n', encoding='utf-8')
         return file
@@ -234,6 +234,11 @@ def main():
     existing = root/'existing-output'; existing.mkdir(); (existing/'preserve.txt').write_text('preserve', encoding='utf-8')
     call(command(simulated, normal, existing), expected=1)
     require(list(p.name for p in existing.iterdir()) == ['preserve.txt'] and (existing/'preserve.txt').read_text() == 'preserve', 'Existing output refusal preserves all bytes')
+    mode_output = root/'timing-mode-mismatch'
+    for profile, option in ((normal, ['--playback-keepalive', 'on']), (config(48000, 2), [])):
+        refused = call([*command(native, profile, mode_output), *option], expected=1)
+        require('playback mode differs' in refused.stderr and not mode_output.exists(),
+                'Mismatched timing and playback modes fail before session creation')
     for extra in (['--simulate'], ['--input', str(normal)], ['--limit-ms', '0']):
         call([native, '--run', '--input', normal, '--output', root/'invalid-output', '--limit-ms', '1000', *extra], expected=1)
         require(not (root/'invalid-output').exists(), 'Malformed/duplicate flags create no context')
