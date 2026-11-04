@@ -1,0 +1,80 @@
+# One ordinary-user timer diagnostic and one separately elevated passive trace.
+param([Parameter(Mandatory)][string]$Plan,[switch]$Run)
+$ErrorActionPreference='Stop'
+$root=Split-Path -Parent $PSScriptRoot
+$settings=Get-Content -LiteralPath $Plan -Raw | ConvertFrom-Json
+$worker=Join-Path $root 'artifacts/build/timer-cadence-20261104/Release/sl3_usbdk.exe'
+$helper=Join-Path $root 'artifacts/extracted/usbdk-msi/UsbDkHelper.dll10'
+$base=Join-Path $root 'tests/results/local/timer-cadence-20261104'
+$traceDirectory="$base-usb"
+if($settings.worker -ine $worker -or $settings.helper -ine $helper -or
+   $settings.resultDirectory -ine $base -or $settings.traceDirectory -ine $traceDirectory -or
+   $settings.challenge -cnotmatch '^[0-9a-f]{16}$'){throw 'Unexpected cadence plan'}
+$attemptPath="$base-attempted.json"
+if((Test-Path -LiteralPath $base) -or (Test-Path -LiteralPath $traceDirectory) -or
+   (Test-Path -LiteralPath $attemptPath)){throw 'Cadence packet already used'}
+$manifest=Get-Content -LiteralPath (Join-Path $root 'artifacts/build/timer-cadence-20261104/native-build-Release.json') -Raw | ConvertFrom-Json
+if($settings.workerSha256 -ne $manifest.usbdk.executableSha256 -or
+   (Get-FileHash -LiteralPath $worker).Hash -ne $settings.workerSha256 -or
+   (Get-FileHash -LiteralPath $helper).Hash -ne $settings.helperSha256){throw 'Cadence runtime hash differs'}
+$collector=Join-Path $PSScriptRoot 'capture-usb-startup.ps1'
+$shell=(Get-Command pwsh).Source
+$preview=& $worker --plan --timer-cadence --challenge $settings.challenge | ConvertFrom-Json
+if($LASTEXITCODE -or $preview.plan_only -ne $true -or $preview.device_access -ne $false -or
+   $preview.maximum_writes -ne 10 -or $preview.audio_submissions -ne 0){throw 'Unexpected cadence preview'}
+$tracePlan=& $shell -NoProfile -File $collector -WithUsbDkLifecycle -DurationSeconds 40 -OutputDirectory $traceDirectory
+if($LASTEXITCODE){throw 'USB/WPP preflight failed'}
+if(-not $Run){$tracePlan;return}
+
+Import-Module (Join-Path $PSScriptRoot 'inspect-process.psm1')
+if((Get-Sl3ProcessEvidence -ProcessId $PID -WithToken).elevated -ne $false){throw 'Start under the ordinary user token'}
+$device=Get-PnpDevice -PresentOnly -InstanceId 'USB\VID_1CC5&PID_0001\SL3.01.00'
+if($device.Problem -ne 'CM_PROB_DRIVER_FAILED_LOAD' -or
+   (Get-Process 'Serato DJ Pro',sl3_usbdk -ErrorAction SilentlyContinue)){throw 'SL3 resting state differs'}
+$scriptHash=(Get-FileHash -LiteralPath $collector).Hash
+$attempt=[IO.File]::Open($attemptPath,[IO.FileMode]::CreateNew)
+try{
+    $record=@{planSha256=(Get-FileHash -LiteralPath $Plan).Hash;utc=[datetime]::UtcNow.ToString('o')}
+    $bytes=[Text.Encoding]::UTF8.GetBytes(($record | ConvertTo-Json))
+    $attempt.Write($bytes,0,$bytes.Length)
+}finally{$attempt.Dispose()}
+$admin=Start-Process -FilePath $shell -Verb RunAs -WindowStyle Hidden -PassThru -ArgumentList @(
+    '-NoProfile','-File',('"{0}"' -f $collector),'-Capture','-WithUsbDkLifecycle','-DurationSeconds','40',
+    '-OutputDirectory',('"{0}"' -f $traceDirectory))
+$capture=Join-Path $traceDirectory 'capture.json'
+$deadline=[datetime]::UtcNow.AddSeconds(15)
+try{
+    do{
+        try{$trace=Get-Content -LiteralPath $capture -Raw | ConvertFrom-Json}catch{$trace=$null}
+        if($trace.status -eq 'recording'){break}
+        Start-Sleep -Milliseconds 100
+    }while(-not $admin.HasExited -and [datetime]::UtcNow -lt $deadline)
+    if($trace.status -ne 'recording'){throw 'No fresh recording manifest'}
+    $identity=Get-Sl3ProcessEvidence -ProcessId $admin.Id
+    $age=([datetime]::UtcNow-([datetimeoffset]$trace.startedUtc).UtcDateTime).TotalSeconds
+    $start=@($trace.commands | Where-Object {
+        ($_.arguments -join ' ') -ceq "start -n $($trace.session)" -and $_.exitCode -eq 0
+    })
+    if(-not $identity.alive -or $trace.collectorPid -ne $admin.Id -or
+       $identity.creationFileTimeUtc -ne $trace.collectorCreationFileTimeUtc -or
+       $identity.imagePath -ine $trace.collectorImagePath -or $trace.producerSha256 -ne $scriptHash -or
+       $age -lt 0 -or $age -gt 2 -or $start.Count -ne 1){throw 'Collector identity or freshness differs'}
+    [ordered]@{collector=$identity;session=$trace.session;ageSeconds=$age;challenge=$settings.challenge;workerSha256=$settings.workerSha256} |
+        ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $traceDirectory 'timer-admission.json')
+    & $worker --timer-query --timer-cadence --challenge $settings.challenge --helper $helper --output $base
+    if($LASTEXITCODE){throw 'Cadence worker failed; preserve its records'}
+    $python=Join-Path $root '.venv/Scripts/python.exe'
+    & $python (Join-Path $PSScriptRoot 'validate-driver-timer.py') (Join-Path $base 'timer.json') --challenge $settings.challenge --cadence
+    if($LASTEXITCODE){throw 'Cadence record rejected'}
+}finally{
+    if(-not $admin.WaitForExit(60000)){throw 'Collector still active after observation window'}
+    if($admin.ExitCode){throw 'Collector failed; inspect its final trace record'}
+}
+$final=Get-Content -LiteralPath $capture -Raw | ConvertFrom-Json
+$deleted=@($final.commands | Where-Object {
+    ($_.arguments -join ' ') -ceq "delete -n $($trace.session)" -and $_.exitCode -eq 0
+})
+if($final.status -ne 'window completed' -or $final.session -cne $trace.session -or
+   $final.cleanupError -or $deleted.Count -ne 1){throw 'Trace cleanup requires inspection'}
+$after=Get-PnpDevice -PresentOnly -InstanceId $device.InstanceId
+if($after.Problem -ne $device.Problem){throw 'SL3 resting state differs after the test'}

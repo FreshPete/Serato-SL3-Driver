@@ -389,37 +389,66 @@ std::string timer_hex(const sl3::control::Challenge& bytes){
     for(const auto byte:bytes){text+=alphabet[byte>>4];text+=alphabet[byte&15];}return text;
 }
 int run_timer_diagnostic(Api& api,USB_DK_DEVICE_INFO& selected,const std::filesystem::path& output,
-                         std::ofstream& report,const sl3::control::Challenge& challenge){
+                         std::ofstream& report,sl3::control::Challenge challenge,bool cadence){
     Device device(api);sl3::control::DriverTimerResult result;
     unsigned writes=0,reads=0;DWORD native_error=0;
     bool redirect_attempted=false,opened=false,closed=false,io_retired=true;std::string error;
+    const auto seed=challenge;
+    std::ostringstream exchanges;
+    unsigned completed=0;
     auto save=[&](const char* phase){
         report.close();report.open(output/L"timer.json",std::ios::trunc);
         report<<"{\"schema\":\"sl3.driver-timer-diagnostic.v1\",\"phase\":"<<quote(phase)<<",\"utc\":"<<quote(utc_now())
-              <<",\"challenge_hex\":"<<quote(timer_hex(challenge))<<",\"redirect_attempted\":"<<(redirect_attempted?"true":"false")
+              <<",\"challenge_hex\":"<<quote(timer_hex(seed))<<",\"redirect_attempted\":"<<(redirect_attempted?"true":"false")
               <<",\"redirect_opened\":"<<(opened?"true":"false")<<",\"last_io_retired\":"<<(io_retired?"true":"false")
               <<",\"redirect_closed\":"<<(closed?"true":"false")<<",\"write_attempts\":"<<writes<<",\"read_attempts\":"<<reads
               <<",\"diagnostic_error\":"<<unsigned(result.error)<<",\"exchange_error\":"<<unsigned(result.exchange_error)
               <<",\"native_error\":"<<native_error<<",\"response_parsed\":"<<(result.response?"true":"false")
               <<",\"response_verified\":false,\"serato_admission_verified\":false,\"reopen_ready_verified\":false,\"audio_submissions\":0,\"alternate_changes\":0,\"rate_changes\":0";
         if(result.response)report<<",\"response_hex\":"<<quote(timer_hex(*result.response));
+        if(cadence)report<<",\"cadence_ms\":100,\"completed_exchanges\":"<<completed<<",\"exchanges\":["<<exchanges.str()<<']';
         report<<",\"error\":"<<quote(error)<<"}\n"<<std::flush;
         if(!report)throw std::runtime_error("Cannot persist timer diagnostic");
     };
     try{
         redirect_attempted=true;save("before idle redirect");device.open(selected);opened=true;
-        using Io=sl3::worker::NativeDriverTimerIo<Device,Transfer>;
-        Io* active=nullptr;
-        Io io(device,challenge,[&](const char* phase){
-            if(active){writes=active->writes;reads=active->reads;}
-            io_retired=std::string_view(phase)=="timer transfer retired";save(phase);
-        });active=&io;
-        result=sl3::control::inspect_driver_timer(challenge,io);io_retired=true;writes=io.writes;reads=io.reads;native_error=io.error;
+        const auto origin=std::chrono::steady_clock::now();
+        for(unsigned index=0;index<(cadence?10u:1u);++index){
+            const auto due=origin+std::chrono::milliseconds(index*100);
+            if(index)std::this_thread::sleep_until(due);
+            if(cadence){io_retired=false;save("before cadence exchange");}
+            const auto start=std::chrono::steady_clock::now();
+            if(cadence && start-due>std::chrono::milliseconds(20)){
+                io_retired=true;throw std::runtime_error("Timer cadence missed its start window");
+            }
+            challenge.back()=std::uint8_t(seed.back()+index);
+            using Io=sl3::worker::NativeDriverTimerIo<Device,Transfer>;
+            Io* active=nullptr;
+            Io io(device,challenge,[&](const char* phase){
+                io_retired=std::string_view(phase)=="timer transfer retired";
+                if(!cadence){
+                    if(active){writes=active->writes;reads=active->reads;}
+                    save(phase);
+                }
+            });active=&io;
+            result=sl3::control::inspect_driver_timer(challenge,io,cadence?80u:sl3::control::driver_timer_budget_ms);
+            io_retired=true;native_error=io.error;
+            if(!cadence){writes=io.writes;reads=io.reads;break;}
+            writes+=io.writes;reads+=io.reads;
+            const auto end=std::chrono::steady_clock::now();
+            if(index)exchanges<<',';
+            exchanges<<"{\"start_us\":"<<std::chrono::duration_cast<std::chrono::microseconds>(start-origin).count()
+                     <<",\"end_us\":"<<std::chrono::duration_cast<std::chrono::microseconds>(end-origin).count()
+                     <<",\"writes\":"<<io.writes<<",\"reads\":"<<io.reads<<'}';
+            if(result.error!=sl3::control::DriverTimerError::none || !result.response)break;
+            if(end>=due+std::chrono::milliseconds(100))throw std::runtime_error("Timer cadence missed its completion window");
+            ++completed;
+        }
         save("before redirect release");
     }catch(const std::exception& exception){error=exception.what();result.error=sl3::control::DriverTimerError::transfer;}
     closed=device.close();save(opened?"finished":"failed before usable redirect");
     if(!closed)fail_stop();
-    return opened && result.error==sl3::control::DriverTimerError::none && result.response?0:1;
+    return opened && result.error==sl3::control::DriverTimerError::none && result.response && (!cadence || completed==10)?0:1;
 }
 using NativeControlDiagnostic=sl3::worker::ControlSelectionDiagnostic<Device,Transfer>;
 struct Capture final:sl3::CaptureBackend {
@@ -767,6 +796,7 @@ int wmain(int argc,wchar_t** argv) {
     std::optional<sl3::control::selection_wire::Target> control_target;
     std::optional<unsigned> held_rate_target;
     std::optional<sl3::control::Challenge> timer_challenge;
+    bool timer_cadence=false;
     std::wstring channel;
     std::filesystem::path helper,output,startup_log;
     for(int i=1;i<argc;++i){const std::wstring arg=argv[i];
@@ -776,6 +806,7 @@ int wmain(int argc,wchar_t** argv) {
         else if(arg==L"--stream-worker")stream_worker=true;
         else if(arg==L"--device-worker")device_worker=true;
         else if(arg==L"--timer-query")timer_query=true;
+        else if(arg==L"--timer-cadence" && !timer_cadence)timer_cadence=true;
         else if(arg==L"--challenge" && i+1<argc && !timer_challenge){
             try{timer_challenge=sl3::control::parse_driver_timer_challenge(argv[++i]);}
             catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 2;}
@@ -799,12 +830,18 @@ int wmain(int argc,wchar_t** argv) {
         else{std::cerr<<"Usage: sl3_usbdk [--plan [--challenge HEX16] | --list --helper FILE | --timer-query --challenge HEX16 --helper FILE --output NEW_DIRECTORY | --capture/--duplex-silence/--select-rate HZ --helper FILE --output NEW_DIRECTORY | --worker/--stream-worker/--device-worker --channel LOCAL_NAME --helper FILE]\n";return 2;}
     }
     if(unsigned(capture)+unsigned(list)+unsigned(plan)+unsigned(duplex)+unsigned(worker)+unsigned(stream_worker)+unsigned(device_worker)+unsigned(rate_target!=0)+unsigned(timer_query)>1 || ((!capture && !duplex && !rate_target && !timer_query) && !output.empty()) || ((!capture && !list && !duplex && !worker && !stream_worker && !device_worker && !rate_target && !timer_query) && !helper.empty()) || (!worker && !stream_worker && !device_worker && !channel.empty()) || ((worker || stream_worker || device_worker) && (channel.empty() || helper.empty())) || (rate_target && output.empty()) || (timer_query && (!timer_challenge || output.empty())) || (timer_challenge && !timer_query && !plan)){std::cerr<<"Conflicting, missing or unused arguments\n";return 2;}
+    if(timer_cadence && (!timer_challenge || (!timer_query && !plan))){std::cerr<<"Timer cadence requires a timer query or plan and challenge\n";return 2;}
     if(!startup_log.empty() && !stream_worker && !device_worker){std::cerr<<"Startup journal is only valid for an isolated audio worker\n";return 2;}
     if(control_target && (!device_worker || startup_log.empty())){std::cerr<<"Control-test target requires an isolated device worker and explicit fresh startup journal\n";return 2;}
     if(held_rate_target && (!device_worker || startup_log.empty() || control_target)){
         std::cerr<<"Rate-test target requires a separate isolated device worker and explicit fresh startup journal\n";return 2;
     }
-    if(plan && timer_challenge){std::cout<<"{\"plan_only\":true,\"helper_loaded\":false,\"device_access\":false,\"driver_changes\":false,\"timer_command\":\"0x37\",\"maximum_writes\":1,\"maximum_reads\":4,\"budget_ms\":1500,\"audio_submissions\":0,\"response_verified\":false,\"challenge_hex\":"<<quote(timer_hex(*timer_challenge))<<"}\n";return 0;}
+    if(plan && timer_challenge){
+        std::cout<<"{\"plan_only\":true,\"helper_loaded\":false,\"device_access\":false,\"driver_changes\":false,\"timer_command\":\"0x37\"";
+        if(timer_cadence)std::cout<<",\"maximum_writes\":10,\"maximum_reads\":40,\"budget_ms\":80,\"cadence_ms\":100";
+        else std::cout<<",\"maximum_writes\":1,\"maximum_reads\":4,\"budget_ms\":1500";
+        std::cout<<",\"audio_submissions\":0,\"response_verified\":false,\"challenge_hex\":"<<quote(timer_hex(*timer_challenge))<<"}\n";return 0;
+    }
     if(device_worker){try{return serve_native_device(channel,helper,startup_log,control_target,held_rate_target);}catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}}
     if(stream_worker){try{return serve_native_stream(channel,helper,startup_log);}catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}}
     if(worker){try{return serve_worker(channel,helper);}catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}}
@@ -821,7 +858,7 @@ int wmain(int argc,wchar_t** argv) {
         }
         Watchdog watchdog;Api api;api.load(helper);auto selected=api.select();
         if(list){std::cout<<"{\"matched_sl3\":1,\"descriptor_fixture_matches\":true,\"high_speed\":true,\"device_redirected\":false}\n";return 0;}
-        if(timer_query){timer_started=true;return run_timer_diagnostic(api,selected,output,report,*timer_challenge);}
+        if(timer_query){timer_started=true;return run_timer_diagnostic(api,selected,output,report,*timer_challenge,timer_cadence);}
         if(rate_target)return run_rate_diagnostic(api,selected,output,report,rate_target);
         if(duplex)return run_duplex_silence(api,selected,output,report);
         Device device(api);unsigned rate=0;bool captured=false,closed=false,transfers=false;unsigned submitted=0,completed=0;
