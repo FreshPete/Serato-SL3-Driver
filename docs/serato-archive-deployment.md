@@ -57,3 +57,11 @@ Twenty-two transaction checks use original synthetic data in bounded owned tempo
 Six actual package CLI scenarios check full validation, repeat preparation, no-overwrite refusal and wrapper refusal of changed core, candidate or plan. The repeated five-file bundle is byte-identical. The actual default wrapper `Plan` passes and leaves the original installed identities unchanged. [Sanitized evidence](evidence/serato-archive-deployment-20261102.json) binds source files, package hashes, fixture/CLI results and the read-only preflight. No new native audio tests are claimed, and no protected install/rollback, current admission or physical audio/DVS result is inferred.
 
 Run fixture checks with `pwsh -NoProfile -File tests/test-serato-archive-file-transaction.ps1`. They require a Windows user session with permission to create ordinary owned temporary files/junctions. The goal remains Windows-first; Mac is deferred.
+
+## First attended Serato 5.0 recognition test
+
+On 4 November 2026, the original signed Serato DJ Pro 5.0.0.1278 executable ran under the ordinary desktop user with the temporary additive archive. The application log reported the genuine USB VID/PID `1CC5:0001`, identified the device as Rane SL3, reported its minimum firmware as installed, and recorded the SL3 being added. Serato showed **Rane SL3 Driver Not Installed** in place of the earlier **Rane SL3 Discontinued** notification. The operator confirmed the new message with a screenshot.
+
+The log separately enumerated the historical Rane ASIO entry and kept playback on its offline device. The test did not register the rebuild or establish that Serato opened it. The next application-side question is which driver check produces the new notification and whether the rebuilt ASIO registration satisfies it.
+
+The single elevated helper restored the original archive after Serato exited and removed the temporary transaction files. The restored SHA-256 matched the original preflight and the post-clean state was `original`. The full application log and candidate archive remain local.
