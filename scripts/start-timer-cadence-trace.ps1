@@ -32,10 +32,12 @@ if($HostLoopback){
     $probe=Join-Path $build 'Release/sl3_input_record_probe.exe'
     $analyser=Join-Path $PSScriptRoot 'analyse-timer-loopback.py'
     $validator=Join-Path $PSScriptRoot 'validate-input-record-probe.py'
+    $traceValidator=Join-Path $PSScriptRoot 'validate-usbdk-capture.py'
     $python=Join-Path $root '.venv/Scripts/python.exe'
     if((Get-FileHash -LiteralPath $probe).Hash -ne $settings.probeSha256 -or
        (Get-FileHash -LiteralPath $analyser).Hash -ne $settings.analyserSha256 -or
-       (Get-FileHash -LiteralPath $validator).Hash -ne $settings.validatorSha256){throw 'Host loopback probe, analyser or validator hash differs'}
+       (Get-FileHash -LiteralPath $validator).Hash -ne $settings.validatorSha256 -or
+       (Get-FileHash -LiteralPath $traceValidator).Hash -ne $settings.traceValidatorSha256){throw 'Host loopback probe, analyser or validator hash differs'}
     $preview=& $probe --plan-loopback | ConvertFrom-Json
     if($LASTEXITCODE -or $preview.planOnly -ne $true -or $preview.deviceAccess -ne $false -or
        $preview.expectedRateHz -ne 44100 -or ($preview.markerHz -join ',') -cne '997,1301' -or
@@ -110,15 +112,24 @@ try{
         $admission.probeSha256=$settings.probeSha256
         $admission.analyserSha256=$settings.analyserSha256
         $admission.validatorSha256=$settings.validatorSha256
+        $admission.traceValidatorSha256=$settings.traceValidatorSha256
         $admission.helperSha256=$settings.helperSha256
     }
     $admission | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $traceDirectory 'timer-admission.json')
     $python=Join-Path $root '.venv/Scripts/python.exe'
     if($HostLoopback){
-        & $probe --run-loopback --worker $worker --worker-sha256 $settings.workerSha256 --helper $helper --output $base --expected-rate 44100
-        if($LASTEXITCODE){throw 'Host loopback probe failed; preserve its records'}
-        & $python $analyser $base --host-callback --worker-sha256 $settings.workerSha256 --output (Join-Path $base 'loopback-analysis.json')
-        if($LASTEXITCODE){throw 'Host loopback analysis failed; preserve its records'}
+        $probeError=$null
+        $probeExitCode=$null
+        try{
+            $probeStarted=[datetimeoffset]::UtcNow
+            try{
+                & $probe --run-loopback --worker $worker --worker-sha256 $settings.workerSha256 --helper $helper --output $base --expected-rate 44100
+                $probeExitCode=$LASTEXITCODE
+            }finally{$probeCompleted=[datetimeoffset]::UtcNow}
+            if($probeExitCode){throw "Host loopback probe exited $probeExitCode"}
+            & $python $analyser $base --host-callback --worker-sha256 $settings.workerSha256 --output (Join-Path $base 'loopback-analysis.json')
+            if($LASTEXITCODE){throw 'Host loopback analysis failed'}
+        }catch{$probeError=$_}
     }elseif($RetainedKeepalive){
         & $probe --retained-keepalive-44100 --worker $worker --worker-sha256 $settings.workerSha256 --helper $helper --output $base
         if($LASTEXITCODE){throw 'Retained probe failed; preserve its records'}
@@ -144,9 +155,41 @@ $deleted=@($final.commands | Where-Object {
 })
 if($final.status -ne 'window completed' -or $final.session -cne $trace.session -or
    $final.cleanupError -or $deleted.Count -ne 1){throw 'Trace cleanup requires inspection'}
-$after=Get-PnpDevice -PresentOnly -InstanceId $device.InstanceId
-if($after.Problem -ne $device.Problem){throw 'SL3 resting state differs after the test'}
+$after=Get-PnpDevice -PresentOnly -InstanceId $device.InstanceId -ErrorAction SilentlyContinue
+$restored=$null -ne $after -and $after.Problem -eq $device.Problem
+if(-not $HostLoopback -and -not $restored){throw 'SL3 resting state differs after the test'}
 if($HostLoopback){
+    $covered=$probeStarted -ge [datetimeoffset]$final.startedUtc -and $probeCompleted -le [datetimeoffset]$final.stoppedUtc
+    $etls=@(Get-ChildItem -LiteralPath $traceDirectory -Filter '*.etl' -File)
+    $recorded=@($final.files)
+    if($etls.Count -ne 1 -or $recorded.Count -ne 1 -or $etls[0].Name -cne $recorded[0].name -or
+       $etls[0].Length -le 0 -or $etls[0].Length -ge 64MB -or $etls[0].Length -ne $recorded[0].bytes -or
+       (Get-FileHash -LiteralPath $etls[0].FullName).Hash -ne $recorded[0].sha256){
+        throw 'Loopback ETL differs from the collector record'
+    }
+    $xml=Join-Path $traceDirectory 'events.xml'
+    $decoder=Start-Process -FilePath (Join-Path $env:SystemRoot 'System32/tracerpt.exe') -WindowStyle Hidden -PassThru -ArgumentList @(
+        ('"{0}"' -f $etls[0].FullName),'-o',('"{0}"' -f $xml),'-of','XML','-y')
+    if(-not $decoder.WaitForExit(45000)){
+        $decoder.Kill()
+        $decoder.WaitForExit()
+        throw 'USB trace decoder timed out'
+    }
+    if($decoder.ExitCode){throw 'USB trace decode failed'}
+    $stats=& $python $traceValidator --trace-xml $xml
+    if($LASTEXITCODE){throw 'USB trace statistics unavailable'}
+    $summary=$stats | ConvertFrom-Json
+    if($summary.eventsLost -ne 0 -or $summary.buffersLost -ne 0 -or $summary.session -cne $final.session){
+        throw 'USB trace is lossy or belongs to another session'
+    }
+    [ordered]@{etlSha256=$recorded[0].sha256;probeStartedUtc=$probeStarted.ToString('o');
+        probeCompletedUtc=$probeCompleted.ToString('o');probeExitCode=$probeExitCode;
+        probeError=$probeError.Exception.Message;coversProbe=$covered;restingStateRestored=$restored;
+        problemBefore=[string]$device.Problem;problemAfter=[string]$after.Problem;traceStats=$summary} |
+        ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $traceDirectory 'loopback-trace-summary.json')
+    if(-not $restored){throw 'SL3 resting state differs after the test'}
+    if(-not $covered){throw 'Trace does not cover the complete loopback probe'}
+    if($probeError){throw $probeError}
     $result=Get-Content -LiteralPath (Join-Path $base 'loopback-analysis.json') -Raw | ConvertFrom-Json
     if($result.schema -cne 'sl3.host-loopback-analysis.v2' -or $result.bothMarkersAccepted -ne $true){
         throw 'The complete stereo return did not qualify. Inspect the saved analysis for each channel.'
