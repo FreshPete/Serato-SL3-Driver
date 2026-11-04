@@ -8,9 +8,15 @@ The [retained broker run](broker-scope-trace.md) validates three read-only clien
 
 The loopback worker is pinned to its isolated SDK-free Release build and differs from the older combined ASIO build below. The loopback report has no physical launch-time reference or independently measured directional delays. The production timing configuration needs separate input/output allowances tied to its actual worker, helper, rate, buffer geometry and evidence. Do not derive those values from the tone's first detected frame or the USB submission cadence. Protected ASIO deployment, current Serato admission and two-deck DVS remain outstanding. macOS remains deferred.
 
+The later stereo-marker replay found a repeatable 340-frame offset within its saved diagnostic stream. The ASIO facade reports one callback bank plus the separately configured allowance in each direction. The stereo diagnostic stages output directly in the worker and bypasses the ASIO callback banks. A split of 340 frames, or subtraction of two 128-frame banks, would therefore assign delays across different paths. A reviewed directional measurement needs a common reference for analogue arrival, callback delivery, callback output commitment and analogue emission on the same ASIO configuration. A cable loopback remains useful for checking the sum and its run-to-run variation.
+
 A fresh combined x64 Release build at `artifacts/build/windows-post-loopback-20261104` compiled the current worker, broker and ASIO DLL and passed all 65 native software checks. Its worker hash differs from the isolated loopback worker. The new package has software evidence only.
 
 The private deployment review bundle at `artifacts/build/deployment-bundles/post-loopback-20261104` verified all 11 payloads against that combined build. Its manifest SHA-256 is `31909e01ff4366fbc2f26f4c7ab4bf5d01afd29f6fffadf8540c738a0a76da94`. Preparation did not install or register it. The timing profile and a live host test are still required.
+
+The later retained keepalive review bundle at `artifacts/build/deployment-bundles/retained-keepalive-20261104` supersedes that package. Its manifest SHA-256 is `e1ad8cc6375eb71b5ea1e52578b2e5b339c33f4e419e871319778e94875613b1`. All 11 payloads verified, and the worker hash exactly matches the [physical retained restart test](driver-timer-diagnostic.md#retained-worker-integration-boundary). The combined build again passed 65 software tests. This binds the tested native stream lifecycle to the review package's worker. The bundled ASIO DLL itself still needs a live host test.
+
+The [host callback loopback diagnostic](driver-timer-diagnostic.md#host-callback-loopback-diagnostic) builds against that unchanged worker. The 65-test Release suite passed after the probe build. The offline analyser recovered a synthetic offset of 432 frames on both channels and rejected truncated PCM. The physical callback loopback and separate directional allowances remain open.
 
 ## 2 November software and requirement audit
 

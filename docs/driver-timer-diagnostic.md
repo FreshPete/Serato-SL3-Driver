@@ -79,6 +79,8 @@ The next packet uses `-Tone -StereoMarkers` with `analysis/timer-stereo-markers-
 
 The attended stereo packet subsequently passed with the confirmed OUT 1/2 to IN 3/4 wiring. In the middle 50 ms window, the 997 Hz marker measured −30.08 dBFS on input 3 and the 1301 Hz marker measured −30.11 dBFS on input 4. Each marker was about 38 dB lower on the opposite channel in that window. The recording saved 41,230 frames at 44.1 kHz. It verified the original control table, observed 929 output completions, and decoded 17,726 USB events with no event or buffer loss. The staged marker began at logical frame 1191. This confirms straight-through stereo order for this cable and pair. Directional latency remains unmeasured.
 
+The stereo analysis now also matches each marker's amplitude envelope against the saved input. Both channels place the returned envelope at frame 1531, or 340 logical frames (7.71 ms at the nominal rate) after staging. An exploratory check with 2, 4 and 6 ms smoothing gave the same location. Carrier-phase matching alone gave inconsistent offsets because it could shift by several cycles. The logical result includes the diagnostic's input and output scheduling and does not separate ADC, DAC or host buffering. It cannot supply ASIO directional allowances.
+
 ## Retained worker integration boundary
 
 The ASIO path still uses `NativeHeldDevice::begin` and `NativeHeldTarget`. The target owns alternate activation and the isochronous backend, while the enclosing device owns the redirect. The session accepts clock and control-table requests only while idle, so the active target is the appropriate owner for a single interrupt loop. The standalone diagnostic's audio thread does not supply that integration.
@@ -92,5 +94,20 @@ The existing native host probe now accepts `--retained-keepalive-44100` with its
 The local retained packet passed preflight with `pwsh -NoProfile -File scripts/start-timer-cadence-trace.ps1 -Plan analysis/retained-keepalive-plan-20261104.json -RetainedKeepalive`. An attended launch adds `-Run` for one separate administrator USB/WPP collector and an ordinary-user host probe. The trace lasts 60 seconds to cover the host probe's watchdog and cleanup. No audio wiring is needed.
 
 The attended retained probe completed both silent streams and closed the single redirect. The live validator initially rejected the journal because its expected sequence omitted the current worker's redirect-owner acquisition markers. The corrected offline validator required both markers and passed the original saved files. It found two keepalive lifetimes, a 329 ms interval between them, and one final release. The trace decoded 27,656 events with no event or buffer loss. The UCX stream device recorded 25 successful 64-byte OUT requests, consistent with three clock reads and 22 timer requests. A 333.7 ms gap separated the interrupt bursts, consistent with the journal's idle period. The trace does not expose the command bytes. Windows returned to its original Code 39 state.
+
+## Host callback loopback diagnostic
+
+With SL3 OUT 1/2 wired to IN 3/4 and IN 3/4 set to LINE, the ordinary-user input recorder can run a separate bounded marker test. Use the native Release probe and the hash-pinned worker from the retained keepalive test. Pass absolute paths and a fresh results directory under an existing parent:
+
+```text
+sl3_input_record_probe --run-loopback --worker <worker.exe> --worker-sha256 <sha256> --helper <helper.dll> --output <fresh-directory> --expected-rate 44100
+python scripts/analyse-timer-loopback.py <result-directory> --host-callback --worker-sha256 <sha256> --output <new-report.json>
+```
+
+The probe requires the retained 44.1 kHz acquisition and read-only routing check before it starts. It writes precomputed 997 and 1301 Hz markers into output channels 1 and 2 at callback frame 8192. The tones peak at −30 dBFS and last 650 ms. The recorder keeps three seconds of all six input channels and their callback frame positions. The ordinary capture mode still sends silent PCM.
+
+On this Windows test host, the local packet preflights with `pwsh -NoProfile -File scripts/start-timer-cadence-trace.ps1 -Plan analysis/host-callback-loopback-plan-20261104.json -HostLoopback`. After confirming the RCA wiring, the attended invocation adds `-Run`. One administrator approval starts the passive 60-second trace. The ordinary-user probe waits for fresh collector evidence, and the runner checks trace cleanup and the SL3's resting state afterward. Preflight does not open the SL3 or play the markers.
+
+The analysis Python environment needs NumPy. Before estimating offsets it checks the worker hash, callback positions and bank alternation, PCM digest, and journal sequence from acquisition through release. The report estimates the offset from callback placement to the returned envelope and gives frequency fits for input channels 3 and 4. Inspect both fits and their separation before interpreting the offsets. This round-trip observation combines callback buffering, the shared queues, native USB transport and the analogue path. Separate input and output measurements are still needed for the production timing profile. The diagnostic uses the host session directly and has no ASIO registration prerequisite.
 
 Do not run it as an automatic startup probe or immediately after a failed redirect. First resolve the [ordinary-user phase observation](hub-port-observer.md) or establish a reviewed ownership design for the known second-open stall. A future physical result must bind its challenge, response, trace, executable identity, cleanup and selected recovery. It must still be reported separately from key verification, current Serato admission, analogue audio, DVS and stability testing.

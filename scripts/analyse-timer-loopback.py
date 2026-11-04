@@ -6,6 +6,43 @@ from pathlib import Path
 import runpy
 
 
+def envelope_offsets(frames, rate, length, origin, frequencies):
+    import numpy as np
+
+    position = np.arange(length)
+    fade = rate // 100
+    ramp = np.minimum(np.minimum(position, length - 1 - position), fade) / fade
+    # Correlate the smoothed onset and end ramps. Carrier phase alone can
+    # select another whole cycle, even in a clean recording.
+    kernel = np.ones(rate * 4 // 1000)
+    measured = np.sqrt(np.apply_along_axis(lambda channel: np.convolve(channel**2, kernel, mode='same'),
+                                          0, frames.astype(np.float64)))
+    lags = len(frames) - length + 1
+    fft_size = 1 << (len(frames) + length - 2).bit_length()
+    energy = np.vstack((np.zeros((1, measured.shape[1])), np.cumsum(measured**2, axis=0)))
+    window_energy = np.maximum(0, energy[length:] - energy[:-length])
+    transformed = np.fft.rfft(measured, fft_size, axis=0)
+    observations = []
+    for frequency in frequencies:
+        samples = np.trunc(265271 * ramp * np.sin(position * (6.283185307179586 * frequency / rate)))
+        reference = np.sqrt(np.convolve(samples**2, kernel, mode='same'))
+        dot = np.fft.irfft(transformed * np.conj(np.fft.rfft(reference, fft_size))[:, None],
+                           fft_size, axis=0)[:lags]
+        denominator = np.sqrt(np.dot(reference, reference) * window_energy)
+        score = np.divide(dot, denominator, out=np.zeros_like(dot), where=denominator > 0)
+        channels = []
+        for index in range(measured.shape[1]):
+            if not np.any(denominator[:, index] > 0):
+                channels.append({'streamChannel': index, 'returnStartFrame': None, 'logicalOffsetFrames': None,
+                                 'envelopeSimilarity': None})
+                continue
+            start = int(np.argmax(score[:, index]))
+            channels.append({'streamChannel': index, 'returnStartFrame': start, 'logicalOffsetFrames': start - origin,
+                             'envelopeSimilarity': float(np.clip(score[start, index], 0, 1))})
+        observations.append({'frequencyHz': frequency, 'channels': channels})
+    return observations
+
+
 def analyse(folder, challenge):
     scripts = Path(__file__).resolve().parent
     timer = runpy.run_path(str(scripts/'validate-driver-timer.py'))
@@ -32,17 +69,49 @@ def analyse(folder, challenge):
               'pcmSha256': hashlib.sha256(audio).hexdigest(), 'rateHz': rate, 'frames': len(frames),
               'toneHz': 997, 'windows': windows, 'physicalWiringVerified': False, 'latencyMeasured': False}
     if marker_hz:
-        result.update(stereoMarkerHz=marker_hz, toneFirstLogicalFrame=checked['toneFirstLogicalFrame'])
+        origin = checked['toneFirstLogicalFrame']
+        result.update(stereoMarkerHz=marker_hz, toneFirstLogicalFrame=origin,
+                      logicalEnvelopeOffsets=envelope_offsets(frames, rate, checked['toneFramesStaged'], origin, marker_hz))
     return result
+
+
+def analyse_host(folder, worker_sha):
+    validator = runpy.run_path(str(Path(__file__).with_name('validate-input-record-probe.py')))
+    checked = validator['validate'](folder, worker_sha, host_loopback=True)
+    raw = validator['read'](folder/'result.json', 256 * 1024)
+    record = json.loads(raw)
+    audio = validator['read'](folder/'input.pcm', 8 * 1024 * 1024)
+    digest = hashlib.sha256(audio).hexdigest()
+    if hashlib.sha256(raw).hexdigest() != checked['resultSha256'] or digest != checked['pcmSha256']:
+        raise ValueError('Host evidence changed after validation')
+    tone = runpy.run_path(str(Path(__file__).with_name('analyse-input-tone.py')))
+    frames = tone['decode_recording'](audio)
+    origin, count, frequencies = (record[key] for key in ('markerFirstFrame', 'markerFrames', 'markerHz'))
+    offsets = envelope_offsets(frames, 44100, count, origin, frequencies)
+    fits = []
+    for channel, offset in zip((2, 3), offsets):
+        first = offset['channels'][channel]['returnStartFrame']
+        if first is not None:
+            fits.append(tone['fit'](frames, 44100, offset['frequencyHz'], first, first + count))
+    return {'schema': 'sl3.host-loopback-analysis.v1', 'recordSha256': checked['resultSha256'],
+            'workerSha256': worker_sha, 'nativeJournal': checked['nativeJournal'],
+            'pcmSha256': digest, 'rateHz': 44100, 'logicalEnvelopeOffsets': offsets,
+            'expectedReturnChannelToneFits': fits, 'timingProfileWritten': False,
+            'directionalLatencyMeasured': False}
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('folder', type=Path)
-    parser.add_argument('--challenge', required=True)
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument('--challenge')
+    mode.add_argument('--host-callback', action='store_true')
+    parser.add_argument('--worker-sha256')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
-    result = analyse(args.folder, args.challenge)
+    if args.host_callback != bool(args.worker_sha256):
+        parser.error('--worker-sha256 is required with --host-callback')
+    result = analyse_host(args.folder, args.worker_sha256) if args.host_callback else analyse(args.folder, args.challenge)
     with args.output.open('x', encoding='utf-8') as stream:
         json.dump(result, stream, indent=2)
         stream.write('\n')

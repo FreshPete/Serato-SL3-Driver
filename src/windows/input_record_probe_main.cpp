@@ -3,6 +3,7 @@
 #include "windows/diagnostic.hpp"
 #include <sddl.h>
 #include <atomic>
+#include <cmath>
 #include <cstring>
 #include <map>
 #include <vector>
@@ -17,6 +18,24 @@ constexpr auto kind=sl3::session::Kind::simulated;
 constexpr auto kind=sl3::session::Kind::native;
 #endif
 constexpr unsigned bank_frames=128;
+constexpr unsigned marker_start=8192;
+constexpr std::array<unsigned,2> marker_hz{997,1301};
+using Marker=std::array<std::vector<std::uint8_t>,2>;
+Marker make_marker(unsigned rate){
+    Marker marker;
+    const auto frames=rate*650/1000;
+    const auto fade=rate/100;
+    for(std::size_t channel=0;channel<marker.size();++channel){
+        auto& pcm=marker[channel];pcm.resize(frames*3);
+        for(unsigned frame=0;frame<frames;++frame){
+            const auto gain=double(std::min({frame,frames-1-frame,fade}))/fade;
+            const auto angle=6.283185307179586*marker_hz[channel]*frame/rate;
+            const auto sample=std::uint32_t(std::int32_t(265271*gain*std::sin(angle)));
+            for(unsigned byte=0;byte<3;++byte)pcm[frame*3+byte]=std::uint8_t(sample>>(8*byte));
+        }
+    }
+    return marker;
+}
 struct Handle {HANDLE value=INVALID_HANDLE_VALUE;~Handle(){if(value!=INVALID_HANDLE_VALUE && value)CloseHandle(value);}};
 void ordinary(){Handle token;require(OpenProcessToken(GetCurrentProcess(),TOKEN_QUERY,&token.value)!=FALSE,"Open diagnostic token");
     TOKEN_ELEVATION elevation{};DWORD count=0;require(GetTokenInformation(token.value,TokenElevation,&elevation,sizeof(elevation),&count) && !elevation.TokenIsElevated,"Ordinary diagnostic token required");}
@@ -41,6 +60,7 @@ struct Capture {
     std::vector<Row> rows;std::array<ASIOBufferInfo,12> planes{};
     std::atomic<bool> done{false},bad{false};HostSession* session=nullptr;
     std::uint64_t frequency=0;long previous_bank=-1;
+    Marker marker;
     explicit Capture(std::size_t frames):pcm(frames*18),recorder(pcm.data(),frames),rows(frames/bank_frames){
         for(long c=0;c<6;++c){planes[std::size_t(c)]={ASIOTrue,c,{}};planes[std::size_t(c+6)]={ASIOFalse,c,{}};}
     }
@@ -60,26 +80,46 @@ void callback(long bank,ASIOBool direct) noexcept {
     if(!observation.valid || observation.bank!=unsigned(bank) || !QueryPerformanceCounter(&ticks) || ticks.QuadPart<=0){c.bad=true;return;}
     const auto recorded=c.recorder.recorded_callbacks();
     if(!c.recorder.append(inputs,bank_frames,observation.first_frame)){c.bad=true;return;}
+    if(observation.first_frame>=marker_start){
+        const auto offset=(observation.first_frame-marker_start)*3;
+        for(std::size_t channel=0;channel<c.marker.size();++channel){
+            const auto& pcm=c.marker[channel];
+            if(offset<pcm.size()){
+                const auto first=std::size_t(offset);
+                std::memcpy(c.planes[channel+6].buffers[bank],pcm.data()+first,
+                            std::min<std::size_t>(bank_frames*3,pcm.size()-first));
+            }
+        }
+    }
     if(c.recorder.recorded_callbacks()!=recorded){
         if(recorded>=c.rows.size()){c.bad=true;return;}
         c.rows[std::size_t(recorded)]={observation.first_frame,observation.host_observation_ns,std::uint64_t(ticks.QuadPart),unsigned(bank)};
     }
     if(c.recorder.complete())c.done.store(true,std::memory_order_release);
 }
-int run(WorkerSpec spec,const std::filesystem::path& folder,unsigned expected){
+int run(WorkerSpec spec,const std::filesystem::path& folder,unsigned expected,bool loopback){
     ordinary();local(folder);local(spec.executable);local(spec.helper);
     require(!std::filesystem::exists(folder),"Fresh recording directory required");Pin parent(folder.parent_path(),true);
     require(CreateDirectoryW(folder.c_str(),nullptr)!=FALSE,"Create recording directory");Pin directory(folder,true);
     const auto target=((std::size_t(expected)*3+127)/128)*128;
     Capture capture(target);LARGE_INTEGER frequency{};require(QueryPerformanceFrequency(&frequency) && frequency.QuadPart>0,"Read QPC frequency");capture.frequency=std::uint64_t(frequency.QuadPart);
+    if(loopback)capture.marker=make_marker(expected);
+    const auto payload=quote(loopback?"bounded stereo markers":"zero PCM only");
     sl3::diagnostic::Watchdog watchdog;current=&capture;HostSession session(spec);capture.session=&session;
-    const auto phase=[&](const wchar_t* name){write_new(folder/name,std::string("{\"phase\":")+quote(ascii(name))+",\"audioOutputPayload\":\"zero PCM only\"}\n");};
+    const auto phase=[&](const wchar_t* name){write_new(folder/name,std::string("{\"phase\":")+quote(ascii(name))+",\"audioOutputPayload\":"+payload+"}\n");};
     bool started=false,disposed=false;std::string error;ULONGLONG elapsed=0;
     phase(L"phase-prepared.json");
     try{
         ASIOCallbacks callbacks{};callbacks.bufferSwitch=callback;
         require(session.create_buffers(capture.planes.data(),12,bank_frames,&callbacks)==ASE_OK,"Prepare SDK input/output planes");
-        phase(L"phase-starting.json");started=session.start_checked(expected,8);require(started,"Single-open checked-rate stream failed");
+        phase(L"phase-starting.json");
+        if(loopback){
+            require(session.inspect() && session.report().observed_rate_hz==expected,"Retained 44.1 kHz acquisition failed");
+            const auto controls=session.inspect_controls();
+            require(controls && controls->audio.raw[8]==1,"Expected loopback routing is absent");
+        }
+        started=loopback?session.start(8):session.start_checked(expected,8);
+        require(started,"Single-open checked-rate stream failed");
         const auto begin=GetTickCount64();
         while(!capture.done.load(std::memory_order_acquire) && !capture.bad.load()){
             Sleep(1);const auto state=session.report();elapsed=GetTickCount64()-begin;
@@ -88,7 +128,12 @@ int run(WorkerSpec spec,const std::filesystem::path& folder,unsigned expected){
         elapsed=GetTickCount64()-begin;
     }catch(const std::exception& e){error=e.what();}
     try{phase(L"phase-stopping.json");}catch(...){if(error.empty())error="Recording stop phase could not be saved";}
-    const auto state=session.stop(5000);const auto& worker=state.worker_snapshot;
+    const auto stopped=session.stop(5000);
+    const auto state=loopback?session.close(5000):stopped;
+    const auto& stats=loopback?stopped.device_snapshot.stats:state.worker_snapshot.stats;
+    const bool stream_stopped=loopback
+        ? stopped.device_snapshot.phase==sl3::device_session::Phase::ready && stopped.device_snapshot.failure==sl3::session::Failure::none
+        : state.worker_snapshot.phase==sl3::session::Phase::stopped && state.worker_snapshot.failure==sl3::session::Failure::none;
     const bool retired=state.io_retired && state.device_released && state.audio.retired && state.audio.active_callbacks==0 && (!state.process.started || (state.process.process_exited && state.process.job_empty));
     if(!retired){
         // Do not read callback-owned PCM/counters or unwind its storage here.
@@ -106,8 +151,7 @@ int run(WorkerSpec spec,const std::filesystem::path& folder,unsigned expected){
     bool successful=error.empty() && elapsed<=6000 && started && disposed && capture.done.load() && !capture.bad.load() && capture.recorder.complete()
         && state.failure==HostFailure::none && !state.termination_requested && state.audio.exit==AudioExit::stopped
         && state.audio.callbacks_started==state.audio.callbacks_completed && state.audio.callbacks_completed==capture.recorder.callbacks()
-        && worker.phase==sl3::session::Phase::stopped && worker.failure==sl3::session::Failure::none
-        && worker.stats.input_frames>=target && worker.stats.output_completions>0 && !worker.stats.pending_mask && !worker.stats.retained_mask
+        && stream_stopped && stats.input_frames>=target && stats.output_completions>0 && !stats.pending_mask && !stats.retained_mask
         && state.observed_rate_hz==expected;
     if(!successful && error.empty())error="Stream/callback or complete-prefix contract failed";
     std::string pcm_hash,startup_hash;std::unique_ptr<Pin> pcm_pin,startup_pin;
@@ -121,7 +165,7 @@ int run(WorkerSpec spec,const std::filesystem::path& folder,unsigned expected){
         if(successful)require(!startup_hash.empty(),"Native startup journal missing");
     }catch(const std::exception& e){error=e.what();successful=false;}}
     std::ostringstream text;text<<std::boolalpha;
-    text<<"{\"schema\":\"sl3.input-record-probe.v1\",\"simulated\":"<<(kind==sl3::session::Kind::simulated)<<",\"successful\":"<<successful
+    text<<"{\"schema\":"<<quote(loopback?"sl3.host-loopback-probe.v1":"sl3.input-record-probe.v1")<<",\"simulated\":"<<(kind==sl3::session::Kind::simulated)<<",\"successful\":"<<successful
         <<",\"error\":"<<quote(error)<<",\"expectedRateHz\":"<<expected<<",\"observedRateHz\":"<<state.observed_rate_hz
         <<",\"nominalRequestedMilliseconds\":3000,\"collectionElapsedMilliseconds\":"<<elapsed<<",\"bankFrames\":128,\"channels\":6,\"sampleBytes\":3,\"intervals\":8"
         <<",\"targetFrames\":"<<target<<",\"recordedFrames\":"<<capture.recorder.frames()<<",\"recordedCallbacks\":"<<capture.recorder.recorded_callbacks()
@@ -130,21 +174,35 @@ int run(WorkerSpec spec,const std::filesystem::path& folder,unsigned expected){
         <<",\"startupJournalSha256\":"<<quote(startup_hash)<<",\"workerSha256\":"<<quote(spec.sha256)<<",\"workerStarted\":"<<state.process.started<<",\"hostFailure\":"<<unsigned(state.failure)
         <<",\"ioRetired\":"<<state.io_retired<<",\"deviceReleased\":"<<state.device_released<<",\"audioThreadRetired\":"<<state.audio.retired
         <<",\"workerExited\":"<<state.process.process_exited<<",\"workerJobEmpty\":"<<state.process.job_empty<<",\"forcedTermination\":"<<state.termination_requested<<",\"buffersDisposed\":"<<disposed
-        <<",\"streamStarted\":"<<started<<",\"workerInputFrames\":"<<worker.stats.input_frames<<",\"outputSubmissions\":"<<worker.stats.output_submissions<<",\"outputCompletions\":"<<worker.stats.output_completions
-        <<",\"audioOutputPayload\":\"zero PCM only\",\"startupFramesDiscarded\":0,\"timingProfileWritten\":false,\"latencyMeasured\":false,\"physicalMappingVerified\":false,\"usbContinuityVerified\":false,\"seratoAdmissionVerified\":false,\"rows\":[";
+        <<",\"streamStarted\":"<<started<<",\"workerInputFrames\":"<<stats.input_frames<<",\"outputSubmissions\":"<<stats.output_submissions<<",\"outputCompletions\":"<<stats.output_completions
+        <<",\"audioOutputPayload\":"<<payload;
+    if(loopback)text<<",\"markerFirstFrame\":"<<marker_start<<",\"markerFrames\":"<<capture.marker[0].size()/3
+        <<",\"markerHz\":["<<marker_hz[0]<<','<<marker_hz[1]<<']';
+    text<<",\"startupFramesDiscarded\":0,\"timingProfileWritten\":false,\"latencyMeasured\":false,\"physicalMappingVerified\":false,\"usbContinuityVerified\":false,\"seratoAdmissionVerified\":false,\"rows\":[";
     const auto count=std::size_t(capture.recorder.recorded_callbacks());for(std::size_t i=0;i<count;++i){if(i)text<<',';const auto& row=capture.rows[i];text<<'['<<row.frame<<','<<row.publication<<','<<row.ticks<<','<<row.bank<<']';}
     text<<"]}\n";write_new(folder/L"result.json",text.str());std::cout<<text.str();return successful?0:1;
 }
 }
 int wmain(int argc,wchar_t** argv){try{
+    if(argc==2 && std::wstring(argv[1])==L"--plan-loopback"){
+        if constexpr(kind!=sl3::session::Kind::native)return 2;
+        std::cout<<"{\"planOnly\":true,\"deviceAccess\":false,\"expectedRateHz\":44100,"
+                   "\"markerHz\":["<<marker_hz[0]<<','<<marker_hz[1]<<"],\"markerFirstFrame\":"<<marker_start
+                 <<",\"markerDurationMilliseconds\":650,\"bankFrames\":"<<bank_frames<<"}\n";
+        return 0;
+    }
     if(argc==1 || (argc==2 && std::wstring(argv[1])==L"--plan")){
         std::cout<<std::boolalpha<<"{\"planOnly\":true,\"deviceAccess\":false,\"simulated\":"<<(kind==sl3::session::Kind::simulated?"true":"false")<<",\"nominalInputMilliseconds\":3000,\"maximumCollectionMilliseconds\":6000,\"audioOutputPayload\":\"zero PCM only\",\"oneAcquisitionRequested\":true,\"expectedRateRequired\":true,\"timingProfileWritten\":false}\n";return 0;}
-    if((argc!=12 && argc!=14) || std::wstring(argv[1])!=L"--run")return 2;
+    const std::wstring mode=argv[1];
+    const bool loopback=mode==L"--run-loopback";
+    if((argc!=12 && argc!=14) || (mode!=L"--run" && !loopback))return 2;
+    if(loopback && kind!=sl3::session::Kind::native)return 2;
     if constexpr(kind==sl3::session::Kind::native){if(argc!=12)return 2;}
     std::map<std::wstring,std::wstring> args;
     for(int at=2;at<argc;at+=2)if(!args.emplace(argv[at],argv[at+1]).second)return 2;
     if((args.size()!=5 && args.size()!=6) || !args.count(L"--worker") || !args.count(L"--worker-sha256") || !args.count(L"--helper") || !args.count(L"--output") || !args.count(L"--expected-rate"))return 2;
     const auto rate=args.at(L"--expected-rate");if(rate!=L"44100" && rate!=L"48000")return 2;
+    if(loopback && rate!=L"44100")return 2;
     WorkerSpec spec;spec.executable=args.at(L"--worker");spec.helper=args.at(L"--helper");spec.sha256=ascii(args.at(L"--worker-sha256"));spec.kind=kind;
     if(!hash(spec.sha256))return 2;
     std::unique_ptr<Pin> fixture_clock;
@@ -155,5 +213,9 @@ int wmain(int argc,wchar_t** argv){try{
     }
     const std::filesystem::path output=args.at(L"--output");
     if constexpr(kind==sl3::session::Kind::native)spec.diagnostic_directory=output;
-    return run(spec,output,rate==L"44100"?44100u:48000u);
+    if(loopback){
+        spec.lifetime=DeviceLifetime::retained;
+        spec.diagnostic_playback_keepalive=true;
+    }
+    return run(spec,output,rate==L"44100"?44100u:48000u,loopback);
 }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}}

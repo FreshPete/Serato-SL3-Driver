@@ -34,12 +34,19 @@ def unique(pairs):
 def reject_constant(value):raise ValueError('Nonfinite JSON number')
 
 
-def validate(folder,worker_sha,simulated=False):
+def validate(folder,worker_sha,simulated=False,host_loopback=False):
     require(re.fullmatch('[0-9a-f]{64}',worker_sha or ''),'Reviewed lowercase worker hash required')
     raw=read(folder/'result.json',262144);result=json.loads(raw,object_pairs_hook=unique,parse_constant=reject_constant)
-    require(result.get('schema')=='sl3.input-record-probe.v1' and result.get('simulated') is simulated and result.get('successful') is True and result.get('error')=='','Successful expected-kind record required')
+    require(not (host_loopback and simulated),'Host loopback requires a native record')
+    schema='sl3.host-loopback-probe.v1' if host_loopback else 'sl3.input-record-probe.v1'
+    require(result.get('schema')==schema and result.get('simulated') is simulated and result.get('successful') is True and result.get('error')=='','Successful expected-kind record required')
     require(result.get('workerSha256')==worker_sha,'Worker image binding differs')
     rate=integer(result.get('observedRateHz'),1);require(rate in (44100,48000) and integer(result.get('expectedRateHz'),1)==rate,'Clock contract differs')
+    payload='bounded stereo markers' if host_loopback else 'zero PCM only'
+    if host_loopback:
+        require(rate==44100 and result.get('markerHz')==[997,1301] and
+                integer(result.get('markerFirstFrame'))==8192 and integer(result.get('markerFrames'))==28665,
+                'Host loopback marker contract differs')
     target=((rate*3+127)//128)*128
     for name,value in [('nominalRequestedMilliseconds',3000),('bankFrames',128),('channels',6),('sampleBytes',3),('intervals',8),('targetFrames',target),('recordedFrames',target),('recordedCallbacks',target//128),('recorderFault',0),('startupFramesDiscarded',0),('hostFailure',0),('pcmBytes',target*18)]:
         require(integer(result.get(name))==value,'Record geometry/status differs: '+name)
@@ -48,7 +55,7 @@ def validate(folder,worker_sha,simulated=False):
     for name in ['forcedTermination','timingProfileWritten','latencyMeasured','physicalMappingVerified','usbContinuityVerified','seratoAdmissionVerified']:
         require(result.get(name) is False,'Unsupported claim/activity: '+name)
     require(integer(result.get('workerInputFrames'))>=target and integer(result.get('outputSubmissions'),1)>0 and integer(result.get('outputCompletions'),1)>0 and
-            result.get('audioOutputPayload')=='zero PCM only','Stream/output contract differs')
+            result.get('audioOutputPayload')==payload,'Stream/output contract differs')
     require(integer(result.get('totalCallbacks'))==target//128+integer(result.get('trailingCallbacksNotRecorded')),'Finite prefix/suffix callback coverage differs')
     frequency=integer(result.get('counterFrequency'),1);require(integer(result.get('collectionElapsedMilliseconds'))<=6000,'Collection deadline exceeded')
     require(result['outputCompletions']<=result['outputSubmissions'],'Output completion/submission counters differ')
@@ -78,9 +85,12 @@ def validate(folder,worker_sha,simulated=False):
         while stages[at:at+2]==['enumerate.enter','enumerate.return']:at+=2
         require(at>3,'Native enumeration missing')
         expected=['configuration.enter','configuration.return','redirect_owner_acquire.enter','redirect_owner_acquire.return',
-                  'redirect_start.enter','redirect_start.return','system_handle.enter','system_handle.return','clock_getter.enter','clock_getter.return',
-                  'redirect_close.enter','redirect_close.return','helper_unload.enter','helper_unload.return']
-        require(stages[at:]==expected,'Expected one acquisition/getter/release; no setters or second acquisition')
+                  'redirect_start.enter','redirect_start.return','system_handle.enter','system_handle.return','clock_getter.enter','clock_getter.return']
+        if host_loopback:
+            expected.extend(['audio_controls.enter','audio_controls.return','clock_getter.enter','clock_getter.return',
+                             'playback_keepalive.enter','playback_keepalive.return'])
+        expected.extend(['redirect_close.enter','redirect_close.return','helper_unload.enter','helper_unload.return'])
+        require(stages[at:]==expected,'Unexpected acquisition, control, stream or release journal')
         native_journal={'workerPid':parsed[0][1],'records':len(parsed),'sha256':sha(journal)}
     return {'valid':True,'schema':'sl3.input-record-validation.v1','simulated':simulated,'rateHz':rate,'frames':target,'channels':6,'sampleBytes':3,
             'recordedCallbacks':len(rows),'trailingCallbacksNotRecorded':result['trailingCallbacksNotRecorded'],'counterFrequency':frequency,
