@@ -50,6 +50,8 @@ For a later attended, reviewed test, the wrapper's explicit actions are `-Action
 
 ## Verification
 
+On 4 November the current private bundle passed full validation again. The read-only wrapper found the original archive, no staging or rollback files, and a valid signature on the installed executable. All 22 Windows transaction fixtures passed again. These results verify bundle and rollback preparation. Application acceptance still requires a later protected test after the Windows audio prerequisites are met.
+
 Twenty-two transaction checks use original synthetic data in bounded owned temporary folders on this Windows host, with real file replacement calls. They cover install/rollback/cleanup, exact backup/retired bytes, stage resume/cancellation, first/second quiescence refusal, unknown/corrupt/missing backups, partial staging, independent source and path identity, changed-target/create races, held-file failure, destination ACL preservation, junction rejection and untrusted owner rejection. Temporary ACL changes and all writes stay inside those disposable fixture folders. No installed app file is used as a transaction test target.
 
 Six actual package CLI scenarios check full validation, repeat preparation, no-overwrite refusal and wrapper refusal of changed core, candidate or plan. The repeated five-file bundle is byte-identical. The actual default wrapper `Plan` passes and leaves the original installed identities unchanged. [Sanitized evidence](evidence/serato-archive-deployment-20261102.json) binds source files, package hashes, fixture/CLI results and the read-only preflight. No new native audio tests are claimed, and no protected install/rollback, current admission or physical audio/DVS result is inferred.
