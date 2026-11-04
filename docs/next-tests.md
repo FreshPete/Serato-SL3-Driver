@@ -1,8 +1,10 @@
 # Next tests
 
-Current queue updated 2 November 2026. Do not repeat installation or rapid reopening to reproduce an already-recorded failure. Sections T01 onward retain historical experiments and preparation; the queue below supersedes their older next-step statements. See the [requirement audit](completion-audit.md) for the full outstanding scope and build/physical-evidence separation.
+Current queue updated 4 November 2026. Do not repeat installation or rapid reopening to reproduce an already-recorded failure. Sections T01 onward retain historical experiments and preparation. See the [requirement audit](completion-audit.md) for the outstanding scope and build/physical-evidence separation.
 
-A [fresh one-page attended packet](next-attended-packet.md) is now prepared and passes default preflight. Its cached PnP mapping is port 4 with `strmdrv`/Code 39; it is not armed or a readiness result.
+The [4 November result](attended-windows-20261104.md) supersedes the [2 November packet](next-attended-packet.md). The recovery follow-up is prepared locally as `analysis/logging-batch-recovery-20261104/controls-image.json` and `analysis/hub-port-observer-recovery-20261104/plan.json`. Both default preflights pass. Its cached PnP mapping is port 4 with `strmdrv` and Code 39. The test is unarmed.
+
+For that follow-up, recheck the PnP mapping and preserve the pre-launch topology record as described in the [observer instructions](hub-port-observer.md). Start the observer with `--run`, then launch the collector with `-Run -WaitForResults` from a second ordinary-user terminal while the owner is available. Keep both terminal sessions open until they return. Expect one read-only acquisition, and retain the launcher observation even if either role fails.
 
 ## Current supervised queue
 
