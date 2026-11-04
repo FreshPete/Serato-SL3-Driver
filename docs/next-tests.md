@@ -9,7 +9,7 @@ The [4 November result](attended-windows-20261104.md) supersedes the [2 November
 
 ## Current supervised queue
 
-The second [InputRecord run](input-record-trace.md) captured a strong Phase signal on stream channels 3 and 4 and passed trace/recovery validation. The operator confirmed those were the physical left-deck inputs in use. A distinct left/right tone can still establish individual channel mapping. The next output investigation is the [bounded timer and routing experiment](driver-timer-diagnostic.md#physical-test-remains-pending).
+The second [InputRecord run](input-record-trace.md) captured a strong Phase signal on stream channels 3 and 4 and passed trace/recovery validation. The operator confirmed those were the physical left-deck inputs in use. The [bounded loopback run](driver-timer-diagnostic.md#physical-test-remains-pending) then passed for physical OUT 1/2 to IN 3/4. A distinct left/right marker and a timing reference are still needed to establish per-jack mapping and measured latency. The existing fixed-frequency return recording does not supply a production timing profile.
 
 The default build includes [overlapping redirect-owner exclusion](redirect-owner.md), the corrected startup marker and passed 48/48 tests plus its normal-token read-only preflight. The [16:40Z experiment](attended-port-controls-20261101.md) ran once and failed overall, while a separate offline reassessment validates its native control-only result. The [decoded lifecycle messages](attended-port-lifecycle-20261101.md) establish successful detachment/removal followed by the original stack's startup timeout. The current diagnostic corrections require fresh plans; all earlier preparation is superseded.
 

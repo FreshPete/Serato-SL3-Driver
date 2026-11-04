@@ -1,4 +1,18 @@
-# Requirement audit — 2 November 2026
+# Requirement audit
+
+## 4 November hardware update
+
+The [Phase capture](input-record-trace.md) verifies a real stereo signal on inputs 3/4. The [analogue loopback](driver-timer-diagnostic.md) verifies a short nonzero playback on OUT 1/2 and return capture on IN 3/4, with the original control table matched. In a representative steady 50 ms window the fitted tone measured −30.08 and −30.13 dBFS peak, and the residual RMS was about −100 dBFS on both channels. This single window is a signal-quality observation under one test level. It does not certify converter dynamic range, all channels, continuous operation or a timing profile.
+
+The [retained broker run](broker-scope-trace.md) validates three read-only client lifetimes under one acquisition. The [release trace](attended-windows-20261104.md) shows that the sampled ordinary-user port and devnode fields cannot tell pending from stopped in that run. Repeated acquisition and recovery still need their own proof.
+
+The loopback worker is pinned to its isolated SDK-free Release build and differs from the older combined ASIO build below. The loopback report has no physical launch-time reference or independently measured directional delays. The production timing configuration needs separate input/output allowances tied to its actual worker, helper, rate, buffer geometry and evidence. Do not derive those values from the tone's first detected frame or the USB submission cadence. Protected ASIO deployment, current Serato admission and two-deck DVS remain outstanding. macOS remains deferred.
+
+A fresh combined x64 Release build at `artifacts/build/windows-post-loopback-20261104` compiled the current worker, broker and ASIO DLL and passed all 65 native software checks. Its worker hash differs from the isolated loopback worker. The new package has software evidence only.
+
+The private deployment review bundle at `artifacts/build/deployment-bundles/post-loopback-20261104` verified all 11 payloads against that combined build. Its manifest SHA-256 is `31909e01ff4366fbc2f26f4c7ab4bf5d01afd29f6fffadf8540c738a0a76da94`. Preparation did not install or register it. The timing profile and a live host test are still required.
+
+## 2 November software and requirement audit
 
 **The full Windows/current-Serato/two-deck-DVS objective remains incomplete.** This review checks current sources and files against the requested end state; it does not substitute passing software tests, decoded records or an offline descriptor for operational compatibility. Mac remains deferred until Windows works. [Machine-readable checks](evidence/requirements-review-20261102.json).
 
