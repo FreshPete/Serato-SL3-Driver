@@ -97,7 +97,7 @@ The attended retained probe completed both silent streams and closed the single 
 
 ## Host callback loopback diagnostic
 
-With SL3 OUT 1/2 wired to IN 3/4 and IN 3/4 set to LINE, the ordinary-user input recorder can run a separate bounded marker test. Use the native Release probe and the hash-pinned worker from the retained keepalive test. Pass absolute paths and a fresh results directory under an existing parent:
+With SL3 OUT 1/2 wired to IN 3/4 and IN 3/4 set to LINE, the ordinary-user input recorder can run a separate bounded marker test. The local packet uses the native Release probe and hash-pinned worker from the current keepalive timing build. Pass absolute paths and a fresh results directory under an existing parent:
 
 ```text
 sl3_input_record_probe --run-loopback --worker <worker.exe> --worker-sha256 <sha256> --helper <helper.dll> --output <fresh-directory> --expected-rate 44100

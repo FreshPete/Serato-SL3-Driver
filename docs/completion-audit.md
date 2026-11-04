@@ -18,7 +18,9 @@ The later retained keepalive review bundle at `artifacts/build/deployment-bundle
 
 The [host callback loopback diagnostic](driver-timer-diagnostic.md#host-callback-loopback-diagnostic) builds against that unchanged worker. The 65-test Release suite passed after the probe build. The offline analyser recovered a synthetic offset of 432 frames on both channels and rejected truncated PCM. The physical callback loopback and separate directional allowances remain open.
 
-The later ASIO and controller build [binds keepalive operation to its reviewed timing record](asio-native-configuration.md). The six targeted configuration, broker and COM tests passed. The older review bundle still identifies its historical DLL and controller. A fresh deployment review is needed for the new binaries.
+The later ASIO and controller build [binds keepalive operation to its reviewed timing record](asio-native-configuration.md). The clean x64 Release build passed all 65 software tests, and the private review bundle at `artifacts/build/deployment-bundles/keepalive-timing-20261104` verified all 11 payloads. Its manifest SHA-256 is `b39d1cffe439e14265f879d275cf56552db835eaced0832eda423bd409ec64f1`. The fresh worker has SHA-256 `e0b8c6d2629a0022f09b3b8942eb487d9555b3ad95cb82cf2631300efe7db078` and differs from the earlier physical restart worker. The pending callback packet now pins the fresh worker. Physical evidence from the earlier worker remains separate.
+
+The new bundle's read-only Windows preflight resolved 346 direct symbol references across 16 dependency names and 10 System32 files. The x64 machine registry has both shared containers, the proposed ASIO name and COM class are absent, and the user registry has no COM overlay for that class. The planned destination is absent. These checks cover runtime dependencies and registration conflicts. The protected installer and live ASIO path remain unexercised.
 
 ## 2 November software and requirement audit
 
