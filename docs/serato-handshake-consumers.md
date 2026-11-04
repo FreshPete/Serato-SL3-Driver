@@ -62,6 +62,52 @@ into the rebuilt driver. The report's kind projection is static, not an executed
 application test. It supplies no justification for changing the real SL3 identity
 or adopting a different product's handshake.
 
+## Adding a MIDI port to the SL3
+
+The original SL3 descriptor explicitly declares `midi_direction=none` and uses the legacy Rane driver API for control. The physical SL3's control interface is vendor-specific and has interrupt endpoints. An operating-system MIDI endpoint would therefore be a new translation layer with its own message contract. [Original descriptor](serato-legacy-sl3-descriptor.md) · [Physical USB configuration](findings.md).
+
+The observed Serato 5.0 SL3 composite is USB-only. Its device-added callback publishes the USB arrival message only when neither HID nor MIDI is attached. If a new MIDI endpoint were matched and attached to that composite, the observed USB-only branch would no longer publish the arrival message. A positive result would require a separate, verified MIDI selection route. [USB arrival branch](serato-usb-arrival.md) · [Live selection trace](serato-archive-deployment.md#live-device-selection-trace).
+
+Original-byte inspection of the two MIDI callback bodies found descriptor lookups and the existing conditional MIDI processor binding. In the checked callback at `14052d370`, the two direct message-constructor calls use IDs `0x2d0` and `0x645`, with subscribers identified as licence/device notifications and an information-panel controller. Those calls do not publish the primary selection message `0x2ca` or the USB manager initialization message `0x5d4`. The checked MIDI processor creation path also requires descriptor material absent from the historical SL3 profile. These bounds leave other indirect paths open, but provide no evidence that a bare MIDI endpoint would select the SL3.
+
+An attended name-association test created a transient [Windows MIDI Services loopback pair](https://microsoft.github.io/MIDI/sdk-reference/Transports/Loopback/). The schema-validated private SL3 definition added the unique MIDI port name and changed MIDI direction from `none` to `in`, preserving the SL3 USB identity and other fields. The installed original archive was preserved for rollback. The virtual port advertised its actual zero VID/PID, and the test sent no MIDI commands.
+
+Serato saw and added the named loopback as a separate MIDI device. It kept retrying aggregation for the physical SL3 through attempt 45 in the observed window, did not add the SL3, and stayed on offline audio. The device callback trace showed a MIDI-only composite and no USB arrival publication for the SL3. The test ended before the one-minute retry period completed, so it establishes no association during that window, not the terminal retry result or behavior of a genuine combined hardware endpoint. Afterward both loopbacks, the temporary driver registration and the temporary archive were removed, and restoration was verified.
+
+A second run observed Serato for 80 seconds. It added both loopback ports separately and exhausted the SL3 retry window. After attempt 119, Serato logged `Device MIDI connection is not ready [1cc5_0001_0000#1]`. The only successful audio startup was `Offline Device`, and the trace recorded no named audio selection. The original archive was restored, and removal of the temporary ASIO registration and loopback ports was verified.
+
+### What the MIDI matcher requires
+
+In the original 5.0.0.1278 image, the composite worker calls `1421df830` at `1421dc11f` with the selected descriptor. The helper reads the descriptor's [shared `midi_name` getter](serato-sl3-selection.md) at `1421df89c`. A nonempty name goes to `1421df1e0`, which invokes the [Windows name matcher](serato-name-matching.md) at `1421df255` and tests direction at `1421df286`. An empty name takes the separate VID/PID path through `1421df650`, which also checks direction. The dispatcher makes no VID/PID fallback after a failed name lookup on this path.
+
+The shared direction predicate `1421dfbe0` requires exactly one port side for direction 1 or 2 and both sides for direction 3. The test descriptor requested `in` (1), while Serato logged the named loopback as `duplex`. The combination cannot pass the direction predicate if the probe is still available to the SL3 worker. The log also shows that a separate worker acquired the probe during the SL3's first retry, so the trace does not establish that the SL3 worker reached the predicate for that endpoint. A controlled retest can keep the same name and physical identity, request duplex, and trace which worker takes the port. Successful pairing would still need a separate ASIO selection check.
+
+The duplex retest changed only the descriptor's MIDI direction and kept the same named loopback and physical SL3 identity. Serato reported the probe as duplex and a separate worker acquired it on the SL3's first retry. The SL3 again reached attempt 119 and reported its MIDI connection was not ready. The trace observed no successful descriptor-based MIDI take, no named audio selection and no load of `sl3_asio.dll`. Offline audio was the only successful startup. This leaves endpoint availability or ownership open as a separate question from direction. The original archive was restored and removal of the temporary ASIO registration and MIDI ports was verified.
+
+### Existing resource slot replacement
+
+An attended Windows test put the exact earlier USB-only SL3 XML into the existing Denon DS1 archive slot. The candidate kept 229 indexed members, verified the other 228 members and retained the SL3's real `1cc5:0001` identity. This was an archive-slot replacement. Serato built its runtime descriptors from that archive through its normal loader.
+
+Serato logged `Device Added: Rane SL3` and emitted the genuine USB arrival message `0x2d4`. It listed the rebuilt ASIO driver during enumeration. The 24-second trace showed no receipt by the traced USB audio handler, no named audio selection and no load of `sl3_asio.dll`. The only successful audio startup was `Offline Device`. Thus the existing resource slot reproduced the additive test's selection result. The original archive was restored and temporary ASIO registration removal verified.
+
+A second attended test loaded the additive archive as a source for the same SL3 object, then replaced the DS1 entry in memory at the end of descriptor registration. It moved the SL3 object from index 195 to the DS1 slot at 49, removed its old entry, and reduced the vector from 235 to 234 entries. It preserved the physical SL3 USB identity and used no virtual MIDI endpoint. Serato added the SL3 and published `0x2d4`, but the 24-second trace showed only default audio selection and no rebuilt DLL load. The original resource archive and temporary ASIO registration were cleaned up and verified. This tests the Windows runtime descriptor slot independently of USB identity substitution and MIDI.
+
+### Process-local USB alias
+
+An independent Windows test changed only the PID returned to Serato's USB discovery call, from `0001` to a synthetic `fffe`. The otherwise identical USB-only SL3 spec used that PID so the lookup could succeed. The test used the additive archive and no virtual MIDI endpoint or runtime slot replacement. Windows continued to enumerate the physical `1cc5:0001` device.
+
+Serato aggregated `1cc5:fffe`, added `Rane SL3` and emitted `0x2d4` carrying the alias. The 24-second trace showed no receipt by the traced USB audio handler, no named audio selection and no rebuilt ASIO DLL load. Serato listed the rebuilt ASIO driver during enumeration, while offline audio was the only successful startup. The original archive was restored and the temporary ASIO registration removed. This isolates one synthetic identity change and does not test the three changes in combination.
+
+### Combined Windows test
+
+The 80-second combined run verified the in-memory DS1 slot replacement, the process-local `1cc5:fffe` USB alias, and Windows' duplex MIDI loopback. Serato assigned the probe to a separate MIDI device. The aliased SL3 reached attempt 119 and reported that its MIDI connection was not ready. The trace showed no successful descriptor-based MIDI take, no named audio selection, and no load of `sl3_asio.dll`. Offline audio was the only successful startup. This tests the three Windows implementations together. The MIDI loopback is a standalone endpoint and did not supply the SL3 with an associated control interface. Cleanup restored the original archive and verified removal of the temporary ASIO registration and both MIDI endpoints.
+
+### MIDI associated with the SL3
+
+An 80-second follow-up kept the combined configuration and reserved the named probe in Serato's MIDI connection list. A process-local diagnostic returned an empty result only when the standalone aggregation caller tried to take that exact test endpoint by URI. This left the endpoint available to the SL3's existing descriptor-based matcher. The trace confirmed a name match and a successful MIDI take on the SL3 aggregation thread during its first attempt. The application logged `Device Added: Rane SL3`. This is an application-level association of a real virtual endpoint. It does not implement SL3 control messages or establish a persistent Windows MIDI binding.
+
+Serato enumerated the rebuilt ASIO driver. Offline audio was the only successful startup, with no named audio selection, no rebuilt ASIO DLL load and no USB-only arrival publication in the trace. The original archive was restored and removal of the temporary ASIO registration and MIDI endpoints was verified.
+
 ## Separate HID branch
 
 Vtable `142810290` is RTTI-bound to `HidManager`, subobject offset 16; slot `+8`
