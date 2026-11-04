@@ -205,7 +205,7 @@ struct RetainedEvidence {
     std::string phase="preparing",error;
     std::string worker_sha;
     unsigned expected_rate=0,attempts=0,completed_streams=0,buffer_recreations=0;
-    bool acquired=false,finished=false,success=false;
+    bool acquired=false,finished=false,success=false,keepalive=false;
     HostReport acquisition{},final{};
 };
 void save_retained(const std::filesystem::path& path,const RetainedEvidence& e,const std::array<Evidence,2>& streams){
@@ -220,6 +220,7 @@ void save_retained(const std::filesystem::path& path,const RetainedEvidence& e,c
         <<",\"acquisition_device_released\":"<<a.device_released<<",\"acquisition_worker_exited\":"<<a.process.process_exited
         <<",\"requested_streams\":2,\"completed_streams\":"<<e.completed_streams<<",\"buffer_recreations\":"<<e.buffer_recreations
         <<",\"requested_stream_ms\":1000,\"bank_frames\":128,\"intervals\":8,\"output_payload\":\"zero PCM only\""
+        <<",\"playback_keepalive\":"<<e.keepalive
         <<",\"streams\":[";
     for(unsigned i=0;i<2;++i){if(i)text<<',';text<<"{\"file\":\"stream-"<<i+1<<".json\",\"successful\":"<<streams[i].success
         <<",\"buffers_disposed\":"<<streams[i].buffers_disposed<<'}';}
@@ -237,6 +238,7 @@ int run_retained(WorkerSpec spec,const std::filesystem::path& folder,unsigned ex
     const auto path=folder/L"probe.json";LARGE_INTEGER frequency{};
     require(QueryPerformanceFrequency(&frequency)!=FALSE && frequency.QuadPart>0,"Read callback counter frequency");
     spec.lifetime=DeviceLifetime::retained;
+    evidence.keepalive=spec.diagnostic_playback_keepalive;
     if constexpr(kind==sl3::session::Kind::native)spec.diagnostic_directory=folder;
     save_retained(path,evidence,streams);Watchdog watchdog(45000);HostSession session(spec);
     try{
@@ -273,6 +275,7 @@ int run_retained(WorkerSpec spec,const std::filesystem::path& folder,unsigned ex
                 && w.stats.input_frames>0 && w.stats.output_completions>0 && w.stats.output_frames_submitted>0 && !w.stats.pending_mask && !w.stats.retained_mask;
             save(stream_path,e,p);require(e.success,"Retained stream failed its callback/I/O/held-device retirement contract");
             ++evidence.completed_streams;save_retained(path,evidence,streams);
+            if(evidence.keepalive && i==0)Sleep(300);
         }
     }catch(const std::exception& error){evidence.error=error.what();}
     evidence.phase="closing";
@@ -523,7 +526,9 @@ int wmain(int argc,wchar_t** argv){
     }
     const std::wstring mode=argc>1?argv[1]:L"";
     const unsigned single_open_rate=mode==L"--single-open-44100"?44100u:mode==L"--single-open-48000"?48000u:0u;
-    const unsigned retained_rate=mode==L"--retained-44100"?44100u:mode==L"--retained-48000"?48000u:0u;
+    const bool keepalive=mode==L"--retained-keepalive-44100";
+    if(keepalive && kind!=sl3::session::Kind::native)return 2;
+    const unsigned retained_rate=mode==L"--retained-44100" || keepalive?44100u:mode==L"--retained-48000"?48000u:0u;
     const bool controls=mode==L"--controls",selection=mode==L"--select-control",rate_select=mode==L"--select-rate";
     if((argc!=10 && argc!=12 && !((selection || rate_select) && (argc==14 || argc==16))) || (mode!=L"--run" && mode!=L"--inspect-reopen" && !single_open_rate && !retained_rate && !controls && !selection && !rate_select)){std::cerr<<"Expected explicit probe mode, --worker FILE --worker-sha256 HASH --helper FILE --output NEW_DIRECTORY; selection requires --target KIND:GROUP:VALUE\n";return 2;}
     unsigned intervals=default_interval_count;
@@ -581,7 +586,8 @@ int wmain(int argc,wchar_t** argv){
             intervals=shape==L"8"?8u:64u;
         }
     }
-    WorkerSpec spec;spec.kind=kind;spec.fixture_mode=fixture_mode;std::filesystem::path folder;
+    WorkerSpec spec;spec.kind=kind;spec.fixture_mode=fixture_mode;spec.diagnostic_playback_keepalive=keepalive;
+    std::filesystem::path folder;
     if(std::wstring(argv[2])!=L"--worker" || std::wstring(argv[4])!=L"--worker-sha256" ||
        std::wstring(argv[6])!=L"--helper" || std::wstring(argv[8])!=L"--output")return 2;
     spec.executable=argv[3];spec.helper=argv[7];folder=argv[9];

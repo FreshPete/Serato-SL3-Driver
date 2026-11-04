@@ -33,7 +33,7 @@ def zero(record, keys):
     require(all(uint(record[k]) and record[k] == 0 for k in keys), 'Nonzero or invalid failure/ownership counters')
 
 
-def journal(path):
+def journal(path, keepalive=False):
     require(0 < path.stat().st_size <= 65536, 'Empty/oversized startup journal')
     raw = path.read_bytes()
     require(raw.endswith(b'\n'), 'Incomplete startup journal suffix')
@@ -52,15 +52,28 @@ def journal(path):
     while stages[at:at+2] == ['enumerate.enter', 'enumerate.return']:
         at += 2
     require(at > 3, 'Missing complete enumeration')
-    expected = ['configuration.enter', 'configuration.return', 'redirect_start.enter', 'redirect_start.return',
-                'system_handle.enter', 'system_handle.return'] + ['clock_getter.enter', 'clock_getter.return']*3 + [
-                'redirect_close.enter', 'redirect_close.return', 'helper_unload.enter', 'helper_unload.return']
+    expected = ['configuration.enter', 'configuration.return']
+    if keepalive:
+        expected.extend(('redirect_owner_acquire.enter', 'redirect_owner_acquire.return'))
+    expected.extend(('redirect_start.enter', 'redirect_start.return', 'system_handle.enter',
+                     'system_handle.return', 'clock_getter.enter', 'clock_getter.return'))
+    for _ in range(2):
+        expected.extend(('clock_getter.enter', 'clock_getter.return'))
+        if keepalive:
+            expected.extend(('playback_keepalive.enter', 'playback_keepalive.return'))
+    expected.extend(('redirect_close.enter', 'redirect_close.return', 'helper_unload.enter', 'helper_unload.return'))
     require(stages[at:] == expected, 'Expected exactly one redirect, three fresh clock getters and one final release')
-    return {'name': path.name, 'sha256': hashlib.sha256(raw).hexdigest(), 'records': len(rows),
-            'workerPid': rows[0][1], 'redirects': 1, 'clockGetters': 3, 'redirectCloses': 1}
+    result = {'name': path.name, 'sha256': hashlib.sha256(raw).hexdigest(), 'records': len(rows),
+              'workerPid': rows[0][1], 'redirects': 1, 'clockGetters': 3, 'redirectCloses': 1}
+    if keepalive:
+        starts = [tick for tick, _, name in rows if name == 'playback_keepalive.enter']
+        stops = [tick for tick, _, name in rows if name == 'playback_keepalive.return']
+        require(starts[1] - stops[0] >= 250, 'Missing idle interval between keepalive lifetimes')
+        result.update(keepaliveLifetimes=2, idleBetweenKeepaliveMs=starts[1] - stops[0])
+    return result
 
 
-def probe(folder, worker_sha, expected_rate, simulated=False):
+def probe(folder, worker_sha, expected_rate, simulated=False, keepalive=False):
     root = read(folder/'probe.json')
     require(root['schema'] == 'sl3.retained-host-probe.v1' and root['phase'] == 'finished', 'Wrong lifecycle schema/phase')
     flags(root, ('successful', 'finished', 'acquisition_verified', 'acquisition_io_retired', 'acquisition_device_held',
@@ -68,6 +81,8 @@ def probe(folder, worker_sha, expected_rate, simulated=False):
           ('acquisition_device_released', 'acquisition_worker_exited', 'device_held', 'forced_termination',
            'analogue_signal_verified', 'latency_measured', 'asio_com_registered'))
     require(root['simulated'] is simulated and root['worker_sha256'].lower() == worker_sha.lower(), 'Worker kind/hash mismatch')
+    require(root.get('playback_keepalive', False) is keepalive and not (keepalive and simulated),
+            'Unexpected keepalive mode')
     for key, expected in {'acquisition_attempts': 1, 'requested_streams': 2, 'completed_streams': 2, 'buffer_recreations': 1,
                           'requested_stream_ms': 1000, 'bank_frames': 128, 'intervals': 8, 'worker_phase': 6,
                           'expected_rate_hz': expected_rate, 'reported_rate_hz': expected_rate}.items():
@@ -106,7 +121,7 @@ def probe(folder, worker_sha, expected_rate, simulated=False):
     require((simulated and not journals) or (not simulated and len(journals) == 1 and journals[0].name == 'worker-1.tsv'), 'Unexpected worker journal count')
     return {'valid': True, 'scope': 'Recorded retained lifecycle consistency only; not hardware attestation or latency approval',
             'simulated': simulated, 'workerSha256': worker_sha.lower(), 'rateHz': expected_rate, 'probeRecordSha256': digest(folder/'probe.json'),
-            'streams': streams, 'journal': None if simulated else journal(journals[0]),
+            'streams': streams, 'journal': None if simulated else journal(journals[0], keepalive),
             'limits': ['Submission/completion differences at stop are preserved', 'No analogue audio, physical clock/continuity, production ASIO or Serato/DVS result']}
 
 
@@ -155,10 +170,12 @@ def main():
     parser.add_argument('--worker-sha256', required=True)
     parser.add_argument('--expected-rate', type=int, choices=(44100, 48000), required=True)
     parser.add_argument('--expect-simulated', action='store_true')
+    parser.add_argument('--keepalive', action='store_true')
     args = parser.parse_args()
     require(re.fullmatch('[0-9a-fA-F]{64}', args.worker_sha256) is not None, 'Invalid expected worker SHA256')
     require(not (args.expect_simulated and args.prerequisites), 'Physical prerequisites cannot be simulated')
-    result = probe(args.probe, args.worker_sha256, args.expected_rate, args.expect_simulated) if args.probe else prerequisites(*args.prerequisites, args.worker_sha256, args.expected_rate)
+    require(not args.keepalive or args.probe and not args.expect_simulated, 'Keepalive requires a native probe record')
+    result = probe(args.probe, args.worker_sha256, args.expected_rate, args.expect_simulated, args.keepalive) if args.probe else prerequisites(*args.prerequisites, args.worker_sha256, args.expected_rate)
     print(json.dumps(result, indent=2))
 
 

@@ -865,7 +865,7 @@ public:
             backend_=std::make_unique<sl3::worker::UsbDkStreamBackend>(sl3::worker::UsbDkStreamApi{device_.api.read,device_.api.write},device_.redirect,device_.system);
             if(!backend_->valid())throw std::runtime_error("Invalid held-device native backend");
             if(keepalive){
-                device_.api.mark("playback_keepalive.start");
+                device_.api.mark("playback_keepalive.enter");
                 timer_=std::thread([this]{run_timer();});
             }
             active_=true;
@@ -877,7 +877,7 @@ public:
         if(closed_)return true;
         if(timer_.joinable()){
             stop_timer_=true;timer_.join();
-            device_.api.mark(timer_error_?"playback_keepalive.failed":"playback_keepalive.retired");
+            device_.api.mark(timer_error_?"playback_keepalive.failed":"playback_keepalive.return");
         }
         if(backend_){error_=backend_->last_error();backend_.reset();}
         if(!device_.deactivate()){error_=GetLastError();return false;}

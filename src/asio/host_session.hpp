@@ -19,6 +19,7 @@ struct WorkerSpec {
     std::optional<control::selection_wire::Target> diagnostic_control_target;
     // Single-use native rate diagnostic only; audio is disabled for this lease.
     std::optional<unsigned> diagnostic_rate_target;
+    bool diagnostic_playback_keepalive=false;
 };
 enum class HostFailure {none,launch,handshake,inspection,rate_changed,audio_start,worker_start,worker,control,audio,containment};
 enum class HostDomain {owned_worker,broker_client};

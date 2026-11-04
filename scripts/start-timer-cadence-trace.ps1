@@ -1,19 +1,22 @@
 # One ordinary-user timer diagnostic and one separately elevated passive trace.
-param([Parameter(Mandatory)][string]$Plan,[switch]$Run,[switch]$SilentStream,[switch]$Tone,[switch]$StereoMarkers)
+param([Parameter(Mandatory)][string]$Plan,[switch]$Run,[switch]$SilentStream,[switch]$Tone,
+      [switch]$StereoMarkers,[switch]$RetainedKeepalive)
 $ErrorActionPreference='Stop'
 if($SilentStream -and $Tone){throw 'Choose one playback mode'}
 if($StereoMarkers -and -not $Tone){throw 'Stereo markers require tone mode'}
+if($RetainedKeepalive -and ($Tone -or $SilentStream)){throw 'Choose one retained or standalone test'}
 $root=Split-Path -Parent $PSScriptRoot
 $settings=Get-Content -LiteralPath $Plan -Raw | ConvertFrom-Json
-$scenario=if($StereoMarkers){'timer-stereo-markers-20261104'}elseif($Tone){'timer-tone-20261104'}elseif($SilentStream){'timer-silent-stream-20261104'}else{'timer-cadence-20261104'}
-$build=Join-Path $root "artifacts/build/$scenario"
+$scenario=if($RetainedKeepalive){'retained-keepalive-20261104'}elseif($StereoMarkers){'timer-stereo-markers-20261104'}elseif($Tone){'timer-tone-20261104'}elseif($SilentStream){'timer-silent-stream-20261104'}else{'timer-cadence-20261104'}
+$buildName=if($RetainedKeepalive){'windows-post-loopback-20261104'}else{$scenario}
+$build=Join-Path $root "artifacts/build/$buildName"
 $worker=Join-Path $build 'Release/sl3_usbdk.exe'
 $helper=Join-Path $root 'artifacts/extracted/usbdk-msi/UsbDkHelper.dll10'
 $base=Join-Path $root "tests/results/local/$scenario"
 $traceDirectory="$base-usb"
 if($settings.worker -ine $worker -or $settings.helper -ine $helper -or
    $settings.resultDirectory -ine $base -or $settings.traceDirectory -ine $traceDirectory -or
-   $settings.challenge -cnotmatch '^[0-9a-f]{16}$'){throw 'Unexpected cadence plan'}
+   (-not $RetainedKeepalive -and $settings.challenge -cnotmatch '^[0-9a-f]{16}$')){throw 'Unexpected cadence plan'}
 $attemptPath="$base-attempted.json"
 if((Test-Path -LiteralPath $base) -or (Test-Path -LiteralPath $traceDirectory) -or
    (Test-Path -LiteralPath $attemptPath)){throw 'Cadence packet already used'}
@@ -23,6 +26,19 @@ if($settings.workerSha256 -ne $manifest.usbdk.executableSha256 -or
    (Get-FileHash -LiteralPath $helper).Hash -ne $settings.helperSha256){throw 'Cadence runtime hash differs'}
 $collector=Join-Path $PSScriptRoot 'capture-usb-startup.ps1'
 $shell=(Get-Command pwsh).Source
+$traceSeconds=40
+if($RetainedKeepalive){
+    $traceSeconds=60
+    $probe=Join-Path $build 'Release/sl3_host_probe.exe'
+    $validator=Join-Path $PSScriptRoot 'validate-retained-host-probe.py'
+    if((Get-FileHash -LiteralPath $probe).Hash -ne $manifest.hostProbe.executableSha256 -or
+       (Get-FileHash -LiteralPath $validator).Hash -ne $manifest.hostProbe.retained.validatorSha256){
+        throw 'Retained probe or validator hash differs'
+    }
+    $preview=& $probe --plan | ConvertFrom-Json
+    if($LASTEXITCODE -or $preview.plan_only -ne $true -or $preview.device_access -ne $false -or
+       $preview.simulated -ne $false -or $preview.retained_lifecycle.streams -ne 2){throw 'Unexpected retained preview'}
+}else{
 $workerMode=@('--timer-cadence')
 $validationMode=@('--cadence')
 if($SilentStream){$workerMode+='--timer-silent-stream';$validationMode+='--silent-stream'}
@@ -35,7 +51,8 @@ if($LASTEXITCODE -or $preview.plan_only -ne $true -or $preview.device_access -ne
 if($Tone -and ($preview.tone_hz -ne 997 -or $preview.tone_duration_ms -ne 650 -or
    $preview.routing_setters -ne 0)){throw 'Unexpected tone preview'}
 if($StereoMarkers -and ($preview.stereo_marker_hz -join ',') -cne '997,1301'){throw 'Unexpected stereo marker preview'}
-$tracePlan=& $shell -NoProfile -File $collector -WithUsbDkLifecycle -DurationSeconds 40 -OutputDirectory $traceDirectory
+}
+$tracePlan=& $shell -NoProfile -File $collector -WithUsbDkLifecycle -DurationSeconds $traceSeconds -OutputDirectory $traceDirectory
 if($LASTEXITCODE){throw 'USB/WPP preflight failed'}
 if(-not $Run){$tracePlan;return}
 
@@ -43,7 +60,7 @@ Import-Module (Join-Path $PSScriptRoot 'inspect-process.psm1')
 if((Get-Sl3ProcessEvidence -ProcessId $PID -WithToken).elevated -ne $false){throw 'Start under the ordinary user token'}
 $device=Get-PnpDevice -PresentOnly -InstanceId 'USB\VID_1CC5&PID_0001\SL3.01.00'
 if($device.Problem -ne 'CM_PROB_DRIVER_FAILED_LOAD' -or
-   (Get-Process 'Serato DJ Pro',sl3_usbdk -ErrorAction SilentlyContinue)){throw 'SL3 resting state differs'}
+   (Get-Process 'Serato DJ Pro',sl3_usbdk,sl3_host_probe -ErrorAction SilentlyContinue)){throw 'SL3 resting state differs'}
 $scriptHash=(Get-FileHash -LiteralPath $collector).Hash
 $attempt=[IO.File]::Open($attemptPath,[IO.FileMode]::CreateNew)
 try{
@@ -52,7 +69,7 @@ try{
     $attempt.Write($bytes,0,$bytes.Length)
 }finally{$attempt.Dispose()}
 $admin=Start-Process -FilePath $shell -Verb RunAs -WindowStyle Hidden -PassThru -ArgumentList @(
-    '-NoProfile','-File',('"{0}"' -f $collector),'-Capture','-WithUsbDkLifecycle','-DurationSeconds','40',
+    '-NoProfile','-File',('"{0}"' -f $collector),'-Capture','-WithUsbDkLifecycle','-DurationSeconds',([string]$traceSeconds),
     '-OutputDirectory',('"{0}"' -f $traceDirectory))
 $capture=Join-Path $traceDirectory 'capture.json'
 $deadline=[datetime]::UtcNow.AddSeconds(15)
@@ -74,17 +91,24 @@ try{
        $age -lt 0 -or $age -gt 2 -or $start.Count -ne 1){throw 'Collector identity or freshness differs'}
     [ordered]@{collector=$identity;session=$trace.session;ageSeconds=$age;challenge=$settings.challenge;workerSha256=$settings.workerSha256} |
         ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $traceDirectory 'timer-admission.json')
+    $python=Join-Path $root '.venv/Scripts/python.exe'
+    if($RetainedKeepalive){
+        & $probe --retained-keepalive-44100 --worker $worker --worker-sha256 $settings.workerSha256 --helper $helper --output $base
+        if($LASTEXITCODE){throw 'Retained probe failed; preserve its records'}
+        & $python $validator --probe $base --worker-sha256 $settings.workerSha256 --expected-rate 44100 --keepalive
+        if($LASTEXITCODE){throw 'Retained keepalive record rejected'}
+    }else{
     & $worker --timer-query @workerMode --challenge $settings.challenge --helper $helper --output $base
     if($LASTEXITCODE){throw 'Cadence worker failed; preserve its records'}
-    $python=Join-Path $root '.venv/Scripts/python.exe'
     $validated=& $python (Join-Path $PSScriptRoot 'validate-driver-timer.py') (Join-Path $base 'timer.json') --challenge $settings.challenge @validationMode
     if($LASTEXITCODE){throw 'Cadence record rejected'}
     if($StereoMarkers -and ((($validated | ConvertFrom-Json).stereoMarkerHz) -join ',') -cne '997,1301'){
         throw 'Cadence record missing stereo markers'
     }
     $validated
+    }
 }finally{
-    if(-not $admin.WaitForExit(60000)){throw 'Collector still active after observation window'}
+    if(-not $admin.WaitForExit(70000)){throw 'Collector still active after observation window'}
     if($admin.ExitCode){throw 'Collector failed; inspect its final trace record'}
 }
 $final=Get-Content -LiteralPath $capture -Raw | ConvertFrom-Json

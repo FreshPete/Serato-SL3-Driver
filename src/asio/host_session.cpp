@@ -26,6 +26,10 @@ HostSession::HostSession(WorkerSpec spec):spec_(std::move(spec)){
            !spec_.diagnostic_directory.is_absolute() || spec_.diagnostic_control_target)
             throw std::invalid_argument("Rate target requires a separate native retained diagnostic directory");
     }
+    if(spec_.diagnostic_playback_keepalive && (spec_.kind!=session::Kind::native ||
+       spec_.lifetime!=DeviceLifetime::retained || !spec_.diagnostic_directory.is_absolute() ||
+       spec_.diagnostic_control_target || spec_.diagnostic_rate_target))
+        throw std::invalid_argument("Playback keepalive requires a separate native retained diagnostic");
 }
 HostSession::~HostSession(){
     // Graceful final release only when no executing audio owner can block this
@@ -79,6 +83,7 @@ void HostSession::launch(){
         if(spec_.diagnostic_rate_target){
             args.push_back(L"--rate-test-target");args.push_back(std::to_wstring(*spec_.diagnostic_rate_target));
         }
+        if(spec_.diagnostic_playback_keepalive)args.push_back(L"--playback-keepalive");
         process_->launch(spec_.executable,spec_.sha256,args);
     }catch(...){failure(HostFailure::launch);throw;}
     // Unknown until an authenticated typed reply states otherwise.
