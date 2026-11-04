@@ -65,3 +65,11 @@ On 4 November 2026, the original signed Serato DJ Pro 5.0.0.1278 executable ran 
 The log separately enumerated the historical Rane ASIO entry and kept playback on its offline device. The test did not register the rebuild or establish that Serato opened it. The next application-side question is which driver check produces the new notification and whether the rebuilt ASIO registration satisfies it.
 
 The single elevated helper restored the original archive after Serato exited and removed the temporary transaction files. The restored SHA-256 matched the original preflight and the post-clean state was `original`. The full application log and candidate archive remain local.
+
+## Attended ASIO registration test
+
+With the same temporary SL3 definition and the reviewed startup-fix ASIO bundle registered, Serato 5.0.0.1278 listed `SL3 Rebuild Development [ASIO]` and added the genuine Rane SL3. The previous **Driver Not Installed** notification did not appear during the test. Serato showed **Sign In to Serato DJ Pro**, and its audio log showed a successful start only for the offline device.
+
+The host's module samples did not observe the rebuilt DLL and its per-process ASIO trace was absent. These observations do not rule out a transient load. The test verifies discovery of the ASIO registration and SL3 recognition. ASIO activation, streaming and DVS remain unverified. The broker session pointer was absent and no timing profile was supplied. A signed-in repeat can test whether Serato proceeds to the driver open before configuring a streaming session.
+
+After Serato exited, the helper verified restoration of the original archive, removal of the temporary x64 ASIO/COM registration and absence of the staged driver directory. No account sign-in was performed during this test.
