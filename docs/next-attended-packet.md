@@ -1,4 +1,6 @@
-# Next attended Windows test packet
+# 2 November attended Windows test packet
+
+**Historical packet.** This packet was used on 4 November. See the [result](attended-windows-20261104.md) before preparing another test.
 
 The next useful physical test is one read-only control acquisition with simultaneous USB lifecycle/image tracing and ordinary-user port observation. A fresh packet is prepared against the current Release build and the 2 November cached PnP mapping. **It is unarmed and has not run.** [Preparation evidence](evidence/sl3-return-packet-20261102.json).
 
