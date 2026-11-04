@@ -2,9 +2,10 @@
 
 Current queue updated 4 November 2026. Do not repeat installation or rapid reopening to reproduce an already-recorded failure. Sections T01 onward retain historical experiments and preparation. See the [requirement audit](completion-audit.md) for the outstanding scope and build/physical-evidence separation.
 
-The [4 November result](attended-windows-20261104.md) supersedes the [2 November packet](next-attended-packet.md). The recovery follow-up is prepared locally as `analysis/logging-batch-recovery-20261104/controls-image.json` and `analysis/hub-port-observer-recovery-20261104/plan.json`. Both default preflights pass. Its cached PnP mapping is port 4 with `strmdrv` and Code 39. The test is unarmed.
+The 13:38 UTC recovery follow-up is complete. It showed identical port and devnode fields during startup-pending and port-stopped phases. The next ownership test is the [retained broker scope](broker-scope-trace.md) with one native redirect shared by successive read-only clients. Prepare a fresh packet for that scenario. See the [follow-up result](attended-windows-20261104.md#1338-utc-follow-up).
 
-For that follow-up, recheck the PnP mapping and preserve the pre-launch topology record as described in the [observer instructions](hub-port-observer.md). Start the observer with `--run`, then launch the collector with `-Run -WaitForResults` from a second ordinary-user terminal while the owner is available. Keep both terminal sessions open until they return. Expect one read-only acquisition, and retain the launcher observation even if either role fails.
+The [4 November result](attended-windows-20261104.md) supersedes the [2 November packet](next-attended-packet.md). The spent recovery packet and its evidence remain local under `analysis/logging-batch-recovery-20261104` and `analysis/hub-port-observer-recovery-20261104`.
+
 
 ## Current supervised queue
 

@@ -1,5 +1,15 @@
 # 4 November attended Windows test
 
+## 13:38 UTC follow-up
+
+The follow-up completed with one 44.1 kHz control acquisition and no audio. Both launcher roles and the observer retired with exit code zero. The independent controls validator confirmed selected recovery. The USB trace reported 7,672 events with zero events or buffers lost. The image rundown validator matched USBHUB3 version metadata across the USB window and retained a decoder schema warning.
+
+The port observer completed 72 observations. The phase analyzer accepted 40 whole snapshots while driver startup was pending and 29 after the port reached its stopped state. It excluded one malformed enumeration reply and two observations outside the selected phases or crossing their boundaries. Every accepted snapshot had the same fingerprint across both phases, including `DeviceConnected`, the matching SL3 descriptor, configuration zero, no open pipes and devnode problem 39. There were no disjoint fields. These ordinary-user fields cannot distinguish the two phases in this run.
+
+The next design to validate is one retained UsbDk acquisition shared across client lifetimes. The existing [broker scope diagnostic](broker-scope-probe.md) exercises this in software and has an attended read-only [trace workflow](broker-scope-trace.md). This run supplies no safe reopen threshold and performed no second acquisition. Keep the raw USB, image and observer records local.
+
+## Initial attempt
+
 The 2 November packet ran once on 4 November. The ordinary-user Release worker redirected the SL3, read back 44,100 Hz and the full 22-byte control table, then closed the redirect. The physical probe validator passed. The run performed no second acquisition, audio transfer or rate change.
 
 The independent root-hub observer recorded two valid samples for port 4. At 11:53:47.974736 UTC its third query returned 35 bytes with index 0, status 9 and an all-zero device descriptor. The query rejected the mismatched index, preserved the raw response and stopped without retry. The supervisor recorded exit 1 and confirmed that the observer retired. This reproduces the malformed response seen during the earlier handoff. It gives no valid port sample for that instant or for recovery afterward.
