@@ -1,9 +1,10 @@
 # One ordinary-user timer diagnostic and one separately elevated passive trace.
-param([Parameter(Mandatory)][string]$Plan,[switch]$Run,[switch]$SilentStream)
+param([Parameter(Mandatory)][string]$Plan,[switch]$Run,[switch]$SilentStream,[switch]$Tone)
 $ErrorActionPreference='Stop'
+if($SilentStream -and $Tone){throw 'Choose one playback mode'}
 $root=Split-Path -Parent $PSScriptRoot
 $settings=Get-Content -LiteralPath $Plan -Raw | ConvertFrom-Json
-$scenario=if($SilentStream){'timer-silent-stream-20261104'}else{'timer-cadence-20261104'}
+$scenario=if($Tone){'timer-tone-20261104'}elseif($SilentStream){'timer-silent-stream-20261104'}else{'timer-cadence-20261104'}
 $build=Join-Path $root "artifacts/build/$scenario"
 $worker=Join-Path $build 'Release/sl3_usbdk.exe'
 $helper=Join-Path $root 'artifacts/extracted/usbdk-msi/UsbDkHelper.dll10'
@@ -24,10 +25,13 @@ $shell=(Get-Command pwsh).Source
 $workerMode=@('--timer-cadence')
 $validationMode=@('--cadence')
 if($SilentStream){$workerMode+='--timer-silent-stream';$validationMode+='--silent-stream'}
+if($Tone){$workerMode+='--timer-tone';$validationMode+='--tone'}
 $preview=& $worker --plan @workerMode --challenge $settings.challenge | ConvertFrom-Json
 if($LASTEXITCODE -or $preview.plan_only -ne $true -or $preview.device_access -ne $false -or
    $preview.maximum_writes -ne 10 -or $preview.audio_submissions -ne 0 -or
    [bool]$preview.silent_stream -ne [bool]$SilentStream){throw 'Unexpected cadence preview'}
+if($Tone -and ($preview.tone_hz -ne 997 -or $preview.tone_duration_ms -ne 650 -or
+   $preview.routing_setters -ne 0)){throw 'Unexpected tone preview'}
 $tracePlan=& $shell -NoProfile -File $collector -WithUsbDkLifecycle -DurationSeconds 40 -OutputDirectory $traceDirectory
 if($LASTEXITCODE){throw 'USB/WPP preflight failed'}
 if(-not $Run){$tracePlan;return}

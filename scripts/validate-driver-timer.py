@@ -19,7 +19,7 @@ def unique(pairs):
     return result
 
 
-def validate(raw, challenge, cadence=False, silent_stream=False):
+def validate(raw, challenge, cadence=False, silent_stream=False, tone=False):
     require(re.fullmatch('[0-9a-fA-F]{16}', challenge), 'Expected eight challenge bytes in hex')
     require(0 < len(raw) <= 8192, 'Timer record exceeds size bound')
     record = json.loads(raw, object_pairs_hook=unique)
@@ -31,11 +31,14 @@ def validate(raw, challenge, cadence=False, silent_stream=False):
         require(record.get(name) is True, 'Missing completion evidence: '+name)
     for name in ('response_verified', 'serato_admission_verified', 'reopen_ready_verified'):
         require(record.get(name) is False, 'Unsupported claim: '+name)
-    require(not silent_stream or cadence, 'Silent stream requires cadence validation')
-    require(record.get('silent_stream') is True if silent_stream else 'silent_stream' not in record,
+    with_stream = silent_stream or tone
+    require(not with_stream or cadence and not (silent_stream and tone), 'Choose one stream mode with cadence')
+    require(record.get('silent_stream') is silent_stream if with_stream else 'silent_stream' not in record,
             'Timer stream mode differs')
     zero_fields = ('diagnostic_error', 'exchange_error', 'native_error', 'rate_changes')
-    zero_fields += ('stream_fault',) if silent_stream else ('audio_submissions', 'alternate_changes')
+    zero_fields += ('stream_fault',) if with_stream else ('audio_submissions', 'alternate_changes')
+    if tone:
+        zero_fields += ('routing_setters',)
     for name in zero_fields:
         require(type(record.get(name)) is int and record[name] == 0, 'Nonzero or invalid field: '+name)
     count = 10 if cadence else 1
@@ -57,14 +60,24 @@ def validate(raw, challenge, cadence=False, silent_stream=False):
     require(type(rows) is list and len(rows) == count, 'Missing cadence observations')
     fields = {'start_us', 'end_us', 'writes', 'reads'}
     previous_outputs = 0
-    if silent_stream:
+    if with_stream:
         fields.update(('output_completions_before', 'output_completions_after'))
-        require(record.get('audio_submissions_known') is True and record.get('output_payload') == 'zero PCM only',
-                'Missing silent-output completion evidence')
+        payload = '997 Hz on stream channels 1 and 2' if tone else 'zero PCM only'
+        require(record.get('audio_submissions_known') is True and record.get('output_payload') == payload,
+                'Missing output completion evidence')
         for name in ('input_frames', 'audio_submissions', 'output_completions', 'observed_rate_hz', 'alternate_activation_attempts'):
             require(type(record.get(name)) is int and record[name] > 0, 'Invalid stream field: '+name)
         require(record['observed_rate_hz'] in (44100, 48000) and record['alternate_activation_attempts'] == 2 and
                 record['output_completions'] <= record['audio_submissions'], 'Stream geometry or completion count differs')
+    if tone:
+        for name in ('controls_before', 'controls_after'):
+            table = record.get(name)
+            require(type(table) is list and len(table) == 22 and
+                    all(type(value) is int and 0 <= value <= 255 for value in table), 'Invalid '+name)
+        require(record['controls_before'][8] == 1 and record['controls_after'] == record['controls_before'],
+                'Original routing table differs')
+        require(type(record.get('tone_frames_staged')) is int and
+                record['tone_frames_staged'] == record['observed_rate_hz'] * 65 // 100, 'Incomplete tone')
     for index, row in enumerate(rows):
         require(type(row) is dict and set(row) == fields and
                 all(type(value) is int for value in row.values()), 'Malformed cadence observation')
@@ -73,7 +86,7 @@ def validate(raw, challenge, cadence=False, silent_stream=False):
                 row['start_us'] <= row['end_us'] < due + 100_000,
                 'Exchange fell outside its cadence slot')
         require(row['writes'] == 1 and 1 <= row['reads'] <= 4, 'Invalid per-slot transfer count')
-        if silent_stream:
+        if with_stream:
             require(previous_outputs <= row['output_completions_before'] < row['output_completions_after'] <= record['output_completions'],
                     'No proven output progress within a timer exchange')
             previous_outputs = row['output_completions_after']
@@ -81,9 +94,11 @@ def validate(raw, challenge, cadence=False, silent_stream=False):
     spacings = [b['start_us'] - a['start_us'] for a, b in zip(rows, rows[1:])]
     result.update(completedExchanges=count, minimumDispatchSpacingUs=min(spacings),
                   maximumDispatchSpacingUs=max(spacings), wireTimingVerified=False)
-    if silent_stream:
+    if with_stream:
         result.update(inputFrames=record['input_frames'], outputCompletions=record['output_completions'],
                       exchangesWithOutputProgress=count, analogueOutputVerified=False)
+    if tone:
+        result.update(toneFramesStaged=record['tone_frames_staged'], originalControlTableMatched=True)
     return result
 
 
@@ -93,10 +108,11 @@ def main():
     parser.add_argument('--challenge', required=True)
     parser.add_argument('--cadence', action='store_true')
     parser.add_argument('--silent-stream', action='store_true')
+    parser.add_argument('--tone', action='store_true')
     args = parser.parse_args()
     try:
         with args.record.open('rb') as stream:
-            result = validate(stream.read(8193), args.challenge, args.cadence, args.silent_stream)
+            result = validate(stream.read(8193), args.challenge, args.cadence, args.silent_stream, args.tone)
     except (OSError, ValueError, TypeError, AttributeError) as error:
         print(json.dumps({'valid': False, 'error': str(error)}))
         return 1

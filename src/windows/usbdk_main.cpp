@@ -36,6 +36,7 @@
 #include <algorithm>
 #include <array>
 #include <atomic>
+#include <cmath>
 #include <cstring>
 #include <filesystem>
 #include <fstream>
@@ -389,16 +390,35 @@ std::string timer_hex(const sl3::control::Challenge& bytes){
     constexpr char alphabet[]="0123456789abcdef";std::string text;
     for(const auto byte:bytes){text+=alphabet[byte>>4];text+=alphabet[byte&15];}return text;
 }
-class SilentCadencePeer final:public sl3::ContinuousPeer {
+class CadenceAudioPeer final:public sl3::ContinuousPeer {
     std::array<sl3::AudioBlock,4> pending_{};
     unsigned read_=0,write_=0,count_=0;
+    const std::atomic<bool>& tone_enabled_;
+    unsigned tone_frames_=0;
 public:
+    explicit CadenceAudioPeer(const std::atomic<bool>& tone_enabled):tone_enabled_(tone_enabled){}
+    unsigned tone_frames() const noexcept{return tone_frames_;}
     sl3::StreamExchange publish_input(const sl3::AudioBlock& input) noexcept override {
         if(count_==pending_.size())return sl3::StreamExchange::full;
         auto& output=pending_[write_];
         output.first_frame=input.first_frame;output.host_observation_ns=input.host_observation_ns;
         output.reported_rate_hz=input.reported_rate_hz;output.packet_count=input.packet_count;
         output.frames_per_packet=input.frames_per_packet;
+        output.pcm.fill(0);
+        if(tone_enabled_){
+            const auto rate=input.reported_rate_hz;
+            const unsigned length=rate*65/100,fade=rate/100;
+            unsigned frames=0;
+            for(unsigned packet=0;packet<input.packet_count;++packet)frames+=input.frames_per_packet[packet];
+            for(unsigned frame=0;frame<frames && tone_frames_<length;++frame,++tone_frames_){
+                const auto ramp=std::min({tone_frames_,length-1-tone_frames_,fade})/double(fade);
+                const auto sample=static_cast<std::uint32_t>(static_cast<std::int32_t>(265271.0*ramp*
+                    std::sin(tone_frames_*(6.283185307179586*997.0/rate))));
+                for(unsigned channel=0;channel<2;++channel)
+                    for(unsigned byte=0;byte<3;++byte)
+                        output.pcm[frame*18+channel*3+byte]=std::uint8_t(sample>>(8*byte));
+            }
+        }
         write_=(write_+1)%4;++count_;
         return sl3::StreamExchange::ok;
     }
@@ -410,7 +430,7 @@ public:
 };
 
 int run_timer_diagnostic(Api& api,USB_DK_DEVICE_INFO& selected,const std::filesystem::path& output,
-                         std::ofstream& report,sl3::control::Challenge challenge,bool cadence,bool silent_stream){
+                         std::ofstream& report,sl3::control::Challenge challenge,bool cadence,bool silent_stream,bool tone){
     Device device(api);sl3::control::DriverTimerResult result;
     unsigned writes=0,reads=0;DWORD native_error=0;
     bool redirect_attempted=false,opened=false,closed=false,io_retired=true;std::string error;
@@ -423,9 +443,12 @@ int run_timer_diagnostic(Api& api,USB_DK_DEVICE_INFO& selected,const std::filesy
     sl3::StreamFault retired_fault=sl3::StreamFault::none;
     unsigned rate=0;
     unsigned alternate_attempts=0;
-    std::atomic<bool> streaming{false},stream_finished{false},stop_audio{false};
+    const bool with_stream=silent_stream || tone;
+    std::atomic<bool> streaming{false},stream_finished{false},stop_audio{false},tone_enabled{false};
     std::atomic<std::uint64_t> observed_output_completions{0};
     std::thread audio;
+    unsigned tone_frames=0,retired_tone_frames=0;
+    std::optional<sl3::control::AudioControlsSnapshot> controls_before,controls_after;
     auto save=[&](const char* phase){
         report.close();report.open(output/L"timer.json",std::ios::trunc);
         report<<"{\"schema\":\"sl3.driver-timer-diagnostic.v1\",\"phase\":"<<quote(phase)<<",\"utc\":"<<quote(utc_now())
@@ -435,26 +458,45 @@ int run_timer_diagnostic(Api& api,USB_DK_DEVICE_INFO& selected,const std::filesy
               <<",\"diagnostic_error\":"<<unsigned(result.error)<<",\"exchange_error\":"<<unsigned(result.exchange_error)
               <<",\"native_error\":"<<native_error<<",\"response_parsed\":"<<(result.response?"true":"false")
               <<",\"response_verified\":false,\"serato_admission_verified\":false,\"reopen_ready_verified\":false,\"rate_changes\":0";
-        if(!silent_stream)report<<",\"audio_submissions\":0,\"alternate_changes\":0";
+        if(!with_stream)report<<",\"audio_submissions\":0,\"alternate_changes\":0";
         if(result.response)report<<",\"response_hex\":"<<quote(timer_hex(*result.response));
         if(cadence)report<<",\"cadence_ms\":100,\"completed_exchanges\":"<<completed<<",\"exchanges\":["<<exchanges.str()<<']';
-        if(silent_stream)report<<",\"silent_stream\":true,\"observed_rate_hz\":"<<rate
+        if(with_stream)report<<",\"silent_stream\":"<<(silent_stream?"true":"false")<<",\"observed_rate_hz\":"<<rate
             <<",\"audio_submissions_known\":"<<(audio.joinable()?"false":"true")
             <<",\"audio_submissions\":"<<stream_stats.output_submissions<<",\"alternate_activation_attempts\":"<<alternate_attempts
             <<",\"stream_fault\":"<<unsigned(stream_fault)<<",\"input_frames\":"<<stream_stats.input_frames
-            <<",\"output_completions\":"<<stream_stats.output_completions<<",\"output_payload\":\"zero PCM only\"";
+            <<",\"output_completions\":"<<stream_stats.output_completions
+            <<",\"output_payload\":"<<quote(tone?"997 Hz on stream channels 1 and 2":"zero PCM only");
+        if(tone){
+            report<<",\"tone_frames_staged\":"<<tone_frames<<",\"routing_setters\":0";
+            auto write_table=[&](const char* name,const std::optional<sl3::control::AudioControlsSnapshot>& controls){
+                report<<','<<quote(name)<<':';
+                if(!controls){report<<"null";return;}
+                report<<'[';
+                for(unsigned i=0;i<controls->raw.size();++i){if(i)report<<',';report<<unsigned(controls->raw[i]);}
+                report<<']';
+            };
+            write_table("controls_before",controls_before);
+            write_table("controls_after",controls_after);
+        }
         report<<",\"error\":"<<quote(error)<<"}\n"<<std::flush;
         if(!report)throw std::runtime_error("Cannot persist timer diagnostic");
     };
     try{
         redirect_attempted=true;save("before idle redirect");device.open(selected);opened=true;
-        if(silent_stream){
+        if(with_stream){
             rate=read_rate(device);
+            if(tone){
+                sl3::worker::NativeControlsIo<Device,Transfer> io(device);
+                controls_before=sl3::control::inspect_audio_controls(io).controls;
+                if(!controls_before || controls_before->raw[8]!=1)
+                    throw std::runtime_error("Original control byte 8 does not match the playback hypothesis");
+            }
             device.activate();
             alternate_attempts=static_cast<unsigned>(device.attempted.size());
             audio=std::thread([&]{
                 sl3::worker::UsbDkStreamBackend backend({api.read,api.write},device.redirect,device.system);
-                SilentCadencePeer peer;
+                CadenceAudioPeer peer(tone_enabled);
                 sl3::ContinuousStream stream(backend,peer);
                 if(stream.start({rate,8})){
                     while(!stop_audio && stream.step()==sl3::StreamState::running){
@@ -467,6 +509,7 @@ int run_timer_diagnostic(Api& api,USB_DK_DEVICE_INFO& selected,const std::filesy
                 stream.stop();
                 while(stream.step()==sl3::StreamState::draining)std::this_thread::yield();
                 if(stream.state()==sl3::StreamState::retained)fail_stop();
+                retired_tone_frames=peer.tone_frames();
                 retired_stats=stream.stats();retired_fault=stream.fault();stream_finished=true;
             });
             const auto deadline=std::chrono::steady_clock::now()+std::chrono::seconds(1);
@@ -504,14 +547,15 @@ int run_timer_diagnostic(Api& api,USB_DK_DEVICE_INFO& selected,const std::filesy
             exchanges<<"{\"start_us\":"<<std::chrono::duration_cast<std::chrono::microseconds>(start-origin).count()
                      <<",\"end_us\":"<<std::chrono::duration_cast<std::chrono::microseconds>(end-origin).count()
                      <<",\"writes\":"<<io.writes<<",\"reads\":"<<io.reads;
-            if(silent_stream)exchanges<<",\"output_completions_before\":"<<outputs_before
+            if(with_stream)exchanges<<",\"output_completions_before\":"<<outputs_before
                                       <<",\"output_completions_after\":"<<outputs_after;
             exchanges<<'}';
             if(result.error!=sl3::control::DriverTimerError::none || !result.response)break;
             if(end>=due+std::chrono::milliseconds(100))throw std::runtime_error("Timer cadence missed its completion window");
             ++completed;
+            if(tone)tone_enabled=true;
         }
-        if(!silent_stream)save("before redirect release");
+        if(!with_stream)save("before redirect release");
     }catch(const std::exception& exception){error=exception.what();result.error=sl3::control::DriverTimerError::transfer;}
     if(audio.joinable()){
         stop_audio=true;audio.join();
@@ -520,8 +564,18 @@ int run_timer_diagnostic(Api& api,USB_DK_DEVICE_INFO& selected,const std::filesy
         }
     }
     stream_stats=retired_stats;stream_fault=retired_fault;
+    tone_frames=retired_tone_frames;
     alternate_attempts=static_cast<unsigned>(device.attempted.size());
-    if(silent_stream)save("before redirect release");
+    if(tone && controls_before){
+        if(!device.deactivate())fail_stop();
+        sl3::worker::NativeControlsIo<Device,Transfer> io(device);
+        controls_after=sl3::control::inspect_audio_controls(io).controls;
+        if(!controls_after || controls_before->raw!=controls_after->raw || tone_frames!=rate*65/100){
+            if(error.empty())error="Tone prefix incomplete or original control table could not be confirmed";
+            result.error=sl3::control::DriverTimerError::transfer;
+        }
+    }
+    if(with_stream)save("before redirect release");
     closed=device.close();save(opened?"finished":"failed before usable redirect");
     if(!closed)fail_stop();
     return opened && result.error==sl3::control::DriverTimerError::none && result.response && (!cadence || completed==10)?0:1;
@@ -872,7 +926,7 @@ int wmain(int argc,wchar_t** argv) {
     std::optional<sl3::control::selection_wire::Target> control_target;
     std::optional<unsigned> held_rate_target;
     std::optional<sl3::control::Challenge> timer_challenge;
-    bool timer_cadence=false,timer_silent_stream=false;
+    bool timer_cadence=false,timer_silent_stream=false,timer_tone=false;
     std::wstring channel;
     std::filesystem::path helper,output,startup_log;
     for(int i=1;i<argc;++i){const std::wstring arg=argv[i];
@@ -884,6 +938,7 @@ int wmain(int argc,wchar_t** argv) {
         else if(arg==L"--timer-query")timer_query=true;
         else if(arg==L"--timer-cadence" && !timer_cadence)timer_cadence=true;
         else if(arg==L"--timer-silent-stream" && !timer_silent_stream)timer_silent_stream=true;
+        else if(arg==L"--timer-tone" && !timer_tone)timer_tone=true;
         else if(arg==L"--challenge" && i+1<argc && !timer_challenge){
             try{timer_challenge=sl3::control::parse_driver_timer_challenge(argv[++i]);}
             catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 2;}
@@ -909,6 +964,7 @@ int wmain(int argc,wchar_t** argv) {
     if(unsigned(capture)+unsigned(list)+unsigned(plan)+unsigned(duplex)+unsigned(worker)+unsigned(stream_worker)+unsigned(device_worker)+unsigned(rate_target!=0)+unsigned(timer_query)>1 || ((!capture && !duplex && !rate_target && !timer_query) && !output.empty()) || ((!capture && !list && !duplex && !worker && !stream_worker && !device_worker && !rate_target && !timer_query) && !helper.empty()) || (!worker && !stream_worker && !device_worker && !channel.empty()) || ((worker || stream_worker || device_worker) && (channel.empty() || helper.empty())) || (rate_target && output.empty()) || (timer_query && (!timer_challenge || output.empty())) || (timer_challenge && !timer_query && !plan)){std::cerr<<"Conflicting, missing or unused arguments\n";return 2;}
     if(timer_cadence && (!timer_challenge || (!timer_query && !plan))){std::cerr<<"Timer cadence requires a timer query or plan and challenge\n";return 2;}
     if(timer_silent_stream && !timer_cadence){std::cerr<<"Timer silent stream requires explicit cadence mode\n";return 2;}
+    if(timer_tone && (!timer_cadence || timer_silent_stream)){std::cerr<<"Timer tone requires cadence and excludes silent stream mode\n";return 2;}
     if(!startup_log.empty() && !stream_worker && !device_worker){std::cerr<<"Startup journal is only valid for an isolated audio worker\n";return 2;}
     if(control_target && (!device_worker || startup_log.empty())){std::cerr<<"Control-test target requires an isolated device worker and explicit fresh startup journal\n";return 2;}
     if(held_rate_target && (!device_worker || startup_log.empty() || control_target)){
@@ -919,6 +975,7 @@ int wmain(int argc,wchar_t** argv) {
         if(timer_cadence)std::cout<<",\"maximum_writes\":10,\"maximum_reads\":40,\"budget_ms\":80,\"cadence_ms\":100";
         else std::cout<<",\"maximum_writes\":1,\"maximum_reads\":4,\"budget_ms\":1500";
         if(timer_silent_stream)std::cout<<",\"silent_stream\":true";
+        if(timer_tone)std::cout<<",\"tone_hz\":997,\"tone_duration_ms\":650,\"routing_setters\":0";
         std::cout<<",\"audio_submissions\":0,\"response_verified\":false,\"challenge_hex\":"<<quote(timer_hex(*timer_challenge))<<"}\n";return 0;
     }
     if(device_worker){try{return serve_native_device(channel,helper,startup_log,control_target,held_rate_target);}catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}}
@@ -937,7 +994,7 @@ int wmain(int argc,wchar_t** argv) {
         }
         Watchdog watchdog;Api api;api.load(helper);auto selected=api.select();
         if(list){std::cout<<"{\"matched_sl3\":1,\"descriptor_fixture_matches\":true,\"high_speed\":true,\"device_redirected\":false}\n";return 0;}
-        if(timer_query){timer_started=true;return run_timer_diagnostic(api,selected,output,report,*timer_challenge,timer_cadence,timer_silent_stream);}
+        if(timer_query){timer_started=true;return run_timer_diagnostic(api,selected,output,report,*timer_challenge,timer_cadence,timer_silent_stream,timer_tone);}
         if(rate_target)return run_rate_diagnostic(api,selected,output,report,rate_target);
         if(duplex)return run_duplex_silence(api,selected,output,report);
         Device device(api);unsigned rate=0;bool captured=false,closed=false,transfers=false;unsigned submitted=0,completed=0;
