@@ -1,6 +1,12 @@
 # Traced three-second input recording
 
-The `InputRecord` scenario prepares an attended native run of the [input recorder](input-record-probe.md). It combines the normal-user diagnostic with the existing administrator USB/WPP trace collector and state-observer attempt. It has not run against physical hardware. Secure Boot and code-integrity settings are unchanged.
+On 4 November the attended Windows run saved 132,352 frames at 44.1 kHz across six channels and passed the traced-run validator. Selected recovery matched, with 28,124 USB events and zero events or buffers lost. The planned source was Phase RCA into Deck 1 set to LINE. The source waveform was not independently checked. Every channel's loudest approximately 100 ms RMS window was below −100 dBFS. The run verifies native recording and retirement, while signal delivery and physical channel mapping remain unresolved. A separately verified line source is the next discriminating input test.
+
+Offline timing analysis of that recording found a median callback interval of 2.999 ms and a maximum of 3.097 ms across the saved prefix, with no repeated publication timestamps. This rules out a long callback stall in the saved prefix. It measures software delivery, and does not verify packet-level continuity or analogue signal quality.
+
+An offline count of the hash-verified USB XML found 3,015 eight-packet UCX input submissions and the same number of completion events on one input pipe. Of the completions, 3,011 succeeded and four reported cancellation. Across those completion records, the successful packet lengths were 90 bytes (11,753 packets) or 108 bytes (12,338 packets), consistent with five or six SL3 frames at 44.1 kHz. The other 29 input packet records were zero-length cancellation entries. The output group had 3,009 submissions and 3,005 successful completions, matching the recorder counters. These aggregate counts support normal packet geometry and retire-time cancellation. They do not match individual USB packets to the saved PCM or establish signal delivery.
+
+The `InputRecord` scenario runs the [input recorder](input-record-probe.md) under the normal user token with a separate administrator USB/WPP trace collector and state observer. Secure Boot and code-integrity settings are unchanged.
 
 The recorder opens the SL3 once, reads its clock rate, starts input collection with zero PCM on all output channels, retains the first whole-bank three-second prefix and releases the session. Its expected rate must be explicitly chosen from an established device observation. A mismatch fails without setting the rate or retrying. No preliminary inspection acquisition, second open, rate/control setter, firmware change, production ASIO configuration or registration is requested.
 

@@ -27,6 +27,12 @@ Regenerate [compact evidence](evidence/driver-timer-diagnostic-build.json) with 
 
 ## Physical test remains pending
 
+The independent macOS [SL3 protocol notes](https://github.com/pepeleedj/Rane-SL3-Macos-ARM-Driver/blob/main/docs/PROTOCOL.md) report that USB playback needs both the per-deck USB switch and recurring `0x37` traffic at roughly 100 ms intervals. [Ben's SL2 test](https://github.com/pepeleedj/Rane-SL2-Macos-ARM-Driver/pull/1) reports a similar dependency on different hardware. Our native silent-output runs confirm transport only. The known-input test stays independent of the timer so its result is attributable to the capture path.
+
+The current single-shot adapter cannot simply be called on each audio callback. One exchange allows up to 1,500 ms and may occupy interrupt IN while waiting for notifications or the matching reply. A periodic playback experiment needs one owner for the interrupt endpoints, one exchange in flight, and separate scheduling from the isochronous queues and ASIO callbacks. Measure actual request and reply spacing on the physical device. A missed deadline should end the experiment and enter cleanup rather than queue a burst of challenges. Keep the driver-liveness exchange separate from any Serato authentication decision.
+
+For a later audible experiment, snapshot the actual control table under the retained acquisition before touching routing. Use the verified write/readback path for only the selected deck, keep output initially zero, and independently observe whether a bounded known signal reaches that deck. Restore and read back the original routing before releasing ownership. If restoration cannot be verified, preserve the result as a cleanup failure. A periodic exchange and a routing write are additional operations that the existing one-shot diagnostic does not perform.
+
 After fresh device/recovery admission, a reviewed traced run can use this explicit form with an exact pinned helper and a fresh local output directory:
 
 ```text
