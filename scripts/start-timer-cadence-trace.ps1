@@ -7,8 +7,8 @@ if($StereoMarkers -and -not $Tone){throw 'Stereo markers require tone mode'}
 if(($RetainedKeepalive -or $HostLoopback) -and ($Tone -or $SilentStream -or ($RetainedKeepalive -and $HostLoopback))){throw 'Choose one retained or standalone test'}
 $root=Split-Path -Parent $PSScriptRoot
 $settings=Get-Content -LiteralPath $Plan -Raw | ConvertFrom-Json
-$scenario=if($HostLoopback){'host-callback-loopback-20261104'}elseif($RetainedKeepalive){'retained-keepalive-20261104'}elseif($StereoMarkers){'timer-stereo-markers-20261104'}elseif($Tone){'timer-tone-20261104'}elseif($SilentStream){'timer-silent-stream-20261104'}else{'timer-cadence-20261104'}
-$buildName=if($HostLoopback){'windows-keepalive-timing-20261104'}elseif($RetainedKeepalive){'windows-post-loopback-20261104'}else{$scenario}
+$scenario=if($HostLoopback){'host-callback-loopback-startup-empty-20261104'}elseif($RetainedKeepalive){'retained-keepalive-20261104'}elseif($StereoMarkers){'timer-stereo-markers-20261104'}elseif($Tone){'timer-tone-20261104'}elseif($SilentStream){'timer-silent-stream-20261104'}else{'timer-cadence-20261104'}
+$buildName=if($HostLoopback){'windows-startup-empty-20261104'}elseif($RetainedKeepalive){'windows-post-loopback-20261104'}else{$scenario}
 $build=Join-Path $root "artifacts/build/$buildName"
 $worker=Join-Path $build 'Release/sl3_usbdk.exe'
 $helper=Join-Path $root 'artifacts/extracted/usbdk-msi/UsbDkHelper.dll10'

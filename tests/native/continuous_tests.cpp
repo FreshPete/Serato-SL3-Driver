@@ -28,6 +28,7 @@ struct Backend final:ContinuousBackend {
     std::uint64_t now=10000000,in=0,out=0,out_position=0,last_output_time=0,prepare_delay_ns=0;
     unsigned intervals=0,rate=44100,hold_in=0,hold_out=0,unproven=0,fail_poll=0,never_cancel=0,cancel_false=0,release_false=0;
     unsigned bad_input=0,prepare_false=8,prepared_calls=0,release_calls=0,cancel_mask=0;
+    unsigned startup_empty_batches=0,output_batch_offset=0;
     std::uint64_t reject_input=~std::uint64_t(0),reject_output=~std::uint64_t(0);
     bool bad=false,record=false;
     std::array<unsigned,256> events{};unsigned event_count=0;
@@ -46,14 +47,15 @@ struct Backend final:ContinuousBackend {
         if(i<4 || !slots[i].prepared || slots[i].pending || continued!=(out!=0))bad=true;
         if(out==reject_output)return false;
         if(block.packet_count!=intervals || block.first_frame!=out_position || block.reported_rate_hz!=rate || block.host_observation_ns<last_output_time)bad=true;
+        const auto batch=out+output_batch_offset;
         std::size_t offset=0;
         for(unsigned p=0;p<64;++p){
-            const auto count=p<intervals?packet_frames(out,p):0;
+            const auto count=p<intervals?packet_frames(batch,p):0;
             if(block.frames_per_packet[p]!=count)bad=true;
-            for(unsigned k=0;k<unsigned(count)*18;++k)if(block.pcm[offset++]!=byte(out,p,k))bad=true;
+            for(unsigned k=0;k<unsigned(count)*18;++k)if(block.pcm[offset++]!=byte(batch,p,k))bad=true;
         }
         output[i-4]=block;slots[i].pending=true;slots[i].cancelled=false;
-        out_position+=frames(out,intervals);last_output_time=block.host_observation_ns;++out;return true;
+        out_position+=frames(batch,intervals);last_output_time=block.host_observation_ns;++out;return true;
     }
     StreamPoll poll(unsigned i,StreamInput* input) noexcept override {
         event(200+i);auto& slot=slots[i];if(!slot.pending){bad=true;return StreamPoll::unproven;}
@@ -79,6 +81,8 @@ struct Backend final:ContinuousBackend {
                 if(bad_input==5)input->packets[0].length=19;
                 if(bad_input==6)input->packets[0].length=(std::uint64_t(1)<<32)+18;
             }
+            if(slot.batch<startup_empty_batches)
+                for(unsigned p=0;p<intervals;++p)input->packets[p]={p==1?0u:108u,0};
         }
         return StreamPoll::success;
     }
@@ -96,6 +100,7 @@ struct Peer final:ContinuousPeer {
     AudioBlock retry{};
     unsigned read=0,write=0,count=0,wrong_output=0;
     std::uint64_t batches=0,position=0,last_time=0;
+    unsigned input_batch_offset=0;
     bool full=false,empty=false,publish_error=false,receive_error=false,have_retry=false,bad=false;
     StreamExchange publish_input(const AudioBlock& block) noexcept override {
         if(publish_error)return StreamExchange::failure;
@@ -103,13 +108,14 @@ struct Peer final:ContinuousPeer {
         if(count==capacity)return StreamExchange::full;
         if(have_retry && !same(retry,block))bad=true;have_retry=false;
         if(block.first_frame!=position || block.host_observation_ns<last_time)bad=true;
+        const auto batch=batches+input_batch_offset;
         std::size_t offset=0;
         for(unsigned p=0;p<64;++p){
-            const auto n=p<block.packet_count?packet_frames(batches,p):0;
+            const auto n=p<block.packet_count?packet_frames(batch,p):0;
             if(block.frames_per_packet[p]!=n)bad=true;
-            for(unsigned k=0;k<unsigned(n)*18;++k)if(block.pcm[offset++]!=byte(batches,p,k))bad=true;
+            for(unsigned k=0;k<unsigned(n)*18;++k)if(block.pcm[offset++]!=byte(batch,p,k))bad=true;
         }
-        queue[write]=block;write=(write+1)%capacity;++count;position+=frames(batches++,block.packet_count);last_time=block.host_observation_ns;return StreamExchange::ok;
+        queue[write]=block;write=(write+1)%capacity;++count;++batches;position+=frames(batch,block.packet_count);last_time=block.host_observation_ns;return StreamExchange::ok;
     }
     StreamExchange receive_output(AudioBlock& block) noexcept override {
         if(receive_error)return StreamExchange::failure;
@@ -167,6 +173,31 @@ static void startup_failures(){
     for(unsigned n:{0u,1u,7u,9u,65u})require(!stream.start({44100,n,20,2}) && !backend.prepared_calls,"Invalid interval count cannot allocate or submit");
     require(!stream.start({96000,8,20,2}) && !stream.start({44100,8,0,2}) && !stream.start({44100,8,20,0}),"Reject unsupported rate and unbounded-zero deadlines");
     require(stream.start({}) && stream.step()==StreamState::running,"Allocation time is excluded from pending-I/O deadline; rejected no-lease configuration permits valid start");stopped(stream,backend);
+}
+static void startup_empty_packet(){
+    {
+        Backend backend;backend.startup_empty_batches=1;backend.output_batch_offset=1;backend.hold_in=0xe;
+        Peer peer;peer.input_batch_offset=1;ContinuousStream stream(backend,peer,true);
+        require(stream.start({}) && stream.step()==StreamState::running && !peer.batches && !backend.out,
+            "Discard the first defective batch without publishing PCM or submitting output");
+        const auto discard=stream.startup_discard();
+        require(discard.empty_packet==1 && discard.discarded_frames==42 && backend.in==5,
+            "Record empty index and actual discarded frames and rearm the original slot");
+        backend.hold_in=0;
+        require(stream.step()==StreamState::running && peer.batches==4 && backend.out==4 && !peer.bad,
+            "Following valid input begins at frame zero with exact duplex bytes");
+        backend.bad_input=3;
+        require(stream.step()==StreamState::stopped && stream.fault()==StreamFault::invalid_input && !backend.bad,
+            "Empty packets after valid input still fail");
+    }
+    for(unsigned scenario=0;scenario<3;++scenario){
+        Backend backend;backend.startup_empty_batches=scenario==0?2:1;
+        Peer peer;ContinuousStream stream(backend,peer,scenario!=1);
+        require(stream.start({scenario==2?48000u:44100u,8,20,2}),"Start empty-batch refusal case");
+        require(stream.step()==StreamState::stopped && stream.fault()==StreamFault::invalid_input && !peer.batches &&
+                stream.startup_discard().discarded_frames==(scenario==0?42u:0u),
+            "Refuse repeat startup empties, disabled policy and different clock");
+    }
 }
 static void faults(){
     for(unsigned bad=1;bad<=6;++bad){
@@ -233,7 +264,7 @@ static void deadlines_and_retention(){
     }
 }
 int main(){
-    try{sustained();ordering_and_backpressure();startup_failures();faults();deadlines_and_retention();
+    try{sustained();ordering_and_backpressure();startup_failures();startup_empty_packet();faults();deadlines_and_retention();
         std::cout<<"Continuous request engine: 18,000 rearmed duplex batches, exact packet PCM, zero measured C++ allocations, ordering, deadlines, cross-direction cancellation and retained leases passed; fake I/O only\n";
     }catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}
 }

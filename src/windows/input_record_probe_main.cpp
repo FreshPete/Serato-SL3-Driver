@@ -131,6 +131,7 @@ int run(WorkerSpec spec,const std::filesystem::path& folder,unsigned expected,bo
     const auto stopped=session.stop(5000);
     const auto state=loopback?session.close(5000):stopped;
     const auto& stats=loopback?stopped.device_snapshot.stats:state.worker_snapshot.stats;
+    const auto& device=state.device_snapshot;
     const bool stream_stopped=loopback
         ? stopped.device_snapshot.phase==sl3::device_session::Phase::ready && stopped.device_snapshot.failure==sl3::session::Failure::none
         : state.worker_snapshot.phase==sl3::session::Phase::stopped && state.worker_snapshot.failure==sl3::session::Failure::none;
@@ -177,7 +178,11 @@ int run(WorkerSpec spec,const std::filesystem::path& folder,unsigned expected,bo
         <<",\"streamStarted\":"<<started<<",\"workerInputFrames\":"<<stats.input_frames<<",\"outputSubmissions\":"<<stats.output_submissions<<",\"outputCompletions\":"<<stats.output_completions
         <<",\"audioOutputPayload\":"<<payload;
     if(loopback)text<<",\"markerFirstFrame\":"<<marker_start<<",\"markerFrames\":"<<capture.marker[0].size()/3
-        <<",\"markerHz\":["<<marker_hz[0]<<','<<marker_hz[1]<<']';
+        <<",\"markerHz\":["<<marker_hz[0]<<','<<marker_hz[1]<<']'
+        <<",\"audioExit\":"<<unsigned(state.audio.exit)<<",\"pumpFault\":"<<unsigned(state.audio.pump_failure.cause)
+        <<",\"pumpQueueResult\":"<<unsigned(state.audio.pump_failure.queue)<<",\"pumpBridgeStatus\":"<<unsigned(state.audio.pump_failure.bridge)
+        <<",\"workerFailure\":"<<unsigned(device.failure)<<",\"workerStreamFault\":"<<unsigned(device.stream_fault)
+        <<",\"workerNativeError\":"<<device.native_error<<",\"workerDiagnostic\":"<<quote(device.diagnostic);
     text<<",\"startupFramesDiscarded\":0,\"timingProfileWritten\":false,\"latencyMeasured\":false,\"physicalMappingVerified\":false,\"usbContinuityVerified\":false,\"seratoAdmissionVerified\":false,\"rows\":[";
     const auto count=std::size_t(capture.recorder.recorded_callbacks());for(std::size_t i=0;i<count;++i){if(i)text<<',';const auto& row=capture.rows[i];text<<'['<<row.frame<<','<<row.publication<<','<<row.ticks<<','<<row.bank<<']';}
     text<<"]}\n";write_new(folder/L"result.json",text.str());std::cout<<text.str();return successful?0:1;

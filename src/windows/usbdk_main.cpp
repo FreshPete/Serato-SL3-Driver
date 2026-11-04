@@ -835,6 +835,7 @@ public:
 class NativeHeldTarget final:public sl3::worker::SessionTarget {
     Device& device_;bool& active_;std::unique_ptr<sl3::worker::UsbDkStreamBackend> backend_;
     bool closed_=false;DWORD error_=0;
+    bool keepalive_;
     std::atomic<bool> stop_timer_{false};
     std::atomic<DWORD> timer_error_{0};
     std::thread timer_;
@@ -859,7 +860,7 @@ class NativeHeldTarget final:public sl3::worker::SessionTarget {
         }
     }
 public:
-    NativeHeldTarget(Device& device,bool& active,bool keepalive):device_(device),active_(active){
+    NativeHeldTarget(Device& device,bool& active,bool keepalive):device_(device),active_(active),keepalive_(keepalive){
         try{
             device_.activate();
             backend_=std::make_unique<sl3::worker::UsbDkStreamBackend>(sl3::worker::UsbDkStreamApi{device_.api.read,device_.api.write},device_.redirect,device_.system);
@@ -873,6 +874,13 @@ public:
     }
     ~NativeHeldTarget(){if(!closed_ && !close())fail_stop();}
     sl3::ContinuousBackend& backend() noexcept override{return *backend_;}
+    bool allow_startup_empty_packet() const noexcept override{return keepalive_;}
+    void report_startup_discard(sl3::StartupDiscard discard) noexcept override{
+        if(!discard.discarded_frames)return;
+        char stage[64]{};
+        std::snprintf(stage,sizeof(stage),"startup_input_discard_p%u_f%u.return",discard.empty_packet,discard.discarded_frames);
+        device_.api.mark(stage);
+    }
     bool close() noexcept override{
         if(closed_)return true;
         if(timer_.joinable()){

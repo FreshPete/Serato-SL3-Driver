@@ -75,7 +75,7 @@ def validate(folder,worker_sha,simulated=False,host_loopback=False):
         journal=read(journals[0],65536);require(journal.endswith(b'\n') and sha(journal)==result.get('startupJournalSha256'),'Native journal binding/completeness differs')
         parsed=[]
         for line in journal.decode('ascii').splitlines():
-            match=re.fullmatch(r'([0-9]+)\t([0-9]+)\t([a-z_]+\.(?:enter|return))',line)
+            match=re.fullmatch(r'([0-9]+)\t([0-9]+)\t([a-z_]+\.(?:enter|return)|startup_input_discard_p[0-7]_f(?:3[5-9]|4[0-2])\.return)',line)
             require(match is not None,'Malformed native journal')
             tick,pid=int(match[1]),int(match[2]);require(0<tick<2**64 and 0<pid<2**32 and (not parsed or tick>=parsed[-1][0]),'Native journal time/PID invalid')
             parsed.append((tick,pid,match[3]))
@@ -86,12 +86,27 @@ def validate(folder,worker_sha,simulated=False,host_loopback=False):
         require(at>3,'Native enumeration missing')
         expected=['configuration.enter','configuration.return','redirect_owner_acquire.enter','redirect_owner_acquire.return',
                   'redirect_start.enter','redirect_start.return','system_handle.enter','system_handle.return','clock_getter.enter','clock_getter.return']
+        startup_discard=None
         if host_loopback:
-            expected.extend(['audio_controls.enter','audio_controls.return','clock_getter.enter','clock_getter.return',
-                             'playback_keepalive.enter','playback_keepalive.return'])
+            expected.extend(['audio_controls.enter','audio_controls_write.enter','audio_controls_write.return'])
+            read_pair=['audio_controls_read.enter','audio_controls_read.return']
+            first_read=at+len(expected)
+            reads=0
+            while stages[first_read+2*reads:first_read+2*reads+2]==read_pair:
+                reads+=1
+            require(1<=reads<=4,'Expected one bounded control getter exchange')
+            expected.extend(read_pair*reads)
+            expected.extend(['audio_controls.return','clock_getter.enter','clock_getter.return','playback_keepalive.enter'])
+            stage=stages[at+len(expected):at+len(expected)+1]
+            if stage and stage[0].startswith('startup_input_discard_'):
+                packet, frames=map(int,re.search(r'_p([0-7])_f(\d+)\.',stage[0]).groups())
+                startup_discard={'emptyPacketIndex':packet,'discardedActualFrames':frames}
+                expected.extend(stage)
+            expected.append('playback_keepalive.return')
         expected.extend(['redirect_close.enter','redirect_close.return','helper_unload.enter','helper_unload.return'])
         require(stages[at:]==expected,'Unexpected acquisition, control, stream or release journal')
         native_journal={'workerPid':parsed[0][1],'records':len(parsed),'sha256':sha(journal)}
+        if host_loopback:native_journal['startupDiscard']=startup_discard
     return {'valid':True,'schema':'sl3.input-record-validation.v1','simulated':simulated,'rateHz':rate,'frames':target,'channels':6,'sampleBytes':3,
             'recordedCallbacks':len(rows),'trailingCallbacksNotRecorded':result['trailingCallbacksNotRecorded'],'counterFrequency':frequency,
             'resultSha256':sha(raw),'nativeJournal':native_journal,'pcmSha256':sha(pcm),'physicalProvenanceVerified':False,'latencyMeasured':False,

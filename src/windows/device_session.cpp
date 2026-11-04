@@ -52,7 +52,9 @@ class Runtime {
             if(pending_reply_)reply(session::Status::operation_failed);
             diagnostic::fail_stop();
         }
-        snapshot_.io_retired=true;stream_.reset();
+        snapshot_.io_retired=true;
+        if(stream_ && target_)target_->report_startup_discard(stream_->startup_discard());
+        stream_.reset();
         if(target_){
             heartbeat_.pulse(timeouts_.cleanup_ms);
             if(!target_->close()){
@@ -225,7 +227,7 @@ class Runtime {
             snapshot_.stats={};snapshot_.stream_fault=StreamFault::none;snapshot_.intervals=start.config.intervals;
             peer_=std::make_unique<MailboxStreamPeer>(*audio_);
             target_=device_->begin(start.config);if(!target_)throw std::runtime_error("Device returned no audio target");
-            stream_=std::make_unique<ContinuousStream>(target_->backend(),*peer_);snapshot_.io_retired=false;
+            stream_=std::make_unique<ContinuousStream>(target_->backend(),*peer_,target_->allow_startup_empty_packet());snapshot_.io_retired=false;
             if(!stream_->start(start.config)){
                 failure(session::Failure::stream,"Initial retained-device input submission failed");
                 pending_reply_=true;begin_stop();

@@ -13,6 +13,8 @@ public:
     virtual bool close() noexcept=0;
     virtual DWORD native_error() const noexcept=0;
     virtual bool control_failed() const noexcept{return false;}
+    virtual bool allow_startup_empty_packet() const noexcept{return false;}
+    virtual void report_startup_discard(StartupDiscard) noexcept{}
     virtual bool wait_for_work(Mailbox&,unsigned pending_mask,DWORD timeout_ms) noexcept=0;
 };
 using SessionFactory=std::function<std::unique_ptr<SessionTarget>(StreamConfig)>;

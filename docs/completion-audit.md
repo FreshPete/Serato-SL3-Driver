@@ -22,6 +22,10 @@ The later ASIO and controller build [binds keepalive operation to its reviewed t
 
 The new bundle's read-only Windows preflight resolved 346 direct symbol references across 16 dependency names and 10 System32 files. The x64 machine registry has both shared containers, the proposed ASIO name and COM class are absent, and the user registry has no COM overlay for that class. The planned destination is absent. These checks cover runtime dependencies and registration conflicts. The protected installer and live ASIO path remain unexercised.
 
+The packaged ASIO DLL with SHA-256 `7c96d52c38cc5ef454c1a070004c033a20934afaa120441f7e1866e44249a237` passed three COM activations and retirements in each apartment from an isolated copy without a device configuration. The activation test checked that Windows loaded the copied image and returned the expected unavailable status. This verifies the packaged DLL's configuration-free activation and retirement only.
+
+The first physical callback run exposed a zero-length packet in the first input batch and stopped before audio. The follow-up worker permits one narrowly bounded startup discard and passed all 65 Windows software tests. Its private review bundle verified all 11 payloads with manifest SHA-256 `2e95f8123aec883c26317bcee78cd39bad3416d80dbc03580bdfbf88cb0e1a22`. The worker in the bundle and the attended retest plan have matching SHA-256 `013e457323db3542fc49db369324e8248d4e6185820a9394089502cb781f3710`. The patched worker still needs the physical retest. [Startup trace and policy](driver-timer-diagnostic.md#first-attended-callback-run).
+
 ## 2 November software and requirement audit
 
 **The full Windows/current-Serato/two-deck-DVS objective remains incomplete.** This review checks current sources and files against the requested end state; it does not substitute passing software tests, decoded records or an offline descriptor for operational compatibility. Mac remains deferred until Windows works. [Machine-readable checks](evidence/requirements-review-20261102.json).

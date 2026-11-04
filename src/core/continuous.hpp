@@ -52,6 +52,7 @@ struct StreamStats {
     std::uint64_t output_frames_submitted=0,output_completions=0;
     unsigned pending_mask=0,retained_mask=0,expected_outputs=0;
 };
+struct StartupDiscard {unsigned empty_packet=0,discarded_frames=0;};
 // One non-reentrant worker owner; virtual methods must not call back into it.
 // Construction/operation use fixed storage. Step only polls nonblocking APIs;
 // actual native call duration still needs an independent process watchdog. This
@@ -60,7 +61,7 @@ struct StreamStats {
 // 'retained' REQUIRES isolated-process containment, never ordinary unwinding.
 class ContinuousStream final {
 public:
-    ContinuousStream(ContinuousBackend&,ContinuousPeer&) noexcept;
+    ContinuousStream(ContinuousBackend&,ContinuousPeer&,bool allow_startup_empty_packet=false) noexcept;
     ContinuousStream(const ContinuousStream&)=delete;
     ContinuousStream& operator=(const ContinuousStream&)=delete;
     // False can still leave state==draining after partial native submission.
@@ -71,6 +72,7 @@ public:
     StreamState state() const noexcept {return state_;}
     StreamFault fault() const noexcept {return fault_;}
     StreamStats stats() const noexcept;
+    StartupDiscard startup_discard() const noexcept {return startup_discard_;}
 private:
     struct Slot {bool prepared=false,pending=false,complete=false;std::uint64_t since=0;};
     struct Schedule {
@@ -87,11 +89,14 @@ private:
     AudioBlock held_{},output_{};
     unsigned input_head_=0,output_head_=4,expected_read_=0,expected_write_=0,expected_count_=0;
     bool held_valid_=false,clock_lost_=false;
+    bool allow_startup_empty_packet_;
+    StartupDiscard startup_discard_{};
     std::uint64_t last_time_=0,drain_since_=0;
     void fail(StreamFault,std::uint64_t now) noexcept;
     void begin_drain(std::uint64_t now) noexcept;
     StreamState drain(std::uint64_t now) noexcept;
     bool pack(unsigned slot,std::uint64_t now) noexcept;
+    bool discard_startup_input(const StreamInput&) noexcept;
     bool matches(const AudioBlock&,const Schedule&) const noexcept;
 };
 }

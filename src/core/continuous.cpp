@@ -4,7 +4,8 @@
 
 namespace sl3 {
 namespace {constexpr std::uint64_t ns_per_ms=1000000;}
-ContinuousStream::ContinuousStream(ContinuousBackend& backend,ContinuousPeer& peer) noexcept:backend_(backend),peer_(peer) {}
+ContinuousStream::ContinuousStream(ContinuousBackend& backend,ContinuousPeer& peer,bool allow_startup_empty_packet) noexcept
+    :backend_(backend),peer_(peer),allow_startup_empty_packet_(allow_startup_empty_packet) {}
 StreamStats ContinuousStream::stats() const noexcept {
     auto result=stats_;result.expected_outputs=expected_count_;result.pending_mask=0;
     for(unsigned i=0;i<8;++i)if(slots_[i].pending)result.pending_mask|=1u<<i;
@@ -65,6 +66,21 @@ bool ContinuousStream::matches(const AudioBlock& block,const Schedule& schedule)
     return block.first_frame==schedule.first && block.host_observation_ns==schedule.time &&
         block.reported_rate_hz==schedule.rate && block.packet_count==schedule.count && block.frames_per_packet==schedule.frames;
 }
+bool ContinuousStream::discard_startup_input(const StreamInput& raw) noexcept {
+    if(!allow_startup_empty_packet_ || stats_.input_blocks || startup_discard_.discarded_frames ||
+       config_.rate_hz!=44100 || config_.intervals!=8 || raw.packet_count!=8)return false;
+    unsigned empty=8,frames=0;
+    for(unsigned i=0;i<8;++i){
+        const auto& packet=raw.packets[i];
+        if(packet.status)return false;
+        if(!packet.length && empty==8)empty=i;
+        else if(packet.length==90 || packet.length==108)frames+=unsigned(packet.length/frame_bytes);
+        else return false;
+    }
+    if(empty==8)return false;
+    startup_discard_={empty,frames};
+    return true;
+}
 StreamState ContinuousStream::drain(std::uint64_t now) noexcept {
     for(unsigned i=0;i<8;++i)if(slots_[i].pending){
         const auto result=backend_.poll(i,nullptr);
@@ -110,15 +126,18 @@ StreamState ContinuousStream::step() noexcept {
         if(i<4)slots_[i].complete=true;else ++stats_.output_completions;
     }
     for(unsigned n=0;n<4 && slots_[input_head_].complete && expected_count_<expected_.size();++n){
-        if(!held_valid_ && !pack(input_head_,now)){fail(StreamFault::invalid_input,now);return drain(now);}
-        const auto published=peer_.publish_input(held_);
-        if(published==StreamExchange::full)break;
-        if(published!=StreamExchange::ok){fail(StreamFault::peer,now);return drain(now);}
-        auto& schedule=expected_[expected_write_];
-        schedule={held_.first_frame,held_.host_observation_ns,now,held_.packet_count,held_.reported_rate_hz,held_.frames_per_packet};
-        expected_write_=(expected_write_+1)%static_cast<unsigned>(expected_.size());++expected_count_;
-        std::uint64_t frames=0;for(auto count:held_.frames_per_packet)frames+=count;
-        ++stats_.input_blocks;stats_.input_frames+=frames;
+        if(held_valid_ || pack(input_head_,now)){
+            const auto published=peer_.publish_input(held_);
+            if(published==StreamExchange::full)break;
+            if(published!=StreamExchange::ok){fail(StreamFault::peer,now);return drain(now);}
+            auto& schedule=expected_[expected_write_];
+            schedule={held_.first_frame,held_.host_observation_ns,now,held_.packet_count,held_.reported_rate_hz,held_.frames_per_packet};
+            expected_write_=(expected_write_+1)%static_cast<unsigned>(expected_.size());++expected_count_;
+            std::uint64_t frames=0;for(auto count:held_.frames_per_packet)frames+=count;
+            ++stats_.input_blocks;stats_.input_frames+=frames;
+        }else if(!discard_startup_input(input_[input_head_])){
+            fail(StreamFault::invalid_input,now);return drain(now);
+        }
         auto& slot=slots_[input_head_];slot.complete=false;held_valid_=false;
         if(!backend_.submit_input(input_head_,true)){fail(StreamFault::submit,now);return drain(now);}
         slot.pending=true;slot.since=now;++stats_.input_submissions;
