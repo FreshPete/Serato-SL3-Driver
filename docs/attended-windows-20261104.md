@@ -22,3 +22,9 @@ Tracefmt decoded the same 7,563-event ETL with the pinned UsbDk message formats.
 | 11:53:58.0446694 | The post-release child context reached `Stopped` after the driver-start timeout and port-disable states. |
 
 The bad query interval falls wholly inside post-release enumeration. The observer supplied no valid sample after that interval. The original run record lacks the probe-completion timestamp, so the strict release correlator cannot validate the full lifecycle. UsbDk's removal-success event came before the redirect child's final deletion state and cannot stand in for probe retirement. The timeline provides no reopen threshold.
+
+Windows event logs independently identify the driver failure after enumeration. Code Integrity Operational event 3077 (record 89086) reports a signing-level or policy block for `strmdrv.sys` at 11:53:48.0500192 UTC. Kernel-PnP event 219 (record 83700) reports the corresponding load failure at 11:53:48.0501883 UTC. This places the block about 9.6 ms after successful USB enumeration. It explains the original-driver failure, while the UsbDk control read belongs to the earlier redirect.
+
+The block event's XML identifies the enforcing policy as **Microsoft Windows Cross Certificates for Code Integrity Exceptions Policy**, version `10.29611.0.0`, with status `0xc0e90002`. The ordinary-user policy inventory query returned access denied, so this identification comes from the historical event, whose policy GUID matches the block message.
+
+Application events show the Codex sandbox service stopping at 11:54:09.9993725 UTC, after the USB trace window but before the configured image collection window could finish. The events do not identify the collector PIDs. They provide a possible interruption point for the missing reports, with process-exit causality still unresolved.
