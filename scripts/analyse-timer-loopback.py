@@ -21,12 +21,19 @@ def analyse(folder, challenge):
     frames = tone['decode_recording'](audio)
     windows = []
     step = rate // 20
+    marker_hz = checked.get('stereoMarkerHz')
     for first in range(0, len(frames), step):
-        fit = tone['fit'](frames, rate, 997, first, min(first + step, len(frames)))
+        end = min(first + step, len(frames))
+        fit = tone['fit'](frames, rate, 997, first, end)
+        if marker_hz:
+            fit['rightMarkerFit'] = tone['fit'](frames, rate, marker_hz[1], first, end)
         windows.append(fit)
-    return {'schema': 'sl3.timer-loopback-analysis.v1', 'recordSha256': checked['recordSha256'],
-            'pcmSha256': hashlib.sha256(audio).hexdigest(), 'rateHz': rate, 'frames': len(frames),
-            'toneHz': 997, 'windows': windows, 'physicalWiringVerified': False, 'latencyMeasured': False}
+    result = {'schema': 'sl3.timer-loopback-analysis.v1', 'recordSha256': checked['recordSha256'],
+              'pcmSha256': hashlib.sha256(audio).hexdigest(), 'rateHz': rate, 'frames': len(frames),
+              'toneHz': 997, 'windows': windows, 'physicalWiringVerified': False, 'latencyMeasured': False}
+    if marker_hz:
+        result.update(stereoMarkerHz=marker_hz, toneFirstLogicalFrame=checked['toneFirstLogicalFrame'])
+    return result
 
 
 def main():

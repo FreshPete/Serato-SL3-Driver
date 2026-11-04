@@ -14,6 +14,7 @@ struct BrokerSpec {
     session::Kind kind=session::Kind::native;
     std::wstring fixture_mode=L"normal";
     std::filesystem::path startup_journal; // Explicit native controller diagnostics only.
+    bool playback_keepalive=false;
 };
 enum class BrokerPhase {dormant,idle,leased,running,sealed,closed};
 struct BrokerReport {

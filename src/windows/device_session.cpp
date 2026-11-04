@@ -61,6 +61,10 @@ class Runtime {
                 if(pending_reply_)reply(session::Status::operation_failed);
                 diagnostic::fail_stop();
             }
+            if(target_->control_failed()){
+                snapshot_.native_error=target_->native_error();
+                failure(session::Failure::control,"Retained-device playback keepalive failed");
+            }
             target_.reset();
         }
         peer_.reset();
@@ -248,6 +252,10 @@ public:
             heartbeat_.pulse(snapshot_.phase==protocol::Phase::draining?timeouts_.cleanup_ms:timeouts_.live_ms);
             command();
             if(stream_){
+                if(target_->control_failed()){
+                    failure(session::Failure::control,"Retained-device playback keepalive failed");
+                    begin_stop();
+                }
                 const auto state=stream_->step();capture();
                 if(stream_->fault()!=StreamFault::none){failure(session::Failure::stream,"Retained-device audio engine fault");begin_stop();}
                 if(state==StreamState::stopped || state==StreamState::retained)finish();

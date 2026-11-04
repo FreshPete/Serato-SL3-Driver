@@ -104,6 +104,12 @@ def validate(raw, challenge, cadence=False, silent_stream=False, tone=False):
     if tone:
         result.update(rateHz=record['observed_rate_hz'], toneFramesStaged=record['tone_frames_staged'], loopbackPcmBytes=captured,
                       originalControlTableMatched=True)
+        if 'stereo_marker_hz' in record or 'tone_first_logical_frame' in record:
+            first = record.get('tone_first_logical_frame')
+            require(record.get('stereo_marker_hz') == [997, 1301] and type(first) is int and
+                    0 < first <= record['input_frames'] - record['tone_frames_staged'],
+                    'Invalid stereo marker geometry')
+            result.update(stereoMarkerHz=[997, 1301], toneFirstLogicalFrame=first)
     return result
 
 

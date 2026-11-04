@@ -55,6 +55,11 @@ bool RetainedBroker::open() noexcept {
             std::vector<std::wstring>{L"--device-worker",L"--channel",control_->name(),L"--helper",spec_.helper.native()}:
             std::vector<std::wstring>{control_->name(),spec_.fixture_mode};
         if(!spec_.startup_journal.empty()){args.push_back(L"--startup-log");args.push_back(spec_.startup_journal.native());}
+        if(spec_.playback_keepalive){
+            if(spec_.kind!=session::Kind::native || spec_.startup_journal.empty())
+                throw std::runtime_error("Playback keepalive requires a journalled native worker");
+            args.push_back(L"--playback-keepalive");
+        }
         process_.launch(spec_.executable,spec_.sha256,args);control_ok_=true;
         const auto hello=call(ds::Command::hello);
         if(hello.status || ds::decode_hello(hello.bytes)!=spec_.kind)throw std::runtime_error("Broker worker kind mismatch");

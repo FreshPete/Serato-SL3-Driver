@@ -395,12 +395,15 @@ class CadenceAudioPeer final:public sl3::ContinuousPeer {
     unsigned read_=0,write_=0,count_=0;
     const std::atomic<bool>& tone_enabled_;
     std::vector<std::uint8_t>& capture_;
+    const bool stereo_markers_;
     std::size_t captured_bytes_=0;
     unsigned tone_frames_=0;
+    std::uint64_t tone_first_frame_=0;
 public:
-    CadenceAudioPeer(const std::atomic<bool>& tone_enabled,std::vector<std::uint8_t>& capture):
-        tone_enabled_(tone_enabled),capture_(capture){}
+    CadenceAudioPeer(const std::atomic<bool>& tone_enabled,std::vector<std::uint8_t>& capture,bool stereo_markers):
+        tone_enabled_(tone_enabled),capture_(capture),stereo_markers_(stereo_markers){}
     unsigned tone_frames() const noexcept{return tone_frames_;}
+    std::uint64_t tone_first_frame() const noexcept{return tone_first_frame_;}
     std::size_t captured_bytes() const noexcept{return captured_bytes_;}
     sl3::StreamExchange publish_input(const sl3::AudioBlock& input) noexcept override {
         if(count_==pending_.size())return sl3::StreamExchange::full;
@@ -419,13 +422,16 @@ public:
         if(tone_enabled_){
             const auto rate=input.reported_rate_hz;
             const unsigned length=rate*65/100,fade=rate/100;
+            if(!tone_frames_)tone_first_frame_=output.first_frame;
             for(unsigned frame=0;frame<frames && tone_frames_<length;++frame,++tone_frames_){
                 const auto ramp=std::min({tone_frames_,length-1-tone_frames_,fade})/double(fade);
-                const auto sample=static_cast<std::uint32_t>(static_cast<std::int32_t>(265271.0*ramp*
-                    std::sin(tone_frames_*(6.283185307179586*997.0/rate))));
-                for(unsigned channel=0;channel<2;++channel)
+                for(unsigned channel=0;channel<2;++channel){
+                    const double frequency=stereo_markers_ && channel==1?1301.0:997.0;
+                    const auto sample=static_cast<std::uint32_t>(static_cast<std::int32_t>(265271.0*ramp*
+                        std::sin(tone_frames_*(6.283185307179586*frequency/rate))));
                     for(unsigned byte=0;byte<3;++byte)
                         output.pcm[frame*18+channel*3+byte]=std::uint8_t(sample>>(8*byte));
+                }
             }
         }
         write_=(write_+1)%4;++count_;
@@ -439,7 +445,8 @@ public:
 };
 
 int run_timer_diagnostic(Api& api,USB_DK_DEVICE_INFO& selected,const std::filesystem::path& output,
-                         std::ofstream& report,sl3::control::Challenge challenge,bool cadence,bool silent_stream,bool tone){
+                         std::ofstream& report,sl3::control::Challenge challenge,bool cadence,bool silent_stream,bool tone,
+                         bool stereo_markers){
     Device device(api);sl3::control::DriverTimerResult result;
     unsigned writes=0,reads=0;DWORD native_error=0;
     bool redirect_attempted=false,opened=false,closed=false,io_retired=true;std::string error;
@@ -457,6 +464,7 @@ int run_timer_diagnostic(Api& api,USB_DK_DEVICE_INFO& selected,const std::filesy
     std::atomic<std::uint64_t> observed_output_completions{0};
     std::thread audio;
     unsigned tone_frames=0,retired_tone_frames=0;
+    std::uint64_t tone_first_frame=0,retired_tone_first_frame=0;
     std::vector<std::uint8_t> loopback;
     std::size_t loopback_bytes=0,retired_loopback_bytes=0;
     std::optional<sl3::control::AudioControlsSnapshot> controls_before,controls_after;
@@ -481,6 +489,7 @@ int run_timer_diagnostic(Api& api,USB_DK_DEVICE_INFO& selected,const std::filesy
         if(tone){
             report<<",\"tone_frames_staged\":"<<tone_frames<<",\"routing_setters\":0"
                   <<",\"loopback_pcm_bytes\":"<<loopback_bytes;
+            if(stereo_markers)report<<",\"stereo_marker_hz\":[997,1301],\"tone_first_logical_frame\":"<<tone_first_frame;
             auto write_table=[&](const char* name,const std::optional<sl3::control::AudioControlsSnapshot>& controls){
                 report<<','<<quote(name)<<':';
                 if(!controls){report<<"null";return;}
@@ -509,7 +518,7 @@ int run_timer_diagnostic(Api& api,USB_DK_DEVICE_INFO& selected,const std::filesy
             alternate_attempts=static_cast<unsigned>(device.attempted.size());
             audio=std::thread([&]{
                 sl3::worker::UsbDkStreamBackend backend({api.read,api.write},device.redirect,device.system);
-                CadenceAudioPeer peer(tone_enabled,loopback);
+                CadenceAudioPeer peer(tone_enabled,loopback,stereo_markers);
                 sl3::ContinuousStream stream(backend,peer);
                 if(stream.start({rate,8})){
                     while(!stop_audio && stream.step()==sl3::StreamState::running){
@@ -523,6 +532,7 @@ int run_timer_diagnostic(Api& api,USB_DK_DEVICE_INFO& selected,const std::filesy
                 while(stream.step()==sl3::StreamState::draining)std::this_thread::yield();
                 if(stream.state()==sl3::StreamState::retained)fail_stop();
                 retired_tone_frames=peer.tone_frames();
+                retired_tone_first_frame=peer.tone_first_frame();
                 retired_loopback_bytes=peer.captured_bytes();
                 retired_stats=stream.stats();retired_fault=stream.fault();stream_finished=true;
             });
@@ -579,6 +589,7 @@ int run_timer_diagnostic(Api& api,USB_DK_DEVICE_INFO& selected,const std::filesy
     }
     stream_stats=retired_stats;stream_fault=retired_fault;
     tone_frames=retired_tone_frames;
+    tone_first_frame=retired_tone_first_frame;
     alternate_attempts=static_cast<unsigned>(device.attempted.size());
     if(tone && controls_before){
         if(!device.deactivate())fail_stop();
@@ -824,12 +835,39 @@ public:
 class NativeHeldTarget final:public sl3::worker::SessionTarget {
     Device& device_;bool& active_;std::unique_ptr<sl3::worker::UsbDkStreamBackend> backend_;
     bool closed_=false;DWORD error_=0;
+    std::atomic<bool> stop_timer_{false};
+    std::atomic<DWORD> timer_error_{0};
+    std::thread timer_;
+    void run_timer() noexcept {
+        auto due=std::chrono::steady_clock::now();
+        while(!stop_timer_){
+            if(std::chrono::steady_clock::now()-due>std::chrono::milliseconds(20)){
+                timer_error_=ERROR_TIMEOUT;return;
+            }
+            sl3::control::Challenge challenge{};
+            if(BCryptGenRandom(nullptr,challenge.data(),ULONG(challenge.size()),BCRYPT_USE_SYSTEM_PREFERRED_RNG)<0){
+                timer_error_=ERROR_GEN_FAILURE;return;
+            }
+            sl3::worker::NativeDriverTimerIo<Device,Transfer> io(device_,challenge);
+            const auto result=sl3::control::inspect_driver_timer(challenge,io,80);
+            if(!result.response || result.error!=sl3::control::DriverTimerError::none){
+                timer_error_=io.error?io.error:ERROR_INVALID_DATA;return;
+            }
+            due+=std::chrono::milliseconds(100);
+            if(std::chrono::steady_clock::now()>=due){timer_error_=ERROR_TIMEOUT;return;}
+            if(!stop_timer_)std::this_thread::sleep_until(due);
+        }
+    }
 public:
-    NativeHeldTarget(Device& device,bool& active):device_(device),active_(active){
+    NativeHeldTarget(Device& device,bool& active,bool keepalive):device_(device),active_(active){
         try{
             device_.activate();
             backend_=std::make_unique<sl3::worker::UsbDkStreamBackend>(sl3::worker::UsbDkStreamApi{device_.api.read,device_.api.write},device_.redirect,device_.system);
             if(!backend_->valid())throw std::runtime_error("Invalid held-device native backend");
+            if(keepalive){
+                device_.api.mark("playback_keepalive.start");
+                timer_=std::thread([this]{run_timer();});
+            }
             active_=true;
         }catch(...){if(!device_.deactivate())fail_stop();throw;}
     }
@@ -837,11 +875,19 @@ public:
     sl3::ContinuousBackend& backend() noexcept override{return *backend_;}
     bool close() noexcept override{
         if(closed_)return true;
+        if(timer_.joinable()){
+            stop_timer_=true;timer_.join();
+            device_.api.mark(timer_error_?"playback_keepalive.failed":"playback_keepalive.retired");
+        }
         if(backend_){error_=backend_->last_error();backend_.reset();}
         if(!device_.deactivate()){error_=GetLastError();return false;}
         active_=false;closed_=true;return true;
     }
-    DWORD native_error() const noexcept override{return backend_?backend_->last_error():error_;}
+    DWORD native_error() const noexcept override{
+        const auto timer_error=timer_error_.load();
+        return timer_error?timer_error:(backend_?backend_->last_error():error_);
+    }
+    bool control_failed() const noexcept override{return timer_error_!=0;}
     bool wait_for_work(sl3::worker::Mailbox& audio,unsigned pending,DWORD timeout) noexcept override{
         if(backend_->immediate_poll())return true;
         std::array<HANDLE,10> events{};DWORD count=0;
@@ -856,10 +902,12 @@ class NativeHeldDevice final:public sl3::worker::SessionDevice {
     NativeControlDiagnostic controls_;
     sl3::control::RateTestGrant rate_grant_;
     std::filesystem::path rate_directory_;
+    const bool keepalive_;
 public:
     NativeHeldDevice(const std::filesystem::path& helper,sl3::diagnostic::StartupJournal& journal,
                      std::optional<sl3::control::selection_wire::Target> target,std::optional<unsigned> rate_target,
-                     const std::filesystem::path& log):controls_(device_,target),rate_grant_(rate_target),rate_directory_(log.native()+L".rate"){
+                     const std::filesystem::path& log,bool keepalive):controls_(device_,target),rate_grant_(rate_target),
+                     rate_directory_(log.native()+L".rate"),keepalive_(keepalive){
         api_.journal=&journal;
         if(target){
             api_.mark(target->setting==sl3::control::AudioControlSetting::through?"control_target_through.enter":"control_target_sensitivity.enter");
@@ -911,7 +959,7 @@ public:
     std::unique_ptr<sl3::worker::SessionTarget> begin(sl3::StreamConfig) override{
         if(controls_.enabled() || rate_grant_.enabled())throw std::runtime_error("Control/rate-test device cannot start audio");
         if(active_ || closed_)throw std::runtime_error("Held device is not available for activation");
-        return std::make_unique<NativeHeldTarget>(device_,active_);
+        return std::make_unique<NativeHeldTarget>(device_,active_,keepalive_);
     }
     bool close() noexcept override{
         controls_.invalidate();
@@ -923,11 +971,14 @@ public:
     DWORD native_error() const noexcept override{return error_;}
 };
 int serve_native_device(const std::wstring& channel,const std::filesystem::path& helper,const std::filesystem::path& log,
-                        std::optional<sl3::control::selection_wire::Target> target,std::optional<unsigned> rate_target){
+                        std::optional<sl3::control::selection_wire::Target> target,std::optional<unsigned> rate_target,
+                        bool keepalive){
     sl3::diagnostic::StartupJournal journal(log);journal.mark("worker.enter");
     auto mailbox=sl3::worker::Mailbox::open(channel);
     return sl3::worker::serve_device_session(*mailbox,sl3::session::Kind::native,
-        [helper,&journal,target,rate_target,log]{return std::make_unique<NativeHeldDevice>(helper,journal,target,rate_target,log);});
+        [helper,&journal,target,rate_target,log,keepalive]{
+            return std::make_unique<NativeHeldDevice>(helper,journal,target,rate_target,log,keepalive);
+        });
 }
 int serve_native_stream(const std::wstring& channel,const std::filesystem::path& helper,const std::filesystem::path& log){
     sl3::diagnostic::StartupJournal journal(log);journal.mark("worker.enter");
@@ -949,7 +1000,7 @@ int wmain(int argc,wchar_t** argv) {
     std::optional<sl3::control::selection_wire::Target> control_target;
     std::optional<unsigned> held_rate_target;
     std::optional<sl3::control::Challenge> timer_challenge;
-    bool timer_cadence=false,timer_silent_stream=false,timer_tone=false;
+    bool timer_cadence=false,timer_silent_stream=false,timer_tone=false,timer_stereo_markers=false,playback_keepalive=false;
     std::wstring channel;
     std::filesystem::path helper,output,startup_log;
     for(int i=1;i<argc;++i){const std::wstring arg=argv[i];
@@ -962,6 +1013,8 @@ int wmain(int argc,wchar_t** argv) {
         else if(arg==L"--timer-cadence" && !timer_cadence)timer_cadence=true;
         else if(arg==L"--timer-silent-stream" && !timer_silent_stream)timer_silent_stream=true;
         else if(arg==L"--timer-tone" && !timer_tone)timer_tone=true;
+        else if(arg==L"--timer-stereo-markers" && !timer_stereo_markers)timer_stereo_markers=true;
+        else if(arg==L"--playback-keepalive" && !playback_keepalive)playback_keepalive=true;
         else if(arg==L"--challenge" && i+1<argc && !timer_challenge){
             try{timer_challenge=sl3::control::parse_driver_timer_challenge(argv[++i]);}
             catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 2;}
@@ -988,10 +1041,14 @@ int wmain(int argc,wchar_t** argv) {
     if(timer_cadence && (!timer_challenge || (!timer_query && !plan))){std::cerr<<"Timer cadence requires a timer query or plan and challenge\n";return 2;}
     if(timer_silent_stream && !timer_cadence){std::cerr<<"Timer silent stream requires explicit cadence mode\n";return 2;}
     if(timer_tone && (!timer_cadence || timer_silent_stream)){std::cerr<<"Timer tone requires cadence and excludes silent stream mode\n";return 2;}
+    if(timer_stereo_markers && !timer_tone){std::cerr<<"Stereo markers require explicit timer tone mode\n";return 2;}
     if(!startup_log.empty() && !stream_worker && !device_worker){std::cerr<<"Startup journal is only valid for an isolated audio worker\n";return 2;}
     if(control_target && (!device_worker || startup_log.empty())){std::cerr<<"Control-test target requires an isolated device worker and explicit fresh startup journal\n";return 2;}
     if(held_rate_target && (!device_worker || startup_log.empty() || control_target)){
         std::cerr<<"Rate-test target requires a separate isolated device worker and explicit fresh startup journal\n";return 2;
+    }
+    if(playback_keepalive && (!device_worker || startup_log.empty() || control_target || held_rate_target)){
+        std::cerr<<"Playback keepalive requires a journalled retained worker without a control or rate write grant\n";return 2;
     }
     if(plan && timer_challenge){
         std::cout<<"{\"plan_only\":true,\"helper_loaded\":false,\"device_access\":false,\"driver_changes\":false,\"timer_command\":\"0x37\"";
@@ -999,9 +1056,10 @@ int wmain(int argc,wchar_t** argv) {
         else std::cout<<",\"maximum_writes\":1,\"maximum_reads\":4,\"budget_ms\":1500";
         if(timer_silent_stream)std::cout<<",\"silent_stream\":true";
         if(timer_tone)std::cout<<",\"tone_hz\":997,\"tone_duration_ms\":650,\"routing_setters\":0";
+        if(timer_stereo_markers)std::cout<<",\"stereo_marker_hz\":[997,1301]";
         std::cout<<",\"audio_submissions\":0,\"response_verified\":false,\"challenge_hex\":"<<quote(timer_hex(*timer_challenge))<<"}\n";return 0;
     }
-    if(device_worker){try{return serve_native_device(channel,helper,startup_log,control_target,held_rate_target);}catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}}
+    if(device_worker){try{return serve_native_device(channel,helper,startup_log,control_target,held_rate_target,playback_keepalive);}catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}}
     if(stream_worker){try{return serve_native_stream(channel,helper,startup_log);}catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}}
     if(worker){try{return serve_worker(channel,helper);}catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}}
     if(!capture && !list && !duplex && !rate_target && !timer_query){std::cout<<"{\"plan_only\":true,\"helper_loaded\":false,\"driver_changes\":false,\"scheduled_ms\":32,\"audio_output_submissions\":0,\"silent_duplex_requires_explicit_mode\":true,\"rate_test_requires_explicit_target\":true,\"scheduling\":\"UsbDk ASAP; continuity not verified\"}\n";return 0;}
@@ -1017,7 +1075,10 @@ int wmain(int argc,wchar_t** argv) {
         }
         Watchdog watchdog;Api api;api.load(helper);auto selected=api.select();
         if(list){std::cout<<"{\"matched_sl3\":1,\"descriptor_fixture_matches\":true,\"high_speed\":true,\"device_redirected\":false}\n";return 0;}
-        if(timer_query){timer_started=true;return run_timer_diagnostic(api,selected,output,report,*timer_challenge,timer_cadence,timer_silent_stream,timer_tone);}
+        if(timer_query){
+            timer_started=true;
+            return run_timer_diagnostic(api,selected,output,report,*timer_challenge,timer_cadence,timer_silent_stream,timer_tone,timer_stereo_markers);
+        }
         if(rate_target)return run_rate_diagnostic(api,selected,output,report,rate_target);
         if(duplex)return run_duplex_silence(api,selected,output,report);
         Device device(api);unsigned rate=0;bool captured=false,closed=false,transfers=false;unsigned submitted=0,completed=0;

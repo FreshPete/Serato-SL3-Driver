@@ -81,7 +81,8 @@ std::string result(const RunEvidence& e,bool expired){
         <<",\"lastNativeError\":"<<r.device.native_error<<",\"lastObservedRateHz\":"<<r.device.rate_hz<<",\"lastDiagnostic\":"<<json_string(r.device.diagnostic)
         <<",\"nativeDeviceAcquired\":"<<(kind==session::Kind::native && e.acquired)<<",\"helperLoadedInController\":"<<helper_loaded()<<",\"usbReadyForNextAcquire\":false,\"rateRestorationVerified\":false}\n";return o.str();
 }
-int run(const std::filesystem::path& input,const std::filesystem::path& output,DWORD duration){
+int run(const std::filesystem::path& input,const std::filesystem::path& output,DWORD duration,bool keepalive){
+    require(!keepalive || kind==session::Kind::native,"Playback keepalive requires the native controller");
     auto config=asio::load_driver_configuration(input);require(!config.broker,"Controller input must be reviewed private-worker format");
     ReadFileLease source(input);const auto source_text=source.text();const auto image=self();auto image_pin=std::make_shared<ReadFileLease>(image,256*1024*1024);const auto image_hash=Process::executable_sha256(image);
     BrokerListener listener; // Requires an ordinary user before files/device access.
@@ -91,10 +92,12 @@ int run(const std::filesystem::path& input,const std::filesystem::path& output,D
     std::vector<std::shared_ptr<ReadFileLease>> published;
     diagnostic::StartupJournal journal(output/L"controller-startup.tsv");journal.mark("controller_intent");
     std::ostringstream intent;intent<<"{\"schema\":\"sl3.broker-controller-intent.v1\",\"kind\":"<<json_string(kind_name)<<",\"workerSha256\":"<<json_string(config.worker.sha256)
-        <<",\"brokerSha256\":"<<json_string(image_hash)<<",\"limitMs\":"<<duration<<",\"controllerGeneratesAudio\":false,\"rateWritesAllowed\":false,\"automaticRestart\":false}\n";
+        <<",\"brokerSha256\":"<<json_string(image_hash)<<",\"limitMs\":"<<duration<<",\"controllerGeneratesAudio\":false,\"rateWritesAllowed\":false,\"automaticRestart\":false"
+        <<",\"playbackKeepalive\":"<<(keepalive?"true":"false")<<"}\n";
     published.push_back(write_new(output/L"intent.json",intent.str()));
     Handle stop;stop.value=CreateEventW(&security.attributes,TRUE,FALSE,stop_name(listener.name()).c_str());require(stop.value && GetLastError()!=ERROR_ALREADY_EXISTS,"Create unique owner-only stop event");
     Timer timer(stop.value,duration);BrokerSpec spec;spec.executable=config.worker.executable;spec.sha256=config.worker.sha256;spec.helper=config.worker.helper;spec.kind=kind;
+    spec.playback_keepalive=keepalive;
     if constexpr(kind==session::Kind::native)spec.startup_journal=output/L"worker-startup.tsv";else spec.fixture_mode=L"audit:"+(output/L"worker-audit.txt").native();
     RetainedBroker owner(spec);RunEvidence evidence;
     try{
@@ -197,7 +200,15 @@ int wmain(int argc,wchar_t** argv){
         }
         require(argc>=2,"Controller mode required");std::map<std::wstring,std::wstring> args;
         for(int n=2;n<argc;n+=2){require(n+1<argc && args.emplace(argv[n],argv[n+1]).second,"Duplicate/incomplete controller option");}
-        if(std::wstring(argv[1])==L"--run"){require(args.size()==3 && args.count(L"--input") && args.count(L"--output") && args.count(L"--limit-ms"),"Run requires input/output/limit-ms only");return run(std::filesystem::path(args.at(L"--input")),std::filesystem::path(args.at(L"--output")),limit(args.at(L"--limit-ms")));}
+        if(std::wstring(argv[1])==L"--run"){
+            const auto option=args.find(L"--playback-keepalive");
+            const bool keepalive=option!=args.end();
+            require(!keepalive || option->second==L"on","Playback keepalive value must be on");
+            require(args.size()==(keepalive?4u:3u) && args.count(L"--input") && args.count(L"--output") &&
+                    args.count(L"--limit-ms"),"Run requires input, output and limit-ms");
+            return run(std::filesystem::path(args.at(L"--input")),std::filesystem::path(args.at(L"--output")),
+                       limit(args.at(L"--limit-ms")),keepalive);
+        }
         if(std::wstring(argv[1])==L"--publish-pointer"){require(args.size()==2 && args.count(L"--config") && args.count(L"--pointer"),"Pointer publication requires config/pointer only");return publish_pointer(std::filesystem::path(args.at(L"--config")),std::filesystem::path(args.at(L"--pointer")));}
         if(std::wstring(argv[1])==L"--withdraw-pointer"){require(args.size()==2 && args.count(L"--pointer") && args.count(L"--sha256"),"Pointer withdrawal requires pointer/sha256 only");return withdraw_pointer(std::filesystem::path(args.at(L"--pointer")),args.at(L"--sha256"));}
         if(std::wstring(argv[1])==L"--stop"){require(args.size()==1 && args.count(L"--config"),"Stop requires config only");return stop(std::filesystem::path(args.at(L"--config")));}
