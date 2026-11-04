@@ -1,11 +1,13 @@
 # One ordinary-user timer diagnostic and one separately elevated passive trace.
-param([Parameter(Mandatory)][string]$Plan,[switch]$Run)
+param([Parameter(Mandatory)][string]$Plan,[switch]$Run,[switch]$SilentStream)
 $ErrorActionPreference='Stop'
 $root=Split-Path -Parent $PSScriptRoot
 $settings=Get-Content -LiteralPath $Plan -Raw | ConvertFrom-Json
-$worker=Join-Path $root 'artifacts/build/timer-cadence-20261104/Release/sl3_usbdk.exe'
+$scenario=if($SilentStream){'timer-silent-stream-20261104'}else{'timer-cadence-20261104'}
+$build=Join-Path $root "artifacts/build/$scenario"
+$worker=Join-Path $build 'Release/sl3_usbdk.exe'
 $helper=Join-Path $root 'artifacts/extracted/usbdk-msi/UsbDkHelper.dll10'
-$base=Join-Path $root 'tests/results/local/timer-cadence-20261104'
+$base=Join-Path $root "tests/results/local/$scenario"
 $traceDirectory="$base-usb"
 if($settings.worker -ine $worker -or $settings.helper -ine $helper -or
    $settings.resultDirectory -ine $base -or $settings.traceDirectory -ine $traceDirectory -or
@@ -13,15 +15,19 @@ if($settings.worker -ine $worker -or $settings.helper -ine $helper -or
 $attemptPath="$base-attempted.json"
 if((Test-Path -LiteralPath $base) -or (Test-Path -LiteralPath $traceDirectory) -or
    (Test-Path -LiteralPath $attemptPath)){throw 'Cadence packet already used'}
-$manifest=Get-Content -LiteralPath (Join-Path $root 'artifacts/build/timer-cadence-20261104/native-build-Release.json') -Raw | ConvertFrom-Json
+$manifest=Get-Content -LiteralPath (Join-Path $build 'native-build-Release.json') -Raw | ConvertFrom-Json
 if($settings.workerSha256 -ne $manifest.usbdk.executableSha256 -or
    (Get-FileHash -LiteralPath $worker).Hash -ne $settings.workerSha256 -or
    (Get-FileHash -LiteralPath $helper).Hash -ne $settings.helperSha256){throw 'Cadence runtime hash differs'}
 $collector=Join-Path $PSScriptRoot 'capture-usb-startup.ps1'
 $shell=(Get-Command pwsh).Source
-$preview=& $worker --plan --timer-cadence --challenge $settings.challenge | ConvertFrom-Json
+$workerMode=@('--timer-cadence')
+$validationMode=@('--cadence')
+if($SilentStream){$workerMode+='--timer-silent-stream';$validationMode+='--silent-stream'}
+$preview=& $worker --plan @workerMode --challenge $settings.challenge | ConvertFrom-Json
 if($LASTEXITCODE -or $preview.plan_only -ne $true -or $preview.device_access -ne $false -or
-   $preview.maximum_writes -ne 10 -or $preview.audio_submissions -ne 0){throw 'Unexpected cadence preview'}
+   $preview.maximum_writes -ne 10 -or $preview.audio_submissions -ne 0 -or
+   [bool]$preview.silent_stream -ne [bool]$SilentStream){throw 'Unexpected cadence preview'}
 $tracePlan=& $shell -NoProfile -File $collector -WithUsbDkLifecycle -DurationSeconds 40 -OutputDirectory $traceDirectory
 if($LASTEXITCODE){throw 'USB/WPP preflight failed'}
 if(-not $Run){$tracePlan;return}
@@ -61,10 +67,10 @@ try{
        $age -lt 0 -or $age -gt 2 -or $start.Count -ne 1){throw 'Collector identity or freshness differs'}
     [ordered]@{collector=$identity;session=$trace.session;ageSeconds=$age;challenge=$settings.challenge;workerSha256=$settings.workerSha256} |
         ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $traceDirectory 'timer-admission.json')
-    & $worker --timer-query --timer-cadence --challenge $settings.challenge --helper $helper --output $base
+    & $worker --timer-query @workerMode --challenge $settings.challenge --helper $helper --output $base
     if($LASTEXITCODE){throw 'Cadence worker failed; preserve its records'}
     $python=Join-Path $root '.venv/Scripts/python.exe'
-    & $python (Join-Path $PSScriptRoot 'validate-driver-timer.py') (Join-Path $base 'timer.json') --challenge $settings.challenge --cadence
+    & $python (Join-Path $PSScriptRoot 'validate-driver-timer.py') (Join-Path $base 'timer.json') --challenge $settings.challenge @validationMode
     if($LASTEXITCODE){throw 'Cadence record rejected'}
 }finally{
     if(-not $admin.WaitForExit(60000)){throw 'Collector still active after observation window'}
