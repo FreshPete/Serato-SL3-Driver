@@ -32,6 +32,15 @@ class LauncherTests(unittest.TestCase):
         self.assertFalse((self.folder/'controls-image-started.json').exists())
         self.assertFalse((self.folder/'controls-image-launch.json').exists())
 
+    def test_wait_cannot_start_a_plan_only_or_child_launch(self):
+        for arguments in (('-WaitForResults',),('-WaitForResults','-Run','-Execute')):
+            with self.subTest(arguments=arguments):
+                child=self.invoke(*arguments)
+                self.assertNotEqual(child.returncode,0)
+                self.assertIn('requires the normal launcher',child.stderr)
+        self.assertFalse((self.folder/'controls-image-launch.json').exists())
+        self.assertFalse((self.folder/'controls-image-launch-observation.json').exists())
+
     def test_real_normal_child_is_denied_and_records_exit(self):
         ident=uuid.uuid4().hex
         child=self.invoke('-Execute','-ExpectedSha256',v.sha(self.path),'-LaunchId',ident)

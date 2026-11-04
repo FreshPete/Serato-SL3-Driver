@@ -88,6 +88,21 @@ class ObserverTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'without retry'):v.samples(self.settings,rows.append)
         query.assert_called_once();self.assertEqual(len(rows),1)
 
+    def test_zero_index_enumeration_gap_preserves_later_samples(self):
+        clock=FakeClock();rows=[]
+        raw=bytes(31)+b'\x09'+bytes(355)
+        gap={**self.query_result(),'successful':False,'error':'Hub response connection index differs',
+             'queryWin32Error':0,'bytesReturned':35,'responseEvidence':v.query.response_evidence(raw,35)}
+        with patch.object(v.time,'monotonic',clock.monotonic),patch.object(v.time,'sleep',clock.sleep),\
+             patch.object(v.query,'run',side_effect=[self.query_result(),gap,self.query_result()]),\
+             patch.object(v,'devnode_status',return_value={'complete':True}) as devnode:
+            result=v.samples({**self.settings,'sampleSeconds':.75},rows.append)
+        self.assertEqual(result['samples'],3)
+        self.assertEqual(result['enumerationGaps'],1)
+        self.assertIsNone(rows[1]['devnode'])
+        self.assertIs(rows[1]['query'],gap)
+        self.assertEqual(devnode.call_count,2)
+
     def test_slow_query_crossing_deadline_is_not_success(self):
         clock=FakeClock()
         def query(settings):clock.value=19;return self.query_result()

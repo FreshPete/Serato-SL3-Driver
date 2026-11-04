@@ -53,6 +53,17 @@ class PortTests(unittest.TestCase):
         self.state(3,999,100,'RegisteringWithHSM');self.state(13,999,9999,'Stopped','PortDisabled')
         self.assertEqual(self.analyse()['contextRows']['postRelease'],6)
 
+    def test_probe_can_retire_after_last_successful_entry(self):
+        completed='2026-11-01T14:00:04+00:00'
+        result=v.correlate(self.rows,42,completed,self.states,self.events)
+        self.assertIsNone(result['firstStoppedEnumeratedAfterProbeTicks'])
+        self.assertEqual(result['postProbePendingStartFileTime'],str(v.clock(completed)))
+        self.assertFalse(result['readinessAdmission'])
+
+    def test_retirement_at_timeout_has_no_pending_window(self):
+        with self.assertRaisesRegex(ValueError,'No successful stopped-enumerated window'):
+            v.correlate(self.rows,42,'2026-11-01T14:00:13.15+00:00',self.states,self.events)
+
     def test_duplicate_rundown_or_child_context_rejected(self):
         original=copy.deepcopy(self.rows)
         self.rows.append(copy.deepcopy(self.rows[0]))

@@ -1,7 +1,8 @@
 <# One normal-user control probe and one administrator collector; no persistent broker. #>
 [CmdletBinding()]
-param([Parameter(Mandatory)][string]$Plan,[switch]$Run,[switch]$Execute,[string]$ExpectedSha256,[string]$LaunchId)
+param([Parameter(Mandatory)][string]$Plan,[switch]$Run,[switch]$WaitForResults,[switch]$Execute,[string]$ExpectedSha256,[string]$LaunchId)
 $ErrorActionPreference='Stop'
+if($WaitForResults -and (-not $Run -or $Execute)){throw 'Waiting for results requires the normal launcher -Run role.'}
 $root=Split-Path -Parent $PSScriptRoot
 $python=Join-Path $root '.venv/Scripts/python.exe'
 $runner=Join-Path $PSScriptRoot 'collect-controls-with-images.py'
@@ -77,3 +78,38 @@ try{
 }
 $record|ConvertTo-Json
 if($record.status -ne 'launched'){exit 1}
+if($WaitForResults){
+    # Observe the original process objects so PID reuse cannot change the target.
+    # The children own all cleanup, including after this observation times out.
+    $clock=[Diagnostics.Stopwatch]::StartNew()
+    $roles=[ordered]@{
+        normalProbe=@{process=$normal;terminalRecord=(Join-Path $settings.contextDirectory 'run-validation.json')}
+        collectorWrapper=@{process=$admin;terminalRecord=(Join-Path $directory ('controls-child-'+$id+'-exit.json'))}
+    }
+    $observed=[ordered]@{}
+    foreach($name in $roles.Keys){
+        $role=$roles[$name]
+        $process=$role.process
+        $remaining=[int][Math]::Max(0,330000-$clock.ElapsedMilliseconds)
+        $retired=$null;$exitCode=$null;$observationError=$null
+        try{
+            $retired=$process.WaitForExit($remaining)
+            if($retired){$exitCode=$process.ExitCode}
+        }catch{$observationError=$_.Exception.Message}
+        $observed[$name]=[ordered]@{
+            pid=$process.Id
+            retired=$retired
+            exitCode=$exitCode
+            observationError=$observationError
+            terminalRecordPresent=(Test-Path -LiteralPath $role.terminalRecord -PathType Leaf)
+        }
+    }
+    $exitedCleanly=@($observed.Values|Where-Object {
+        -not $_.retired -or $_.exitCode -ne 0 -or $_.observationError -or -not $_.terminalRecordPresent
+    }).Count -eq 0
+    $terminal=[ordered]@{launchId=$id;planSha256=$hash;observedUtc=[DateTime]::UtcNow.ToString('o');
+        roles=$observed;exitedCleanly=$exitedCleanly;readinessAdmission=$false}
+    Write-NewJson (Join-Path $directory 'controls-image-launch-observation.json') $terminal
+    $terminal|ConvertTo-Json -Depth 8
+    if(-not $exitedCleanly){exit 1}
+}

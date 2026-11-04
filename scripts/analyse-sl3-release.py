@@ -81,8 +81,9 @@ def correlate(rows,worker,completed,states,events):
     require(len(timers)==1,'Timeout observation absent or ambiguous')
     timer=timers[0]
     entries=[r for r in post if r['state']=='DsmStateEtwStoppedEnumerated' and r['event']=='DsmEventOperationSuccess' and
-             r['depth']==0 and done<r['time']<timer['time']]
-    require(entries,'No post-completion successful stopped-enumerated entry')
+             r['depth']==0 and clock(enums[1]['time'])<=r['time']<timer['time']]
+    require(entries and done<timer['time'],'No successful stopped-enumerated window after probe completion')
+    first_after_probe=next((r['time']-done for r in entries if r['time']>done),None)
     tail=[r for r in post if r['time']>=timer['time']]
     require([r['state'] for r in tail]==['DsmStateEtwCheckIfDeviceCanBeDisabledOnDriverNotFound',
             'DsmStateEtwDisablingDeviceInControllerOnStartTimeout','DsmStateEtwDisablingPortOnStartTimeout','DsmStateEtwStopped'] and
@@ -91,7 +92,9 @@ def correlate(rows,worker,completed,states,events):
     return {'scope':'Trace-local exact-port/child correlation; no readiness decision',
             'port':port,'workerVidPidCycles':2,'successfulPortEnumerations':2,'distinctTargetDsmContexts':3,
             'contextRows':{'initial':len(selected[0][1]),'redirect':len(selected[1][1]),'postRelease':len(post)},
-            'postReleaseContextMappedToSl3Port':True,'firstStoppedEnumeratedAfterProbeTicks':str(entries[0]['time']-done),
+            'postReleaseContextMappedToSl3Port':True,
+            'firstStoppedEnumeratedAfterProbeTicks':str(first_after_probe) if first_after_probe is not None else None,
+            'postProbePendingStartFileTime':str(max(done,entries[-1]['time'])),
             'lastSuccessfulEntryToTimerTicks':str(timer['time']-entries[-1]['time']),
             'stoppedAfterProbeTicks':str(tail[-1]['time']-done),'timeoutTail':[project(r) for r in tail],
             'readinessAdmission':False,'successiveAcquisitionVerified':False,'normalUserReadinessObservationVerified':False}

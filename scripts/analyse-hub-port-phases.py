@@ -17,13 +17,14 @@ def module(name):
 
 
 release=module('analyse-sl3-release.py')
+port_query=module('query-sl3-hub-port.py')
 clock,require,sha,read=release.clock,release.require,release.sha,release.read
 
 
 def compare(samples,pending_start,timer,stopped,source_start,source_end):
     require(source_start<=pending_start<timer<=stopped<source_end,'Invalid phase boundaries')
     require(1<len(samples)<=128,'Snapshot count outside bound')
-    phases={'pending':[],'stopped':[]};previous=None;excluded=0
+    phases={'pending':[],'stopped':[]};previous=None;excluded=0;gaps=0
     for sequence,sample in enumerate(samples,1):
         require(sample['record']=='sample' and sample['sequence']==sequence,'Missing or reordered snapshot')
         entry,end=clock(sample['entryUtc']),clock(sample['completedUtc']);query=sample['query'];node=sample['devnode']
@@ -31,6 +32,9 @@ def compare(samples,pending_start,timer,stopped,source_start,source_end):
         previous=end
         require(entry<=clock(query['queryStartedUtc'])<=clock(query['queryFinishedUtc'])<=clock(query['completedUtc'])<=end,
                 'Query/combined snapshot bounds differ')
+        if node is None and query['readinessAdmission'] is False and port_query.enumeration_gap(query):
+            gaps+=1
+            continue
         require(query['successful'] is True and query['error'] is None and query['handleClosed'] is True and
                 node['complete'] is True,'Incomplete snapshot cannot classify a phase')
         require(query['readinessAdmission'] is False and query['connection']['readinessAdmission'] is False,
@@ -58,6 +62,7 @@ def compare(samples,pending_start,timer,stopped,source_start,source_end):
         if not set(values_by_phase['pending'][key])&set(values_by_phase['stopped'][key]):candidates.append(key)
     return {'scope':'Observed fields during startup-pending and port-stopped phases; no production readiness decision',
             'phaseSamples':{name:len(cohort) for name,cohort in phases.items()},'excludedBoundaryOrOtherPhaseSamples':excluded,
+            'excludedEnumerationGaps':gaps,
             'phaseSpansTicks':{name:str(cohort[-1][1]-cohort[0][0]) for name,cohort in phases.items()},
             'commonCompleteFingerprints':len(common),'ambiguousCompleteFingerprintObserved':bool(common),
             'candidateDisjointFields':candidates,
@@ -134,8 +139,9 @@ def analyse(job,collector_plan,window_path):
             clock(target[0]['observations'][0]['time'])<=source_start<source_end<=clock(target[0]['observations'][1]['time']),
             'Image does not bracket native USB source window')
     timer=int(mapped['timeoutTail'][0]['timestampFileTime']);stopped=int(mapped['timeoutTail'][-1]['timestampFileTime'])
-    pending=timer-int(mapped['lastSuccessfulEntryToTimerTicks'])
+    pending=int(mapped['postProbePendingStartFileTime'])
     result=compare(rows[2:-1],pending,timer,stopped,source_start,source_end)
+    require(result['excludedEnumerationGaps']==summary.get('enumerationGaps',0),'Enumeration gap count differs')
     result.update(port=mapped['port'],controlsRunSha256=sha(context/'run.json'),observerPlanSha256=plan_sha,
                   observationsSha256=sha(job/'observations.ndjson'),windowSha256=sha(window_path),
                   pendingStartFileTime=str(pending),timerFileTime=str(timer),stoppedFileTime=str(stopped))

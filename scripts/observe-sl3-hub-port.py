@@ -149,22 +149,25 @@ def devnode_status(instance):
 
 
 def samples(settings,emit):
-    start=time.monotonic();deadline=start+settings['sampleSeconds'];count=0
+    start=time.monotonic();deadline=start+settings['sampleSeconds'];count=0;gaps=0
     while time.monotonic()<deadline:
         require(count<settings['maximumSamples'],'Sample count exceeded fixed bound')
         entry=now();value=query.run(settings['query']);count+=1
         node=devnode_status(settings['devnodeInstance']) if value['successful'] else None
         emit({'record':'sample','sequence':count,'entryUtc':entry,'completedUtc':now(),
               'elapsedSeconds':time.monotonic()-start,'query':value,'devnode':node})
-        require(value['successful'] is True and value['error'] is None and value['handleClosed'] is True,
-                'Hub query failed; sampling stopped without retry')
         require(value['producerToken']['pid']==os.getpid() and value['producerToken']['elevated'] is False,
                 'Query did not execute in the normal observer process')
-        require(node['complete'] is True,'Devnode observation was incomplete; sampling stopped')
+        if query.enumeration_gap(value):
+            gaps+=1
+        else:
+            require(value['successful'] is True and value['error'] is None and value['handleClosed'] is True,
+                    'Hub query failed; sampling stopped without retry')
+            require(node['complete'] is True,'Devnode observation was incomplete; sampling stopped')
         require(time.monotonic()<=deadline,'Synchronous query crossed the sample deadline')
         remaining=deadline-time.monotonic()
         if remaining>0:time.sleep(min(settings['intervalSeconds'],remaining))
-    return {'samples':count,'elapsedSeconds':time.monotonic()-start}
+    return {'samples':count,'enumerationGaps':gaps,'elapsedSeconds':time.monotonic()-start}
 
 
 def worker(directory,expected_sha):
@@ -181,7 +184,7 @@ def worker(directory,expected_sha):
             admission=await_trace(settings);emit({'record':'admission',**admission})
             result.update(samples(settings,emit))
             require(settings['runtime']==runtime(),'Observer runtime changed during sampling')
-            result['successful']=result['samples']>1
+            result['successful']=result['samples']-result['enumerationGaps']>1
         except Exception as error:result['error']=str(error)
         finally:result['completedUtc']=now();emit(result)
     return result

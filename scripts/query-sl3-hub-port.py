@@ -102,6 +102,18 @@ def response_evidence(raw,returned):
     return result
 
 
+def enumeration_gap(result):
+    """Recognize only the observed zero-index reply, without assigning it to a port."""
+    if (result['successful'] is not False or result['error']!='Hub response connection index differs' or
+            result['handleClosed'] is not True or result.get('queryWin32Error')!=0):
+        return False
+    returned=result['bytesReturned']
+    evidence=result['responseEvidence']
+    raw=bytes.fromhex(evidence['bufferHex'])
+    return (returned==c.sizeof(Connection) and evidence==response_evidence(raw,returned) and
+            raw[:returned]==bytes(31)+b'\x09\x00\x00\x00')
+
+
 def run(settings):
     require(os.name=='nt','Windows required')
     token=own_token();require(token['queried'] is True and token['elevated'] is False,'Use a normal user token; no elevated fallback')

@@ -55,6 +55,20 @@ class PhaseTests(unittest.TestCase):
         self.samples.pop()
         with self.assertRaisesRegex(ValueError,'Insufficient'):self.compare()
 
+    def test_enumeration_gap_does_not_count_toward_phase_coverage(self):
+        self.add(13)
+        sample=self.samples[-1]
+        sample['devnode']=None
+        raw=bytes(31)+b'\x09'+bytes(355)
+        sample['query'].update(successful=False,error='Hub response connection index differs',
+                               queryWin32Error=0,bytesReturned=35,responseEvidence=v.port_query.response_evidence(raw,35))
+        del sample['query']['connection']
+        result=self.compare()
+        self.assertEqual(result['excludedEnumerationGaps'],1)
+        self.assertEqual(result['phaseSamples']['stopped'],4)
+        sample['query']['handleClosed']=False
+        with self.assertRaisesRegex(ValueError,'Incomplete'):self.compare()
+
     def test_partial_snapshot_or_changed_field_inventory_refused(self):
         original=copy.deepcopy(self.samples)
         for fault in ('close','node','inventory','sequence','overlap','clock'):
