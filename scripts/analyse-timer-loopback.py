@@ -75,6 +75,39 @@ def analyse(folder, challenge):
     return result
 
 
+def host_marker_returns(frames, origin, count, frequencies, fit):
+    rate = 44100
+    fade = rate // 100
+    candidates = envelope_offsets(frames, rate, count, origin, frequencies)
+    returns = []
+    for channel, marker in zip((2, 3), candidates):
+        candidate = marker['channels'][channel]
+        first = candidate['returnStartFrame']
+        result = {'streamChannel': channel, 'frequencyHz': marker['frequencyHz'],
+                  'envelopeSimilarity': candidate['envelopeSimilarity'], 'acceptedOffsetFrames': None}
+        if first is None:
+            result['rejection'] = 'No return signal'
+        else:
+            tone_fit = fit(frames, rate, marker['frequencyHz'], first + fade, first + count - fade)
+            result['toneFit'] = tone_fit
+            channels = tone_fit['channels']
+            expected = channels[channel]
+            amplitude = expected['sineAmplitudeCode']
+            strongest_other = max(item['sineAmplitudeCode'] for i, item in enumerate(channels) if i != channel)
+            if first < origin or candidate['envelopeSimilarity'] < 0.90:
+                result['rejection'] = 'Return starts too early or envelope does not match'
+            elif amplitude < 1000 or (expected['explainedCentredEnergyFraction'] or 0) < 0.80:
+                result['rejection'] = 'Expected marker is weak or poorly fitted'
+            elif amplitude < 4 * strongest_other:
+                result['rejection'] = 'Marker is not isolated on the expected channel'
+            elif (abs(frames[first:first + count, channel]) >= 8388607).any():
+                result['rejection'] = 'Return contains clipped samples'
+            else:
+                result['acceptedOffsetFrames'] = first - origin
+        returns.append(result)
+    return returns
+
+
 def analyse_host(folder, worker_sha):
     validator = runpy.run_path(str(Path(__file__).with_name('validate-input-record-probe.py')))
     checked = validator['validate'](folder, worker_sha, host_loopback=True)
@@ -87,16 +120,12 @@ def analyse_host(folder, worker_sha):
     tone = runpy.run_path(str(Path(__file__).with_name('analyse-input-tone.py')))
     frames = tone['decode_recording'](audio)
     origin, count, frequencies = (record[key] for key in ('markerFirstFrame', 'markerFrames', 'markerHz'))
-    offsets = envelope_offsets(frames, 44100, count, origin, frequencies)
-    fits = []
-    for channel, offset in zip((2, 3), offsets):
-        first = offset['channels'][channel]['returnStartFrame']
-        if first is not None:
-            fits.append(tone['fit'](frames, 44100, offset['frequencyHz'], first, first + count))
-    return {'schema': 'sl3.host-loopback-analysis.v1', 'recordSha256': checked['resultSha256'],
+    returns = host_marker_returns(frames, origin, count, frequencies, tone['fit'])
+    return {'schema': 'sl3.host-loopback-analysis.v2', 'recordSha256': checked['resultSha256'],
             'workerSha256': worker_sha, 'nativeJournal': checked['nativeJournal'],
-            'pcmSha256': digest, 'rateHz': 44100, 'logicalEnvelopeOffsets': offsets,
-            'expectedReturnChannelToneFits': fits, 'timingProfileWritten': False,
+            'pcmSha256': digest, 'rateHz': 44100, 'markerReturns': returns,
+            'bothMarkersAccepted': all(item['acceptedOffsetFrames'] is not None for item in returns),
+            'timingProfileWritten': False,
             'directionalLatencyMeasured': False}
 
 

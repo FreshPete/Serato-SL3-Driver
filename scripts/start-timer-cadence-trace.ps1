@@ -146,3 +146,10 @@ if($final.status -ne 'window completed' -or $final.session -cne $trace.session -
    $final.cleanupError -or $deleted.Count -ne 1){throw 'Trace cleanup requires inspection'}
 $after=Get-PnpDevice -PresentOnly -InstanceId $device.InstanceId
 if($after.Problem -ne $device.Problem){throw 'SL3 resting state differs after the test'}
+if($HostLoopback){
+    $result=Get-Content -LiteralPath (Join-Path $base 'loopback-analysis.json') -Raw | ConvertFrom-Json
+    if($result.schema -cne 'sl3.host-loopback-analysis.v2' -or $result.bothMarkersAccepted -ne $true){
+        throw 'The complete stereo return did not qualify. Inspect the saved analysis for each channel.'
+    }
+    $result.markerReturns | Select-Object streamChannel,frequencyHz,acceptedOffsetFrames
+}
