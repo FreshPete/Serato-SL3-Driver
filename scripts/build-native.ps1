@@ -28,6 +28,8 @@ try {
         if($required -notin $testNames){throw "Required native test is missing: $required"}
     }
     if('sl3_input_recorder_tests' -notin $testNames){throw 'Required PCM prefix recorder test missing'}
+    if('sl3_output_recorder_tests' -notin $testNames){throw 'Required software output recorder test missing'}
+    if('sl3_output_capture_lifecycle' -notin $testNames){throw 'Required software output capture lifecycle test missing'}
     if($WithAsioComponent){foreach($name in @('sl3_input_record_probe_plan','sl3_input_record_probe_lifecycle')){if($name -notin $testNames){throw "Required input recording probe test missing: $name"}}}
     if('sl3_timer_verification_tests' -notin $testNames){throw 'Required timer-verification test is missing'}
     if('sl3_redirect_owner_tests' -notin $testNames){throw 'Required interprocess redirect ownership test is missing'}
@@ -84,6 +86,7 @@ try {
         $sourceFiles+=@(Get-Item -LiteralPath (Join-Path $root 'artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/asio.h'),(Join-Path $root 'artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/asiosys.h'))
         $sourceFiles+=@(Get-Item -LiteralPath (Join-Path $root 'artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/iasiodrv.h'))
     }
+    $sourceFiles+=@(Get-Item -LiteralPath (Join-Path $root 'scripts/export-output-capture.py'),(Join-Path $root 'scripts/test-output-capture.py'))
     foreach($file in $sourceFiles){$inputs[$file.FullName.Substring($root.Length+1).Replace('\','/')]=(Get-FileHash -LiteralPath $file.FullName).Hash}
     $record=[ordered]@{utc=[datetime]::UtcNow.ToString('o');configuration=$Configuration;architecture='x64';generator='Visual Studio 16 2019';windowsSdk='10.0.19041.0';coreTestsPassed=$true;planOnlyPassed=$true;physicalCaptureTested=$false;inputs=$inputs;executableSha256=(Get-FileHash -LiteralPath $exe).Hash;executableBytes=(Get-Item -LiteralPath $exe).Length}
     $record.ctestTests=$testNames
@@ -91,6 +94,11 @@ try {
         nativeOpenGuardConnected=$true;globalObject=$true;nonWaiting=$true;retainedAcrossAudioStop=$true
         physicalOverlapTested=$false;kernelDetachmentVerified=$false;safeSuccessiveAcquisitionVerified=$false}
     $record.inputRecorder=[ordered]@{softwareTestsPassed=$true;testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_input_recorder_tests.exe")).Hash;fixedCallbackPrefix=$true;callbackAllocationTestsPassed=$true;physicalRecordingRun=$false}
+    $record.outputCapture=[ordered]@{softwareTestsPassed=$true;maximumSeconds=5;optInEnvironment='SL3_OUTPUT_CAPTURE_DIRECTORY'
+        manualArmRequired=$true;sampleRates=@(44100,48000);source='worker-dequeued-output-pcm';fileIoOnStreamThread=$false
+        physicalSeratoRecordingRun=$false;analogOutputVerified=$false;usbCompletionVerified=$false
+        recorderTestSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_output_recorder_tests.exe")).Hash
+        lifecycleFixtureSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_output_capture_fixture.exe")).Hash}
     if($WithAsioComponent){$record.inputRecordProbe=[ordered]@{planAndSimulatedRecordingPassed=$true
         executableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_input_record_probe.exe")).Hash
         simulatedExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_input_record_probe_simulated.exe")).Hash

@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "scope": "software-only",
+  "ratesHz": [
+    44100,
+    48000
+  ],
+  "maximumSeconds": 5,
+  "nativeChecksPassed": 71,
+  "deploymentChecksPassed": 26,
+  "exporterRegressionTestsPassed": 2,
+  "buildManifestSha256": "a37b6a090fceaa5c977207f702b57928e8820e3a79d6949727333bd08771ed2e",
+  "ctestLogSha256": "506a49f66694cc383644ad7a20596658cdfdb315e2a741fe334cb6cb7fb09de8",
+  "recorderTestSha256": "be4dd9a836ca6f40e7f17705d1396a8add52ddbd16806910f0d1dfbbf5977284",
+  "lifecycleFixtureSha256": "aa49ca0633f8761a71781399364cf06a4bc80aa6ca188623cb159e7062343aa4",
+  "preparedBundleManifestSha256": "f3428509415c1c5626e6949e5303d9d1d7197e706c2c08db94c50805ad90cee7",
+  "nativeDestinationChecked": true,
+  "directImportsResolved": true,
+  "packageInstalled": false,
+  "liveSeratoTwoDeckCaptureVerified": false,
+  "usbCompletionVerified": false,
+  "analogOutputVerified": false
+}

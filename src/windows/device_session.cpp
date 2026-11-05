@@ -9,6 +9,8 @@ namespace protocol=device_session;
 class Runtime {
     Mailbox& control_;session::Kind kind_;DeviceFactory factory_;SessionTimeouts timeouts_;Heartbeat heartbeat_;
     std::unique_ptr<SessionDevice> device_;
+    std::unique_ptr<SoftwareOutputCapture> output_capture_;
+    bool capture_configured_=false;
     std::unique_ptr<Mailbox> audio_;
     std::unique_ptr<MailboxStreamPeer> peer_;
     std::unique_ptr<SessionTarget> target_;
@@ -47,6 +49,7 @@ class Runtime {
     }
     void finish(){
         capture();
+        if(output_capture_)output_capture_->retire();
         if(stream_ && stream_->state()==StreamState::retained){
             snapshot_.phase=protocol::Phase::retained;snapshot_.io_retired=false;
             if(pending_reply_)reply(session::Status::operation_failed);
@@ -225,7 +228,10 @@ class Runtime {
             const auto rate=device_->read_rate();session::encode_clock(rate);snapshot_.rate_hz=rate;
             if(rate!=start.config.rate_hz)throw std::runtime_error("Held device clock changed; no audio activation");
             snapshot_.stats={};snapshot_.stream_fault=StreamFault::none;snapshot_.intervals=start.config.intervals;
-            peer_=std::make_unique<MailboxStreamPeer>(*audio_);
+            if(!capture_configured_){
+                output_capture_=SoftwareOutputCapture::from_environment(rate);capture_configured_=true;
+            }
+            peer_=std::make_unique<MailboxStreamPeer>(*audio_,output_capture_.get());
             target_=device_->begin(start.config);if(!target_)throw std::runtime_error("Device returned no audio target");
             stream_=std::make_unique<ContinuousStream>(target_->backend(),*peer_,target_->allow_startup_empty_packet());snapshot_.io_retired=false;
             if(!stream_->start(start.config)){

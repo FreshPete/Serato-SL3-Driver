@@ -2,6 +2,8 @@
 
 Updated 5 November 2026. The target is to use Phase Essential for two-deck DVS in Serato DJ Pro 5.0 on Windows 11, with the Rane SL3 handling audio. The first milestone is one deck tracking from Phase through the SL3, with Serato playback returning through the SL3 outputs. The current tests use the signed UsbDk transport with Windows driver-signature enforcement enabled.
 
+The owner now has Phase A on inputs 3/4 and Phase B on 5/6, with both remotes on one physical turntable. Both RCA leads are occupied. A bounded, opt-in worker PCM recorder and offline stereo WAV exporter are implemented for the next two-deck test. This provides software output clips without an AUX return cable; it does not provide live PC monitoring or prove physical output. The second-deck live test remains pending. [Capture design, wiring and test procedure](two-deck-output-capture.md)
+
 ## What works on the bench
 
 - In the next manual-only session, the owner answered yes to the REL-mode test asking whether spinning, stopping and moving the Phase platter controlled the waveform. Startup succeeded at 44.1 kHz, the complete Frida session detached, and the viewing interval lasted 111.436 seconds until the owner said done. The broker reported a successful requested stop with I/O retirement, device release and worker exit verified. The installer restored the original resources and removed registration and staged files. This is the first owner-confirmed one-deck REL tracking test on inputs 3/4. Audible SL3 output, the second deck, sustained reliability and a permanent installation remain unverified. [REL session evidence](evidence/phase-rel-session-20261105.json)
