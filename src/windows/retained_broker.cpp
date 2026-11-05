@@ -23,7 +23,10 @@ void RetainedBroker::clear_client() noexcept {
     if(client_)CloseHandle(client_);client_=nullptr;lease_=0;
     state_.client_attached=false;state_.client_alive=false;state_.client_pid=0;
 }
-void RetainedBroker::seal() noexcept {state_.failed=true;state_.phase=BrokerPhase::sealed;}
+void RetainedBroker::seal(BrokerFailure cause) noexcept {
+    if(!state_.failed){state_.first_failure=cause;state_.first_failure_phase=state_.phase;}
+    state_.failed=true;state_.phase=BrokerPhase::sealed;
+}
 Message RetainedBroker::call(ds::Command command,const std::vector<std::uint8_t>& body){
     if(!control_ok_)throw std::runtime_error("Broker worker control sealed");
     try{
@@ -32,7 +35,7 @@ Message RetainedBroker::call(ds::Command command,const std::vector<std::uint8_t>
         if(control_->await_reply(process_.process_handle(),5000,reply)!=MessageResult::ok)
             throw std::runtime_error("Broker worker reply unavailable");
         return reply;
-    }catch(...){control_ok_=false;control_->close();seal();throw;}
+    }catch(...){control_ok_=false;control_->close();seal(BrokerFailure::control_channel);throw;}
 }
 ds::Snapshot RetainedBroker::snapshot(ds::Command command,const std::vector<std::uint8_t>& body){
     state_.snapshot_valid=false;
@@ -43,7 +46,7 @@ ds::Snapshot RetainedBroker::snapshot(ds::Command command,const std::vector<std:
         if(reply.status || state_.device.failure!=session::Failure::none || state_.device.stream_fault!=StreamFault::none)
             throw std::runtime_error("Broker worker operation failed");
         return state_.device;
-    }catch(...){seal();throw;}
+    }catch(...){seal(BrokerFailure::worker_operation);throw;}
 }
 bool RetainedBroker::open() noexcept {
     if(state_.phase!=BrokerPhase::dormant)return false;
@@ -66,7 +69,7 @@ bool RetainedBroker::open() noexcept {
         state_.acquire_attempted=true;
         if(!ready(snapshot(ds::Command::acquire)))throw std::runtime_error("Broker did not acquire an idle device");
         state_.phase=BrokerPhase::idle;return true;
-    }catch(...){seal();close();return false;}
+    }catch(...){seal(BrokerFailure::acquisition);close();return false;}
 }
 std::uint64_t RetainedBroker::attach(HANDLE client){
     poll_client();
@@ -84,7 +87,7 @@ std::uint64_t RetainedBroker::attach(HANDLE client){
         if(!ready(snapshot(ds::Command::clock)))throw std::runtime_error("Broker admission clock unavailable");
         // Reobserve the same object, never re-open a recycled PID.
         if(WaitForSingleObject(copy,0)!=WAIT_TIMEOUT){CloseHandle(copy);return 0;}
-    }catch(...){CloseHandle(copy);seal();throw;}
+    }catch(...){CloseHandle(copy);seal(BrokerFailure::admission);throw;}
     client_=copy;lease_=next_lease_++;
     state_.client_pid=pid;state_.client_attached=state_.client_alive=true;state_.phase=BrokerPhase::leased;
     return lease_;
@@ -97,12 +100,12 @@ void RetainedBroker::check(std::uint64_t lease){
         state_.process=process_.observe();
         if(!state_.process.started || !state_.process.job_assigned || state_.process.process_exited)
             throw std::runtime_error("Broker worker is no longer live");
-    }catch(...){seal();throw;}
+    }catch(...){seal(BrokerFailure::worker_observation);throw;}
 }
 unsigned RetainedBroker::clock(std::uint64_t lease){
     check(lease);if(state_.phase!=BrokerPhase::leased)throw std::runtime_error("Broker clock requires idle client");
     try{if(!ready(snapshot(ds::Command::clock)))throw std::runtime_error("Broker clock did not retire");return state_.device.rate_hz;}
-    catch(...){seal();throw;}
+    catch(...){seal(BrokerFailure::clock);throw;}
 }
 ds::Snapshot RetainedBroker::start(std::uint64_t lease,const ds::Start& start){
     check(lease);if(state_.phase!=BrokerPhase::leased)throw std::runtime_error("Broker stream already active");
@@ -115,7 +118,7 @@ ds::Snapshot RetainedBroker::start(std::uint64_t lease,const ds::Start& start){
            s.rate_hz!=start.config.rate_hz || s.intervals!=start.config.intervals)
             throw std::runtime_error("Broker worker did not enter requested stream");
         state_.phase=BrokerPhase::running;return s;
-    }catch(...){seal();throw;}
+    }catch(...){seal(BrokerFailure::start);throw;}
 }
 ds::Snapshot RetainedBroker::stop(std::uint64_t lease){
     check(lease);
@@ -123,7 +126,7 @@ ds::Snapshot RetainedBroker::stop(std::uint64_t lease){
     try{
         if(!ready(snapshot(ds::Command::stop)))throw std::runtime_error("Broker worker retained stream leases");
         state_.phase=BrokerPhase::leased;return state_.device;
-    }catch(...){seal();throw;}
+    }catch(...){seal(BrokerFailure::stop);throw;}
 }
 bool RetainedBroker::detach(std::uint64_t lease) noexcept {
     try{check(lease);stop(lease);clear_client();state_.phase=BrokerPhase::idle;return true;}
@@ -134,14 +137,14 @@ void RetainedBroker::poll_client() noexcept {
     const auto wait=WaitForSingleObject(client_,0);
     if(wait==WAIT_TIMEOUT)return;
     if(wait==WAIT_OBJECT_0 && state_.phase==BrokerPhase::leased){clear_client();state_.phase=BrokerPhase::idle;return;}
-    seal();close();
+    seal(wait==WAIT_OBJECT_0?BrokerFailure::client_exited_running:BrokerFailure::client_wait);close();
 }
 BrokerReport RetainedBroker::report() noexcept {
     poll_client();
     try{
         state_.process=process_.observe();
-        if(state_.process.started && state_.process.process_exited && state_.phase!=BrokerPhase::closed)seal();
-    }catch(...){seal();}
+        if(state_.process.started && state_.process.process_exited && state_.phase!=BrokerPhase::closed)seal(BrokerFailure::worker_exited);
+    }catch(...){seal(BrokerFailure::process_observation);}
     return state_;
 }
 BrokerReport RetainedBroker::close() noexcept {
@@ -173,6 +176,6 @@ BrokerReport RetainedBroker::close() noexcept {
         }
         if(state_.process.exit_code_known && state_.process.exit_code!=0)clean=false;
     }catch(...){clean=false;}
-    if(clean)state_.phase=BrokerPhase::closed;else seal();return state_;
+    if(clean)state_.phase=BrokerPhase::closed;else seal(BrokerFailure::shutdown);return state_;
 }
 }

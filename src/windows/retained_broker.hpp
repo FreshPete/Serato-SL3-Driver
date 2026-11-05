@@ -17,10 +17,34 @@ struct BrokerSpec {
     bool playback_keepalive=false;
 };
 enum class BrokerPhase {dormant,idle,leased,running,sealed,closed};
+enum class BrokerFailure {none,control_channel,worker_operation,acquisition,admission,worker_observation,
+    clock,start,stop,client_exited_running,client_wait,worker_exited,process_observation,abandoned,shutdown};
+inline const char* broker_failure_name(BrokerFailure value) noexcept {
+    switch(value){
+    case BrokerFailure::none:return "none";
+    case BrokerFailure::control_channel:return "worker_control_channel";
+    case BrokerFailure::worker_operation:return "worker_operation";
+    case BrokerFailure::acquisition:return "acquisition";
+    case BrokerFailure::admission:return "client_admission";
+    case BrokerFailure::worker_observation:return "worker_observation";
+    case BrokerFailure::clock:return "clock";
+    case BrokerFailure::start:return "stream_start";
+    case BrokerFailure::stop:return "stream_stop";
+    case BrokerFailure::client_exited_running:return "client_exited_running";
+    case BrokerFailure::client_wait:return "client_wait";
+    case BrokerFailure::worker_exited:return "worker_exited";
+    case BrokerFailure::process_observation:return "process_observation";
+    case BrokerFailure::abandoned:return "client_control_abandoned";
+    case BrokerFailure::shutdown:return "owner_shutdown";
+    }
+    return "unknown";
+}
 struct BrokerReport {
     BrokerPhase phase=BrokerPhase::dormant;
     bool client_attached=false,client_alive=false,termination_requested=false;
     bool failed=false; // Sticky operation/ownership failure, including after clean final release.
+    BrokerFailure first_failure=BrokerFailure::none;
+    BrokerPhase first_failure_phase=BrokerPhase::dormant;
     bool acquire_attempted=false,snapshot_valid=false;
     DWORD client_pid=0;
     ProcessState process{};
@@ -52,7 +76,7 @@ public:
     void poll_client() noexcept;
     BrokerReport report() noexcept;
     BrokerReport close() noexcept;
-    BrokerReport abandon() noexcept {seal();return close();} // Unknown client/control outcome; never reusable.
+    BrokerReport abandon() noexcept {seal(BrokerFailure::abandoned);return close();} // Unknown client/control outcome; never reusable.
     // Borrowed local wait handle; never close it or use it beyond owner life.
     // An IPC frontend must duplicate an appropriate wait-only handle to clients.
     HANDLE worker_process_handle() const noexcept {return process_.process_handle();}
@@ -68,6 +92,6 @@ private:
     device_session::Snapshot snapshot(device_session::Command,const std::vector<std::uint8_t>& body={});
     void check(std::uint64_t);
     void clear_client() noexcept;
-    void seal() noexcept;
+    void seal(BrokerFailure) noexcept;
 };
 }

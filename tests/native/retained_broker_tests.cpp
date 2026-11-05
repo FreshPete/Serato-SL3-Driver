@@ -107,12 +107,17 @@ static void death(const std::filesystem::path& worker,const std::filesystem::pat
     const auto lease=owner.attach(next.process.process_handle());const auto data=next.prepare();owner.start(lease,data);
     next.process.terminate_and_wait(2000);owner.poll_client();const auto ended=owner.report();
     require(ended.failed && !ended.client_attached && (ended.phase==BrokerPhase::closed || ended.phase==BrokerPhase::sealed) && !owner.open(),"Running client death ends owner permanently without reacquisition");
+    require(ended.first_failure==BrokerFailure::client_exited_running && ended.first_failure_phase==BrokerPhase::running,
+        "Running process death retains its original ownership failure and phase after device release");
+    const auto final=owner.close();require(final.first_failure==ended.first_failure && final.first_failure_phase==ended.first_failure_phase,
+        "Repeated close cannot overwrite the original failure with a cleanup observation");
     rejects([&]{owner.attach(dead.process.process_handle());});
 }
 static void failures(const std::filesystem::path& worker,const std::filesystem::path& self){
     {
         RetainedBroker unopened(spec(worker));const auto s=unopened.close();
         require(s.phase==BrokerPhase::closed && !s.failed && !s.process.started && !unopened.open(),"Closing dormant owner never launches or invents a failure");
+        require(s.first_failure==BrokerFailure::none,"Normal dormant close must not invent an ownership fault");
     }
     {
         RetainedBroker lost(spec(worker));require(lost.open(),"Open before synthetic worker death");Client attached(self);

@@ -1,0 +1,31 @@
+# Serato shutdown after the two-deck test
+
+The attended two-deck Phase test established owner-reported tracking and a five-second software output recording. At cleanup, the broker reported `successful=false`, `reason=owner_failure`, while its final device, stream and native error fields were zero. I/O retirement, device release, worker exit and empty job all verified. The original Serato resources were restored and the temporary driver removed. These are separate observations: safe release does not erase the failed ownership result. [Live result](evidence/phase-two-deck-session-20261105.json)
+
+## What the old trace can establish
+
+The saved process exit FILETIME is approximately 8,129.751 ms after the observer's `viewing_window_ended` event. The observer then posted window-close requests, waited eight seconds and, if still running, terminated its exact owned Serato process. This timing is consistent with the forced-close fallback being used. It is an inference: that observer version did not record the wait result, termination decision or application exit code. The data cannot distinguish a shutdown hang, an unanswered application dialog, or another reason for delayed exit.
+
+The old broker's `owner_failure` is similarly too broad. The final typed worker snapshot describes device release, while the broker separately seals on an active client's disappearance or an unknown control outcome. Consequently, zero final device errors do not prove the ASIO client detached gracefully.
+
+## Diagnostic change
+
+`BrokerReport` now preserves the first typed ownership failure and the broker phase at that point. Later worker replies, clean release or repeated close cannot overwrite it. Causes distinguish worker-control failure, failed worker operation, admission/clock/start/stop failure, client exit during streaming, client/process observation failure, control abandonment and owner shutdown.
+
+The controller adds `ownerFailureCode`, `ownerFailurePhase` and a connection diagnostic capped at 512 characters to its result. It uses the existing broker-pipe diagnostic channel. The success, containment, acquisition and cleanup rules are unchanged. No callback tracing or audio-path file logging is added.
+
+The private manual-session observer is also prepared to record its close request, wait result, any successful forced-termination request, and the application's exit code. This runs after interaction without reattaching instrumentation. The revised observer passed a syntax check, but its new records have not been collected from a live session.
+
+## Validation
+
+The refreshed Release build passed all 71 native checks and all 26 deployment checks. A direct process-death test verifies that `client_exited_running` and the original running phase survive subsequent release and repeated close. Normal dormant closure retains `none`. The actual controller lifecycle checks verify no invented failure on ordinary stops and a typed cause on destructive client release.
+
+The simulated blocked-client case recorded `client_control_abandoned`, phase `running`, and `Complete broker pipe operation: 109`, while still proving device and process retirement. This validates the new diagnostic path. Its worker also reported a synthetic stream fault, so it is not evidence of the cause of the real Serato session's shutdown failure.
+
+A fresh private diagnostic bundle passed native-destination and direct-import checks. It is prepared and not installed. The previous working two-deck package and its raw evidence remain preserved. [Preparation evidence](evidence/shutdown-diagnostic-preparation-20261105.json)
+
+## Next live check
+
+Use the reviewed manual-only startup, detach the tracer, then stop playback and close Serato manually. Allow the owner to answer any application dialogs. The observer should detect process exit without needing its automatic close request. Inspect the new first-failure cause, connection diagnostic, application exit code and forced-termination flag alongside independent device-release evidence. Do not relabel an ownership failure as success merely because cleanup completes.
+
+No further hardware run has been performed for this diagnostic change. Shutdown is not fixed yet. Physical audible output, independent turntable control, sustained operation and a permanent installation remain separate open requirements.

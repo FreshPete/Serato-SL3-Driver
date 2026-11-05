@@ -72,7 +72,7 @@ struct Timer {
     Timer(HANDLE event,DWORD duration):stop(event),thread([this,duration]{if(WaitForSingleObject(stop,duration)==WAIT_TIMEOUT){expired=true;SetEvent(stop);}}){}
     ~Timer(){SetEvent(stop);thread.join();}
 };
-struct RunEvidence {bool acquired=false,published=false;std::string error,reason="failure";BrokerReport final;};
+struct RunEvidence {bool acquired=false,published=false;std::string error,reason="failure",connection_diagnostic;BrokerReport final;};
 std::string result(const RunEvidence& e,bool expired){
     const auto& r=e.final;const bool retired=e.acquired && r.snapshot_valid && r.device.io_retired;
     const bool released=e.acquired && r.snapshot_valid && r.device.device_released;
@@ -84,6 +84,8 @@ std::string result(const RunEvidence& e,bool expired){
         <<",\"processExitCodeKnown\":"<<r.process.exit_code_known<<",\"processExitCode\":"<<r.process.exit_code
         <<",\"lastDevicePhase\":"<<unsigned(r.device.phase)<<",\"lastDeviceFailure\":"<<unsigned(r.device.failure)<<",\"lastStreamFault\":"<<unsigned(r.device.stream_fault)
         <<",\"lastNativeError\":"<<r.device.native_error<<",\"lastObservedRateHz\":"<<r.device.rate_hz<<",\"lastDiagnostic\":"<<json_string(r.device.diagnostic)
+        <<",\"ownerFailureCode\":"<<json_string(broker_failure_name(r.first_failure))<<",\"ownerFailurePhase\":"<<unsigned(r.first_failure_phase)
+        <<",\"connectionDiagnostic\":"<<json_string(e.connection_diagnostic)
         <<",\"nativeDeviceAcquired\":"<<(kind==session::Kind::native && e.acquired)<<",\"helperLoadedInController\":"<<helper_loaded()<<",\"usbReadyForNextAcquire\":false,\"rateRestorationVerified\":false}\n";return o.str();
 }
 int run(const std::filesystem::path& input,const std::filesystem::path& output,DWORD duration,bool keepalive){
@@ -132,8 +134,11 @@ int run(const std::filesystem::path& input,const std::filesystem::path& output,D
             <<",\"brokerSha256\":"<<json_string(image_hash)<<",\"workerSha256\":"<<json_string(config.worker.sha256)<<",\"rateHz\":"<<ready_state.device.rate_hz<<",\"limitMs\":"<<duration<<",\"readyIsSnapshot\":true}\n";
         published.push_back(write_new(output/L"ready.json",ready.str()));evidence.published=true;journal.mark("serve_begin");
         while(WaitForSingleObject(stop.value,0)==WAIT_TIMEOUT){
-            const auto served=serve_broker_client(listener,owner,stop.value);
-            if(served==BrokerServeResult::owner_failed || owner.report().failed){evidence.reason="owner_failure";break;}
+            std::string connection_diagnostic;
+            const auto served=serve_broker_client(listener,owner,stop.value,&connection_diagnostic);
+            if(served==BrokerServeResult::owner_failed || owner.report().failed){
+                evidence.reason="owner_failure";evidence.connection_diagnostic=connection_diagnostic.substr(0,512);break;
+            }
             if(served==BrokerServeResult::stopped)break;
         }
         if(evidence.reason!="owner_failure")evidence.reason=timer.expired?"lifetime_limit":"stop_requested";

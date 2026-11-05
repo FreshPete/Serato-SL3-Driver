@@ -1,0 +1,27 @@
+{
+  "schema": "sl3.shutdown-diagnostic-preparation.v1",
+  "nativeChecksPassed": 71,
+  "deploymentChecksPassed": 26,
+  "buildManifestSha256": "70e06e7f099eff355dd528593ad08af229d5ec5aedd96d8cf432fa33d1bf93d4",
+  "preparedBundleManifestSha256": "898c4e5294aec6a67a7364ed9e47ff602f5228401fa10e8a1ca06d46e7cc8993",
+  "nativeDestinationChecked": true,
+  "directImportsResolved": true,
+  "installed": false,
+  "liveNewDiagnosticsRun": false,
+  "syntheticBlockedClientResultSha256": "61dee96fa439081150c694afc464f999e70b008a1c3d1655bfd6c4927e667cee",
+  "syntheticBlockedClient": {
+    "kind": "simulated",
+    "successful": false,
+    "ownerFailureCode": "client_control_abandoned",
+    "ownerFailurePhase": 3,
+    "connectionDiagnostic": "Complete broker pipe operation: 109",
+    "ioRetiredVerified": true,
+    "deviceReleasedVerified": true,
+    "processExited": true,
+    "jobEmpty": true
+  },
+  "previousLiveProcessExitAfterViewingEndMs": 8129.751,
+  "previousLiveForcedTerminationProven": false,
+  "eightSecondFallbackExplanationIsInference": true,
+  "shutdownFixed": false
+}

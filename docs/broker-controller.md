@@ -93,6 +93,12 @@ a native-mode kind-refusal test from claiming physical release based on an empty
 simulated worker's quit reply. Last snapshot diagnostics, native error, phase,
 fault, rate and actual process exit facts remain available as bounded metadata.
 
+The report also preserves the first ownership failure as `ownerFailureCode`
+and its original broker phase as `ownerFailurePhase`. Repeated close and later
+worker release cannot replace that cause. `connectionDiagnostic` retains up to
+512 characters from the failing pipe connection. These are control-thread
+diagnostics, not callback logging. [Serato shutdown investigation](serato-shutdown-diagnostic.md)
+
 Controller `successful` means this session lifecycle met its stated cleanup
 conditions. It does not establish analogue audio, timing accuracy, restoration,
 safe successive USB acquisition, current Serato admission or DVS. The result

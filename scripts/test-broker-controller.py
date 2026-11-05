@@ -152,6 +152,8 @@ def main():
                 'Simulation never becomes native evidence')
         require(result['usbReadyForNextAcquire'] is False and result['rateRestorationVerified'] is False, 'No inferred readiness/restoration')
         require(result['processExited'] is True and result['jobEmpty'] is True, 'Actual worker/job retirement')
+        require(isinstance(result['connectionDiagnostic'], str) and len(result['connectionDiagnostic']) <= 512,
+                'Bounded connection diagnostic must survive final publication')
         return result
 
     def active(name, mode='ordinary', lifetime=10000):
@@ -224,9 +226,12 @@ def main():
                 final = finish_case(output, proc, 0)
                 require(final['successful'] is True and final['reason'] == 'stop_requested' and final['published'] is True and
                         final['snapshotValid'] is True and final['ioRetiredVerified'] is True and final['deviceReleasedVerified'] is True and not final['failed'], 'Idle stop verified independently')
+                require(final['ownerFailureCode'] == 'none' and not final['connectionDiagnostic'],
+                        'Ordinary stop must not fabricate an ownership failure')
             else:
                 final = finish_case(output, proc, 1)
                 require(not final['successful'] and final['failed'] and final['reason'] == 'owner_failure', 'Destructive client release preserves owner failure')
+                require(final['ownerFailureCode'] != 'none', 'Destructive release must preserve a typed first failure')
             audit = (output/'worker-audit.txt').read_text().splitlines()
             require(audit.count('acquire') == 1 and audit.count('release') == 1, 'No controller reacquisition loop')
             if mode.startswith('ordinary'):
