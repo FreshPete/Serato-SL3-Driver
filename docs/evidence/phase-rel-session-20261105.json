@@ -1,0 +1,37 @@
+{
+  "schema": "sl3.phase-rel-session.v1",
+  "sourcesSha256": {
+    "trace": "73990630442feba586e9285762a694e176fa36dfc34ea073b5e33c939de7d666",
+    "broker": "c32823e86c4fa148693588f6c9891215dbdf8f2b6e125b98bb6e097f44067941",
+    "supervisor": "beb08bbdff848ebfe89743f0fe0c5086790a7974b31077546f893037ac053a5b",
+    "ready": "18c95fb20c932562bffe74b92abb9f4bacecebaa926b6b2525510425dc3daae5"
+  },
+  "traceEvents": 216,
+  "traceErrors": 0,
+  "rateHz": 44100,
+  "brokerLimitMs": 600000,
+  "asioStartReturnedSuccess": true,
+  "fullTracerDetachedAfterStart": true,
+  "desktopAutomationUsedDuringViewing": false,
+  "viewingDurationMs": 111436,
+  "endedAtOwnerRequest": true,
+  "ownerConfirmedRelPlatterTracking": true,
+  "physicalInputs": [
+    3,
+    4
+  ],
+  "audibleSl3OutputVerified": false,
+  "secondDeckVerified": false,
+  "brokerSuccessful": true,
+  "brokerReason": "stop_requested",
+  "ioRetiredVerified": true,
+  "deviceReleasedVerified": true,
+  "workerExitedVerified": true,
+  "jobEmptyVerified": true,
+  "lastNativeError": 1168,
+  "originalResourcesRestored": true,
+  "temporaryRegistrationRemoved": true,
+  "permanentInstallationValidated": false,
+  "generalUiResponsivenessIndependentlyVerified": false,
+  "severeLagReportedInThisRun": false
+}

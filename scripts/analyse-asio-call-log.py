@@ -23,12 +23,13 @@ def analyze(rows,marker):
     complete=all(marker[k]==0 for k in ['stopStatus','eventsLost','buffersLost'])
     v.require(type(marker['complete']) is bool and marker['complete']==complete,'Consistent session completion required')
     v.require(len(rows)<=8192,'Provider record bound exceeded')
-    pending={};closed=set();pairs=[];orphans=[];build=None;methods={};seen=set()
+    pending={};closed=set();pairs=[];orphans=[];build=None;methods={};seen=set();stamps=[]
     for ordinal,row in enumerate(rows):
         v.require(set(row)==OUTER and row['schema']=='sl3.asio-etw-record.v1','Exact event envelope required')
         v.integer(row['pid'],marker['pid'],marker['pid']);v.integer(row['tid'],1,2**32-1)
         stamp=row['timestampFileTime'];v.require(type(stamp) is str and re.fullmatch('[0-9]{1,20}',stamp),'Bounded FILETIME string required')
         v.integer(int(stamp),1,2**64-1)
+        stamps.append(int(stamp))
         p=row['payload'];v.require(type(p) is dict and set(p)==FIELDS and p['schema']=='sl3.asio-call.v1','Exact provider payload required')
         v.require(p['build'] in ['production','session_fixture'] and p['phase'] in ['begin','end','abandoned'],'Known build/phase required')
         build=p['build'] if build is None else build;v.require(p['build']==build,'Mixed build ordinals cannot be paired safely')
@@ -56,8 +57,9 @@ def analyze(rows,marker):
             if p['phase']=='end':method['rawResults'][str(p['result'])]=method['rawResults'].get(str(p['result']),0)+1
     gaps=sorted(set(range(min(seen),max(seen)+1))-seen) if seen else []
     abandoned=sum(p['phase']=='abandoned' for p in pairs)
-    return {'schema':'sl3.asio-call-analysis.v1','scope':'Selected own-provider calls in one completed ETL; host identity unverified','build':build,
+    return {'schema':'sl3.asio-call-analysis.v1','scope':'Selected own-provider calls in one completed ETL; host identity unverified','build':build,'pid':marker['pid'],
             'recordCount':len(rows),'pairedCalls':len(pairs),'completedCalls':len(pairs)-abandoned,'abandonedCalls':abandoned,
+            'eventFileTimeRange':{'first':str(min(stamps)),'last':str(max(stamps))} if stamps else None,
             'unterminatedBegins':sorted(pending),'orphanTerminals':orphans,'callIdGaps':gaps,'moduleCallBudgetReached':4096 in seen,
             'sessionMetadataComplete':complete,'sessionStopStatus':marker['stopStatus'],'reportedEventsLost':marker['eventsLost'],'reportedBuffersLost':marker['buffersLost'],
             'observedPairsComplete':bool(rows) and not pending and not orphans and not abandoned and not gaps,
@@ -68,10 +70,14 @@ def sha(path):return hashlib.sha256(v.bounded(path,16*1024*1024)).hexdigest()
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--etl',type=Path,required=True);p.add_argument('--session',type=Path,required=True)
-    p.add_argument('--configuration',choices=['Release','Debug'],default='Release');p.add_argument('--output',type=Path,required=True);args=p.parse_args()
+    p.add_argument('--configuration',choices=['Release','Debug'],default='Release');p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--expected-pid',type=int,help='Require the PID recorded by the independent host observer')
+    args=p.parse_args()
     etl=args.etl.absolute();session=args.session.absolute();folder=args.output.absolute()
     v.require(not folder.exists() and not folder.is_symlink() and not folder.is_junction() and folder.parent.is_dir(),'Fresh output directory required')
     marker=v.parse(v.bounded(session,65536));analyze([],marker)
+    if args.expected_pid is not None:
+        v.require(marker['pid']==args.expected_pid,'Session PID differs from expected observer PID')
     manifest=ROOT/f'artifacts/build/asio-trace-decoder/decoder-build-{args.configuration}.json';m=v.parse(v.bounded(manifest,1024*1024))
     v.require(m['schema']=='sl3.asio-etl-decoder-build.v1' and m['configuration']==args.configuration,'Known decoder build required')
     for source,digest in m['inputs'].items():v.require(sha(ROOT/source)==digest,'Decoder source drift')

@@ -59,9 +59,10 @@ def read(path, maximum=LIMIT):
 
 def inside(path, parent):
     require(path.is_absolute(), 'Absolute paths required')
+    require('..' not in path.parts, 'Parent traversal is not a deployment destination')
     result = path.resolve()
     require(result.is_relative_to(parent.resolve()) and result != parent.resolve(), 'Path escapes intended directory')
-    return result
+    return path
 
 
 def pe_info(data, role):
@@ -134,7 +135,7 @@ def prepare(manifest, expected, helper, output, installation, pointer, unmeasure
     if unmeasured:
         diagnostic = build.get('unmeasuredAsioDiagnostic', {})
         require(diagnostic.get('rateHz') == 44100 and diagnostic.get('bufferFrames') == 128
-                and diagnostic.get('maximumLifetimeMs') == 120000 and diagnostic.get('latencyAvailable') is False
+                and diagnostic.get('maximumLifetimeMs') == 600000 and diagnostic.get('latencyAvailable') is False
                 and diagnostic.get('simulatedCallbacksPassed') is True and diagnostic.get('nativePositiveRun') is False
                 and diagnostic.get('installed') is False, 'Tested unmeasured diagnostic build required')
         require({'sl3_asio_unmeasured_absent', 'sl3_broker_unmeasured_plan',
@@ -177,7 +178,7 @@ def prepare(manifest, expected, helper, output, installation, pointer, unmeasure
                                  'owned-entry uninstall and conflict preservation'],
         'automaticStart': False, 'serviceCreated': False, 'rateProfileIncluded': False, 'registryApplied': False,
         **diagnostic_label})
-    notice = "UNMEASURED 44.1 kHz DIAGNOSTIC ONLY. Broker lifetime is limited to two minutes.\n" if unmeasured else ""
+    notice = "UNMEASURED 44.1 kHz DIAGNOSTIC ONLY. Broker lifetime is limited to ten minutes.\n" if unmeasured else ""
     payload['README.txt'] = (notice+"LOCAL REVIEW BUNDLE - NOT INSTALLED; NOT A WORKING DRIVER RELEASE.\n"
         "Copy/ACL/registration installation and owned-entry uninstall still need implementation.\n"
         "The proposed locator references the reviewed future installation, not this bundle.\n"
@@ -241,7 +242,11 @@ def verify_payloads(manifest, payload):
     timing_mode = seed.get('timingMode')
     require(timing_mode in (None, 'unmeasured-diagnostic-44100-128') and
             timing_mode == manifest.get('timingMode') == plan.get('timingMode'), 'Bundle timing mode mismatch')
-    installation, pointer = destinations(Path(seed['installationDirectory']), Path(seed['pointerPath']))
+    installation = Path(seed['installationDirectory'])
+    pointer = Path(seed['pointerPath'])
+    # Resolve for containment, but retain the hash-bound spelling used by the
+    # locator. Windows app redirection can change resolve() after publication.
+    destinations(installation, pointer)
     require(payload['sl3-asio.conf'] == locator_text(installation, pointer, digest(payload['sl3_broker_controller.exe']), digest(payload['sl3_usbdk.exe'])), 'Locator does not bind planned binaries/pointer')
     require(plan['schema'] == 'sl3.deployment-plan.v1' and plan['packageId'] == manifest['packageId'] and
             plan['registryView'] == 64 and plan['registryHive'] == 'HKEY_LOCAL_MACHINE' and plan['registryApplied'] is False and

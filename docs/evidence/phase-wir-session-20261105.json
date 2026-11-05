@@ -1,0 +1,30 @@
+{
+  "schema": "sl3.phase-wir-session.v1",
+  "sourcesSha256": {
+    "trace": "aeac8b1fb5fc4a7fb08457cac12db04c41e6667d67226cdd8a1c5127b024fba6",
+    "broker": "6d2d9aed51d32f9b478bedc397c3f2580aa599d0a70513f71e44b8952aa4f12b",
+    "supervisor": "21446c12fcd903740bac1acd462c9c448823afbf5b703f0835dc549b0def8e68"
+  },
+  "traceEvents": 219,
+  "traceErrors": 0,
+  "asioStartReturnedSuccess": true,
+  "processProbesUnloadedAfterStart": true,
+  "fridaSessionStillAttachedDuringViewing": true,
+  "viewingDurationMs": 234557,
+  "endedByManualStop": true,
+  "ownerReportedPhaseControlWorking": true,
+  "ownerConfirmedMode": "WIR",
+  "spotifyTrackControlReported": true,
+  "relTrackingVerified": false,
+  "audibleSl3OutputVerified": false,
+  "ownerReportedSevereLagDuringDesktopAutomation": true,
+  "lagCauseVerified": false,
+  "brokerSuccessful": false,
+  "brokerReason": "owner_failure",
+  "ioRetiredVerified": true,
+  "deviceReleasedVerified": true,
+  "workerExitedVerified": true,
+  "jobEmptyVerified": true,
+  "originalResourcesRestored": true,
+  "temporaryRegistrationRemoved": true
+}

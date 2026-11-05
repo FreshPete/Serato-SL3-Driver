@@ -1,4 +1,12 @@
-# SL3 rebuild status — 2 November 2026
+# SL3 rebuild status — 5 November 2026
+
+Serato DJ Pro 5.0.0.1278 on Windows 11 successfully selected the SL3, opened the rebuilt ASIO driver and started 44.1 kHz audio with 128-frame buffers. Phase signal was measured in Serato's channels 3/4. The owner confirmed WIR control and separately confirmed one-deck REL tracking in a manual session with the tracer detached. The REL session ended with verified I/O retirement, device release and worker exit.
+
+The [demonstration page](docs/demo-20261105.md) includes the owner's phone video, working screenshot and version screenshot. The [Phase status](docs/phase-essential-status.md) and [return report](docs/RETURN-REPORT.md) track the evidence and remaining work.
+
+The integration is experimental and temporary. Audible SL3 output, sustained reliability, two-deck operation and a reusable installation/startup flow remain unverified. The latest Release build passed 69 native checks, with 26 deployment checks passing. Windows signing enforcement remains part of the test requirements.
+
+## Earlier checkpoint — 2 November 2026
 
 **Compatibility is not restored. No replacement driver release is available.** The [requirement audit](docs/completion-audit.md) and [return report](docs/RETURN-REPORT.md) separate implemented software, archived physical evidence and remaining validation.
 

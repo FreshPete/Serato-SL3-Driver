@@ -89,7 +89,7 @@ std::string result(const RunEvidence& e,bool expired){
 int run(const std::filesystem::path& input,const std::filesystem::path& output,DWORD duration,bool keepalive){
     require(!keepalive || kind==session::Kind::native,"Playback keepalive requires the native controller");
     if constexpr(timing_policy==asio::TimingPolicy::unmeasured_diagnostic)
-        require(duration<=120000,"Unmeasured diagnostic lifetime must not exceed two minutes");
+        require(duration<=600000,"Unmeasured diagnostic lifetime must not exceed ten minutes");
     auto config=asio::load_driver_configuration(input,timing_policy);require(!config.broker,"Controller input must be private-worker format");
     require(keepalive==!config.keepalive_timing_sha256.empty(),"Controller playback mode differs from reviewed timing profile");
     ReadFileLease source(input);const auto source_text=source.text();const auto image=self();auto image_pin=std::make_shared<ReadFileLease>(image,256*1024*1024);const auto image_hash=Process::executable_sha256(image);

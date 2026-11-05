@@ -2,9 +2,13 @@
 
 Restore the physical Rane SL3 for current Serato DJ Pro and two-deck DVS. Windows 11 x64 is first; macOS 26 Tahoe is second. Driver loading, independent audio, Serato recognition and working DVS are separate milestones.
 
-## Latest status — 4 November 2026
+## Latest status — 5 November 2026
 
-The Windows target is **Phase Essential with the Rane SL3 in Serato DJ Pro 5.0**. The rebuilt Windows transport captured the real Phase signal on the SL3's inputs 3 and 4 and passed a separate stereo playback loopback. Serato recognized the SL3, including in a test where its virtual MIDI port was associated, but did not load the rebuilt ASIO driver. See the [Phase Essential status and resume point](docs/phase-essential-status.md).
+**Serato DJ Pro 5.0 on Windows 11 now opens the rebuilt SL3 ASIO driver and starts audio.** The owner confirmed Phase Essential control in WIR mode, including with a Spotify track, and separately confirmed one-deck REL tracking through SL3 inputs 3 and 4. The manual REL test ended with a successful broker stop and verified device release.
+
+See the [phone video, working screenshot and version screenshot](docs/demo-20261105.md), [Phase Essential status](docs/phase-essential-status.md) and [latest return report](docs/RETURN-REPORT.md).
+
+This remains an experimental temporary integration. Audible SL3 output, sustained reliability, a second deck and a reusable installation/startup process remain unfinished. The latest Release build passed 69 native checks and the deployment workflow passed 26 checks.
 
 ## Earlier engineering status — 2 November 2026
 

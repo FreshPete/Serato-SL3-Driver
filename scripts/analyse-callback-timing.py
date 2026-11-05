@@ -69,12 +69,12 @@ def analyse(report):
     }
 
 
-def analyse_recording(folder, worker_sha, simulated):
+def analyse_recording(folder, worker_sha, simulated, host_loopback=False):
     path = Path(__file__).with_name('validate-input-record-probe.py')
     spec = importlib.util.spec_from_file_location('validate_input_record_probe', path)
     recorder = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(recorder)
-    checked = recorder.validate(folder, worker_sha, simulated)
+    checked = recorder.validate(folder, worker_sha, simulated, host_loopback=host_loopback)
     raw = recorder.read(folder/'result.json', 262144)
     require(recorder.sha(raw) == checked['resultSha256'], 'Recording changed after validation')
     rows = json.loads(raw)['rows']
@@ -89,6 +89,8 @@ def analyse_recording(folder, worker_sha, simulated):
     result.update(sourceSchema='sl3.input-record-probe.v1', probeRecordSha256=checked['resultSha256'],
                   pcmSha256=checked['pcmSha256'], completeRecordedPrefixCoverage=True,
                   trailingCallbacksNotRecorded=trailing, completeCallbackCoverage=trailing == 0)
+    if host_loopback:
+        result.update(hostLoopback=True, workerSha256=worker_sha)
     return result
 
 
@@ -97,9 +99,12 @@ def main():
     parser.add_argument('probe', type=Path, help='Host probe JSON, or input recorder directory with --worker-sha256')
     parser.add_argument('--worker-sha256', help='Reviewed worker SHA-256 for a finite input recording')
     parser.add_argument('--simulated', action='store_true', help='Require simulated input recording evidence')
+    parser.add_argument('--host-loopback', action='store_true', help='Validate a saved physical callback loopback')
     args = parser.parse_args()
+    if args.host_loopback and (args.worker_sha256 is None or args.simulated):
+        parser.error('--host-loopback requires --worker-sha256 and physical evidence')
     if args.worker_sha256 is not None:
-        result = analyse_recording(args.probe, args.worker_sha256, args.simulated)
+        result = analyse_recording(args.probe, args.worker_sha256, args.simulated, args.host_loopback)
     else:
         require(not args.simulated, '--simulated requires --worker-sha256')
         require(args.probe.stat().st_size <= 1024*1024, 'Oversized probe record')

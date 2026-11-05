@@ -1,0 +1,51 @@
+{
+  "schema": "sl3.phase-serato-input.v1",
+  "sourceTraceSha256": "8f5ff12364598fd86b950f7be435d00ea522c2d698b66770da484f2f86525052",
+  "snapshots": 8,
+  "spanMs": 21010,
+  "framesPerSnapshot": 128,
+  "rateHz": 44100,
+  "inputs": [
+    {
+      "channel": 1,
+      "meanSnapshotRms": 1.5859276241597778e-05,
+      "meanSnapshotRmsDbfs": -95.99433272303223,
+      "maximumSnapshotPeak": 9.989738464355469e-05
+    },
+    {
+      "channel": 2,
+      "meanSnapshotRms": 1.5421783203177087e-05,
+      "meanSnapshotRmsDbfs": -96.23730812813358,
+      "maximumSnapshotPeak": 8.690357208251953e-05
+    },
+    {
+      "channel": 3,
+      "meanSnapshotRms": 0.23786630877664827,
+      "meanSnapshotRmsDbfs": -12.47334133567909,
+      "maximumSnapshotPeak": 0.33844172954559326
+    },
+    {
+      "channel": 4,
+      "meanSnapshotRms": 0.24152354133424508,
+      "meanSnapshotRmsDbfs": -12.34081064207696,
+      "maximumSnapshotPeak": 0.33972764015197754
+    },
+    {
+      "channel": 5,
+      "meanSnapshotRms": 1.9952433635163328e-05,
+      "meanSnapshotRmsDbfs": -94.00008250093526,
+      "maximumSnapshotPeak": 9.357929229736328e-05
+    },
+    {
+      "channel": 6,
+      "meanSnapshotRms": 1.2174755163525788e-05,
+      "meanSnapshotRmsDbfs": -98.2907952752832,
+      "maximumSnapshotPeak": 6.937980651855469e-05
+    }
+  ],
+  "phaseScopeCircleObserved": true,
+  "scopeTrackingPercentObserved": 0,
+  "platterTrackingVerified": false,
+  "audiblePlaybackVerified": false,
+  "probeMayAffectTiming": true
+}

@@ -1,4 +1,10 @@
-# Public development checkpoint — 2 November 2026
+# Public development checkpoint — 5 November 2026
+
+Serato DJ Pro 5.0 now selects the SL3, loads the rebuilt ASIO driver and starts audio in the attended Windows 11 setup. Phase WIR control and one-deck REL tracking have been confirmed by the owner. Physical input delivery on channels 3/4 was measured, and the manual REL run stopped and released cleanly.
+
+The [demo page](demo-20261105.md) provides public screenshots and the owner's phone video. [Phase status](phase-essential-status.md) explains the temporary startup route, earlier UI lag and remaining validation. Audible SL3 output, sustained reliability, the second deck and permanent deployment remain open.
+
+## Earlier checkpoints — 2 November 2026
 
 **Full requirement review refreshed, 2 November:** [The current audit](completion-audit.md) now replaces stale 50-test/current-worker statements with verified 65/65/39 manifest records and exact current images. The named rebuilt x64 ASIO/CLSID registrations remain absent; installed original Serato files match. All operational Windows/audio/Serato/DVS requirements retain their missing proof. The unarmed attended packet is the next external step; no hardware, app or policy action ran.
 

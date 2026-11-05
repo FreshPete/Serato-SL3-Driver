@@ -20,6 +20,7 @@ class CallAnalysisTests(unittest.TestCase):
         self.assertEqual(r['completedCalls'],2);self.assertTrue(r['observedPairsComplete'])
         self.assertEqual(r['methods']['start']['returnedErrors'],1)
         self.assertEqual(r['pairs'][0]['beginRecord'],1)
+        self.assertEqual(r['eventFileTimeRange'], {'first':'1000000','last':'1000000'})
         for key in ['actualEtwCaptureDecoded','sourceHostIdentityVerified','wholeHostSequenceVerified','seratoCaptureVerified','physicalAudioVerified','currentSeratoAdmissionVerified','twoDeckDvsVerified']:
             self.assertIs(r[key],False)
 

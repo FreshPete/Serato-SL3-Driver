@@ -80,7 +80,8 @@ def process_handle(pid):
         kernel.CloseHandle(handle)
 
 
-def start(controller, source, session, pointer, controller_sha):
+def start(controller, source, session, pointer, controller_sha, limit_ms=120000):
+    require(type(limit_ms) is int and 1000 <= limit_ms <= 600000, "Diagnostic lifetime must be 1000..600000 ms")
     require(digest(controller) == controller_sha, "Diagnostic controller hash differs")
     config = session / "sl3-asio.conf"
     ownership = session.with_suffix(".pointer.json")
@@ -93,7 +94,7 @@ def start(controller, source, session, pointer, controller_sha):
     pointer.parent.mkdir(exist_ok=True)
     with session.with_suffix(".stdout").open("xb") as out, session.with_suffix(".stderr").open("xb") as err:
         process = subprocess.Popen(
-            [str(controller), "--run", "--input", str(source), "--output", str(session), "--limit-ms", "120000"],
+            [str(controller), "--run", "--input", str(source), "--output", str(session), "--limit-ms", str(limit_ms)],
             stdout=out, stderr=err, creationflags=subprocess.CREATE_NO_WINDOW,
         )
     expected_sha = None
@@ -108,7 +109,8 @@ def start(controller, source, session, pointer, controller_sha):
         require(process.poll() is None and ready["controllerPid"] == process.pid
                 and ready["configSha256"] == config_sha and ready["brokerSha256"] == controller_sha
                 and ready["kind"] == inspection["kind"]
-                and ready["rateHz"] == 44100 and ready["workerSha256"] == inspection["workerSha256"],
+                and ready["rateHz"] == 44100 and ready["workerSha256"] == inspection["workerSha256"]
+                and ready["limitMs"] == limit_ms,
                 "Diagnostic broker readiness does not match the launched process")
         expected = (
             f"SL3-ASIO-SESSION-POINTER-1\nconfiguration={config}\nconfiguration_sha256={config_sha}\n"
@@ -154,7 +156,7 @@ def stop(controller, session, pointer, controller_sha):
             require(identity[1](15000), "Exact diagnostic controller still running")
     require(result_path.is_file(), "Diagnostic broker did not report retirement")
     result = read(result_path)
-    require(result["successful"] and result["processExited"] and result["jobEmpty"]
+    require(result["processExited"] and result["jobEmpty"] and result["ioRetiredVerified"]
             and result["deviceReleasedVerified"] and not pointer.exists(),
             "Diagnostic worker retirement is incomplete")
     return {**result, "controllerExited": True}
@@ -179,13 +181,15 @@ if __name__ == "__main__":
     parser.add_argument("--session", type=Path, required=True)
     parser.add_argument("--pointer", type=Path, required=True)
     parser.add_argument("--input", type=Path)
+    parser.add_argument("--limit-ms", type=int, help="Start lifetime, default 120000, maximum 600000")
     args = parser.parse_args()
     require(all(path.is_absolute() for path in (args.controller, args.session, args.pointer)), "Absolute paths required")
     with handoff_lock(args.session):
         if args.action == "start":
             require(args.input is not None and args.input.is_absolute(), "Start requires an absolute input")
-            result = start(args.controller, args.input, args.session, args.pointer, args.controller_sha256)
+            result = start(args.controller, args.input, args.session, args.pointer, args.controller_sha256,
+                           120000 if args.limit_ms is None else args.limit_ms)
         else:
-            require(args.input is None, "Stop does not take an input")
+            require(args.input is None and args.limit_ms is None, "Stop does not take an input or lifetime")
             result = close_handoff(args.controller, args.session, args.pointer, args.controller_sha256)
     print(json.dumps(result))

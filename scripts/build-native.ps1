@@ -128,7 +128,7 @@ try {
         dllSha256=(Get-FileHash -LiteralPath (Join-Path $build "unmeasured/$Configuration/sl3_asio.dll")).Hash
         brokerSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_broker_controller_unmeasured.exe")).Hash
         simulatedBrokerSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_broker_controller_unmeasured_simulated.exe")).Hash
-        rateHz=44100;bufferFrames=128;latencyAvailable=$false;maximumLifetimeMs=120000
+        rateHz=44100;bufferFrames=128;latencyAvailable=$false;maximumLifetimeMs=600000
         simulatedCallbacksPassed=$true;nativePositiveRun=$false;installed=$false}}
     if($WithAsioComponent){$record.brokerAsio=[ordered]@{simulatedOrdinaryComLifecyclePassed=$true
         testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_broker_asio_tests.exe")).Hash

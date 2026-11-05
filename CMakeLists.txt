@@ -219,7 +219,7 @@ if(SL3_BUILD_ASIO_COMPONENT)
     add_test(NAME sl3_asio_unmeasured_absent COMMAND sl3_asio_activation_tests "$<TARGET_FILE:sl3_asio_unmeasured>" sta)
     add_test(NAME sl3_broker_unmeasured_plan COMMAND sl3_broker_controller_unmeasured --plan)
     add_test(NAME sl3_broker_unmeasured_rejects_long_lifetime COMMAND sl3_broker_controller_unmeasured
-      --run --input missing.conf --output missing-output --limit-ms 120001)
+      --run --input missing.conf --output missing-output --limit-ms 600001)
     set_tests_properties(sl3_broker_unmeasured_rejects_long_lifetime PROPERTIES WILL_FAIL TRUE)
     add_test(NAME sl3_broker_unmeasured_lifecycle COMMAND "${Python3_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/scripts/test-broker-controller.py"
       --unmeasured "$<TARGET_FILE:sl3_broker_controller>" "$<TARGET_FILE:sl3_broker_controller_unmeasured_simulated>"
