@@ -1,13 +1,14 @@
 # One ordinary-user timer diagnostic and one separately elevated passive trace.
 param([Parameter(Mandatory)][string]$Plan,[switch]$Run,[switch]$SilentStream,[switch]$Tone,
-      [switch]$StereoMarkers,[switch]$RetainedKeepalive,[switch]$HostLoopback)
+      [switch]$StereoMarkers,[switch]$RetainedKeepalive,[switch]$HostLoopback,[switch]$Deck1Output)
 $ErrorActionPreference='Stop'
 if($SilentStream -and $Tone){throw 'Choose one playback mode'}
 if($StereoMarkers -and -not $Tone){throw 'Stereo markers require tone mode'}
+if($Deck1Output -and -not $HostLoopback){throw 'Deck 1 output requires the host loopback mode'}
 if(($RetainedKeepalive -or $HostLoopback) -and ($Tone -or $SilentStream -or ($RetainedKeepalive -and $HostLoopback))){throw 'Choose one retained or standalone test'}
 $root=Split-Path -Parent $PSScriptRoot
 $settings=Get-Content -LiteralPath $Plan -Raw | ConvertFrom-Json
-$scenario=if($HostLoopback){'host-callback-loopback-startup-empty-20261104'}elseif($RetainedKeepalive){'retained-keepalive-20261104'}elseif($StereoMarkers){'timer-stereo-markers-20261104'}elseif($Tone){'timer-tone-20261104'}elseif($SilentStream){'timer-silent-stream-20261104'}else{'timer-cadence-20261104'}
+$scenario=if($Deck1Output){'host-callback-loopback-deck1-20261105'}elseif($HostLoopback){'host-callback-loopback-startup-empty-20261104'}elseif($RetainedKeepalive){'retained-keepalive-20261104'}elseif($StereoMarkers){'timer-stereo-markers-20261104'}elseif($Tone){'timer-tone-20261104'}elseif($SilentStream){'timer-silent-stream-20261104'}else{'timer-cadence-20261104'}
 $buildName=if($HostLoopback){'windows-startup-empty-20261104'}elseif($RetainedKeepalive){'windows-post-loopback-20261104'}else{$scenario}
 $build=Join-Path $root "artifacts/build/$buildName"
 $worker=Join-Path $build 'Release/sl3_usbdk.exe'
@@ -30,6 +31,9 @@ $traceSeconds=40
 if($HostLoopback){
     $traceSeconds=60
     $probe=Join-Path $build 'Release/sl3_input_record_probe.exe'
+    if($Deck1Output){$probe=Join-Path $root 'artifacts/build/windows-deck1-loopback-20261105/Release/sl3_input_record_probe.exe'}
+    $previewMode=if($Deck1Output){'--plan-loopback-deck1'}else{'--plan-loopback'}
+    $probeMode=if($Deck1Output){'--run-loopback-deck1'}else{'--run-loopback'}
     $analyser=Join-Path $PSScriptRoot 'analyse-timer-loopback.py'
     $validator=Join-Path $PSScriptRoot 'validate-input-record-probe.py'
     $traceValidator=Join-Path $PSScriptRoot 'validate-usbdk-capture.py'
@@ -38,11 +42,11 @@ if($HostLoopback){
        (Get-FileHash -LiteralPath $analyser).Hash -ne $settings.analyserSha256 -or
        (Get-FileHash -LiteralPath $validator).Hash -ne $settings.validatorSha256 -or
        (Get-FileHash -LiteralPath $traceValidator).Hash -ne $settings.traceValidatorSha256){throw 'Host loopback probe, analyser or validator hash differs'}
-    $preview=& $probe --plan-loopback | ConvertFrom-Json
+    $preview=& $probe $previewMode | ConvertFrom-Json
     if($LASTEXITCODE -or $preview.planOnly -ne $true -or $preview.deviceAccess -ne $false -or
        $preview.expectedRateHz -ne 44100 -or ($preview.markerHz -join ',') -cne '997,1301' -or
        $preview.markerFirstFrame -ne 8192 -or $preview.markerDurationMilliseconds -ne 650 -or
-       $preview.bankFrames -ne 128){throw 'Unexpected host loopback preview'}
+       $preview.bankFrames -ne 128 -or ($Deck1Output -and ($preview.markerOutputChannels -join ',') -cne '3,4')){throw 'Unexpected host loopback preview'}
     & $python -c 'import numpy'
     if($LASTEXITCODE){throw 'Host loopback analysis environment unavailable'}
 }elseif($RetainedKeepalive){
@@ -114,6 +118,7 @@ try{
         $admission.validatorSha256=$settings.validatorSha256
         $admission.traceValidatorSha256=$settings.traceValidatorSha256
         $admission.helperSha256=$settings.helperSha256
+        if($Deck1Output){$admission.markerOutputChannels=$preview.markerOutputChannels}
     }
     $admission | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $traceDirectory 'timer-admission.json')
     $python=Join-Path $root '.venv/Scripts/python.exe'
@@ -123,7 +128,7 @@ try{
         try{
             $probeStarted=[datetimeoffset]::UtcNow
             try{
-                & $probe --run-loopback --worker $worker --worker-sha256 $settings.workerSha256 --helper $helper --output $base --expected-rate 44100
+                & $probe $probeMode --worker $worker --worker-sha256 $settings.workerSha256 --helper $helper --output $base --expected-rate 44100
                 $probeExitCode=$LASTEXITCODE
             }finally{$probeCompleted=[datetimeoffset]::UtcNow}
             if($probeExitCode){throw "Host loopback probe exited $probeExitCode"}
@@ -191,7 +196,8 @@ if($HostLoopback){
     if(-not $covered){throw 'Trace does not cover the complete loopback probe'}
     if($probeError){throw $probeError}
     $result=Get-Content -LiteralPath (Join-Path $base 'loopback-analysis.json') -Raw | ConvertFrom-Json
-    if($result.schema -cne 'sl3.host-loopback-analysis.v2' -or $result.bothMarkersAccepted -ne $true){
+    if($result.schema -cne 'sl3.host-loopback-analysis.v2' -or $result.bothMarkersAccepted -ne $true -or
+       ($Deck1Output -and ($result.markerOutputChannels -join ',') -cne '3,4')){
         throw 'The complete stereo return did not qualify. Inspect the saved analysis for each channel.'
     }
     $result.markerReturns | Select-Object streamChannel,frequencyHz,acceptedOffsetFrames

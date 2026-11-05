@@ -3,6 +3,7 @@
 #include <atomic>
 #include <cmath>
 #include <cstring>
+#include <fstream>
 #include <iostream>
 #include <limits>
 #include <stdexcept>
@@ -47,20 +48,21 @@ static void unavailable(DriverFacade& driver){
         driver.start(),driver.stop(),driver.controlPanel(),driver.future(kAsioCanTimeInfo,nullptr),driver.outputReady()})require(result==ASE_NotPresent,"Uninitialized methods fail without readiness");
     require(a==71 && b==72 && c==73 && d==74 && rate==12345 && position.lo==75 && time.lo==76 && info.channel==77 && clock.index==78 && buffer.channelNum==79,"Unavailable calls preserve outputs");
 }
-static void healthy(const std::filesystem::path& fixture){
+static void healthy(const WorkerSpec& worker,unsigned expected_rate){
     // Explicit synthetic extra delays, not a physical SL3 calibration.
-    DriverFacade driver(spec(fixture),{7,11});unavailable(driver);require(driver.init()==ASIOTrue && driver.init()==ASIOTrue,"Inspection-backed initialization is idempotent");
+    DriverFacade driver(worker,{7,11});unavailable(driver);require(driver.init()==ASIOTrue && driver.init()==ASIOTrue,"Inspection-backed initialization is idempotent");
     long minimum=0,maximum=0,preferred=0,granularity=0;
     require(driver.getBufferSize(&minimum,&maximum,&preferred,&granularity)==ASE_OK && minimum==64 && maximum==1024 && preferred==128 && granularity==-1,"Supported power-of-two buffer range");
     require(driver.getChannels(nullptr,&minimum)==ASE_InvalidParameter && driver.getBufferSize(&minimum,&maximum,&preferred,nullptr)==ASE_InvalidParameter,"Validate pointers before output publication");
-    ASIOSampleRate rate=0;require(driver.getSampleRate(&rate)==ASE_OK && rate==48000 && driver.canSampleRate(rate)==ASE_OK && driver.setSampleRate(rate)==ASE_OK &&
-        driver.canSampleRate(44100)==ASE_NoClock && driver.setSampleRate(44100)==ASE_NoClock && driver.setSampleRate(0)==ASE_NoClock &&
+    const auto other_rate=expected_rate==48000?44100u:48000u;
+    ASIOSampleRate rate=0;require(driver.getSampleRate(&rate)==ASE_OK && rate==expected_rate && driver.canSampleRate(rate)==ASE_OK && driver.setSampleRate(rate)==ASE_OK &&
+        driver.canSampleRate(other_rate)==ASE_NoClock && driver.setSampleRate(other_rate)==ASE_NoClock && driver.setSampleRate(0)==ASE_NoClock &&
         driver.canSampleRate(std::numeric_limits<double>::quiet_NaN())==ASE_NoClock,"Observed-rate-only contract, no implicit rate setter");
     long count=0;require(driver.getClockSources(nullptr,&count)==ASE_OK && count==1,"Clock count query with zero capacity");
     std::array<ASIOClockSource,2> clocks{};clocks[1].index=999;count=2;
     require(driver.getClockSources(clocks.data(),&count)==ASE_OK && count==1 && clocks[0].index==0 && clocks[0].isCurrentSource==ASIOTrue && clocks[0].associatedChannel==-1 &&
         clocks[0].associatedGroup==-1 && clocks[1].index==999 && driver.setClockSource(0)==ASE_OK && driver.setClockSource(1)==ASE_InvalidParameter,"Only one device clock, no array overrun or control write");
-    Host h(driver);host=&h;auto cb=callbacks();
+    Host h(driver);h.rate=expected_rate;host=&h;auto cb=callbacks();
     require(driver.createBuffers(h.buffers.data(),12,64,&cb)==ASE_OK,"Publish actual SDK planes");const auto pointer=h.buffers[0].buffers[0];
     long input=0,output=0;require(driver.getLatencies(&input,&output)==ASE_OK && input==71 && output==75,"Bridge delay plus explicitly supplied synthetic extra delays");
     for(long direction=0;direction<2;++direction)for(long channel=0;channel<6;++channel){ASIOChannelInfo info{};info.channel=channel;info.isInput=direction?ASIOTrue:ASIOFalse;
@@ -75,6 +77,15 @@ static void healthy(const std::filesystem::path& fixture){
     require(driver.disposeBuffers()==ASE_OK,"Dispose after normal retirement");ASIOChannelInfo inactive{};inactive.isInput=ASIOTrue;
     require(driver.getChannelInfo(&inactive)==ASE_OK && inactive.isActive==ASIOFalse,"Disposed channel metadata becomes inactive");
     require(driver.controlPanel()==ASE_NotPresent && driver.future(kAsioCanTimeInfo,nullptr)==ASE_NotPresent && driver.outputReady()==ASE_NotPresent,"No unimplemented time-info/output-ready negotiation");
+}
+static void healthy_44100(const std::filesystem::path& fixture){
+    struct ClockFile {
+        std::filesystem::path path=std::filesystem::temp_directory_path()/(L"SL3FacadeClock-"+std::to_wstring(GetCurrentProcessId())+L"-"+std::to_wstring(GetTickCount64())+L".txt");
+        ~ClockFile(){std::error_code error;std::filesystem::remove(path,error);}
+    } clock;
+    {std::ofstream file(clock.path);file<<44100;require(bool(file),"Write simulated 44.1 kHz clock");}
+    const auto mode=L"clock:"+clock.path.native();
+    healthy(spec(fixture,mode.c_str()),44100);
 }
 static void bound_profile(const std::filesystem::path& fixture){
     DriverFacade wrong_rate(spec(fixture),{7,11,44100,128});require(wrong_rate.init()==ASIOFalse,"Reject observed rate outside timing calibration");
@@ -99,7 +110,7 @@ static void failures(const std::filesystem::path& fixture,const std::filesystem:
     char message[124]{};failed.getErrorMessage(message);failed.getErrorMessage(nullptr);require(std::strlen(message)>0 && std::strlen(message)<124,"Bounded error string");
 }
 int wmain(int argc,wchar_t** argv){
-    try{require(argc==3,"Fixture and native worker paths required");healthy(argv[1]);bound_profile(argv[1]);failures(argv[1],argv[2]);
-        std::cout<<"ASIO facade clock/buffer/channel/latency metadata, current-block position, session callbacks, reentry, repeated start/stop and native absent-helper rejection passed; synthetic timing only\n";
+    try{require(argc==3,"Fixture and native worker paths required");healthy(spec(argv[1]),48000);healthy_44100(argv[1]);bound_profile(argv[1]);failures(argv[1],argv[2]);
+        std::cout<<"ASIO facade clock and callbacks at 44.1/48 kHz, buffer and channel metadata, repeated start/stop and native absent-helper rejection passed; synthetic timing only\n";
     }catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}
 }

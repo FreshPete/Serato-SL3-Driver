@@ -47,6 +47,9 @@ def validate(folder,worker_sha,simulated=False,host_loopback=False):
         require(rate==44100 and result.get('markerHz')==[997,1301] and
                 integer(result.get('markerFirstFrame'))==8192 and integer(result.get('markerFrames'))==28665,
                 'Host loopback marker contract differs')
+        outputs=result.get('markerOutputChannels',[1,2])
+        require(type(outputs) is list and [integer(channel) for channel in outputs] in ([1,2],[3,4]),
+                'Host loopback marker output channels differ')
     target=((rate*3+127)//128)*128
     for name,value in [('nominalRequestedMilliseconds',3000),('bankFrames',128),('channels',6),('sampleBytes',3),('intervals',8),('targetFrames',target),('recordedFrames',target),('recordedCallbacks',target//128),('recorderFault',0),('startupFramesDiscarded',0),('hostFailure',0),('pcmBytes',target*18)]:
         require(integer(result.get(name))==value,'Record geometry/status differs: '+name)

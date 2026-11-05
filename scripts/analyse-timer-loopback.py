@@ -121,12 +121,15 @@ def analyse_host(folder, worker_sha):
     frames = tone['decode_recording'](audio)
     origin, count, frequencies = (record[key] for key in ('markerFirstFrame', 'markerFrames', 'markerHz'))
     returns = host_marker_returns(frames, origin, count, frequencies, tone['fit'])
-    return {'schema': 'sl3.host-loopback-analysis.v2', 'recordSha256': checked['resultSha256'],
+    result = {'schema': 'sl3.host-loopback-analysis.v2', 'recordSha256': checked['resultSha256'],
             'workerSha256': worker_sha, 'nativeJournal': checked['nativeJournal'],
             'pcmSha256': digest, 'rateHz': 44100, 'markerReturns': returns,
             'bothMarkersAccepted': all(item['acceptedOffsetFrames'] is not None for item in returns),
             'timingProfileWritten': False,
             'directionalLatencyMeasured': False}
+    if 'markerOutputChannels' in record:
+        result['markerOutputChannels'] = record['markerOutputChannels']
+    return result
 
 
 def main():

@@ -61,6 +61,7 @@ struct Capture {
     std::atomic<bool> done{false},bad{false};HostSession* session=nullptr;
     std::uint64_t frequency=0;long previous_bank=-1;
     Marker marker;
+    unsigned first_marker_output=0;
     explicit Capture(std::size_t frames):pcm(frames*18),recorder(pcm.data(),frames),rows(frames/bank_frames){
         for(long c=0;c<6;++c){planes[std::size_t(c)]={ASIOTrue,c,{}};planes[std::size_t(c+6)]={ASIOFalse,c,{}};}
     }
@@ -86,7 +87,7 @@ void callback(long bank,ASIOBool direct) noexcept {
             const auto& pcm=c.marker[channel];
             if(offset<pcm.size()){
                 const auto first=std::size_t(offset);
-                std::memcpy(c.planes[channel+6].buffers[bank],pcm.data()+first,
+                std::memcpy(c.planes[channel+6+c.first_marker_output].buffers[bank],pcm.data()+first,
                             std::min<std::size_t>(bank_frames*3,pcm.size()-first));
             }
         }
@@ -97,13 +98,13 @@ void callback(long bank,ASIOBool direct) noexcept {
     }
     if(c.recorder.complete())c.done.store(true,std::memory_order_release);
 }
-int run(WorkerSpec spec,const std::filesystem::path& folder,unsigned expected,bool loopback){
+int run(WorkerSpec spec,const std::filesystem::path& folder,unsigned expected,bool loopback,unsigned first_marker_output){
     ordinary();local(folder);local(spec.executable);local(spec.helper);
     require(!std::filesystem::exists(folder),"Fresh recording directory required");Pin parent(folder.parent_path(),true);
     require(CreateDirectoryW(folder.c_str(),nullptr)!=FALSE,"Create recording directory");Pin directory(folder,true);
     const auto target=((std::size_t(expected)*3+127)/128)*128;
     Capture capture(target);LARGE_INTEGER frequency{};require(QueryPerformanceFrequency(&frequency) && frequency.QuadPart>0,"Read QPC frequency");capture.frequency=std::uint64_t(frequency.QuadPart);
-    if(loopback)capture.marker=make_marker(expected);
+    if(loopback){capture.marker=make_marker(expected);capture.first_marker_output=first_marker_output;}
     const auto payload=quote(loopback?"bounded stereo markers":"zero PCM only");
     sl3::diagnostic::Watchdog watchdog;current=&capture;HostSession session(spec);capture.session=&session;
     const auto phase=[&](const wchar_t* name){write_new(folder/name,std::string("{\"phase\":")+quote(ascii(name))+",\"audioOutputPayload\":"+payload+"}\n");};
@@ -179,6 +180,7 @@ int run(WorkerSpec spec,const std::filesystem::path& folder,unsigned expected,bo
         <<",\"audioOutputPayload\":"<<payload;
     if(loopback)text<<",\"markerFirstFrame\":"<<marker_start<<",\"markerFrames\":"<<capture.marker[0].size()/3
         <<",\"markerHz\":["<<marker_hz[0]<<','<<marker_hz[1]<<']'
+        <<",\"markerOutputChannels\":["<<first_marker_output+1<<','<<first_marker_output+2<<']'
         <<",\"audioExit\":"<<unsigned(state.audio.exit)<<",\"pumpFault\":"<<unsigned(state.audio.pump_failure.cause)
         <<",\"pumpQueueResult\":"<<unsigned(state.audio.pump_failure.queue)<<",\"pumpBridgeStatus\":"<<unsigned(state.audio.pump_failure.bridge)
         <<",\"workerFailure\":"<<unsigned(device.failure)<<",\"workerStreamFault\":"<<unsigned(device.stream_fault)
@@ -189,17 +191,20 @@ int run(WorkerSpec spec,const std::filesystem::path& folder,unsigned expected,bo
 }
 }
 int wmain(int argc,wchar_t** argv){try{
-    if(argc==2 && std::wstring(argv[1])==L"--plan-loopback"){
+    const std::wstring mode=argc>=2?argv[1]:L"--plan";
+    const bool deck1=mode==L"--plan-loopback-deck1" || mode==L"--run-loopback-deck1";
+    const unsigned first_marker_output=deck1?2u:0u;
+    if(argc==2 && (mode==L"--plan-loopback" || mode==L"--plan-loopback-deck1")){
         if constexpr(kind!=sl3::session::Kind::native)return 2;
         std::cout<<"{\"planOnly\":true,\"deviceAccess\":false,\"expectedRateHz\":44100,"
                    "\"markerHz\":["<<marker_hz[0]<<','<<marker_hz[1]<<"],\"markerFirstFrame\":"<<marker_start
-                 <<",\"markerDurationMilliseconds\":650,\"bankFrames\":"<<bank_frames<<"}\n";
+                 <<",\"markerDurationMilliseconds\":650,\"bankFrames\":"<<bank_frames
+                 <<",\"markerOutputChannels\":["<<first_marker_output+1<<','<<first_marker_output+2<<"]}\n";
         return 0;
     }
     if(argc==1 || (argc==2 && std::wstring(argv[1])==L"--plan")){
         std::cout<<std::boolalpha<<"{\"planOnly\":true,\"deviceAccess\":false,\"simulated\":"<<(kind==sl3::session::Kind::simulated?"true":"false")<<",\"nominalInputMilliseconds\":3000,\"maximumCollectionMilliseconds\":6000,\"audioOutputPayload\":\"zero PCM only\",\"oneAcquisitionRequested\":true,\"expectedRateRequired\":true,\"timingProfileWritten\":false}\n";return 0;}
-    const std::wstring mode=argv[1];
-    const bool loopback=mode==L"--run-loopback";
+    const bool loopback=mode==L"--run-loopback" || mode==L"--run-loopback-deck1";
     if((argc!=12 && argc!=14) || (mode!=L"--run" && !loopback))return 2;
     if(loopback && kind!=sl3::session::Kind::native)return 2;
     if constexpr(kind==sl3::session::Kind::native){if(argc!=12)return 2;}
@@ -222,5 +227,5 @@ int wmain(int argc,wchar_t** argv){try{
         spec.lifetime=DeviceLifetime::retained;
         spec.diagnostic_playback_keepalive=true;
     }
-    return run(spec,output,rate==L"44100"?44100u:48000u,loopback);
+    return run(spec,output,rate==L"44100"?44100u:48000u,loopback,first_marker_output);
 }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}}
