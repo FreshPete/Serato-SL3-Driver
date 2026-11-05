@@ -1,0 +1,132 @@
+{
+  "schema": "sl3.serato-startup-driver-cases.v1",
+  "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "range": [
+    "0x1421daef0",
+    "0x1421daf41"
+  ],
+  "rangeSha256": "02b5cb270bcab7e0ad22aaede9bbb278bc6ef9d594e5ab26ede0d5f415173065",
+  "decodedInstructions": 22,
+  "cases": [
+    {
+      "slot50": false,
+      "slot48": false,
+      "slot58": false,
+      "slot90": false,
+      "pendingCase": 7
+    },
+    {
+      "slot50": false,
+      "slot48": false,
+      "slot58": false,
+      "slot90": true,
+      "pendingCase": 5
+    },
+    {
+      "slot50": false,
+      "slot48": false,
+      "slot58": true,
+      "slot90": false,
+      "pendingCase": 7
+    },
+    {
+      "slot50": false,
+      "slot48": false,
+      "slot58": true,
+      "slot90": true,
+      "pendingCase": 5
+    },
+    {
+      "slot50": false,
+      "slot48": true,
+      "slot58": false,
+      "slot90": false,
+      "pendingCase": 7
+    },
+    {
+      "slot50": false,
+      "slot48": true,
+      "slot58": false,
+      "slot90": true,
+      "pendingCase": 5
+    },
+    {
+      "slot50": false,
+      "slot48": true,
+      "slot58": true,
+      "slot90": false,
+      "pendingCase": 7
+    },
+    {
+      "slot50": false,
+      "slot48": true,
+      "slot58": true,
+      "slot90": true,
+      "pendingCase": 5
+    },
+    {
+      "slot50": true,
+      "slot48": false,
+      "slot58": false,
+      "slot90": false,
+      "pendingCase": 6
+    },
+    {
+      "slot50": true,
+      "slot48": false,
+      "slot58": false,
+      "slot90": true,
+      "pendingCase": 4
+    },
+    {
+      "slot50": true,
+      "slot48": false,
+      "slot58": true,
+      "slot90": false,
+      "pendingCase": 6
+    },
+    {
+      "slot50": true,
+      "slot48": false,
+      "slot58": true,
+      "slot90": true,
+      "pendingCase": 3
+    },
+    {
+      "slot50": true,
+      "slot48": true,
+      "slot58": false,
+      "slot90": false,
+      "pendingCase": 6
+    },
+    {
+      "slot50": true,
+      "slot48": true,
+      "slot58": false,
+      "slot90": true,
+      "pendingCase": 4
+    },
+    {
+      "slot50": true,
+      "slot48": true,
+      "slot58": true,
+      "slot90": false,
+      "pendingCase": 6
+    },
+    {
+      "slot50": true,
+      "slot48": true,
+      "slot58": true,
+      "slot90": true,
+      "pendingCase": 6
+    }
+  ],
+  "genericAbsentCase": 7,
+  "genericInstalledCase": 6,
+  "genericInstalledWithOnlySlot90ChangedCase": 6,
+  "allFourTrueStillSameCase": true,
+  "scope": "Local branch after four virtual results; no inferred method semantics or upstream reachability",
+  "vendorCodeExecuted": false,
+  "applicationModified": false,
+  "physicalDeviceAccess": false
+}
