@@ -54,7 +54,11 @@ def main(argv=None):
             try:
                 result = install(bundle,expected)
             except Exception as error:
-                result = getattr(error,'report',{'successful':False,'error':str(error)})
+                result = getattr(error,'report',{'schema':'sl3.session-install-failure.v1',
+                                                'successful':False,'error':str(error),'stageResult':None})
+                if not isinstance(result,dict) or result.get('successful') is not False:
+                    result = {'schema':'sl3.session-install-failure.v1','successful':False,'error':str(error),
+                              'stageResult':None,'causeReport':result}
             json.dump(result,stream);stream.flush();os.fsync(stream.fileno())
         return 0 if result['successful'] else 1
 

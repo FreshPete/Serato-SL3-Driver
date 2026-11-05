@@ -12,7 +12,7 @@ PERMIT_NAME = '8c7758f23375cee18a9cf3be4a3acc15.bin.sl3-permit'
 SOURCES = (
     'scripts/serato-session-capsule.py','scripts/prepare-serato-session-capsule.py',
     'scripts/serato-session-installer.py','scripts/serato-session-broker.py',
-    'scripts/asio-install.py','scripts/asio-uninstall.py','scripts/asio-install-journal.py',
+    'scripts/asio-install.py','scripts/asio-install-base.py','scripts/asio-uninstall.py','scripts/asio-install-journal.py',
     'scripts/asio-file-stage.py','scripts/asio-registry.py','scripts/asio-runtime-check.py',
     'scripts/prepare-asio-deployment.py','scripts/asio-diagnostic-session.py','scripts/serato-installer-permit.py',
     'src/installer/SessionLauncher.cs',

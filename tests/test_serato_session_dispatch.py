@@ -15,7 +15,7 @@ BROKER = runpy.run_path(str(ROOT/'scripts/serato-session-broker.py'))
 
 
 class InstallerDispatchTest(unittest.TestCase):
-    def execute(self, root, action='plan', elevated=True, success=True):
+    def execute(self, root, action='plan', elevated=True, success=True, failure_report=None):
         state = {'claimed':False,'installCalled':False,'retirementChecked':False}
         record = {'bundle':{'path':str(root/'bundle'),'sha256':'1'*64},'permitPath':str(root/'permit')}
         plan = {'pointerPath':str(root/'pointer'),'installationDirectory':str(root/'installation')}
@@ -40,6 +40,8 @@ class InstallerDispatchTest(unittest.TestCase):
             self.assertTrue((root/'install-receipt.json').exists())
             state['installCalled']=True
             if success: return {'successful':True}
+            if failure_report is not None:
+                error=RuntimeError('early base preparation failed');error.report=failure_report;raise error
             raise RuntimeError('synthetic installation failure')
         def retired(directory,plan): state['retirementChecked']=True
         def uninstall(base,destination,digest):
@@ -89,6 +91,14 @@ class InstallerDispatchTest(unittest.TestCase):
             (root/'install-receipt.json').write_text(json.dumps({'stageResult':{'stageRecordSha256':'2'*64}}))
             result,state=self.execute(root,'rollback')
             self.assertEqual(result,0);self.assertTrue(state['uninstallCalled'])
+
+    def test_early_or_malformed_exception_reports_cannot_claim_success(self):
+        for report in ({'schema':'sl3.base-preparation.v1','error':'early failure'}, {'successful':True}):
+            with self.subTest(report=report), tempfile.TemporaryDirectory() as temporary:
+                result,state=self.execute(Path(temporary),'install',success=False,failure_report=report)
+                receipt=state['receiptAtPermitRelease']
+                self.assertEqual(result,1);self.assertIs(receipt['successful'],False)
+                self.assertIsNone(receipt['stageResult']);self.assertEqual(receipt['causeReport'],report)
 
 
 class BrokerDispatchTest(unittest.TestCase):

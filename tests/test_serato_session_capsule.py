@@ -1,4 +1,5 @@
 import json
+import ast
 from pathlib import Path
 import runpy
 import shutil
@@ -53,6 +54,19 @@ class RetirementTest(unittest.TestCase):
 
 
 class CapsuleBindingTest(unittest.TestCase):
+    def test_literal_sibling_imports_are_in_the_source_pin_inventory(self):
+        root=Path(__file__).resolve().parents[1]
+        pinned=set(API['SOURCES'])
+        for relative in pinned:
+            if not relative.endswith('.py'):continue
+            for node in ast.walk(ast.parse((root/relative).read_text(encoding='utf-8-sig'))):
+                if not isinstance(node,ast.Call) or not node.args or not isinstance(node.args[0],ast.Constant) or not isinstance(node.args[0].value,str):continue
+                value=node.args[0].value
+                if isinstance(node.func,ast.Name) and node.func.id=='sibling':
+                    self.assertIn('scripts/'+value+'.py',pinned,relative)
+                elif isinstance(node.func,ast.Attribute) and node.func.attr=='with_name' and value.endswith('.py'):
+                    self.assertIn('scripts/'+value,pinned,relative)
+
     def test_source_interpreter_and_session_location_bindings(self):
         verify = API['verify']
         with tempfile.TemporaryDirectory() as temporary:

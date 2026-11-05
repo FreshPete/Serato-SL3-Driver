@@ -8,7 +8,7 @@ This is still temporary diagnostic integration. The parameterized helpers and la
 
 - `prepare-serato-session-capsule.py` verifies the reviewed app/package and emits a fresh `session-capsule.json`, generated `Program.cs` and .NET project under `analysis/sl3-session-capsule-*`.
 - `src/installer/SessionLauncher.cs` is the original launcher template. The generated executable accepts only `--plan` or no arguments. Plan is read-only; no arguments request the normal attended installer flow, including UAC.
-- `serato-session-capsule.py` verifies the manifest, fourteen bound source files, exact interpreter/application, native package, fixed diagnostic policy and session location before helper dispatch.
+- `serato-session-capsule.py` verifies the manifest, fifteen bound source files, exact interpreter/application, native package, fixed diagnostic policy and session location before helper dispatch. The complete-wrapper audit added the installer-base dependency to the original fourteen-file set.
 - `serato-session-installer.py` exposes Plan and explicit elevated install/revoke/rollback operations using the existing protected permit, journaled installer and own-file uninstaller.
 - `serato-session-broker.py` exposes Plan, bounded ordinary-user broker start and verified stop, delegating process ownership and pointer withdrawal to the existing diagnostic coordinator.
 
@@ -46,4 +46,4 @@ Ten tests cover capsule location/source/interpreter bindings, release-proof refu
 
 On this Windows host, a fresh generated launcher compiled successfully and its real `--plan` passed, as did both helper Plan modes. An earlier compiled launcher refused stale source before child dispatch. The fresh executable passed private installer-resource packaging and round-trip validation. Nothing was installed, no broker was started and Serato was not launched. [Sanitized evidence](evidence/session-capsule-20261105.json)
 
-The public [process supervisor](serato-startup-supervisor.md), capsule and installer resource now exist as separate reviewable components. The remaining wrapper must assemble them with the protected archive/permit transaction, bounded stage supervisor, application-exit checks, broker stop and rollback. That full parameterized route still needs live validation. It is not a permanent installation or a finished end-user launcher.
+The public [assembled session wrapper](serato-complete-session.md) now combines these components with the protected archive/permit transaction, bounded stage supervisor, application-exit checks, broker stop and rollback. Its complete read-only Plan passes. That parameterized route still needs live validation. It is not a permanent installation or a finished end-user launcher.
