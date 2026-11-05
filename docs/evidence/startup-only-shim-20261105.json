@@ -1,0 +1,36 @@
+{
+  "schema": "sl3.startup-only-shim-evidence.v1",
+  "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "templateSha256": "6fba4cac1f6b531882fa3b5fcf79d5ee09d28aba25a2706aad60c4a54743f687",
+  "preparerSha256": "2d467707b994d1bd4ddd150d701ff024c38d1dbfd987f3de84c54095a04bcf48",
+  "preparedScriptSha256": "01ed993a8ca213641b17a050773a7229a387faec81b59a44c019c9440bf48e5a",
+  "guardedEntries": [
+    {
+      "name": "arrival",
+      "rva": 25554576,
+      "bytesChecked": 8
+    },
+    {
+      "name": "click",
+      "rva": 25553920,
+      "bytesChecked": 8
+    },
+    {
+      "name": "panel",
+      "rva": 5967024,
+      "bytesChecked": 8
+    }
+  ],
+  "behavioralMockCasesPassed": 8,
+  "preparerTestsPassed": 4,
+  "actualPinnedApplicationEntryChecksPassed": true,
+  "hostApplicationAndDllReverificationRequired": true,
+  "hostFullDetachAfterStartRequired": true,
+  "applicationLaunched": false,
+  "processAttached": false,
+  "deviceAccess": false,
+  "installed": false,
+  "liveShimValidated": false,
+  "permanentLauncherImplemented": false,
+  "vendorArchivePublished": false
+}
