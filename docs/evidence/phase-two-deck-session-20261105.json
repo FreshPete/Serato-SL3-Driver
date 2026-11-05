@@ -1,0 +1,126 @@
+{
+  "schema": "sl3.phase-two-deck-session.v1",
+  "sourcesSha256": {
+    "trace": "f814c4bb7f124711cd2680a55cbcaededb3cdf9190d77c31a211443eb3c06f6e",
+    "broker": "b749e35609797d25f8f55a070995d997bcefb6d22b4e069149c75c144e0b9f20",
+    "supervisor": "26c0e25848960878f6266e6dc02aba628dfc8fa311e6f239233e2c829751955c",
+    "captureMetadata": "867c7749a2598989a920ee896d15b8b97b799b6e31e90f3f79e89e0706d69dcd",
+    "signalAnalysis": "cc5451c955bdb6d034abc8f601aa16af7f41727213161769e775e59884cd174e"
+  },
+  "seratoVersion": "5.0.0.1278",
+  "traceEvents": 216,
+  "traceErrors": 0,
+  "fullTracerDetachedAfterStart": true,
+  "desktopAutomationUsedDuringViewing": false,
+  "viewingDurationMs": 139514,
+  "endedAtOwnerRequest": true,
+  "ownerConfirmedBothDecksFollowPlatterInRequestedRelTest": true,
+  "modeLabelsIndependentlyObserved": false,
+  "ownerConfirmedResponsive": true,
+  "physicalInputs": {
+    "phaseA": [
+      3,
+      4
+    ],
+    "phaseB": [
+      5,
+      6
+    ]
+  },
+  "physicalTurntables": 1,
+  "independentPlatterControlVerified": false,
+  "softwareOutputCapture": {
+    "source": "worker-dequeued-output-pcm",
+    "rateHz": 44100,
+    "frames": 220500,
+    "seconds": 5,
+    "firstFrame": 3770500,
+    "pcmSha256": "b7c3813c7a5b3b00dcae8ead07466f24a8e5df9ed00727711b918eefcba3ba8a",
+    "channelMeasurements": [
+      {
+        "logicalChannel": 1,
+        "peakDbfs": null,
+        "rmsDbfs": null,
+        "nonzeroSamples": 0,
+        "clippedSamples": 0
+      },
+      {
+        "logicalChannel": 2,
+        "peakDbfs": null,
+        "rmsDbfs": null,
+        "nonzeroSamples": 0,
+        "clippedSamples": 0
+      },
+      {
+        "logicalChannel": 3,
+        "peakDbfs": -1.7382205293330255,
+        "rmsDbfs": -17.88663241805257,
+        "nonzeroSamples": 212748,
+        "clippedSamples": 0
+      },
+      {
+        "logicalChannel": 4,
+        "peakDbfs": -2.944298557297433,
+        "rmsDbfs": -20.36871532052192,
+        "nonzeroSamples": 212748,
+        "clippedSamples": 0
+      },
+      {
+        "logicalChannel": 5,
+        "peakDbfs": -2.5976132795726414,
+        "rmsDbfs": -17.27055533485798,
+        "nonzeroSamples": 217253,
+        "clippedSamples": 0
+      },
+      {
+        "logicalChannel": 6,
+        "peakDbfs": -2.4111725538202227,
+        "rmsDbfs": -17.472469666241246,
+        "nonzeroSamples": 217253,
+        "clippedSamples": 0
+      }
+    ],
+    "stereoExports": [
+      {
+        "file": "channels-1-2.wav",
+        "logicalChannels": [
+          1,
+          2
+        ],
+        "sha256": "9559ec06db5fce8290d5b8923ee3ac6ff57ab16729a1bfe343c8110c9a6cfb21"
+      },
+      {
+        "file": "deck-1-channels-3-4.wav",
+        "logicalChannels": [
+          3,
+          4
+        ],
+        "sha256": "2f0724390731355e6213198fd3f752c5b70f3e96893290d11ab9f3be1a2c3a7a"
+      },
+      {
+        "file": "deck-2-channels-5-6.wav",
+        "logicalChannels": [
+          5,
+          6
+        ],
+        "sha256": "061d291a7667a1a541747b3e126d9cdfa4c4dd1124e9288d09ef3107df7dc738"
+      }
+    ]
+  },
+  "usbOutputCompletionVerified": false,
+  "audibleSl3OutputVerified": false,
+  "brokerSuccessful": false,
+  "brokerReason": "owner_failure",
+  "lastDeviceFailure": 0,
+  "lastStreamFault": 0,
+  "lastNativeError": 0,
+  "ioRetiredVerified": true,
+  "deviceReleasedVerified": true,
+  "workerExitedVerified": true,
+  "jobEmptyVerified": true,
+  "controllerExitedVerified": true,
+  "originalResourcesRestored": true,
+  "temporaryRegistrationRemoved": true,
+  "permanentInstallationValidated": false,
+  "rawAudioPublished": false
+}

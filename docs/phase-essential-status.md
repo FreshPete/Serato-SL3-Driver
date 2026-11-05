@@ -2,7 +2,9 @@
 
 Updated 5 November 2026. The target is to use Phase Essential for two-deck DVS in Serato DJ Pro 5.0 on Windows 11, with the Rane SL3 handling audio. The first milestone is one deck tracking from Phase through the SL3, with Serato playback returning through the SL3 outputs. The current tests use the signed UsbDk transport with Windows driver-signature enforcement enabled.
 
-The owner now has Phase A on inputs 3/4 and Phase B on 5/6, with both remotes on one physical turntable. Both RCA leads are occupied. A bounded, opt-in worker PCM recorder and offline stereo WAV exporter are implemented for the next two-deck test. This provides software output clips without an AUX return cable; it does not provide live PC monitoring or prove physical output. The second-deck live test remains pending. [Capture design, wiring and test procedure](two-deck-output-capture.md)
+The latest attended test used Phase A on inputs 3/4 and Phase B on 5/6, with both remotes on one physical turntable. The owner confirmed both waveforms followed spinning and stopping after being asked to select REL on both decks, and confirmed Serato was responsive. The tracer was fully detached and no desktop automation was used during interaction. The mode labels were not independently observed. A five-second, 44.1 kHz software recording captured nonzero audio on both output pairs, 3/4 and 5/6, with no clipped samples. Independent turntable control and physical audible SL3 output remain unverified. [Two-deck session evidence](evidence/phase-two-deck-session-20261105.json)
+
+Both RCA leads were occupied by Phase, so the recording was made inside the worker without an AUX return cable. It records dequeued software PCM before USB submission and does not provide live PC monitoring or prove physical output. Cleanup verified retired I/O, device release, worker exit and original-resource restoration. The broker nevertheless reported `successful=false`, `reason=owner_failure`; shutdown behavior remains an open issue. [Capture design and result](two-deck-output-capture.md)
 
 ## What works on the bench
 
@@ -15,7 +17,7 @@ The owner now has Phase A on inputs 3/4 and Phase B on 5/6, with both remotes on
 
 ## Where Serato 5.0 stops
 
-One-deck REL tracking is now owner-confirmed in the manual-only session above. The next validation is physical audio output through SL3, followed by sustained operation and a second deck. The startup still depends on the reviewed temporary descriptor, installer-panel identity correction and bounded diagnostic broker. A permanent, repeatable installation/startup route remains unfinished.
+Two-deck platter tracking is now owner-confirmed in the requested REL test, with both remotes sharing one turntable. Separate software output clips were captured from both decks. The next validation is physical audio output through SL3, independent deck control and sustained operation, alongside resolving the shutdown failure. Startup still depends on the reviewed temporary descriptor, installer-panel identity correction and bounded diagnostic broker. A permanent, repeatable installation/startup route remains unfinished.
 
 The previous longer run had severe UI lag after desktop-control attempts. That run unloaded process probes but retained the Frida session. Cleanup restored PC responsiveness according to the owner. The successful REL run subsequently detached the complete Frida session and used manual desktop interaction throughout. This narrows a useful testing condition, while the exact cause of the earlier lag remains unresolved. Future physical tests should preserve this manual-only workflow. The viewing limit is nine minutes within a ten-minute broker bound, with an explicit earlier stop at the owner's request.
 

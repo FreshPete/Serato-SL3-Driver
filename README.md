@@ -4,11 +4,11 @@ Restore the physical Rane SL3 for current Serato DJ Pro and two-deck DVS. Window
 
 ## Latest status — 5 November 2026
 
-**Serato DJ Pro 5.0 on Windows 11 now opens the rebuilt SL3 ASIO driver and starts audio.** The owner confirmed Phase Essential control in WIR mode, including with a Spotify track, and separately confirmed one-deck REL tracking through SL3 inputs 3 and 4. The manual REL test ended with a successful broker stop and verified device release.
+**Serato DJ Pro 5.0 on Windows 11 now runs an owner-confirmed two-deck Phase Essential tracking test with the rebuilt SL3 ASIO driver.** Phase A used inputs 3/4 and Phase B used 5/6, with both remotes on one physical turntable. The owner confirmed both decks followed platter movement in the requested REL test and Serato stayed responsive. A five-second software recording contains audio on both deck output pairs without clipped samples. [Two-deck result and limits](docs/evidence/phase-two-deck-session-20261105.json)
 
 See the [phone video, working screenshot and version screenshot](docs/demo-20261105.md), [Phase Essential status](docs/phase-essential-status.md) and [latest return report](docs/RETURN-REPORT.md).
 
-This remains an experimental temporary integration. Audible SL3 output, sustained reliability, a second deck and a reusable installation/startup process remain unfinished. The latest Release build passed 69 native checks and the deployment workflow passed 26 checks.
+This remains an experimental temporary integration. Physical audible SL3 output, independent turntable control, sustained reliability and a reusable installation/startup process remain unfinished. The two-deck session restored original files and verified device release, but its broker reported `owner_failure` during shutdown; that result remains unresolved. The latest Release build passed 71 native checks and the deployment workflow passed 26 checks. [Software output recorder](docs/two-deck-output-capture.md)
 
 ## Earlier engineering status — 2 November 2026
 
