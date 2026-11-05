@@ -1,0 +1,237 @@
+--- a/scripts/asio-diagnostic-session.py
++++ b/scripts/asio-diagnostic-session.py
+@@ -6,6 +6,7 @@
+ import hashlib
+ import json
+ import msvcrt
++import os
+ from pathlib import Path
+ import subprocess
+ import time
+@@ -80,6 +81,26 @@
+         kernel.CloseHandle(handle)
+ 
+ 
++def owned_creation_time(process):
++    """Use Popen's retained Windows handle, including after an early exit."""
++    kernel = ctypes.WinDLL('kernel32', use_last_error=True)
++    kernel.GetProcessTimes.argtypes = (wintypes.HANDLE,) + (ctypes.POINTER(wintypes.FILETIME),) * 4
++    kernel.GetProcessTimes.restype = wintypes.BOOL
++    times = [wintypes.FILETIME() for _ in range(4)]
++    if not kernel.GetProcessTimes(int(process._handle), *(ctypes.byref(item) for item in times)):
++        raise ctypes.WinError(ctypes.get_last_error())
++    return str((times[0].dwHighDateTime << 32) | times[0].dwLowDateTime)
++
++
++def record_launch(process, controller, controller_sha, source, session, pointer, inspection):
++    record = {'schema':'sl3.diagnostic-controller-launch.v1','controllerPid':process.pid,
++              'controllerCreatedFileTime':owned_creation_time(process),'controllerSha256':controller_sha,
++              'controller':str(controller),'input':str(source),'inputSha256':digest(source),
++              'session':str(session),'pointer':str(pointer),'kind':inspection['kind']}
++    with session.with_suffix('.launch.json').open('x',encoding='utf-8') as stream:
++        json.dump(record,stream);stream.flush();os.fsync(stream.fileno())
++
++
+ def start(controller, source, session, pointer, controller_sha, limit_ms=120000):
+     require(type(limit_ms) is int and 1000 <= limit_ms <= 600000, "Diagnostic lifetime must be 1000..600000 ms")
+     require(digest(controller) == controller_sha, "Diagnostic controller hash differs")
+@@ -87,6 +108,7 @@
+     ownership = session.with_suffix(".pointer.json")
+     require(not session.with_suffix(".closed").exists(), "Diagnostic broker handoff has closed")
+     require(not session.exists() and not ownership.exists() and not pointer.exists()
++            and not session.with_suffix('.launch.json').exists()
+             and not pointer.with_name(pointer.name + ".pending").exists(), "Fresh session and pointer required")
+     inspection = run(controller, "--inspect-input", "--input", source)
+     require(inspection["rateHz"] == 44100 and inspection["bufferFrames"] == 128
+@@ -99,6 +121,7 @@
+         )
+     expected_sha = None
+     try:
++        record_launch(process,controller,controller_sha,source,session,pointer,inspection)
+         ready_path = session / "ready.json"
+         deadline = time.monotonic() + 12
+         while not ready_path.exists():
+@@ -165,12 +188,48 @@
+ def close_handoff(controller, session, pointer, controller_sha):
+     session.with_suffix(".closed").touch(exist_ok=True)
+     if not session.with_suffix(".pointer.json").exists():
++        if session.with_suffix('.launch.json').exists():
++            return stop_unpublished(controller,session,pointer,controller_sha)
+         require(not session.exists() and not session.with_suffix(".stdout").exists()
+                 and not session.with_suffix(".stderr").exists()
+                 and not pointer.exists() and not pointer.with_name(pointer.name + ".pending").exists(),
+                 "Broker startup lacks a complete ownership record; preserve files for review")
+         return {"controllerExited": True, "brokerStarted": False}
+     return stop(controller, session, pointer, controller_sha)
++
++
++def stop_unpublished(controller,session,pointer,controller_sha):
++    require(digest(controller)==controller_sha,'Diagnostic controller hash differs')
++    launch=read(session.with_suffix('.launch.json'))
++    require(type(launch.get('controllerPid')) is int and 0<launch['controllerPid']<=0xffffffff and
++            isinstance(launch.get('controllerCreatedFileTime'),str) and launch['controllerCreatedFileTime'].isdigit()
++            and int(launch['controllerCreatedFileTime'])>0 and launch.get('kind') in ('native','simulated'),
++            'Unpublished controller identity is malformed')
++    require(launch['schema']=='sl3.diagnostic-controller-launch.v1' and launch['controller']==str(controller)
++            and launch['controllerSha256']==controller_sha and launch['session']==str(session)
++            and launch['pointer']==str(pointer) and launch['inputSha256']==digest(Path(launch['input'])),
++            'Unpublished launch binding differs')
++    require(not pointer.exists() and not pointer.with_name(pointer.name+'.pending').exists(),
++            'Unpublished controller has a conflicting pointer')
++    result_path=session/'result.json';config=session/'sl3-asio.conf'
++    with process_handle(launch['controllerPid']) as identity:
++        if identity and str(identity[0])==launch['controllerCreatedFileTime']:
++            if not identity[1](0) and config.is_file():
++                try:
++                    run(controller,'--stop','--config',config)
++                except subprocess.CalledProcessError:
++                    # The exact controller can finish between observation and
++                    # the stop request. Require its handle to signal below;
++                    # the worker result alone cannot establish that fact.
++                    if not identity[1](0):
++                        raise
++            require(identity[1](15000),'Exact unpublished controller still running')
++    require(result_path.is_file(),'Unpublished controller lacks a typed retirement result')
++    result=read(result_path)
++    require(result['kind']==launch['kind'] and result['published'] is False and
++            all(result.get(key) is True for key in ('processExited','jobEmpty','ioRetiredVerified','deviceReleasedVerified')),
++            'Unpublished worker retirement is incomplete')
++    return {**result,'controllerExited':True}
+ 
+ 
+ if __name__ == "__main__":
+--- /dev/null
++++ b/tests/test-asio-unpublished-retirement.py
+@@ -0,0 +1,132 @@
++from contextlib import contextmanager
++import json
++from pathlib import Path
++import runpy
++import subprocess
++import sys
++import tempfile
++import unittest
++from unittest.mock import patch
++
++API=runpy.run_path(str(Path(__file__).resolve().parents[1]/'scripts/asio-diagnostic-session.py'))
++
++
++class RetirementCandidateTest(unittest.TestCase):
++    def fixture(self,root):
++        controller=root/'controller.exe';controller.write_bytes(b'not executed')
++        source=root/'input.conf';source.write_bytes(b'immutable synthetic input')
++        session=root/'session';session.mkdir();pointer=root/'pointer'
++        launch={'schema':'sl3.diagnostic-controller-launch.v1','controllerPid':123,'controllerCreatedFileTime':'456',
++                'controllerSha256':API['digest'](controller),'controller':str(controller),'input':str(source),
++                'inputSha256':API['digest'](source),'session':str(session),'pointer':str(pointer),'kind':'simulated'}
++        result={'kind':'simulated','successful':False,'published':False,'processExited':True,'jobEmpty':True,
++                'ioRetiredVerified':True,'deviceReleasedVerified':True}
++        session.with_suffix('.launch.json').write_text(json.dumps(launch))
++        (session/'result.json').write_text(json.dumps(result))
++        return controller,source,session,pointer,launch,result
++
++    def test_result_without_launch_record_is_not_an_exit_proof(self):
++        with tempfile.TemporaryDirectory() as temporary:
++            controller,_,session,pointer,_,_=self.fixture(Path(temporary))
++            session.with_suffix('.launch.json').unlink()
++            with self.assertRaisesRegex(RuntimeError,'ownership record'):
++                API['close_handoff'](controller,session,pointer,API['digest'](controller))
++
++    def test_live_matching_controller_refuses_even_with_retired_worker_result(self):
++        @contextmanager
++        def alive(pid):yield 456,lambda timeout:False
++        with tempfile.TemporaryDirectory() as temporary:
++            controller,_,session,pointer,_,_=self.fixture(Path(temporary))
++            with patch.dict(API['stop_unpublished'].__globals__,process_handle=alive):
++                with self.assertRaisesRegex(RuntimeError,'still running'):
++                    API['close_handoff'](controller,session,pointer,API['digest'](controller))
++
++    def test_reused_pid_never_receives_control_command(self):
++        @contextmanager
++        def reused(pid):yield 999,lambda timeout:False
++        def forbidden(*args):raise AssertionError('Unrelated process must not receive a stop')
++        with tempfile.TemporaryDirectory() as temporary:
++            controller,_,session,pointer,_,result=self.fixture(Path(temporary))
++            (session/'sl3-asio.conf').write_text('never sent')
++            with patch.dict(API['stop_unpublished'].__globals__,process_handle=reused,run=forbidden):
++                self.assertEqual(API['close_handoff'](controller,session,pointer,API['digest'](controller)),
++                                 {**result,'controllerExited':True})
++
++    def test_conflicting_pointer_or_changed_input_is_preserved(self):
++        with tempfile.TemporaryDirectory() as temporary:
++            controller,source,session,pointer,_,_=self.fixture(Path(temporary))
++            pointer.write_text('other pointer')
++            with self.assertRaisesRegex(RuntimeError,'conflicting pointer'):
++                API['close_handoff'](controller,session,pointer,API['digest'](controller))
++            self.assertEqual(pointer.read_text(),'other pointer');pointer.unlink()
++            source.write_text('changed')
++            with self.assertRaisesRegex(RuntimeError,'binding differs'):
++                API['close_handoff'](controller,session,pointer,API['digest'](controller))
++
++    def test_each_worker_release_fact_is_required_and_false_success_is_preserved(self):
++        @contextmanager
++        def gone(pid):yield None
++        for key in ('processExited','jobEmpty','ioRetiredVerified','deviceReleasedVerified'):
++            with self.subTest(key=key),tempfile.TemporaryDirectory() as temporary:
++                controller,_,session,pointer,_,result=self.fixture(Path(temporary))
++                (session/'result.json').write_text(json.dumps({**result,key:False}))
++                with patch.dict(API['stop_unpublished'].__globals__,process_handle=gone):
++                    with self.assertRaisesRegex(RuntimeError,'retirement is incomplete'):
++                        API['close_handoff'](controller,session,pointer,API['digest'](controller))
++
++    def test_actual_owned_python_process_must_exit_before_admission(self):
++        with tempfile.TemporaryDirectory() as temporary:
++            root=Path(temporary);source=root/'input';source.write_text('fixture')
++            session=root/'session';session.mkdir();pointer=root/'pointer';marker=root/'exit.txt'
++            code='import pathlib,sys,time; p=pathlib.Path(sys.argv[1]);\nwhile not p.exists(): time.sleep(.01)'
++            child=subprocess.Popen([sys.executable,'-c',code,str(marker)],creationflags=subprocess.CREATE_NO_WINDOW)
++            try:
++                controller=Path(sys.executable);identity=API['digest'](controller)
++                API['record_launch'](child,controller,identity,source,session,pointer,{'kind':'simulated'})
++                (session/'result.json').write_text(json.dumps({'kind':'simulated','successful':False,'published':False,
++                    'processExited':True,'jobEmpty':True,'ioRetiredVerified':True,'deviceReleasedVerified':True}))
++                original=API['process_handle']
++                @contextmanager
++                def short_wait(pid):
++                    with original(pid) as state:
++                        yield None if state is None else (state[0],lambda timeout:state[1](min(timeout,50)))
++                with patch.dict(API['stop_unpublished'].__globals__,process_handle=short_wait):
++                    with self.assertRaisesRegex(RuntimeError,'still running'):
++                        API['close_handoff'](controller,session,pointer,identity)
++                marker.write_text('exit');child.wait(timeout=5)
++                result=API['close_handoff'](controller,session,pointer,identity)
++                self.assertFalse(result['successful']);self.assertTrue(result['controllerExited'])
++            finally:
++                marker.write_text('exit')
++                if child.poll() is None:child.wait(timeout=5)
++
++    def test_exit_during_stop_requires_exact_handle_exit(self):
++        for exited in (False, True):
++            with self.subTest(exited=exited),tempfile.TemporaryDirectory() as temporary:
++                controller,_,session,pointer,_,result=self.fixture(Path(temporary))
++                (session/'sl3-asio.conf').write_text('synthetic configuration')
++                observations=iter((False,exited,exited))
++                @contextmanager
++                def state(pid):yield 456,lambda timeout:next(observations)
++                def stop_failure(*args):raise subprocess.CalledProcessError(1,args)
++                with patch.dict(API['stop_unpublished'].__globals__,process_handle=state,run=stop_failure):
++                    if exited:
++                        self.assertEqual(API['close_handoff'](controller,session,pointer,API['digest'](controller)),
++                                         {**result,'controllerExited':True})
++                    else:
++                        with self.assertRaises(subprocess.CalledProcessError):
++                            API['close_handoff'](controller,session,pointer,API['digest'](controller))
++
++    def test_malformed_identity_is_rejected_before_process_lookup(self):
++        for field,value in (('controllerPid',True),('controllerPid',0),('controllerPid',2**32),
++                            ('controllerCreatedFileTime','0'),('controllerCreatedFileTime','bad'),('kind','unknown')):
++            with self.subTest(field=field,value=value),tempfile.TemporaryDirectory() as temporary:
++                controller,_,session,pointer,launch,_=self.fixture(Path(temporary))
++                session.with_suffix('.launch.json').write_text(json.dumps({**launch,field:value}))
++                def forbidden(*args):raise AssertionError('Malformed identity reached process lookup')
++                with patch.dict(API['stop_unpublished'].__globals__,process_handle=forbidden):
++                    with self.assertRaisesRegex(RuntimeError,'identity is malformed'):
++                        API['close_handoff'](controller,session,pointer,API['digest'](controller))
++
++
++if __name__=='__main__':unittest.main()

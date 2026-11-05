@@ -1,0 +1,18 @@
+{
+  "schema": "sl3.unpublished-broker-retirement-candidate.v1",
+  "selectedForLiveUse": false,
+  "preparedLiveSourcesModified": false,
+  "usbDeviceOpened": false,
+  "baselineSha256": "e58e1ec6842c7b979f39a801032c9acf0938e9af700ca9f4e83abc9f7d134f12",
+  "candidateSha256": "01315ebf806be68faef8aa539a7b3992d1bcf5f5a1353dd791473b80dc19c54b",
+  "patchSha256": "60551909275289e7106fc1b3c0281a7ebe073a957901702471d313dd7d961f41",
+  "targetedTestsPassed": 8,
+  "actualWindowsTestProcessUsed": true,
+  "simulatedControllerSha256": "669c6a241dd24456a9ff28f7b0e37a2c868ce9830ae209a9991fe360e1543c2a",
+  "inspectionResponseWasTestDouble": true,
+  "controllerAndWorkerWereRealSimulatedExecutables": true,
+  "baselineRefusedCleanup": true,
+  "candidateVerifiedControllerExit": true,
+  "originalClockMismatchFailurePreserved": true,
+  "nativeHardwareValidation": false
+}
