@@ -1,6 +1,6 @@
 'use strict';
-// Process-local interoperability only. The launcher must pin the application
-// and staged DLL before loading this script, and unload/detach after ASIO start.
+// Process-local interoperability only. The host pins the application/package,
+// verifies the newly installed DLL before manual viewing, then unloads/detaches.
 // No entitlement, authorization, USB identity or callback hooks are installed.
 (() => {
   const config = globalThis.SL3_SESSION_CONFIG;

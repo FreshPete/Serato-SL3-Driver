@@ -1,0 +1,23 @@
+{
+  "schema": "sl3.startup-supervisor-evidence.v1",
+  "supervisorSha256": "90a15165910cddad92e17f11d91b6594f37fb1712a56df30c4d6da2c63049a41",
+  "supervisorTestsSha256": "3280648dbc12e1dbbb1935dcb03597cd28e8cd8211dd6ba7526543a24c7add8f",
+  "preparationManifestSha256": "c70421121c070a63f0c3166e4fb684de83398ed6a49b2d405707f72b04003194",
+  "preparedScriptSha256": "183fcb8e3d978123264127682c597c184dae3147035265551622c7148fee5f37",
+  "templateSha256": "638fed31fcf69f63c4efa375a5d8cc7311bb98a6234b0c6436a394f42a427c67",
+  "supervisorTestsPassed": 12,
+  "preparerTestsPassed": 4,
+  "shimBehavioralCasesPassed": 8,
+  "actualWindowsChildProcessesTested": true,
+  "normalExitAndForcedTerminationDistinguished": true,
+  "actualHardDeadlineExitCode": 70,
+  "actualPinnedApplicationPlanPassed": true,
+  "unstagedRunRefusedBeforeOutputCreation": true,
+  "plannedDeploymentManifestSha256": "898c4e5294aec6a67a7364ed9e47ff602f5228401fa10e8a1ca06d46e7cc8993",
+  "seratoLaunched": false,
+  "actualFridaAttachTested": false,
+  "deviceAcquired": false,
+  "registryWritten": false,
+  "liveSupervisorValidated": false,
+  "completeInstallerLauncherImplemented": false
+}

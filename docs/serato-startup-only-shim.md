@@ -35,7 +35,7 @@ The preparer reads the application without executing it, requires its exact revi
   --prepare analysis/sl3-startup-shim-YOUR-NAME
 ```
 
-The preparation manifest explicitly leaves `liveShimValidated=false`. A configured DLL path is a binding input, not proof that a DLL is installed or verified. The host must reverify the application and exact staged DLL against the reviewed deployment package before launch. No original XML, archive, installer payload or resource codec material is emitted by this preparer.
+The preparation manifest explicitly leaves `liveShimValidated=false`. A configured DLL path is a binding input, not proof that a DLL is installed or verified. The host must verify the application and reviewed deployment package before launch. In the working installer-completion route the DLL does not exist at application launch; the protected installer publishes it afterward. The new process supervisor checks that staged file against the reviewed package after ASIO start and before entering manual viewing. This is a file check, not loaded-memory attestation. No original XML, archive, installer payload or resource codec material is emitted by this preparer.
 
 ## Validation and remaining work
 
@@ -50,4 +50,4 @@ node tests/test_serato_startup_shim.cjs
 .venv/Scripts/python.exe -m unittest discover -s tests -p test_serato_startup_preparation.py
 ```
 
-The smaller shim has not yet been substituted into a live session. A reusable public launcher still needs the complete source-bound descriptor/installer preparation, protected staging, process ownership, bounded broker lifetime, full detach and verified rollback. Those responsibilities cannot be replaced by loading this script alone. The first live check must preserve the existing known-working package and distinguish this shim's validation from the separate [shutdown investigation](serato-shutdown-diagnostic.md).
+The smaller shim has not yet been substituted into a live session. A [public process supervisor](serato-startup-supervisor.md) now implements owned process/job handling, bounded startup/viewing, full detach and exit reporting, with software and actual Windows test-process coverage. A reusable launcher still needs the complete source-bound descriptor/installer preparation, protected staging, bounded broker lifetime and verified rollback around it. Those responsibilities cannot be replaced by loading this script alone. The first live check must preserve the existing known-working package and distinguish this shim's validation from the separate [shutdown investigation](serato-shutdown-diagnostic.md).
