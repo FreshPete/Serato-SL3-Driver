@@ -1,0 +1,24 @@
+{
+  "schema": "sl3.asio-restart-endurance-evidence.v1",
+  "objects": 16,
+  "startStopCycles": 64,
+  "callbacks": 144280,
+  "handlesBefore": 136,
+  "handlesAfter": 123,
+  "exactLifecycleAudit": true,
+  "simulatedTransport": true,
+  "physicalUsbTested": false,
+  "seratoExecuted": false,
+  "physicalReopenVerified": false,
+  "realTimeCadenceVerified": false,
+  "productionSourcesModified": false,
+  "sha256": {
+    "source": "6341206abdecf17129377eb63a4c1aa075f3e350952c2e612ded5a2aa518a9aa",
+    "buildDefinition": "fa382dfcffa559074e608d78712d27d5f44e7cd41115acdf86a29a2f49f25f53",
+    "testExecutable": "3d559b3094642ea549ade128282ec3cd9174758500b71e56b842f2583fbe769e",
+    "testAsioDll": "cc288bd0812749143876e642665d37e24f0da0ce8dd3989b53794aa58c5bb4c1",
+    "simulatedWorker": "eaa5447b8eedf30d5a71a116ffc6609ac0c9683be196ba71f6f561224f09f8bc",
+    "linkedWorkerLibrary": "fa3e0f2e5594e49987cae6131ae28b0db1652fe6ea5bc3df6c621a1fe8194a76",
+    "lifecycleAudit": "6f98bfceaa552874bb8282b79cfb086d1786f4ac03acd6a669cab2ad2644f51a"
+  }
+}
