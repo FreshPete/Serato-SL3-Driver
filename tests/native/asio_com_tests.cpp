@@ -30,7 +30,8 @@ int wmain(int argc,wchar_t** argv){
         require(get && unload,"COM exports");
         require(!GetProcAddress(module,"DllRegisterServer") && !GetProcAddress(module,"DllUnregisterServer"),"No registration entrypoints yet");
         require(!GetProcAddress(module,"sl3_test_configure") && !GetProcAddress(module,"sl3_test_configure_retained") &&
-                !GetProcAddress(module,"sl3_test_configure_broker") && !GetProcAddress(module,"sl3_test_configure_bound_broker"),"Production DLL exports no simulated-provider configuration");
+                !GetProcAddress(module,"sl3_test_configure_broker") && !GetProcAddress(module,"sl3_test_configure_bound_broker") &&
+                !GetProcAddress(module,"sl3_test_configure_unmeasured"),"Production DLL exports no simulated-provider configuration");
         require(unload()==S_OK,"Initially unloadable");
         sl3::asio::DeviceScope* missing_scope=nullptr;
         require(get(sl3::asio::driver_clsid,sl3::asio::scope_iid,reinterpret_cast<void**>(&missing_scope))==S_OK &&

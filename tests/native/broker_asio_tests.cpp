@@ -19,7 +19,7 @@ template<class F>static F symbol(HMODULE module,const char* name){
     const auto address=GetProcAddress(module,name);require(address!=nullptr,"Test DLL export");F result;static_assert(sizeof(result)==sizeof(address));std::memcpy(&result,&address,sizeof(result));return result;
 }
 struct Host {
-    IASIO* device=nullptr;std::array<ASIOBufferInfo,12> planes{};bool block=false;
+    IASIO* device=nullptr;std::array<ASIOBufferInfo,12> planes{};bool block=false;unsigned rate=48000;
     Handle entered,release;std::atomic<unsigned> calls{0};std::atomic<bool> bad{false};
     Host(){entered.value=CreateEventW(nullptr,TRUE,FALSE,nullptr);release.value=CreateEventW(nullptr,TRUE,FALSE,nullptr);require(entered.value && release.value,"Callback events");
         for(long c=0;c<6;++c){planes[std::size_t(c)]={ASIOTrue,c,{}};planes[std::size_t(c+6)]={ASIOFalse,c,{}};}}
@@ -29,7 +29,7 @@ static Host* host=nullptr;
 static void callback(long bank,ASIOBool direct){
     auto& h=*host;const auto call=h.calls.load();ASIOSamples position{};ASIOTimeStamp timestamp{};ASIOSampleRate rate=0;
     if(bank!=long(call%2) || direct!=ASIOTrue || h.device->getSamplePosition(&position,&timestamp)!=ASE_OK ||
-       ((std::uint64_t(position.hi)<<32)|position.lo)!=std::uint64_t(call)*128 || h.device->getSampleRate(&rate)!=ASE_OK || rate!=48000 ||
+       ((std::uint64_t(position.hi)<<32)|position.lo)!=std::uint64_t(call)*128 || h.device->getSampleRate(&rate)!=ASE_OK || rate!=h.rate ||
        h.device->stop()!=ASE_InvalidMode || h.device->disposeBuffers()!=ASE_InvalidMode)h.bad=true;
     SetEvent(h.entered.value);if(h.block)WaitForSingleObject(h.release.value,INFINITE);
     for(unsigned c=0;c<6;++c)std::memset(h.planes[c+6].buffers[bank],0,128*3);
@@ -40,6 +40,11 @@ static void buffers(Host& h){ASIOCallbacks callbacks{};callbacks.bufferSwitch=ca
     require(h.device->createBuffers(h.planes.data(),12,128,&callbacks)==ASE_OK,"Official SDK planes prepared");}
 static void cycles(Host& h,const std::filesystem::path& pause={}){
     buffers(h);const auto stable=h.planes[0].buffers[0];
+    if(h.rate==44100){
+        long input=71,output=72;
+        require(h.device->getLatencies(&input,&output)==ASE_InvalidMode && input==0 && output==0,
+                "Unmeasured broker publishes no directional latency");
+    }
     for(unsigned cycle=0;cycle<2;++cycle){
         h.calls=0;ResetEvent(h.entered.value);require(h.device->start()==ASE_OK,"Actual IASIO start over broker");
         if(cycle==0 && !pause.empty()){
@@ -54,12 +59,12 @@ static void cycles(Host& h,const std::filesystem::path& pause={}){
     }
     require(h.device->disposeBuffers()==ASE_OK,"Retired callback planes disposed");
 }
-static void ordinary(const std::filesystem::path& library,const std::wstring& endpoint,HANDLE server,bool blocked,const std::string& worker_hash={},bool activate_com=false,const std::filesystem::path& pause={}){
+static void ordinary(const std::filesystem::path& library,const std::wstring& endpoint,HANDLE server,bool blocked,const std::string& worker_hash={},bool activate_com=false,const std::filesystem::path& pause={},bool unmeasured=false){
     HMODULE module=LoadLibraryExW(library.c_str(),nullptr,LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR|LOAD_LIBRARY_SEARCH_SYSTEM32);require(module!=nullptr,"Load actual unregistered ASIO test DLL");
     using Configure=BOOL(*)(const wchar_t*,HANDLE);using GetClass=HRESULT(__stdcall*)(REFCLSID,REFIID,void**);using Unload=HRESULT(__stdcall*)();
     const auto configure=symbol<Configure>(module,"sl3_test_configure_broker");const auto get=symbol<GetClass>(module,"DllGetClassObject");const auto unload=symbol<Unload>(module,"DllCanUnloadNow");
     if(worker_hash.empty())require(configure(endpoint.c_str(),server),"Explicit simulated broker test configuration");
-    else {using ConfigureBound=BOOL(*)(const wchar_t*,HANDLE,const char*);require(symbol<ConfigureBound>(module,"sl3_test_configure_bound_broker")(endpoint.c_str(),server,worker_hash.c_str()),"Explicit simulated provider with reviewed record worker contract");}
+    else {using ConfigureBound=BOOL(*)(const wchar_t*,HANDLE,const char*);require(symbol<ConfigureBound>(module,unmeasured?"sl3_test_configure_unmeasured_broker":"sl3_test_configure_bound_broker")(endpoint.c_str(),server,worker_hash.c_str()),"Explicit simulated provider with pinned record worker contract");}
     auto create=[&](Host& h){
         HRESULT result=E_FAIL;
         if(activate_com)result=CoCreateInstance(driver_clsid,nullptr,CLSCTX_INPROC_SERVER,driver_clsid,reinterpret_cast<void**>(&h.device));
@@ -70,9 +75,10 @@ static void ordinary(const std::filesystem::path& library,const std::wstring& en
     };
     if(!blocked){
         for(unsigned object=0;object<3;++object){
-            Host h;host=&h;create(h);long in=0,out=0;
+            Host h;h.rate=unmeasured?44100u:48000u;host=&h;create(h);long in=0,out=0;
             require(h.device->getChannels(&in,&out)==ASE_OK && in==6 && out==6,"Broker metadata on ordinary object");
-            require(h.device->setSampleRate(44100)==ASE_NoClock && h.device->setSampleRate(48000)==ASE_OK,"ASIO remains observed-rate-only");
+            require(h.device->setSampleRate(unmeasured?48000:44100)==ASE_NoClock &&
+                    h.device->setSampleRate(h.rate)==ASE_OK,"ASIO remains observed-rate-only");
             if(object)cycles(h,object==1?pause:std::filesystem::path{}); // Enumeration object followed by two audio objects.
             require(h.device->Release()==0,"Ordinary object releases final reference");h.device=nullptr;
             require(unload()==S_OK,"No lingering COM object/scope after successful detach");
@@ -138,6 +144,14 @@ static void run(const std::filesystem::path& self,const std::filesystem::path& f
 int wmain(int argc,wchar_t** argv){
     try{
         if(argc==5 && std::wstring(argv[1])==L"--published"){
+            if(std::wstring(argv[4])==L"unmeasured"){
+                const auto config=load_driver_entry_configuration(std::filesystem::absolute(argv[2]),TimingPolicy::unmeasured_diagnostic);
+                require(config.broker && !config.latency.report_latency && config.latency.rate_hz==44100 &&
+                        config.latency.buffer_frames==128,"Published unmeasured configuration");
+                ordinary(std::filesystem::absolute(argv[3]),config.broker->endpoint,config.broker->server->handle(),
+                         false,config.broker->worker_sha256,false,{},true);
+                return 0;
+            }
             const auto config=load_driver_entry_configuration(std::filesystem::absolute(argv[2]));
             require(config.broker && config.broker->kind==session::Kind::native && config.latency.rate_hz==48000 && config.latency.buffer_frames==128 &&
                 config.latency.input_extra_frames==7 && config.latency.output_extra_frames==11,"Published native-only record with synthetic test profile");

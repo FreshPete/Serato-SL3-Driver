@@ -86,6 +86,12 @@ ASIOError DriverFacade::getChannels(long* input,long* output) const noexcept {
 }
 ASIOError DriverFacade::getLatencies(long* input,long* output) const noexcept {
     if(!initialized_)return ASE_NotPresent;if(!input || !output)return ASE_InvalidParameter;
+    if (!latency_.report_latency) {
+        // Some hosts consume both outputs even when the query returns an error.
+        *input = 0;
+        *output = 0;
+        return ASE_InvalidMode;
+    }
     auto frames=frames_.load();if(!frames)frames=latency_.buffer_frames;if(!frames)return ASE_InvalidMode;
     *input=long(frames+latency_.input_extra_frames);*output=long(frames+latency_.output_extra_frames);return ASE_OK;
 }

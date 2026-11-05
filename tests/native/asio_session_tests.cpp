@@ -208,6 +208,22 @@ int wmain(int argc,wchar_t** argv){
             require(h.device->disposeBuffers()==ASE_OK,"Retire preferred-bank retry buffers");
             // Prevent Host's redundant dispose; its stop is safely idempotent.
         }
+        if(argc==3){
+            const auto unmeasured=reinterpret_cast<Configure>(GetProcAddress(module,"sl3_test_configure_unmeasured"));
+            require(unmeasured && unmeasured(fixture.c_str(),hash.c_str()),"Select unmeasured timing in the test DLL");
+            Host h;host=&h;h.frames=128;
+            require(factory->CreateInstance(nullptr,sl3::asio::driver_clsid,reinterpret_cast<void**>(&h.device))==S_OK &&
+                    h.device->init(nullptr)==ASIOTrue,"Initialize unmeasured IASIO object");
+            ASIOCallbacks callbacks{};callbacks.bufferSwitch=callback;
+            require(h.device->createBuffers(h.buffers.data(),12,240,&callbacks)==ASE_InvalidMode &&
+                    h.device->createBuffers(h.buffers.data(),12,128,&callbacks)==ASE_OK,"Use the fixed diagnostic bank after an unsupported request");
+            long input=71,output=75;
+            require(h.device->getLatencies(&input,&output)==ASE_InvalidMode && input==0 && output==0,
+                    "IASIO returns unavailable latency and initializes both outputs");
+            require(h.device->start()==ASE_OK && WaitForSingleObject(h.entered,2000)==WAIT_OBJECT_0 &&
+                    h.device->stop()==ASE_OK && h.calls>0 && !h.bad &&
+                    h.device->disposeBuffers()==ASE_OK,"Diagnostic IASIO stream completes without measured latency");
+        }
         std::unique_ptr<Host> blocked;
         if(argc==4){
             const auto audited=reinterpret_cast<ConfigureAudit>(GetProcAddress(module,"sl3_test_configure_retained_audit"));

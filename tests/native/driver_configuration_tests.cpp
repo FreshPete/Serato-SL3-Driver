@@ -81,6 +81,31 @@ static void records(Fixture& fixture){
     fixture.reset();
     const auto adjacent=production_configuration_path();require(adjacent.is_absolute() && adjacent.filename()==L"sl3-asio.conf" && adjacent.parent_path()==std::filesystem::path([]{std::vector<wchar_t> value(32768);const auto n=GetModuleFileNameW(nullptr,value.data(),DWORD(value.size()));return std::wstring(value.data(),n);}()).parent_path(),"Configuration follows containing module, not working directory");
 }
+static void diagnostic_timing(Fixture& f){
+    const auto text="SL3-ASIO-DIAGNOSTIC-TIMING-1\nworker_sha256="+f.worker_hash+
+        "\nhelper_sha256="+reviewed_helper_sha256+"\nrate_hz=44100\nbuffer_frames=128\n";
+    const auto set_timing=[&](const std::string& timing){
+        write(f.timing,timing);
+        auto config=f.config_text;
+        config.replace(config.find("timing_record_sha256=")+21,64,digest(f.timing));
+        write(f.config,config);
+    };
+    rejects([&]{load_driver_configuration(f.config,TimingPolicy::unmeasured_diagnostic);});
+    set_timing(text);
+    rejects([&]{load_driver_configuration(f.config);});
+    rejects([&]{load_driver_entry_configuration(f.config);});
+    {
+        const auto result=load_driver_entry_configuration(f.config,TimingPolicy::unmeasured_diagnostic);
+        require(!result.latency.report_latency && result.latency.rate_hz==44100 &&
+                result.latency.buffer_frames==128 && result.keepalive_timing_sha256.empty(),
+                "Explicit diagnostic policy preserves fixed clock and unavailable latency");
+    }
+    auto wrong_rate=text;
+    wrong_rate.replace(wrong_rate.find("44100"),5,"48000");
+    set_timing(wrong_rate);
+    rejects([&]{load_driver_configuration(f.config,TimingPolicy::unmeasured_diagnostic);});
+    f.reset();
+}
 static void production_abi(Fixture& fixture,const std::filesystem::path& source,bool activate_com=false){
     std::unique_ptr<sl3::test::ComApartment> apartment;std::unique_ptr<sl3::test::ComActivation> activation;
     if(!std::filesystem::exists(fixture.dll))require(std::filesystem::copy_file(source,fixture.dll),"Copy production DLL into isolated test folder");
@@ -182,7 +207,7 @@ static void broker_records(Fixture& f,const std::filesystem::path& worker,const 
     f.reset();
 }
 int wmain(int argc,wchar_t** argv){
-    try{require(argc==4,"Simulated fixture, reviewed helper and production DLL paths required");Fixture fixture(argv[1],argv[2]);records(fixture);production_abi(fixture,argv[3]);broker_records(fixture,argv[1],argv[3]);
+    try{require(argc==4,"Simulated fixture, reviewed helper and production DLL paths required");Fixture fixture(argv[1],argv[2]);records(fixture);diagnostic_timing(fixture);production_abi(fixture,argv[3]);broker_records(fixture,argv[1],argv[3]);
         require(!GetModuleHandleW(L"UsbDkHelper.dll10") && !GetModuleHandleW(L"UsbDkHelper.dll"),"Helper never loaded in test host");
         std::cout<<"Strict direct/locator/pointer configuration/hash/profile bindings, held file leases and actual production ASIO provider rejection of simulated worker passed; synthetic records only, no physical USB\n";
     }catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}

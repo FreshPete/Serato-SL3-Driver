@@ -28,7 +28,7 @@ def main():
     folder.mkdir(parents=True)
     bundles = ROOT/'artifacts/build/deployment-bundles'
     bundle = bundles/identity
-    manifest = ROOT/'artifacts/build/native/native-build-Release.json'
+    manifest = Path(sys.argv[1]).resolve() if len(sys.argv) == 2 else ROOT/'artifacts/build/native/native-build-Release.json'
     build = json.loads(manifest.read_text(encoding='utf-8-sig'))
     helper = ROOT/'artifacts/extracted/usbdk-msi/UsbDkHelper.dll10'
     installation = Path(os.environ['ProgramFiles'])/'SL3 Rebuild'/('review-'+identity)

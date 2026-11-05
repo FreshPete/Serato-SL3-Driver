@@ -91,7 +91,7 @@ std::string session_pointer_text(const std::filesystem::path& configuration,cons
     auto text="SL3-ASIO-SESSION-POINTER-1\nconfiguration="+configuration.u8string()+"\nconfiguration_sha256="+sha256+"\n";
     parse_session_pointer(text);return text;
 }
-DriverConfiguration load_driver_configuration(const std::filesystem::path& location){
+DriverConfiguration load_driver_configuration(const std::filesystem::path& location,TimingPolicy policy){
     auto files=std::make_shared<Files>();
     const auto bytes=locked_text(*files,location);
     const std::string broker_prefix="SL3-ASIO-BROKER-CONFIG-";
@@ -104,18 +104,26 @@ DriverConfiguration load_driver_configuration(const std::filesystem::path& locat
     const auto timing_path=path(config[4]);const auto timing_hash=hash(config[5]);
     pin_hash(*files,timing_path,timing_hash,65536);
     const auto timing_text=locked_text(*files,timing_path);
-    const bool keepalive=timing_text.rfind("SL3-ASIO-TIMING-2",0)==0;
-    const auto timing=record(timing_text,{keepalive?"SL3-ASIO-TIMING-2":"SL3-ASIO-TIMING-1","review=","worker_sha256=","helper_sha256=","rate_hz=","buffer_frames=",
-        "intervals=","requests_per_direction=","input_extra_frames=","output_extra_frames=","measurement_file=","measurement_sha256="});
-    if(keepalive)result.keepalive_timing_sha256=timing_hash;
-    if(!timing[0].empty() || timing[1]!="approved" || hash(timing[2])!=result.worker.sha256 || hash(timing[3])!=reviewed_helper_sha256 ||
-       timing[6]!="8" || timing[7]!="4")throw std::invalid_argument("ASIO timing does not bind the reviewed worker/helper/pipeline");
-    result.latency={number(timing[8]),number(timing[9]),number(timing[4]),number(timing[5])};
-    const auto& latency=result.latency;const auto limit=unsigned(std::numeric_limits<long>::max())-2048u;
-    if((latency.rate_hz!=44100 && latency.rate_hz!=48000) || latency.buffer_frames<64 || latency.buffer_frames>1024 ||
-       (latency.buffer_frames&(latency.buffer_frames-1)) || latency.input_extra_frames>limit || latency.output_extra_frames>limit)
-        throw std::invalid_argument("Invalid bound ASIO timing mode");
-    pin_hash(*files,path(timing[10]),hash(timing[11]),1024*1024);
+    if(policy==TimingPolicy::unmeasured_diagnostic){
+        const auto timing=record(timing_text,{"SL3-ASIO-DIAGNOSTIC-TIMING-1","worker_sha256=","helper_sha256=","rate_hz=","buffer_frames="});
+        if(!timing[0].empty() || hash(timing[1])!=result.worker.sha256 || hash(timing[2])!=reviewed_helper_sha256 ||
+           timing[3]!="44100" || timing[4]!="128")
+            throw std::invalid_argument("ASIO diagnostic requires the pinned 44.1 kHz, 128-frame mode");
+        result.latency={0,0,44100,128,false};
+    }else{
+        const bool keepalive=timing_text.rfind("SL3-ASIO-TIMING-2",0)==0;
+        const auto timing=record(timing_text,{keepalive?"SL3-ASIO-TIMING-2":"SL3-ASIO-TIMING-1","review=","worker_sha256=","helper_sha256=","rate_hz=","buffer_frames=",
+            "intervals=","requests_per_direction=","input_extra_frames=","output_extra_frames=","measurement_file=","measurement_sha256="});
+        if(keepalive)result.keepalive_timing_sha256=timing_hash;
+        if(!timing[0].empty() || timing[1]!="approved" || hash(timing[2])!=result.worker.sha256 || hash(timing[3])!=reviewed_helper_sha256 ||
+           timing[6]!="8" || timing[7]!="4")throw std::invalid_argument("ASIO timing does not bind the reviewed worker/helper/pipeline");
+        result.latency={number(timing[8]),number(timing[9]),number(timing[4]),number(timing[5])};
+        const auto& latency=result.latency;const auto limit=unsigned(std::numeric_limits<long>::max())-2048u;
+        if((latency.rate_hz!=44100 && latency.rate_hz!=48000) || latency.buffer_frames<64 || latency.buffer_frames>1024 ||
+           (latency.buffer_frames&(latency.buffer_frames-1)) || latency.input_extra_frames>limit || latency.output_extra_frames>limit)
+            throw std::invalid_argument("Invalid bound ASIO timing mode");
+        pin_hash(*files,path(timing[10]),hash(timing[11]),1024*1024);
+    }
     pin_hash(*files,result.worker.executable,result.worker.sha256,256*1024*1024);
     pin_hash(*files,result.worker.helper,reviewed_helper_sha256,256*1024*1024);
     if(broker){
@@ -125,13 +133,13 @@ DriverConfiguration load_driver_configuration(const std::filesystem::path& locat
     }
     result.files=std::move(files);return result;
 }
-DriverConfiguration load_driver_entry_configuration(const std::filesystem::path& location){
+DriverConfiguration load_driver_entry_configuration(const std::filesystem::path& location,TimingPolicy policy){
     auto files=std::make_shared<Files>();const auto bytes=locked_text(*files,location);
     const std::string prefix="SL3-ASIO-LOCATOR-";
     if(bytes.compare(0,prefix.size(),prefix)!=0){
         // Preserve the explicit direct formats. A malformed locator cannot
         // reach this branch or fall back to a private worker configuration.
-        auto result=load_driver_configuration(location);
+        auto result=load_driver_configuration(location,policy);
         if(!result.broker && !result.keepalive_timing_sha256.empty())
             throw std::invalid_argument("Keepalive timing requires a controller-owned broker session");
         files->external.push_back(result.files);result.files=files;return result;
@@ -154,7 +162,7 @@ DriverConfiguration load_driver_entry_configuration(const std::filesystem::path&
     if(!GetFileInformationByHandle(anchor.handle,&first) || !GetFileInformationByHandle(actual.handle,&second) ||
        first.dwVolumeSerialNumber!=second.dwVolumeSerialNumber || first.nFileIndexHigh!=second.nFileIndexHigh || first.nFileIndexLow!=second.nFileIndexLow)
         throw std::invalid_argument("ASIO session broker differs from locator file identity");
-    auto result=load_driver_configuration(configuration);
+    auto result=load_driver_configuration(configuration,policy);
     if(!result.broker)throw std::invalid_argument("ASIO locator requires a broker session");
     files->external.push_back(result.files);result.files=std::move(files);return result;
 }
@@ -166,13 +174,17 @@ std::filesystem::path production_configuration_path(){
     if(!count || count>=buffer.size())throw std::runtime_error("Read ASIO module path");
     return std::filesystem::path(std::wstring(buffer.data(),count)).parent_path()/L"sl3-asio.conf";
 }
-std::unique_ptr<DriverFacade> make_native_asio_facade(){
-    auto config=load_driver_entry_configuration(production_configuration_path());
+std::unique_ptr<DriverFacade> make_native_asio_facade(TimingPolicy policy){
+    auto config=load_driver_entry_configuration(production_configuration_path(),policy);
+    if(policy==TimingPolicy::unmeasured_diagnostic && !config.broker)
+        throw std::invalid_argument("Unmeasured ASIO requires a retained broker");
     if(config.broker)return std::make_unique<DriverFacade>(*config.broker,config.latency,config.files);
     return std::make_unique<DriverFacade>(config.worker,config.latency,config.files);
 }
-std::shared_ptr<DriverScope> make_native_asio_scope(){
-    auto config=load_driver_entry_configuration(production_configuration_path());
+std::shared_ptr<DriverScope> make_native_asio_scope(TimingPolicy policy){
+    auto config=load_driver_entry_configuration(production_configuration_path(),policy);
+    if(policy==TimingPolicy::unmeasured_diagnostic && !config.broker)
+        throw std::invalid_argument("Unmeasured ASIO requires a retained broker");
     if(config.broker)return std::make_shared<DriverScope>(DriverScope{std::make_shared<DriverOwner>(*config.broker,config.files),config.latency});
     return std::make_shared<DriverScope>(DriverScope{std::make_shared<DriverOwner>(config.worker,config.files),config.latency});
 }

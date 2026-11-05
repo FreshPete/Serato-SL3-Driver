@@ -3,19 +3,22 @@
 #include "asio/driver_configuration.hpp"
 #include <mutex>
 
-namespace {std::mutex configuration_mutex;std::filesystem::path executable,audit_path;std::string expected_hash;bool retained=false;
+namespace {std::mutex configuration_mutex;std::filesystem::path executable,audit_path;std::string expected_hash;bool retained=false, report_latency=true;
 std::shared_ptr<sl3::asio::DriverOwner> shared_owner;std::optional<sl3::asio::BrokerAttachment> broker;}
-static BOOL configure(const wchar_t* path,const char* hash,bool held) noexcept {
+static BOOL configure(const wchar_t* path,const char* hash,bool held,bool latency=true) noexcept {
     try{
         if(!path || !hash)return FALSE;
         const std::filesystem::path candidate(path);const std::string expected(hash);
         if(!candidate.is_absolute() || sl3::worker::Process::executable_sha256(candidate)!=expected)return FALSE;
         std::lock_guard<std::mutex> guard(configuration_mutex);if(shared_owner)return FALSE;
-        executable=candidate;expected_hash=expected;retained=held;audit_path.clear();broker.reset();return TRUE;
+        executable=candidate;expected_hash=expected;retained=held;report_latency=latency;audit_path.clear();broker.reset();return TRUE;
     }catch(...){return FALSE;}
 }
 extern "C" __declspec(dllexport) BOOL sl3_test_configure(const wchar_t* path,const char* hash) noexcept {return configure(path,hash,false);}
 extern "C" __declspec(dllexport) BOOL sl3_test_configure_retained(const wchar_t* path,const char* hash) noexcept {return configure(path,hash,true);}
+extern "C" __declspec(dllexport) BOOL sl3_test_configure_unmeasured(const wchar_t* path,const char* hash) noexcept {
+    return configure(path,hash,false,false);
+}
 // Test-only audit records the actual simulated worker lifecycle across distinct
 // COM objects. This export/provider is absent from the production DLL.
 extern "C" __declspec(dllexport) BOOL sl3_test_configure_retained_audit(const wchar_t* path,const char* hash,const wchar_t* audit) noexcept {
@@ -29,27 +32,38 @@ extern "C" __declspec(dllexport) BOOL sl3_test_configure_retained_audit(const wc
 }
 std::unique_ptr<sl3::asio::DriverFacade> make_test_asio_facade(){
     std::lock_guard<std::mutex> guard(configuration_mutex);
-    if(broker)return std::make_unique<sl3::asio::DriverFacade>(*broker,sl3::asio::LatencyProfile{7,11,48000,128});
+    if(broker){
+        const auto timing=report_latency?sl3::asio::LatencyProfile{7,11,48000,128}:sl3::asio::LatencyProfile{0,0,44100,128,false};
+        return std::make_unique<sl3::asio::DriverFacade>(*broker,timing);
+    }
     if(executable.empty())return {};
     if(shared_owner)return std::make_unique<sl3::asio::DriverFacade>(shared_owner,sl3::asio::LatencyProfile{7,11});
     sl3::asio::WorkerSpec spec;spec.executable=executable;spec.sha256=expected_hash;spec.kind=sl3::session::Kind::simulated;
     spec.lifetime=retained?sl3::asio::DeviceLifetime::retained:sl3::asio::DeviceLifetime::temporary;
     if(!audit_path.empty())spec.fixture_mode=L"audit:"+audit_path.native();
-    return std::make_unique<sl3::asio::DriverFacade>(spec,sl3::asio::LatencyProfile{7,11});
+    const auto timing=report_latency?sl3::asio::LatencyProfile{7,11}:sl3::asio::LatencyProfile{0,0,48000,128,false};
+    return std::make_unique<sl3::asio::DriverFacade>(spec,timing);
 }
-extern "C" __declspec(dllexport) BOOL sl3_test_configure_broker(const wchar_t* endpoint,HANDLE server) noexcept {
+static BOOL configure_broker(const wchar_t* endpoint,HANDLE server,const char* worker_hash,bool latency) noexcept {
     try{
         if(!endpoint || !*endpoint)return FALSE;
         sl3::asio::BrokerAttachment candidate{endpoint,sl3::worker::ProcessWait::duplicate(server),sl3::session::Kind::simulated};
+        if(worker_hash){
+            if(std::string(worker_hash).size()!=64)return FALSE;
+            candidate.worker_sha256=worker_hash;
+        }
         std::lock_guard<std::mutex> guard(configuration_mutex);if(shared_owner)return FALSE;
-        broker=std::move(candidate);executable.clear();expected_hash.clear();audit_path.clear();retained=false;return TRUE;
+        broker=std::move(candidate);executable.clear();expected_hash.clear();audit_path.clear();retained=false;report_latency=latency;return TRUE;
     }catch(...){return FALSE;}
 }
+extern "C" __declspec(dllexport) BOOL sl3_test_configure_broker(const wchar_t* endpoint,HANDLE server) noexcept {
+    return configure_broker(endpoint,server,nullptr,true);
+}
 extern "C" __declspec(dllexport) BOOL sl3_test_configure_bound_broker(const wchar_t* endpoint,HANDLE server,const char* worker_hash) noexcept {
-    try{
-        if(!worker_hash || std::string(worker_hash).size()!=64 || !sl3_test_configure_broker(endpoint,server))return FALSE;
-        std::lock_guard<std::mutex> guard(configuration_mutex);broker->worker_sha256=worker_hash;return TRUE;
-    }catch(...){return FALSE;}
+    return worker_hash?configure_broker(endpoint,server,worker_hash,true):FALSE;
+}
+extern "C" __declspec(dllexport) BOOL sl3_test_configure_unmeasured_broker(const wchar_t* endpoint,HANDLE server,const char* worker_hash) noexcept {
+    return worker_hash?configure_broker(endpoint,server,worker_hash,false):FALSE;
 }
 extern "C" __declspec(dllexport) BOOL sl3_test_configure_shared_owner_audit(const wchar_t* path,const char* hash,const wchar_t* audit) noexcept {
     try{

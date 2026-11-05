@@ -12,6 +12,9 @@ struct LatencyProfile {
     // Zero leaves the test/component contract unrestricted. Production profiles
     // bind both values, so measurements are never extrapolated to other modes.
     unsigned rate_hz=0,buffer_frames=0;
+    // Component diagnostics can stream while explicitly reporting unknown latency.
+    // Production configuration never selects this mode.
+    bool report_latency=true;
 };
 // Explicit control-scope owner. Retain this object across successive facades to
 // keep a retained worker acquired. There is no global cache, timeout or reopen.

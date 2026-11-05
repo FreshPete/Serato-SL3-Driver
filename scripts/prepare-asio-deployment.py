@@ -103,7 +103,7 @@ def locator_text(installation, pointer, controller_sha, worker_sha):
             '\nbroker_sha256='+controller_sha+'\nworker_sha256='+worker_sha+'\n').encode('utf-8')
 
 
-def prepare(manifest, expected, helper, output, installation, pointer):
+def prepare(manifest, expected, helper, output, installation, pointer, unmeasured=False):
     installation, pointer = destinations(installation, pointer)
     output = inside(output, ROOT/'artifacts/build/deployment-bundles')
     require(not output.exists(), 'Bundle directory must be new; existing bytes are preserved')
@@ -131,6 +131,23 @@ def prepare(manifest, expected, helper, output, installation, pointer):
         'sl3_usbdk.exe': ('worker', manifest.parent/'Release/sl3_usbdk.exe', build['usbdk']['executableSha256'].lower()),
         'UsbDkHelper.dll': ('helper', helper, HELPER_SHA),
     }
+    if unmeasured:
+        diagnostic = build.get('unmeasuredAsioDiagnostic', {})
+        require(diagnostic.get('rateHz') == 44100 and diagnostic.get('bufferFrames') == 128
+                and diagnostic.get('maximumLifetimeMs') == 120000 and diagnostic.get('latencyAvailable') is False
+                and diagnostic.get('simulatedCallbacksPassed') is True and diagnostic.get('nativePositiveRun') is False
+                and diagnostic.get('installed') is False, 'Tested unmeasured diagnostic build required')
+        require({'sl3_asio_unmeasured_absent', 'sl3_broker_unmeasured_plan',
+                 'sl3_broker_unmeasured_rejects_long_lifetime', 'sl3_broker_unmeasured_lifecycle'}.issubset(build['ctestTests']),
+                'Required unmeasured diagnostic coverage missing')
+        dll_sha = sha_value(diagnostic['dllSha256'].lower())
+        broker_sha = sha_value(diagnostic['brokerSha256'].lower())
+        require(dll_sha != sources['sl3_asio.dll'][2] and broker_sha not in (
+            sources['sl3_broker_controller.exe'][2], sha_value(diagnostic['simulatedBrokerSha256'].lower())),
+            'Expected distinct native diagnostic DLL and controller')
+        sources['sl3_asio.dll'] = ('asio', manifest.parent/'unmeasured/Release/sl3_asio.dll', dll_sha)
+        sources['sl3_broker_controller.exe'] = (
+            'controller', manifest.parent/'Release/sl3_broker_controller_unmeasured.exe', broker_sha)
     payload = {}; images = {}
     for name, (role, path, expected_sha) in sources.items():
         data = read(path); require(digest(data) == expected_sha, f'Payload hash mismatch: {name}')
@@ -141,6 +158,8 @@ def prepare(manifest, expected, helper, output, installation, pointer):
     seed = {'builderSha256': digest(read(Path(__file__))), 'buildManifestSha256': digest(raw),
             'payloadHashes': {k: digest(v) for k, v in payload.items()},
             'installationDirectory': str(installation), 'pointerPath': str(pointer)}
+    diagnostic_label = {'timingMode': 'unmeasured-diagnostic-44100-128'} if unmeasured else {}
+    seed.update(diagnostic_label)
     identity = digest(encoded(seed))
     payload['sl3-asio.conf'] = locator_text(installation, pointer, digest(payload['sl3_broker_controller.exe']), digest(payload['sl3_usbdk.exe']))
     payload['provenance.json'] = encoded({'schema': 'sl3.deployment-provenance.v1', 'identitySeed': seed,
@@ -156,8 +175,10 @@ def prepare(manifest, expected, helper, output, installation, pointer):
         'requiredInstallChecks': ['new destination', 'protected administrator-owned executable files', 'no registry conflicts',
                                  'all payload hashes', 'VC runtime availability', 'separate user-owned session pointer',
                                  'owned-entry uninstall and conflict preservation'],
-        'automaticStart': False, 'serviceCreated': False, 'rateProfileIncluded': False, 'registryApplied': False})
-    payload['README.txt'] = ("LOCAL REVIEW BUNDLE - NOT INSTALLED; NOT A WORKING DRIVER RELEASE.\n"
+        'automaticStart': False, 'serviceCreated': False, 'rateProfileIncluded': False, 'registryApplied': False,
+        **diagnostic_label})
+    notice = "UNMEASURED 44.1 kHz DIAGNOSTIC ONLY. Broker lifetime is limited to two minutes.\n" if unmeasured else ""
+    payload['README.txt'] = (notice+"LOCAL REVIEW BUNDLE - NOT INSTALLED; NOT A WORKING DRIVER RELEASE.\n"
         "Copy/ACL/registration installation and owned-entry uninstall still need implementation.\n"
         "The proposed locator references the reviewed future installation, not this bundle.\n"
         "No measured timing/profile, current Serato admission, physical audio or DVS is certified.\n"
@@ -168,7 +189,7 @@ def prepare(manifest, expected, helper, output, installation, pointer):
     result = {'schema': 'sl3.deployment-bundle.v1', 'packageId': identity,
               'files': {name: {'bytes': len(data), 'sha256': digest(data)} for name, data in payload.items()},
               'installed': False, 'registryWritten': False, 'binaryExecuted': False, 'protectedInstallationCreated': False,
-              'physicalAudioTested': False, 'currentSeratoAdmissionTested': False}
+              'physicalAudioTested': False, 'currentSeratoAdmissionTested': False, **diagnostic_label}
     output.parent.mkdir(parents=True, exist_ok=True); output.mkdir()
     for name, data in payload.items():
         with (output/name).open('xb') as stream:
@@ -177,7 +198,7 @@ def prepare(manifest, expected, helper, output, installation, pointer):
         stream.write(encoded(result))  # Published last; partial output is retained on I/O failure.
     expected_bundle = digest(encoded(result)); verify(output, expected_bundle)
     return {'prepared': True, 'directory': str(output), 'bundleManifestSha256': expected_bundle,
-            'files': len(payload), 'installed': False, 'registryWritten': False, 'binaryExecuted': False}
+            'files': len(payload), 'installed': False, 'registryWritten': False, 'binaryExecuted': False, **diagnostic_label}
 
 
 def verify(bundle, expected):
@@ -217,6 +238,9 @@ def verify_payloads(manifest, payload):
         require(pe_info(payload[name], role) == provenance['images'][name], 'PE metadata mismatch')
     require(digest(payload['UsbDkHelper.dll']) == HELPER_SHA, 'Unreviewed helper payload')
     plan = record(payload['deployment-plan.json'])
+    timing_mode = seed.get('timingMode')
+    require(timing_mode in (None, 'unmeasured-diagnostic-44100-128') and
+            timing_mode == manifest.get('timingMode') == plan.get('timingMode'), 'Bundle timing mode mismatch')
     installation, pointer = destinations(Path(seed['installationDirectory']), Path(seed['pointerPath']))
     require(payload['sl3-asio.conf'] == locator_text(installation, pointer, digest(payload['sl3_broker_controller.exe']), digest(payload['sl3_usbdk.exe'])), 'Locator does not bind planned binaries/pointer')
     require(plan['schema'] == 'sl3.deployment-plan.v1' and plan['packageId'] == manifest['packageId'] and
@@ -237,15 +261,18 @@ def main(argv=None):
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument('--prepare', action='store_const', const='prepare', dest='mode')
     mode.add_argument('--verify', action='store_const', const='verify', dest='mode')
+    parser.add_argument('--unmeasured-diagnostic', action='store_true')
     for name in ['manifest', 'expected-build-sha256', 'helper', 'output', 'install-directory', 'pointer', 'bundle', 'expected-bundle-sha256']:
         parser.add_argument('--'+name)
     args = vars(parser.parse_args(argv)); operation = args.pop('mode')
+    unmeasured = args.pop('unmeasured_diagnostic')
+    require(not unmeasured or operation == 'prepare', 'Diagnostic selection applies only to preparation')
     fields = ({'manifest', 'expected_build_sha256', 'helper', 'output', 'install_directory', 'pointer'} if operation == 'prepare'
               else {'bundle', 'expected_bundle_sha256'})
     require({k for k, v in args.items() if v is not None} == fields, 'Exactly the selected operation options are required')
     if operation == 'prepare':
         result = prepare(Path(args['manifest']), args['expected_build_sha256'], Path(args['helper']), Path(args['output']),
-                         Path(args['install_directory']), Path(args['pointer']))
+                         Path(args['install_directory']), Path(args['pointer']), unmeasured)
     else:
         result = verify(Path(args['bundle']), args['expected_bundle_sha256'])
     print(json.dumps(result))

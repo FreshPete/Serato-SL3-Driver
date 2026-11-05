@@ -18,16 +18,17 @@ struct SessionPointer {
     std::filesystem::path configuration;
     std::string sha256;
 };
+enum class TimingPolicy { reviewed, unmeasured_diagnostic };
 // Bounded syntax only; resolving a target applies the file/process policy.
 SessionPointer parse_session_pointer(const std::string&);
 std::string session_pointer_text(const std::filesystem::path&,const std::string& sha256);
 // Strict UTF-8 records, absolute paths, locked bytes and SHA256 bindings only.
 // This verifies consistency, not the truth/quality of a timing measurement.
-DriverConfiguration load_driver_configuration(const std::filesystem::path&);
+DriverConfiguration load_driver_configuration(const std::filesystem::path&,TimingPolicy=TimingPolicy::reviewed);
 // Direct configuration, or one fixed locator -> mutable pointer -> immutable
 // broker configuration. No search, environment expansion, recursion or fallback.
-DriverConfiguration load_driver_entry_configuration(const std::filesystem::path&);
+DriverConfiguration load_driver_entry_configuration(const std::filesystem::path&,TimingPolicy=TimingPolicy::reviewed);
 std::filesystem::path production_configuration_path();
-std::unique_ptr<DriverFacade> make_native_asio_facade();
-std::shared_ptr<DriverScope> make_native_asio_scope();
+std::unique_ptr<DriverFacade> make_native_asio_facade(TimingPolicy=TimingPolicy::reviewed);
+std::shared_ptr<DriverScope> make_native_asio_scope(TimingPolicy=TimingPolicy::reviewed);
 }

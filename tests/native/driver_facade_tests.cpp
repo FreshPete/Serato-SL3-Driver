@@ -48,9 +48,8 @@ static void unavailable(DriverFacade& driver){
         driver.start(),driver.stop(),driver.controlPanel(),driver.future(kAsioCanTimeInfo,nullptr),driver.outputReady()})require(result==ASE_NotPresent,"Uninitialized methods fail without readiness");
     require(a==71 && b==72 && c==73 && d==74 && rate==12345 && position.lo==75 && time.lo==76 && info.channel==77 && clock.index==78 && buffer.channelNum==79,"Unavailable calls preserve outputs");
 }
-static void healthy(const WorkerSpec& worker,unsigned expected_rate){
-    // Explicit synthetic extra delays, not a physical SL3 calibration.
-    DriverFacade driver(worker,{7,11});unavailable(driver);require(driver.init()==ASIOTrue && driver.init()==ASIOTrue,"Inspection-backed initialization is idempotent");
+static void healthy(const WorkerSpec& worker,unsigned expected_rate,LatencyProfile timing){
+    DriverFacade driver(worker,timing);unavailable(driver);require(driver.init()==ASIOTrue && driver.init()==ASIOTrue,"Inspection-backed initialization is idempotent");
     long minimum=0,maximum=0,preferred=0,granularity=0;
     require(driver.getBufferSize(&minimum,&maximum,&preferred,&granularity)==ASE_OK && minimum==64 && maximum==1024 && preferred==128 && granularity==-1,"Supported power-of-two buffer range");
     require(driver.getChannels(nullptr,&minimum)==ASE_InvalidParameter && driver.getBufferSize(&minimum,&maximum,&preferred,nullptr)==ASE_InvalidParameter,"Validate pointers before output publication");
@@ -64,7 +63,12 @@ static void healthy(const WorkerSpec& worker,unsigned expected_rate){
         clocks[0].associatedGroup==-1 && clocks[1].index==999 && driver.setClockSource(0)==ASE_OK && driver.setClockSource(1)==ASE_InvalidParameter,"Only one device clock, no array overrun or control write");
     Host h(driver);h.rate=expected_rate;host=&h;auto cb=callbacks();
     require(driver.createBuffers(h.buffers.data(),12,64,&cb)==ASE_OK,"Publish actual SDK planes");const auto pointer=h.buffers[0].buffers[0];
-    long input=0,output=0;require(driver.getLatencies(&input,&output)==ASE_OK && input==71 && output==75,"Bridge delay plus explicitly supplied synthetic extra delays");
+    long input=71,output=75;
+    const auto latency_status=driver.getLatencies(&input,&output);
+    if (timing.report_latency)
+        require(latency_status==ASE_OK && input==71 && output==75,"Bridge delay plus synthetic extra delays");
+    else
+        require(latency_status==ASE_InvalidMode && input==0 && output==0,"Unknown latency clears both outputs and returns an error");
     for(long direction=0;direction<2;++direction)for(long channel=0;channel<6;++channel){ASIOChannelInfo info{};info.channel=channel;info.isInput=direction?ASIOTrue:ASIOFalse;
         require(driver.getChannelInfo(&info)==ASE_OK && info.type==ASIOSTInt24LSB && info.isActive==ASIOTrue && info.channelGroup==0 && std::strstr(info.name,"SL3"),"Logical channels and active buffer selection");}
     ASIOSamples position{};position.lo=77;ASIOTimeStamp time{};time.lo=78;
@@ -85,7 +89,9 @@ static void healthy_44100(const std::filesystem::path& fixture){
     } clock;
     {std::ofstream file(clock.path);file<<44100;require(bool(file),"Write simulated 44.1 kHz clock");}
     const auto mode=L"clock:"+clock.path.native();
-    healthy(spec(fixture,mode.c_str()),44100);
+    const auto worker=spec(fixture,mode.c_str());
+    healthy(worker,44100,{7,11});
+    healthy(worker,44100,{0,0,44100,0,false});
 }
 static void bound_profile(const std::filesystem::path& fixture){
     DriverFacade wrong_rate(spec(fixture),{7,11,44100,128});require(wrong_rate.init()==ASIOFalse,"Reject observed rate outside timing calibration");
@@ -110,7 +116,7 @@ static void failures(const std::filesystem::path& fixture,const std::filesystem:
     char message[124]{};failed.getErrorMessage(message);failed.getErrorMessage(nullptr);require(std::strlen(message)>0 && std::strlen(message)<124,"Bounded error string");
 }
 int wmain(int argc,wchar_t** argv){
-    try{require(argc==3,"Fixture and native worker paths required");healthy(spec(argv[1]),48000);healthy_44100(argv[1]);bound_profile(argv[1]);failures(argv[1],argv[2]);
+    try{require(argc==3,"Fixture and native worker paths required");healthy(spec(argv[1]),48000,{7,11});healthy_44100(argv[1]);bound_profile(argv[1]);failures(argv[1],argv[2]);
         std::cout<<"ASIO facade clock and callbacks at 44.1/48 kHz, buffer and channel metadata, repeated start/stop and native absent-helper rejection passed; synthetic timing only\n";
     }catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}
 }

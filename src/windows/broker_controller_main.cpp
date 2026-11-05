@@ -16,6 +16,11 @@
 
 namespace {
 using namespace sl3;using namespace sl3::worker;
+#ifdef SL3_ASIO_UNMEASURED_DIAGNOSTIC
+constexpr auto timing_policy=asio::TimingPolicy::unmeasured_diagnostic;
+#else
+constexpr auto timing_policy=asio::TimingPolicy::reviewed;
+#endif
 #ifdef SL3_BROKER_CONTROLLER_SIMULATED
 constexpr auto kind=session::Kind::simulated;constexpr const char* kind_name="simulated";
 #else
@@ -83,7 +88,9 @@ std::string result(const RunEvidence& e,bool expired){
 }
 int run(const std::filesystem::path& input,const std::filesystem::path& output,DWORD duration,bool keepalive){
     require(!keepalive || kind==session::Kind::native,"Playback keepalive requires the native controller");
-    auto config=asio::load_driver_configuration(input);require(!config.broker,"Controller input must be reviewed private-worker format");
+    if constexpr(timing_policy==asio::TimingPolicy::unmeasured_diagnostic)
+        require(duration<=120000,"Unmeasured diagnostic lifetime must not exceed two minutes");
+    auto config=asio::load_driver_configuration(input,timing_policy);require(!config.broker,"Controller input must be private-worker format");
     require(keepalive==!config.keepalive_timing_sha256.empty(),"Controller playback mode differs from reviewed timing profile");
     ReadFileLease source(input);const auto source_text=source.text();const auto image=self();auto image_pin=std::make_shared<ReadFileLease>(image,256*1024*1024);const auto image_hash=Process::executable_sha256(image);
     BrokerListener listener; // Requires an ordinary user before files/device access.
@@ -99,7 +106,12 @@ int run(const std::filesystem::path& input,const std::filesystem::path& output,D
     Handle stop;stop.value=CreateEventW(&security.attributes,TRUE,FALSE,stop_name(listener.name()).c_str());require(stop.value && GetLastError()!=ERROR_ALREADY_EXISTS,"Create unique owner-only stop event");
     Timer timer(stop.value,duration);BrokerSpec spec;spec.executable=config.worker.executable;spec.sha256=config.worker.sha256;spec.helper=config.worker.helper;spec.kind=kind;
     spec.playback_keepalive=keepalive;
-    if constexpr(kind==session::Kind::native)spec.startup_journal=output/L"worker-startup.tsv";else spec.fixture_mode=L"audit:"+(output/L"worker-audit.txt").native();
+    if constexpr(kind==session::Kind::native)spec.startup_journal=output/L"worker-startup.tsv";
+    else if constexpr(timing_policy==asio::TimingPolicy::unmeasured_diagnostic){
+        const auto clock=output/L"simulated-clock.txt";
+        published.push_back(write_new(clock,"44100\n"));
+        spec.fixture_mode=L"clock:"+clock.native();
+    }else spec.fixture_mode=L"audit:"+(output/L"worker-audit.txt").native();
     RetainedBroker owner(spec);RunEvidence evidence;
     try{
         journal.mark("owner_open_begin");require(owner.open(),"Broker owner acquisition/handshake failed");evidence.acquired=true;journal.mark("owner_open_ready");
@@ -109,7 +121,7 @@ int run(const std::filesystem::path& input,const std::filesystem::path& output,D
         auto native_config=source_text;const std::string header="SL3-ASIO-CONFIG-1";require(native_config.compare(0,header.size(),header)==0,"Controller input header changed");native_config.replace(0,header.size(),"SL3-ASIO-BROKER-CONFIG-1");
         native_config+="broker="+image.u8string()+"\nbroker_sha256="+image_hash+"\nsession_record="+record.u8string()+"\nsession_record_sha256="+Process::executable_sha256(record)+"\n";
         const auto consumer=output/L"sl3-asio.conf";published.push_back(write_new(consumer,native_config));
-        auto binding=asio::load_driver_configuration(consumer);require(binding.broker && GetProcessId(binding.broker->server->handle())==GetCurrentProcessId(),"Verify published controller binding");journal.mark("consumer_config_published");
+        auto binding=asio::load_driver_configuration(consumer,timing_policy);require(binding.broker && GetProcessId(binding.broker->server->handle())==GetCurrentProcessId(),"Verify published controller binding");journal.mark("consumer_config_published");
         const auto ready_state=owner.report();
         require(!ready_state.failed && ready_state.phase==BrokerPhase::idle && ready_state.snapshot_valid && ready_state.device.io_retired &&
             !ready_state.device.device_released && ready_state.process.started && ready_state.process.job_assigned && !ready_state.process.process_exited,
@@ -132,7 +144,7 @@ int run(const std::filesystem::path& input,const std::filesystem::path& output,D
         evidence.final.device.device_released && evidence.final.process.process_exited && evidence.final.process.job_empty && !evidence.final.termination_requested?0:1;
 }
 int stop(const std::filesystem::path& file){
-    const auto config=asio::load_driver_configuration(file);require(config.broker.has_value(),"Stop requires a live reviewed broker configuration");
+    const auto config=asio::load_driver_configuration(file,timing_policy);require(config.broker.has_value(),"Stop requires a live broker configuration");
     Handle event;event.value=OpenEventW(EVENT_MODIFY_STATE,FALSE,stop_name(config.broker->endpoint).c_str());require(event.value && SetEvent(event.value),"Request known controller stop");
     std::cout<<"{\"schema\":\"sl3.broker-controller-stop.v1\",\"stopRequested\":true,\"deviceReleasedVerified\":false}\n";return 0;
 }
@@ -142,7 +154,7 @@ void ordinary_user(){
     require(GetTokenInformation(token.value,TokenElevation,&elevation,sizeof(elevation),&bytes) && !elevation.TokenIsElevated,"Pointer commands require an ordinary non-elevated user");
 }
 int publish_pointer(const std::filesystem::path& source,const std::filesystem::path& destination){
-    auto config=asio::load_driver_configuration(source);require(config.broker.has_value(),"Pointer publication requires an immutable broker configuration");
+    auto config=asio::load_driver_configuration(source,timing_policy);require(config.broker.has_value(),"Pointer publication requires an immutable broker configuration");
     ReadFileLease source_pin(source);const auto digest=Process::executable_sha256(source);ordinary_user();
     local(destination);Handle parent;
     parent.value=CreateFileW(destination.parent_path().c_str(),GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE,nullptr,OPEN_EXISTING,FILE_FLAG_BACKUP_SEMANTICS,nullptr);
@@ -201,6 +213,18 @@ int wmain(int argc,wchar_t** argv){
         }
         require(argc>=2,"Controller mode required");std::map<std::wstring,std::wstring> args;
         for(int n=2;n<argc;n+=2){require(n+1<argc && args.emplace(argv[n],argv[n+1]).second,"Duplicate/incomplete controller option");}
+        if constexpr(timing_policy==asio::TimingPolicy::unmeasured_diagnostic){
+            if(std::wstring(argv[1])==L"--inspect-input"){
+                require(args.size()==1 && args.count(L"--input"),"Inspection requires input only");
+                const auto config=asio::load_driver_configuration(std::filesystem::path(args.at(L"--input")),timing_policy);
+                require(!config.broker,"Inspection requires private-worker input");
+                std::cout<<"{\"schema\":\"sl3.unmeasured-input-inspection.v1\",\"kind\":"<<json_string(kind_name)
+                    <<",\"rateHz\":"<<config.latency.rate_hz<<",\"bufferFrames\":"<<config.latency.buffer_frames
+                    <<",\"workerSha256\":"<<json_string(config.worker.sha256)
+                    <<",\"latencyAvailable\":false,\"deviceAccess\":false,\"filesWritten\":false}\n";
+                return 0;
+            }
+        }
         if(std::wstring(argv[1])==L"--run"){
             const auto option=args.find(L"--playback-keepalive");
             const bool keepalive=option!=args.end();

@@ -18,6 +18,11 @@ std::shared_ptr<sl3::asio::DriverScope> make_test_asio_scope();
 #endif
 
 namespace {
+#ifdef SL3_ASIO_UNMEASURED_DIAGNOSTIC
+constexpr auto timing_policy=sl3::asio::TimingPolicy::unmeasured_diagnostic;
+#else
+constexpr auto timing_policy=sl3::asio::TimingPolicy::reviewed;
+#endif
 std::atomic<ULONG> objects{0},locks{0};
 namespace trace=sl3::asio::trace;
 std::int64_t rate_bits(double value) noexcept {std::int64_t bits=0;static_assert(sizeof(bits)==sizeof(value));std::memcpy(&bits,&value,sizeof(bits));return bits;}
@@ -60,7 +65,7 @@ public:
 #ifdef SL3_ASIO_SESSION_FIXTURE
                 facade_=make_test_asio_facade();
 #else
-                facade_=sl3::asio::make_native_asio_facade();
+                facade_=sl3::asio::make_native_asio_facade(timing_policy);
 #endif
                 }
             }
@@ -153,7 +158,7 @@ public:
 #ifdef SL3_ASIO_SESSION_FIXTURE
             auto scope=make_test_asio_scope();
 #else
-            auto scope=sl3::asio::make_native_asio_scope();
+            auto scope=sl3::asio::make_native_asio_scope(timing_policy);
 #endif
             if(!scope || !scope->owner)throw std::runtime_error("Missing explicit ASIO scope");
             std::lock_guard<std::mutex> guard(scope_mutex_);scope_=std::move(scope);scope_state_=ScopeState::active;return S_OK;

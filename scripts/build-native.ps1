@@ -1,6 +1,7 @@
-param([ValidateSet('Debug','Release')][string]$Configuration='Release',[switch]$WithAsioComponent,
+param([ValidateSet('Debug','Release')][string]$Configuration='Release',[switch]$WithAsioComponent,[switch]$WithUnmeasuredAsioDiagnostic,
       [string]$BuildDirectory='artifacts/build/native')
 $ErrorActionPreference='Stop'
+if($WithUnmeasuredAsioDiagnostic -and -not $WithAsioComponent){throw 'The unmeasured diagnostic requires the ASIO component'}
 $root=Split-Path -Parent $PSScriptRoot
 $build=[IO.Path]::GetFullPath($(if([IO.Path]::IsPathRooted($BuildDirectory)){$BuildDirectory}else{Join-Path $root $BuildDirectory}))
 $buildRoot=[IO.Path]::GetFullPath((Join-Path $root 'artifacts/build'))+[IO.Path]::DirectorySeparatorChar
@@ -9,13 +10,20 @@ New-Item -ItemType Directory -Force -Path $build | Out-Null
 Start-Transcript -Path (Join-Path $build "build-$Configuration.log") | Out-Null
 try {
     $asioOption=if($WithAsioComponent){'ON'}else{'OFF'}
-    & cmake -S $root -B $build -G 'Visual Studio 16 2019' -A x64 '-DCMAKE_SYSTEM_VERSION=10.0.19041.0' "-DSL3_BUILD_ASIO_COMPONENT=$asioOption"
+    $diagnosticOption=if($WithUnmeasuredAsioDiagnostic){'ON'}else{'OFF'}
+    & cmake -S $root -B $build -G 'Visual Studio 16 2019' -A x64 '-DCMAKE_SYSTEM_VERSION=10.0.19041.0' "-DSL3_BUILD_ASIO_COMPONENT=$asioOption" "-DSL3_BUILD_UNMEASURED_ASIO_DIAGNOSTIC=$diagnosticOption"
     if($LASTEXITCODE -ne 0){throw 'Native CMake configuration failed'}
     & cmake --build $build --config $Configuration
     if($LASTEXITCODE -ne 0){throw 'Native build failed'}
     $testListingText=& ctest --test-dir $build -C $Configuration --show-only=json-v1
     if($LASTEXITCODE -ne 0){throw 'Native test inventory failed'}
     $testNames=@(($testListingText|ConvertFrom-Json).tests|ForEach-Object name)
+    if($WithUnmeasuredAsioDiagnostic){
+        foreach($name in @('sl3_asio_unmeasured_absent','sl3_broker_unmeasured_plan',
+            'sl3_broker_unmeasured_rejects_long_lifetime','sl3_broker_unmeasured_lifecycle')){
+            if($name -notin $testNames){throw "Required unmeasured ASIO diagnostic check missing: $name"}
+        }
+    }
     foreach($required in @('sl3_rate_selection_tests','sl3_control_frames_tests','sl3_core_tests','sl3_playback_tests','sl3_audio_bridge_tests','sl3_duplex_tests','sl3_continuous_tests','sl3_usbdk_stream_tests','sl3_session_tests','sl3_usbdk_rejects_stream_modes','sl3_worker_process_tests','sl3_mailbox_tests','sl3_audio_ring_tests','sl3_worker_protocol_tests','sl3_usbdk_rejects_worker_capture','sl3_capture_plan','sl3_capture_rejects_modes','sl3_usbdk_plan','sl3_usbdk_rejects_modes','sl3_usbdk_rejects_duplex_capture')){
         if($required -notin $testNames){throw "Required native test is missing: $required"}
     }
@@ -116,6 +124,12 @@ try {
         testScriptSha256=(Get-FileHash -LiteralPath (Join-Path $root 'scripts/test-broker-controller.py')).Hash
         explicitLifetimeAndStop=$true;nativeStartupJournalWired=$true;atomicPublication=$true
         nativePositiveRun=$false;installed=$false;registrationChanged=$false}}
+    if($WithUnmeasuredAsioDiagnostic){$record.unmeasuredAsioDiagnostic=[ordered]@{
+        dllSha256=(Get-FileHash -LiteralPath (Join-Path $build "unmeasured/$Configuration/sl3_asio.dll")).Hash
+        brokerSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_broker_controller_unmeasured.exe")).Hash
+        simulatedBrokerSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_broker_controller_unmeasured_simulated.exe")).Hash
+        rateHz=44100;bufferFrames=128;latencyAvailable=$false;maximumLifetimeMs=120000
+        simulatedCallbacksPassed=$true;nativePositiveRun=$false;installed=$false}}
     if($WithAsioComponent){$record.brokerAsio=[ordered]@{simulatedOrdinaryComLifecyclePassed=$true
         testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_broker_asio_tests.exe")).Hash
         ordinaryObjects=3;starts=4;acquisitions=1;freshClockReads=8;customFactoryScopeRequested=$false

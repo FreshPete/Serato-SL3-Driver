@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 import time
 import uuid
 
@@ -29,7 +30,85 @@ def call(args, expected=0, timeout=15):
     return result
 
 
+def unmeasured(production, simulated, worker, helper, client, library):
+    with tempfile.TemporaryDirectory(prefix='sl3-unmeasured-') as temporary:
+        root = Path(temporary).resolve()
+        timing = root / 'timing.txt'
+        timing.write_bytes(
+            f'SL3-ASIO-DIAGNOSTIC-TIMING-1\nworker_sha256={sha(worker)}\n'
+            f'helper_sha256={sha(helper)}\nrate_hz=44100\nbuffer_frames=128\n'.encode())
+        config = root / 'input.conf'
+        config.write_bytes(
+            f'SL3-ASIO-CONFIG-1\nworker={worker}\nworker_sha256={sha(worker)}\nhelper={helper}\n'
+            f'timing_record={timing}\ntiming_record_sha256={sha(timing)}\n'.encode())
+        before = sorted(p.name for p in root.iterdir())
+        inspection = json.loads(call([simulated, '--inspect-input', '--input', config]).stdout)
+        require(inspection['rateHz'] == 44100 and inspection['bufferFrames'] == 128
+                and inspection['latencyAvailable'] is False and inspection['deviceAccess'] is False
+                and inspection['workerSha256'] == sha(worker), 'Unmeasured input preflight')
+        require(sorted(p.name for p in root.iterdir()) == before, 'Input inspection creates no files')
+        output = root / 'session'
+        args = ['--run', '--input', config, '--output', output, '--limit-ms', 10000]
+        call([production, *args], expected=1)
+        require(not output.exists(), 'Production must refuse diagnostic input before creating a session')
+        proc = subprocess.Popen([str(x) for x in (simulated, *args)], stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE, text=True, creationflags=subprocess.CREATE_NO_WINDOW)
+        try:
+            ready_path = output / 'ready.json'
+            deadline = time.monotonic() + 8
+            while not ready_path.exists():
+                require(proc.poll() is None and time.monotonic() < deadline, 'Simulated broker readiness')
+                time.sleep(.02)
+            ready = load(ready_path)
+            require(ready['controllerPid'] == proc.pid and ready['rateHz'] == 44100
+                    and ready['kind'] == 'simulated' and proc.poll() is None, 'Bound 44.1 kHz session')
+            published = output / 'sl3-asio.conf'
+            require(ready['configSha256'] == sha(published), 'Verified published config hash')
+            pointer = root / 'session-pointer.txt'
+            args = ['--publish-pointer', '--config', published, '--pointer', pointer]
+            call([production, *args], expected=1)
+            require(not pointer.exists(), 'Production must refuse diagnostic pointer publication')
+            call([simulated, *args])
+            locator = root / 'sl3-asio.conf'
+            locator.write_bytes(
+                f'SL3-ASIO-LOCATOR-1\nsession_pointer={pointer}\nbroker={simulated}\n'
+                f'broker_sha256={sha(simulated)}\nworker_sha256={sha(worker)}\n'.encode())
+            call([client, '--published', locator, library, 'unmeasured'])
+            call([simulated, '--withdraw-pointer', '--pointer', pointer, '--sha256', sha(pointer)])
+            require(not pointer.exists(), 'Explicit diagnostic pointer withdrawal')
+            call([simulated, '--stop', '--config', published])
+            stdout, stderr = proc.communicate(timeout=12)
+            require(proc.returncode == 0, f'Unmeasured controller retirement: {stdout}\n{stderr}')
+            final = load(output / 'result.json')
+            require(final['processExited'] and final['jobEmpty'] and not final['nativeDeviceAcquired']
+                    and not final['helperLoadedInController'], 'Simulated worker exits with no native access')
+        finally:
+            if proc.poll() is None:
+                proc.kill()
+                proc.communicate(timeout=5)
+        coordinator = Path(__file__).with_name('asio-diagnostic-session.py')
+        args = ['--controller', simulated, '--controller-sha256', sha(simulated),
+                '--session', root / 'coordinated', '--pointer', pointer]
+        started = json.loads(call([sys.executable, coordinator, 'start', *args, '--input', config]).stdout)
+        require(started['pointerPublished'] and pointer.is_file(), 'Separate coordinator publishes exact pointer')
+        for _ in range(2):
+            final = json.loads(call([sys.executable, coordinator, 'stop', *args]).stdout)
+            require(final['successful'] and final['jobEmpty'] and final['controllerExited'] and not pointer.exists(),
+                    'Separate coordinator retires worker and accepts cleanup retry')
+        call([sys.executable, coordinator, 'start', *args, '--input', config], expected=1)
+        never_started = root / 'never-started'
+        args[5] = never_started
+        closed = json.loads(call([sys.executable, coordinator, 'stop', *args]).stdout)
+        require(closed == {'controllerExited': True, 'brokerStarted': False}, 'Cleanup can close an unused handoff')
+        call([sys.executable, coordinator, 'start', *args, '--input', config], expected=1)
+        require(not never_started.exists() and not pointer.exists(), 'Closed handoff refuses a delayed launcher')
+    print('Simulated 44.1 kHz diagnostic ASIO callbacks, pointer withdrawal and worker retirement passed')
+
+
 def main():
+    if len(sys.argv) == 8 and sys.argv[1] == '--unmeasured':
+        unmeasured(*(Path(x).resolve() for x in sys.argv[2:]))
+        return
     require(len(sys.argv) == 7, 'native/simulated controller, worker, helper, ASIO client and fixture DLL required')
     native, simulated, worker, helper, client, library = [Path(x).resolve() for x in sys.argv[1:]]
     for path in (native, simulated, worker, helper, client, library):

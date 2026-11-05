@@ -42,6 +42,8 @@ it for verification:
 .venv/Scripts/python.exe scripts/prepare-asio-deployment.py --verify --bundle $output --expected-bundle-sha256 <reviewed-lowercase-bundle-manifest-sha256>
 ```
 
+For the bounded Phase diagnostic, pass `--unmeasured-diagnostic` during preparation and use the Release build record from `-WithUnmeasuredAsioDiagnostic`. The builder selects the separate diagnostic DLL and native broker, validates their distinct image hashes and required tests, and binds the timing mode into the manifest, package identity and install plan. Use a dedicated install directory and session pointer. The package uses the existing SL3 ASIO registration name and cannot be staged alongside another package using that name. The prepared 44.1 kHz review bundle passed file verification and the read-only System32 import check. It remains uninstalled.
+
 Both operations need the existing analysis environment's `pefile` dependency,
 already pinned in `scripts/requirements-analysis.txt`. PE inspection parses data;
 it never loads or executes the packaged Windows DLLs/executables. Default plan
