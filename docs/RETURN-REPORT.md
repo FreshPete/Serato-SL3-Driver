@@ -1,5 +1,15 @@
 # SL3 rebuild progress for the owner's return
 
+## 5 November checkpoint
+
+The rebuilt Windows transport captured the Phase signal on SL3 inputs 3 and 4. A separate callback loopback from outputs 1 and 2 to inputs 3 and 4 measured 596 frames round trip at 44.1 kHz. Serato DJ Pro 5.0 correctly parsed both candidate sample rates and stayed on default audio. [Phase status and bench evidence](phase-essential-status.md)
+
+The next attended test traces one **Download Driver** click in the workspace copy using the ordinary desktop account. Startup left the panel device ID at zero. The click trace distinguishes the actual click from a startup message with the same message number and records the identity and bundle lookup if the local installer runs. [Installer handoff](serato-archive-deployment.md#driver-install-completion-experiment)
+
+The live Serato-to-ASIO handoff and the physical Deck 1 output pair are still pending. The first DVS milestone remains one Phase deck on inputs 3 and 4 with Serato playback through the SL3.
+
+## Earlier checkpoints
+
 **Phase input and concurrent playback control validated, 4 November.** A second [physical input capture](input-record-trace.md) recorded Phase on inputs 3 and 4, both near −12.4 dBFS RMS. A separate [silent stream test](driver-timer-diagnostic.md) completed all ten `0x37` exchanges with output completions during every exchange. The next packet generates a short tone and records the return through an RCA cable from OUT 1/2 to the separate IN 3/4 LINE pair. It passed preflight and awaits wiring. Analogue output, measured latency and current Serato DVS remain open.
 
 **Retained connection and native input capture validated, 4 November.** [Three clients shared one live UsbDk acquisition](broker-scope-trace.md) and completed seven 44.1 kHz clock reads. The [native input run](input-record-trace.md) saved all six channels for three seconds, with expected USB packet lengths and no long callback stall. It contained no identifiable Phase signal. The [prepared follow-up](next-tests.md) uses a verified stereo tone into Deck 1 LINE to separate source problems from input-path problems. Audible output, analogue mapping and latency, and current Serato DVS still need validation. The [playback experiment notes](driver-timer-diagnostic.md#physical-test-remains-pending) capture the independent reports about recurring `0x37` traffic and routing.
