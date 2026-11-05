@@ -14,8 +14,10 @@ In Serato DJ Pro 5.0.0.1278, the temporary SL3 definition let Serato identify th
 
 Replacing an existing spec in the archive, replacing a descriptor entry in memory, and applying a process-local USB alias each left Serato on its fallback `Offline Device`. The combined test also failed to associate the virtual MIDI endpoint until a narrowly scoped diagnostic reserved the port for the SL3's own matcher. Serato then paired the port and added the SL3 on the first attempt. The 80-second trace still showed no named audio selection or ASIO DLL load. The virtual MIDI port was an association test. Phase's analogue control signal and any SL3 control messages are separate from that port. [MIDI and descriptor experiments](serato-handshake-consumers.md#adding-a-midi-port-to-the-sl3)
 
-The original Serato resources were restored and the temporary ASIO registration and MIDI ports were removed. Serato playback through the SL3 and Phase DVS tracking inside Serato remain unverified. The work is paused at the application-to-ASIO handoff.
+The original Serato resources were restored and the temporary ASIO registration and MIDI ports were removed. Serato playback through the SL3 and Phase DVS tracking inside Serato remain unverified. The current test boundary is the application-to-ASIO handoff.
 
 ## Resume point
 
-Trace the device-added to ASIO-selection handoff on a working Serato 5.0 ASIO device, then compare it with the SL3 trace. That will help identify which application component selects the driver and whether a control exchange is involved. Once Serato opens the rebuilt driver with a live streaming configuration, verify one Phase deck on inputs 3 and 4 and playback through the SL3 before testing the second deck.
+The installer completion callback is a separate route to primary-device selection. The first attended test opened a driver download page that returned 404 and observed no local installer launch. The next trace will distinguish the browser action from the local installer and capture the device ID and bundle lookup. [Driver-install completion experiment](serato-archive-deployment.md#driver-install-completion-experiment)
+
+The diagnostic package can show whether Serato reaches the rebuilt ASIO driver. A live audio session is needed to verify one Phase deck on inputs 3 and 4 and playback through the SL3 before testing the second deck.
