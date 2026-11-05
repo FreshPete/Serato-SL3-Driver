@@ -6,7 +6,7 @@ The rebuilt Windows transport captured the Phase signal on SL3 inputs 3 and 4. A
 
 The next attended test traces one **Download Driver** click in the workspace copy using the ordinary desktop account. Startup left the panel device ID at zero. The click trace distinguishes the actual click from a startup message with the same message number and records the identity and bundle lookup if the local installer runs. [Installer handoff](serato-archive-deployment.md#driver-install-completion-experiment)
 
-The live Serato-to-ASIO handoff and the physical Deck 1 output pair are still pending. The first DVS milestone remains one Phase deck on inputs 3 and 4 with Serato playback through the SL3.
+Serato found and extracted the rebuilt launcher when given the genuine SL3 profile inputs and an isolated test folder. The result matched the reviewed launcher byte for byte, and the cleanup script removed the read-only copy. Startup traces also confirmed that the installer and audio Engine share a primary-device manager. The live Serato-to-ASIO handoff and the physical Deck 1 output pair are still pending. The first DVS milestone remains one Phase deck on inputs 3 and 4 with Serato playback through the SL3.
 
 ## Earlier checkpoints
 

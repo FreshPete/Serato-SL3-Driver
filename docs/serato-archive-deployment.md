@@ -121,3 +121,10 @@ The browser action and local installer have separate dispatch paths. The local i
 With the original archive, a workspace copy of Serato showed neither the driver notice nor the SL3 arrival message. With the candidate archive, it checked the exact rebuilt ASIO registry key three times. All three results were false. A DeviceManager worker then prepared the web-enabled notice before the UI recorded the SL3 arrival. The installer panel started with a zero device ID, and the trace observed no message that populated it. The ID used during the earlier click remains unverified.
 
 Clearing only the candidate's x64 detection string suppressed the notice while preserving the real SL3 arrival. Serato still used default audio. Inspection of the generic DriverAPI explains the distinction. The successful detection branch sends a notice-management message, while the local installer reads its ID from a different message path. This experiment used no temporary ASIO registration and performed no installer action. The original installed application passed its read-only preflight afterward.
+
+
+### Isolated launcher and selection checks
+
+The real SL3 USB ID selected the registered rebuilt profile in a workspace lookup. The panel's initial zero ID returned no descriptor. Serato's own bundle functions read the staged package, reported the expected resource size and extracted a byte-identical launcher into an isolated directory. The cleanup script removed the read-only output. The launcher was never executed.
+
+The installer and audio Engine shared the same primary-device manager during startup. The manager subscribes to the installer pointer request on route 7 and can send a separate integer state on route 0. The Engine received startup value zero. The next attended trace will show whether the click supplies the real SL3 identity and whether installation leads to a selected SL3, state one and a named ASIO open. The installed application passed verification after the workspace tests.
