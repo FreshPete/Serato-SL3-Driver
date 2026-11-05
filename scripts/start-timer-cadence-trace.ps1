@@ -46,7 +46,8 @@ if($HostLoopback){
     if($LASTEXITCODE -or $preview.planOnly -ne $true -or $preview.deviceAccess -ne $false -or
        $preview.expectedRateHz -ne 44100 -or ($preview.markerHz -join ',') -cne '997,1301' -or
        $preview.markerFirstFrame -ne 8192 -or $preview.markerDurationMilliseconds -ne 650 -or
-       $preview.bankFrames -ne 128 -or ($Deck1Output -and ($preview.markerOutputChannels -join ',') -cne '3,4')){throw 'Unexpected host loopback preview'}
+       $preview.bankFrames -ne 128 -or ($Deck1Output -and (($preview.markerOutputChannels -join ',') -cne '3,4' -or
+       ($preview.markerReturnChannels -join ',') -cne '1,2'))){throw 'Unexpected host loopback preview'}
     & $python -c 'import numpy'
     if($LASTEXITCODE){throw 'Host loopback analysis environment unavailable'}
 }elseif($RetainedKeepalive){
@@ -118,7 +119,10 @@ try{
         $admission.validatorSha256=$settings.validatorSha256
         $admission.traceValidatorSha256=$settings.traceValidatorSha256
         $admission.helperSha256=$settings.helperSha256
-        if($Deck1Output){$admission.markerOutputChannels=$preview.markerOutputChannels}
+        if($Deck1Output){
+            $admission.markerOutputChannels=$preview.markerOutputChannels
+            $admission.markerReturnChannels=$preview.markerReturnChannels
+        }
     }
     $admission | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $traceDirectory 'timer-admission.json')
     $python=Join-Path $root '.venv/Scripts/python.exe'
@@ -197,7 +201,8 @@ if($HostLoopback){
     if($probeError){throw $probeError}
     $result=Get-Content -LiteralPath (Join-Path $base 'loopback-analysis.json') -Raw | ConvertFrom-Json
     if($result.schema -cne 'sl3.host-loopback-analysis.v2' -or $result.bothMarkersAccepted -ne $true -or
-       ($Deck1Output -and ($result.markerOutputChannels -join ',') -cne '3,4')){
+       ($Deck1Output -and (($result.markerOutputChannels -join ',') -cne '3,4' -or
+       ($result.markerReturnChannels -join ',') -cne '1,2'))){
         throw 'The complete stereo return did not qualify. Inspect the saved analysis for each channel.'
     }
     $result.markerReturns | Select-Object streamChannel,frequencyHz,acceptedOffsetFrames

@@ -181,6 +181,7 @@ int run(WorkerSpec spec,const std::filesystem::path& folder,unsigned expected,bo
     if(loopback)text<<",\"markerFirstFrame\":"<<marker_start<<",\"markerFrames\":"<<capture.marker[0].size()/3
         <<",\"markerHz\":["<<marker_hz[0]<<','<<marker_hz[1]<<']'
         <<",\"markerOutputChannels\":["<<first_marker_output+1<<','<<first_marker_output+2<<']'
+        <<",\"markerReturnChannels\":"<<(first_marker_output==2?"[1,2]":"[3,4]")
         <<",\"audioExit\":"<<unsigned(state.audio.exit)<<",\"pumpFault\":"<<unsigned(state.audio.pump_failure.cause)
         <<",\"pumpQueueResult\":"<<unsigned(state.audio.pump_failure.queue)<<",\"pumpBridgeStatus\":"<<unsigned(state.audio.pump_failure.bridge)
         <<",\"workerFailure\":"<<unsigned(device.failure)<<",\"workerStreamFault\":"<<unsigned(device.stream_fault)
@@ -199,7 +200,8 @@ int wmain(int argc,wchar_t** argv){try{
         std::cout<<"{\"planOnly\":true,\"deviceAccess\":false,\"expectedRateHz\":44100,"
                    "\"markerHz\":["<<marker_hz[0]<<','<<marker_hz[1]<<"],\"markerFirstFrame\":"<<marker_start
                  <<",\"markerDurationMilliseconds\":650,\"bankFrames\":"<<bank_frames
-                 <<",\"markerOutputChannels\":["<<first_marker_output+1<<','<<first_marker_output+2<<"]}\n";
+                 <<",\"markerOutputChannels\":["<<first_marker_output+1<<','<<first_marker_output+2<<']'
+                 <<",\"markerReturnChannels\":"<<(deck1?"[1,2]":"[3,4]")<<"}\n";
         return 0;
     }
     if(argc==1 || (argc==2 && std::wstring(argv[1])==L"--plan")){

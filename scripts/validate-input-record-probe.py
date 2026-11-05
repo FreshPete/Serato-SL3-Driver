@@ -50,6 +50,9 @@ def validate(folder,worker_sha,simulated=False,host_loopback=False):
         outputs=result.get('markerOutputChannels',[1,2])
         require(type(outputs) is list and [integer(channel) for channel in outputs] in ([1,2],[3,4]),
                 'Host loopback marker output channels differ')
+        returns=result.get('markerReturnChannels',[3,4])
+        require(type(returns) is list and [integer(channel) for channel in returns] == ([1,2] if outputs==[3,4] else [3,4]),
+                'Host loopback must use a separate marker return pair')
     target=((rate*3+127)//128)*128
     for name,value in [('nominalRequestedMilliseconds',3000),('bankFrames',128),('channels',6),('sampleBytes',3),('intervals',8),('targetFrames',target),('recordedFrames',target),('recordedCallbacks',target//128),('recorderFault',0),('startupFramesDiscarded',0),('hostFailure',0),('pcmBytes',target*18)]:
         require(integer(result.get(name))==value,'Record geometry/status differs: '+name)

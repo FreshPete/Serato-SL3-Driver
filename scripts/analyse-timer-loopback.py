@@ -75,12 +75,12 @@ def analyse(folder, challenge):
     return result
 
 
-def host_marker_returns(frames, origin, count, frequencies, fit):
+def host_marker_returns(frames, origin, count, frequencies, fit, return_channels=(2, 3)):
     rate = 44100
     fade = rate // 100
     candidates = envelope_offsets(frames, rate, count, origin, frequencies)
     returns = []
-    for channel, marker in zip((2, 3), candidates):
+    for channel, marker in zip(return_channels, candidates):
         candidate = marker['channels'][channel]
         first = candidate['returnStartFrame']
         result = {'streamChannel': channel, 'frequencyHz': marker['frequencyHz'],
@@ -120,7 +120,8 @@ def analyse_host(folder, worker_sha):
     tone = runpy.run_path(str(Path(__file__).with_name('analyse-input-tone.py')))
     frames = tone['decode_recording'](audio)
     origin, count, frequencies = (record[key] for key in ('markerFirstFrame', 'markerFrames', 'markerHz'))
-    returns = host_marker_returns(frames, origin, count, frequencies, tone['fit'])
+    return_channels = [channel-1 for channel in record.get('markerReturnChannels', [3, 4])]
+    returns = host_marker_returns(frames, origin, count, frequencies, tone['fit'], return_channels)
     result = {'schema': 'sl3.host-loopback-analysis.v2', 'recordSha256': checked['resultSha256'],
             'workerSha256': worker_sha, 'nativeJournal': checked['nativeJournal'],
             'pcmSha256': digest, 'rateHz': 44100, 'markerReturns': returns,
@@ -129,6 +130,8 @@ def analyse_host(folder, worker_sha):
             'directionalLatencyMeasured': False}
     if 'markerOutputChannels' in record:
         result['markerOutputChannels'] = record['markerOutputChannels']
+    if 'markerReturnChannels' in record:
+        result['markerReturnChannels'] = record['markerReturnChannels']
     return result
 
 
