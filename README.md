@@ -4,6 +4,8 @@ Restore the physical Rane SL3 for current Serato DJ Pro and two-deck DVS. Window
 
 ## Latest status — 6 November 2026
 
+**Automatic-start boundary clarified:** original Serato bytes show the installer-completion handoff depends on driver detection and a live descriptor. A generic message-helper address previously labelled “startup” is now labelled accurately in trace summaries. No click automation or live application change was made. [Handoff findings](docs/serato-installer-handoff.md)
+
 **Shutdown investigation now covers posted window close:** two simulated integration cases exercise the actual ASIO fixture DLL and broker from a window-owning STA thread, with normal and deliberately blocked callbacks. Both passed, including retained-buffer safety after a failed stop. This does not reproduce or resolve Serato's recorded forced exit. [Test scope and next measurement](docs/asio-window-close-investigation.md)
 
 **Launcher progress is no longer held until session exit:** ordinary helper output now streams to the caller, with bounded byte-preserving forwarding and support for installer launches without console handles. Three real process fixtures and nineteen copied-kit checks passed; the graphical launcher and live session validation remain outstanding. [Progress handling and evidence](docs/native-launcher-progress.md)

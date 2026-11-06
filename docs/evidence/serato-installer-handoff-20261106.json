@@ -1,0 +1,286 @@
+{
+  "schema": "sl3.serato-installer-handoff.v1",
+  "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "functionRanges": {
+    "genericMessageHelper": {
+      "start": "0x14154b4b0",
+      "endExclusive": "0x14154b5f0",
+      "sha256": "e8bc73fe61f61ff0423d212ad34d09e6cb512cc388091715cc34971766d44452"
+    },
+    "clickPublisher": {
+      "start": "0x141380170",
+      "endExclusive": "0x1413801e3",
+      "sha256": "35cb0a3c84d68ab3a6695e2f9b8c2c48c1378d999b72e2ed7a7bb06e0c4cb1d3"
+    },
+    "installerCompletion": {
+      "start": "0x1405b0a40",
+      "endExclusive": "0x1405b0ca4",
+      "sha256": "a4c10996a00402850ec6a51212d4d0cfddb1643b55d3c157001cef8f959a6f88"
+    }
+  },
+  "instructions": [
+    {
+      "group": "genericMessageHelper",
+      "va": "0x14154b4cc",
+      "bytes": "418bd9",
+      "instruction": "mov ebx, r9d"
+    },
+    {
+      "group": "genericMessageHelper",
+      "va": "0x14154b4cf",
+      "bytes": "458bf0",
+      "instruction": "mov r14d, r8d"
+    },
+    {
+      "group": "genericMessageHelper",
+      "va": "0x14154b4d2",
+      "bytes": "448bfa",
+      "instruction": "mov r15d, edx"
+    },
+    {
+      "group": "genericMessageHelper",
+      "va": "0x14154b4db",
+      "bytes": "4183f9ff",
+      "instruction": "cmp r9d, -1"
+    },
+    {
+      "group": "genericMessageHelper",
+      "va": "0x14154b4df",
+      "bytes": "0f858a000000",
+      "instruction": "jne 0x14154b56f"
+    },
+    {
+      "group": "genericMessageHelper",
+      "va": "0x14154b548",
+      "bytes": "418bd7",
+      "instruction": "mov edx, r15d"
+    },
+    {
+      "group": "genericMessageHelper",
+      "va": "0x14154b54e",
+      "bytes": "e8ad363100",
+      "instruction": "call 0x14185ec00"
+    },
+    {
+      "group": "genericMessageHelper",
+      "va": "0x14154b56b",
+      "bytes": "7cb3",
+      "instruction": "jl 0x14154b520"
+    },
+    {
+      "group": "genericMessageHelper",
+      "va": "0x14154b5aa",
+      "bytes": "418bd7",
+      "instruction": "mov edx, r15d"
+    },
+    {
+      "group": "genericMessageHelper",
+      "va": "0x14154b5b0",
+      "bytes": "e84b363100",
+      "instruction": "call 0x14185ec00"
+    },
+    {
+      "group": "genericMessageHelper",
+      "va": "0x14154b5b5",
+      "bytes": "eb03",
+      "instruction": "jmp 0x14154b5ba"
+    },
+    {
+      "group": "genericMessageHelper",
+      "va": "0x14154b5cc",
+      "bytes": "e88f020000",
+      "instruction": "call 0x14154b860"
+    },
+    {
+      "group": "clickPublisher",
+      "va": "0x1413801a7",
+      "bytes": "baff040000",
+      "instruction": "mov edx, 0x4ff"
+    },
+    {
+      "group": "clickPublisher",
+      "va": "0x1413801ac",
+      "bytes": "41b801000000",
+      "instruction": "mov r8d, 1"
+    },
+    {
+      "group": "clickPublisher",
+      "va": "0x1413801b5",
+      "bytes": "e846ea4d00",
+      "instruction": "call 0x14185ec00"
+    },
+    {
+      "group": "clickPublisher",
+      "va": "0x1413801ba",
+      "bytes": "eb03",
+      "instruction": "jmp 0x1413801bf"
+    },
+    {
+      "group": "clickPublisher",
+      "va": "0x1413801d4",
+      "bytes": "ff5058",
+      "instruction": "call qword ptr [rax + 0x58]"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0ac7",
+      "bytes": "c6851801000000",
+      "instruction": "mov byte ptr [rbp + 0x118], 0"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0ae6",
+      "bytes": "e875f7b601",
+      "instruction": "call 0x142120260"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0aeb",
+      "bytes": "488bd8",
+      "instruction": "mov rbx, rax"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0aee",
+      "bytes": "4885c0",
+      "instruction": "test rax, rax"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0af1",
+      "bytes": "0f8499010000",
+      "instruction": "je 0x1405b0c90"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0b22",
+      "bytes": "ff5048",
+      "instruction": "call qword ptr [rax + 0x48]"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0b25",
+      "bytes": "84c0",
+      "instruction": "test al, al"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0b27",
+      "bytes": "0f8421010000",
+      "instruction": "je 0x1405b0c4e"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0b3f",
+      "bytes": "ff5018",
+      "instruction": "call qword ptr [rax + 0x18]"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0b42",
+      "bytes": "41bfffff0000",
+      "instruction": "mov r15d, 0xffff"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0b48",
+      "bytes": "66413bc7",
+      "instruction": "cmp ax, r15w"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0b4c",
+      "bytes": "0f8586000000",
+      "instruction": "jne 0x1405b0bd8"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0b64",
+      "bytes": "ff5020",
+      "instruction": "call qword ptr [rax + 0x20]"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0b67",
+      "bytes": "66413bc7",
+      "instruction": "cmp ax, r15w"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0b6b",
+      "bytes": "756b",
+      "instruction": "jne 0x1405b0bd8"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0b9c",
+      "bytes": "ba8b060000",
+      "instruction": "mov edx, 0x68b"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0c0a",
+      "bytes": "ba51000000",
+      "instruction": "mov edx, 0x51"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0c16",
+      "bytes": "e855a5f2ff",
+      "instruction": "call 0x1404db170"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0c1b",
+      "bytes": "80bb2205000000",
+      "instruction": "cmp byte ptr [rbx + 0x522], 0"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0c22",
+      "bytes": "742a",
+      "instruction": "je 0x1405b0c4e"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0c2e",
+      "bytes": "c744242007000000",
+      "instruction": "mov dword ptr [rsp + 0x20], 7"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0c39",
+      "bytes": "4c8bc3",
+      "instruction": "mov r8, rbx"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0c3c",
+      "bytes": "baca020000",
+      "instruction": "mov edx, 0x2ca"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0c48",
+      "bytes": "e823a5f2ff",
+      "instruction": "call 0x1404db170"
+    }
+  ],
+  "helperOrigin": "0x154b5b5 is a return within a generic message helper, not unique evidence of a startup action",
+  "clickOrigin": "0x13801ba follows the fixed 0x4ff click-message construction",
+  "primaryPublication": {
+    "message": 714,
+    "descriptorArgumentRegister": "r8",
+    "requiresNonNullCast": true,
+    "requiresDriverPredicateSlot": "0x48",
+    "requiresNonSentinelIdentityPath": true,
+    "requiresDescriptorByteNonZero": "0x522",
+    "stackArgument": 7
+  },
+  "scope": "Selected original instruction and branch guards; no full call graph or runtime object/lifetime claim",
+  "automaticStartImplemented": false,
+  "vendorCodeExecuted": false,
+  "applicationModified": false,
+  "registryWritten": false,
+  "physicalDeviceAccess": false
+}

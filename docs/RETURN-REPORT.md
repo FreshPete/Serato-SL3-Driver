@@ -2,6 +2,8 @@
 
 ## 6 November packaging checkpoint
 
+**Repeated-click investigation:** a new offline inspector verifies the real click publisher, generic message helper and guarded installer-completion publication in the pinned application. The summarizer now calls the generic origin `installer_helper_message`; seven tests pass. Widening the startup shim to that helper is not justified, and automatic Start still needs an identified UI-thread action receiver and real completion evidence. No application/device ran. [Findings and candidate boundary](serato-installer-handoff.md)
+
 **Posted-close ASIO integration checked.** A retained parent posts exactly one close to its owned simulated client's hidden window. Normal callbacks stop/dispose/detach; a deliberately blocked callback yields bounded failed stop, keeps planes alive and permits disposal/detach only after release and actual retirement. Both cases passed in the existing broker-ASIO target, followed by all 71 Release checks. Production driver code/package is unchanged; this narrows offline coverage without diagnosing Serato's actual shutdown. [Investigation](asio-window-close-investigation.md)
 
 **Progress buffering fixed before graphical launcher work.** The ordinary native helper route now forwards output while children run, preserving bytes, independent four-MiB limits and child exit results. Missing installer console handles are supported. Three real parent/child fixtures, eight argument cases and nineteen moved-kit checks passed. No UI, UAC, Serato or audio operation ran; native audio binaries are unchanged. [Contract and evidence](native-launcher-progress.md)

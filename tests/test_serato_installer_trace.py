@@ -9,7 +9,7 @@ summarize = runpy.run_path(
 
 
 class InstallerTraceTest(unittest.TestCase):
-    def test_startup_and_click_use_the_same_message_id(self):
+    def test_generic_helper_and_click_use_the_same_message_id(self):
         events = [
             {"event": "message_create", "id": 0x4FF, "caller": "0x154b5b5"},
             {"event": "driver_web_dispatch"},
@@ -21,7 +21,7 @@ class InstallerTraceTest(unittest.TestCase):
         self.assertEqual(
             [event["event"] for event in summary["installerTimeline"]],
             [
-                "installer_startup_message",
+                "installer_helper_message",
                 "driver_web_action_prepared",
                 "installer_click_message",
                 "installer_action",

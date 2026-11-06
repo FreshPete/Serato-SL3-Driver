@@ -9,7 +9,7 @@ INSTALLER_TIMELINE_FIELDS = {
     'driver_web_action_prepared': (),
     'device_installer_message': ('id', 'caller'),
     'installer_click_message': ('id', 'caller'),
-    'installer_startup_message': ('id', 'caller'),
+    'installer_helper_message': ('id', 'caller'),
     'installer_panel_initial_identity': ('vid', 'pid', 'rev'),
     'installer_panel_identity': ('id', 'vid', 'pid', 'rev'),
     'installer_action': ('vid', 'pid', 'rev', 'installerBusy'),
@@ -46,7 +46,7 @@ def event_name(event):
     if name == 'message_create' and event.get('id') == 0x4ff:
         return {
             '0x13801ba': 'installer_click_message',
-            '0x154b5b5': 'installer_startup_message',
+            '0x154b5b5': 'installer_helper_message',
         }.get(event.get('caller'), name)
     if name == 'primary_message' and event.get('caller') == '0x5b0c4d':
         return 'installer_primary_message'
