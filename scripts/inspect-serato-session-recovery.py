@@ -23,9 +23,12 @@ def classify(current, resources, owners, running, issues, has_run, broker_retire
           type(resources.get('bundlePresent')) is not bool or type(resources.get('pendingPresent')) is not bool):
         phase, message = 'review_required', 'Recovery evidence is incomplete or conflicting; no changes were made.'
     elif (current.get('currentSetupClean') is True and resources.get('archiveState') == 'original' and
-          resources.get('bundlePresent') is False and resources.get('pendingPresent') is False):
+          resources.get('bundlePresent') is False and resources.get('pendingPresent') is False and
+          resources.get('protectedSessionOwnerPresent') is False):
         phase, message = 'clean', 'Original files and temporary registration are already clean.'
-    elif not has_run or owners['runner']['state'] not in ('exited','replaced') or owners['stage']['state'] not in ('exited','replaced'):
+    elif (resources.get('protectedSessionOwnerPresent') is not True or not has_run or
+          owners['runner']['state'] not in ('exited','replaced') or
+          owners.get('protectedStage',owners['stage'])['state'] not in ('exited','replaced')):
         phase, message = 'review_required', 'Interrupted state lacks verified retired session owners.'
     elif not broker_retired:
         phase, message = 'broker_retirement_required', 'Broker retirement must be verified before protected recovery.'
@@ -39,11 +42,18 @@ def resources(plan, powershell):
     quote = lambda value: "'" + str(value).replace("'", "''") + "'"
     script = '\n'.join(["$ErrorActionPreference='Stop'",
         '. ' + quote(ROOT / 'scripts/serato-installer-resource-transaction.ps1'),
+        '. ' + quote(ROOT / 'scripts/serato-protected-session-owner.ps1'),
         '$tx=New-Sl3ArchiveTransaction ' + quote(Path(plan['application']['path']).with_name('userio_resources.bin')) +
             ' ' + quote(plan['originalArchiveSha256']) + ' ' + quote(plan['archiveSource']['sha256']),
         "$quiet={if(Get-Process 'Serato DJ Pro' -ErrorAction SilentlyContinue){throw 'Close Serato before recovery inspection'}}",
-        'Get-Sl3InstallerResourceRecoveryPlan $tx ' + quote(plan['installerResource']['sha256']) +
-            ' $quiet ${function:Assert-Sl3ArchiveProtectedPath} | ConvertTo-Json -Depth 4'])
+        '$result=Get-Sl3InstallerResourceRecoveryPlan $tx ' + quote(plan['installerResource']['sha256']) +
+            ' $quiet ${function:Assert-Sl3ArchiveProtectedPath}',
+        '$slot=Get-Sl3ProtectedSessionOwner ' + quote(Path(plan['permitPath']).with_name('8c7758f23375cee18a9cf3be4a3acc15.bin.sl3-session')) +
+            ' ${function:Assert-Sl3ArchiveProtectedPath}',
+        'if($slot.present){Assert-Sl3ProtectedSessionScope $slot ' + quote(plan['capsule']['sha256']) + ' ' + quote(plan['nativeBundle']['sha256']) + '}',
+        '$result | Add-Member -NotePropertyName protectedSessionOwnerPresent -NotePropertyValue $slot.present',
+        '$result | Add-Member -NotePropertyName protectedStageOwner -NotePropertyValue $(if($slot.present){$slot.record.stage}else{$null})',
+        '$result | ConvertTo-Json -Depth 5'])
     command = [str(powershell / 'pwsh.exe'), '-NoLogo','-NoProfile','-NonInteractive','-EncodedCommand',
                base64.b64encode(script.encode('utf-16-le')).decode('ascii')]
     child = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, creationflags=subprocess.CREATE_NO_WINDOW)
@@ -58,6 +68,7 @@ def resources(plan, powershell):
     if (result.get('schema') != 'sl3.installer-resource-recovery-plan.v1' or result.get('filesWritten') is not False or
         result.get('deviceAccess') is not False or result.get('archiveState') not in
             ('original','install-staged','installed','rollback-staged','restored') or
+        type(result.get('protectedSessionOwnerPresent')) is not bool or
         type(result.get('bundlePresent')) is not bool or type(result.get('pendingPresent')) is not bool):
         raise ValueError('Resource check scope differs')
     return {**result, 'observed':True}
@@ -94,6 +105,8 @@ def inspect(plan_path, expected, powershell, powershell_sha):
             module('prepare-portable-powershell.py')['verify'](powershell,powershell_sha)
             current = status['current_state'](plan)
             resource = resources(plan,powershell)
+            if resource.get('protectedSessionOwnerPresent') is True:
+                owners['protectedStage']=owner(resource.get('protectedStageOwner'),powershell/'pwsh.exe','protectedStage',True)
             if run is not None:
                 try:
                     capsule = module('serato-session-capsule.py')

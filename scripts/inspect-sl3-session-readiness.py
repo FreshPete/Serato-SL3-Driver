@@ -128,7 +128,8 @@ def residue(installation, pointer, application):
     s = stage()
     paths = {'nativeInstallation': installation, 'sessionPointer': pointer, 'pendingPointer': Path(str(pointer) + '.pending'),
              'installerResource': application.parent / 'bundles/8c7758f23375cee18a9cf3be4a3acc15.bin',
-             'installerPermit': application.parent / 'bundles/8c7758f23375cee18a9cf3be4a3acc15.bin.sl3-permit'}
+             'installerPermit': application.parent / 'bundles/8c7758f23375cee18a9cf3be4a3acc15.bin.sl3-permit',
+             'protectedSessionOwner': application.parent / 'bundles/8c7758f23375cee18a9cf3be4a3acc15.bin.sl3-session'}
     occupied = [name for name, path in paths.items() if not s.absent(path)]
     registry = []
     for name in ('SOFTWARE\\ASIO\\SL3 Rebuild Development',

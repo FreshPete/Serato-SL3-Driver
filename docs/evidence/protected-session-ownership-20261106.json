@@ -1,0 +1,61 @@
+{
+  "schema": "sl3.protected-session-ownership-evidence.v1",
+  "date": "2026-11-06",
+  "sourcePins": 45,
+  "completePlanSourcePins": 33,
+  "launcherSha256": "d0fd654487a63b4243c0ffc8c8901faf6463a208350c3d996abe048f20511768",
+  "releaseManifestSha256": "6b475fde0950929bd4b9142645c6aff95b1f68bec3be79086af5fef56a4cf791",
+  "kitManifestSha256": "06fa8abcb38d841e2399b4eff9db9e25c86243623af958a08ced25ef90d6bffe",
+  "checksPassed": {
+    "ownerPrimitives": 10,
+    "recoveryClassification": 8,
+    "status": 11,
+    "readiness": 7,
+    "savedResult": 6,
+    "completePlan": 5,
+    "nativeChecks": 6,
+    "kit": 17,
+    "freshPreparation": 8,
+    "stop": 8
+  },
+  "totalChecksPassed": 86,
+  "reports": {
+    "ownerPrimitives": {
+      "sha256": "ae853b3aa344ece3d914c529926549882196b78f261835447da6b7abd6586e03",
+      "passedCases": 10
+    },
+    "nativeChecks": {
+      "sha256": "4ce1c250b30a586514fc0864c9402059ab42962119c22b29eb36e9913d8becf2",
+      "passedCases": 6
+    },
+    "kit": {
+      "sha256": "e3785027f751ac19e5db1dfff6774c9c389bc2aba24d070472a958c52498c484",
+      "passedCases": 17
+    },
+    "fresh": {
+      "sha256": "2501af88636ce9eba99e5424a0e4aab5e8ed4b4e827bf5f745599e52195f7a21",
+      "passedCases": 8
+    },
+    "stop": {
+      "sha256": "43eedd15b3a77db4fcb2019538991f253148361f18f69a8ee7ead110b0821287",
+      "passedCases": 8
+    }
+  },
+  "hostReadOnlyObservation": {
+    "reportSha256": "6b380b4085c70d85ece4a4cdd316c2e8f33f0518414ebcbac73c204f7faeab15",
+    "phase": "clean",
+    "protectedSessionOwnerPresent": false,
+    "ordinaryToken": true,
+    "originalSetupClean": true
+  },
+  "nativeAudioBundleSha256": "898c4e5294aec6a67a7364ed9e47ff602f5228401fa10e8a1ca06d46e7cc8993",
+  "audioBinariesChanged": false,
+  "fixtureAclCallbackSubstituted": true,
+  "productionOwnershipCreationValidated": false,
+  "productionOwnershipRemovalValidated": false,
+  "automaticRecoveryCommandImplemented": false,
+  "applicationStarted": false,
+  "deviceOpened": false,
+  "elevationRequested": false,
+  "liveSeratoShutdownValidated": false
+}

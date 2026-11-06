@@ -68,10 +68,12 @@ try {
         $null=Pin-Input $path $entry.Value.sha256
     }
     . "$PSScriptRoot/serato-installer-resource-transaction.ps1"
+    . "$PSScriptRoot/serato-protected-session-owner.ps1"
     $exe=$plan.application.path
     $target=Join-Path (Split-Path $exe) 'userio_resources.bin'
     $bundle=Join-Path (Split-Path $exe) 'bundles/8c7758f23375cee18a9cf3be4a3acc15.bin'
     $permit=$plan.permitPath
+    $protectedOwner=$bundle+'.sl3-session'
     $capsulePath=$plan.capsule.path
     $capsuleHash=$plan.capsule.sha256
     $directory=Split-Path $capsulePath
@@ -103,6 +105,17 @@ try {
         if ($LASTEXITCODE) { throw 'Broker retirement is unverified; preserve native files' }
     }
     function Rollback-OwnInstall {
+        if (Test-RegistrationAbsent) {
+            if (Test-Path -LiteralPath $plan.pointerPath) { throw 'An active broker pointer remains' }
+            $brokerEvidence=@($receipt,$session,($session+'.stdout'),($session+'.stderr'),($session+'.pointer.json')) |
+                Where-Object {Test-Path -LiteralPath $_}
+            if ($brokerEvidence) {
+                & $python -I -B -c 'import runpy,sys; a=runpy.run_path(sys.argv[1]); r,p,d=a["verify"](__import__("pathlib").Path(sys.argv[2]),sys.argv[3]); a["require_retired"](d,p)' `
+                    "$PSScriptRoot/serato-session-capsule.py" $capsulePath $capsuleHash
+                if ($LASTEXITCODE) { throw 'Absent native files do not prove broker retirement' }
+            }
+            return
+        }
         if (Test-Path -LiteralPath $receipt) {
             $result=Get-Content -LiteralPath $receipt -Raw | ConvertFrom-Json -AsHashtable
             if ($result -isnot [Collections.IDictionary] -or -not $result.Contains('successful') -or
@@ -132,6 +145,27 @@ try {
                 }
             }
         }
+        $protectedScope=Get-Sl3ProtectedSessionOwner $protectedOwner ${function:Assert-Sl3ArchiveProtectedPath}
+        if ($protectedScope.present) {
+            Assert-Sl3ProtectedSessionScope $protectedScope $capsuleHash $plan.nativeBundle.sha256
+            if (Test-Sl3ProtectedStageAlive $protectedScope) { throw 'Protected staging owner remains active' }
+            # Prevent another recovery from deleting/replacing the ownership
+            # record while this recovery operates on the selected resources.
+            $recoveryOwnerLease=[IO.File]::Open($protectedOwner,'Open','Read','Read')
+            $leases.Add($recoveryOwnerLease)
+            $again=Get-Sl3ProtectedSessionOwner $protectedOwner ${function:Assert-Sl3ArchiveProtectedPath}
+            if ($again.sha256 -cne $protectedScope.sha256) { throw 'Protected staging ownership changed' }
+        } elseif ((Get-Sl3ArchiveTransactionState $tx).state -ne 'original' -or
+            -not (Test-RegistrationAbsent) -or (Test-Path -LiteralPath $permit) -or
+            (Test-Path -LiteralPath $bundle) -or (Test-Path -LiteralPath ($bundle+'.sl3-pending'))) {
+            throw 'Protected session ownership is missing; preserve interrupted state for review'
+        } else {
+            $cache=& $python -I -B "$PSScriptRoot/retire-serato-session-cache.py" --local-app-data $localAppData --expected-launcher-sha256 $plan.launcher.sha256
+            if ($LASTEXITCODE -or ($cache | ConvertFrom-Json).cachedLauncherPresent) {
+                throw 'Unowned launcher cache requires review; no recovery changes were made'
+            }
+            'Original state already clean; no recovery changes performed'; return
+        }
         # Preflight all resource identities before revoking/uninstalling anything.
         $null=Get-Sl3InstallerResourceRecoveryPlan $tx $plan.installerResource.sha256 `
             ${function:Assert-Stopped} ${function:Assert-Sl3ArchiveProtectedPath}
@@ -141,13 +175,18 @@ try {
             ${function:Assert-Stopped} ${function:Assert-Sl3ArchiveProtectedPath}
         & $python -I -B "$PSScriptRoot/retire-serato-session-cache.py" --local-app-data $localAppData --expected-launcher-sha256 $plan.launcher.sha256 --retire
         if ($LASTEXITCODE) { throw 'Recovered resources but launcher cache retirement needs review' }
+        if ($protectedScope.present) {
+            $recoveryOwnerLease.Dispose()
+            Remove-Sl3ProtectedSessionOwner $protectedOwner $capsuleHash $plan.nativeBundle.sha256 `
+                ${function:Assert-Stopped} ${function:Assert-Sl3ArchiveProtectedPath}
+        }
         'Owned session resources recovered'; return
     }
     Invoke-Installer plan
     if ((Get-Sl3ArchiveTransactionState $tx).state -ne 'original' -or -not (Test-RegistrationAbsent)) {
         throw 'Original resources and absent temporary native installation required'
     }
-    foreach ($path in @($bundle,($bundle+'.sl3-pending'),$permit,$receipt,$ready,$release,$final,$clean,$session,$plan.pointerPath,
+    foreach ($path in @($bundle,($bundle+'.sl3-pending'),$protectedOwner,$permit,$receipt,$ready,$release,$final,$clean,$session,$plan.pointerPath,
                         ($plan.pointerPath+'.pending'),($session+'.stdout'),($session+'.stderr'),
                         ($session+'.closed'),($session+'.lock'),($session+'.pointer.json'),
                         (Join-Path $directory 'broker-timing.txt'),(Join-Path $directory 'broker-input.conf'),
@@ -170,8 +209,11 @@ try {
             throw 'Original desktop runner identity is unavailable'
         }
         $supervisorState=@{permitIssued=$false;completed=$false}
+        $protectedClaim=$null
         $report=@{restored=$false;registrationAbsent=$false;receiptState='absent';error=$null}
         try {
+            $protectedClaim=New-Sl3ProtectedSessionOwner $protectedOwner $capsuleHash $plan.nativeBundle.sha256 `
+                ${function:Assert-Stopped} ${function:Assert-Sl3ArchiveProtectedPath}
             Invoke-Sl3InstallerResourceTest $tx $plan.archiveSource.path $plan.installerResource.path $plan.installerResource.sha256 {
                 Assert-Stopped
                 if ($supervisorState.permitIssued -and (Test-Path -LiteralPath $permit)) { throw 'Installer permit remains' }
@@ -208,6 +250,17 @@ try {
         finally {
             $report.restored=(Get-Sl3ArchiveTransactionState $tx).state -eq 'original' -and -not (Test-Path -LiteralPath $bundle)
             $report.registrationAbsent=$supervisorState.completed -and (Test-RegistrationAbsent)
+            if ($null -ne $protectedClaim) {
+                try {
+                    if ($report.restored -and $report.registrationAbsent -and -not $report.error) {
+                        Remove-Sl3ProtectedSessionOwner $protectedOwner $capsuleHash $plan.nativeBundle.sha256 `
+                            ${function:Assert-Stopped} ${function:Assert-Sl3ArchiveProtectedPath} $protectedClaim
+                    }
+                } catch { $report.error=$_.Exception.Message }
+                finally { $protectedClaim.lease.Dispose() }
+            }
+            $report.protectedOwnerAbsent=-not (Test-Path -LiteralPath $protectedOwner)
+            $report.restored=$report.restored -and $report.protectedOwnerAbsent
             Write-New $final ($report | ConvertTo-Json)
         }
         if ($report.error -or -not $report.restored -or -not $report.registrationAbsent) { throw 'Protected session requires recovery; inspect session-final.json' }

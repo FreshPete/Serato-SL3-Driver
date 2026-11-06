@@ -55,7 +55,8 @@ def current_state(plan):
     paths = {'nativeInstallation': Path(plan['nativeInstallation']), 'sessionPointer': Path(plan['pointerPath']),
              'pendingPointer': Path(plan['pointerPath'] + '.pending'),
              'installerResource': application.parent / 'bundles/8c7758f23375cee18a9cf3be4a3acc15.bin',
-             'installerPermit': Path(plan['permitPath'])}
+             'installerPermit': Path(plan['permitPath']),
+             'protectedSessionOwner': application.parent / 'bundles/8c7758f23375cee18a9cf3be4a3acc15.bin.sl3-session'}
     local = s.known_folder('f1b32785-6fba-4fcf-9d55-7b8e7f157091')
     paths['cachedLauncher'] = (local / 'Serato/Serato DJ Pro/Drivers/SL3_Rebuild_Development_x64.exe').resolve()
     occupied = [name for name, path in paths.items() if not s.absent(path)]

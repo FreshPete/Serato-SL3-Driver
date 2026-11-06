@@ -1,5 +1,7 @@
 # Recovering interrupted Serato resource staging
 
+**Later update:** the protected wrapper now requires [session-specific ownership](protected-session-ownership.md) for interrupted protected state. Legacy dirty state without that record is preserved for manual review. The resource-only fixture cases below do not exercise that wrapper prerequisite.
+
 Explicit session recovery now handles two previously missed, hash-verifiable states: a candidate archive staged before installation (`install-staged`), and a reviewed installer resource left at its `.sl3-pending` path. The existing recovery branch now preflights the resource set before permit revocation or native uninstall. [Checkpoint evidence](evidence/interrupted-resource-recovery-20261106.json)
 
 ## Implementation

@@ -8,7 +8,8 @@ API=runpy.run_path(str(Path(__file__).resolve().parents[1]/'scripts/inspect-sera
 class RecoveryCheckTest(unittest.TestCase):
     def fixture(self):
         return {'current':{'observed':True,'currentSetupClean':True},
-                'resources':{'observed':True,'archiveState':'original','bundlePresent':False,'pendingPresent':False},
+                'resources':{'observed':True,'archiveState':'original','bundlePresent':False,'pendingPresent':False,
+                             'protectedSessionOwnerPresent':False},
                 'owners':{role:{'state':'exited'} for role in ('runner','stage','supervisor')},
                 'running':False,'issues':[],'has_run':True,'broker_retired':True}
 
@@ -34,21 +35,38 @@ class RecoveryCheckTest(unittest.TestCase):
     def test_archive_witnesses_prevent_clean_even_when_status_file_checks_pass(self):
         for state in ('install-staged','installed','rollback-staged','restored'):
             values=self.fixture();values['resources']['archiveState']=state
+            values['resources']['protectedSessionOwnerPresent']=True
             result=API['classify'](**values)
             self.assertEqual(result['phase'],'recovery_required');self.assertFalse(result['recoveryAuthorized'])
         values=self.fixture();values['resources']['pendingPresent']=True
+        values['resources']['protectedSessionOwnerPresent']=True
         self.assertEqual(API['classify'](**values)['phase'],'recovery_required')
 
     def test_missing_retired_stage_owner_prevents_known_dirty_recovery(self):
         values=self.fixture();values['current']['currentSetupClean']=False
+        values['resources']['protectedSessionOwnerPresent']=True
         for state in ('not_recorded','unknown'):
             values['owners']['stage']['state']=state
             self.assertEqual(API['classify'](**values)['phase'],'review_required')
 
     def test_broker_retirement_is_separate_from_retired_wrapper_owners(self):
         values=self.fixture();values['current']['currentSetupClean']=False;values['broker_retired']=False
+        values['resources']['protectedSessionOwnerPresent']=True
         result=API['classify'](**values)
         self.assertEqual(result['phase'],'broker_retirement_required');self.assertFalse(result['recoveryAuthorized'])
+
+    def test_missing_protected_ownership_blocks_dirty_recovery(self):
+        values=self.fixture();values['current']['currentSetupClean']=False
+        values['resources']['protectedSessionOwnerPresent']=False
+        self.assertEqual(API['classify'](**values)['phase'],'review_required')
+
+    def test_protected_stage_record_covers_interrupted_stage_record_publication(self):
+        values=self.fixture();values['current']['currentSetupClean']=False
+        values['resources']['protectedSessionOwnerPresent']=True
+        values['owners']['stage']['state']='not_recorded';values['owners']['protectedStage']={'state':'alive'}
+        self.assertEqual(API['classify'](**values)['phase'],'active_session')
+        values['owners']['protectedStage']['state']='exited'
+        self.assertEqual(API['classify'](**values)['phase'],'recovery_required')
 
 
 if __name__=='__main__':unittest.main()

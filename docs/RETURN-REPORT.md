@@ -2,6 +2,8 @@
 
 ## 6 November packaging checkpoint
 
+**Shared staging ownership bound to a session.** A protected create-new record and retained read handle now scope staging/recovery to a capsule, bundle and staging process lifetime. Normal cleanup releases only the creating stage's exact record; recovery refuses live, foreign or unrecorded dirty state. Ten real Windows fixture cases passed. Native audio binaries are unchanged; production marker creation/removal and live audio shutdown remain unverified. [Protocol and evidence](protected-session-ownership.md)
+
 **Native recovery check implemented.** Kit/fresh preparation includes its argument vector. The 44-source native release passes the compiled PowerShell runtime identity to a selected-session inspector; full plans now pin 32 sources. Six classification and six actual native owned-process cases passed, including active-owner refusal, stale/malformed/noncanonical records and clean state after retirement. No recovery action, elevation or device operation ran. [Contract and evidence](session-recovery-check.md)
 
 **Two interrupted resource states fixed.** Recovery now accepts a verified `install-staged` archive and removes a matching pending installer copy. It checks all resource identities before permit revocation/native rollback, then rechecks before resource cleanup. Twelve new real file-operation cases and 22 archive regressions passed; unknown/changed files remain preserved. The fixtures substitute the production ACL callback and do not validate elevated recovery against Serato. A simpler recovery entry remains unfinished. [Contract and evidence](interrupted-resource-recovery.md)

@@ -1,5 +1,7 @@
 # Native read-only recovery check
 
+**Later update:** [protected session ownership](protected-session-ownership.md) adds a matching protected record prerequisite for dirty-state recovery and observes its stage process. New bindings pin 45 release sources and 33 plan sources; the counts below describe this earlier checkpoint.
+
 Prepared kit and fresh-session records now include `recoveryCheckArguments`. The native launcher exposes:
 
 ```text
