@@ -1,0 +1,224 @@
+{
+  "schema": "sl3.frida-local-clang-build-evidence.v1",
+  "date": "2026-11-06",
+  "toolchain": {
+    "schema": "sl3.local-llvm-provenance.v1",
+    "version": "21.1.8",
+    "upstreamRelease": "https://github.com/llvm/llvm-project/releases/tag/llvmorg-21.1.8",
+    "archive": {
+      "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.8/clang%2Bllvm-21.1.8-x86_64-pc-windows-msvc.tar.xz",
+      "bytes": 942572476,
+      "sha256": "749d22f565fcd5718dbed06512572d0e5353b502c03fe1f7f17ee8b8aca21a47",
+      "actualSha256": "749d22f565fcd5718dbed06512572d0e5353b502c03fe1f7f17ee8b8aca21a47"
+    },
+    "signature": {
+      "verificationExitCode": 0,
+      "validSignatureFingerprint": "B6C8F98282B944E3B0D5C2530FC3042E345AD05D",
+      "releaseKeySource": "https://releases.llvm.org/release-keys.asc",
+      "releaseKeysSha256": "f38bd19b7f2d22cafa755841e6ce9375b9a2e6d41f7b974e4953d6b084839001",
+      "verificationLogSha256": "ba1b2ee619c2e0751794c72ccfe95e3b3ba046f467396b8a9d163f480272960d",
+      "webOfTrustCertificationClaimed": false,
+      "hostTrustStoreChanged": false,
+      "separateProjectKeyring": true
+    },
+    "extraction": {
+      "projectLocal": true,
+      "filter": "Python tarfile data filter",
+      "selectedPrefixes": [
+        "bin",
+        "lib/clang",
+        "share",
+        "LICENSE.TXT"
+      ],
+      "archiveInventorySha256": "4d36f6ee41572c3bbbf995eb277b64623a3691dde4a9ad7a0722657782d46cef"
+    },
+    "usedTools": {
+      "bin/clang-cl.exe": "812f6a0e80a5541108c0f4ae31121bcd5b692707041ac83a86e595f4729f5c8a",
+      "bin/lld-link.exe": "89c1209acd8d69b83d7c1a95173c59f036890de4cce713b508270ec4ac71c795"
+    },
+    "systemInstallationPerformed": false,
+    "pathChanges": "Build child environment only"
+  },
+  "configurationInspection": {
+    "schema": "sl3.frida-local-build-inspection.v1",
+    "sourceCommits": {
+      ".": "29016dbd9d8fce836b2b86892b04cc31c2f767aa",
+      "releng": "564352a3eac2ca0f5db776b6929955dbb20cf731",
+      "subprojects/frida-core": "317363ce8064e3ede421ded3e53e1d3ffcfd782d",
+      "subprojects/frida-gum": "c73c1bbf24ab6bab4e46e11faedd051579e1e942",
+      "subprojects/frida-python": "50ad5f65ddcb1270cbc25505f987fac14e763491",
+      "subprojects/efni": "329dd8e94505e95e066251e3d4dfe25d0e55eec3",
+      "releng/meson": "145667c57ed2649ddcc6fbb11b6008e0d451df1d",
+      "releng/tomlkit": "911cccd630965ff423316e25b4685ecf7df0ec0a",
+      "subprojects/frida-python/frida-bindgen": "eace04901ef6300429e8c343095297df042dba0e"
+    },
+    "requiredOptions": {
+      "frida_python": "enabled",
+      "frida-core:local_backend": "enabled",
+      "frida-core:compat": [
+        "disabled"
+      ],
+      "frida-core:tests": "disabled",
+      "frida-gum:tests": "disabled",
+      "frida_tools": "disabled",
+      "frida_node": "disabled",
+      "frida_net": "disabled",
+      "frida_swift": "disabled",
+      "frida_qml": "disabled",
+      "server": "disabled",
+      "portal": "disabled",
+      "gadget": "disabled",
+      "inject": "disabled",
+      "graft_tool": "disabled",
+      "frida-core:fruity_backend": "disabled",
+      "frida-core:droidy_backend": "disabled",
+      "frida-core:socket_backend": "disabled",
+      "frida-core:simmy_backend": "disabled",
+      "frida-core:barebone_backend": "disabled",
+      "frida-core:compiler_backend": "disabled"
+    },
+    "targetCount": 36,
+    "buildMetadataSha256": {
+      "intro-buildoptions.json": "a15bd93f5d49f5fa3e9afad6dfa22022c239d1baf099d9461d5ce764b157cb10",
+      "intro-targets.json": "6e0cd5970e85da6ba2ac5f636013fc422c60f677106bf951f088ea560eabbf54",
+      "build.ninja": "2f3592f735f1362ed99cb534740181d9089363d03e44891de23fd8f0025b5154"
+    },
+    "configurationOnly": true,
+    "candidateInspected": false,
+    "reviewedWindowsIncludeChangesAllowed": true,
+    "sourceHeaderChanges": [
+      {
+        "path": "gum/backend-windows/gummodule-windows.c",
+        "includeAdded": "gumprocess.h",
+        "originalSha256": "a07c9e4318958899ef802c41efb4348fa6d8f708916c3c47d9afd83adacace35",
+        "normalizedPatchedSha256": "01571181f9fe6bfc3ec8102d8700772b0de57b6ca2a719ac2602b474ba22ad35"
+      },
+      {
+        "path": "gum/backend-windows/gumprocess-windows.c",
+        "includeAdded": "gum-init.h",
+        "originalSha256": "ffaa91f68d669a99f736af51f7d7e3fbfa4825c52a7b0471c410a95123826344",
+        "normalizedPatchedSha256": "332eafe2a88afff1a6da78ead2348adbbac41900130b8d97f6e000ce47f9f8f4"
+      },
+      {
+        "path": "gum/backend-dbghelp/gumdbghelpbacktracer.c",
+        "includeAdded": "gum/gumwindows.h",
+        "originalSha256": "134f0fcd968ae483336572ec1f5757f8d8a1219403c5d8e6ed9a775c719d9025",
+        "normalizedPatchedSha256": "132b80db9672ad7177951c873b3eb9ded2397db495379393578d376768eb0989"
+      }
+    ],
+    "sourceDeclarationChanges": [
+      {
+        "path": "lib/agent/agent-glue.c",
+        "originalSha256": "f5183f84e0598685c3e2deb2572965c58d30685a18812e8d048c81ad3e4b5f13",
+        "normalizedPatchedSha256": "06c917377ac809de2f5a3abc8825b12ffc349d389177a59be1a84502be33fc86"
+      }
+    ],
+    "candidateImported": false,
+    "candidateExecuted": false,
+    "seratoStarted": false,
+    "deviceOpened": false,
+    "securityHoldCleared": false,
+    "runtimeCompatibilityVerified": false,
+    "antivirusCompatibilityVerified": false,
+    "embeddedAssetContentsAttested": false
+  },
+  "sourcePatches": [
+    {
+      "path": "patches/frida-core-17.25.2-windows-agent-declarations.patch",
+      "normalizedSha256": "de95eb1f3e6518590864b6ef01d0230cf7067fea3fe7304a7d81655f1e7b2873",
+      "reverseApplyCheckExitCode": 0
+    },
+    {
+      "path": "patches/frida-gum-17.25.2-windows-includes.patch",
+      "normalizedSha256": "aa16db40b06da14be1031341a7e25b514cd1e4594620974d0f4b9092d96b031d",
+      "reverseApplyCheckExitCode": 0
+    }
+  ],
+  "compilerSelection": {
+    "c": "clang-cl 21.1.8",
+    "cpp": "clang-cl 21.1.8",
+    "linker": "LLD 21.1.8",
+    "configuration": "Explicit Meson native file; upstream configure wrapper falls back to a stale Enterprise VS path on this host.",
+    "nativeFileSha256": "8a5bf73bef6f30c2edc8b3c17fca7b0927bfcfab4b74739f48fc8c3ebaa84974",
+    "buildCommandSha256": "6c1bbc512f91cb8b963f2bcb6264ee78b29816816bd24994b0a37061f434e88d",
+    "compilerMetadataSha256": "5df11a7e524c346b67842437679920670ec41d6c484262d5df08e3d6c9bc19b5"
+  },
+  "buildResult": {
+    "exitCode": 1,
+    "stage": "linking embedded agent",
+    "logSha256": "e212bf3290df3e2b976d259140acf6a008c579bed7e6fb74dd71b0aac1c78b03",
+    "missingSymbols": [
+      "__writegsqword",
+      "__std_min_element_8u",
+      "__std_min_8u",
+      "__std_mismatch_1",
+      "__std_max_element_4u"
+    ],
+    "causes": "Clang TLS intrinsic unresolved and prebuilt V8 library requires newer Microsoft STL runtime symbols. No stub symbols or error suppression added."
+  },
+  "tests": {
+    "configurationAndExactPatchTests": 18,
+    "passed": true,
+    "fullInspectionRefusesMissingCandidate": true
+  },
+  "candidateProduced": false,
+  "fridaSdkImported": false,
+  "injectedAgentExecuted": false,
+  "sessionKitChanged": false,
+  "buildUtilitiesExecuted": true,
+  "securityHoldStillPresent": true,
+  "protectionsChanged": false,
+  "firmwareChanged": false,
+  "uacRequested": false,
+  "postBuildRecovery": {
+    "schema": "sl3.session-recovery-check.v1",
+    "planSha256": "b27d93a6f0de15e410d7846bb88c1ced3c8df5e15bd2949f4b608bb2eeae178e",
+    "phase": "clean",
+    "message": "Original files and temporary registration are already clean.",
+    "originalSetupClean": true,
+    "activeSessionObserved": false,
+    "recoveryAuthorized": false,
+    "owners": {
+      "runner": {
+        "state": "not_recorded"
+      },
+      "stage": {
+        "state": "not_recorded"
+      },
+      "supervisor": {
+        "state": "not_recorded"
+      }
+    },
+    "currentSetup": {
+      "observed": true,
+      "originalResources": true,
+      "occupiedPaths": [],
+      "registrationPresent": false,
+      "currentSetupClean": true
+    },
+    "resourcePlan": {
+      "schema": "sl3.installer-resource-recovery-plan.v1",
+      "archiveState": "original",
+      "bundlePresent": false,
+      "pendingPresent": false,
+      "filesWritten": false,
+      "deviceAccess": false,
+      "protectedSessionOwnerPresent": false,
+      "protectedStageOwner": null,
+      "observed": true
+    },
+    "brokerRetirementReported": false,
+    "issues": [],
+    "pointInTimeObservation": true,
+    "ordinaryToken": true,
+    "previousSessionShutdownVerified": false,
+    "repairAttempted": false,
+    "filesWritten": false,
+    "registryWritten": false,
+    "elevationRequested": false,
+    "deviceOpened": false,
+    "deviceReadinessVerified": false
+  },
+  "physicalAudioValidationAdded": false,
+  "remainingWork": "Resolve a complete supported Windows compiler/runtime combination, or review and test the specific remaining portability/dependency changes; then statically inspect a completed candidate before any bounded runtime test."
+}

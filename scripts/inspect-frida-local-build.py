@@ -16,6 +16,14 @@ PINS = {
     'releng/tomlkit': '911cccd630965ff423316e25b4685ecf7df0ec0a',
     'subprojects/frida-python/frida-bindgen': 'eace04901ef6300429e8c343095297df042dba0e',
 }
+WINDOWS_INCLUDES = {
+    'gum/backend-windows/gummodule-windows.c': ('#include "gummodule-windows.h"', 'gumprocess.h'),
+    'gum/backend-windows/gumprocess-windows.c': ('#include "gumprocess-priv.h"', 'gum-init.h'),
+    'gum/backend-dbghelp/gumdbghelpbacktracer.c': ('#include "gum/gumdbghelpbacktracer.h"', 'gum/gumwindows.h'),
+}
+AGENT_ANCHOR = b'#include "frida-payload.h"\n'
+AGENT_DECLARATIONS = (b'\n#ifdef _MSC_VER\nvoid frida_libc_shim_init (void);\n'
+                      b'void frida_libc_shim_deinit (void);\n#endif\n')
 
 
 def require(condition, message):
@@ -48,15 +56,56 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def inspect(source, build, configuration_only=False):
+def expected_header_change(original, anchor, header):
+    anchor = anchor.encode('ascii') + b'\n'
+    require(original.count(anchor) == 1, 'Unique upstream include anchor required')
+    return original.replace(anchor, anchor + b'\n#include "' + header.encode('ascii') + b'"\n')
+
+
+def verify_header_change(original, actual, anchor, header):
+    require(actual.replace(b'\r\n', b'\n') == expected_header_change(original, anchor, header),
+            'Reviewed header-only patch differs')
+
+
+def verify_agent_change(original, actual):
+    require(original.count(AGENT_ANCHOR) == 1 and
+            actual.replace(b'\r\n', b'\n') == original.replace(AGENT_ANCHOR, AGENT_ANCHOR + AGENT_DECLARATIONS),
+            'Reviewed agent declarations differ')
+
+
+def inspect(source, build, configuration_only=False, allow_reviewed_windows_includes=False):
     source, build = source.resolve(), build.resolve()
     git = lambda directory, *args: subprocess.check_output(
         ['git', '-C', str(directory), *args], text=True, timeout=30).strip()
+    header_changes = []
+    declaration_changes = []
     for relative, expected in PINS.items():
         directory = source / relative
         require(git(directory, 'rev-parse', 'HEAD') == expected, 'Source commit differs: ' + relative)
-        require(not git(directory, 'status', '--porcelain', '--untracked-files=no', '--ignore-submodules=untracked'),
-                'Tracked source changes present: ' + relative)
+        status = git(directory, 'status', '--porcelain', '--untracked-files=no', '--ignore-submodules=untracked')
+        if status and allow_reviewed_windows_includes and relative == '.':
+            require({line.strip() for line in status.splitlines()} <=
+                    {'M subprojects/frida-gum', 'M subprojects/frida-core'}, 'Unexpected modified submodule')
+        elif status and allow_reviewed_windows_includes and relative == 'subprojects/frida-core':
+            name = 'lib/agent/agent-glue.c'
+            require(status.strip() == 'M ' + name, 'Only the reviewed agent declarations are permitted')
+            original = subprocess.check_output(['git', '-C', str(directory), 'show', 'HEAD:' + name], timeout=30)
+            actual = (directory / name).read_bytes().replace(b'\r\n', b'\n')
+            verify_agent_change(original, actual)
+            declaration_changes.append({'path': name, 'originalSha256': hashlib.sha256(original).hexdigest(),
+                                        'normalizedPatchedSha256': hashlib.sha256(actual).hexdigest()})
+        elif status and allow_reviewed_windows_includes and relative == 'subprojects/frida-gum':
+            require({line.strip() for line in status.splitlines()} == {'M ' + name for name in WINDOWS_INCLUDES},
+                    'Only the reviewed Windows include changes are permitted')
+            for name, (anchor, header) in WINDOWS_INCLUDES.items():
+                original = subprocess.check_output(['git', '-C', str(directory), 'show', 'HEAD:' + name], timeout=30)
+                actual = (directory / name).read_bytes()
+                verify_header_change(original, actual, anchor, header)
+                header_changes.append({'path': name, 'includeAdded': header,
+                                       'originalSha256': hashlib.sha256(original).hexdigest(),
+                                       'normalizedPatchedSha256': hashlib.sha256(actual.replace(b'\r\n', b'\n')).hexdigest()})
+        else:
+            require(not status, 'Tracked source changes present: ' + relative)
     options = build / 'meson-info/intro-buildoptions.json'
     targets = build / 'meson-info/intro-targets.json'
     ninja = build / 'build.ninja'
@@ -66,6 +115,9 @@ def inspect(source, build, configuration_only=False):
               'requiredOptions': configuration, 'targetCount': len(json.loads(targets.read_text())),
               'buildMetadataSha256': {p.name: digest(p) for p in (options, targets, ninja)},
               'configurationOnly': configuration_only, 'candidateInspected': False,
+              'reviewedWindowsIncludeChangesAllowed': allow_reviewed_windows_includes,
+              'sourceHeaderChanges': header_changes,
+              'sourceDeclarationChanges': declaration_changes,
               'candidateImported': False, 'candidateExecuted': False, 'seratoStarted': False,
               'deviceOpened': False, 'securityHoldCleared': False,
               'runtimeCompatibilityVerified': False, 'antivirusCompatibilityVerified': False,
@@ -95,5 +147,8 @@ if __name__ == '__main__':
     parser.add_argument('--source', type=Path, required=True)
     parser.add_argument('--build', type=Path, required=True)
     parser.add_argument('--configuration-only', action='store_true')
+    parser.add_argument('--allow-reviewed-windows-includes', action='store_true',
+                        help='Allow only the exact include additions and agent declarations encoded in this inspector')
     args = parser.parse_args()
-    print(json.dumps(inspect(args.source, args.build, args.configuration_only), indent=2))
+    print(json.dumps(inspect(args.source, args.build, args.configuration_only,
+                             args.allow_reviewed_windows_includes), indent=2))

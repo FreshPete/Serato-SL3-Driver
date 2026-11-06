@@ -1,0 +1,39 @@
+diff --git a/gum/backend-dbghelp/gumdbghelpbacktracer.c b/gum/backend-dbghelp/gumdbghelpbacktracer.c
+index c37fcb3fc4d538b5ba7642bda755dff78ff3f519..527ae569f0ead84bad3e08107a17a80285ccca43 100644
+--- a/gum/backend-dbghelp/gumdbghelpbacktracer.c
++++ b/gum/backend-dbghelp/gumdbghelpbacktracer.c
+@@ -7,6 +7,8 @@
+ 
+ #include "gum/gumdbghelpbacktracer.h"
+ 
++#include "gum/gumwindows.h"
++
+ #include "guminterceptor.h"
+ 
+ #if defined (HAVE_ARM64)
+diff --git a/gum/backend-windows/gummodule-windows.c b/gum/backend-windows/gummodule-windows.c
+index e7661c146aedfcaef3a365c207b242bb8f39cf0a..b3e98f0b236015e4b7e9dfb3c49394eb3915621b 100644
+--- a/gum/backend-windows/gummodule-windows.c
++++ b/gum/backend-windows/gummodule-windows.c
+@@ -9,6 +9,8 @@
+ 
+ #include "gummodule-windows.h"
+ 
++#include "gumprocess.h"
++
+ #include <psapi.h>
+ 
+ typedef struct _GumEnumerateImportsContext GumEnumerateImportsContext;
+diff --git a/gum/backend-windows/gumprocess-windows.c b/gum/backend-windows/gumprocess-windows.c
+index 2f31f4e55b8732b8fbc007221b679cfcc873c299..6f61b06b6a6462d67c3d4a74c1266f9b132db2c1 100644
+--- a/gum/backend-windows/gumprocess-windows.c
++++ b/gum/backend-windows/gumprocess-windows.c
+@@ -8,6 +8,8 @@
+ 
+ #include "gumprocess-priv.h"
+ 
++#include "gum-init.h"
++
+ #include "gummodule-windows.h"
+ 
+ #include <intrin.h>

@@ -1,0 +1,16 @@
+diff --git a/lib/agent/agent-glue.c b/lib/agent/agent-glue.c
+index f7b5c9aec94549da15ffdd45e1f33846293c69eb..401974e66830426b936d6969402526a46032cba1 100644
+--- a/lib/agent/agent-glue.c
++++ b/lib/agent/agent-glue.c
+@@ -3,6 +3,11 @@
+ #include "frida-base.h"
+ #include "frida-payload.h"
+ 
++#ifdef _MSC_VER
++void frida_libc_shim_init (void);
++void frida_libc_shim_deinit (void);
++#endif
++
+ #ifdef HAVE_ANDROID
+ # include <jni.h>
+ # if __ANDROID_API__ < __ANDROID_API_L__
