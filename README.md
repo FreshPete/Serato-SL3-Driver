@@ -4,6 +4,8 @@ Restore the physical Rane SL3 for current Serato DJ Pro and two-deck DVS. Window
 
 ## Latest status — 6 November 2026
 
+**Supervisor-owned instrumentation manager now retires before playback.** The supervisor uses a dedicated Frida manager and closes it with startup detachment. Real attached/spawned Python fixtures remain alive after that retirement, then stop normally; the native stop channel and refreshed private kit checks pass. This does not yet prove Serato shutdown. [Change, evidence and refreshed candidate](docs/instrumentation-manager-retirement.md)
+
 **Passive runtime observation completed; existing session path held.** Two isolated no-install startup captures observed the expected receiver, popup return and SL3 arrival publication on the same thread. Both posted-close attempts still required forced exit. Defender quarantined a temporary stock Frida `idund.exe` helper; protections remain enabled and that session runtime remains held. Driver binaries and original installed files are unchanged. [Findings, security event and limitations](docs/passive-action-capture.md)
 
 **Replacement dependency passes an owned-process runtime test.** The reviewed local-only/QuickJS candidate now imports, attaches to its own fixture, runs a health RPC and detaches/closes normally in a separate 47-file SDK. Its owned job is empty without forced cleanup; no Defender detection events appeared in the observed window, with protections enabled. The TLS fixture, static asset review and file-scan evidence are preserved. The working session kit is unchanged and needs separate Serato validation. [Owned-process result and next steps](docs/local-frida-owned-probe.md)

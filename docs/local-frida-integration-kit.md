@@ -1,5 +1,7 @@
 # Startup integration candidate passes offline kit checks
 
+This records the initial integration-kit checkpoint. The [manager-retirement update](instrumentation-manager-retirement.md) contains the subsequent production supervisor change and refreshed private kit/plan identities for the next attended test.
+
 A fresh private kit now carries the reviewed local-only Frida build, the startup inspection dependencies and a newly bound native launcher/installer resource. Both default and optional-observer session plans pass the complete native/PowerShell verification path. A moved copy also prepares and checks a fresh session using its own runtimes with an empty PATH. Serato and the SL3 were not started. [Evidence](evidence/local-frida-integration-kit-20261106.json)
 
 ## Runtime and launcher binding

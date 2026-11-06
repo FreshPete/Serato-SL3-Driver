@@ -13,6 +13,11 @@ MODULE = runpy.run_path(str(Path(__file__).resolve().parents[1]/'scripts/run-ser
 BUILDER = runpy.run_path(str(Path(__file__).resolve().parents[1]/'scripts/prepare-serato-startup-shim.py'))
 
 
+def mock_frida(device):
+    manager = type('Manager', (), {'get_local_device': staticmethod(lambda: device), 'close': staticmethod(lambda: None)})()
+    return type('Frida', (), {'DeviceManager': staticmethod(lambda: manager)})()
+
+
 class PreflightTest(unittest.TestCase):
     def test_launcher_environment_requires_bound_application_and_package(self):
         verify = MODULE['launcher_environment']
@@ -191,7 +196,7 @@ class WindowsOwnershipTest(unittest.TestCase):
     def test_changed_application_never_spawns_a_process(self):
         class Device:
             def spawn(self, *args, **kwargs): raise AssertionError('Must not spawn changed application')
-        frida = type('Frida',(),{'get_local_device':staticmethod(Device)})()
+        frida = mock_frida(Device())
         backend = MODULE['WindowsProcess'](Path(sys.executable),frida,expected_application_sha='0'*64)
         with self.assertRaisesRegex(ValueError,'Application changed'):
             backend.start('script',lambda *args:None)
@@ -229,7 +234,7 @@ class WindowsOwnershipTest(unittest.TestCase):
                         return Session()
                     def resume(self, pid): pass
                 device = Device()
-                frida = type('Frida',(),{'get_local_device':staticmethod(lambda:device)})()
+                frida = mock_frida(device)
                 try:
                     backend = MODULE['WindowsProcess'](Path(sys.executable),frida,expected_application_sha=MODULE['digest'](sys.executable),
                                                        asio_private_trace=private_trace,
@@ -259,6 +264,9 @@ class WindowsOwnershipTest(unittest.TestCase):
                         self.assertFalse(result['process']['closeTimeoutWindowObservation']['postCloseRequested'])
                     self.assertEqual(result['supervisionCompleted'],graceful)
                     self.assertTrue(result['tracerDetached'])
+                    self.assertTrue(result['instrumentationManagerClosedBeforeViewing'])
+                    self.assertTrue(result['process']['instrumentationManagerClosed'])
+                    self.assertNotIn('detachError', result['process'])
                     self.assertEqual(device.spawn_environment,{'SL3_ASIO_PRIVATE_TRACE':'1' if private_trace else '0',
                         'SL3_SESSION_CAPSULE':'','SL3_SESSION_CAPSULE_SHA256':''})
                 finally:

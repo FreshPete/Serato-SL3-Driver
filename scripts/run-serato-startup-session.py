@@ -129,6 +129,7 @@ def supervise(backend, script, verify_driver, stop_requested, clock=time.monoton
     action_ordinal=0
     report = {'schema': 'sl3.startup-supervisor-result.v1', 'events': [], 'error': None,
               'asioStartObserved': False, 'stagedAsioVerified': False, 'tracerDetached': False,
+              'instrumentationManagerClosedBeforeViewing': False,
               'hostDirectDeviceAccess': False, 'hardwareStreamingVerified': False,
               'registryWrittenByHost': False, 'resourcesRestoredByHost': False}
 
@@ -185,7 +186,8 @@ def supervise(backend, script, verify_driver, stop_requested, clock=time.monoton
         report['stagedAsioVerified'] = True
         backend.detach()
         report['tracerDetached'] = True
-        event('diagnostic_tracer_detached')
+        report['instrumentationManagerClosedBeforeViewing'] = getattr(backend, 'manager_closed', False) is True
+        event('diagnostic_tracer_detached', managerClosed=report['instrumentationManagerClosedBeforeViewing'])
         deadline = clock() + viewing_seconds
         while clock() < deadline:
             if backend.wait(.1):
@@ -249,7 +251,18 @@ class WindowsProcess:
         self.launcher_context = dict(launcher_context or {})
         require(set(self.launcher_context) in (set(), {'SL3_SESSION_CAPSULE','SL3_SESSION_CAPSULE_SHA256'}),
                 'Unexpected launcher environment fields')
-        self.device = frida.get_local_device()
+        # This host owns its instrumentation lifetime. Do not retain a global
+        # device manager throughout the detached manual-playback window.
+        self.manager = frida.DeviceManager()
+        self.manager_closed = False
+        try:
+            self.device = self.manager.get_local_device()
+        except BaseException as error:
+            try:
+                self.manager.close(); self.manager_closed = True
+            except Exception as cleanup_error:
+                error.add_note('Device manager cleanup failed: ' + str(cleanup_error)[:256])
+            raise
         self.handle = self.job = self.session = self.script = self.pid = None
         self.k = k = c.WinDLL('kernel32', use_last_error=True)
         for name, args, result in (
@@ -304,10 +317,21 @@ class WindowsProcess:
         return value == 0
 
     def detach(self):
-        if self.script:
-            self.script.unload(); self.script = None
-        if self.session:
-            self.session.detach(); self.session = None
+        errors = []
+        for name, operation in (('script', 'unload'), ('session', 'detach')):
+            value = getattr(self, name)
+            if value:
+                try:
+                    getattr(value, operation)(); setattr(self, name, None)
+                except Exception as error:
+                    errors.append(error)
+        if not self.manager_closed:
+            try:
+                self.manager.close(); self.manager_closed = True; self.device = None
+            except Exception as error:
+                errors.append(error)
+        if errors:
+            raise RuntimeError('Instrumentation retirement failed: ' + '; '.join(str(x)[:256] for x in errors)) from errors[0]
 
     def window_snapshot(self, post_close=False, user32=None):
         """Owned top-level metadata only; no titles, screenshots or synchronous messages."""
@@ -392,6 +416,7 @@ class WindowsProcess:
                 self.detach()
             except Exception as error:
                 result['detachError'] = str(error)[:512]
+            result['instrumentationManagerClosed'] = self.manager_closed
             if self.job:
                 class Accounting(c.Structure):
                     _fields_ = [('times',c.c_int64*4),('faults',w.DWORD),('total',w.DWORD),

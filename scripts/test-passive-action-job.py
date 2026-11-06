@@ -39,7 +39,9 @@ pathlib.Path(sys.argv[2]).write_text(json.dumps(r))
                 return self.child.pid
             def attach(self,*args):return Session()
             def resume(self,*args):pass
-        device=Device();frida=type('MockFrida',(),{'get_local_device':staticmethod(lambda:device)})()
+        device=Device()
+        manager=type('Manager',(),{'get_local_device':staticmethod(lambda:device),'close':staticmethod(lambda:None)})()
+        frida=type('MockFrida',(),{'DeviceManager':staticmethod(lambda:manager)})()
         backend=host['WindowsProcess'](Path(sys.executable),frida,expected_application_sha=host['digest'](sys.executable))
         try:
             backend.start('fixture',lambda *args:None)
@@ -49,6 +51,7 @@ pathlib.Path(sys.argv[2]).write_text(json.dumps(r))
             assert outcome['spawnAccepted'] is False and not unexpected.exists(),outcome
         finally:cleanup=backend.cleanup()
         assert cleanup['processExited'] and cleanup['exitCode']==0 and cleanup['jobEmpty']
+        assert cleanup['instrumentationManagerClosed'] and 'detachError' not in cleanup
         return {'schema':'sl3.passive-action-job-test.v1','policy':policy,'childOutcome':outcome,
             'cleanup':cleanup,'mockedFridaBoundary':True,'seratoExecuted':False,'deviceOpened':False}
 

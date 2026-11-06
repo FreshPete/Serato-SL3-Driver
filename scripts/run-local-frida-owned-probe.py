@@ -123,7 +123,7 @@ class Job:
             self.k.CloseHandle(self.handle); self.handle = None
 
 
-def probe(sdk, expected, output):
+def probe(sdk, expected, output, production_manager=False):
     # The outer supervisor assigns this cooperative child to its job before opening the gate.
     deadline = time.monotonic() + 10
     while not (output / 'go').is_file():
@@ -142,9 +142,10 @@ def probe(sdk, expected, output):
     report = {'schema': 'sl3.local-frida-owned-probe.v1', 'candidateSha256': manifest['candidateSha256'],
               'runtimeScope': manifest['scope'],
               'runnerNormalizedSha256': source_identity(),
+              'productionManagerRequested': production_manager, 'productionSpawnPathTested': False,
               'stages': [], 'passed': False, 'fixtureStarted': False, 'deviceOpened': False,
               'seratoStarted': False, 'securityHoldCleared': False}
-    fixture = session = script = frida = None
+    fixture = session = script = frida = backend = None
     def stage(name):
         report['stages'].append(name); save(output / 'progress.json', report)
     try:
@@ -152,7 +153,15 @@ def probe(sdk, expected, output):
         require(Path(frida.__file__).resolve() == sdk / 'packages/frida/__init__.py' and
                 Path(frida._frida.__file__).resolve() == sdk / 'packages/frida/_frida.pyd', 'Wrong SDK import path')
         report['version'] = frida.__version__; stage('candidate_imported')
-        device = frida.get_local_device()
+        if production_manager:
+            report['productionSupervisorNormalizedSha256'] = hashlib.sha256(
+                (ROOT / 'scripts/run-serato-startup-session.py').read_bytes().replace(b'\r\n', b'\n')).hexdigest()
+            host = runpy.run_path(str(ROOT / 'scripts/run-serato-startup-session.py'))
+            backend = host['WindowsProcess'](sdk / 'python.exe', frida,
+                                             expected_application_sha=manifest['files']['python.exe']['sha256'])
+            device = backend.device
+        else:
+            device = frida.get_local_device()
         require(device.type == 'local', 'Local process backend required'); stage('local_backend_ready')
         fixture = subprocess.Popen([str(sdk / 'python.exe'), '-I', '-B', str(Path(__file__).resolve()),
                                     '--fixture-mode', '--output', str(output)], creationflags=subprocess.DETACHED_PROCESS)
@@ -161,15 +170,26 @@ def probe(sdk, expected, output):
         require(fixture.poll() is None, 'Owned fixture exited before attachment')
         stage('fixture_owned')
         session = device.attach(fixture.pid); stage('fixture_attached')
+        if backend: backend.session = session
         require(process_created(fixture) == report['fixtureCreated'] and fixture.poll() is None, 'Fixture ownership changed')
         script = session.create_script('rpc.exports.health = () => ({pid: Process.id, arch: Process.arch, runtime: Script.runtime});')
+        if backend: backend.script = script
         script.load(); stage('script_loaded')
         result = script.exports_sync.health()
         require(result == {'pid': fixture.pid, 'arch': 'x64', 'runtime': 'QJS'}, 'Unexpected owned-process health reply')
         report['health'] = result; stage('health_rpc_passed')
-        script.unload(); script = None; stage('script_unloaded')
-        session.detach(); session = None; stage('fixture_detached')
-        frida.shutdown(); frida = None; stage('manager_closed')
+        if backend:
+            backend.detach()
+            require(backend.manager_closed, 'Production instrumentation manager did not close')
+            report['productionManagerClosed'] = True
+            script = session = None; stage('production_instrumentation_retired')
+        else:
+            script.unload(); script = None; stage('script_unloaded')
+            session.detach(); session = None; stage('fixture_detached')
+            frida.shutdown(); stage('manager_closed')
+        frida = None
+        require(fixture.poll() is None, 'Fixture exited while instrumentation was retiring')
+        report['fixtureStillAliveAfterRetirement'] = True
         (output / 'stop-fixture').write_text('stop', encoding='ascii')
         require(fixture.wait(timeout=5) == 0, 'Fixture did not exit normally')
         report['fixtureExitCode'] = fixture.returncode; stage('fixture_exited')
@@ -179,9 +199,12 @@ def probe(sdk, expected, output):
     finally:
         # A native-library cleanup stall is bounded by the outer retained job handle.
         try:
-            if script: script.unload()
-            if session: session.detach()
-            if frida: frida.shutdown()
+            if backend:
+                backend.detach()
+            else:
+                if script: script.unload()
+                if session: session.detach()
+                if frida and not production_manager: frida.shutdown()
             if fixture and fixture.poll() is None:
                 (output / 'stop-fixture').write_text('stop', encoding='ascii'); fixture.wait(timeout=5)
         except BaseException as error:
@@ -190,7 +213,7 @@ def probe(sdk, expected, output):
     return 0 if report['passed'] else 1
 
 
-def run(sdk, expected, output):
+def run(sdk, expected, output, production_manager=False):
     manifest = verify_sdk(sdk, expected)
     shell = C.WinDLL('shell32'); shell.IsUserAnAdmin.restype = W.BOOL
     require(not shell.IsUserAnAdmin(), 'Probe requires an ordinary user token; no elevation')
@@ -200,6 +223,7 @@ def run(sdk, expected, output):
     report = {'schema': 'sl3.local-frida-owned-supervision.v1', 'candidateSha256': manifest['candidateSha256'],
               'runtimeScope': manifest['scope'],
               'runnerNormalizedSha256': source_identity(),
+              'productionManagerRequested': production_manager,
               'sdkManifestSha256': expected, 'processStarted': False, 'timedOut': False,
               'forcedJobCleanup': False, 'activeProcessLimit': 4, 'silentBreakawayAllowed': False,
               'killOnJobClose': True, 'ordinaryToken': True, 'securityHoldCleared': False,
@@ -209,7 +233,8 @@ def run(sdk, expected, output):
         with (output / 'stdout.txt').open('xb') as stdout, (output / 'stderr.txt').open('xb') as stderr:
             child = subprocess.Popen([str(sdk / 'python.exe'), '-I', '-B', str(Path(__file__).resolve()),
                                       '--probe-mode', '--sdk', str(sdk), '--expected-sdk-manifest-sha256', expected,
-                                      '--output', str(output)], stdout=stdout, stderr=stderr,
+                                      '--output', str(output), *(['--production-manager'] if production_manager else [])],
+                                     stdout=stdout, stderr=stderr,
                                      creationflags=subprocess.DETACHED_PROCESS)
             report['processStarted'] = True; report['probePid'] = child.pid
             job.assign(child); assigned = True; report['probeCreated'] = job.creation(child)
@@ -231,6 +256,7 @@ def run(sdk, expected, output):
             report['passed'] = (report.get('probeExitCode') == 0 and not report['timedOut'] and
                                 not report['forcedJobCleanup'] and report['afterCleanup']['active'] == 0 and
                                 report.get('probe', {}).get('runnerNormalizedSha256') == report['runnerNormalizedSha256'] and
+                                report.get('probe', {}).get('productionManagerRequested') is production_manager and
                                 report.get('probe', {}).get('passed') is True)
     except BaseException as error:
         report['error'] = str(error)[:1024]
@@ -261,6 +287,8 @@ if __name__ == '__main__':
     parser.add_argument('--sdk', type=Path)
     parser.add_argument('--expected-sdk-manifest-sha256')
     parser.add_argument('--output', type=Path)
+    parser.add_argument('--production-manager', action='store_true',
+                        help='Exercise the production manager-retirement method against the owned fixture')
     args = parser.parse_args()
     if args.fixture_mode:
         deadline = time.monotonic() + 50
@@ -269,10 +297,10 @@ if __name__ == '__main__':
         require(args.sdk is not None and args.expected_sdk_manifest_sha256, 'Explicit candidate SDK identity required')
         sdk = args.sdk.resolve()
         if args.probe_mode:
-            sys.exit(probe(sdk, args.expected_sdk_manifest_sha256, args.output.resolve()))
+            sys.exit(probe(sdk, args.expected_sdk_manifest_sha256, args.output.resolve(), args.production_manager))
         elif args.run:
             require(args.output is not None, 'Fresh output required for run')
-            result = run(sdk, args.expected_sdk_manifest_sha256, args.output.absolute())
+            result = run(sdk, args.expected_sdk_manifest_sha256, args.output.absolute(), args.production_manager)
             print(json.dumps(result, indent=2)); sys.exit(0 if result['passed'] else 1)
         else:
             manifest = verify_sdk(sdk, args.expected_sdk_manifest_sha256)

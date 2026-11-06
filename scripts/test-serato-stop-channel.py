@@ -111,7 +111,7 @@ while(-not(Test-Path -LiteralPath (Join-Path $taskDirectory 'owner-exit.txt')) -
             result_path.unlink()
         sys.path.insert(0, str(Path(plan['python']['path']).parent / 'packages'))
         import frida
-        real = frida.get_local_device(); application = Path(sys.executable)
+        manager = frida.DeviceManager(); real = manager.get_local_device(); application = Path(sys.executable)
         exit_marker = output / 'child-exit.txt'
         child_code = 'import pathlib,sys,time; p=pathlib.Path(sys.argv[1]); limit=time.monotonic()+30\nwhile not p.exists() and time.monotonic()<limit: time.sleep(.01)'
         class Device:
@@ -120,7 +120,8 @@ while(-not(Test-Path -LiteralPath (Join-Path $taskDirectory 'owner-exit.txt')) -
                 return real.spawn([str(application), '-I', '-B', '-c', child_code, str(exit_marker)], **kwargs)
             def attach(self, pid): return real.attach(pid)
             def resume(self, pid): return real.resume(pid)
-        wrapped = type('OwnedHeadlessFrida', (), {'get_local_device': staticmethod(Device)})()
+        managed = type('Manager', (), {'get_local_device': staticmethod(Device), 'close': staticmethod(manager.close)})()
+        wrapped = type('OwnedHeadlessFrida', (), {'DeviceManager': staticmethod(lambda: managed)})()
         class Backend(host['WindowsProcess']):
             def cleanup(self):
                 # Headless fixture cooperates on a marker; this does not test
@@ -147,6 +148,8 @@ while(-not(Test-Path -LiteralPath (Join-Path $taskDirectory 'owner-exit.txt')) -
         assert requested and requested[0]['stopRequested'] is True and requested[0]['shutdownConfirmed'] is False
         assert observed['endReason'] == 'manual_stop' and observed['supervisionCompleted'] is True
         assert observed['tracerDetached'] is True and observed['process']['exitCode'] == 0
+        assert observed['instrumentationManagerClosedBeforeViewing'] is True
+        assert observed['process']['instrumentationManagerClosed'] is True
         assert observed['process']['jobEmpty'] and not observed['process']['observerForcedTermination']
         passed('atomic-stop-observed-by-real-owned-headless-child-supervisor')
         before = (output / 'stop.txt').read_bytes()

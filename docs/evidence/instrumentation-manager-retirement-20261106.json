@@ -1,0 +1,337 @@
+{
+  "schema": "sl3.instrumentation-manager-retirement.v1",
+  "date": "2026-11-06",
+  "productionSupervisorNormalizedSha256": "ae695eb83b798f49b20da9f7e04a5a877b7a15458df9a57cad24cfbb0692c6c5",
+  "ownedManagerProbe": {
+    "schema": "sl3.local-frida-owned-supervision.v1",
+    "candidateSha256": "8ed5bdde028c484463fc536fa1678b4b5bbfd99d99c387eb40436d18a8d82da3",
+    "runtimeScope": "local-frida-startup-integration-candidate",
+    "runnerNormalizedSha256": "c0d6930634306c6131b0db755988f2e1abbdcff5af6ccfd4eb487da5cba1430e",
+    "productionManagerRequested": true,
+    "sdkManifestSha256": "f11669fa63baa4c6d8fc167061f41cb369044e90624e70763d5ca7137b31c386",
+    "processStarted": true,
+    "timedOut": false,
+    "forcedJobCleanup": false,
+    "activeProcessLimit": 4,
+    "silentBreakawayAllowed": false,
+    "killOnJobClose": true,
+    "ordinaryToken": true,
+    "securityHoldCleared": false,
+    "deviceOpened": false,
+    "seratoStarted": false,
+    "passed": true,
+    "probePid": 40176,
+    "probeCreated": "134384620999723450",
+    "probeExitCode": 0,
+    "beforeCleanup": {
+      "total": 2,
+      "active": 0,
+      "terminated": 0
+    },
+    "afterCleanup": {
+      "total": 2,
+      "active": 0,
+      "terminated": 0
+    },
+    "probe": {
+      "schema": "sl3.local-frida-owned-probe.v1",
+      "candidateSha256": "8ed5bdde028c484463fc536fa1678b4b5bbfd99d99c387eb40436d18a8d82da3",
+      "runtimeScope": "local-frida-startup-integration-candidate",
+      "runnerNormalizedSha256": "c0d6930634306c6131b0db755988f2e1abbdcff5af6ccfd4eb487da5cba1430e",
+      "productionManagerRequested": true,
+      "productionSpawnPathTested": false,
+      "stages": [
+        "candidate_imported",
+        "local_backend_ready",
+        "fixture_owned",
+        "fixture_attached",
+        "script_loaded",
+        "health_rpc_passed",
+        "production_instrumentation_retired",
+        "fixture_exited"
+      ],
+      "passed": true,
+      "fixtureStarted": true,
+      "deviceOpened": false,
+      "seratoStarted": false,
+      "securityHoldCleared": false,
+      "version": "17.25.2",
+      "productionSupervisorNormalizedSha256": "ae695eb83b798f49b20da9f7e04a5a877b7a15458df9a57cad24cfbb0692c6c5",
+      "fixturePid": 6260,
+      "fixtureCreated": "134384621002972237",
+      "health": {
+        "pid": 6260,
+        "arch": "x64",
+        "runtime": "QJS"
+      },
+      "productionManagerClosed": true,
+      "fixtureStillAliveAfterRetirement": true,
+      "fixtureExitCode": 0
+    },
+    "finalAccounting": {
+      "total": 2,
+      "active": 0,
+      "terminated": 0
+    }
+  },
+  "spawnedFixtureEnvironment": {
+    "schema": "sl3.portable-environment-tests.v1",
+    "cases": [
+      {
+        "selectedContext": false,
+        "expectedEnvironmentObserved": true,
+        "childExitCode": 0,
+        "processAndJobRetired": true,
+        "forcedTermination": false
+      },
+      {
+        "selectedContext": true,
+        "expectedEnvironmentObserved": true,
+        "childExitCode": 0,
+        "processAndJobRetired": true,
+        "forcedTermination": false
+      }
+    ],
+    "fridaVersion": "17.25.2",
+    "actualFridaUsed": true,
+    "vendorApplicationExecuted": false,
+    "deviceAccess": false,
+    "registryWritten": false
+  },
+  "environmentContainment": {
+    "schema": "sl3.manager-retirement-environment-owned.v1",
+    "scriptNormalizedSha256": "667f2de52c0148cda397fa0f4f828a484ef866058ff34e3ffef1ae8e3e82ccb8",
+    "forcedCleanup": false,
+    "created": "134384621528396335",
+    "exitCode": 0,
+    "accounting": {
+      "total": 5,
+      "active": 0,
+      "terminated": 0
+    },
+    "passed": true
+  },
+  "stopChannelContainment": {
+    "schema": "sl3.manager-retirement-stop-owned.v1",
+    "activeProcessLimit": 16,
+    "breakawayAllowed": false,
+    "forcedCleanup": false,
+    "deviceOpened": false,
+    "seratoStarted": false,
+    "syntheticStartupEvents": true,
+    "created": "134384623931895156",
+    "exitCode": 0,
+    "accounting": {
+      "total": 9,
+      "active": 0,
+      "terminated": 0
+    },
+    "passed": true
+  },
+  "stopChannelFixture": {
+    "schema": "sl3.session-stop-channel-tests.v1",
+    "cases": [
+      {
+        "name": "live-owned-processes-read-only-stop-plan",
+        "passed": true
+      },
+      {
+        "name": "stale-runner-creation-refused",
+        "passed": true
+      },
+      {
+        "name": "different-runner-file-identity-refused",
+        "passed": true
+      },
+      {
+        "name": "foreign-supervisor-intent-refused",
+        "passed": true
+      },
+      {
+        "name": "finished-session-result-preserved",
+        "passed": true
+      },
+      {
+        "name": "atomic-stop-observed-by-real-owned-headless-child-supervisor",
+        "passed": true
+      },
+      {
+        "name": "repeat-stop-is-idempotent",
+        "passed": true
+      },
+      {
+        "name": "foreign-capsule-stop-record-refused",
+        "passed": true
+      }
+    ],
+    "actualFridaUsed": true,
+    "syntheticStartupEvents": true,
+    "ownedHeadlessChildOnly": true,
+    "normalFixtureExit": true,
+    "forcedFixtureTermination": false,
+    "sessionPlanSha256": "53cecc1b365e1cb04fed1abb1d43375b24d5ec728706483e7f10e7361d389757",
+    "fridaVersion": "17.25.2",
+    "nativeStopEntryUsed": true,
+    "vendorApplicationExecuted": false,
+    "packageBinaryLoaded": false,
+    "deviceAccess": false,
+    "registryWritten": false,
+    "elevationRequested": false,
+    "seratoShutdownValidated": false
+  },
+  "passiveJobFixture": {
+    "schema": "sl3.passive-action-job-test.v1",
+    "policy": {
+      "activeProcessLimit": 1,
+      "killOnJobClose": true,
+      "silentBreakawayAllowed": false
+    },
+    "childOutcome": {
+      "spawnAccepted": false,
+      "winerror": 1816
+    },
+    "cleanup": {
+      "processStarted": true,
+      "pid": 14060,
+      "processExited": true,
+      "observerForcedTermination": false,
+      "closeRequested": false,
+      "exitCode": 0,
+      "jobEmpty": true,
+      "closeGraceSeconds": 20,
+      "processFileTimes": {
+        "first": "134384622834753098",
+        "last": "134384622835369372"
+      },
+      "instrumentationManagerClosed": true
+    },
+    "mockedFridaBoundary": true,
+    "seratoExecuted": false,
+    "deviceOpened": false
+  },
+  "tests": {
+    "freshSessions": {
+      "cases": 8,
+      "allPassed": true,
+      "resultSha256": "d0aa42a6da9549c8231e3f812669b59b27e38f61a5304f22d8aab89af76c042c"
+    },
+    "copiedKit": {
+      "cases": 10,
+      "allPassed": true,
+      "resultSha256": "e262780756cc4ebaa1e71d315417b23577171bc169b8b5dfb40c9a9c2ea0e241"
+    },
+    "retirementFailures": {
+      "cases": 7,
+      "allPassed": true
+    },
+    "supervisor": {
+      "cases": 16,
+      "allPassed": true,
+      "logSha256": "b28ef42a9f5705599b770363272c4212dc8016c8b5f531fafdcacb9bc30847eb"
+    },
+    "windowClose": {
+      "cases": 6,
+      "allPassed": true,
+      "logSha256": "ef8b6be13eafed5769f5b4675184f06f6051ede8eae5340b294b1d2938fb3569"
+    },
+    "actionPayload": {
+      "cases": 3,
+      "allPassed": true,
+      "logSha256": "e1c047546fab39a403417f4931765fd9721d2f23e7a1cde6358d03ae7ed1c8e0"
+    },
+    "nativeArguments": {
+      "cases": 8,
+      "allPassed": true,
+      "logSha256": "0c78eaecfcc8786f584edccc6d4212776c6aee5f11f91acb323251807a57072b"
+    }
+  },
+  "kit": {
+    "schema": "sl3.portable-kit-assembly.v1",
+    "planOnly": false,
+    "filesSelected": 849,
+    "selectedBytes": 329291730,
+    "applicationStarted": false,
+    "registryWritten": false,
+    "deviceAccess": false,
+    "deploymentScope": "destinations-bound-at-preparation",
+    "prepared": true,
+    "kitManifestSha256": "2bfd0e54705f50cda1fe4ab1ff43d6d906f4b4e58b0d80601832e8ec70b19361",
+    "filesWritten": true,
+    "liveValidated": false
+  },
+  "nativeRelease": {
+    "launcherSha256": "bfd8d045e526f4f574d41890fda9a9443cf327f5a01cb0d62efbaeffd6bdd8d8",
+    "resourceSha256": "7360aabd17699f6f65ee3b5e7cd312ef6c827d26a70adc1fc4fa57bb78005a27",
+    "releaseSha256": "67346c30e43407aaeef067e3888ef301b596d3764bf44daa540dba25ac6951a3",
+    "sourcePins": 49,
+    "runtimePins": 126
+  },
+  "plans": {
+    "manager-retirement-default-20261106": "1100616ecd4e47067d0f154693df14430c2b448fb16503075b9d6d9346db574d",
+    "manager-retirement-observed-20261106": "e5479c7e80047fc70ca52e81aa44fd9a7214edfbad53ddf2eda9537248762e68"
+  },
+  "postSetupCheck": {
+    "schema": "sl3.session-recovery-check.v1",
+    "planSha256": "1100616ecd4e47067d0f154693df14430c2b448fb16503075b9d6d9346db574d",
+    "phase": "clean",
+    "message": "Original files and temporary registration are already clean.",
+    "originalSetupClean": true,
+    "activeSessionObserved": false,
+    "recoveryAuthorized": false,
+    "owners": {
+      "runner": {
+        "state": "not_recorded"
+      },
+      "stage": {
+        "state": "not_recorded"
+      },
+      "supervisor": {
+        "state": "not_recorded"
+      }
+    },
+    "currentSetup": {
+      "observed": true,
+      "originalResources": true,
+      "occupiedPaths": [],
+      "registrationPresent": false,
+      "currentSetupClean": true
+    },
+    "resourcePlan": {
+      "schema": "sl3.installer-resource-recovery-plan.v1",
+      "archiveState": "original",
+      "bundlePresent": false,
+      "pendingPresent": false,
+      "filesWritten": false,
+      "deviceAccess": false,
+      "protectedSessionOwnerPresent": false,
+      "protectedStageOwner": null,
+      "observed": true
+    },
+    "brokerRetirementReported": false,
+    "issues": [],
+    "pointInTimeObservation": true,
+    "ordinaryToken": true,
+    "previousSessionShutdownVerified": false,
+    "repairAttempted": false,
+    "filesWritten": false,
+    "registryWritten": false,
+    "elevationRequested": false,
+    "deviceOpened": false,
+    "deviceReadinessVerified": false
+  },
+  "protectionObservation": {
+    "windowStartUtc": "2026-11-06T18:08:18.9723450Z",
+    "observedUtc": "2026-11-06T18:15:19.2670378Z",
+    "detectionEvents": [],
+    "antivirusEnabled": true,
+    "realTimeProtectionEnabled": true,
+    "behaviorMonitorEnabled": true,
+    "holdStillPresent": true,
+    "settingsChanged": false
+  },
+  "seratoStarted": false,
+  "deviceOpened": false,
+  "audioDriverBinariesChanged": false,
+  "seratoShutdownFixed": false,
+  "oldStockRuntimeHoldCleared": false
+}

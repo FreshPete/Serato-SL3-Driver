@@ -18,10 +18,10 @@ def exercise(frida_directory):
     import frida
     api=runpy.run_path(str(ROOT/'scripts/run-serato-startup-session.py'))
     application=Path(sys._base_executable).absolute()
-    real=frida.get_local_device()
     rows=[]
     test_root=ROOT/'artifacts/build/portable-environment-tests';test_root.mkdir(exist_ok=True)
     for selected in (False,True):
+        manager=frida.DeviceManager();real=manager.get_local_device()
         with tempfile.TemporaryDirectory(dir=test_root) as temporary:
             directory=Path(temporary)
             assert directory.resolve().is_relative_to(test_root.resolve())
@@ -37,7 +37,8 @@ def exercise(frida_directory):
                     return real.spawn([str(application),'-I','-B','-c',code,str(output),str(marker)],**kwargs)
                 def attach(self,pid):return real.attach(pid)
                 def resume(self,pid):return real.resume(pid)
-            wrapped=type('OwnedPythonFrida',(),{'get_local_device':staticmethod(Device)})()
+            managed=type('Manager',(),{'get_local_device':staticmethod(Device),'close':staticmethod(manager.close)})()
+            wrapped=type('OwnedPythonFrida',(),{'DeviceManager':staticmethod(lambda:managed)})()
             context={'SL3_SESSION_CAPSULE':str(directory/'session-capsule.json'),
                      'SL3_SESSION_CAPSULE_SHA256':'a'*64} if selected else {}
             backend=api['WindowsProcess'](application,wrapped,expected_application_sha=api['digest'](application),launcher_context=context)
@@ -56,7 +57,9 @@ def exercise(frida_directory):
                         except (ValueError,OSError):
                             if time.monotonic()>=deadline:raise
                             time.sleep(.01)
-                    backend.detach();marker.write_text('exit')
+                    backend.detach()
+                    assert backend.manager_closed and not backend.wait(0)
+                    marker.write_text('exit')
                     assert backend.wait(5)
                 finally:
                     marker.write_text('exit')
