@@ -13,7 +13,7 @@ APP_SHA = '66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265'
 ORIGINAL_SHA = '872fc4fdad2eab2ddd34387d2d3c04dd9731c84798d9fdc7bd05ca54e1567db8'
 CANDIDATE_SHA = 'd135e6f1c03601cc44b3e5f623eed36af81bbff585332a3fdc8d5d533b2cb66a'
 ASSETS = {'archive/candidate-userio_resources.bin', 'archive/serato-archive-file-transaction.ps1',
-          'archive/deployment-plan.json', 'archive/archive-test.ps1'}
+          'archive/deployment-plan.json', 'archive/archive-test.ps1','archive/action-child.ps1'}
 
 
 def require(value, text):
@@ -31,6 +31,8 @@ def module(name):
 
 def source_names():
     return sorted(set(['scripts/serato-on-demand-test.py', 'scripts/prepare-serato-on-demand-test.py',
+        'scripts/on-demand-action-lock.py',
+        'scripts/on-demand-action-child.ps1',
         'scripts/prepare-asio-deployment.py', 'scripts/rebind-asio-deployment.py',
         'scripts/prepare-embedded-python.py',
         'scripts/serato-archive-file-transaction.ps1', 'scripts/serato-archive-deployment-template.ps1',
@@ -180,13 +182,26 @@ def main():
         native = Native(Path(record['bundle']['directory']),record['bundle']['sha256'])
         if args.action != 'plan':
             require(native.s.elevated(), 'Run this exact reviewed action as administrator; no automatic approval prompt is requested')
+        lease=None
         def archive(action):
-            child = subprocess.run([str(Path(record['powershell']['directory'])/'pwsh.exe'),'-NoProfile','-NonInteractive',
-                '-File',str(args.experiment.parent/'archive/archive-test.ps1'),'-Action',action],
-                capture_output=True,timeout=90,creationflags=subprocess.CREATE_NO_WINDOW)
+            command=[str(Path(record['powershell']['directory'])/'pwsh.exe'),'-NoProfile','-NonInteractive','-File']
+            if lease is None:
+                child=subprocess.run([*command,str(args.experiment.parent/'archive/archive-test.ps1'),'-Action',action],
+                    capture_output=True,timeout=90,creationflags=subprocess.CREATE_NO_WINDOW)
+            else:
+                with lease.child() as (handle,options):
+                    child=subprocess.run([*command,str(args.experiment.parent/'archive/action-child.ps1'),'-Action',action,'-ActionLockHandle',str(handle)],
+                        capture_output=True,timeout=90,creationflags=subprocess.CREATE_NO_WINDOW,**options)
             require(child.returncode == 0, 'Archive action refused: '+child.stderr.decode('utf-8',errors='replace'))
             return json.loads(child.stdout)
-        result = coordinate(args.action, archive, native)
+        if args.action == 'plan':
+            result = coordinate(args.action,archive,native)
+        else:
+            locking=module('on-demand-action-lock.py')
+            lock_path=Path(record['application']).with_name(locking['LOCK_NAME'])
+            with locking['hold'](native.s,lock_path,native.s.PRODUCTION) as lease:
+                result=coordinate(args.action,archive,native)
+            result['actionLock']=lease.report
         print(json.dumps(result,indent=2))
         return 0 if result['successful'] else 1
 

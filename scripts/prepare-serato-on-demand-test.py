@@ -48,7 +48,8 @@ def prepare(application,bundle,bundle_sha,powershell,powershell_sha,python_sha,o
     require('@@' not in template,'Unresolved archive token')
     files = {'archive/candidate-userio_resources.bin':(candidate_output/'userio_resources.bin').read_bytes(),
         'archive/serato-archive-file-transaction.ps1':core,'archive/deployment-plan.json':raw_inner,
-        'archive/archive-test.ps1':template.encode('utf-8')}
+        'archive/archive-test.ps1':template.encode('utf-8'),
+        'archive/action-child.ps1':(ROOT/'scripts/on-demand-action-child.ps1').read_bytes()}
     require(all(sha(ROOT/name)==value for name,value in pins.items()),'Experiment sources changed during preparation')
     require(sha(application)==API['APP_SHA'] and sha(application.with_name('userio_resources.bin'))==API['ORIGINAL_SHA'],
             'Original inputs changed')

@@ -60,9 +60,18 @@ switch($Action){
         here=folder/name;here.mkdir();base=here/'native-base'
         with s.descriptor(policy.sddl(True)) as attributes:
             s.check(s.api('kernel32.dll','CreateDirectoryW',W.BOOL,[W.LPCWSTR,ctypes.POINTER(s.Attributes)])(str(base),ctypes.byref(attributes)))
-        archive_dir=here/'archive';archive_dir.mkdir();target=archive_dir/'userio_resources.bin';source=here/'candidate.bin'
+        archive_dir=here/'archive'
+        with s.descriptor(policy.sddl(True)) as attributes:
+            s.check(s.api('kernel32.dll','CreateDirectoryW',W.BOOL,[W.LPCWSTR,ctypes.POINTER(s.Attributes)])(str(archive_dir),ctypes.byref(attributes)))
+        target=archive_dir/'userio_resources.bin';source=here/'candidate.bin'
         original=b'ORIGINAL OWNED SYNTHETIC ARCHIVE\n';candidate=b'CANDIDATE OWNED SYNTHETIC ARCHIVE\n';target.write_bytes(original);source.write_bytes(candidate)
-        control={'running':False,'archiveInstallFailure':False,'nativeInstallFailure':False,'installs':0,'removals':0}
+        control={'running':False,'archiveInstallFailure':False,'nativeInstallFailure':False,'installs':0,'removals':0,'lease':None}
+        bridge_dir=here/'bridge';bridge_dir.mkdir()
+        (bridge_dir/'action-child.ps1').write_bytes((ROOT/'scripts/on-demand-action-child.ps1').read_bytes())
+        (bridge_dir/'fixture.json').write_text(json.dumps({'target':str(target),'source':str(source),
+            'original':API['hashlib'].sha256(original).hexdigest(),'candidate':sha(source)}),encoding='utf-8')
+        (bridge_dir/'archive-test.ps1').write_text("param([string]$Action)\n$x=Get-Content -LiteralPath (Join-Path $PSScriptRoot 'fixture.json') -Raw|ConvertFrom-Json\n& '"+
+            str(bridge).replace("'","''")+"' -Action $Action -Target $x.target -Source $x.source -Original $x.original -Candidate $x.candidate\n",encoding='utf-8')
         with winreg.CreateKeyEx(winreg.HKEY_CURRENT_USER,namespace+'\\'+name,0,ACCESS) as parent, \
              winreg.CreateKeyEx(parent,'machine-model',0,ACCESS) as root,winreg.CreateKeyEx(parent,'overlay-model',0,ACCESS) as overlay:
             for key in ('SOFTWARE\\Classes\\CLSID','SOFTWARE\\ASIO'):
@@ -82,14 +91,28 @@ switch($Action){
                     return install['sibling']('asio-uninstall').uninstall_owned(base,base/'stage',receipt,policy,root,overlay)
             def archive(action):
                 if action=='Install' and control['archiveInstallFailure']:raise OSError('Injected failure between native and archive install')
-                child=subprocess.run([str(pwsh),'-NoProfile','-NonInteractive','-File',str(bridge),'-Action',action,
-                    '-Target',str(target),'-Source',str(source),'-Original',API['hashlib'].sha256(original).hexdigest(),
-                    '-Candidate',sha(source)],capture_output=True,timeout=30,creationflags=subprocess.CREATE_NO_WINDOW)
+                command=[str(pwsh),'-NoProfile','-NonInteractive','-File']
+                if control['lease'] is None:
+                    child=subprocess.run([*command,str(bridge),'-Action',action,'-Target',str(target),'-Source',str(source),
+                        '-Original',API['hashlib'].sha256(original).hexdigest(),'-Candidate',sha(source)],
+                        capture_output=True,timeout=30,creationflags=subprocess.CREATE_NO_WINDOW)
+                else:
+                    with control['lease'].child() as (handle,options):
+                        child=subprocess.run([*command,str(bridge_dir/'action-child.ps1'),'-Action',action,'-ActionLockHandle',str(handle)],
+                            capture_output=True,timeout=30,creationflags=subprocess.CREATE_NO_WINDOW,**options)
                 require(child.returncode==0,child.stderr.decode('utf-8',errors='replace'))
                 result=json.loads(child.stdout);result['seratoRunning']=control['running'];return result
             yield archive,Native(),control,target,root,overlay,base
             require(r.snapshot(root,'UnrelatedVendor')==unrelated,'Foreign registration sibling preserved')
-    def run(f,action):return API['coordinate'](action,f[0],f[1])
+    def run(f,action):
+        if action=='plan':return API['coordinate'](action,f[0],f[1])
+        locking=API['module']('on-demand-action-lock.py')
+        with locking['hold'](s,f[3].parent/locking['LOCK_NAME'],policy) as lease:
+            f[2]['lease']=lease
+            try:value=API['coordinate'](action,f[0],f[1])
+            finally:f[2]['lease']=None
+        require(lease.report['handleClosed'] and not (f[3].parent/locking['LOCK_NAME']).exists(),'Paired action releases only its temporary lock')
+        value['actionLock']=lease.report;return value
     def remove_tree(path):
         require(path==namespace or path.startswith(namespace+'\\'),'Private registry cleanup boundary')
         with winreg.OpenKey(winreg.HKEY_CURRENT_USER,path,0,ACCESS) as node:
@@ -125,6 +148,16 @@ switch($Action){
             case('reported-running-app-refuses-setup',lambda:failed(run(f,'setup')))
             case('reported-running-app-refuses-restoration',lambda:failed(run(f,'restore')))
             require(f[2]['installs']==f[2]['removals']==0,'Running-state injection precedes mutations')
+        with fixture('overlapping-action') as f:
+            locking=API['module']('on-demand-action-lock.py')
+            with locking['hold'](s,f[3].parent/locking['LOCK_NAME'],policy):
+                for action in ('setup','restore'):
+                    try:run(f,action)
+                    except ValueError as error:
+                        require('action lock exists or is held' in str(error),'Expected action lock conflict')
+                        cases.append({'name':'overlapping-'+action+'-refused-before-components','passed':True})
+                    else:raise AssertionError('Overlapping action entered component work')
+            require(f[2]['installs']==f[2]['removals']==0 and f[1].observe()['state']=='absent','Overlap cannot install/remove native package')
         with fixture('foreign-registration') as f:
             passed(run(f,'setup'));key='SOFTWARE\\ASIO\\'+deployment['NAME']
             with winreg.OpenKey(f[4],key,0,ACCESS) as item:winreg.SetValueEx(item,'ForeignValue',0,winreg.REG_SZ,'preserve')

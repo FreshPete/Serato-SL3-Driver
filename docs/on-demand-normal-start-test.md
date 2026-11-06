@@ -16,15 +16,15 @@ Setup installs the native package first, then applies the SL3 resource profile. 
 
 Restore first restores/cleans the original archive witnesses, then removes the exact native installation and owned registration. Unknown files, foreign registration values and unrecognized partial native states are preserved. Existing native installer recovery remains necessary for a failure inside native staging or removal; this coordinator does not guess missing receipt identities. Component failure reports and post-failure observations remain in its result.
 
-These are **two guarded component transactions, not one atomic transaction**. Run one reviewed action at a time with Serato closed and no concurrent installer/update or privileged writer. The experiment does not establish abrupt-process-crash recovery, production protection on this package, native USB retirement or a clean Serato shutdown.
+Setup and restore now share an [exclusive action lock retained by their archive helpers](on-demand-action-serialization.md). These are **two guarded component transactions, not one atomic transaction**. Run one reviewed action at a time with Serato closed and no concurrent installer/update or privileged writer. The experiment does not establish abrupt-process-crash recovery, production protection on this package, native USB retirement or a clean Serato shutdown.
 
 ## Prepared host candidate
 
 The current source-bound manifest is:
 
 ```text
-analysis/sl3-on-demand-test-normal-start-reviewed-20261106/experiment.json
-SHA256 f8e0033e57f82e5e54b0f62081033800a20ab2548f6f276c6d8d7a90a9299d14
+analysis/sl3-on-demand-test-normal-start-serialized-20261106/experiment.json
+SHA256 4ca890a6d5e7c2d232919374bc047f86387587b4c4bd7c50648549c964b57073
 ```
 
 Its native bundle is bound to `C:\Program Files\SL3 Rebuild\on-demand-diagnostic-v1`; no files have been installed there. The legacy reserved pointer remains unused. The native bundle manifest SHA-256 is `e7931b5da5f3a051676b595e7925c8c118a95291ef9d1978683e68177bb50094`.
@@ -37,17 +37,17 @@ The read-only invocation is:
 
 ```powershell
 & artifacts/build/embedded-python-on-demand-test-20261106/python.exe -I -B scripts/serato-on-demand-test.py `
-  --experiment analysis/sl3-on-demand-test-normal-start-reviewed-20261106/experiment.json `
-  --expected-experiment-sha256 f8e0033e57f82e5e54b0f62081033800a20ab2548f6f276c6d8d7a90a9299d14
+  --experiment analysis/sl3-on-demand-test-normal-start-serialized-20261106/experiment.json `
+  --expected-experiment-sha256 4ca890a6d5e7c2d232919374bc047f86387587b4c4bd7c50648549c964b57073
 ```
 
-Do not use the earlier `sl3-on-demand-test-normal-start-20261106` manifest: source changes correctly made it stale. Do not restore old source or override its pins. Regenerate a fresh experiment after changing a bound source, asset, package, account or runtime.
+Do not use the earlier `sl3-on-demand-test-normal-start-20261106` or `sl3-on-demand-test-normal-start-reviewed-20261106` manifests: source changes correctly made it stale. Do not restore old source or override its pins. Regenerate a fresh experiment after changing a bound source, asset, package, account or runtime.
 
 ## Verification and next live observation
 
-All **15 isolated setup/restore scenarios** passed using actual workspace archive replacement, native file staging and private HKCU registration. They cover idle Plan, setup/restoration, repeats without reinstallation, failure between components and retry, typed native failure preservation, injected running-state refusal, and preservation/resolution of unknown archive bytes or foreign registration values. The archive bytes are synthetic in these tests, the registry roots are private fixtures, and packaged native code is not executed.
+All **17 isolated setup/restore scenarios** passed using actual workspace archive replacement, native file staging and private HKCU registration. They cover idle Plan, setup/restoration, repeats without reinstallation, failure between components and retry, typed native failure preservation, injected running-state refusal, and preservation/resolution of unknown archive bytes or foreign registration values. The archive bytes are synthetic in these tests, the registry roots are private fixtures, and packaged native code is not executed.
 
-Another **12 real-host preparation checks** passed: the default and final read-only Plan, ordinary-token setup/restore refusal without a prompt, wrong manifest identity, altered candidate asset, excessive diagnostic lifetime, false shim/installed claims, foreign application/source paths and existing-output preservation. A separate check verified that the older source-bound manifest is refused. The [checkpoint evidence](evidence/on-demand-normal-start-preparation-20261106.json) binds the reports, current sources, prepared manifest, assets and runtimes.
+Another **13 real-host preparation checks** passed: the default and final read-only Plan, ordinary-token setup/restore refusal without a prompt, wrong manifest identity, altered candidate asset, excessive diagnostic lifetime, false shim/installed claims, foreign application/source paths and existing-output preservation. A separate check verified that the older source-bound manifest is refused. The earlier [preparation checkpoint](evidence/on-demand-normal-start-preparation-20261106.json) is historical. The refreshed [serialization evidence](evidence/on-demand-action-serialization-20261106.json) binds the current reports, sources and five-asset manifest, including the archive child handle wrapper. Fourteen additional actual lock/cohort checks verify that setup and restore exclude each other even while an archive helper survives its coordinator.
 
 The host Plan reports original archive, absent native installation and Serato stopped. Postchecks again found original Serato files, no occupied session paths or temporary registration, and no matching test/controller/worker or Serato process. Firmware and Windows security settings were unchanged.
 

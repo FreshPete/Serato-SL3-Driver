@@ -20,6 +20,8 @@ def main():
     copied=folder/'experiment.json';original=path.read_bytes();cases=[];details={}
     sources={name:sha(ROOT/name) for name in API['source_names']()};sources[Path(__file__).relative_to(ROOT).as_posix()]=sha(Path(__file__))
     before={p.relative_to(path.parent).as_posix():sha(p) for p in path.parent.rglob('*') if p.is_file()}
+    production_lock=Path(meta['application']).with_name(API['module']('on-demand-action-lock.py')['LOCK_NAME'])
+    require(not production_lock.exists(),'No active production action lock allowed for read-only host checks')
     def call(name,action=None,success=True,reason=None):
         command=[sys.executable,'-I','-B',str(ROOT/'scripts/serato-on-demand-test.py')]
         if action is not None:command.append(action)
@@ -63,6 +65,8 @@ def main():
     else:raise AssertionError('Existing output was overwritten')
     require(before=={p.relative_to(path.parent).as_posix():sha(p) for p in path.parent.rglob('*') if p.is_file()},'Original preparation preserved')
     call('final-readonly-host-plan')
+    require(not production_lock.exists(),'Read-only/refused operations left an application lock')
+    cases.append({'name':'production-action-lock-remains-absent','passed':True})
     require(all(sha(ROOT/name)==value for name,value in sources.items()),'Preparation test source changed')
     result={'schema':'sl3.on-demand-preparation-tests.v1','passed':True,'cases':cases,'details':details,'sourceSha256':sources,
         'experimentSha256':expected,'productionSetupExecuted':False,'elevationRequested':False,'applicationLaunched':False,
