@@ -47,9 +47,9 @@ try {
     }
     $python=$plan.python.path
     $null=Pin-Input $python $plan.python.sha256
+    foreach ($entry in $plan.runtimeFiles.GetEnumerator()) { $null=Pin-Input $entry.Key $entry.Value }
     & $python -I -B "$PSScriptRoot/prepare-serato-session-plan.py" --verify $SessionPlan --expected-plan-sha256 $ExpectedPlanSha256
     if ($LASTEXITCODE) { throw 'Complete session plan verification failed' }
-    foreach ($entry in $plan.runtimeFiles.GetEnumerator()) { $null=Pin-Input $entry.Key $entry.Value }
     foreach ($artifact in @($plan.capsule,$plan.archiveSource,$plan.installerResource,$plan.launcher,$plan.application)) {
         $null=Pin-Input $artifact.path $artifact.sha256
     }

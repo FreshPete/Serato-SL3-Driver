@@ -11,16 +11,29 @@ TEMPLATE = 'src/installer/PortableSessionLauncher.cs'
 BUILDER = 'scripts/prepare-portable-session-launcher.py'
 
 
-def prepare(output=None):
+def prepare(output=None,runtime=None,runtime_sha=None):
     api = runpy.run_path(str(ROOT/'scripts/serato-session-capsule.py'))
     pins = {**api['source_hashes'](), TEMPLATE:api['sha'](ROOT/TEMPLATE), BUILDER:api['sha'](ROOT/BUILDER)}
     python_sha = api['sha'](Path(sys.executable))
+    runtime_pins={}
+    if runtime is not None or runtime_sha is not None:
+        api['require'](runtime is not None and runtime_sha is not None,'Complete embedded runtime binding required')
+        runtime=Path(runtime).absolute()
+        api['require'](Path(sys.executable).absolute()==runtime/'python.exe','Run builder under the selected embedded runtime')
+        runtime_api=runpy.run_path(str(ROOT/'scripts/prepare-embedded-python.py'))
+        verified=runtime_api['verify'](runtime,runtime_sha)
+        runtime_pins={name:details['sha256'] for name,details in verified['files'].items()}
+        runtime_pins['runtime-manifest.json']=runtime_sha
+        pins['scripts/prepare-embedded-python.py']=api['sha'](ROOT/'scripts/prepare-embedded-python.py')
     record = {'schema':'sl3.portable-launcher-release.v1','sourcePins':pins,'pythonSha256':python_sha,
               'applicationSha256':api['APP_SHA'],'runtime':'net10.0 framework-dependent win-x64',
               'sessionBoundAtBuildTime':False,'liveValidated':False}
+    record['runtimePins']=runtime_pins
+    record['completeEmbeddedRuntimePinned']=bool(runtime_pins)
     template = (ROOT/TEMPLATE).read_text(encoding='utf-8')
     replacements = {'__PYTHON_SHA__':json.dumps(python_sha), '__APPLICATION_SHA__':json.dumps(api['APP_SHA']),
-                    '__SOURCE_PINS__':',\n'.join('    { '+json.dumps(name)+', '+json.dumps(value)+' }' for name,value in sorted(pins.items()))}
+                    '__SOURCE_PINS__':',\n'.join('    { '+json.dumps(name)+', '+json.dumps(value)+' }' for name,value in sorted(pins.items())),
+                    '__RUNTIME_PINS__':',\n'.join('    { '+json.dumps(name)+', '+json.dumps(value)+' }' for name,value in sorted(runtime_pins.items()))}
     for marker,value in replacements.items():
         api['require'](template.count(marker)==1,'Portable launcher marker differs')
         template=template.replace(marker,value)
@@ -45,5 +58,7 @@ def prepare(output=None):
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--prepare',type=Path)
+    parser.add_argument('--embedded-runtime',type=Path)
+    parser.add_argument('--expected-runtime-manifest-sha256')
     args=parser.parse_args()
-    print(json.dumps(prepare(args.prepare),indent=2))
+    print(json.dumps(prepare(args.prepare,args.embedded_runtime,args.expected_runtime_manifest_sha256),indent=2))

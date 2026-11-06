@@ -11,6 +11,9 @@ using System.Text.Json;
 // remain pinned to the release compiled by the offline builder.
 const string PythonSha = __PYTHON_SHA__;
 const string ApplicationSha = __APPLICATION_SHA__;
+var runtimePins = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) {
+__RUNTIME_PINS__
+};
 var sourcePins = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) {
 __SOURCE_PINS__
 };
@@ -41,6 +44,13 @@ try {
     python = LocalPath(interpreter.GetProperty("path").GetString()!);
     if (interpreter.GetProperty("sha256").GetString() != PythonSha) throw new InvalidOperationException("Release interpreter differs");
     Pin(python, PythonSha);
+    foreach (var file in runtimePins) {
+        string runtimeRoot = Path.GetDirectoryName(python)!;
+        string path = Path.GetFullPath(Path.Combine(runtimeRoot, file.Key));
+        if (!path.StartsWith(Path.TrimEndingDirectorySeparator(runtimeRoot) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("Runtime member escaped its root");
+        Pin(path, file.Value);
+    }
     var application = record.GetProperty("application");
     if (application.GetProperty("sha256").GetString() != ApplicationSha) throw new InvalidOperationException("Release application differs");
     Pin(LocalPath(application.GetProperty("path").GetString()!), ApplicationSha);

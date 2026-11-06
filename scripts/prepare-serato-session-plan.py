@@ -39,6 +39,15 @@ def runtime_files(directory):
     return files
 
 
+def embedded_runtime_files(python):
+    directory=Path(python).parent
+    manifest=directory/'runtime-manifest.json'
+    if not manifest.exists():return {}
+    expected=sha(manifest)
+    verified=module('prepare-embedded-python.py')['verify'](directory,expected)
+    return {str(manifest):expected,**{str(directory/Path(name)):details['sha256'] for name,details in verified['files'].items()}}
+
+
 def bind_installer(application,launcher,resource):
     require(launcher.name=='SL3_Rebuild_Development_x64.exe' and 64<=launcher.stat().st_size<=1024*1024,
             'Reviewed bounded launcher executable required')
@@ -66,7 +75,9 @@ def construct(capsule,capsule_sha,prepared,prepared_sha,archive,resource,launche
     bind_installer(application,launcher,resource)
     host=module('run-serato-startup-session.py')
     host['preflight'](prepared,prepared_sha,application,Path(record['bundle']['path']),record['bundle']['sha256'],sha(resource))
+    embedded_files=embedded_runtime_files(record['python']['path'])
     sources={**record['sources'],**{name:sha(ROOT/name) for name in EXTRA_SOURCES}}
+    if embedded_files:sources['scripts/prepare-embedded-python.py']=sha(ROOT/'scripts/prepare-embedded-python.py')
     tag=directory.name.removeprefix('sl3-session-capsule-')
     require(re.fullmatch('[A-Za-z0-9-]{1,80}',tag),'Bounded session directory tag required')
     return {'schema':'sl3.serato-session-plan.v1','projectRoot':str(ROOT),
@@ -76,7 +87,7 @@ def construct(capsule,capsule_sha,prepared,prepared_sha,archive,resource,launche
         'archiveSource':{'path':str(archive),'sha256':host['PHASE_RESOURCES']},'originalArchiveSha256':host['ORIGINAL_RESOURCES'],
         'installerResource':{'path':str(resource),'sha256':sha(resource)},
         'launcher':{'path':str(launcher),'sha256':sha(launcher)},'permitPath':record['permitPath'],
-        'fridaDirectory':str(frida),'runtimeFiles':runtime_files(frida),'sources':sources,
+        'fridaDirectory':str(frida),'runtimeFiles':{**runtime_files(frida),**embedded_files},'sources':sources,
         'hostOutput':str(ROOT/'analysis'/('sl3-startup-session-'+tag)),
         'nativeInstallation':plan['installationDirectory'],'pointerPath':plan['pointerPath'],
         'registryEntries':plan['registryEntries'],'stageLimitSeconds':900,'permitLimitSeconds':300,

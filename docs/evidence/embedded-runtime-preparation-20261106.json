@@ -1,0 +1,176 @@
+{
+  "schema": "sl3.embedded-runtime-preparation.v1",
+  "date": "2026-11-06",
+  "archive": {
+    "releasePage": "https://www.python.org/downloads/release/python-3152/",
+    "url": "https://www.python.org/ftp/python/3.15.2/python-3.15.2-embed-amd64.zip",
+    "sha256": "d012f3aa29cf07436dae8aea1fec0fd195c2612a0b059b1f915ae0afb9ad1f62",
+    "officialPublishedHashMatched": true
+  },
+  "runtimeManifestSha256": "08a7aec0dce42a94cd5a5b97f55b40219f9449e74eaf47129f906a9749ecb609",
+  "runtimeFileCount": 129,
+  "runtimeBytes": 204691106,
+  "runtimePinCount": 130,
+  "sourcePinCount": 18,
+  "moduleSmoke": {
+    "pythonVersion": "3.15.2",
+    "isolated": true,
+    "siteDisabled": true,
+    "allSearchPathsInsidePrivateRuntime": true,
+    "pefileImported": true,
+    "capstoneImported": true,
+    "fridaImported": true
+  },
+  "authenticode": {
+    "python.exe": {
+      "status": "Valid",
+      "publisher": "CN=Python Software Foundation, O=Python Software Foundation, L=Beaverton, S=Oregon, C=US"
+    },
+    "python315.dll": {
+      "status": "Valid",
+      "publisher": "CN=Python Software Foundation, O=Python Software Foundation, L=Beaverton, S=Oregon, C=US"
+    }
+  },
+  "launcherTests": {
+    "schema": "sl3.portable-launcher-tests.v1",
+    "launcherSha256": "b268f7ff18f2ed2475b1cafd973df36bf7ccd6c593d0ac2008d0579c06a80bd3",
+    "cases": [
+      {
+        "name": "first-session",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "second-session-same-executable",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "no-environment-no-installation",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "unsupported-action",
+        "passed": true,
+        "exitCode": 2
+      },
+      {
+        "name": "wrong-capsule-hash",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "executable-relocated-without-rebuild",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "untrusted-interpreter",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "foreign-helper-root",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-package-binding",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "moved-capsule-binding",
+        "passed": true,
+        "exitCode": 1
+      }
+    ],
+    "sameExecutableAcceptedTwoSessionBindings": true,
+    "binaryRecompiledBetweenSessions": false,
+    "onlyPlanOrRefusalInvocations": true,
+    "registryWritten": false,
+    "deviceAccess": false,
+    "liveValidated": false
+  },
+  "environmentTests": {
+    "schema": "sl3.portable-environment-tests.v1",
+    "cases": [
+      {
+        "selectedContext": false,
+        "expectedEnvironmentObserved": true,
+        "childExitCode": 0,
+        "processAndJobRetired": true,
+        "forcedTermination": false
+      },
+      {
+        "selectedContext": true,
+        "expectedEnvironmentObserved": true,
+        "childExitCode": 0,
+        "processAndJobRetired": true,
+        "forcedTermination": false
+      }
+    ],
+    "fridaVersion": "17.25.2",
+    "actualFridaUsed": true,
+    "vendorApplicationExecuted": false,
+    "deviceAccess": false,
+    "registryWritten": false
+  },
+  "tamperAndCopyTests": {
+    "schema": "sl3.embedded-launcher-runtime-tests.v1",
+    "cases": [
+      {
+        "name": "copied-runtime-plan",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "changed-module-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-standard-library-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "copied-runtime-complete-wrapper-plan",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "wrapper-refuses-module-before-python-verifier",
+        "passed": true,
+        "exitCode": 1
+      }
+    ],
+    "actualCopiedRuntimeUsed": true,
+    "tamperedCodeExecuted": false,
+    "deviceAccess": false,
+    "vendorApplicationExecuted": false,
+    "registryWritten": false
+  },
+  "runtimePreparerTestsPassed": 5,
+  "pointerTestsPassedUnderPrivateRuntime": 5,
+  "supervisorTestsPassedUnderPrivateRuntime": 13,
+  "sessionTestsPassedUnderPrivateRuntime": 22,
+  "resourceTransactionChecksPassed": 4,
+  "completeReadOnlyPlansPassed": 2,
+  "liveSeratoTestPassed": false,
+  "hardwareOpened": false,
+  "systemPythonModified": false,
+  "globalPathModified": false,
+  "powerShellAndDotNetBundled": false,
+  "runtimeBinariesPublished": false,
+  "sourceSha256": {
+    "scripts/prepare-embedded-python.py": "5ebd4fb9ee2a76419dff4eed3fc1e5ccfcaa99c4983cf370ac3eb9d234dc867c",
+    "scripts/prepare-portable-session-launcher.py": "2187d1e0313f24d9659d90de129c574352e99363abd59e8692a4009d30ee2dbf",
+    "scripts/prepare-serato-session-plan.py": "dc1d7634670fae8f618fd291e775f72f28beebc6efcd4dbb7a90ea381f18921e",
+    "scripts/serato-session.ps1": "2ee37163f394daaee8c8bd64c935519363a9e1331e9d7834eab195873aee2a17",
+    "src/installer/PortableSessionLauncher.cs": "0c1fb37bd8a0d25c6fa129b49902484ef231b688aa0942dac5baa8b61fe55215",
+    "scripts/test-embedded-launcher-runtime.py": "b43d7d137694e66e65859eb8016ccccc88c65ad4da40fbda50b96ec5073b046a",
+    "tests/test_embedded_python.py": "f6a9c0e3e142964caef83655cc926e883803c0dafd5087b6af56b11448a1072d"
+  }
+}
