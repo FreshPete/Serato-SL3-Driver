@@ -1,4 +1,5 @@
 #include "asio/driver_configuration.hpp"
+#include "asio/broker_activation.hpp"
 #include "asio/com_identity.hpp"
 #include "com_activation_fixture.hpp"
 #include "iasiodrv.h"
@@ -207,6 +208,17 @@ static void broker_records(Fixture& f,const std::filesystem::path& worker,const 
     f.reset();
 }
 int wmain(int argc,wchar_t** argv){
+    if(argc==3 && std::wstring(argv[1])==L"--inspect-activation"){
+        try{
+            const auto config=load_driver_entry_configuration(std::filesystem::absolute(argv[2]),TimingPolicy::unmeasured_diagnostic);
+            require(config.activation && !config.broker && config.activation->kind==sl3::session::Kind::native &&
+                    config.activation->output.empty(),"Native passive activation record required");
+            require(!GetModuleHandleW(L"UsbDkHelper.dll10") && !GetModuleHandleW(L"UsbDkHelper.dll"),"Inspector must not load the USB helper");
+            std::cout<<"{\"schema\":\"sl3.activation-config-inspection.v1\",\"accepted\":true,\"nativeKind\":true,"
+                       "\"unmeasuredDiagnostic\":true,\"activationAttempted\":false,\"helperLoaded\":false,\"deviceAccess\":false}\n";
+            return 0;
+        }catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}
+    }
     try{require(argc==4,"Simulated fixture, reviewed helper and production DLL paths required");Fixture fixture(argv[1],argv[2]);records(fixture);diagnostic_timing(fixture);production_abi(fixture,argv[3]);broker_records(fixture,argv[1],argv[3]);
         require(!GetModuleHandleW(L"UsbDkHelper.dll10") && !GetModuleHandleW(L"UsbDkHelper.dll"),"Helper never loaded in test host");
         std::cout<<"Strict direct/locator/pointer configuration/hash/profile bindings, held file leases and actual production ASIO provider rejection of simulated worker passed; synthetic records only, no physical USB\n";

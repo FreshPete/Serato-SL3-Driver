@@ -1,0 +1,126 @@
+{
+  "schema": "sl3.activation-configuration-review-checkpoint.v1",
+  "date": "2026-11-06",
+  "releaseTestsPassed": 73,
+  "configurationCasesPassed": 17,
+  "cases": [
+    {
+      "name": "native-parser-accepts-generated-records-with-unicode-and-spaces",
+      "passed": true
+    },
+    {
+      "name": "repeat-readonly-native-inspection",
+      "passed": true
+    },
+    {
+      "name": "existing-output-preserved",
+      "passed": true
+    },
+    {
+      "name": "wrong-bundle-hash",
+      "passed": true
+    },
+    {
+      "name": "wrong-build-hash",
+      "passed": true
+    },
+    {
+      "name": "wrong-review-hash",
+      "passed": true
+    },
+    {
+      "name": "native-rejects-extra-simulation-selector",
+      "passed": true
+    },
+    {
+      "name": "native-rejects-extra-simulation-selector-review-refusal",
+      "passed": true
+    },
+    {
+      "name": "native-rejects-incomplete-record",
+      "passed": true
+    },
+    {
+      "name": "native-rejects-incomplete-record-review-refusal",
+      "passed": true
+    },
+    {
+      "name": "native-rejects-excessive-diagnostic-lifetime",
+      "passed": true
+    },
+    {
+      "name": "native-rejects-excessive-diagnostic-lifetime-review-refusal",
+      "passed": true
+    },
+    {
+      "name": "native-rejects-input-hash-mismatch",
+      "passed": true
+    },
+    {
+      "name": "native-rejects-input-hash-mismatch-review-refusal",
+      "passed": true
+    },
+    {
+      "name": "copied-location-is-not-silently-rebound",
+      "passed": true
+    },
+    {
+      "name": "unexpected-inventory",
+      "passed": true
+    },
+    {
+      "name": "restored-records-pass-native-recheck",
+      "passed": true
+    }
+  ],
+  "sourceSha256": {
+    "scripts/prepare-asio-activation-config.py": "a8b595d093bed0819ed919666ecb1a0ee8474a92b79e3afc07a14d9e205db104",
+    "scripts/test-asio-activation-config.py": "6c418953e6403a55f8fe54538f8a895715231e79da42744ca3cc2ad840748bc6"
+  },
+  "nativeInspectorSourceSha256": "94acdb6952f5c8ee00a02ce21737ea167a98eeb12cdf8c14149769fe78c967b6",
+  "buildScriptSha256": "5f17a92690ca646c83fd6b82e33bc81465e8bff1fb6323f04d46ceb500d574dc",
+  "nativeBuildManifestSha256": "6bd7ae8244e568cde351cbd42d3f92528539352f43e57003993e8ba0a1a6ee2a",
+  "ctestLogSha256": "248c38a5619ba19723d22445d583340d11a189ab72bcd3caa2fc229a61cdc949",
+  "testReportSha256": "64234cc0b8063270b2a40d606873af03cb43c4268d0c3b3425599c6f6c3ed6b2",
+  "reviewSha256": "2020f954e54932ea9bd672a13f8b31409fd743aeebad8e26d3ea43dfacd11302",
+  "bundleSha256": "04bf1c22973bee3b18485af7b5de94f2043444a9bafc759a6bc3b4fc08abd63d",
+  "nativeInspectorSha256": "baf6cda6bcd7fb4df6774a3ec58b6ee831c284f5f03d5f38a303d2f052e72e26",
+  "generatedRecordIdentities": {
+    "sl3-asio.conf": {
+      "bytes": 572,
+      "sha256": "f79ac85604414bb3b3ac9a2e2765115bbb66ca3c695680fcab51ed3ef7a67493"
+    },
+    "sl3-timing.conf": {
+      "bytes": 219,
+      "sha256": "c4d7e745dbd7925e5bf39867431fc7eef6fe5f14fb7cb45fd5115f07e381ac40"
+    },
+    "sl3-worker.conf": {
+      "bytes": 638,
+      "sha256": "8416b5d314d2e54cda66c9c4300a4d94e224389d07191a9d8082a53c66a33574"
+    }
+  },
+  "inspection": {
+    "accepted": true,
+    "activationAttempted": false,
+    "deviceAccess": false,
+    "helperLoaded": false,
+    "nativeKind": true,
+    "schema": "sl3.activation-config-inspection.v1",
+    "unmeasuredDiagnostic": true
+  },
+  "postcheck": {
+    "observed": true,
+    "originalResources": true,
+    "occupiedPaths": [],
+    "registrationPresent": false,
+    "currentSetupClean": true
+  },
+  "maximumLifetimeMs": 600000,
+  "installed": false,
+  "nativeDeviceAccess": false,
+  "seratoNormalStartValidated": false,
+  "serviceInstalled": false,
+  "securityPolicyChanged": false,
+  "firmwareChanged": false,
+  "scope": "Location-bound configuration review from native diagnostic payloads; native passive parser only, no ASIO session or controller launch by this preparer/test"
+}

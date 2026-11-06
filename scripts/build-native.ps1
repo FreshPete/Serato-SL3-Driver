@@ -255,6 +255,7 @@ try {
         $record.asioComponent.librarySha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_asio_buffers.lib")).Hash
         $record.asioComponent.testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_asio_buffer_tests.exe")).Hash
         $record.asioComponent.comDllSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_asio.dll")).Hash
+        $record.asioComponent.activationConfigurationInspectorSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_driver_configuration_tests.exe")).Hash
         $record.asioComponent.comTestExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_asio_com_tests.exe")).Hash
         $record.asioComponent.registrationFreeActivation=[ordered]@{staPassed=$true;mtaPassed=$true;productionUnavailableTested=$true;simulatedBrokerStreamsTested=$true;testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_asio_activation_tests.exe")).Hash;registryChanged=$false;installed=$false;physicalAudioTested=$false;seratoAdmissionTested=$false}
         $record.asioComponent.callTrace=[ordered]@{implemented=$true;testsPassed=$true;providerGuid='953df2f7-5f98-4895-a57a-73c0188c4321';maximumCallsPerModule=4096;callbackPathsInstrumented=$false;manifestInstalled=$false;traceSessionStarted=$false;actualEtwCaptureTested=$false;physicalAudioTested=$false;testExecutableSha256=(Get-FileHash -LiteralPath (Join-Path $build "$Configuration/sl3_asio_call_trace_tests.exe")).Hash}
