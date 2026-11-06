@@ -1,5 +1,7 @@
 # Portable inputs for one-time SL3 setup
 
+Follow-up: a [separate native verifier/preparation entry](native-on-demand-entry.md) now checks all kit files before Python dispatch and passes actual moved-kit tests. The kit below is unchanged. Its original Python-only checkpoint does not include that later entry or a graphical installer.
+
 The one-time setup route now has a self-contained engineering kit. It can be moved before preparation and generate a locally bound setup/restore experiment using only its own tools and runtimes. **It is not a public installer, and normal Serato startup remains unvalidated.** Fifteen actual moved-kit checks pass with an empty process PATH. [Source-bound evidence](evidence/on-demand-engineering-kit-20261106.json)
 
 The final kit has 758 payload files: the reviewed source closure and license, native on-demand package, portable PowerShell and a setup-only Python runtime. It includes no Serato executable or application-derived resource archive. Preparation creates the compatibility archive directly from the owner's exact original 5.0.0.1278 installation, verifies the original signature/schema, rebinds native metadata to current Windows known folders and preserves all native binary bytes. It installs nothing and launches neither Serato nor the transport.

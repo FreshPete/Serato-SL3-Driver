@@ -1,0 +1,138 @@
+{
+  "schema": "sl3.native-setup-entry-tests.v1",
+  "passed": true,
+  "cases": [
+    {
+      "name": "native-verification-only",
+      "passed": true
+    },
+    {
+      "name": "native-readonly-plan",
+      "passed": true
+    },
+    {
+      "name": "native-real-preparation",
+      "passed": true
+    },
+    {
+      "name": "generated-plan-from-native-preparation",
+      "passed": true
+    },
+    {
+      "name": "native-verification-after-preparation",
+      "passed": true
+    },
+    {
+      "name": "changed-helper-refused-before-execution",
+      "passed": true
+    },
+    {
+      "name": "changed-python-library",
+      "passed": true
+    },
+    {
+      "name": "changed-powershell-runtime",
+      "passed": true
+    },
+    {
+      "name": "changed-native-driver",
+      "passed": true
+    },
+    {
+      "name": "changed-manifest-refused",
+      "passed": true
+    },
+    {
+      "name": "extra-dll-refused-before-interpreter",
+      "passed": true
+    },
+    {
+      "name": "unreviewed-application-refused",
+      "passed": true
+    },
+    {
+      "name": "mutable-action-not-exposed",
+      "passed": true
+    },
+    {
+      "name": "unsupported-kit-path",
+      "passed": true
+    },
+    {
+      "name": "final-native-plan",
+      "passed": true
+    }
+  ],
+  "testSourceSha256": "fbb316d32cad3f2cacf1bcf9dd0726790e6d8a50434e328e6c52abd41fb24de9",
+  "buildSha256": "6a1479a21287f7c152fa8df93a38840cbc3701eba9574b4ff5231c9b9dc16334",
+  "sourceManifestSha256": "6b90b1dbbea8474d36c3a86e0319beeb430d5aa75d698282d45f0d5fa7c7f446",
+  "sourcePins": {
+    "src/installer/OnDemandKitEntry.cpp": "90522611cae5f7bf4d6f5d68a45d70d9a91fe0c960d241d318263f2ff6ffe4e0",
+    "src/installer/NativeSessionLauncher.cpp": "40c6837c2aba5a571d9cf33b348a7b3e367e1403357f9beb0d3304af40bb1bc6",
+    "scripts/prepare-on-demand-entry.py": "41f4616a0c47cd7b40c54aa67715af2c473b4c4341c21a3def5c7a730ac3a2e5",
+    "scripts/build-on-demand-entry.ps1": "9778ad2ff4c016bd98c25d01def58686ea8b3d6b38ca88929e8138d988f5e2bd"
+  },
+  "generatedPins": {
+    "launcher_config.hpp": "b5e624fe9f47289efdff221b3289979f6b9973281aa84859c6d759161ca03d60",
+    "setup_config.hpp": "73b30a0c5dd6704d6b3e3f463c928a50467b777232852ab1277dd86903324ab2",
+    "CMakeLists.txt": "379d997f5003bc22027fa4c1755c38432c6c044d0dbdf874e5a1dd4e4e6958c7"
+  },
+  "executableSha256": "1a417b069bca40a86f7c5b39c59dcd4f0eb0a8c4a89d5f6c21fff2b7a30ae9b0",
+  "kitManifestSha256": "1d4f287974ddea51e74b5855270cf61268428e78eaff74069a8443349f2c2f38",
+  "filesPinnedBeforeHelper": 760,
+  "imports": [
+    "SHELL32.dll",
+    "api-ms-win-core-console-l1-1-0.dll",
+    "api-ms-win-core-debug-l1-1-0.dll",
+    "api-ms-win-core-errorhandling-l1-1-0.dll",
+    "api-ms-win-core-file-l1-1-0.dll",
+    "api-ms-win-core-file-l1-2-2.dll",
+    "api-ms-win-core-file-l2-1-0.dll",
+    "api-ms-win-core-handle-l1-1-0.dll",
+    "api-ms-win-core-heap-l1-1-0.dll",
+    "api-ms-win-core-heap-l2-1-0.dll",
+    "api-ms-win-core-interlocked-l1-1-0.dll",
+    "api-ms-win-core-libraryloader-l1-2-0.dll",
+    "api-ms-win-core-localization-l1-2-0.dll",
+    "api-ms-win-core-namedpipe-l1-1-0.dll",
+    "api-ms-win-core-processenvironment-l1-1-0.dll",
+    "api-ms-win-core-processthreads-l1-1-0.dll",
+    "api-ms-win-core-processthreads-l1-1-1.dll",
+    "api-ms-win-core-profile-l1-1-0.dll",
+    "api-ms-win-core-rtlsupport-l1-1-0.dll",
+    "api-ms-win-core-string-l1-1-0.dll",
+    "api-ms-win-core-synch-l1-1-0.dll",
+    "api-ms-win-core-sysinfo-l1-1-0.dll",
+    "api-ms-win-core-util-l1-1-0.dll",
+    "api-ms-win-security-base-l1-1-0.dll",
+    "bcrypt.dll"
+  ],
+  "emptyPath": true,
+  "movedKitTested": true,
+  "modifiedHelperExecuted": false,
+  "productionInstallationPerformed": false,
+  "elevationRequested": false,
+  "seratoLaunched": false,
+  "nativeDeviceAccess": false,
+  "hostPostcheck": {
+    "observed": true,
+    "originalResources": true,
+    "occupiedPaths": [],
+    "registrationPresent": false,
+    "currentSetupClean": true
+  },
+  "graphicalSetupProvided": false,
+  "installedRegistryActivationValidated": false,
+  "report": "artifacts/build/native-entry-tests-6a3556d3410e458cb3997bbcb1301c12/result.json",
+  "reportSha256": "8a64acbd42e1f411e31db2c6fea379701fbe59cca0d67432b7896acf8414fda7",
+  "buildDirectory": "artifacts/build/native-on-demand-entry-20261106",
+  "inertBuildChecksPassed": 2,
+  "normalStartExperimentSha256": "4ca890a6d5e7c2d232919374bc047f86387587b4c4bd7c50648549c964b57073",
+  "normalStartExperimentStillSourceCurrent": true,
+  "limitations": [
+    "Native entry exposes only verify/plan/offline preparation.",
+    "The externally selected native executable remains a trust input.",
+    "No graphical setup, elevation, installation, Serato launch or USB acquisition ran.",
+    "Files are pinned during helper execution; this is not a protected consumer installation or a proof against all concurrent directory writers."
+  ]
+}
