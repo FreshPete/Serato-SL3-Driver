@@ -1,0 +1,55 @@
+{
+  "schema": "sl3.broker-activation-checkpoint.v1",
+  "date": "2026-11-06",
+  "releaseTestsPassed": 72,
+  "sourceSha256": {
+    "CMakeLists.txt": "eaf1f4967bcf1e323cddda2a3e7923d1295ed4f568e66b8dee063f164b75fb4c",
+    "src/asio/broker_activation.hpp": "6af4692cdba4d61c6187def53a945e2b1eaec77610b5ab70795104a91ed2e1e3",
+    "src/asio/broker_activation.cpp": "188eecf32d1887f50c75d1ad17dc20832f4d237b00ce5e00e1e0a683d12bead8",
+    "tests/native/broker_activation_tests.cpp": "551d6923bfb627c8bb287da52006161e70a6be2ec0094cf68b13599e97ff588c",
+    "scripts/test-broker-activation.py": "0369a9a7df22f2037d443b5346ff98e9e44545ea8f07cead25a0871959fb37bd"
+  },
+  "fixture": {
+    "schema": "sl3.broker-activation-tests.v1",
+    "passed": true,
+    "simulatedSessions": 2,
+    "asioStartStopCycles": 2,
+    "callbacks": 3341,
+    "nativeDeviceAccess": false,
+    "failedStartupNormalExitObserved": true,
+    "failedStartupForcedContainmentObserved": true,
+    "serviceInstalled": false,
+    "productionAsioEntryChanged": false
+  },
+  "retirements": [
+    {
+      "session": "session",
+      "resultSha256": "1f34d42bf63ac6d4d7039760145a873fa9bfd5c5b8a6323fc39fea7dabd5454d",
+      "simulatedWorkerRetired": true
+    },
+    {
+      "session": "retained",
+      "resultSha256": "1f34d42bf63ac6d4d7039760145a873fa9bfd5c5b8a6323fc39fea7dabd5454d",
+      "simulatedWorkerRetired": true
+    }
+  ],
+  "fixtureRunSha256": "fc56470b12f955162dbf56be39f9de62f56757627fa3d9d0a502bfa0a65ca988",
+  "nativeBuildManifestSha256": "9607f63c5b30748f0344c7087708cfff77f841cbcd4373711001c9787ba65bc5",
+  "ctestLogSha256": "7eff77848e9d39bfbfdd18b457a8413cac15a293891b1fcf2e9a98b2b5fe0abc",
+  "imageSha256": {
+    "sl3_broker_activation_tests.exe": "b6dece7fcd67f904b7ba285ab9b696eccb1f65d7a8821b3866438814e2058d34",
+    "sl3_broker_controller_unmeasured_simulated.exe": "3c6f065ccc62a3c3530c0860a5e4b677b3656ff0538adb47034a4cf175b074c2",
+    "sl3_device_session_fixture.exe": "c8cc033d00b9b2d0c9cbf7e57e77d53149d498c9cfbd1f9f6e0e5fe513214421",
+    "UsbDkHelper.dll10": "66bbfe6f99b417f97c7a9e97816e24af7dde0e01b8e535c41e91e1c6c19cfeda"
+  },
+  "librarySha256": "a79f2e09c950f3eacacc6c11190f5c88df69abe594f21dad705147f68d666e37",
+  "productionAsioEntryConnected": false,
+  "stableActivationConfigurationImplemented": false,
+  "seratoNormalLaunchValidated": false,
+  "nativeDeviceAccess": false,
+  "serviceInstalled": false,
+  "installedPackageChanged": false,
+  "firmwareChanged": false,
+  "securityPolicyChanged": false,
+  "scope": "Native ordinary-user activation component with simulated broker/worker and real ASIO facade; not installed-use validation"
+}

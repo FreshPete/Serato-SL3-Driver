@@ -33,6 +33,8 @@ In parallel, design on-demand transport availability. The existing broker alread
 
 The [first installed-startup investigation](installed-startup-investigation.md) records the ordinary-user contract and inventories the pinned schema's declared connection options without executing Serato.
 
+A [native on-demand activation component](broker-on-demand-activation.md) now exercises controller ownership, configuration binding and lease-driven retirement with simulated workers and the real ASIO facade. Production entry/configuration wiring and native hardware validation remain open; no installed service or automatic normal-start mechanism has been deployed.
+
 ## Acceptance checks
 
 1. Setup installs the required reviewed components once and records exact installed/original identities for repair and uninstall.
