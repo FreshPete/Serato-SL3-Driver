@@ -1,0 +1,47 @@
+{
+  "schema": "sl3.serato-installed-profile-options.v1",
+  "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "archiveSha256": "872fc4fdad2eab2ddd34387d2d3c04dd9731c84798d9fdc7bd05ca54e1567db8",
+  "schemaSha256": "9e15093df616f9b9eac7f2f0fc1dbebfc55ce353415e22569fcfa00b98c1cc56",
+  "schemaZipCrc32": 313368588,
+  "deviceTypeHierarchyDerivedFirst": [
+    "midi_native_pro_device_type",
+    "device_native_pro_device_type"
+  ],
+  "topLevelElementCount": 107,
+  "topLevelAttributeCount": 2,
+  "uniqueTopLevelElementNames": 106,
+  "uniqueTopLevelAttributeNames": 2,
+  "connectionDeclarations": [
+    "connect_on_finish_install"
+  ],
+  "driverDeclarations": [
+    "driver"
+  ],
+  "driverTypeHierarchyDerivedFirst": [
+    "device_driver_type"
+  ],
+  "driverTypeElements": [
+    "audio",
+    "audio_deck_setup_type",
+    "audio_deck_setup_type_initialized_incorrectly",
+    "driver_detection",
+    "installer"
+  ],
+  "driverTypeAttributes": [],
+  "namedStartupOptionDeclared": {
+    "connect_on_start": false,
+    "connect_on_launch": false,
+    "connect_on_arrival": false,
+    "auto_connect": false
+  },
+  "scope": "Declared top-level options inherited by native_pro_device in this exact schema; nested definitions, other descriptor kinds and executable parser extensions are not exhausted",
+  "knownExternalDoctypeRemovedBeforeParsing": true,
+  "externalDtdLoaded": false,
+  "noXmlOnlySolutionProven": true,
+  "vendorCodeExecuted": false,
+  "xmlPublished": false,
+  "keyMaterialPublished": false,
+  "installedFilesChanged": false,
+  "deviceAccess": false
+}

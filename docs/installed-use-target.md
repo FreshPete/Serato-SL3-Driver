@@ -13,7 +13,7 @@ Historical helper names containing `phase` refer to the tested development profi
 | Component | Current implementation | Installed target |
 | --- | --- | --- |
 | Native audio driver | Temporary ASIO/COM registration and protected package staging | Stable installed registration and verified files, with explicit uninstall |
-| USB transport | An elevated, bounded session owner publishes an authenticated broker locator | Broker available automatically to an ordinary Serato process, with restricted device operations and application-lifetime ownership |
+| USB transport | An ordinary-user, bounded session owner publishes an authenticated broker locator | Ordinary-user broker available automatically to Serato, with restricted device operations and application-lifetime ownership |
 | Serato device definition | A locally generated SL3 definition temporarily replaces the owner's resource archive | Version-checked local compatibility definition; preserve originals and handle upgrades/removal |
 | Initial device selection | Startup shim plus genuine Download Driver action and real installer-completion handoff | Genuine SL3 admission/primary selection on ordinary application startup or device arrival, without reinstalling |
 | Startup instrumentation | Supervisor starts the application, supplies missing installer-panel identity and detaches after ASIO starts | Remove the installer workaround if possible; any remaining activation component must work with normal Serato launch, be explicitly installed/removable and scoped to the reviewed application |
@@ -29,7 +29,9 @@ The current startup shim observes genuine SL3 arrival and the genuine install cl
 
 Next investigate the installed-device connection/admission route and the producer of the panel's missing identity. Prefer a proper registered device/provider path that removes the install panel entirely. Establish the live descriptor, owner thread/lifetime and actual ASIO selection before changing event delivery; a scalar message or arbitrary callback is not enough. Do not use account, entitlement or DVS-license state changes as a startup mechanism. The old stock Frida runtime remains held; future live work must use the separately reviewed candidate and preserve its scope/protection limits.
 
-In parallel, design on-demand transport availability. A narrowly scoped installed broker/service is a candidate, not an implementation claim. It must authenticate the caller/session, open only the intended SL3 through the reviewed transport, accept no arbitrary executable/path/firmware commands and release acquisition when its audio owner exits. Existing ASIO/broker contracts should be reused where valid. The service must not be a permanent elevated version of the current general scripting environment.
+In parallel, design on-demand transport availability. The existing broker already runs as an ordinary user: its endpoint rejects elevated tokens, and the current session helper starts it without `runas`. Earlier physical control evidence independently queried normal parent/probe/worker tokens. Administrator prompts currently cover protected staging/registration (and optional trace collection), not a requirement for an elevated audio broker. Prefer ordinary-user on-demand activation and reuse the existing authenticated broker contract; an elevated Windows service is not established as necessary. Activation must open only the intended SL3 through the reviewed transport, accept no arbitrary executable/path/firmware commands and release acquisition when its audio owner exits. A stable driver install must not retain the general development scripting environment as an elevated service.
+
+The [first installed-startup investigation](installed-startup-investigation.md) records the ordinary-user contract and inventories the pinned schema's declared connection options without executing Serato.
 
 ## Acceptance checks
 
