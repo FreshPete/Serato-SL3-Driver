@@ -20,4 +20,4 @@ Defender events 1000/1001 record a matching on-demand scan ID and the candidate 
 
 The current inspector's explicit option is `--allow-reviewed-windows-portability` (the earlier includes option remains an alias). It accepts only the encoded source changes; twenty-two configuration and exact-patch tests pass. Earlier failed attempts and their separate patch files remain preserved.
 
-The next step is further embedded-asset/dependency review, followed by a bounded owned-process runtime test if that review supports it. No new binary has replaced the working session kit, no Serato/device test ran, and no further audio, shutdown or DVS validation is claimed.
+An [image-level native asset review](frida-embedded-asset-review.md) now matches all twelve agent/helper descriptors and the four non-empty payloads to the final image. The next step is an isolated candidate SDK and a bounded owned-process runtime test. No new binary has replaced the working session kit, no Serato/device test ran, and no further audio, shutdown or DVS validation is claimed.
