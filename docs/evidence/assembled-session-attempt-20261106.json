@@ -1,0 +1,27 @@
+{
+  "schema": "sl3.assembled-session-attempt.v1",
+  "date": "2026-11-06",
+  "applicationVersion": "5.0.0.1278",
+  "startupError": "Startup deadline: installer_action",
+  "asioStartObserved": false,
+  "processExited": true,
+  "observerForcedTermination": true,
+  "applicationExitCode": 1,
+  "applicationJobEmpty": true,
+  "brokerStarted": false,
+  "controllerExited": true,
+  "originalResourcesRestored": true,
+  "temporaryRegistrationAbsent": true,
+  "installationReceiptState": "absent",
+  "stageError": null,
+  "concurrentWindowsDescriptorFailureObserved": true,
+  "physicalAudioTested": false,
+  "cleanApplicationShutdownVerified": false,
+  "newWrapperEndToEndValidated": false,
+  "sha256": {
+    "hostResult": "ced014bdf8acf4fbe10a6fdc3e108266e53e7ee3969b59f761dcb0b62cb2a509",
+    "protectedStageResult": "9ba754c27dd62baf112513eb66d9bf312c637b779f532ff7a0c454a1d3ca629f",
+    "brokerRetirement": "0f374fc4a8e227ad11dc248ee6b745ac52a504f321fdd07542fb111ab885af4d",
+    "preparedPlan": "14c4302170bb71ccaf5e3a99e3c49a77f2430f386bb2826aef2ad5348e657d6e"
+  }
+}

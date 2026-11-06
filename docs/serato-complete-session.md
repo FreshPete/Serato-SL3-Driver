@@ -46,6 +46,8 @@ Four additional PowerShell cases exercise actual temporary-file resource transac
 
 ## First live check and remaining work
 
+The first attended invocation on 6 November 2026 staged the reviewed resources and opened Serato, but Windows concurrently showed a USB descriptor-request failure rather than an SL3 identity. The owner saw no driver notice. The trace observed only readiness and timed out waiting for the installer action; ASIO never started, no installation receipt was created and the broker did not start. Application cleanup used forced termination after its close-request fallback. Protected cleanup restored the original resources and verified absent temporary registration, and the launcher cache was absent. This is a failed startup with successful independent rollback, not validation of the full route or clean application shutdown. The records are preserved, and a fresh one-shot retry has passed Plan pending device recovery. [Attempt evidence](evidence/assembled-session-attempt-20261106.json)
+
 The next attended run must validate the assembled route, smaller shim, generated launcher, actual elevation boundaries, full detach, manual application close and complete rollback. Keep playback stopped for the initial startup/shutdown check. Capture the new broker first-failure cause and application termination record if shutdown is not clean. Preserve the known-working private route for comparison.
 
 Physical audible output through the SL3, independently observed deck-mode labels, independent platter control, sustained operation and a permanent repeatable installation remain open. No live result, timing certification or Mac validation is inferred from these software and Plan checks.
