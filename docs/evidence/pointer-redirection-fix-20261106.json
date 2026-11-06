@@ -1,0 +1,16 @@
+{
+  "schema": "sl3.pointer-redirection-fix.v1",
+  "date": "2026-11-06",
+  "actualWindowsFileUsed": true,
+  "actualLeafRedirectionObserved": true,
+  "previousContainmentCheckRefusedFixture": true,
+  "fixedPointerCheckAcceptedRegularFixture": true,
+  "hashBoundNativePathSpellingPreserved": true,
+  "focusedTestsPassed": 5,
+  "deploymentChecksPassed": 26,
+  "sessionChecksPassed": 22,
+  "liveCleanupRetestPassed": false,
+  "hardwareOpened": false,
+  "sourceSha256": "7e420606983d1bfdef9c75eda459281b957cc1918db80e28ca85141a17f016cc",
+  "testSha256": "be01f00277dea086465ca9d670e397715f8bc86eebff06b766c37039619c94e0"
+}

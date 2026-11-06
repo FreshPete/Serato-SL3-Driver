@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import re
+import stat
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -65,6 +66,27 @@ def inside(path, parent):
     return path
 
 
+def pointer_destination(path, parent):
+    """Validate the logical pointer name without canonicalizing its file leaf.
+
+    Packaged Windows callers can see a regular file through a redirected leaf
+    while its directory resolves to the native Local AppData path. Parent
+    containment still follows junctions; a reparse leaf is never admitted.
+    Actual pointer withdrawal independently verifies ownership and contents.
+    """
+    require(path.is_absolute(), 'Absolute paths required')
+    require('..' not in path.parts, 'Parent traversal is not a deployment destination')
+    require(path.parent.resolve().is_relative_to(parent.resolve()), 'Path escapes intended directory')
+    try:
+        info = path.lstat()
+    except FileNotFoundError:
+        pass
+    else:
+        require(stat.S_ISREG(info.st_mode) and not (getattr(info, 'st_file_attributes', 0) & 0x400),
+                'Pointer must be a regular non-reparse file')
+    return path
+
+
 def pe_info(data, role):
     import pefile  # Analysis/build dependency only; no binary is executed or loaded.
     pe = pefile.PE(data=data)
@@ -84,7 +106,7 @@ def destinations(installation, pointer):
     program_files = Path(os.environ['ProgramFiles']).resolve()/'SL3 Rebuild'
     user_data = Path(os.environ['LOCALAPPDATA']).resolve()/'SL3Rebuild'
     installation = inside(installation, program_files)
-    pointer = inside(pointer, user_data)
+    pointer = pointer_destination(pointer, user_data)
     require(pointer.name not in ('', '.', '..'), 'Pointer filename required')
     for path in (installation, pointer):
         require(len(path.drive) == 2 and path.drive[1] == ':' and ':' not in str(path)[2:] and
