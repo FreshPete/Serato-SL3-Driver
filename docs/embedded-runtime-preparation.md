@@ -1,5 +1,7 @@
 # Private Python runtime for the launcher candidate
 
+The next launcher candidate is native Windows code, so its executable no longer requires a separate .NET runtime installation. It uses this same private Python runtime and full file bindings. PowerShell and the remaining release-kit work are still outstanding. [Native launcher checks](native-session-launcher.md)
+
 The packaging candidate now has an application-local Python runtime. The same reusable launcher passed two session Plans using it, and the complete wrapper passed two read-only Plans with all runtime files bound. No global Python installation, PATH, registry, Serato resource, device binding or hardware state was changed. This is preparation and software validation, not a live Serato result. [Evidence](evidence/embedded-runtime-preparation-20261106.json)
 
 ## Inputs and isolation

@@ -1,5 +1,7 @@
 # One launcher build for multiple temporary sessions
 
+There is now a native Windows candidate that removes the separate .NET runtime prerequisite for the launcher. Its eleven executable checks, argument parsing, copied-runtime refusal checks and two complete read-only Plans pass. Live Serato validation remains pending. [Native implementation and limits](native-session-launcher.md)
+
 The next candidate now supports a fully pinned, private embedded Python runtime. Both the reusable launcher and complete wrapper passed Plans with it, including copied-runtime and changed-module refusal checks. PowerShell and .NET remain prerequisites; no live Serato result is inferred. [Runtime preparation and limits](embedded-runtime-preparation.md)
 
 The reusable-launcher prototype removes the need to compile and repackage an executable for every new session. One release-bound executable passed Plan for two different fresh session configurations, and two complete wrapper Plans passed using the same executable and private installer-resource bytes. No installer ran and no SL3 was opened for these checks. [Preparation and validation evidence](evidence/reusable-launcher-preparation-20261106.json)

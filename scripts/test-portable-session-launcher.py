@@ -41,6 +41,10 @@ def exercise(launcher, prepared_a, prepared_b):
         call('executable-relocated-without-rebuild',plan(prepared_a),0,copy)
         fixture=directory/'session-capsule.json'
         original=json.loads(prepared_a.read_bytes())
+        named=directory/'with spaces; dollar$(literal) 会话';named.mkdir()
+        named_record=json.loads(json.dumps(original));named_record['sessionDirectory']=str(named)
+        named_capsule=named/'session-capsule.json';named_capsule.write_text(json.dumps(named_record),encoding='utf-8')
+        call('unicode-space-and-shell-metacharacters-in-capsule-path',plan(named_capsule),0)
         for name,mutation in (
             ('untrusted-interpreter',lambda item:item['python'].update(sha256='0'*64)),
             ('foreign-helper-root',lambda item:item.update(projectRoot=str(directory/'untrusted-root'))),
