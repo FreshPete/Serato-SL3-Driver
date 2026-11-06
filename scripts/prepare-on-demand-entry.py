@@ -44,7 +44,7 @@ def prepare(kit,expected,output):
     values={'launcher_config.hpp':header,'setup_config.hpp':setup,'CMakeLists.txt':cmake}
     for name,text in values.items():(output/name).write_text(text,encoding='utf-8')
     record={'schema':'sl3.native-setup-entry-source.v1','kitManifestSha256':expected,'sourcePins':pins,
-        'generatedPins':{n:sha(output/n) for n in values},'compiledPayloadFiles':len(files),'mutableActionsExposed':False,
+        'generatedPins':{n:sha(output/n) for n in values},'compiledPayloadFiles':len(files),'mutableActionsExposed':True,'mutableActionsRequireAlreadyElevatedProcess':True,
         'elevationRequested':False,'seratoLaunched':False,'nativeDeviceAccess':False}
     (output/'entry-source.json').write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8');return {'prepared':True,'directory':str(output),'sourceManifestSha256':sha(output/'entry-source.json')}
 

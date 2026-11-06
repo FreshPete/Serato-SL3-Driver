@@ -1,5 +1,7 @@
 # Native verification and preparation entry
 
+Follow-up: a [new reviewed-record entry](native-on-demand-experiment-entry.md) adds native experiment checking and explicit already-elevated setup/restore delegation. Its read-only/refusal cases pass; elevated mutation has not run. The preparation-only build and evidence below remain the earlier checkpoint.
+
 The one-time setup engineering kit now has an ordinary native Windows entry. It verifies its **760 compiled kit-file bindings before starting Python**, then dispatches only the fixed setup-only interpreter and preparer. Fifteen actual moved-kit scenarios and two inert build checks pass. No installer, administrator prompt, Serato launch or device operation ran. [Source/build/runtime evidence](evidence/native-on-demand-entry-20261106.json)
 
 ## What is available

@@ -38,8 +38,23 @@ def main():
     first=call('native-verification-only',command('--verify'));require(first['filesPinned']==source['compiledPayloadFiles'] and first['pythonStarted'] is False and not (kit/'analysis').exists(),'Native verify must remain idle')
     call('native-readonly-plan',command('--plan'));require(not (kit/'analysis').exists(),'Plan creates no mutable state')
     prepared=call('native-real-preparation',command('--prepare'));require(prepared['preparedExperiment']['prepared'] is True and prepared['normalStartupValidated'] is False,'Actual copied-kit preparation required')
-    child=subprocess.run(prepared['planArguments'],env=env,capture_output=True,timeout=60,creationflags=subprocess.CREATE_NO_WINDOW);require(child.returncode==0,child.stderr.decode('utf-8',errors='replace'))
-    plan=json.loads(child.stdout);require(plan['after']=={'archive':'original','seratoRunning':False,'native':{'state':'absent'}},'Actual restored host observation required');cases.append({'name':'generated-plan-from-native-preparation','passed':True});details['generated-plan']=plan
+    experiment=Path(prepared['preparedExperiment']['experiment']);experiment_sha=prepared['preparedExperiment']['experimentSha256']
+    def reviewed(action,selected=experiment,identity=experiment_sha):return command(action)+['--experiment',str(selected),'--expected-experiment-sha256',identity]
+    plan=call('native-generated-experiment-check',reviewed('--check-experiment'));require(plan['after']=={'archive':'original','seratoRunning':False,'native':{'state':'absent'}},'Actual restored host observation required')
+    call('native-apply-refuses-ordinary-token',reviewed('--apply-experiment'),False,'Run this exact reviewed setup/restore entry as administrator')
+    call('native-restore-refuses-ordinary-token',reviewed('--restore-experiment'),False,'Run this exact reviewed setup/restore entry as administrator')
+    call('native-wrong-experiment-hash',reviewed('--check-experiment',identity='0'*64),False,'Reviewed setup input hash differs')
+    call('native-foreign-experiment-scope',reviewed('--check-experiment',selected=folder/('sl3-on-demand-test-'+'0'*32)/'experiment.json'),False,'Prepared state must belong to this kit')
+    asset=experiment.parent/'archive/archive-test.ps1';saved=asset.read_bytes();asset.write_bytes(saved+b'changed')
+    try:call('native-changed-prepared-asset',reviewed('--check-experiment'),False,'Reviewed setup input hash differs')
+    finally:asset.write_bytes(saved)
+    experiment_record=json.loads(experiment.read_bytes());bundle=Path(experiment_record['bundle']['directory']);image=bundle/'sl3_usbdk.exe';saved=image.read_bytes();image.write_bytes(saved[:-1]+bytes([saved[-1]^1]))
+    try:call('native-changed-rebound-worker',reviewed('--check-experiment'),False,'Reviewed setup input hash differs')
+    finally:image.write_bytes(saved)
+    saved=experiment.read_bytes();changed=json.loads(saved);changed['projectRoot']=str(folder);experiment.write_text(json.dumps(changed),encoding='utf-8')
+    try:call('native-foreign-project-root',reviewed('--check-experiment',identity=sha(experiment)),False,'Prepared experiment root/application differs')
+    finally:experiment.write_bytes(saved)
+    call('native-final-experiment-check',reviewed('--check-experiment'))
     call('native-verification-after-preparation',command('--verify'))
     before={p.relative_to(kit/'analysis').as_posix():sha(p) for p in (kit/'analysis').rglob('*') if p.is_file()}
     marker=folder/'altered-helper-executed';helper=kit/'scripts/prepare-on-demand-kit.py';saved=helper.read_bytes();helper.write_bytes(('from pathlib import Path\nPath('+repr(str(marker))+').write_text("unexpected helper execution")\n').encode()+saved)
@@ -56,7 +71,7 @@ def main():
     try:call('extra-dll-refused-before-interpreter',command('--plan'),False,'Unexpected setup payload before helper execution')
     finally:extra.unlink()
     wrong=command('--plan');wrong[-1]=str(folder/'unreviewed.exe');call('unreviewed-application-refused',wrong,False,'Original Serato executable required')
-    call('mutable-action-not-exposed',command('--install'),False,'Only verification and offline preparation')
+    call('unknown-mutable-action-refused',command('--install'),False,'Known setup entry action required')
     semicolon=command('--plan');semicolon[3]=str(folder/'unsupported;kit');call('unsupported-kit-path',semicolon,False,'Local fixed-drive kit without semicolons')
     require(before=={p.relative_to(kit/'analysis').as_posix():sha(p) for p in (kit/'analysis').rglob('*') if p.is_file()},'Refusals must not create or change prepared state')
     call('final-native-plan',command('--plan'))
@@ -69,7 +84,8 @@ def main():
         'buildSha256':sha(build_path),'sourceManifestSha256':sha(source_path),'sourcePins':source['sourcePins'],'generatedPins':source['generatedPins'],
         'executableSha256':sha(host),'kitManifestSha256':source['kitManifestSha256'],'filesPinnedBeforeHelper':source['compiledPayloadFiles'],
         'imports':imports,'emptyPath':True,'movedKitTested':True,'modifiedHelperExecuted':False,'productionInstallationPerformed':False,'elevationRequested':False,
-        'seratoLaunched':False,'nativeDeviceAccess':False,'hostPostcheck':state,'graphicalSetupProvided':False,'installedRegistryActivationValidated':False}
+        'seratoLaunched':False,'nativeDeviceAccess':False,'hostPostcheck':state,'graphicalSetupProvided':False,'installedRegistryActivationValidated':False,
+        'preparedExperimentNativeCheckPassed':True,'mutableActionsTestedOnlyAsOrdinaryTokenRefusals':True,'elevatedSetupOrRestoreValidated':False}
     output=folder/'result.json';output.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8');print(json.dumps({'passed':True,'cases':len(cases),'report':str(output)},indent=2))
 
 
