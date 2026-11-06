@@ -27,9 +27,10 @@ def main():
     spec = importlib.util.spec_from_file_location('sl3_file_stage_under_test', TOOL)
     stage = importlib.util.module_from_spec(spec); sys.modules[spec.name] = stage; spec.loader.exec_module(stage)
     require(not stage.elevated(), 'This unattended suite must run non-elevated; no machine stage is permitted')
-    pointer = json.loads((ROOT/'artifacts/build/deployment-tests-last.json').read_text()); source_index = Path(pointer['directory'])/'index.json'
+    pointer = json.loads((Path(sys.argv[1]).absolute() if len(sys.argv) == 2 else ROOT/'artifacts/build/deployment-tests-last.json').read_text()); source_index = Path(pointer['directory'])/'index.json'
     require(sha(source_index) == pointer['indexSha256'], 'Reviewed package test index')
     package = json.loads(source_index.read_text()); bundle = ROOT/package['positiveBundle']; expected = package['bundleManifestSha256']
+    staged_files = len(json.loads((bundle/'bundle-manifest.json').read_text())['files']) + 3
     module = stage.reader(); module.verify(bundle, expected)
     identity = uuid.uuid4().hex; folder = ROOT/'artifacts/build/file-stage-tests'/identity; folder.mkdir(parents=True)
     sid = stage.user_sid(); policy = stage.Policy(sid, (stage.SYSTEM, stage.ADMINS, sid))
@@ -96,9 +97,9 @@ def main():
     require(attempted and not receipt['productionPolicy'] and not receipt['registered'], 'Test descriptor cannot certify production protection')
     record_hash = receipt['stageRecordSha256']
     value = case('actual-stage-inspection', lambda: stage.inspect_stage(destination, record_hash, policy))
-    require(value['files'] == 14 and not value['productionPolicy'] and not value['plannedDestinationMatches'], 'Actual user-owned stage remains distinct from planned Program Files installation')
+    require(value['files'] == staged_files and not value['productionPolicy'] and not value['plannedDestinationMatches'], 'Actual user-owned stage remains distinct from planned Program Files installation')
     require(source_before == {p.name: sha(p) for p in bundle.iterdir()}, 'Source package unchanged')
-    for name in module.REQUIRED | {'bundle-manifest.json'}:
+    for name in module.required_files(json.loads((bundle/'bundle-manifest.json').read_text())) | {'bundle-manifest.json'}:
         require((bundle/name).read_bytes() == (destination/name).read_bytes(), 'Exact captured-to-staged bytes')
     case('production-rejects-test-descriptor', lambda: rejected(lambda: stage.inspect_stage(destination, record_hash)))
     original = {p.name: sha(p) for p in destination.iterdir()}

@@ -32,9 +32,10 @@ def main():
     i = m.install; j = i.sibling('asio-install-journal'); s = j.stage_module(); r = i.sibling('asio-registry')
     require(not s.elevated(), 'Ordinary token required for unattended suite')
     sid = s.user_sid(); policy = s.Policy(sid, (s.SYSTEM, s.ADMINS, sid))
-    pointer = json.loads((ROOT/'artifacts/build/deployment-tests-last.json').read_text()); index = Path(pointer['directory'])/'index.json'
+    pointer = json.loads((Path(sys.argv[1]).absolute() if len(sys.argv) == 2 else ROOT/'artifacts/build/deployment-tests-last.json').read_text()); index = Path(pointer['directory'])/'index.json'
     require(j.digest(index.read_bytes()) == pointer['indexSha256'], 'Reviewed package index')
     package = json.loads(index.read_text()); bundle = ROOT/package['positiveBundle']; expected = package['bundleManifestSha256']
+    staged_files = len(json.loads((bundle/'bundle-manifest.json').read_text())['files']) + 3
     s.reader().verify(bundle, expected); plan = json.loads((bundle/'deployment-plan.json').read_text())
     source_before = {p.name: j.digest(p.read_bytes()) for p in bundle.iterdir()}
     locations = [Path(plan['installationDirectory']), Path(plan['pointerPath']).parent]; before_locations = [p.exists() for p in locations]
@@ -226,11 +227,11 @@ def main():
                 value = case('late-foreign-value-blocks-first-deletion', lambda: fail(lambda: run(f)))
             finally:
                 j.write_flush = real_write
-            require(injected and not value['deletedRegistryKeys'] and len(list(f[1].iterdir())) == 14, 'Late foreign state and stage preserved')
+            require(injected and not value['deletedRegistryKeys'] and len(list(f[1].iterdir())) == staged_files, 'Late foreign state and stage preserved')
         with fixture('busy-stage') as f:
             with s.open_file(f[1]/'sl3_asio.dll'):
                 value = case('busy-stage-refuses-file-removal-after-registry-removal', lambda: fail(lambda: run(f)))
-            require(r.inspect(f[5], plan)['allAbsent'] and len(list(f[1].iterdir())) == 14 and
+            require(r.inspect(f[5], plan)['allAbsent'] and len(list(f[1].iterdir())) == staged_files and
                     value['fileCleanupAttempted'] and not value['fileResult']['deleteMarkedFiles'], 'Truthful partial outcome')
             value = case('busy-stage-explicit-retry-completes-after-handle-release', lambda: run(f))
             require(value['successful'] and len(value['initiallyAbsentKeys']) == 3 and not value['deletedRegistryKeys'], 'Registry absence is fresh observation')
@@ -252,7 +253,7 @@ def main():
             recovered = case('reviewed-new-recovery-journal-finishes-partial-files', lambda: file_recovery.recover_owned(
                 bundle, expected, f[0], f[1], f[2], recovery_journal, j.digest(recovery_journal.read_bytes()), policy, *f[5:]))
             require(recovered['successful'] and len(recovered['initiallyAbsentFiles']) == 1 and
-                    len(recovered['absentObservedFiles']) == 13 and not f[1].exists(), 'Composed file recovery uses fresh survivor state')
+                    len(recovered['absentObservedFiles']) == (staged_files - 1) and not f[1].exists(), 'Composed file recovery uses fresh survivor state')
         with fixture('completion-failure') as f:
             real_write = j.write_flush
             def poisoned(handle, raw):
@@ -286,7 +287,7 @@ def main():
             finally:
                 j.write_flush = real_write
             require(injected and value['fileCleanupAttempted'] and not value['fileResult']['deleteMarkedFiles'] and
-                    len(list(f[1].iterdir())) == 14, 'Late overlay and full stage preserved')
+                    len(list(f[1].iterdir())) == staged_files, 'Late overlay and full stage preserved')
         try:
             m.recover_production(folder, folder/'stage', '0'*64, folder/'journal', '0'*64)
         except ValueError as error:

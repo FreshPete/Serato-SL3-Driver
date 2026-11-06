@@ -1,0 +1,231 @@
+{
+  "schema": "sl3.on-demand-deployment-checkpoint.v1",
+  "date": "2026-11-06",
+  "contractCasesPassed": 21,
+  "contractCases": [
+    {
+      "name": "prepare-protected-destination-activation-records",
+      "passed": true
+    },
+    {
+      "name": "verify-v2",
+      "passed": true
+    },
+    {
+      "name": "legacy-v1-still-verifies",
+      "passed": true
+    },
+    {
+      "name": "temporary-session-still-admits-locator-plan",
+      "passed": true
+    },
+    {
+      "name": "temporary-session-refuses-self-starting-plan",
+      "passed": true
+    },
+    {
+      "name": "actual-capsule-preparation-refuses-before-session-output",
+      "passed": true
+    },
+    {
+      "name": "all-native-payload-bytes-preserved",
+      "passed": true
+    },
+    {
+      "name": "existing-output-preserved",
+      "passed": true
+    },
+    {
+      "name": "unknown-version",
+      "passed": true
+    },
+    {
+      "name": "v1-cannot-carry-activation",
+      "passed": true
+    },
+    {
+      "name": "unknown-activation-mode",
+      "passed": true
+    },
+    {
+      "name": "reviewed-timing-cannot-mask-diagnostic",
+      "passed": true
+    },
+    {
+      "name": "rehashed-sl3-asio.conf-refused",
+      "passed": true
+    },
+    {
+      "name": "rehashed-sl3-worker.conf-refused",
+      "passed": true
+    },
+    {
+      "name": "rehashed-sl3-timing.conf-refused",
+      "passed": true
+    },
+    {
+      "name": "unbounded-lifetime",
+      "passed": true
+    },
+    {
+      "name": "service-policy",
+      "passed": true
+    },
+    {
+      "name": "claimed-measured-latency",
+      "passed": true
+    },
+    {
+      "name": "pointer-runtime-policy",
+      "passed": true
+    },
+    {
+      "name": "receipt-path-expansion-refused",
+      "passed": true
+    },
+    {
+      "name": "v2-account-path-rebinding",
+      "passed": true
+    }
+  ],
+  "isolatedCasesPassed": 261,
+  "isolatedSuites": [
+    {
+      "suite": "test-asio-file-stage.py",
+      "casesPassed": 24,
+      "indexSha256": "56317a310aa72e1071d880cbaa0debe79ccc2f22a84a195c18c4cb391e5fedc2",
+      "stdoutSha256": "7cc9cb6d65fa1d15e54af2dc78b017dae12ac74837277e3743d956e850a07ed8",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "suite": "test-asio-file-cleanup.py",
+      "casesPassed": 26,
+      "indexSha256": "de12dfa962d117cfd09ce7e6076f45fc97c61ce7c6badcb196ed3444fc4e4273",
+      "stdoutSha256": "aeac79925352783283d07e6a8dfd2686eea03d3cbc591dec5a468a7a6ad914ac",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "suite": "test-asio-install.py",
+      "casesPassed": 20,
+      "indexSha256": "8eac14762dbc062c8cdccffa28ca8afe71d874d1c590239c86d48d456950fbdc",
+      "stdoutSha256": "afe0d02539e2a6acb26a9d7dd56bfb4a5ad855914a2d9f5e295020b681fb03fa",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "suite": "test-asio-uninstall.py",
+      "casesPassed": 20,
+      "indexSha256": "f88657b839739d9d56414d3da724294a86049c3f27cbf54fe6e2e037c98f9592",
+      "stdoutSha256": "5ed46dd9125055b9e50f917906d7dece2ec89e4360ec953ce7dd9880e29d2781",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "suite": "test-asio-recover-install.py",
+      "casesPassed": 41,
+      "indexSha256": "5bb7ba3e1a0b6c4b090754d3322496af86d447bf9ff34303e34e236d1a5a8184",
+      "stdoutSha256": "c63659d63d3e4ee24869ad87b2e1641aebc3f7d0d640904b532f280510fe7540",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "suite": "test-asio-recover-uninstall.py",
+      "casesPassed": 22,
+      "indexSha256": "40a755763321382702158d4018e5917de6a125cfd519dda0bc1fc48458b8b7da",
+      "stdoutSha256": "7f20cfbd76afc3a3f1fa4fe6ee61f92df712a68af23fbddfd2215a8a27915cc8",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "suite": "test-asio-recover-files.py",
+      "casesPassed": 37,
+      "indexSha256": "fd9d0f500b99254e1e921efadd1fad48c248d65ea6ea86a519341ff94f416620",
+      "stdoutSha256": "1ec6d3be1a51081b1db03f640d2e4e54cd44cd6b30c52a42beda02b5deb34aac",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "suite": "test-asio-recover-copy.py",
+      "casesPassed": 71,
+      "indexSha256": "6bbbad56f5f01f828964bc3e373f2d9d26d8affdb6f7aed8e1d9bc92bad986ac",
+      "stdoutSha256": "82ae3f4cf8130b1a1844addf5fa96cf9a828f537f9e71b7a03e5ce92b06d8646",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "legacyCasesPassed": 100,
+  "legacySuites": [
+    {
+      "suite": "legacy-preparation",
+      "casesPassed": 26,
+      "reportSha256": "7b27b5633a7473081e844ab415a89db0a48c0d4094843282cc4e213af00c8add"
+    },
+    {
+      "suite": "legacy-rebinding",
+      "casesPassed": 10,
+      "reportSha256": "b2535b7bb1c034e498d3590aedeb1ae11720e8f9043df35d6a432db0649711dc"
+    },
+    {
+      "suite": "legacy-staging",
+      "casesPassed": 24,
+      "reportSha256": "c217ffad889b27e8e4f6afe73f2c2a75a8314e8c5794e2bb7248e29d7bf8806a"
+    },
+    {
+      "suite": "legacy-installation",
+      "casesPassed": 20,
+      "reportSha256": "3a48ec80805d61e4a41891f32fe4f30e5447caba979661203fb44ab637c37315"
+    },
+    {
+      "suite": "legacy-removal",
+      "casesPassed": 20,
+      "reportSha256": "37bd0aaa3c90121086a7e2040b221ffdcbccadee48300019326b0e33d1abb9fd"
+    }
+  ],
+  "sourceSha256": {
+    "scripts/asio-diagnostic-session.py": "e58e1ec6842c7b979f39a801032c9acf0938e9af700ca9f4e83abc9f7d134f12",
+    "scripts/asio-file-stage.py": "55dd7bce6cfc513b301a155068bc17c5605f0e9ff5d55f67d499373c98d24b60",
+    "scripts/asio-install-base.py": "5de3e3b1a674d61c8e1da570a24af9998aac9143933817928da7f4079b03b6d2",
+    "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad",
+    "scripts/asio-install.py": "a5110d99b554f7c7fecdbe07d7e81ad87b708f26a6372b95c3aa92bdbc92d666",
+    "scripts/asio-recover-copy.py": "1269cd647bc44f7a3f766bd24bf821266de2df76e5e6046c1aa6e0745def6d27",
+    "scripts/asio-recover-files.py": "f9f2d874b96522c1180d6bdeb6022d61a470b393f2d312965fe7414d31b3fbae",
+    "scripts/asio-recover-install.py": "4adaddd64656abca3a7418d35703b9a83b436a6b5d9023cbb2c5275fba11def9",
+    "scripts/asio-recover-uninstall.py": "e5d54063cc005a7db353eb7418e43848f7e71b0deecc6306c0dafff856e279b8",
+    "scripts/asio-registry.py": "f0b1009fe0a3cee39acc30e295dddeac9171082d8d7029f404a302d0114b7bbf",
+    "scripts/asio-runtime-check.py": "f7e3d3ee2a9f68a446361854717bc889882328cc721fa6613f5fef2e0498b354",
+    "scripts/asio-uninstall.py": "5210818b800a6a0d8531aadc8dd955499476ae1b3fb65b98cfe0c79565fc61d7",
+    "scripts/prepare-asio-activation-config.py": "a8b595d093bed0819ed919666ecb1a0ee8474a92b79e3afc07a14d9e205db104",
+    "scripts/prepare-asio-activation-deployment.py": "b207f3fa5870fd7eb85ca4c88c95e08bf1ba9a741ea24bfff40686167d4975c9",
+    "scripts/prepare-asio-deployment.py": "87790868d83c7d36afe8d82e00dd3894d618e32bcf99d0929f3a197a107de0c7",
+    "scripts/prepare-serato-session-capsule.py": "fdb45079ea1b403613c4dbdfdf463c644d56e6f52d86926d5c16f4605c290731",
+    "scripts/rebind-asio-deployment.py": "a7b06588a5ba70b72ac2d440f86891f8fb03b11e53addbba542f9b0c89096047",
+    "scripts/serato-session-capsule.py": "8307f5d73ab9b7c67dc2dad56d2445b67cb4981c9389a634998ff4e957725b81",
+    "scripts/test-asio-activation-deployment.py": "f3cd91fb58b8c5d138a1127481c831700ee64bb1aad570f86f0536faf6a220f3",
+    "scripts/test-asio-file-cleanup.py": "c5964183d721d6a63085df2d6466b73b9e638ff2d3a8e0454676a9e152c59cb2",
+    "scripts/test-asio-file-stage.py": "3b461b3c9104c08301eeb431413f8d127dd21bad7f3dd05bceb704d112e83887",
+    "scripts/test-asio-install.py": "7fb77074b126ada4de9ef9f68ef3766476ee5017e24d2177e648c0c669556a8e",
+    "scripts/test-asio-recover-copy.py": "b131d7e9bf0d5c15d0587f5608eebd0694610b56a0748d15dd607f3c678c79a3",
+    "scripts/test-asio-recover-files.py": "38e7b7f80aeeb758f4fec92b65c761061ef31a09b6055e90764f0e1d59055369",
+    "scripts/test-asio-recover-install.py": "44e85bf6e72a40843b1565a4980cd5bab6f3cc87dcfd5640679f5307f621c0c0",
+    "scripts/test-asio-recover-uninstall.py": "f10cc3fae74f501fd4fb8d43beac5a3d94be6cab0491cb9f541f921680adcbf9",
+    "scripts/test-asio-uninstall.py": "e83a757e154cb93c350d5c852d06ffae551f653478de9cb73bfc4288e54ec938"
+  },
+  "testReportSha256": "72576c42116b0fe017c2a1d49873e0c972504b51777fd89bdd1d3e574cb30f23",
+  "bundleManifestSha256": "5a2114b125da044bb827e8efccd2b0d261ba0deedff09f19f58755df77400e6b",
+  "priorNativeBuildReused": true,
+  "priorNativeReleaseTestsPassed": 73,
+  "priorNativeSourceAndBuildScriptPinsStillMatch": true,
+  "priorNativeBuildManifestSha256": "6bd7ae8244e568cde351cbd42d3f92528539352f43e57003993e8ba0a1a6ee2a",
+  "capsuleBoundaryReportSha256": "8ec208f172deee7cbbe608e1a68b14d571d3480230568a44cb39fa9f9b194fd6",
+  "capsuleBoundaryReason": "Temporary session requires its externally owned locator package",
+  "timeoutCleanupReportSha256": "836de963a80d4cb1d0053ed8b3886099ddac0a0d69db3decf24db599d719f4ba",
+  "earlierTimeoutWasPassingResult": false,
+  "postcheck": {
+    "observed": true,
+    "originalResources": true,
+    "occupiedPaths": [],
+    "registrationPresent": false,
+    "currentSetupClean": true
+  },
+  "productionInstallationPerformed": false,
+  "nativeDeviceAccess": false,
+  "nativePackageBinariesExecuted": false,
+  "seratoNormalStartupValidated": false,
+  "firmwareChanged": false,
+  "securityPolicyChanged": false,
+  "scope": "Protected-destination on-demand diagnostic bundle, actual workspace/private-HKCU staging/removal/recovery tests; exception-injected interruptions, not a native-device or production-installation test"
+}

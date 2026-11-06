@@ -40,8 +40,12 @@ def rebind(bundle, expected, output=None, installation=None, pointer=None):
     updated = dict(payload)
     updated['provenance.json'] = api['encoded'](provenance)
     updated['deployment-plan.json'] = api['encoded'](plan)
-    updated['sl3-asio.conf'] = api['locator_text'](installation, pointer,
-        api['digest'](payload['sl3_broker_controller.exe']), api['digest'](payload['sl3_usbdk.exe']))
+    if manifest['schema'] == 'sl3.deployment-bundle.v2':
+        updated.update(api['activation_records'](installation,
+            api['digest'](payload['sl3_broker_controller.exe']), api['digest'](payload['sl3_usbdk.exe'])))
+    else:
+        updated['sl3-asio.conf'] = api['locator_text'](installation, pointer,
+            api['digest'](payload['sl3_broker_controller.exe']), api['digest'](payload['sl3_usbdk.exe']))
     rebound = {**manifest, 'packageId': identity, 'files': {
         name: {'bytes': len(data), 'sha256': api['digest'](data)} for name, data in updated.items()}}
     # This is the same mandatory current-account verifier used by installation.

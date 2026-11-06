@@ -27,9 +27,10 @@ def main():
     j = u.sibling('asio-install-journal'); s = j.stage_module(); r = u.sibling('asio-registry')
     require(not s.elevated(), 'Unattended suite requires an ordinary token')
     sid = s.user_sid(); policy = s.Policy(sid, (s.SYSTEM, s.ADMINS, sid))
-    pointer = json.loads((ROOT/'artifacts/build/deployment-tests-last.json').read_text()); index = Path(pointer['directory'])/'index.json'
+    pointer = json.loads((Path(sys.argv[1]).absolute() if len(sys.argv) == 2 else ROOT/'artifacts/build/deployment-tests-last.json').read_text()); index = Path(pointer['directory'])/'index.json'
     require(j.digest(index.read_bytes()) == pointer['indexSha256'], 'Reviewed package index')
     package = json.loads(index.read_text()); bundle = ROOT/package['positiveBundle']; bundle_hash = package['bundleManifestSha256']
+    staged_files = len(json.loads((bundle/'bundle-manifest.json').read_text())['files']) + 3
     s.reader().verify(bundle, bundle_hash); plan = json.loads((bundle/'deployment-plan.json').read_text())
     before_bundle = {p.name: j.digest(p.read_bytes()) for p in bundle.iterdir()}
     def live():
@@ -95,7 +96,7 @@ def main():
         with fixture('complete') as f:
             value = case('isolated-complete-uninstall', lambda: run(f))
             require(value['successful'] and value['finalRegistryAbsentObserved'] and value['directoryAbsentObserved'] and
-                    len(value['registryResult']['deletedKeys']) == 3 and len(value['fileResult']['absentObservedFiles']) == 14,
+                    len(value['registryResult']['deletedKeys']) == 3 and len(value['fileResult']['absentObservedFiles']) == staged_files,
                     'Both independently observed removals')
             journal = case('complete-uninstall-retained-journal', lambda: j.inspect_journal(f[0], Path(value['journal']), policy))
             require(journal['records'][-1]['payload']['event'] == 'uninstall_completed', 'Flushed completion observation')
@@ -123,27 +124,27 @@ def main():
             winreg.DeleteKeyEx(f[3], r.entries(plan)[1]['key'], winreg.KEY_WOW64_64KEY, 0)
             before = r.inspect(f[3], plan)
             value = case('partial-registration-preserved', lambda: fail(lambda: run(f)))
-            require(not value['registryRemovalAttempted'] and before == r.inspect(f[3], plan) and len(files(f[1])) == 14, 'Partial state requires reconciliation')
+            require(not value['registryRemovalAttempted'] and before == r.inspect(f[3], plan) and len(files(f[1])) == staged_files, 'Partial state requires reconciliation')
         with fixture('overlay') as f:
             with winreg.CreateKeyEx(f[4], r.entries(plan)[0]['key'], 0, ACCESS) as key:
                 winreg.SetValueEx(key, '', 0, winreg.REG_SZ, 'foreign overlay')
             value = case('current-user-overlay-blocks-removal', lambda: fail(lambda: run(f)))
-            require(not value['registryRemovalAttempted'] and r.inspect(f[3], plan)['exactOwned'] and len(files(f[1])) == 14, 'Overlay conflict preserves both')
+            require(not value['registryRemovalAttempted'] and r.inspect(f[3], plan)['exactOwned'] and len(files(f[1])) == staged_files, 'Overlay conflict preserves both')
         with fixture('busy-file') as f:
             with s.open_file(f[1]/'README.txt'):
                 value = case('busy-file-after-registration-removal-reports-partial', lambda: fail(lambda: run(f)))
                 require(value['registryResult']['successful'] and value['fileCleanupAttempted'] and
-                        not value['fileResult']['deleteMarkedFiles'] and r.inspect(f[3], plan)['allAbsent'] and len(files(f[1])) == 14,
+                        not value['fileResult']['deleteMarkedFiles'] and r.inspect(f[3], plan)['allAbsent'] and len(files(f[1])) == staged_files,
                         'Registration removed but busy stage retained, without fake rollback')
             value = case('busy-reader-release-resumes-absent-registration', lambda: run(f))
             require(value['successful'] and not value['registryRemovalAttempted'], 'Explicit retry removes remaining owned stage')
         with fixture('lock-conflict') as f:
             with j.transaction(f[0], policy, 'uninstall', {'packageId': plan['packageId']}):
                 value = case('competing-transaction-preserves-state', lambda: fail(lambda: run(f)))
-                require(value['journal'] is None and r.inspect(f[3], plan)['exactOwned'] and len(files(f[1])) == 14, 'Lock refusal before mutations')
+                require(value['journal'] is None and r.inspect(f[3], plan)['exactOwned'] and len(files(f[1])) == staged_files, 'Lock refusal before mutations')
         with fixture('wrong-base') as f:
             value = case('stage-outside-serialized-base-refused', lambda: fail(lambda: u.uninstall_owned(folder, f[1], f[2], policy, f[3], f[4])))
-            require(value['journal'] is None and r.inspect(f[3], plan)['exactOwned'] and len(files(f[1])) == 14, 'Base scope refusal before mutations')
+            require(value['journal'] is None and r.inspect(f[3], plan)['exactOwned'] and len(files(f[1])) == staged_files, 'Base scope refusal before mutations')
         with fixture('late-foreign-file') as f:
             real_unregister = r.unregister_owned
             def add_unknown(root, plan, journal):
@@ -156,7 +157,7 @@ def main():
             finally:
                 r.unregister_owned = real_unregister
             require(value['registryResult']['successful'] and not value['fileResult']['deleteMarkedFiles'] and
-                    len(files(f[1])) == 15 and (f[1]/'foreign.txt').read_bytes() == b'preserve late foreign data',
+                    len(files(f[1])) == staged_files + 1 and (f[1]/'foreign.txt').read_bytes() == b'preserve late foreign data',
                     'Full cleanup revalidation preserves unknown data after registration phase')
         with fixture('journal-failure') as f:
             real_write = j.write_flush; count = []
@@ -171,7 +172,7 @@ def main():
             finally:
                 j.write_flush = real_write
             require(not value['registryRemovalAttempted'] and not value['failureJournalPersisted'] and
-                    r.inspect(f[3], plan)['exactOwned'] and len(files(f[1])) == 14, 'No mutation after journal failure')
+                    r.inspect(f[3], plan)['exactOwned'] and len(files(f[1])) == staged_files, 'No mutation after journal failure')
         with fixture('interrupted-registry') as f:
             real_unregister = r.unregister_owned
             def interrupted(root, plan, journal):
@@ -186,7 +187,7 @@ def main():
             finally:
                 r.unregister_owned = real_unregister
             require(len(value['registryResult']['deletedKeys']) == 1 and not value['fileCleanupAttempted'] and
-                    len(files(f[1])) == 14 and value['failureJournalPersisted'], 'Exact partial registry receipt, all stage files retained')
+                    len(files(f[1])) == staged_files and value['failureJournalPersisted'], 'Exact partial registry receipt, all stage files retained')
         with fixture('final-journal-failure') as f:
             real_write = j.write_flush
             def fail_completion(handle, raw):

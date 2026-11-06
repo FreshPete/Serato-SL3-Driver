@@ -32,9 +32,10 @@ def main():
     i = m.install; j = i.sibling('asio-install-journal'); s = j.stage_module(); r = i.sibling('asio-registry')
     require(not s.elevated(), 'Ordinary token required for unattended suite')
     sid = s.user_sid(); policy = s.Policy(sid, (s.SYSTEM, s.ADMINS, sid))
-    pointer = json.loads((ROOT/'artifacts/build/deployment-tests-last.json').read_text()); index = Path(pointer['directory'])/'index.json'
+    pointer = json.loads((Path(sys.argv[1]).absolute() if len(sys.argv) == 2 else ROOT/'artifacts/build/deployment-tests-last.json').read_text()); index = Path(pointer['directory'])/'index.json'
     require(j.digest(index.read_bytes()) == pointer['indexSha256'], 'Reviewed package index')
     package = json.loads(index.read_text()); bundle = ROOT/package['positiveBundle']; expected = package['bundleManifestSha256']
+    staged_files = len(json.loads((bundle/'bundle-manifest.json').read_text())['files']) + 3
     s.reader().verify(bundle, expected); plan = json.loads((bundle/'deployment-plan.json').read_text())
     source_before = {p.name: j.digest(p.read_bytes()) for p in bundle.iterdir()}
     locations = [Path(plan['installationDirectory']), Path(plan['pointerPath']).parent]; before_locations = [p.exists() for p in locations]
@@ -139,7 +140,7 @@ def main():
     try:
         with winreg.CreateKeyEx(winreg.HKEY_CURRENT_USER, namespace, 0, ACCESS) as marker:
             winreg.SetValueEx(marker, 'SL3TestOwner', 0, winreg.REG_SZ, identity)
-        for boundary in range(41):
+        for boundary in range(3 * (staged_files - 2) + 5):
             with fixture('boundary-'+str(boundary), boundary) as f:
                 count = len(list(f[1].iterdir()))
                 value = case('recover-after-staging-event-'+str(boundary), lambda: run(f))
@@ -156,7 +157,7 @@ def main():
             case('unjournalled-file-creation-preserved', lambda: unchanged(f, lambda: run(f)))
         with fixture('stage-gap', gap='stage-completion') as f:
             value = case('complete-stage-before-completion-journal-recovered', lambda: run(f))
-            require(value['successful'] and len(value['absentObservedFiles']) == 14, 'Created receipt witness covers completion-record gap')
+            require(value['successful'] and len(value['absentObservedFiles']) == staged_files, 'Created receipt witness covers completion-record gap')
         with fixture('completed-stage', complete_stage=True) as f:
             case('journalled-complete-stage-preserved-for-install-recovery', lambda: unchanged(f, lambda: run(f)))
         with fixture('unknown') as f:

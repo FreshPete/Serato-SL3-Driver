@@ -18,6 +18,30 @@ LIMIT = 16*1024*1024
 REQUIRED = {'sl3_asio.dll', 'sl3_broker_controller.exe', 'sl3_usbdk.exe', 'UsbDkHelper.dll',
             'sl3-asio.conf', 'PROJECT-LICENSE.txt', 'USBDK-LICENSE.txt', 'THIRD-PARTY-NOTICES.txt',
             'deployment-plan.json', 'provenance.json', 'README.txt'}
+ACTIVATION_REQUIRED = REQUIRED | {'sl3-worker.conf', 'sl3-timing.conf'}
+ACTIVATION_MODE = 'asio-init-v1'
+
+
+def required_files(manifest):
+    """Select a fixed inventory before using any manifest-controlled filename."""
+    if manifest.get('schema') == 'sl3.deployment-bundle.v1':
+        require('activationMode' not in manifest, 'Legacy bundle cannot select activation')
+        return REQUIRED
+    require(manifest.get('schema') == 'sl3.deployment-bundle.v2' and
+            manifest.get('activationMode') == ACTIVATION_MODE and
+            manifest.get('timingMode') == 'unmeasured-diagnostic-44100-128', 'Unsupported deployment bundle mode/version')
+    return ACTIVATION_REQUIRED
+
+
+def allowed_receipt_inventory(names):
+    # Receipts are read before their captured manifest can be verified. Admit
+    # only these two complete fixed sets, never arbitrary receipt filenames.
+    return set(names) in (REQUIRED | {'bundle-manifest.json'}, ACTIVATION_REQUIRED | {'bundle-manifest.json'})
+
+
+def require_session_locator(plan):
+    require(plan.get('activationMode') is None and plan.get('automaticStart') is False and
+            plan.get('rateProfileIncluded') is False, 'Temporary session requires its externally owned locator package')
 
 
 def require(value, message):
@@ -126,6 +150,19 @@ def locator_text(installation, pointer, controller_sha, worker_sha):
             '\nbroker_sha256='+controller_sha+'\nworker_sha256='+worker_sha+'\n').encode('utf-8')
 
 
+def activation_records(installation, controller_sha, worker_sha):
+    """Records bind final protected destinations, without a session pointer."""
+    timing = ('SL3-ASIO-DIAGNOSTIC-TIMING-1\nworker_sha256=' + worker_sha + '\nhelper_sha256=' + HELPER_SHA +
+              '\nrate_hz=44100\nbuffer_frames=128\n').encode('utf-8')
+    worker = ('SL3-ASIO-CONFIG-1\nworker=' + str(installation/'sl3_usbdk.exe') + '\nworker_sha256=' + worker_sha +
+              '\nhelper=' + str(installation/'UsbDkHelper.dll') + '\ntiming_record=' + str(installation/'sl3-timing.conf') +
+              '\ntiming_record_sha256=' + digest(timing) + '\n').encode('utf-8')
+    entry = ('SL3-ASIO-ACTIVATION-1\ncontroller=' + str(installation/'sl3_broker_controller.exe') +
+             '\ncontroller_sha256=' + controller_sha + '\ninput=' + str(installation/'sl3-worker.conf') +
+             '\ninput_sha256=' + digest(worker) + '\nstartup_timeout_ms=15000\nstartup_failure_grace_ms=5000\nlifetime_ms=600000\n').encode('utf-8')
+    return {'sl3-asio.conf': entry, 'sl3-worker.conf': worker, 'sl3-timing.conf': timing}
+
+
 def prepare(manifest, expected, helper, output, installation, pointer, unmeasured=False):
     installation, pointer = destinations(installation, pointer)
     output = inside(output, ROOT/'artifacts/build/deployment-bundles')
@@ -231,9 +268,10 @@ def capture_bundle(bundle, expected):
         require(not path.is_symlink() and not (getattr(path.stat(), 'st_file_attributes', 0) & 0x400), 'Reparse bundle/manifest refused')
     raw = read(bundle/'bundle-manifest.json'); require(digest(raw) == sha_value(expected), 'Bundle manifest hash mismatch')
     manifest = record(raw)
-    require(manifest['schema'] == 'sl3.deployment-bundle.v1' and set(manifest['files']) == REQUIRED, 'Bundle schema/inventory mismatch')
+    inventory = required_files(manifest)
+    require(set(manifest['files']) == inventory, 'Bundle schema/inventory mismatch')
     require(all(manifest[k] is False for k in ('installed', 'registryWritten', 'binaryExecuted', 'protectedInstallationCreated', 'physicalAudioTested', 'currentSeratoAdmissionTested')), 'Review bundle cannot claim installation or hardware validation')
-    require({x.name for x in bundle.iterdir()} == REQUIRED | {'bundle-manifest.json'}, 'Unexpected or missing bundle file')
+    require({x.name for x in bundle.iterdir()} == inventory | {'bundle-manifest.json'}, 'Unexpected or missing bundle file')
     payload = {}
     for name, details in manifest['files'].items():
         path = bundle/name
@@ -257,7 +295,8 @@ def verify_payloads(manifest, payload):
 
 def inspect_portable_payloads(manifest, payload):
     """Check portable metadata/PE bytes; never authorizes staging or old paths."""
-    require(manifest['schema'] == 'sl3.deployment-bundle.v1' and set(manifest['files']) == REQUIRED and set(payload) == REQUIRED, 'Bundle schema/inventory mismatch')
+    inventory = required_files(manifest)
+    require(set(manifest['files']) == inventory and set(payload) == inventory, 'Bundle schema/inventory mismatch')
     require(all(manifest[k] is False for k in ('installed', 'registryWritten', 'binaryExecuted', 'protectedInstallationCreated', 'physicalAudioTested', 'currentSeratoAdmissionTested')), 'Review bundle cannot claim installation or hardware validation')
     for name, data in payload.items():
         details = manifest['files'][name]
@@ -277,6 +316,10 @@ def inspect_portable_payloads(manifest, payload):
     timing_mode = seed.get('timingMode')
     require(timing_mode in (None, 'unmeasured-diagnostic-44100-128') and
             timing_mode == manifest.get('timingMode') == plan.get('timingMode'), 'Bundle timing mode mismatch')
+    activation = manifest['schema'] == 'sl3.deployment-bundle.v2'
+    require(seed.get('activationMode') == manifest.get('activationMode') == plan.get('activationMode'), 'Activation mode mismatch')
+    if activation:
+        sha_value(seed['activationToolSha256']); sha_value(seed['activationOriginBundleSha256']); sha_value(seed['activationContractSha256'])
     installation = Path(seed['installationDirectory'])
     pointer = Path(seed['pointerPath'])
     # Inspect foreign destination text without opening or following those paths.
@@ -285,13 +328,22 @@ def inspect_portable_payloads(manifest, payload):
         require(path.is_absolute() and len(path.drive) == 2 and path.drive[1] == ':' and
                 '..' not in path.parts and ':' not in str(path)[2:] and
                 not any(ord(char) < 32 for char in str(path)), 'Local portable destination syntax required')
-    require(payload['sl3-asio.conf'] == locator_text(installation, pointer, digest(payload['sl3_broker_controller.exe']), digest(payload['sl3_usbdk.exe'])), 'Locator does not bind planned binaries/pointer')
+    if activation:
+        expected_records = activation_records(installation, digest(payload['sl3_broker_controller.exe']), digest(payload['sl3_usbdk.exe']))
+        require(all(payload[name] == data for name, data in expected_records.items()), 'Activation records do not bind protected destinations/binaries/timing')
+    else:
+        require(payload['sl3-asio.conf'] == locator_text(installation, pointer, digest(payload['sl3_broker_controller.exe']), digest(payload['sl3_usbdk.exe'])), 'Locator does not bind planned binaries/pointer')
     require(plan['schema'] == 'sl3.deployment-plan.v1' and plan['packageId'] == manifest['packageId'] and
             plan['registryView'] == 64 and plan['registryHive'] == 'HKEY_LOCAL_MACHINE' and plan['registryApplied'] is False and
             plan['registryEntries'] == registry_entries(installation, manifest['packageId']) and
             plan['installationDirectory'] == str(installation) and plan['pointerPath'] == str(pointer), 'Plan identity/view/entries mismatch')
     require(plan['proposedAcl'] == PROPOSED_ACL and plan['requiresAdministratorAtInstall'] is True and
-            all(plan[k] is False for k in ('automaticStart', 'serviceCreated', 'rateProfileIncluded')), 'Unsafe installation policy proposed')
+            plan['serviceCreated'] is False and plan['automaticStart'] is activation and
+            plan['rateProfileIncluded'] is activation, 'Unsafe installation policy proposed')
+    if activation:
+        require(plan.get('activationTrigger') == 'IASIO.init' and plan.get('maximumLifetimeMs') == 600000 and
+                plan.get('sessionPointerUsed') is False and plan.get('latencyAvailable') is False,
+                'Explicit bounded diagnostic activation policy required')
     return {'portableContractVerified': True, 'installationDirectory': str(installation), 'pointerPath': str(pointer),
             'productionDestinationsAdmitted': False, 'binaryExecuted': False}
 

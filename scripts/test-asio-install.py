@@ -27,9 +27,10 @@ def main():
     j = i.sibling('asio-install-journal'); s = j.stage_module(); r = i.sibling('asio-registry'); runtime = i.sibling('asio-runtime-check')
     require(not s.elevated(), 'Unattended tests must run non-elevated')
     sid = s.user_sid(); policy = s.Policy(sid, (s.SYSTEM, s.ADMINS, sid))
-    pointer = json.loads((ROOT/'artifacts/build/deployment-tests-last.json').read_text()); index = Path(pointer['directory'])/'index.json'
+    pointer = json.loads((Path(sys.argv[1]).absolute() if len(sys.argv) == 2 else ROOT/'artifacts/build/deployment-tests-last.json').read_text()); index = Path(pointer['directory'])/'index.json'
     require(j.digest(index.read_bytes()) == pointer['indexSha256'], 'Reviewed package test index')
     package = json.loads(index.read_text()); bundle = ROOT/package['positiveBundle']; expected = package['bundleManifestSha256']
+    staged_files = len(json.loads((bundle/'bundle-manifest.json').read_text())['files']) + 3
     s.reader().verify(bundle, expected); plan = json.loads((bundle/'deployment-plan.json').read_text())
     before_bundle = {p.name: j.digest(p.read_bytes()) for p in bundle.iterdir()}
     locations = [Path(plan['installationDirectory']), Path(plan['pointerPath']).parent]; before_locations = [p.exists() for p in locations]
@@ -100,7 +101,7 @@ def main():
             finally:
                 r.register_new = real_register
             require(value['successful'] and value['runtimeDirectImportsResolved'] and value['stageVerifiedObserved'] and
-                    value['registrationOwnedObserved'] and not value['productionPolicy'] and len(list(f[1].iterdir())) == 14,
+                    value['registrationOwnedObserved'] and not value['productionPolicy'] and len(list(f[1].iterdir())) == staged_files,
                     'Actual isolated stage/registry observations, not production protection')
             case('source-and-stage-leased-across-registration', lambda: {'writeOpensDenied': len(denied)})
             journal = case('installation-completion-journal', lambda: j.inspect_journal(f[0], Path(value['journal']), policy))
@@ -187,7 +188,7 @@ def main():
             finally:
                 r.register_new = real_register
             require(value['registrationAttempted'] and value['registrationResult']['rolledBackKeys'] and
-                    r.inspect(f[2], plan)['allAbsent'] and len(list(f[1].iterdir())) == 14, 'Engine rollback remains scoped; complete stage retained')
+                    r.inspect(f[2], plan)['allAbsent'] and len(list(f[1].iterdir())) == staged_files, 'Engine rollback remains scoped; complete stage retained')
         with fixture('late-registration-conflict') as f:
             real_stage = s.stage_new
             def late_conflict(*args, **kwargs):
@@ -200,7 +201,7 @@ def main():
                 value = case('post-stage-registration-conflict-preserves-both', lambda: fail(lambda: run(f)))
             finally:
                 s.stage_new = real_stage
-            require(value['stageResult'] and not value['registrationAttempted'] and len(list(f[1].iterdir())) == 14 and
+            require(value['stageResult'] and not value['registrationAttempted'] and len(list(f[1].iterdir())) == staged_files and
                     r.snapshot(f[2], r.entries(plan)[0]['key'])['values']['']['data'] == 'preserve late foreign registration',
                     'Conflict after staging is not overwritten or used to delete the stage')
         with fixture('completion-journal-failure') as f:

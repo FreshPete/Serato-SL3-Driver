@@ -27,10 +27,11 @@ def main():
     spec = importlib.util.spec_from_file_location('sl3_cleanup_under_test', TOOL)
     stage = importlib.util.module_from_spec(spec); sys.modules[spec.name] = stage; spec.loader.exec_module(stage)
     require(not stage.elevated(), 'Unattended test must be non-elevated')
-    pointer = json.loads((ROOT/'artifacts/build/deployment-tests-last.json').read_text())
+    pointer = json.loads((Path(sys.argv[1]).absolute() if len(sys.argv) == 2 else ROOT/'artifacts/build/deployment-tests-last.json').read_text())
     index = Path(pointer['directory'])/'index.json'
     require(sha(index) == pointer['indexSha256'], 'Reviewed package index hash')
     package = json.loads(index.read_text()); bundle = ROOT/package['positiveBundle']; expected = package['bundleManifestSha256']
+    staged_files = len(json.loads((bundle/'bundle-manifest.json').read_text())['files']) + 3
     stage.reader().verify(bundle, expected)
     folder = ROOT/'artifacts/build/file-cleanup-tests'/uuid.uuid4().hex; folder.mkdir(parents=True)
     sid = stage.user_sid(); policy = stage.Policy(sid, (stage.SYSTEM, stage.ADMINS, sid))
@@ -92,10 +93,10 @@ def main():
     positive, digest = fixture('positive'); events = []
     result = case('complete-owned-cleanup', lambda: stage.remove_stage(positive, digest, policy, events.append))
     require(result['successful'] and result['directoryDeletionMarked'] and result['directoryAbsentObserved'] and
-            stage.absent(positive) and len(result['deleteMarkedFiles']) == 14 and
+            stage.absent(positive) and len(result['deleteMarkedFiles']) == staged_files and
             result['deleteMarkedFiles'] == result['absentObservedFiles'], 'All fourteen files and own directory observed absent')
     require(events[0]['event'] == 'validated' and events[0]['stageRecordSha256'] == digest and
-            len(events[0]['stageRecord']['files']) == 12, 'Caller receives recovery metadata before mutation')
+            len(events[0]['stageRecord']['files']) == (staged_files - 2), 'Caller receives recovery metadata before mutation')
     require(result['deleteMarkedFiles'][-2:] == ['stage-intent.json', 'stage-record.json'] and
             result['deleteMarkedFiles'][0] == 'sl3_asio.dll', 'Binaries first, intent/receipt last')
     (folder/'positive-journal.json').write_text(json.dumps(events, indent=2)+'\n', encoding='utf-8')
@@ -195,14 +196,14 @@ def main():
     result = case('journal-failure-truthful-partial', lambda: refused(destination, digest, fail_after, zero=False))
     require(result['deleteMarkedFiles'] == ['sl3_asio.dll'] and result['absentObservedFiles'] == ['sl3_asio.dll'] and
             result['stageRecordStillPresent'] and result['intentStillPresent'], 'Partial receipt retains exact observed deletion and recovery records')
-    require(not (destination/'sl3_asio.dll').exists() and len(snapshot(destination)) == 13, 'No retry or remaining file deletion')
+    require(not (destination/'sl3_asio.dll').exists() and len(snapshot(destination)) == (staged_files - 1), 'No retry or remaining file deletion')
 
     destination, digest = fixture('late-foreign-file'); unknown = destination/'foreign.txt'
     def late_file(event):
         if event['event'] == 'before_delete' and event['name'] == 'stage-intent.json':
             unknown.write_bytes(b'foreign data must survive')
     result = case('late-foreign-file-preserved', lambda: refused(destination, digest, late_file, zero=False))
-    require(len(result['absentObservedFiles']) == 12 and result['stageRecordStillPresent'] and result['intentStillPresent'] and
+    require(len(result['absentObservedFiles']) == (staged_files - 2) and result['stageRecordStillPresent'] and result['intentStillPresent'] and
             unknown.read_bytes() == b'foreign data must survive', 'Late unknown data and recovery metadata retained')
 
     destination, digest = fixture('late-directory-data'); late = destination/'foreign.txt'
@@ -210,7 +211,7 @@ def main():
         if event['event'] == 'before_directory_delete':
             late.write_bytes(b'directory is no longer empty')
     result = case('nonempty-final-directory-preserved', lambda: refused(destination, digest, before_directory, zero=False))
-    require(len(result['absentObservedFiles']) == 14 and not result['directoryDeletionMarked'] and late.exists() and
+    require(len(result['absentObservedFiles']) == staged_files and not result['directoryDeletionMarked'] and late.exists() and
             not result['stageRecordStillPresent'], 'External recovery record required after receipt deletion')
 
     destination, digest = fixture('mapped-image')

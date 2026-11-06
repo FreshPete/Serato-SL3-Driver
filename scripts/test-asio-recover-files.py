@@ -28,9 +28,10 @@ def main():
     u = m.uninstall; j = u.sibling('asio-install-journal'); s = j.stage_module(); r = u.sibling('asio-registry')
     require(not s.elevated(), 'Ordinary token required for unattended suite')
     sid = s.user_sid(); policy = s.Policy(sid, (s.SYSTEM, s.ADMINS, sid))
-    pointer = json.loads((ROOT/'artifacts/build/deployment-tests-last.json').read_text()); index = Path(pointer['directory'])/'index.json'
+    pointer = json.loads((Path(sys.argv[1]).absolute() if len(sys.argv) == 2 else ROOT/'artifacts/build/deployment-tests-last.json').read_text()); index = Path(pointer['directory'])/'index.json'
     require(j.digest(index.read_bytes()) == pointer['indexSha256'], 'Reviewed package index')
     package = json.loads(index.read_text()); bundle = ROOT/package['positiveBundle']; expected = package['bundleManifestSha256']
+    staged_files = len(json.loads((bundle/'bundle-manifest.json').read_text())['files']) + 3
     s.reader().verify(bundle, expected); plan = json.loads((bundle/'deployment-plan.json').read_text())
     source_before = {p.name: j.digest(p.read_bytes()) for p in bundle.iterdir()}
     locations = [Path(plan['installationDirectory']), Path(plan['pointerPath']).parent]; before_locations = [p.exists() for p in locations]
@@ -87,7 +88,7 @@ def main():
                         raise OSError('Simulated original completion-record failure after directory removal')
                     real_write(handle, raw)
                 try:
-                    if deleted == 15:
+                    if deleted == staged_files + 1:
                         j.write_flush = fail_completion
                     else:
                         s.remove_stage = interrupted
@@ -120,19 +121,19 @@ def main():
     try:
         with winreg.CreateKeyEx(winreg.HKEY_CURRENT_USER, namespace, 0, ACCESS) as marker:
             winreg.SetValueEx(marker, 'SL3TestOwner', 0, winreg.REG_SZ, identity)
-        for deleted in range(16):
+        for deleted in range(staged_files + 2):
             with fixture('boundary-'+str(deleted), deleted) as f:
                 value = case('recover-after-'+str(deleted)+'-file-boundary', lambda: run(f))
-                absent = min(deleted, 14)
+                absent = min(deleted, staged_files)
                 require(value['successful'] and len(value['initiallyAbsentFiles']) == absent and
-                        len(value['absentObservedFiles']) == 14-absent and not f[1].exists() and
-                        value['directoryAlreadyAbsentObserved'] == (deleted == 15), 'Exact existing/missing/new deletion accounting')
+                        len(value['absentObservedFiles']) == staged_files-absent and not f[1].exists() and
+                        value['directoryAlreadyAbsentObserved'] == (deleted == staged_files + 1), 'Exact existing/missing/new deletion accounting')
                 require(j.inspect_journal(f[0], Path(value['journal']), policy)['records'][-1]['payload']['event'] == 'file_recovery_completed', 'Flushed recovery completion')
         with fixture('arbitrary-holes', 0) as f:
             for name in ['README.txt', 'sl3-asio.conf', 'bundle-manifest.json']:
                 (f[1]/name).unlink()
             value = case('non-prefix-missing-files-recovered-from-fresh-state', lambda: run(f))
-            require(len(value['initiallyAbsentFiles']) == 3 and len(value['absentObservedFiles']) == 11, 'No inferred deletion history')
+            require(len(value['initiallyAbsentFiles']) == 3 and len(value['absentObservedFiles']) == staged_files - 3, 'No inferred deletion history')
         with fixture('foreign') as f:
             (f[1]/'foreign.txt').write_bytes(b'preserve unknown data')
             case('unknown-file-preserved-before-mutation', lambda: no_mutation(f, lambda: run(f)))
@@ -171,7 +172,7 @@ def main():
             case('wrong-journal-review-hash-refused', lambda: no_mutation(f, lambda: m.recover_owned(bundle, expected, *f[:4], '0'*64, policy, *f[5:])))
         with fixture('bad-stage-hash') as f:
             case('wrong-stage-review-hash-refused', lambda: no_mutation(f, lambda: m.recover_owned(bundle, expected, f[0], f[1], '0'*64, f[3], f[4], policy, *f[5:])))
-        with fixture('recreated-root', 15) as f:
+        with fixture('recreated-root', staged_files + 1) as f:
             with s.descriptor(policy.sddl(True)) as attributes:
                 s.check(s.api('kernel32.dll', 'CreateDirectoryW', W.BOOL, [W.LPCWSTR, ctypes.POINTER(s.Attributes)])(str(f[1]), ctypes.byref(attributes)))
             case('recreated-empty-directory-preserved', lambda: no_mutation(f, lambda: run(f)))
@@ -186,7 +187,7 @@ def main():
                 value = case('late-unknown-data-prevents-first-new-deletion', lambda: fail(lambda: run(f)))
             finally:
                 j.write_flush = real_write
-            require(injected and not value['deleteMarkedFiles'] and len(list(f[1].iterdir())) == 14, 'Late unknown and all survivors preserved')
+            require(injected and not value['deleteMarkedFiles'] and len(list(f[1].iterdir())) == staged_files, 'Late unknown and all survivors preserved')
         with fixture('journal-after-delete') as f:
             real_write = j.write_flush
             def fail_after_delete(handle, raw):
@@ -200,7 +201,7 @@ def main():
                 j.write_flush = real_write
             require(len(value['deleteMarkedFiles']) == len(value['absentObservedFiles']) == 1 and not value['successful'], 'Exact newly observed removal, not success')
             value = case('explicit-retry-rechecks-original-journal-and-current-survivors', lambda: run(f))
-            require(value['successful'] and len(value['initiallyAbsentFiles']) == 2 and len(value['absentObservedFiles']) == 12, 'Retry does not repeat earlier deletion')
+            require(value['successful'] and len(value['initiallyAbsentFiles']) == 2 and len(value['absentObservedFiles']) == (staged_files - 2), 'Retry does not repeat earlier deletion')
         try:
             m.recover_production(bundle, expected, folder, folder/'stage', '0'*64, folder/'journal', '0'*64)
         except ValueError as error:

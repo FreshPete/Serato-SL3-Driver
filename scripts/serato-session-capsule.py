@@ -61,6 +61,7 @@ def verify(path, expected):
     bundle = Path(record['bundle']['path'])
     module('prepare-asio-deployment.py','verify')(bundle,record['bundle']['sha256'])
     plan = json.loads((bundle/'deployment-plan.json').read_bytes())
+    module('prepare-asio-deployment.py','require_session_locator')(plan)
     require(plan['timingMode'] == 'unmeasured-diagnostic-44100-128','Reviewed diagnostic package required')
     return record,plan,path.parent
 

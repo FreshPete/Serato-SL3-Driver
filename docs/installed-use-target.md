@@ -35,6 +35,8 @@ The [first installed-startup investigation](installed-startup-investigation.md) 
 
 A [native on-demand activation component](broker-on-demand-activation.md) now exercises controller ownership, configuration binding and lease-driven retirement with simulated workers and the real ASIO facade. The [stable activation record and lazy ASIO entry path](asio-activation-entry.md) are now wired in source and pass unregistered COM/IASIO tests with simulated transport, including software reopen and callback ownership. Native hardware validation and normal Serato primary selection remain open; no installed service or automatic normal-start mechanism has been deployed.
 
+The [on-demand deployment package](asio-on-demand-deployment.md) now binds its entry/worker/timing records to final protected paths. Isolated workspace/private-HKCU staging, registration, removal and recovery pass; native binaries are preserved and the temporary session route refuses this mode. This is installer-library validation, not production installation or ordinary Serato startup. The ten-minute unmeasured diagnostic limit still applies.
+
 ## Acceptance checks
 
 1. Setup installs the required reviewed components once and records exact installed/original identities for repair and uninstall.

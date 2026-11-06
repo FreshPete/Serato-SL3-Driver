@@ -31,6 +31,7 @@ def prepare(application,bundle,expected,output=None,capture=False):
                    'Reviewed Serato application required')
     api['module']('prepare-asio-deployment.py','verify')(bundle,expected)
     plan = json.loads((bundle/'deployment-plan.json').read_bytes())
+    api['module']('prepare-asio-deployment.py','require_session_locator')(plan)
     api['require'](plan['timingMode'] == 'unmeasured-diagnostic-44100-128','Reviewed diagnostic package required')
     python = Path(sys.executable).absolute()
     record = {'schema':'sl3.session-capsule.v1','projectRoot':str(ROOT),

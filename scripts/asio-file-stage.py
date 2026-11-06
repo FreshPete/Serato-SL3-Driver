@@ -244,10 +244,11 @@ def snapshot_bundle(bundle, expected, stack):
     handle = stack.enter_context(open_file(bundle/'bundle-manifest.json'))
     raw = read_handle(handle, module.LIMIT); require(hashlib.sha256(raw).hexdigest() == expected, 'Reviewed bundle manifest mismatch')
     manifest = module.record(raw)
-    require(set(manifest['files']) == module.REQUIRED and {p.name for p in bundle.iterdir()} == module.REQUIRED | {'bundle-manifest.json'}, 'Exact source inventory required')
+    inventory = module.required_files(manifest)
+    require(set(manifest['files']) == inventory and {p.name for p in bundle.iterdir()} == inventory | {'bundle-manifest.json'}, 'Exact source inventory required')
     require(sum(item['bytes'] for item in manifest['files'].values()) <= TOTAL_LIMIT, 'Total stage payload limit')
     payload = {}
-    for name in sorted(module.REQUIRED):
+    for name in sorted(inventory):
         handle = stack.enter_context(open_file(bundle/name))
         payload[name] = read_handle(handle, module.LIMIT)
     module.verify_payloads(manifest, payload)
@@ -334,7 +335,7 @@ def inspect_stage(destination, expected, policy=PRODUCTION):
                 Path(record['directory']['path']) == destination and record['policy'] == policy.record() and
                 record['productionPolicy'] == (policy == PRODUCTION) and
                 all(record[k] is False for k in ('registered', 'binaryPayloadExecuted', 'deviceAccess')), 'Stage receipt root/policy mismatch')
-        require(set(record['files']) == module.REQUIRED | {'bundle-manifest.json'} and
+        require(module.allowed_receipt_inventory(record['files']) and
                 {p.name for p in destination.iterdir()} == set(record['files']) | {'stage-record.json', 'stage-intent.json'}, 'Staged inventory mismatch')
         require(sum(item['bytes'] for item in record['files'].values()) <= TOTAL_LIMIT, 'Staged payload total limit')
         payload = {}
@@ -423,7 +424,7 @@ def remove_stage(destination, expected, policy=PRODUCTION, journal=None):
                     record['policy'] == policy.record(), 'Cleanup root identity/policy changed')
             expected_names = set(record['files']) | {'stage-record.json', 'stage-intent.json'}
             require({p.name for p in destination.iterdir()} == expected_names, 'Cleanup inventory changed')
-            require(set(record['files']) == module.REQUIRED | {'bundle-manifest.json'}, 'Cleanup receipt inventory mismatch')
+            require(module.allowed_receipt_inventory(record['files']), 'Cleanup receipt inventory mismatch')
             metadata = dict(record['files']); metadata['stage-intent.json'] = record['intent']
             for name, details in metadata.items():
                 handle = lock(name); file = inspect_policy(handle, policy, False)['file']

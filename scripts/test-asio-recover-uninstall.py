@@ -27,9 +27,10 @@ def main():
     u = recovery.uninstall; j = u.sibling('asio-install-journal'); s = j.stage_module(); r = u.sibling('asio-registry')
     require(not s.elevated(), 'Unattended suite must be non-elevated')
     sid = s.user_sid(); policy = s.Policy(sid, (s.SYSTEM, s.ADMINS, sid))
-    pointer = json.loads((ROOT/'artifacts/build/deployment-tests-last.json').read_text()); index = Path(pointer['directory'])/'index.json'
+    pointer = json.loads((Path(sys.argv[1]).absolute() if len(sys.argv) == 2 else ROOT/'artifacts/build/deployment-tests-last.json').read_text()); index = Path(pointer['directory'])/'index.json'
     require(j.digest(index.read_bytes()) == pointer['indexSha256'], 'Reviewed package test index')
     package = json.loads(index.read_text()); bundle = ROOT/package['positiveBundle']; expected = package['bundleManifestSha256']
+    staged_files = len(json.loads((bundle/'bundle-manifest.json').read_text())['files']) + 3
     s.reader().verify(bundle, expected); plan = json.loads((bundle/'deployment-plan.json').read_text())
     before_bundle = {p.name: j.digest(p.read_bytes()) for p in bundle.iterdir()}
     locations = [Path(plan['installationDirectory']), Path(plan['pointerPath']).parent]; before_locations = [p.exists() for p in locations]
@@ -123,7 +124,7 @@ def main():
             with fixture('after-'+str(deleted), deleted) as f:
                 value = case('recover-after-'+str(deleted)+'-registry-deletions', lambda: run(f))
                 require(value['successful'] and len(value['deletedRegistryKeys']) == 3-deleted and
-                        len(value['initiallyAbsentKeys']) == deleted and len(value['fileResult']['absentObservedFiles']) == 14 and
+                        len(value['initiallyAbsentKeys']) == deleted and len(value['fileResult']['absentObservedFiles']) == staged_files and
                         not f[1].exists() and r.inspect(f[5], plan)['allAbsent'], 'Recovery reflects fresh absence and only remaining exact keys')
                 journal = j.inspect_journal(f[0], Path(value['journal']), policy)
                 require(journal['records'][-1]['payload']['event'] == 'recovery_completed', 'New completion record flushed')
@@ -151,7 +152,7 @@ def main():
             (f[1]/'README.txt').write_bytes(b'changed after interruption')
             case('changed-stage-refused-before-registry-repair', lambda: no_mutation(f, lambda: run(f)))
         with fixture('partial-files', file_interruption=True) as f:
-            require(len(list(f[1].iterdir())) == 13, 'Original interruption removed exactly one file')
+            require(len(list(f[1].iterdir())) == (staged_files - 1), 'Original interruption removed exactly one file')
             case('partially-removed-stage-refused-without-guessing', lambda: no_mutation(f, lambda: run(f)))
         with fixture('same-byte-journal-replacement') as f:
             data = f[3].read_bytes(); saved = f[0]/'saved-original.jsonl'; f[3].replace(saved)
@@ -193,7 +194,7 @@ def main():
                 value = case('interrupted-recovery-reports-exact-additional-deletion', lambda: fail(lambda: run(f)))
             finally:
                 j.write_flush = real_write
-            require(len(value['deletedRegistryKeys']) == 1 and not value['fileCleanupAttempted'] and len(list(f[1].iterdir())) == 14,
+            require(len(value['deletedRegistryKeys']) == 1 and not value['fileCleanupAttempted'] and len(list(f[1].iterdir())) == staged_files,
                     'One additional key removed, complete stage retained')
             value = case('explicit-retry-uses-original-reviewed-journal-and-fresh-state', lambda: run(f))
             require(value['successful'] and len(value['initiallyAbsentKeys']) == 2 and len(value['deletedRegistryKeys']) == 1, 'Retry acts only on last remaining key')
