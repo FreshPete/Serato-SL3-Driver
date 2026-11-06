@@ -1,0 +1,247 @@
+{
+  "schema": "sl3.native-kit-entry-evidence.v1",
+  "date": "2026-11-06",
+  "image": {
+    "sha256": "96fb70fd1a09ddc91d5a85544b1b0f465ede91ebb919fd6de4194d83617d7079",
+    "bytes": 565760,
+    "machine": "amd64",
+    "clrDirectoryBytes": 0,
+    "asInvoker": true,
+    "externalMsvcRuntimeImport": false,
+    "dotNetStartupImport": false
+  },
+  "sourcePins": 38,
+  "pythonRuntimePins": 130,
+  "powershellRuntimePins": 659,
+  "kitManifestSha256": "ba3085b8677371d2a8b94a73128d11dbc87b38b621f42e3ad76ecfd7b31d1543",
+  "installerResourceSha256": "0bc926a65a2a820817aba4821ac63aba9f5a2ea1c03a91dfdd6a28ec581d6f2a",
+  "releaseManifestSha256": "31415b268177f881cbdbfd7059c11f24230c9827d81cea6bd5f3e42783191aaa",
+  "nativeKitTests": {
+    "schema": "sl3.native-kit-entry-tests.v1",
+    "cases": [
+      {
+        "name": "native-kit-plan-relocated-empty-path",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "native-kit-complete-offline-preparation",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "native-prepared-kit-complete-session-plan",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "native-kit-plan-after-preparation",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "wrong-kit-identity-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-kit-preparer-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-specification-evidence-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-private-standard-library-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-powershell-runtime-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "foreign-launcher-release-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "unreviewed-application-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "semicolon-kit-path-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "incomplete-start-context-refused",
+        "passed": true,
+        "exitCode": 2
+      }
+    ],
+    "kitManifestSha256": "ba3085b8677371d2a8b94a73128d11dbc87b38b621f42e3ad76ecfd7b31d1543",
+    "launcherSha256": "96fb70fd1a09ddc91d5a85544b1b0f465ede91ebb919fd6de4194d83617d7079",
+    "generatedSessionPlanSha256": "32d579d07b7cd3eca8cdb0d167f673756496d14eb73ffbc38a89f0c551406c5f",
+    "globalPathEmpty": true,
+    "spacesAndUnicodeInKitPath": true,
+    "onlyPlanPreparationOrRefusalInvocations": true,
+    "liveStartAttempted": false,
+    "applicationStarted": false,
+    "brokerStarted": false,
+    "elevationRequested": false,
+    "registryWritten": false,
+    "deviceAccess": false,
+    "liveValidated": false
+  },
+  "directKitRegressions": {
+    "schema": "sl3.portable-kit-relocation-tests.v1",
+    "cases": [
+      {
+        "name": "relocated-kit-inventory-private-interpreter-empty-path",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "relocated-kit-read-only-application-plan",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "relocated-kit-complete-offline-preparation",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "relocated-kit-native-complete-session-plan",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "kit-static-inventory-still-valid-after-preparation",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "wrong-kit-hash-refused",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-kit-helper-refused-before-preparation",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "native-entry-refuses-changed-kit-helper",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-kit-runtime-refused-before-preparation",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "unexpected-static-kit-file-refused",
+        "passed": true,
+        "exitCode": 1
+      }
+    ],
+    "kitManifestSha256": "ba3085b8677371d2a8b94a73128d11dbc87b38b621f42e3ad76ecfd7b31d1543",
+    "generatedSessionPlanSha256": "db8d08e118e628887e4780712c0958ac07af9f5d33e026f7f768c68ac79a51b0",
+    "archiveSha256": "d135e6f1c03601cc44b3e5f623eed36af81bbff585332a3fdc8d5d533b2cb66a",
+    "globalPathEmpty": true,
+    "kitInterpreterAndPowerShellUsed": true,
+    "preparedPathsReboundToMovedKit": true,
+    "spacesAndUnicodeInKitPath": true,
+    "deploymentScope": "reviewed-windows-host-and-account",
+    "differentWindowsAccountTested": false,
+    "secondPcTested": false,
+    "applicationStarted": false,
+    "elevationRequested": false,
+    "registryWritten": false,
+    "deviceAccess": false,
+    "liveValidated": false
+  },
+  "capsuleRegressions": {
+    "schema": "sl3.portable-launcher-tests.v1",
+    "launcherSha256": "96fb70fd1a09ddc91d5a85544b1b0f465ede91ebb919fd6de4194d83617d7079",
+    "cases": [
+      {
+        "name": "first-session",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "second-session-same-executable",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "no-environment-no-installation",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "unsupported-action",
+        "passed": true,
+        "exitCode": 2
+      },
+      {
+        "name": "wrong-capsule-hash",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "executable-relocated-without-rebuild",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "unicode-space-and-shell-metacharacters-in-capsule-path",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "untrusted-interpreter",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "foreign-helper-root",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-package-binding",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "moved-capsule-binding",
+        "passed": true,
+        "exitCode": 1
+      }
+    ],
+    "sameExecutableAcceptedTwoSessionBindings": true,
+    "binaryRecompiledBetweenSessions": false,
+    "onlyPlanOrRefusalInvocations": true,
+    "registryWritten": false,
+    "deviceAccess": false,
+    "liveValidated": false
+  },
+  "windowsArgumentRoundTripsPassed": 8,
+  "liveStartAttempted": false,
+  "audioBinariesChanged": false,
+  "binaryKitPublished": false,
+  "kitSessionStatePresent": false,
+  "securityPolicyChanged": false,
+  "firmwareChanged": false,
+  "publicInstallerReady": false
+}

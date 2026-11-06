@@ -232,7 +232,37 @@ int session_dispatch(wchar_t** argv){
                        (root/L"scripts/serato-session.ps1").native(),L"-Mode",plan?L"Plan":L"Run",
                        L"-SessionPlan",selected.native(),L"-ExpectedPlanSha256",identity},root,false);
 }
+int kit_dispatch(wchar_t** argv){
+    require(!release::powershell_pins.empty(),"This launcher has no reviewed kit runtime binding");
+    const auto manifest=local_path(argv[3]);const std::wstring identity=argv[5];
+    const auto application=local_path(argv[7]);const auto root=manifest.parent_path();
+    require(manifest.filename()==L"kit-manifest.json","Expected kit manifest filename");
+    require(root.native().find(L';')==std::wstring::npos,"Kit directory cannot contain a semicolon; choose another location");
+    std::vector<Handle> leases;
+    const JsonObject record(read_capsule(pin(leases,manifest,identity,65536)));
+    require(record.text(L"schema")==L"sl3.portable-serato-kit.v1","Unsupported kit manifest");
+    pin(leases,root/L"kit-inventory.json",record.text(L"inventorySha256"),1024*1024);
+    for(const auto& item:release::source_pins)pin(leases,child_path(root,item.first),item.second);
+    const auto python=root/L"runtime/python/python.exe";pin(leases,python,release::python_sha);
+    for(const auto& item:release::runtime_pins)pin(leases,child_path(python.parent_path(),item.first),item.second);
+    const auto powershell=root/L"runtime/powershell";
+    for(const auto& item:release::powershell_pins)pin(leases,child_path(powershell,item.first),item.second);
+    std::wstring image(32768,L'\0');const auto copied=GetModuleFileNameW(nullptr,image.data(),DWORD(image.size()));
+    require(copied && copied<image.size(),"Current launcher path unavailable");image.resize(copied);
+    pin(leases,local_path(image),record.text(L"launcherSha256"));
+    pin(leases,root/L"SL3_Rebuild_Development_x64.exe",record.text(L"launcherSha256"));
+    pin(leases,application,release::application_sha);
+    std::vector<std::wstring> arguments={L"-I",L"-B",(root/L"scripts/prepare-portable-serato-kit.py").native(),
+            L"--kit-manifest",manifest.native(),L"--expected-kit-manifest-sha256",identity,L"--app",application.native()};
+    const auto action=std::wstring(argv[1]);
+    if(action!=L"--plan-kit")arguments.push_back(L"--prepare");
+    if(action==L"--start-kit")arguments.push_back(L"--start");
+    return run_process(python,arguments,root,false);
+}
 int dispatch(int argc,wchar_t** argv){
+    if(argc==8 && (std::wstring(argv[1])==L"--plan-kit" || std::wstring(argv[1])==L"--prepare-kit" ||
+       std::wstring(argv[1])==L"--start-kit") && std::wstring(argv[2])==L"--kit-manifest" &&
+       std::wstring(argv[4])==L"--expected-kit-manifest-sha256" && std::wstring(argv[6])==L"--app")return kit_dispatch(argv);
     if(argc==8 && (std::wstring(argv[1])==L"--plan-session" || std::wstring(argv[1])==L"--start-session" ||
        std::wstring(argv[1])==L"--prepare-session" || std::wstring(argv[1])==L"--start-fresh-session") &&
        std::wstring(argv[2])==L"--session-plan" && std::wstring(argv[4])==L"--expected-session-plan-sha256" &&

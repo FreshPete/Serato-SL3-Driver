@@ -6,6 +6,7 @@ from pathlib import Path, PurePosixPath
 import re
 import runpy
 import stat
+import subprocess
 import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -136,6 +137,8 @@ def prepare(manifest, expected, application, write=False):
               'applicationStarted': False, 'registryWritten': False, 'deviceAccess': False, 'liveValidated': False,
               'planArguments': [str(ROOT / 'SL3_Rebuild_Development_x64.exe'), '--plan-session', '--session-plan', str(path),
                                 '--expected-session-plan-sha256', identity, '--powershell-directory', str(powershell)]}
+    result['startArguments'] = [*result['planArguments']]
+    result['startArguments'][1] = '--start-session'
     with (capsule_directory / 'kit-preparation-complete.json').open('x', encoding='utf-8') as stream:
         json.dump(result, stream, indent=2)
         stream.write('\n')
@@ -148,11 +151,18 @@ if __name__ == '__main__':
     parser.add_argument('--expected-kit-manifest-sha256', required=True)
     parser.add_argument('--app', type=Path)
     parser.add_argument('--prepare', action='store_true')
+    parser.add_argument('--start', action='store_true')
     args = parser.parse_args()
+    require(not args.start or (args.prepare and args.app is not None),
+            'Starting requires explicit preparation and application selection')
     if args.app is None:
         require(not args.prepare, 'Application selection required for preparation')
         record = verify(args.kit_manifest, args.expected_kit_manifest_sha256)
         result = {'kitVerified': True, 'filesWritten': False, 'applicationStarted': False, 'deviceAccess': False}
     else:
         result = prepare(args.kit_manifest, args.expected_kit_manifest_sha256, args.app, args.prepare)
-    print(json.dumps(result, indent=2))
+    print(json.dumps(result, indent=2), flush=True)
+    if args.start:
+        # The native entry verifies the complete generated session again. The
+        # preparation receipt above is not a claim about the resulting live run.
+        raise SystemExit(subprocess.run(result['startArguments'], creationflags=subprocess.CREATE_NO_WINDOW).returncode)

@@ -29,6 +29,10 @@ def prepare(runtime,runtime_sha,output=None,powershell=None,powershell_sha=None)
         pins.update({name:api['sha'](ROOT/name) for name in session_api['EXTRA_SOURCES']})
         pins['scripts/prepare-portable-powershell.py']=api['sha'](ROOT/'scripts/prepare-portable-powershell.py')
         pins['scripts/prepare-fresh-serato-session.py']=api['sha'](ROOT/'scripts/prepare-fresh-serato-session.py')
+        archive_api=runpy.run_path(str(ROOT/'scripts/prepare-serato-installed-phase-archive.py'))
+        kit_sources=(*archive_api['SOURCES'],'scripts/prepare-portable-serato-kit.py',
+                     'scripts/assemble-portable-serato-kit.py','LICENSE')
+        pins.update({name:api['sha'](ROOT/name) for name in kit_sources})
     runtime_pins={name:details['sha256'] for name,details in verified['files'].items()}
     runtime_pins['runtime-manifest.json']=runtime_sha
     python_sha=api['sha'](Path(sys.executable))

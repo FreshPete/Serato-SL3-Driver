@@ -2,21 +2,15 @@
 
 Restore the physical Rane SL3 for current Serato DJ Pro and two-deck DVS. Windows 11 x64 is first; macOS 26 Tahoe is second. Driver loading, independent audio, Serato recognition and working DVS are separate milestones.
 
-## Latest status — 5 November 2026
+## Latest status — 6 November 2026
 
 **Serato DJ Pro 5.0 on Windows 11 now runs an owner-confirmed two-deck Phase Essential tracking test with the rebuilt SL3 ASIO driver.** Phase A used inputs 3/4 and Phase B used 5/6, with both remotes on one physical turntable. The owner confirmed both decks followed platter movement in the requested REL test and Serato stayed responsive. A five-second software recording contains audio on both deck output pairs without clipped samples. [Two-deck result and limits](docs/evidence/phase-two-deck-session-20261105.json)
 
 See the [phone video, working screenshot and version screenshot](docs/demo-20261105.md), [Phase Essential status](docs/phase-essential-status.md) and [latest return report](docs/RETURN-REPORT.md).
 
-**6 November packaging progress:** the native launcher now starts complete read-only session checks through private PowerShell and Python runtimes. Two prepared sessions and relocated runtime paths passed without a separate PowerShell command. The new live startup path and public installer remain unfinished. [Launcher contract and evidence](docs/portable-powershell-session-entry.md)
+**Packaging prototype:** a copied kit now verifies and prepares a complete session through its native executable, using its own runtimes and generating the exact tested Phase archive from the owner's original Serato installation. Moved-kit tests passed with an empty `PATH` and spaces/Unicode in the folder; 42 targeted launcher/kit checks passed. The kit remains bound to the reviewed Windows host/account. Its combined live Start mode, simple graphical interface and public installer remain unfinished. [Native kit entry and evidence](docs/native-kit-entry.md)
 
-Fresh session configuration can now be prepared automatically using the same release executable and installer resource. Two successive preparations passed the complete read-only checks; the new combined startup entry still needs a live test. [Fresh-session preparation](docs/fresh-session-preparation.md)
-
-The exact tested Phase descriptor archive can also be generated from the user's original Serato 5.0 installation using the public recipe, without historical installers or a private intermediate archive. Isolated generation checks and a complete session Plan passed. [Installed-file preparation](docs/installed-phase-archive-preparation.md)
-
-A copied development kit now prepares and verifies that complete session using its own runtimes and helpers, including with an empty `PATH` and spaces/Unicode in its folder. It remains bound to the reviewed Windows host/account; live kit startup and another PC are untested. [Kit assembly and relocation evidence](docs/portable-kit-assembly.md)
-
-This remains an experimental temporary integration. Physical audible SL3 output, independent turntable control, sustained reliability and a reusable installation/startup process remain unfinished. The two-deck session restored original files and verified device release, but its broker reported `owner_failure` during shutdown; that result remains unresolved. The latest Release build passed 71 native checks and the deployment workflow passed 26 checks. [Software output recorder](docs/two-deck-output-capture.md)
+This remains an experimental temporary integration. Physical audible SL3 output, independent turntable control and sustained reliability remain unverified. The latest looped run retains the owner's report that both decks worked and closed normally, but the supervisor recorded viewing-limit termination; clean post-playback shutdown is unresolved. Automatic rollback with the pointer-path fix succeeded and original files were restored. The native audio build is unchanged; its latest Release build passed 71 checks and the deployment workflow passed 26 checks. [Latest looped result](docs/evidence/pointer-cleanup-live-retest-20261106.json) · [Software output recorder](docs/two-deck-output-capture.md)
 
 ## Earlier engineering status — 2 November 2026
 
