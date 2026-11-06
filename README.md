@@ -4,6 +4,8 @@ Restore the physical Rane SL3 for current Serato DJ Pro and two-deck DVS. Window
 
 ## Latest status — 6 November 2026
 
+[Return-to-testing packet](docs/return-to-testing.md): exact current candidate, last host observation, established results and the attended recovery/trace sequence. The compatibility candidate is uninstalled. Unattended hardware tests are on hold; the install-once goal is incomplete.
+
 **Product target: install once, then open Serato normally.** Phase Essential and timecode vinyl must use the same SL3 audio driver with source-appropriate input settings. The temporary session launcher/window is an engineering aid, not the final experience. Normal-start Serato selection, streaming/shutdown/reopen under the installed path and uninstall still need validation. [Installed-use target and acceptance checks](docs/installed-use-target.md)
 
 **Failed ASIO activation now retains controller cleanup evidence.** The driver distinguishes pre-readiness failure, forced cleanup and unverified cleanup, without inventing USB release or retrying a retained failed object. All 73 native, 25 setup-entry and 18 window checks pass; a fresh setup-only kit/window is prepared and uninstalled. This does not repair the USB reopen fault or establish normal Serato selection. [Implementation, current candidates and limits](docs/asio-activation-failure-report.md)
