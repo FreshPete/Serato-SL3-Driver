@@ -17,7 +17,7 @@ def prepare(build_path,expected,kit,experiment,experiment_sha,output):
     require(sha(build_path)==expected,'Reviewed native entry build required');build=json.loads(build_path.read_bytes())
     require(build['schema']=='sl3.native-setup-entry-build.v1' and build['configuration']=='Release' and build['inertChecksPassed'],'Successful native entry Release build required')
     source_path=build_path.parent/'entry-source.json';require(sha(source_path)==build['sourceManifestSha256'],'Native entry source binding differs');source=json.loads(source_path.read_bytes())
-    require(source['mutableActionsRequireAlreadyElevatedProcess'] and all(sha(ROOT/n)==v for n,v in source['sourcePins'].items()),'Current native entry source required')
+    require(source['mutableActionsRequireAlreadyElevatedProcess'] and 'src/installer/SetupResultPipe.hpp' in source['sourcePins'] and all(sha(ROOT/n)==v for n,v in source['sourcePins'].items()),'Current result-channel native entry source required')
     require(all(sha(source_path.parent/n)==v for n,v in source['generatedPins'].items()),'Generated native entry source changed')
     entry=build_path.parent/'build/Release/SL3_Setup_Engineering.exe';require(sha(entry)==build['executableSha256'],'Native entry image changed')
     require(sha(kit/'kit-manifest.json')==source['kitManifestSha256'],'Selected native entry kit differs')
@@ -25,7 +25,7 @@ def prepare(build_path,expected,kit,experiment,experiment_sha,output):
     with ExitStack() as held:record=api['verify'](experiment,experiment_sha,held)
     require(record['projectRoot']==str(kit),'Prepared experiment belongs to another kit')
     pins={n:sha(ROOT/n) for n in ['src/installer/SetupWindow.cpp','src/installer/SessionWindow.cpp','src/installer/NativeSessionLauncher.cpp',
-        'tests/native/setup_window_tests.cpp','scripts/prepare-setup-window.py','scripts/build-setup-window.ps1']}
+        'tests/native/setup_window_tests.cpp','scripts/prepare-setup-window.py','scripts/build-setup-window.ps1','src/installer/SetupResultPipe.hpp']}
     values={'launcher':str(entry),'launcher_sha':build['executableSha256'],'plan':str(experiment),'plan_sha':experiment_sha,'kit_root':str(kit),
         'kit':str(kit/'kit-manifest.json'),'kit_sha':source['kitManifestSha256'],'application':record['application'],'powershell':str(kit/'runtime/powershell')}
     config='#pragma once\nnamespace session_window_config {\n'+''.join('inline const std::wstring '+k+'=L'+json.dumps(v)+';\n' for k,v in values.items())+'}\n'

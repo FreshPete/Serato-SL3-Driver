@@ -1,5 +1,7 @@
 # Native entry for a reviewed setup record
 
+Follow-up: the [current result-channel entry](setup-result-diagnostics.md) adds a one-way, process-authenticated diagnostic stream for explicit setup/restore. Ordinary-token refusals and owned IPC tests pass; an actual elevated action remains unvalidated.
+
 The native setup entry can now check a generated experiment and delegate its existing setup/restore actions to the fixed controller. **Only the read-only path and ordinary-token refusals have run. Elevated installation and restoration are unvalidated through this entry.** Twenty-three actual cases and two inert build checks pass. No prompt, installed change, Serato launch or native USB operation ran. [Current source/build evidence](evidence/native-on-demand-experiment-entry-20261106.json)
 
 ## Explicit prepared actions

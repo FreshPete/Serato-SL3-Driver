@@ -2,6 +2,7 @@
 #define SL3_LAUNCHER_ARGUMENT_TEST
 #include "NativeSessionLauncher.cpp"
 #include "setup_config.hpp"
+#include "SetupResultPipe.hpp"
 #include <set>
 
 namespace sl3::setup {
@@ -117,6 +118,15 @@ int dispatch(int argc,wchar_t** argv){
 }
 }
 int wmain(int argc,wchar_t** argv){
-    try{return sl3::setup::dispatch(argc,argv);}
+    try{
+        if(argc==14 && std::wstring(argv[10])==L"--result-pipe" && std::wstring(argv[12])==L"--result-server-pid"){
+            const std::wstring action=argv[1];sl3::launcher::require(action==L"--apply-experiment" || action==L"--restore-experiment","Result channel applies only to setup/restore");
+            sl3::setup::token_requirement(true);
+            sl3::setup_result::Client result(argv[11],sl3::setup_result::process_id(argv[13]));result.redirect();
+            try{return sl3::setup::dispatch(10,argv);}
+            catch(const std::exception& error){result.write(std::string("SL3 setup entry refused: ")+error.what()+"\n");return 1;}
+        }
+        return sl3::setup::dispatch(argc,argv);
+    }
     catch(const std::exception& error){std::cerr<<"SL3 setup entry refused: "<<error.what()<<'\n';return 1;}
 }

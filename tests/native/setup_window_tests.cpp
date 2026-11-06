@@ -27,6 +27,13 @@ int main(){
         message(live_window,WM_CLOSE,0,0);require(IsWindow(live_window),"Closing cannot interrupt an active check");++cases;
         const auto began=GetTickCount64();while(live.busy){message(live_window,WM_TIMER,0,0);require(GetTickCount64()-began<30000,"Read-only setup check deadline");Sleep(10);}
         require(live.code==0 && live.allowed.clean && live.allowed.install && !live.allowed.restore && IsWindowEnabled(live.start_button),"Actual native read-only check produces install eligibility");++cases;
+        {ActionResult observed;observed.code=1;observed.capture.authenticated=true;observed.capture.bytes="fixture failure report";
+            const auto report=result_text(observed);const auto saved=preserve_result(report);std::vector<Handle> leases;
+            Handle read(CreateFileW(saved.c_str(),GENERIC_READ,FILE_SHARE_READ,nullptr,OPEN_EXISTING,0,nullptr));require(read.value!=INVALID_HANDLE_VALUE,"Read owned diagnostic result");
+            require(read_capsule(read.value)==report,"Saved ordinary-user result preserves exact diagnostic bytes");++cases;
+            const std::string previous="retained administrator failure\n";live.append(previous.data(),previous.size());
+            checked(RoInitialize(RO_INIT_SINGLETHREADED),"Initialize retained-result parser");const auto code=inspect(live,true);RoUninitialize();
+            require(code==0 && live.output.find(previous)!=std::string::npos && live.output.find("Post-action observation:")!=std::string::npos,"Postcheck must not erase the administrator diagnostic");++cases;}
         message(live_window,WM_CLOSE,0,0);require(!IsWindow(live_window),"Completed window closes normally");++cases;
         std::cout<<"{\"schema\":\"sl3.setup-window-tests.v1\",\"passed\":true,\"cases\":"<<cases<<",\"privilegedActionsExecuted\":false,\"seratoLaunched\":false,\"nativeDeviceAccess\":false}\n";return 0;
     }catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}

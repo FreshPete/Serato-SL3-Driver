@@ -1,5 +1,7 @@
 # One-time SL3 setup window
 
+Follow-up: [administrator result capture and local diagnostics](setup-result-diagnostics.md) now preserve failure details across the postcheck and show the existing ten-minute diagnostic bound. The earlier build/visual evidence below is historical; the latest rendered review was interrupted by the locked desktop.
+
 The simple Windows setup window is now implemented and built. It offers **Check setup**, **Install**, **Restore original setup** and optional diagnostic details. Opening it runs no command. Sixteen checks pass, and the ordinary/expanded layouts and selected keyboard behavior were inspected on this host. **Administrator installation/restoration and normal Serato startup have not run through this window.** [Source, build and observation evidence](evidence/one-time-setup-window-20261106.json)
 
 This is a host-bound engineering prototype around the [reviewed native entry](native-on-demand-experiment-entry.md), not a public installer. It preserves the intended experience: install once, close the setup window and use the original Serato shortcut. Phase and timecode vinyl share the driver; the UI has no Phase-specific installation mode.

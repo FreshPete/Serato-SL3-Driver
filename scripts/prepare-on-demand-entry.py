@@ -20,7 +20,8 @@ def prepare(kit,expected,output):
     runpy.run_path(str(kit/'scripts/prepare-on-demand-kit.py'))['verify'](manifest,expected)
     files={**files,'kit-manifest.json':{'sha256':expected,'bytes':manifest.stat().st_size},
         'kit-inventory.json':{'sha256':meta['inventorySha256'],'bytes':inventory.stat().st_size}}
-    source_names=['src/installer/OnDemandKitEntry.cpp','src/installer/NativeSessionLauncher.cpp','scripts/prepare-on-demand-entry.py','scripts/build-on-demand-entry.ps1']
+    source_names=['src/installer/OnDemandKitEntry.cpp','src/installer/NativeSessionLauncher.cpp','scripts/prepare-on-demand-entry.py','scripts/build-on-demand-entry.ps1',
+        'src/installer/SetupResultPipe.hpp','tests/native/setup_result_pipe_tests.cpp']
     pins={n:sha(ROOT/n) for n in source_names}
     header=('#pragma once\n#include <string>\n#include <vector>\n#include <utility>\nnamespace sl3::launcher::release {\n'
         'inline const std::wstring python_sha=L'+json.dumps(meta['pythonExecutableSha256'])+';\n'
@@ -38,8 +39,15 @@ def prepare(kit,expected,output):
         'target_compile_options(SL3_Setup_Engineering PRIVATE /W4 /WX /permissive- /EHsc /utf-8)\n'
         'target_include_directories(SL3_Setup_Engineering PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")\n'
         'target_link_libraries(SL3_Setup_Engineering PRIVATE windowsapp shell32 bcrypt advapi32)\n'
+        'add_executable(sl3_setup_result_pipe_tests "'+(ROOT/'tests/native/setup_result_pipe_tests.cpp').as_posix()+'")\n'
+        'target_compile_features(sl3_setup_result_pipe_tests PRIVATE cxx_std_17)\n'
+        'target_compile_definitions(sl3_setup_result_pipe_tests PRIVATE UNICODE _UNICODE WIN32_LEAN_AND_MEAN NOMINMAX)\n'
+        'target_compile_options(sl3_setup_result_pipe_tests PRIVATE /W4 /WX /permissive- /EHsc /utf-8)\n'
+        'target_include_directories(sl3_setup_result_pipe_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")\n'
+        'target_link_libraries(sl3_setup_result_pipe_tests PRIVATE windowsapp shell32 bcrypt advapi32)\n'
         'enable_testing()\nadd_test(NAME setup_help COMMAND SL3_Setup_Engineering --help)\n'
         'add_test(NAME setup_unknown COMMAND SL3_Setup_Engineering --install)\nset_tests_properties(setup_unknown PROPERTIES WILL_FAIL TRUE)\n')
+    cmake+='add_test(NAME setup_result_pipe_contract COMMAND sl3_setup_result_pipe_tests)\nset_tests_properties(setup_result_pipe_contract PROPERTIES TIMEOUT 30)\n'
     output=Path(output).absolute();require(output.parent.resolve()==(ROOT/'artifacts/build').resolve() and output.name.startswith('native-on-demand-entry-') and not output.exists(),'Fresh native entry build output required');output.mkdir()
     values={'launcher_config.hpp':header,'setup_config.hpp':setup,'CMakeLists.txt':cmake}
     for name,text in values.items():(output/name).write_text(text,encoding='utf-8')

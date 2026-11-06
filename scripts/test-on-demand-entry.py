@@ -22,7 +22,8 @@ def main():
     require(all(sha(ROOT/n)==v for n,v in source['sourcePins'].items()) and all(sha(source_path.parent/n)==v for n,v in source['generatedPins'].items()),'Native entry source changed')
     host=build_path.parent/'build/Release/SL3_Setup_Engineering.exe';require(sha(host)==build['executableSha256'],'Native entry image changed')
     original=Path(sys.argv[3]).absolute();require(sha(original/'kit-manifest.json')==source['kitManifestSha256'],'Compiled kit binding required')
-    identity=uuid.uuid4().hex;folder=ROOT/'artifacts/build'/('native-entry-tests-'+identity);folder.mkdir();kit=folder/'Moved kit é';shutil.copytree(original,kit)
+    identity=uuid.uuid4().hex;folder=ROOT/'artifacts/build'/('native-entry-tests-'+identity);folder.mkdir();kit=folder/'Moved kit é'
+    shutil.copytree(original,kit,ignore=lambda directory,names:['analysis'] if Path(directory)==original else [])
     env=dict(os.environ);env['PATH']='';env['PYTHONDONTWRITEBYTECODE']='1';env.pop('SL3_ASIO_PRIVATE_TRACE',None)
     app=r'C:\Program Files\Serato\Serato DJ Pro\Serato DJ Pro.exe';cases=[];details={}
     def command(action):return [str(host),action,'--kit',str(kit),'--app',app]
@@ -43,6 +44,9 @@ def main():
     plan=call('native-generated-experiment-check',reviewed('--check-experiment'));require(plan['after']=={'archive':'original','seratoRunning':False,'native':{'state':'absent'}},'Actual restored host observation required')
     call('native-apply-refuses-ordinary-token',reviewed('--apply-experiment'),False,'Run this exact reviewed setup/restore entry as administrator')
     call('native-restore-refuses-ordinary-token',reviewed('--restore-experiment'),False,'Run this exact reviewed setup/restore entry as administrator')
+    result_options=['--result-pipe','\\\\.\\pipe\\SL3SetupResult-'+uuid.uuid4().hex,'--result-server-pid',str(os.getpid())]
+    call('native-result-channel-apply-still-refuses-ordinary-token',reviewed('--apply-experiment')+result_options,False,'Run this exact reviewed setup/restore entry as administrator')
+    call('native-readonly-result-channel-option-refused',reviewed('--check-experiment')+result_options,False,'Result channel applies only to setup/restore')
     call('native-wrong-experiment-hash',reviewed('--check-experiment',identity='0'*64),False,'Reviewed setup input hash differs')
     call('native-foreign-experiment-scope',reviewed('--check-experiment',selected=folder/('sl3-on-demand-test-'+'0'*32)/'experiment.json'),False,'Prepared state must belong to this kit')
     asset=experiment.parent/'archive/archive-test.ps1';saved=asset.read_bytes();asset.write_bytes(saved+b'changed')

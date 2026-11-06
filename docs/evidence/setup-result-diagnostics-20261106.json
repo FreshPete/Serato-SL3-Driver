@@ -1,0 +1,180 @@
+{
+  "schema": "sl3.setup-result-diagnostics-checkpoint.v1",
+  "date": "2026-11-06",
+  "passed": true,
+  "entry": {
+    "directory": "artifacts/build/native-on-demand-entry-result-channel-20261106",
+    "buildSha256": "fac9800b067fcbf66f05fe6ac26a055ff466be51bf119005b49b8473090d3229",
+    "sourceSha256": "03fa19971a11d72d9d891091d590138e6cb43c581ee1dc0a9ac3fb7667884f95",
+    "executableSha256": "c026d647ffeb75132269154f19d31f3a664c5c9977247b6f2b60b1dcd6b1026d",
+    "sourcePins": {
+      "src/installer/OnDemandKitEntry.cpp": "2d1489650e109fb7fff0bf813d5cc87360fa961e0dc94e1718ec1df62c4e96c7",
+      "src/installer/NativeSessionLauncher.cpp": "40c6837c2aba5a571d9cf33b348a7b3e367e1403357f9beb0d3304af40bb1bc6",
+      "scripts/prepare-on-demand-entry.py": "843cffdf59a93129c6a2ba440c70f0798d8aa750e747109473fee3e0a90ded08",
+      "scripts/build-on-demand-entry.ps1": "9778ad2ff4c016bd98c25d01def58686ea8b3d6b38ca88929e8138d988f5e2bd",
+      "src/installer/SetupResultPipe.hpp": "c79dd08b214041e6109cf3be400d35bee07c9517b9ec88d58fde16423adce6ca",
+      "tests/native/setup_result_pipe_tests.cpp": "e6c544afd37cae34dbcf2f831758ffeb7a474b7a4bdce7f5ee0067f889ef1f0b"
+    }
+  },
+  "window": {
+    "directory": "artifacts/build/native-setup-window-results-reviewed-20261106",
+    "buildSha256": "95a7d3a3920c529e97d24f97b75069ce6ae26511c277bd9f9f346a4c7eebce7d",
+    "sourceSha256": "6b0e51cb38f6500742b3e831d4a24305b7cd5d83e3586dc2996516c5812fdda1",
+    "executableSha256": "698e3e0670405e628ab3d736e8bf95aaed4c0e77e005409c36c89ad0ac8296dd",
+    "sourcePins": {
+      "src/installer/SetupWindow.cpp": "2f1a287e4e56f4c3ed4aa1ff4fe9f957c91ab8bbee961e66f13bf4b1fdc5707f",
+      "src/installer/SessionWindow.cpp": "8c9c3c61f4f2a9bfc497d24f676e127c6acee8334d62616b5e1681f8524ff293",
+      "src/installer/NativeSessionLauncher.cpp": "40c6837c2aba5a571d9cf33b348a7b3e367e1403357f9beb0d3304af40bb1bc6",
+      "tests/native/setup_window_tests.cpp": "50a9b3e8c982d846f2891e0532c7910f6850a0500448724207ee4d254ecdab39",
+      "scripts/prepare-setup-window.py": "cc8442037023b5ff6bd60891904cfdbbdfa2aaadf9c81f8d91fdf000f76222f7",
+      "scripts/build-setup-window.ps1": "62c895bfa37f5fd4a492a77c2eb618561c985822e4c4d8d0be6b79d7d472aaeb",
+      "src/installer/SetupResultPipe.hpp": "c79dd08b214041e6109cf3be400d35bee07c9517b9ec88d58fde16423adce6ca"
+    }
+  },
+  "resultPipeContract": {
+    "schema": "sl3.setup-result-pipe-tests.v1",
+    "passed": true,
+    "cases": 8,
+    "anonymousClientObserved": true,
+    "elevatedProcessExecuted": false,
+    "seratoLaunched": false,
+    "nativeDeviceAccess": false
+  },
+  "windowContract": {
+    "schema": "sl3.setup-window-tests.v1",
+    "passed": true,
+    "cases": 18,
+    "privilegedActionsExecuted": false,
+    "seratoLaunched": false,
+    "nativeDeviceAccess": false
+  },
+  "nativeEntryChecks": {
+    "cases": [
+      {
+        "name": "native-verification-only",
+        "passed": true
+      },
+      {
+        "name": "native-readonly-plan",
+        "passed": true
+      },
+      {
+        "name": "native-real-preparation",
+        "passed": true
+      },
+      {
+        "name": "native-generated-experiment-check",
+        "passed": true
+      },
+      {
+        "name": "native-apply-refuses-ordinary-token",
+        "passed": true
+      },
+      {
+        "name": "native-restore-refuses-ordinary-token",
+        "passed": true
+      },
+      {
+        "name": "native-result-channel-apply-still-refuses-ordinary-token",
+        "passed": true
+      },
+      {
+        "name": "native-readonly-result-channel-option-refused",
+        "passed": true
+      },
+      {
+        "name": "native-wrong-experiment-hash",
+        "passed": true
+      },
+      {
+        "name": "native-foreign-experiment-scope",
+        "passed": true
+      },
+      {
+        "name": "native-changed-prepared-asset",
+        "passed": true
+      },
+      {
+        "name": "native-changed-rebound-worker",
+        "passed": true
+      },
+      {
+        "name": "native-foreign-project-root",
+        "passed": true
+      },
+      {
+        "name": "native-final-experiment-check",
+        "passed": true
+      },
+      {
+        "name": "native-verification-after-preparation",
+        "passed": true
+      },
+      {
+        "name": "changed-helper-refused-before-execution",
+        "passed": true
+      },
+      {
+        "name": "changed-python-library",
+        "passed": true
+      },
+      {
+        "name": "changed-powershell-runtime",
+        "passed": true
+      },
+      {
+        "name": "changed-native-driver",
+        "passed": true
+      },
+      {
+        "name": "changed-manifest-refused",
+        "passed": true
+      },
+      {
+        "name": "extra-dll-refused-before-interpreter",
+        "passed": true
+      },
+      {
+        "name": "unreviewed-application-refused",
+        "passed": true
+      },
+      {
+        "name": "unknown-mutable-action-refused",
+        "passed": true
+      },
+      {
+        "name": "unsupported-kit-path",
+        "passed": true
+      },
+      {
+        "name": "final-native-plan",
+        "passed": true
+      }
+    ],
+    "report": "artifacts/build/native-entry-tests-59dde632d2ab488ea7e9d82eb1107cf6/result.json",
+    "sha256": "bb091a6646c25088b40ae93d92b6466761afcdcda3ec7f53ea4e43126a5deb37"
+  },
+  "testLogsSha256": {
+    "entry": "f281b5ee19922ca3d967dd0afbfc852729ab54a435bb9348b741f680cc1f4031",
+    "window": "cdc830cfd30ea82f8e41184161b7c9a4716ce92a160d5ceebb3fbc5bc19a583c"
+  },
+  "diagnosticLogsAuthorizeRecovery": false,
+  "elevatedResultTransportTested": false,
+  "productionInstallationPerformed": false,
+  "elevationRequested": false,
+  "seratoLaunched": false,
+  "nativeDeviceAccess": false,
+  "latestTextAccessibilityObserved": true,
+  "latestRenderedVisualReviewComplete": false,
+  "desktopInteractionStoppedBecauseLocked": true,
+  "idleSetupWindowLeftOpen": true,
+  "hostPostcheck": {
+    "observed": true,
+    "originalResources": true,
+    "occupiedPaths": [],
+    "registrationPresent": false,
+    "currentSetupClean": true
+  },
+  "normalStartExperimentStillSourceCurrent": true,
+  "normalStartExperimentSha256": "4ca890a6d5e7c2d232919374bc047f86387587b4c4bd7c50648549c964b57073"
+}

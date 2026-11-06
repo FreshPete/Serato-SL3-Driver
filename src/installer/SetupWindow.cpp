@@ -1,6 +1,7 @@
 // One-time setup UI. Existing native entry owns all setup/controller operations.
 #define SL3_SESSION_WINDOW_TEST
 #include "SessionWindow.cpp"
+#include "SetupResultPipe.hpp"
 
 namespace sl3::setup_window {
 using namespace sl3::launcher;
@@ -32,21 +33,61 @@ void enable(State& s){
 }
 std::vector<std::wstring> arguments(const wchar_t* action){return {action,L"--kit",config::kit_root,L"--app",config::application,
     L"--experiment",config::plan,L"--expected-experiment-sha256",config::plan_sha};}
-int inspect(State& s){
-    {std::lock_guard<std::mutex> lock(s.mutex);s.output.clear();++s.log_revision;}
-    const auto code=sl3::window::execute(s,arguments(L"--check-experiment"),true);s.allowed={};s.running=false;
-    if(!code){std::string raw;{std::lock_guard<std::mutex> lock(s.mutex);raw=s.output;}
+int inspect(State& s,bool retain_prior=false){
+    std::string prior;
+    {std::lock_guard<std::mutex> lock(s.mutex);if(retain_prior)prior=s.output;s.output.clear();++s.log_revision;}
+    s.allowed={};s.running=false;int code=1;
+    try{code=sl3::window::execute(s,arguments(L"--check-experiment"),true);}
+    catch(...){if(retain_prior){std::string failed;{std::lock_guard<std::mutex> lock(s.mutex);failed=s.output;s.output=prior;}
+        const auto combined=std::string("\nPost-action observation failed:\n")+failed;s.append(combined.data(),combined.size());}throw;}
+    std::string raw;{std::lock_guard<std::mutex> lock(s.mutex);raw=s.output;}
+    if(retain_prior){std::lock_guard<std::mutex> lock(s.mutex);s.output=prior;}
+    if(retain_prior){const auto combined=std::string("\nPost-action observation:\n")+raw;s.append(combined.data(),combined.size());}
+    if(!code){
         const JsonObject result(raw);require(result.text(L"schema")==L"sl3.on-demand-test-action.v1","Typed setup observation required");
         const auto after=result.object(L"after");s.running=serato_running(raw);s.allowed=eligibility(after.text(L"archive"),after.object(L"native").text(L"state"),s.running);}
     return code;
+}
+struct ActionResult {int code=1;sl3::setup_result::Capture capture;std::string transfer_error;};
+ActionResult elevated_action(const std::vector<std::wstring>& selected){
+    sl3::setup_result::Server server;auto args=selected;
+    args.insert(args.end(),{L"--result-pipe",server.name,L"--result-server-pid",std::to_wstring(GetCurrentProcessId())});
+    const auto executable=local_path(config::launcher);const auto parameters=command_line(args);const auto directory=executable.parent_path().native();
+    SHELLEXECUTEINFOW info{};info.cbSize=sizeof(info);info.fMask=SEE_MASK_NOCLOSEPROCESS|SEE_MASK_NOASYNC;
+    info.lpVerb=L"runas";info.lpFile=executable.c_str();info.lpParameters=parameters.c_str();info.lpDirectory=directory.c_str();info.nShow=SW_HIDE;
+    if(!ShellExecuteExW(&info))throw WinError("Start approved native setup action");Handle process(info.hProcess);require(process.value!=nullptr,"Launched setup process identity required");
+    ActionResult result;
+    try{result.capture=server.collect(process.value);}catch(const std::exception& error){result.transfer_error=error.what();}
+    server.close(); // If collection fails, release the diagnostic writer; never terminate the transaction.
+    require(WaitForSingleObject(process.value,INFINITE)==WAIT_OBJECT_0,"Wait for the actual administrator action");DWORD code=1;
+    require(GetExitCodeProcess(process.value,&code)!=FALSE,"Read actual administrator action exit");result.code=int(code);return result;
+}
+std::string result_text(const ActionResult& result){
+    return "SL3 setup diagnostic (not a recovery authorization)\nexperiment_sha256="+utf8(config::plan_sha)+
+        "\nprocess_exit_code="+std::to_string(result.code)+"\nwriter_authenticated="+(result.capture.authenticated?"true":"false")+
+        "\nover_limit="+(result.capture.over_limit?"true":"false")+"\nchannel_error="+std::to_string(result.capture.error)+
+        "\ntransfer_error="+result.transfer_error+"\n\nAdministrator output:\n"+result.capture.bytes;
+}
+fs::path preserve_result(const std::string& result){
+    const auto directory=local_path(config::plan).parent_path()/(L"ui-action-"+sl3::setup_result::token());
+    require(CreateDirectoryW(directory.c_str(),nullptr)!=FALSE,"Create fresh local diagnostic directory");
+    const auto path=directory/L"administrator-result.txt";
+    Handle file(CreateFileW(path.c_str(),GENERIC_WRITE,0,nullptr,CREATE_NEW,FILE_FLAG_OPEN_REPARSE_POINT,nullptr));
+    require(file.value!=INVALID_HANDLE_VALUE,"Create new local diagnostic result");DWORD written=0;
+    require(result.size()<=1024*1024 && WriteFile(file.value,result.data(),DWORD(result.size()),&written,nullptr) && written==result.size() && FlushFileBuffers(file.value),"Preserve complete local diagnostic result");return path;
 }
 int apply(State& s,int action){
     auto code=inspect(s);if(code)return code;
     require(action==install?s.allowed.install:s.allowed.restore,"Current setup state does not admit this action");
     std::vector<Handle> leases;pin(leases,local_path(config::launcher),config::launcher_sha);pin(leases,local_path(config::plan),config::plan_sha,65536);
-    const auto operation=run_process(local_path(config::launcher),arguments(action==install?L"--apply-experiment":L"--restore-experiment"),
-                                     local_path(config::launcher).parent_path(),true);
-    code=inspect(s);if(operation)return operation;if(code)return code;
+    const auto operation=elevated_action(arguments(action==install?L"--apply-experiment":L"--restore-experiment"));
+    const auto report=result_text(operation);std::string persistence_error;
+    {std::lock_guard<std::mutex> lock(s.mutex);s.output.clear();++s.log_revision;}s.append(report.data(),report.size());
+    try{const auto saved=std::string("\nFull administrator result saved: ")+utf8(preserve_result(report).native())+"\n";s.append(saved.data(),saved.size());}
+    catch(const std::exception& error){persistence_error=error.what();s.append(persistence_error.data(),persistence_error.size());}
+    code=inspect(s,true);if(operation.code)return operation.code;if(code)return code;
+    require(operation.capture.authenticated && !operation.capture.over_limit && !operation.capture.error && operation.transfer_error.empty() && persistence_error.empty(),"Administrator result was not completely received and preserved; retain the observed state");
+    const JsonObject actual(operation.capture.bytes);require(actual.text(L"schema")==L"sl3.on-demand-test-action.v1" && actual.text(L"action")==std::wstring(action==install?L"setup":L"restore"),"Matching administrator result required");
     require(action==install?s.allowed.installed:s.allowed.clean,"Command finished but observed setup state differs");return 0;
 }
 void begin(State& s,int action){
@@ -80,7 +121,7 @@ LRESULT message(HWND window,UINT message,WPARAM wparam,LPARAM lparam){
         s->heading=control(L"STATIC",L"Set up your SL3",0);SendMessageW(s->heading,WM_SETFONT,WPARAM(s->title),TRUE);
         s->progress=control(L"STATIC",s->preview?L"Preview — actions are disabled":L"Check this setup to begin",0);
         s->description=control(L"STATIC",L"Install this compatibility build once, then open Serato normally.\r\nClose Serato before installing or restoring.",0);
-        s->instructions=control(L"STATIC",L"Phase and timecode vinyl use the same SL3 audio driver.\r\nExperimental build for Serato 5.0. Normal startup still needs a live test.",0);
+        s->instructions=control(L"STATIC",L"Phase and timecode vinyl share the SL3 driver.\r\nDiagnostic audio sessions have a 10-minute limit.\r\nNormal Serato 5.0 startup still needs a live test.",0);
         s->check_button=control(L"BUTTON",L"&Check setup",BS_DEFPUSHBUTTON|WS_TABSTOP,check);
         s->start_button=control(L"BUTTON",L"&Install",WS_TABSTOP,install);
         s->recover_button=control(L"BUTTON",L"&Restore original setup",WS_TABSTOP,restore);
