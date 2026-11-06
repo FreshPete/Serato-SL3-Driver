@@ -2,6 +2,8 @@
 
 **Subsequent result:** a [three-second native stream passed, but reopening afterward failed](native-asio-silent-stream-reopen.md). The two control-only successes below remain valid; they do not prove reliable reopening after audio.
 
+The [saved cadence comparison](native-reopen-cadence.md) shows the successful second control-only acquisition started 16.922 seconds after the first release. It is not evidence of immediate reopening. The failed post-stream attempt had a shorter, 9.406-second gap; a streaming-specific cause was not isolated.
+
 The exact packaged production DLL now initializes the physical SL3 through its lazy ASIO entry, without an administrator prompt or prestarted broker. Two successive fresh COM hosts each report six inputs, six outputs and a 44.1 kHz clock. Between them the SL3 remained connected and was not power-cycled.
 
 Both hosts released the ASIO object normally. The observer retained and validated the exact controller and worker process objects before release, then observed both exit. Each controller reported successful native acquisition, I/O retirement, device release and an empty process job, with no forced termination, lifetime expiry or device/stream failure. Worker journals contain clock reads and normal redirect close/helper unload. No audio buffers or streams were created. This is a control-only result; connected Phase remotes were not sampled.

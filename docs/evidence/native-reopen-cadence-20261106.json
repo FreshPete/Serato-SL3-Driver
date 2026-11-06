@@ -1,0 +1,93 @@
+{
+  "schema": "sl3.native-reopen-cadence.v1",
+  "sameBootAssertedByCaller": true,
+  "bootIdentityIndependentlyVerified": false,
+  "runs": [
+    {
+      "resultSha256": "3556c8f256db7a48cb62455429676e9295a3411c1588ea0cb2dcdd87efcad8ff",
+      "workerJournalSha256": "955f8c5c299365b62d4b911bb6a5e1e38cea327d5216bd7401ed74185be8605d",
+      "successful": true,
+      "bundleSha256": "e7931b5da5f3a051676b595e7925c8c118a95291ef9d1978683e68177bb50094",
+      "nativeBuildSha256": "6bd7ae8244e568cde351cbd42d3f92528539352f43e57003993e8ba0a1a6ee2a",
+      "streamStarted": false,
+      "timeline": {
+        "redirectStartEnterMs": 221350921,
+        "redirectStartReturnMs": 221351046,
+        "redirectCloseReturnMs": 221351218,
+        "lastMarker": "helper_unload.return"
+      },
+      "gapFromPreviousRedirectCloseMs": null,
+      "analysisIdentity": "native-activation-control-c662b4b7e5bd4abc9fda104b3894cccd"
+    },
+    {
+      "resultSha256": "d29a62b4cf34ba44a224bfd97fbefba9fbc5b0add0d2667ac59e6715f945969c",
+      "workerJournalSha256": "4d77b43596fd06fa04dc30e65520e174ee6e10951455811ba6749b54708c29b8",
+      "successful": true,
+      "bundleSha256": "e7931b5da5f3a051676b595e7925c8c118a95291ef9d1978683e68177bb50094",
+      "nativeBuildSha256": "6bd7ae8244e568cde351cbd42d3f92528539352f43e57003993e8ba0a1a6ee2a",
+      "streamStarted": false,
+      "timeline": {
+        "redirectStartEnterMs": 221368140,
+        "redirectStartReturnMs": 221368281,
+        "redirectCloseReturnMs": 221368453,
+        "lastMarker": "helper_unload.return"
+      },
+      "gapFromPreviousRedirectCloseMs": 16922,
+      "analysisIdentity": "native-activation-control-14054a13ddc84d40a0a44a7dce07ed6b"
+    },
+    {
+      "resultSha256": "81971b9eded475841eaa9368981682de2514cea8171e7d4bc4d3db5873c2687d",
+      "workerJournalSha256": "ce2953f34dac6397fc8b0f42f383ee4289e78438a42c2a6a4c4964f5725d8e4a",
+      "successful": true,
+      "bundleSha256": "e7931b5da5f3a051676b595e7925c8c118a95291ef9d1978683e68177bb50094",
+      "nativeBuildSha256": "6bd7ae8244e568cde351cbd42d3f92528539352f43e57003993e8ba0a1a6ee2a",
+      "streamStarted": true,
+      "timeline": {
+        "redirectStartEnterMs": 221621906,
+        "redirectStartReturnMs": 221622062,
+        "redirectCloseReturnMs": 221625234,
+        "lastMarker": "helper_unload.return"
+      },
+      "gapFromPreviousRedirectCloseMs": 253453,
+      "analysisIdentity": "native-activation-silent-duplex-51ad707cec5249e7b98a23290fe467fc"
+    },
+    {
+      "resultSha256": "fac78c59ec7238db32c655821153b1eae3a0b1aa7396b2213c3cf75bbd471e0d",
+      "workerJournalSha256": "478c7d42cac728f433940620eb9dd751a11578278c44b01c6209496fb4dd00df",
+      "successful": false,
+      "bundleSha256": "e7931b5da5f3a051676b595e7925c8c118a95291ef9d1978683e68177bb50094",
+      "nativeBuildSha256": "6bd7ae8244e568cde351cbd42d3f92528539352f43e57003993e8ba0a1a6ee2a",
+      "streamStarted": false,
+      "timeline": {
+        "redirectStartEnterMs": 221634640,
+        "redirectStartReturnMs": null,
+        "redirectCloseReturnMs": null,
+        "lastMarker": "redirect_start.enter"
+      },
+      "gapFromPreviousRedirectCloseMs": 9406,
+      "analysisIdentity": "native-activation-control-81f99a24752345978691ca0b08e0e0b3"
+    }
+  ],
+  "streamingCauseIsolated": false,
+  "readinessDelayEstablished": false,
+  "automaticRetryRecommended": false,
+  "deviceAccess": false,
+  "vendorCodeExecuted": false,
+  "date": "2026-11-06",
+  "testsPassed": 6,
+  "sameBootContext": "These four probes were launched and observed in the same uninterrupted agent execution; the raw journals alone do not carry a boot identifier.",
+  "sourceSha256": {
+    "scripts/summarize-native-reopen-cadence.py": "b79afb8fe840ac566f0074a509ea09b0776e862a52b435c3067a11ba58ba7d9c",
+    "tests/test_native_reopen_cadence.py": "2e1e14d72fdd6ff3158813fe44d1be669dd726ea3712a2761a2d015989b856ea",
+    "src/windows/startup_journal.hpp": "f391804857092750996b97abf8237df2835c89d34f975b6df73d602ff3501eba"
+  },
+  "configurationLogObservation": {
+    "channel": "Microsoft-Windows-Kernel-PnP/Configuration",
+    "enabled": true,
+    "recordCount": 1367,
+    "lastWriteUtc": "2026-11-06T19:25:37.0619253Z",
+    "queryStartUtc": "2026-11-06T22:45:00Z",
+    "queryHadNoMatchingEvents": true,
+    "establishesUsbLifecycle": false
+  }
+}

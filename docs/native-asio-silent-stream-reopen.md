@@ -2,6 +2,8 @@
 
 6 November 2026: the exact production ASIO DLL completed a three-second physical silent-duplex stream through its new lazy activation path. A subsequent control-only reopen failed at `redirect_start.enter`, before any clock read. Hardware testing stopped there. This is **not** a reliable-reopen or ready-to-install result.
 
+**Timing follow-up:** the successful control-only reopen used a 16.922-second gap; the failed post-stream acquisition used 9.406 seconds. The [journal comparison](native-reopen-cadence.md) preserves this confound. Streaming is not isolated as the cause, and neither interval is a validated readiness delay.
+
 ## Observations
 
 | Probe | Observed result |
