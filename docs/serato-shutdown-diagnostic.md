@@ -1,5 +1,7 @@
 # Serato shutdown after the two-deck test
 
+**6 November 2026 update:** the assembled temporary wrapper has now passed an attended manual-close test after USB recovery. Serato exited with code 0 before any observer close request, and the new broker reported `ownerFailureCode=none` and a successful requested stop, with complete retirement and rollback. Playback stayed stopped. This establishes one clean startup/shutdown with the smaller fully detached tracer; it does not reproduce or definitively explain the older two-deck failure, or prove shutdown after sustained playback. [Successful session evidence](evidence/assembled-session-success-20261106.json)
+
 The attended two-deck Phase test established owner-reported tracking and a five-second software output recording. At cleanup, the broker reported `successful=false`, `reason=owner_failure`, while its final device, stream and native error fields were zero. I/O retirement, device release, worker exit and empty job all verified. The original Serato resources were restored and the temporary driver removed. These are separate observations: safe release does not erase the failed ownership result. [Live result](evidence/phase-two-deck-session-20261105.json)
 
 ## What the old trace can establish
