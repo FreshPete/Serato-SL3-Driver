@@ -37,6 +37,8 @@ A [native on-demand activation component](broker-on-demand-activation.md) now ex
 
 The [on-demand deployment package](asio-on-demand-deployment.md) now binds its entry/worker/timing records to final protected paths. Isolated workspace/private-HKCU staging, registration, removal and recovery pass; native binaries are preserved and the temporary session route refuses this mode. This is installer-library validation, not production installation or ordinary Serato startup. The ten-minute unmeasured diagnostic limit still applies.
 
+A [no-shim normal-start experiment](on-demand-normal-start-test.md) is now prepared with source-bound setup/restore and a successful read-only host Plan. It leaves Serato for manual ordinary launch and explicitly preserves the distinction between component setup and actual device selection. Neither production setup nor native acquisition has run.
+
 ## Acceptance checks
 
 1. Setup installs the required reviewed components once and records exact installed/original identities for repair and uninstall.
