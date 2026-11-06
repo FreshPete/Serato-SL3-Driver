@@ -1,0 +1,120 @@
+{
+  "schema": "sl3.com-registration-activation-tests.v1",
+  "passed": true,
+  "outcomes": [
+    {
+      "scenario": "before-registration",
+      "passed": true,
+      "hostResult": {
+        "schema": "sl3.com-registration-result.v1",
+        "registryAliasContainsClass": false,
+        "classNotRegistered": true,
+        "fixtureLoaded": false,
+        "nativeDeviceAccess": false
+      },
+      "retirements": []
+    },
+    {
+      "scenario": "private-registry-alias-not-activation-proof",
+      "passed": true,
+      "hostResult": {
+        "schema": "sl3.com-registration-result.v1",
+        "registryAliasContainsClass": true,
+        "classNotRegistered": true,
+        "fixtureLoaded": false,
+        "nativeDeviceAccess": false
+      },
+      "retirements": []
+    },
+    {
+      "scenario": "registration-free-com-reopen",
+      "passed": true,
+      "hostResult": {
+        "schema": "sl3.com-registration-result.v1",
+        "registrationFreeContext": true,
+        "comFactoryResolved": true,
+        "coCreateInstances": 2,
+        "callbacksCompleted": 3497,
+        "simulatedOnly": true,
+        "nativeDeviceAccess": false
+      },
+      "retirements": [
+        {
+          "session": "session-1",
+          "resultSha256": "1f34d42bf63ac6d4d7039760145a873fa9bfd5c5b8a6323fc39fea7dabd5454d",
+          "ioRetiredVerified": true,
+          "processExited": true,
+          "jobEmpty": true
+        },
+        {
+          "session": "session-2",
+          "resultSha256": "1f34d42bf63ac6d4d7039760145a873fa9bfd5c5b8a6323fc39fea7dabd5454d",
+          "ioRetiredVerified": true,
+          "processExited": true,
+          "jobEmpty": true
+        }
+      ]
+    },
+    {
+      "scenario": "after-registration-removal",
+      "passed": true,
+      "hostResult": {
+        "schema": "sl3.com-registration-result.v1",
+        "registryAliasContainsClass": false,
+        "classNotRegistered": true,
+        "fixtureLoaded": false,
+        "nativeDeviceAccess": false
+      },
+      "retirements": []
+    }
+  ],
+  "sourceSha256": {
+    "scripts/test-com-registration-activation.py": "6d280fd259ff4cd0b0443b4c0c7b4260b5547e3aaa3773918e18f49e34f77bea",
+    "scripts/asio-registry.py": "f0b1009fe0a3cee39acc30e295dddeac9171082d8d7029f404a302d0114b7bbf",
+    "scripts/prepare-asio-deployment.py": "87790868d83c7d36afe8d82e00dd3894d618e32bcf99d0929f3a197a107de0c7",
+    "scripts/asio-file-stage.py": "55dd7bce6cfc513b301a155068bc17c5605f0e9ff5d55f67d499373c98d24b60",
+    "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad"
+  },
+  "buildSha256": "7334b16eef416408f73149603f5ed9b109f2964fc62b895eec311b5f675c7cab",
+  "hostSha256": "51a2b950b168f6baae5bc379c4fdee04c74b3426145caf44a83b77ccdca79907",
+  "simulatedReferenceSha256": "6140b6111397d9918ceb73fd9c3846e266b0e78c10cf0f0fc90f2a7f0c1a1a52",
+  "fixtureDllSha256": "001cf518f8b86c0281b0200329a5d18591a5508dcbdb4a187e1c67b8692fe619",
+  "activationManifestSha256": "d015bff8a41e74cc531c18fdcbfa891aada70f5e9a6fdeb9a5f57e1a0880be28",
+  "registrationRecordsFromInstallerGenerator": true,
+  "processLocalHkcrOverride": true,
+  "privateNamespaceRemoved": true,
+  "liveRegistrationsUnchanged": true,
+  "productionInstallationPerformed": false,
+  "seratoLaunched": false,
+  "nativeDeviceAccess": false,
+  "simulatedProviderConfiguredThroughTestExport": true,
+  "installedRegistryActivationValidated": false,
+  "registrationFreeComActivationValidated": true,
+  "reportPath": "analysis/com-registration-48bd985750d9409ea20ec7a224392c65/result.json",
+  "reportSha256": "5db59cb208ce47ed49e0c60cc5fe0e6b2b9a571aa3c05f67d901a846d3ddb187",
+  "buildInputs": {
+    "diagnostics/asio-com-registration/CMakeLists.txt": "5e5d052de66899497f6ecb07de60a9d647b154495ad413ae388e19627d7e7505",
+    "diagnostics/asio-com-registration/host.cpp": "e8169be7462062e139af133d93736f1feb2652ef4a0242f289abdf8b22db5c9d",
+    "src/asio/com_identity.hpp": "358f892e11f17308d37fdcb8c82ceea0171a3421d8472ac675f9e012783904ac",
+    "scripts/build-com-registration-host.ps1": "89b82b017cc5cca61acc768ecce97eb8c7f2350e457060cced68a8d19615b577",
+    "artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/asio.h": "93d2f80d49b4ac9c963514e7c1307ab5111d8104246192233745beb058534ea1",
+    "artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/asiosys.h": "f44a1ed0fd7c056ff047aeebc4c05a8c185f0585a24d8debc55c70107777dbef",
+    "artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/iasiodrv.h": "86ad4788452c74823653cf57d4bd557c48bb6542d7e6eb7fff80102c705a066d"
+  },
+  "buildPlanAndRefusalChecks": 2,
+  "hostPostcheck": {
+    "observed": true,
+    "originalResources": true,
+    "occupiedPaths": [],
+    "registrationPresent": false,
+    "currentSetupClean": true
+  },
+  "normalStartExperimentStillSourceCurrent": true,
+  "normalStartExperimentSha256": "4ca890a6d5e7c2d232919374bc047f86387587b4c4bd7c50648549c964b57073",
+  "limitations": [
+    "Private registry alias did not provide COM activation; it is not an installed-registry test.",
+    "Manifest-based activation is an isolated test only, not a Serato deployment proposal.",
+    "Simulated provider configured through a test-only export after COM factory resolution.",
+    "No Serato selection, physical audio, USB release or DVS validation."
+  ]
+}
