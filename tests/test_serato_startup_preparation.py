@@ -22,6 +22,16 @@ class FakePE:
 
 
 class PreparationTest(unittest.TestCase):
+    def test_observer_composition_is_opt_in_and_requires_a_boolean(self):
+        ordinary=MODULE['compose']('C:\\test\\sl3_asio.dll')
+        observed=MODULE['compose']('C:\\test\\sl3_asio.dll',True)
+        self.assertNotIn(b"SL3_ACTION_OBSERVER_MODE = 'shared'",ordinary)
+        self.assertIn(b"SL3_ACTION_OBSERVER_MODE = 'shared'",observed)
+        self.assertEqual(MODULE['observer_sources'](False),{})
+        self.assertEqual(len(MODULE['observer_sources'](True)),3)
+        for invalid in (1,'true',None):
+            with self.subTest(invalid=invalid),self.assertRaises(ValueError):MODULE['compose']('C:\\test\\sl3_asio.dll',invalid)
+
     def test_guard_inventory_and_local_path_contract(self):
         source = MODULE['TEMPLATE'].read_text()
         self.assertEqual(len(MODULE['points'](source)), 3)

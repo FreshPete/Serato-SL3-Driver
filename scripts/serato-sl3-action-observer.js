@@ -25,6 +25,11 @@
     if (!controllers.has(key) && controllers.size < 8) controllers.set(key, controllers.size + 1);
     return controllers.get(key);
   };
+  const arrivalPublished = thread => emit('genuine_sl3_arrival_published', {thread});
+  let installed = false;
+  const activate = sharedArrival => {
+  if (installed) throw new Error('Action observer already active');
+  installed = true;
   Interceptor.attach(app.base.add(points[0][1]), {
     onEnter(args) {
       if (!active()) return;
@@ -77,16 +82,24 @@
       });
     }
   });
-  Interceptor.attach(app.base.add(points[3][1]), {
+  if (!sharedArrival) Interceptor.attach(app.base.add(points[3][1]), {
     onEnter(args) {
       if (!active() || args[1].toUInt32() !== 0x2d4) return;
       const packed = args[2];
       const vid = parseInt(packed.toString().slice(0, -8) || '0', 16) & 0xffff;
       const pid = packed.toUInt32() >>> 16, rev = packed.toUInt32() & 0xffff;
       if (vid === 0x1cc5 && pid === 1 && rev === 0)
-        emit('genuine_sl3_arrival_published', {thread: this.threadId});
+        arrivalPublished(this.threadId);
     }
   });
   emit('action_observer_ready', {guardedEntries: points.length, invokesCallbacks: false,
     readsAudio: false, maximumEvents: 128});
+  };
+  if (globalThis.SL3_ACTION_OBSERVER_MODE === 'shared') {
+    if (globalThis.SL3_ACTION_OBSERVER) throw new Error('Action observer already prepared');
+    globalThis.SL3_ACTION_OBSERVER = Object.freeze({version: 1, activate: () => activate(true), arrivalPublished});
+  } else {
+    if (globalThis.SL3_ACTION_OBSERVER_MODE !== undefined) throw new Error('Unknown action observer mode');
+    activate(false);
+  }
 })();

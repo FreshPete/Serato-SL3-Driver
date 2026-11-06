@@ -33,6 +33,30 @@ def digest(path):
         return hashlib.file_digest(stream, 'sha256').hexdigest()
 
 
+def action_observation(payload):
+    layouts={
+        'action_observer_ready':{'guardedEntries':4,'invokesCallbacks':False,'readsAudio':False,'maximumEvents':128},
+        'driver_action_receiver_observed':{'controller':'controller','thread':'thread','callbackSlot':16,'captureOffset':8,'receiverMatchesPopup':True},
+        'driver_popup_returned':{'controller':'controller','thread':'thread','callbacks':'count'},
+        'driver_controller_message_returned':{'controller':'controller','thread':'thread','message':'message'},
+        'genuine_sl3_arrival_published':{'thread':'thread'},
+        'action_observer_fault':{'stage':'stage'},
+    }
+    layout=layouts.get(payload['event'])
+    if layout is None:return None
+    require(set(payload)=={'event','ordinal',*layout},'Unexpected action observer fields')
+    require(type(payload['ordinal']) is int and 1<=payload['ordinal']<=128,'Invalid action observer ordinal')
+    for field,rule in layout.items():
+        value=payload[field]
+        if rule in ('controller','thread','count','message'):
+            lower=0 if rule=='message' else 1
+            upper={'controller':8,'thread':2**32-1,'count':128,'message':2**32-1}[rule]
+            require(type(value) is int and lower<=value<=upper,'Invalid action observer '+field)
+        elif rule=='stage':require(value in ('popup_stack','callback_read'),'Invalid action observer fault stage')
+        else:require(type(value) is type(rule) and value==rule,'Invalid action observer '+field)
+    return {key:value for key,value in payload.items() if key!='event'}
+
+
 def launcher_environment(capsule, expected, application, bundle, bundle_sha):
     if capsule is None and expected is None:
         return {}
@@ -60,9 +84,12 @@ def preflight(prepared, preparation_sha, application, bundle, bundle_sha, instal
     builder = runpy.run_path(str(ROOT/'scripts/prepare-serato-startup-shim.py'))
     planned = builder['asio_path'](record['plannedAsioPath'])
     template = (ROOT/'scripts/serato-sl3-startup-shim.js').read_bytes()
-    configuration = ('globalThis.SL3_SESSION_CONFIG = Object.freeze(' + json.dumps({'asioPath': planned}) + ');\n').encode()
+    observe=record.get('observeDownloadAction',False)
+    require(type(observe) is bool and record.get('actionObserverSources',{})==builder['observer_sources'](observe),
+            'Action observer binding differs')
+    expected_script=builder['compose'](planned,observe)
     script = (prepared/'startup-shim.js').read_bytes()
-    require(len(script) <= 65536 and script == configuration + template and
+    require(len(script) <= 65536 and script == expected_script and
             hashlib.sha256(template).hexdigest() == record['templateSha256'] and
             hashlib.sha256(script).hexdigest() == record['preparedScriptSha256'], 'Prepared startup script differs')
     runpy.run_path(str(ROOT/'scripts/prepare-asio-deployment.py'))['verify'](bundle, bundle_sha)
@@ -99,6 +126,7 @@ def supervise(backend, script, verify_driver, stop_requested, clock=time.monoton
     """One owned process. Backend cleanup runs even on partial startup failure."""
     incoming = queue.Queue(maxsize=128)
     overflow = threading.Event()
+    action_ordinal=0
     report = {'schema': 'sl3.startup-supervisor-result.v1', 'events': [], 'error': None,
               'asioStartObserved': False, 'stagedAsioVerified': False, 'tracerDetached': False,
               'hostDirectDeviceAccess': False, 'hardwareStreamingVerified': False,
@@ -118,6 +146,7 @@ def supervise(backend, script, verify_driver, stop_requested, clock=time.monoton
             event_sink(item)
 
     def wait_for(name, seconds):
+        nonlocal action_ordinal
         deadline = clock() + seconds
         while clock() < deadline:
             if stop_requested():
@@ -135,7 +164,12 @@ def supervise(backend, script, verify_driver, stop_requested, clock=time.monoton
                 continue
             payload = item.get('payload')
             require(isinstance(payload, dict) and isinstance(payload.get('event'), str), 'Malformed startup event')
-            event(payload['event'], timeMs=payload.get('timeMs'))
+            observation=action_observation(payload)
+            fields={}
+            if observation is not None:
+                require(observation['ordinal']==action_ordinal+1,'Action observer event sequence differs')
+                action_ordinal=observation['ordinal'];fields['actionObservation']=observation
+            event(payload['event'], timeMs=payload.get('timeMs'),**fields)
             if payload['event'] == name and (name != 'asio_live_start_end' or payload.get('result') == 0):
                 return
         raise TimeoutError('Startup deadline: ' + name)

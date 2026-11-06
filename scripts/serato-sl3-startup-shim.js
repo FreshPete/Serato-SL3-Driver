@@ -18,6 +18,12 @@
       value => value.toString(16).padStart(2, '0')).join('');
     if (bytes !== expected) throw new Error('Startup shim entry differs: ' + name);
   }
+  if (config.observeDownloadAction !== undefined && typeof config.observeDownloadAction !== 'boolean')
+    throw new Error('Action observation must be an explicit Boolean');
+  const actionObserver = config.observeDownloadAction === true ? globalThis.SL3_ACTION_OBSERVER : null;
+  if (config.observeDownloadAction === true && (!actionObserver || actionObserver.version !== 1))
+    throw new Error('Prepared shared action observer required');
+  if (actionObserver) actionObserver.activate();
   const emit = (event, fields = {}) => send({event, timeMs: Date.now(), ...fields});
   let arrival = null, click = null, supplied = false, started = false;
   Interceptor.attach(app.base.add(points[0][1]), {
@@ -29,7 +35,10 @@
       if (vid === 0x1cc5 && pid === 1) {
         arrival = rev === 0 ? {vid, pid, rev} : null;
         click = null;
-        if (arrival) emit('sl3_arrival_observed', arrival);
+        if (arrival) {
+          emit('sl3_arrival_observed', arrival);
+          if (actionObserver) actionObserver.arrivalPublished(this.threadId);
+        }
       }
     }
   });

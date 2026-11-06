@@ -5,6 +5,7 @@ import hashlib
 import json
 from pathlib import Path, PureWindowsPath
 import re
+import runpy
 
 import pefile
 
@@ -47,7 +48,25 @@ def output_path(path):
     return path
 
 
-def prepare(application, planned_asio, output=None):
+def observer_sources(observe):
+    require(type(observe) is bool, 'Action observation requires an explicit Boolean')
+    return {name:digest((ROOT/name).read_bytes()) for name in (
+        'scripts/serato-sl3-action-observer.js','scripts/inspect-serato-download-action.py',
+        'scripts/export-serato-clock-handshake-evidence.py')} if observe else {}
+
+
+def compose(planned, observe=False):
+    require(type(observe) is bool, 'Action observation requires an explicit Boolean')
+    config={'asioPath':planned}
+    if observe:config['observeDownloadAction']=True
+    prefix=('globalThis.SL3_SESSION_CONFIG = Object.freeze('+json.dumps(config)+');\n').encode()
+    if observe:
+        prefix+=b"globalThis.SL3_ACTION_OBSERVER_MODE = 'shared';\n"+(ROOT/'scripts/serato-sl3-action-observer.js').read_bytes()+b'\n'
+    return prefix+TEMPLATE.read_bytes()
+
+
+def prepare(application, planned_asio, output=None, observe_download_action=False):
+    dependencies=observer_sources(observe_download_action)
     target = asio_path(planned_asio)
     destination = output_path(output) if output is not None else None
     application = Path(application)
@@ -63,9 +82,12 @@ def prepare(application, planned_asio, output=None):
             require(pe.get_data(rva, 8) == bytes.fromhex(expected), 'Application entry differs: ' + name)
     finally:
         pe.close()
-    script = ('globalThis.SL3_SESSION_CONFIG = Object.freeze(' + json.dumps({'asioPath': target}) + ');\n').encode() + source
+    if observe_download_action:
+        runpy.run_path(str(ROOT/'scripts/inspect-serato-download-action.py'))['inspect'](application.absolute())
+    script = compose(target,observe_download_action)
     result = {'schema': 'sl3.startup-shim-preparation.v1', 'applicationSha256': APP_SHA,
               'templateSha256': digest(source), 'preparedScriptSha256': digest(script), 'plannedAsioPath': target,
+              'observeDownloadAction':observe_download_action,'actionObserverSources':dependencies,
               'guardedEntries': [{'name': name, 'rva': rva, 'bytesChecked': 8} for name, rva, _ in entry_points],
               'hostMustReverifyApplicationAndAsio': True, 'hostMustUnloadAndDetachAfterStart': True,
               'prepared': destination is not None, 'applicationLaunched': False, 'processAttached': False,
@@ -85,5 +107,6 @@ if __name__ == '__main__':
     parser.add_argument('--app', type=Path, required=True)
     parser.add_argument('--asio-path', required=True)
     parser.add_argument('--prepare', type=Path)
+    parser.add_argument('--observe-download-action', action='store_true')
     args = parser.parse_args()
-    print(json.dumps(prepare(args.app, args.asio_path, args.prepare), indent=2))
+    print(json.dumps(prepare(args.app, args.asio_path, args.prepare,args.observe_download_action), indent=2))

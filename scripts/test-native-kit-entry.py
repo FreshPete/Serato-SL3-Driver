@@ -60,6 +60,11 @@ def exercise(kit, expected, application):
         assert status['originalSetupCurrentlyClean'] is True and status['completionEvidenceConsistent'] is False
         assert status['repairAttempted'] is False and status['deviceOpened'] is False
         assert json.loads(Path(prepared['sessionPlan']).read_bytes())['asioPrivateTrace'] is False
+        selected=json.loads(Path(prepared['sessionPlan']).read_bytes())
+        shim=Path(selected['preparedShim']['path'])
+        shim_record=json.loads((shim/'preparation.json').read_bytes())
+        assert shim_record['observeDownloadAction'] is False and shim_record['actionObserverSources']=={}
+        assert b'action_observer_ready' not in (shim/'startup-shim.js').read_bytes()
         recovery=json.loads(call('native-prepared-session-recovery-check',prepared['recoveryCheckArguments']).stdout)
         assert recovery['phase']=='clean' and recovery['resourcePlan']['archiveState']=='original'
         assert recovery['recoveryAuthorized'] is False and recovery['repairAttempted'] is False

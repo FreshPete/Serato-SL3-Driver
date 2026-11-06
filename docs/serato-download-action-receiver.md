@@ -1,5 +1,7 @@
 # Original Download Driver action receiver
 
+**Follow-up:** [opt-in supervised integration](session-action-observation.md) now shares the arrival hook, verifies both guard groups before attachment and retains the diagnostic fields. Its offline checks passed; no live probe or automatic action has run. The standalone checkpoint below remains historical.
+
 The original Serato 5.0.0.1278 executable identifies the click action more precisely than a scalar message ID. Its RTTI names a `std::_Func_impl_no_alloc` lambda from `DeviceNotificationController::ShowDriverPopup`. The action vtable's invoke slot (`+16`) points to `141380170`, the previously checked genuine `0x4ff` publisher. [Offline inspection and preparation source](../scripts/inspect-serato-download-action.py) · [Evidence](evidence/serato-download-action-20261106.json)
 
 ## What the original bytes establish

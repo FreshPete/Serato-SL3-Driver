@@ -56,6 +56,7 @@ def exercise(launcher, powershell, template):
         assert capsule['sessionDirectory'] == str(directory)
         assert plan['launcher'] == original['launcher'] and plan['installerResource'] == original['installerResource']
         assert plan['asioPrivateTrace'] is original['asioPrivateTrace']
+        assert plan['preparedShim']==original['preparedShim']
         assert result['asioPrivateTrace'] is original['asioPrivateTrace']
         assert plan['nativeBundle'] == original['nativeBundle'] and plan['hostOutput'] != original['hostOutput']
         assert all(not (directory / name).exists() for name in ('session-run.lock', 'install-receipt.json', 'broker-session'))

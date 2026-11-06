@@ -22,6 +22,8 @@ EXTRA_SOURCES=(
     'scripts/prepare-portable-powershell.py',
     'scripts/serato-protected-session-owner.ps1',
     'scripts/recover-serato-session.py',
+    'scripts/serato-sl3-action-observer.js','scripts/inspect-serato-download-action.py',
+    'scripts/export-serato-clock-handshake-evidence.py',
 )
 
 

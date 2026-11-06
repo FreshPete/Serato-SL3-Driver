@@ -4,9 +4,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const source = fs.readFileSync(path.join(__dirname, '../scripts/serato-sl3-startup-shim.js'), 'utf8');
-function setup({badEntry = false} = {}) {
+const actionSource = fs.readFileSync(path.join(__dirname, '../scripts/serato-sl3-action-observer.js'), 'utf8');
+function setup({badEntry = false, observeAction = false, badActionEntry = false, missingAction = false} = {}) {
   const appBase = 0x140000000n, dllBase = 0x180000000n;
   const entries = new Map([[0x185ee90n, '48895c2408574883'], [0x185ec00n, '48895c2408574883'], [0x5b0cb0n, '48895c2420574883']]);
+  if (observeAction) for (const [rva, bytes] of [[0x137df40n,'48895c2418555657'],[0xf25270n,'4053555657415648'],[0x137b790n,'48895c2418555657']]) entries.set(rva,bytes);
   const memory = new Map(), hooks = new Map(), events = [], writes = [];
   const state = {now: 10000, observer: null};
   class Pointer {
@@ -17,6 +19,7 @@ function setup({badEntry = false} = {}) {
     toInt32() { return this.toUInt32() | 0; }
     toString() { return '0x' + this.value.toString(16); }
     isNull() { return this.value === 0n; }
+    equals(other) { return this.value === other.value; }
     readU16() { return Number(memory.get(this.value) || 0); }
     readU32() { return this.readU16(); }
     writeU16(value) { writes.push([this.value, value]); memory.set(this.value, value); }
@@ -24,6 +27,7 @@ function setup({badEntry = false} = {}) {
     readByteArray() {
       let bytes = entries.get(this.value - appBase);
       if (badEntry && this.value === appBase + 0x5b0cb0n) bytes = '0000000000000000';
+      if (badActionEntry && this.value === appBase + 0x137df40n) bytes = '0000000000000000';
       assert.ok(bytes, 'Unexpected application entry inspected');
       return Uint8Array.from(Buffer.from(bytes, 'hex')).buffer;
     }
@@ -42,6 +46,7 @@ function setup({badEntry = false} = {}) {
     },
     Interceptor: {attach(address, handlers) { assert.ok(!hooks.has(address.value), 'Duplicate hook'); hooks.set(address.value, handlers); }}
   };
+  if (observeAction) context.SL3_SESSION_CONFIG.observeDownloadAction = true;
   function enter(address, args, thread = 7, caller = 0x13801ban) {
     const invocation = {threadId: thread, returnAddress: p(appBase + caller)};
     const handlers = hooks.get(address); assert.ok(handlers, 'Missing expected hook');
@@ -49,7 +54,7 @@ function setup({badEntry = false} = {}) {
     return result => { if (handlers.onLeave) handlers.onLeave.call(invocation, p(result)); };
   }
   const api = {p, memory, hooks, events, writes, state, dll,
-    load() { vm.runInNewContext(source, context); },
+    load() { vm.runInNewContext(observeAction && !missingAction ? "globalThis.SL3_ACTION_OBSERVER_MODE = 'shared';\n"+actionSource+'\n'+source : source, context); },
     arrival(value = 0x1cc500010000n) { enter(appBase + 0x185ee90n, [p(0), p(0x2d4), p(value)]); },
     click(thread = 7, caller) { enter(appBase + 0x185ec00n, [p(0), p(0x4ff)], thread, caller); },
     panel(thread = 7, message = 0x4ff) { memory.set(0x200cn, message); enter(appBase + 0x5b0cb0n, [p(0x1000), p(0x2000)], thread); },
@@ -61,6 +66,18 @@ let cases = 0;
 function test(name, check) { check(); cases++; console.log('PASS ' + name); }
 test('all entry guards precede any hook', () => {
   const s = setup({badEntry: true}); assert.throws(() => s.load(), /entry differs/); assert.equal(s.hooks.size, 0);
+});
+test('combined guards fail before either diagnostic installs hooks', () => {
+  for (const options of [{badEntry:true},{badActionEntry:true},{missingAction:true}]) {
+    const s=setup({observeAction:true,...options});assert.throws(()=>s.load());assert.equal(s.hooks.size,0);
+  }
+});
+test('combined diagnostic shares arrival and preserves the manual click requirement', () => {
+  const s=setup({observeAction:true});s.load();assert.equal(s.hooks.size,6);
+  s.arrival();s.panel();assert.equal(s.writes.length,0);
+  assert.equal(s.events.filter(e=>e.event==='genuine_sl3_arrival_published').length,1);
+  assert.equal(s.events.filter(e=>e.event==='sl3_arrival_observed').length,1);
+  s.click();s.panel();assert.equal(s.writes.length,3);
 });
 test('genuine arrival plus explicit click supplies only the three zero fields once', () => {
   const s = setup(); s.load(); assert.equal(s.hooks.size, 3); s.arrival(); s.click(); s.panel();
