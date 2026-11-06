@@ -1,0 +1,150 @@
+{
+  "schema": "sl3.serato-download-action.v1",
+  "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "callbackRtti": ".?AV?$_Func_impl_no_alloc@V<lambda_1>@?1??ShowDriverPopup@DeviceNotificationController@dj@serato@@AEAAXV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@_N10@Z@X$$V@std@@",
+  "callbackTableRva": "0x2f2bdb8",
+  "invokeSlot": 16,
+  "captureOffset": 8,
+  "capturedValue": "ShowDriverPopup receiver; shallow raw-pointer copy, not a demonstrated lifetime lease",
+  "copyLeafSha256": "e8e0d025f409523d23cc42ddcd52d5a1fe3f0ae7985538f30f082415d7873bc0",
+  "functionRanges": {
+    "0x14137df40": {
+      "endExclusive": "0x14137eaec",
+      "codeEndExclusive": "0x14137eaec",
+      "embeddedDataBytes": 0,
+      "sha256": "1e711a53a186d79e78d479968d54dcc4e465114109f7fe5bd12b83ec32702381"
+    },
+    "0x141380170": {
+      "endExclusive": "0x1413801e3",
+      "codeEndExclusive": "0x1413801e3",
+      "embeddedDataBytes": 0,
+      "sha256": "35cb0a3c84d68ab3a6695e2f9b8c2c48c1378d999b72e2ed7a7bb06e0c4cb1d3"
+    },
+    "0x14137b790": {
+      "endExclusive": "0x14137c928",
+      "codeEndExclusive": "0x14137c8a0",
+      "embeddedDataBytes": 136,
+      "sha256": "62a5503ec22c2e8b4510c97b8cfdd5d39f57464599d7cfe96fcf2961a96b42a4"
+    }
+  },
+  "instructions": [
+    {
+      "va": "0x14137df7d",
+      "bytes": "488bd9",
+      "instruction": "mov rbx, rcx"
+    },
+    {
+      "va": "0x14137df80",
+      "bytes": "48894c2440",
+      "instruction": "mov qword ptr [rsp + 0x40], rcx"
+    },
+    {
+      "va": "0x14137e610",
+      "bytes": "488d05a1d7ba01",
+      "instruction": "lea rax, [rip + 0x1bad7a1]"
+    },
+    {
+      "va": "0x14137e617",
+      "bytes": "4889442460",
+      "instruction": "mov qword ptr [rsp + 0x60], rax"
+    },
+    {
+      "va": "0x14137e61c",
+      "bytes": "488b442440",
+      "instruction": "mov rax, qword ptr [rsp + 0x40]"
+    },
+    {
+      "va": "0x14137e621",
+      "bytes": "4889442468",
+      "instruction": "mov qword ptr [rsp + 0x68], rax"
+    },
+    {
+      "va": "0x14137e648",
+      "bytes": "4c8d442460",
+      "instruction": "lea r8, [rsp + 0x60]"
+    },
+    {
+      "va": "0x14137e654",
+      "bytes": "e8176cbaff",
+      "instruction": "call 0x140f25270"
+    },
+    {
+      "va": "0x14138017c",
+      "bytes": "488b4108",
+      "instruction": "mov rax, qword ptr [rcx + 8]"
+    },
+    {
+      "va": "0x141380180",
+      "bytes": "488b5840",
+      "instruction": "mov rbx, qword ptr [rax + 0x40]"
+    },
+    {
+      "va": "0x1413801a7",
+      "bytes": "baff040000",
+      "instruction": "mov edx, 0x4ff"
+    },
+    {
+      "va": "0x1413801b5",
+      "bytes": "e846ea4d00",
+      "instruction": "call 0x14185ec00"
+    },
+    {
+      "va": "0x1413801d4",
+      "bytes": "ff5058",
+      "instruction": "call qword ptr [rax + 0x58]"
+    },
+    {
+      "va": "0x14137b7c5",
+      "bytes": "488bf1",
+      "instruction": "mov rsi, rcx"
+    },
+    {
+      "va": "0x14137bcb2",
+      "bytes": "488bce",
+      "instruction": "mov rcx, rsi"
+    },
+    {
+      "va": "0x14137bcb5",
+      "bytes": "e886220000",
+      "instruction": "call 0x14137df40"
+    }
+  ],
+  "observerSourceSha256": "3839b9a614347ea59b559f99dd6ec589732e8c417e48a34c230ce48677148c5b",
+  "inspectorSourceSha256": "b047bed6553755261b3f44c696f793ed09d495b42256051fb95878fadd665701",
+  "imageReaderSourceSha256": "70ac61b7df9bc6e63fc054a0edc191e998ed407747b0a32fe4cdd2b7dbe9ea20",
+  "guardedEntries": [
+    [
+      "popup",
+      20438848,
+      "48895c2418555657"
+    ],
+    [
+      "button",
+      15880816,
+      "4053555657415648"
+    ],
+    [
+      "message",
+      20428688,
+      "48895c2418555657"
+    ],
+    [
+      "arrival",
+      25554576,
+      "48895c2408574883"
+    ]
+  ],
+  "prepared": true,
+  "observerExecuted": false,
+  "vendorCodeExecuted": false,
+  "invokesCallbacks": false,
+  "processAttached": false,
+  "applicationModified": false,
+  "physicalDeviceAccess": false,
+  "liveValidated": false,
+  "verification": {
+    "mockedBoundaryCasesPassed": 9,
+    "wrongImageRefusedBeforeOutput": true,
+    "existingOutputPreserved": true
+  }
+}

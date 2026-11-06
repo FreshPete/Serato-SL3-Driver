@@ -1,5 +1,7 @@
 # Removing the repeated Download Driver action
 
+**Follow-up:** the [original action receiver is now statically identified](serato-download-action-receiver.md), with a passive probe prepared and mocked-boundary checks passing. Runtime readiness, thread and lifetime observations remain outstanding; the candidate below is still not an automatic-start implementation.
+
 The working temporary route still needs the user to click Download Driver and approve the local installer. This investigation checks what an automatic launcher would have to preserve. No automatic action was implemented and Serato was not executed.
 
 The new [offline inspector](../scripts/inspect-serato-installer-handoff.py) verifies the exact original Serato 5.0.0.1278 image, complete PE function boundaries and selected instructions in three functions. [Reproducible findings](evidence/serato-installer-handoff-20261106.json)

@@ -2,6 +2,8 @@
 
 ## 6 November packaging checkpoint
 
+**Original action receiver found.** The driver-popup lambda, invoke slot and shallow receiver capture are verified in original Serato bytes. A separate passive startup probe correlates the callback, popup receiver and observed threads without invoking or copying the callable. Nine mocked-boundary cases plus actual offline preparation/wrong-image/no-overwrite checks passed. Live observation and automatic action delivery remain unimplemented or unverified; the working shim and driver package are unchanged. [Details](serato-download-action-receiver.md)
+
 **Repeated-click investigation:** a new offline inspector verifies the real click publisher, generic message helper and guarded installer-completion publication in the pinned application. The summarizer now calls the generic origin `installer_helper_message`; seven tests pass. Widening the startup shim to that helper is not justified, and automatic Start still needs an identified UI-thread action receiver and real completion evidence. No application/device ran. [Findings and candidate boundary](serato-installer-handoff.md)
 
 **Posted-close ASIO integration checked.** A retained parent posts exactly one close to its owned simulated client's hidden window. Normal callbacks stop/dispose/detach; a deliberately blocked callback yields bounded failed stop, keeps planes alive and permits disposal/detach only after release and actual retirement. Both cases passed in the existing broker-ASIO target, followed by all 71 Release checks. Production driver code/package is unchanged; this narrows offline coverage without diagnosing Serato's actual shutdown. [Investigation](asio-window-close-investigation.md)
