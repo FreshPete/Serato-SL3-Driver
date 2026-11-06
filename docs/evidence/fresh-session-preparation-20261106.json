@@ -1,0 +1,227 @@
+{
+  "schema": "sl3.fresh-session-preparation-evidence.v1",
+  "date": "2026-11-06",
+  "launcherSha256": "c6fa9b45219dafd28c06d31e94703eec2268dc4a856d72202e0f16c763bd1770",
+  "launcherBytes": 554496,
+  "releaseManifestSha256": "88b3eff59827d377ff5e8842684d476da09250f08f67a70ff7cedcc07281a076",
+  "installerResourceSha256": "de1f08582adccf62af104bfaef31626c4ee607410ef7cee5a2388a6c6a89cf82",
+  "sourcePins": 30,
+  "pythonRuntimePins": 130,
+  "powershellRuntimePins": 659,
+  "preparationTests": {
+    "schema": "sl3.fresh-session-preparation-tests.v1",
+    "cases": [
+      {
+        "name": "default-read-only-preparation-plan",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "fresh-preparation-1",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "fresh-complete-wrapper-plan-1",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "fresh-preparation-2",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "fresh-complete-wrapper-plan-2",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "wrong-reviewed-plan-hash-writes-no-session",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "other-launcher-release-refused-before-preparation",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "recording-template-refused-before-session-creation",
+        "passed": true,
+        "exitCode": 1
+      }
+    ],
+    "sessions": [
+      {
+        "capsuleSha256": "8c2de49ed33f9835cc0ac345bc551ebc31885fb6125819a17225f9f8299f4bec",
+        "sessionPlanSha256": "756d87b5a559081d346a836e77211c37203ef14224e450ce810068fcfdfb7e26"
+      },
+      {
+        "capsuleSha256": "2e64ef691ec95f42458e6c9ff5295af86abb122d13763ec7e50880f68c8be6b3",
+        "sessionPlanSha256": "a99ea955c7ff82ae5bb93f5a9de76ed5ee812fb8d73357e5261a85609d461e12"
+      }
+    ],
+    "sameLauncherAndResourceReused": true,
+    "preparedSessionsRetainedForReview": true,
+    "applicationStarted": false,
+    "deviceAccess": false,
+    "registryWritten": false,
+    "elevationRequested": false,
+    "liveValidated": false
+  },
+  "fullSessionEntryTests": {
+    "schema": "sl3.native-session-entry-tests.v1",
+    "launcherSha256": "c6fa9b45219dafd28c06d31e94703eec2268dc4a856d72202e0f16c763bd1770",
+    "cases": [
+      {
+        "name": "complete-plan-private-python-and-powershell",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "second-session-same-executable",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "wrong-plan-hash-refused",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "executable-relocated",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "powershell-semicolon-path-refused-clearly",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "powershell-relocated-spaces-unicode-and-dollar-parentheses",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "changed-pwsh.exe-refused-before-powershell",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-pwsh.runtimeconfig.json-refused-before-powershell",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-System.Management.Automation.dll-refused-before-powershell",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "foreign-interpreter",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "foreign-application",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "unsupported-schema",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-wrapper-refused-before-powershell",
+        "passed": true,
+        "exitCode": 1
+      }
+    ],
+    "onlyPlanOrRefusalInvocations": true,
+    "applicationStarted": false,
+    "deviceAccess": false,
+    "registrationWritten": false,
+    "elevationRequested": false,
+    "liveValidated": false
+  },
+  "capsuleEntryTests": {
+    "schema": "sl3.portable-launcher-tests.v1",
+    "launcherSha256": "c6fa9b45219dafd28c06d31e94703eec2268dc4a856d72202e0f16c763bd1770",
+    "cases": [
+      {
+        "name": "first-session",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "second-session-same-executable",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "no-environment-no-installation",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "unsupported-action",
+        "passed": true,
+        "exitCode": 2
+      },
+      {
+        "name": "wrong-capsule-hash",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "executable-relocated-without-rebuild",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "unicode-space-and-shell-metacharacters-in-capsule-path",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "untrusted-interpreter",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "foreign-helper-root",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-package-binding",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "moved-capsule-binding",
+        "passed": true,
+        "exitCode": 1
+      }
+    ],
+    "sameExecutableAcceptedTwoSessionBindings": true,
+    "binaryRecompiledBetweenSessions": false,
+    "onlyPlanOrRefusalInvocations": true,
+    "registryWritten": false,
+    "deviceAccess": false,
+    "liveValidated": false
+  },
+  "windowsArgumentRoundTripsPassed": 8,
+  "combinedFreshStartLiveValidated": false,
+  "applicationStarted": false,
+  "brokerStarted": false,
+  "deviceAccess": false,
+  "registryWritten": false,
+  "elevationRequested": false,
+  "audioBinariesChanged": false,
+  "securityPolicyChanged": false,
+  "publicInstallerReady": false
+}

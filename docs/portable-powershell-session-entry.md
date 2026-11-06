@@ -1,5 +1,7 @@
 # Portable PowerShell and native session entry
 
+**Follow-up:** automatic fresh-session preparation now reuses the same release executable and installer resource across new sessions. Its preparation and Plan routes passed offline; live fresh startup is still untested. [Contract and evidence](fresh-session-preparation.md)
+
 The native launcher can now start the complete session wrapper using a private, application-local PowerShell runtime. The read-only route passed with two separately prepared sessions, without a separate PowerShell command. This is a packaging candidate, not a published end-user installer or new hardware validation. [Recorded checks](evidence/portable-powershell-session-entry-20261106.json)
 
 ## Runtime preparation

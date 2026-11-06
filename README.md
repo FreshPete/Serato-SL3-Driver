@@ -10,6 +10,8 @@ See the [phone video, working screenshot and version screenshot](docs/demo-20261
 
 **6 November packaging progress:** the native launcher now starts complete read-only session checks through private PowerShell and Python runtimes. Two prepared sessions and relocated runtime paths passed without a separate PowerShell command. The new live startup path and public installer remain unfinished. [Launcher contract and evidence](docs/portable-powershell-session-entry.md)
 
+Fresh session configuration can now be prepared automatically using the same release executable and installer resource. Two successive preparations passed the complete read-only checks; the new combined startup entry still needs a live test. [Fresh-session preparation](docs/fresh-session-preparation.md)
+
 This remains an experimental temporary integration. Physical audible SL3 output, independent turntable control, sustained reliability and a reusable installation/startup process remain unfinished. The two-deck session restored original files and verified device release, but its broker reported `owner_failure` during shutdown; that result remains unresolved. The latest Release build passed 71 native checks and the deployment workflow passed 26 checks. [Software output recorder](docs/two-deck-output-capture.md)
 
 ## Earlier engineering status — 2 November 2026

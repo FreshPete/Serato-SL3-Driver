@@ -217,12 +217,24 @@ int session_dispatch(wchar_t** argv){
     require(application.text(L"sha256")==release::application_sha,"Release application differs");
     pin(leases,local_path(application.text(L"path")),release::application_sha);
     for(const auto& item:release::powershell_pins)pin(leases,child_path(powershell,item.first),item.second);
+    const auto action=std::wstring(argv[1]);
+    if(action==L"--prepare-session" || action==L"--start-fresh-session"){
+        std::wstring image(32768,L'\0');const auto copied=GetModuleFileNameW(nullptr,image.data(),DWORD(image.size()));
+        require(copied && copied<image.size(),"Current launcher path unavailable");image.resize(copied);
+        pin(leases,local_path(image),record.object(L"launcher").text(L"sha256"));
+        std::vector<std::wstring> arguments={L"-I",L"-B",(root/L"scripts/prepare-fresh-serato-session.py").native(),
+                L"--session-plan",selected.native(),L"--expected-session-plan-sha256",identity,
+                L"--powershell-directory",powershell.native(),L"--prepare"};
+        if(action==L"--start-fresh-session")arguments.push_back(L"--start");
+        return run_process(python,arguments,root,false);
+    }
     return run_process(powershell/L"pwsh.exe",{L"-NoLogo",L"-NoProfile",L"-NonInteractive",L"-File",
                        (root/L"scripts/serato-session.ps1").native(),L"-Mode",plan?L"Plan":L"Run",
                        L"-SessionPlan",selected.native(),L"-ExpectedPlanSha256",identity},root,false);
 }
 int dispatch(int argc,wchar_t** argv){
-    if(argc==8 && (std::wstring(argv[1])==L"--plan-session" || std::wstring(argv[1])==L"--start-session") &&
+    if(argc==8 && (std::wstring(argv[1])==L"--plan-session" || std::wstring(argv[1])==L"--start-session" ||
+       std::wstring(argv[1])==L"--prepare-session" || std::wstring(argv[1])==L"--start-fresh-session") &&
        std::wstring(argv[2])==L"--session-plan" && std::wstring(argv[4])==L"--expected-session-plan-sha256" &&
        std::wstring(argv[6])==L"--powershell-directory")return session_dispatch(argv);
     const bool plan=argc==6 && std::wstring(argv[1])==L"--plan" && std::wstring(argv[2])==L"--capsule" &&
