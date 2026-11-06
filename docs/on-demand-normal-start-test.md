@@ -52,3 +52,7 @@ Another **12 real-host preparation checks** passed: the default and final read-o
 The host Plan reports original archive, absent native installation and Serato stopped. Postchecks again found original Serato files, no occupied session paths or temporary registration, and no matching test/controller/worker or Serato process. Firmware and Windows security settings were unchanged.
 
 The next attended test must actually set up the candidate, launch Serato normally and observe whether it selects and initializes this ASIO driver. Leave playback stopped initially. Do not click Download Driver as part of this comparison; record any notice instead. Close Serato manually before restoration. Successful preparation is not proof that this startup route works. Native restart/shutdown, actual output, longer reliability and timecode vinyl remain separate tests; Phase RCA and vinyl share the same audio path.
+
+## Optional completed-log inspection
+
+An [offline ASIO control-log reader](asio-control-observation.md) is now verified against owned fixtures. It can inspect completed driver-owned logs after an explicitly observed trial without desktop automation or a startup shim. Logging remains disabled for the prepared baseline; no persistent environment or shortcut change was made. A capture cannot be attributed to Serato from its PID/build tag alone, and successful start metadata is not physical-audio or DVS proof.

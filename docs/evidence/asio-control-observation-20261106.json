@@ -1,0 +1,330 @@
+{
+  "schema": "sl3.control-observation-checkpoint.v1",
+  "date": "2026-11-06",
+  "parserCasesPassed": 24,
+  "parserCases": [
+    {
+      "name": "successful-control-stages-not-physical-audio",
+      "passed": true
+    },
+    {
+      "name": "objects-remain-separate",
+      "passed": true
+    },
+    {
+      "name": "interleaved-control-threads",
+      "passed": true
+    },
+    {
+      "name": "begin-does-not-prove-init-success",
+      "passed": true
+    },
+    {
+      "name": "abandoned-call-remains-incomplete",
+      "passed": true
+    },
+    {
+      "name": "orphan-terminal-not-promoted",
+      "passed": true
+    },
+    {
+      "name": "reported-loss-prevents-completeness",
+      "passed": true
+    },
+    {
+      "name": "budget-limit-prevents-completeness",
+      "passed": true
+    },
+    {
+      "name": "empty-capture-not-selection-proof",
+      "passed": true
+    },
+    {
+      "name": "indeterminate-timing-keeps-return-but-not-completeness",
+      "passed": true
+    },
+    {
+      "name": "future-success-code-is-not-start-success",
+      "passed": true
+    },
+    {
+      "name": "mixed-pid",
+      "passed": true
+    },
+    {
+      "name": "mixed-build",
+      "passed": true
+    },
+    {
+      "name": "different-thread-terminal",
+      "passed": true
+    },
+    {
+      "name": "different-pair-clock",
+      "passed": true
+    },
+    {
+      "name": "boolean-operation",
+      "passed": true
+    },
+    {
+      "name": "unknown-operation",
+      "passed": true
+    },
+    {
+      "name": "begin-success-claim",
+      "passed": true
+    },
+    {
+      "name": "extra-user-string",
+      "passed": true
+    },
+    {
+      "name": "duplicate-begin",
+      "passed": true
+    },
+    {
+      "name": "duplicate-terminal",
+      "passed": true
+    },
+    {
+      "name": "contradictory-stop-marker",
+      "passed": true
+    },
+    {
+      "name": "nonfinite-json",
+      "passed": true
+    },
+    {
+      "name": "duplicate-json-key",
+      "passed": true
+    }
+  ],
+  "collectorCasesPassed": 7,
+  "collectorCases": [
+    {
+      "name": "inert-plan-0",
+      "passed": true
+    },
+    {
+      "name": "inert-plan-1",
+      "passed": true
+    },
+    {
+      "name": "existing-output-preserved",
+      "passed": true
+    },
+    {
+      "name": "open-logger",
+      "passed": true
+    },
+    {
+      "name": "contradictory-marker",
+      "passed": true
+    },
+    {
+      "name": "wrong-decoder-build-identity",
+      "passed": true
+    },
+    {
+      "name": "changed-decoder-image-refused-before-execution",
+      "passed": true
+    }
+  ],
+  "simulatedProducerTraceFilesDecoded": 4,
+  "simulatedTraceObservations": [
+    {
+      "inputEtlSha256": "29abe36d033d552687cfc6a25300d85d9b3b6f8ccbea2dec2fd37e596d70ec43",
+      "inputMarkerSha256": "5a86ddde67816f33ffd1047a5f1b2d1dd5aaef38961e07bfb32b33ed5f055ea6",
+      "decodedEvents": 14,
+      "completeCallPairs": 7,
+      "startReturnSuccessObserved": true,
+      "initRejectionObserved": false,
+      "physicalAudioVerified": false
+    },
+    {
+      "inputEtlSha256": "2d39661f522766981ecd3399ef856ff3b421145d49cd0e6ab52bc1aeacaa4762",
+      "inputMarkerSha256": "5a86ddde67816f33ffd1047a5f1b2d1dd5aaef38961e07bfb32b33ed5f055ea6",
+      "decodedEvents": 14,
+      "completeCallPairs": 7,
+      "startReturnSuccessObserved": true,
+      "initRejectionObserved": false,
+      "physicalAudioVerified": false
+    },
+    {
+      "inputEtlSha256": "df720744d4a69f0629911aff2f7564d49feb852f6f5181176e87753ad8a79973",
+      "inputMarkerSha256": "5a86ddde67816f33ffd1047a5f1b2d1dd5aaef38961e07bfb32b33ed5f055ea6",
+      "decodedEvents": 14,
+      "completeCallPairs": 7,
+      "startReturnSuccessObserved": true,
+      "initRejectionObserved": false,
+      "physicalAudioVerified": false
+    },
+    {
+      "inputEtlSha256": "b76d92159ffb1884004eafcda3818b2219ffd73e7ed0d4675e125f17c04925a6",
+      "inputMarkerSha256": "5a86ddde67816f33ffd1047a5f1b2d1dd5aaef38961e07bfb32b33ed5f055ea6",
+      "decodedEvents": 6,
+      "completeCallPairs": 3,
+      "startReturnSuccessObserved": false,
+      "initRejectionObserved": true,
+      "physicalAudioVerified": false
+    }
+  ],
+  "producerFixture": {
+    "schema": "sl3.activation-asio-tests.v1",
+    "passed": true,
+    "simulatedSessions": 5,
+    "normalSessions": 3,
+    "callbacks": 5511,
+    "registrationChanged": false,
+    "nativeDeviceAccess": false,
+    "lazyCreationVerified": true,
+    "normalReopenVerified": true,
+    "privateUserRootVerified": true,
+    "blockedCallbackLeaseVerified": true,
+    "rejectedInitRetiresWhileObjectHeld": true
+  },
+  "simulatedRetirements": [
+    {
+      "owner": 1,
+      "resultSha256": "1f34d42bf63ac6d4d7039760145a873fa9bfd5c5b8a6323fc39fea7dabd5454d",
+      "successful": true
+    },
+    {
+      "owner": 2,
+      "resultSha256": "1f34d42bf63ac6d4d7039760145a873fa9bfd5c5b8a6323fc39fea7dabd5454d",
+      "successful": true
+    },
+    {
+      "owner": 3,
+      "resultSha256": "1f34d42bf63ac6d4d7039760145a873fa9bfd5c5b8a6323fc39fea7dabd5454d",
+      "successful": true
+    },
+    {
+      "owner": 4,
+      "resultSha256": "1f34d42bf63ac6d4d7039760145a873fa9bfd5c5b8a6323fc39fea7dabd5454d",
+      "successful": true
+    },
+    {
+      "owner": 5,
+      "resultSha256": "9423ab98b839357e443b38dbf9391d746797bd7618f2131a49dc3407a03ae4a0",
+      "successful": false
+    }
+  ],
+  "referenceRunSha256": "6140b6111397d9918ceb73fd9c3846e266b0e78c10cf0f0fc90f2a7f0c1a1a52",
+  "testReportSha256": "7b556832bef722fa8b66721198a1ac25f0d64cc9d50ba17203d6e92d49eb2b3b",
+  "productionUnavailableFixtureCasesPassed": 3,
+  "productionUnavailableFixtureReportSha256": "806e43443107734f94d40108e6211de7b47490304f0d3d2778579d2a820489f6",
+  "productionUnavailableDllSha256": "ce71618afc06b3d368f841538ac58b20fddf2a7e8abd88b24e124ac11f573625",
+  "productionUnavailableObservation": {
+    "schema": "sl3.asio-control-observation.v1",
+    "pid": 28164,
+    "buildKind": "production",
+    "decodedEvents": 16,
+    "completeCallPairs": 8,
+    "factoryReturns": [
+      {
+        "call": 1,
+        "result": 0
+      }
+    ],
+    "objects": [
+      {
+        "object": 1,
+        "completedCalls": {
+          "name": 1,
+          "version": 1,
+          "init": 1,
+          "channels": 1,
+          "buffer_size": 1,
+          "get_rate": 1,
+          "error": 1
+        },
+        "lastResults": {
+          "name": 0,
+          "version": 1,
+          "init": 0,
+          "channels": -1000,
+          "buffer_size": -1000,
+          "get_rate": -1000,
+          "error": 0
+        },
+        "initSuccessObserved": false,
+        "initRejectionObserved": true,
+        "bufferCreationSuccessObserved": false,
+        "startReturnSuccessObserved": false,
+        "startFailureObserved": false,
+        "stopReturnSuccessObserved": false,
+        "disposeSuccessObserved": false,
+        "nonSuccessReturns": [
+          {
+            "call": 4,
+            "operation": "init",
+            "result": 0
+          },
+          {
+            "call": 5,
+            "operation": "channels",
+            "result": -1000
+          },
+          {
+            "call": 6,
+            "operation": "buffer_size",
+            "result": -1000
+          },
+          {
+            "call": 7,
+            "operation": "get_rate",
+            "result": -1000
+          }
+        ]
+      }
+    ],
+    "missingTerminals": [],
+    "orphanTerminals": [],
+    "abandonedCalls": [],
+    "unpairedCalls": [],
+    "maximumCallOrdinal": 8,
+    "logger": {
+      "stopped": true,
+      "complete": true,
+      "eventsLost": 0,
+      "buffersLost": 0
+    },
+    "readerReportedLosses": 0,
+    "budgetReached": false,
+    "controlClockConsistent": true,
+    "controlMetadataComplete": true,
+    "absenceOfCallsProvesDriverNotSelected": false,
+    "callbackProgressRecorded": false,
+    "physicalAudioVerified": false,
+    "dvsVerified": false,
+    "seratoProcessIdentityVerified": false,
+    "loadedImageIdentityVerified": false,
+    "analyzerStartsTracing": false,
+    "analyzerOpensDevice": false
+  },
+  "productionUnavailableObservationReportSha256": "16ec45e42fe72104cbd7e2ab4100f1d9d7ea9dd250fcfc7a4002e44aa163ad2e",
+  "sourceSha256": {
+    "scripts/inspect-asio-control-trace.py": "35bf539134fe1b484acd084fcf23a60e39d1613aba5ec69089c25b15cbccc5d1",
+    "scripts/test-asio-control-observation.py": "c81df506f3826d5f5da0115ececcf65102d8cb83dc2190e5d2cd87c25871ca55"
+  },
+  "decoderBuildSha256": "4195406df119dd573cde88eca8ac815549f349fd96470084c4dbb7535392f607",
+  "decoderExecutableSha256": "e6fe96f8e4363c28ac5704cadeaa269be738593194387d0b0fe5d1eada9d6c91",
+  "preparedNormalStartExperimentStillSourceCurrent": true,
+  "preparedNormalStartExperimentSha256": "f8e0033e57f82e5e54b0f62081033800a20ab2548f6f276c6d8d7a90a9299d14",
+  "postcheck": {
+    "observed": true,
+    "originalResources": true,
+    "occupiedPaths": [],
+    "registrationPresent": false,
+    "currentSetupClean": true
+  },
+  "seratoLaunched": false,
+  "nativeDeviceAccess": false,
+  "persistentEnvironmentModified": false,
+  "registryModified": false,
+  "firmwareChanged": false,
+  "securityPolicyChanged": false,
+  "scope": "Offline metadata interpretation with completed ETL from an owned unavailable production DLL and simulated ASIO fixtures; not a Serato, physical-audio or DVS test"
+}
