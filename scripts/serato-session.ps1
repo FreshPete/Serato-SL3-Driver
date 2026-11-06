@@ -238,7 +238,8 @@ try {
         & $python -I -B "$PSScriptRoot/run-serato-startup-session.py" --run --prepared $plan.preparedShim.path `
             --expected-preparation-sha256 $plan.preparedShim.sha256 --app $exe --bundle $plan.nativeBundle.path `
             --expected-bundle-sha256 $plan.nativeBundle.sha256 --expected-installer-bundle-sha256 $plan.installerResource.sha256 `
-            --output $plan.hostOutput --frida-directory $plan.fridaDirectory
+            --output $plan.hostOutput --frida-directory $plan.fridaDirectory `
+            --launcher-capsule $capsulePath --expected-launcher-capsule-sha256 $capsuleHash
         $hostExit=$LASTEXITCODE
         if ($hostExit) { throw 'Application supervision failed; preserve its result while completing independent cleanup' }
     } finally {

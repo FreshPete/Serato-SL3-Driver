@@ -28,6 +28,19 @@ def digest(path):
         return hashlib.file_digest(stream, 'sha256').hexdigest()
 
 
+def launcher_environment(capsule, expected, application, bundle, bundle_sha):
+    if capsule is None and expected is None:
+        return {}
+    require(capsule is not None and expected is not None, 'Complete launcher capsule binding required')
+    path = Path(capsule).absolute()
+    api = runpy.run_path(str(ROOT/'scripts/serato-session-capsule.py'))
+    record, _, _ = api['verify'](path, expected)
+    require(Path(record['application']['path']).absolute() == Path(application).absolute() and
+            Path(record['bundle']['path']).absolute() == Path(bundle).absolute() and
+            record['bundle']['sha256'] == bundle_sha, 'Launcher capsule differs from supervised application/package')
+    return {'SL3_SESSION_CAPSULE':str(path),'SL3_SESSION_CAPSULE_SHA256':expected}
+
+
 def preflight(prepared, preparation_sha, application, bundle, bundle_sha, installer_sha, running=False):
     # Keep native Windows spelling; resolve() can rewrite packaged-app profile
     # paths. The deployment verifier performs its own containment checks.
@@ -176,11 +189,14 @@ class HardDeadline:
 
 class WindowsProcess:
     """Frida-spawned process and retained Win32 handles; never kills by PID lookup."""
-    def __init__(self, application, frida, expected_application_sha=APP_SHA):
+    def __init__(self, application, frida, expected_application_sha=APP_SHA, launcher_context=None):
         import ctypes as c
         from ctypes import wintypes as w
         self.c, self.w, self.application = c, w, application
         self.expected_application_sha = expected_application_sha
+        self.launcher_context = dict(launcher_context or {})
+        require(set(self.launcher_context) in (set(), {'SL3_SESSION_CAPSULE','SL3_SESSION_CAPSULE_SHA256'}),
+                'Unexpected launcher environment fields')
         self.device = frida.get_local_device()
         self.handle = self.job = self.session = self.script = self.pid = None
         self.k = k = c.WinDLL('kernel32', use_last_error=True)
@@ -214,8 +230,9 @@ class WindowsProcess:
         limits = Extended(); limits.basic.flags = 0x2000 | 0x1000
         self.job = self.checked(k.CreateJobObjectW(None, None))
         self.checked(k.SetInformationJobObject(self.job, 9, c.byref(limits), c.sizeof(limits)))
-        self.pid = self.device.spawn([str(self.application)], cwd=str(self.application.parent), stdio='pipe',
-                                     env={'SL3_ASIO_PRIVATE_TRACE': '0'})
+        environment = {'SL3_ASIO_PRIVATE_TRACE':'0','SL3_SESSION_CAPSULE':'','SL3_SESSION_CAPSULE_SHA256':''}
+        environment.update(self.launcher_context)
+        self.pid = self.device.spawn([str(self.application)], cwd=str(self.application.parent), stdio='pipe', env=environment)
         self.handle = self.checked(k.OpenProcess(0x101101, False, self.pid))
         self.checked(k.AssignProcessToJobObject(self.job, self.handle))
         self.session = self.device.attach(self.pid)
@@ -313,10 +330,14 @@ def main():
     parser.add_argument('--expected-installer-bundle-sha256', required=True)
     parser.add_argument('--output', type=Path)
     parser.add_argument('--frida-directory', type=Path)
+    parser.add_argument('--launcher-capsule', type=Path)
+    parser.add_argument('--expected-launcher-capsule-sha256')
     args = parser.parse_args()
     require(not args.run or args.output is not None, 'Fresh output directory required for Run')
     prepared = preflight(args.prepared,args.expected_preparation_sha256,args.app,args.bundle,
                          args.expected_bundle_sha256,args.expected_installer_bundle_sha256,args.run)
+    context = launcher_environment(args.launcher_capsule,args.expected_launcher_capsule_sha256,
+                                   args.app,args.bundle,args.expected_bundle_sha256)
     if not args.run:
         print(json.dumps({'planOnly':True,'inputsVerified':True,'resourceState':prepared['resourceState'],
                           'processStarted':False,'filesWritten':False,'registryWritten':False,'deviceAccess':False}))
@@ -336,7 +357,7 @@ def main():
         json.dump({'schema':'sl3.startup-supervisor-intent.v1','applicationSha256':APP_SHA,
                    'scriptSha256':prepared['scriptSha256'],'preparationSha256':prepared['preparationSha256'],
                    'deploymentManifestSha256':prepared['deploymentManifestSha256'],
-                   'requiresExternalRollback':True,'hardDeadlineSeconds':840},stream,indent=2)
+                   'requiresExternalRollback':True,'hardDeadlineSeconds':840,'launcherCapsuleBound':bool(context)},stream,indent=2)
     def verify_driver():
         require(digest(prepared['asio']) == prepared['asioSha256'], 'Installed ASIO differs from reviewed package')
     watchdog = HardDeadline()
@@ -346,7 +367,7 @@ def main():
         with (output/'events.jsonl').open('x',encoding='utf-8') as events:
             def publish(item):
                 events.write(json.dumps(item)+'\n'); events.flush()
-            report = supervise(WindowsProcess(prepared['application'],frida),prepared['script'],verify_driver,
+            report = supervise(WindowsProcess(prepared['application'],frida,launcher_context=context),prepared['script'],verify_driver,
                                lambda:(output/'stop.txt').exists(),event_sink=publish)
         report['fridaVersion'] = frida.__version__
     except Exception as error:

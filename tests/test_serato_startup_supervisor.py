@@ -14,6 +14,18 @@ BUILDER = runpy.run_path(str(Path(__file__).resolve().parents[1]/'scripts/prepar
 
 
 class PreflightTest(unittest.TestCase):
+    def test_launcher_environment_requires_bound_application_and_package(self):
+        verify = MODULE['launcher_environment']
+        self.assertEqual(verify(None,None,'app','bundle','a'*64),{})
+        with self.assertRaisesRegex(ValueError,'Complete'):verify(Path('capsule'),None,'app','bundle','a'*64)
+        record={'application':{'path':str(Path('app').absolute())},
+                'bundle':{'path':str(Path('bundle').absolute()),'sha256':'a'*64}}
+        with patch.object(MODULE['runpy'],'run_path',return_value={'verify':lambda *args:(record,{},Path.cwd())}):
+            context=verify(Path('capsule'),'b'*64,'app','bundle','a'*64)
+            self.assertEqual(context,{'SL3_SESSION_CAPSULE':str(Path('capsule').absolute()),'SL3_SESSION_CAPSULE_SHA256':'b'*64})
+            with self.assertRaisesRegex(ValueError,'differs'):verify(Path('capsule'),'b'*64,'other-app','bundle','a'*64)
+            with self.assertRaisesRegex(ValueError,'differs'):verify(Path('capsule'),'b'*64,'app','bundle','c'*64)
+
     def test_valid_plan_and_tamper_refusals_are_read_only(self):
         preflight = MODULE['preflight']
         with tempfile.TemporaryDirectory() as temporary:
@@ -183,6 +195,7 @@ class WindowsOwnershipTest(unittest.TestCase):
                 class Device:
                     child = None
                     def spawn(self, argv, **kwargs):
+                        self.spawn_environment=kwargs['env']
                         code = 'import pathlib,sys,time; p=pathlib.Path(sys.argv[1]);\nwhile not p.exists(): time.sleep(.01)'
                         self.child = subprocess.Popen([sys.executable,'-c',code,str(marker)],creationflags=subprocess.CREATE_NO_WINDOW)
                         return self.child.pid
@@ -203,6 +216,8 @@ class WindowsOwnershipTest(unittest.TestCase):
                     self.assertEqual(result['process']['exitCode'],0 if graceful else 1)
                     self.assertEqual(result['supervisionCompleted'],graceful)
                     self.assertTrue(result['tracerDetached'])
+                    self.assertEqual(device.spawn_environment,{'SL3_ASIO_PRIVATE_TRACE':'0',
+                        'SL3_SESSION_CAPSULE':'','SL3_SESSION_CAPSULE_SHA256':''})
                 finally:
                     if device.child is not None and device.child.poll() is None:
                         device.child.kill();device.child.wait(timeout=5)

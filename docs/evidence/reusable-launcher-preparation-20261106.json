@@ -1,0 +1,139 @@
+{
+  "schema": "sl3.reusable-launcher-preparation.v1",
+  "date": "2026-11-06",
+  "releaseConfiguration": {
+    "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+    "liveValidated": false,
+    "pythonSha256": "30734a1efbdbeac0da8519c294bc05e7ccfb6f4c2e3c818769206a547a59c245",
+    "runtime": "net10.0 framework-dependent win-x64",
+    "schema": "sl3.portable-launcher-release.v1",
+    "sessionBoundAtBuildTime": false,
+    "sourcePins": {
+      "scripts/asio-diagnostic-session.py": "e58e1ec6842c7b979f39a801032c9acf0938e9af700ca9f4e83abc9f7d134f12",
+      "scripts/asio-file-stage.py": "9675ca854e2b52f3af3029e1c772b87f36afed7d99d24d8c65c3fdf944cd5fc9",
+      "scripts/asio-install-base.py": "5de3e3b1a674d61c8e1da570a24af9998aac9143933817928da7f4079b03b6d2",
+      "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad",
+      "scripts/asio-install.py": "a5110d99b554f7c7fecdbe07d7e81ad87b708f26a6372b95c3aa92bdbc92d666",
+      "scripts/asio-registry.py": "f0b1009fe0a3cee39acc30e295dddeac9171082d8d7029f404a302d0114b7bbf",
+      "scripts/asio-runtime-check.py": "f7e3d3ee2a9f68a446361854717bc889882328cc721fa6613f5fef2e0498b354",
+      "scripts/asio-uninstall.py": "5210818b800a6a0d8531aadc8dd955499476ae1b3fb65b98cfe0c79565fc61d7",
+      "scripts/prepare-asio-deployment.py": "7e420606983d1bfdef9c75eda459281b957cc1918db80e28ca85141a17f016cc",
+      "scripts/prepare-portable-session-launcher.py": "2a874059e70f3069cabac8312ab545757fe92c0b0a12c87c1eed82fc4a15274e",
+      "scripts/prepare-serato-session-capsule.py": "f2005628ac889fa49647861681ff100018c1c3170d0a9c8237a04e6f44c68049",
+      "scripts/serato-installer-permit.py": "077b4254054539e7484365da18df7c3c1f5af47b145d2a09c869eb5be0f528c9",
+      "scripts/serato-session-broker.py": "8ec653ee608e1b76467429139842d70c57de765e10cd369df938faae76ef5058",
+      "scripts/serato-session-capsule.py": "b8c7cade961b99ef958f35842eebdb42620e94982e861062b0a80dd59e4a6af7",
+      "scripts/serato-session-installer.py": "b1b1b705a390ce2dce147a81e2578fd1dfcc8590e3efd3f0dced4eec09a54782",
+      "src/installer/PortableSessionLauncher.cs": "8740fd7d38b0cc813f9e104c64cc9007fb3e6293104027fa2b2b9b164071ce5d",
+      "src/installer/SessionLauncher.cs": "50c35ea12f5a45924aea2868d9dc72394f494711be487aa0c604cf9a9fbcf3db"
+    }
+  },
+  "launcherChecks": {
+    "schema": "sl3.portable-launcher-tests.v1",
+    "launcherSha256": "df5e8aebbc835d5569cbb9d6502e563cb092b1b685210ef07322ba0292a229f5",
+    "cases": [
+      {
+        "name": "first-session",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "second-session-same-executable",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "no-environment-no-installation",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "unsupported-action",
+        "passed": true,
+        "exitCode": 2
+      },
+      {
+        "name": "wrong-capsule-hash",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "executable-relocated-without-rebuild",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "untrusted-interpreter",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "foreign-helper-root",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-package-binding",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "moved-capsule-binding",
+        "passed": true,
+        "exitCode": 1
+      }
+    ],
+    "sameExecutableAcceptedTwoSessionBindings": true,
+    "binaryRecompiledBetweenSessions": false,
+    "onlyPlanOrRefusalInvocations": true,
+    "registryWritten": false,
+    "deviceAccess": false,
+    "liveValidated": false
+  },
+  "environmentChecks": {
+    "schema": "sl3.portable-environment-tests.v1",
+    "cases": [
+      {
+        "selectedContext": false,
+        "expectedEnvironmentObserved": true,
+        "childExitCode": 0,
+        "processAndJobRetired": true,
+        "forcedTermination": false
+      },
+      {
+        "selectedContext": true,
+        "expectedEnvironmentObserved": true,
+        "childExitCode": 0,
+        "processAndJobRetired": true,
+        "forcedTermination": false
+      }
+    ],
+    "fridaVersion": "17.25.2",
+    "actualFridaUsed": true,
+    "vendorApplicationExecuted": false,
+    "deviceAccess": false,
+    "registryWritten": false
+  },
+  "supervisorTestsPassed": 13,
+  "sessionTestsPassed": 22,
+  "actualResourceTransactionChecksPassed": 4,
+  "completeReadOnlyPlansPassed": 2,
+  "sharedInstallerResourceSha256": "0a286c61f1d4191d2111211c9676407599c5ddbe876dd685f58fccc8f4fcc3f9",
+  "sessionPlanSha256": [
+    "d795d3805d410cd3c395350be4e78996f049a0e247620e826029ea80f9127409",
+    "ce3a0a721fa271965fe272a3c70edf0973ed530569c034d9469ea1c7b8701064"
+  ],
+  "sameExecutableAndInstallerResourceUsedForBothSessions": true,
+  "perSessionCompilationRemovedForCandidate": true,
+  "liveSeratoValidation": false,
+  "fullPortableRuntimeBundled": false,
+  "repeatedDriverClickRemoved": false,
+  "existingSessionSpecificLauncherPreserved": true,
+  "sourceSha256": {
+    "scripts/run-serato-startup-session.py": "8db3bfdbf32c7e18ee305ada0667c356f65264038a83ebc9b1996ad5f6790b33",
+    "scripts/serato-session.ps1": "a4dc1d3c27663a553e857605d9a054acf822d349f7f7796dfd2d1773fe5dc9de",
+    "scripts/test-portable-session-launcher.py": "23571017a6ee003c5aff63522b2457879657345cad069798fc47aa2478934c1a",
+    "scripts/test-portable-launcher-environment.py": "30146b428452ce1ea9ad6d1c031dbbf2e1b1f701ef4f262d86801e8b4b521381",
+    "tests/test_serato_startup_supervisor.py": "cc0056dc4db41996fb8e827f21b94465867095df367600808bcbaacee0ae4b3e"
+  }
+}
