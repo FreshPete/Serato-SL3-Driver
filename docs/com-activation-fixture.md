@@ -1,5 +1,7 @@
 # Windows COM activation fixture
 
+Follow-up: the [exact production package DLL now passes idle COM enumeration](production-com-enumeration.md), still without initialization or hardware access. That checkpoint records the current runner signature and build; the four-scenario evidence below remains the earlier historical run.
+
 Windows COM now resolves the explicitly simulated ASIO fixture, creates two successive IASIO objects, runs callbacks and retires both owners normally. This extends the previous tests that called `DllGetClassObject` directly. **Installed registry activation and normal Serato selection remain unverified.** [Pinned run and build evidence](evidence/com-activation-fixture-20261106.json)
 
 ## What actually ran

@@ -1,0 +1,156 @@
+{
+  "schema": "sl3.com-registration-activation-tests.v1",
+  "passed": true,
+  "outcomes": [
+    {
+      "scenario": "before-registration",
+      "passed": true,
+      "hostResult": {
+        "schema": "sl3.com-registration-result.v1",
+        "registryAliasContainsClass": false,
+        "classNotRegistered": true,
+        "fixtureLoaded": false,
+        "nativeDeviceAccess": false
+      },
+      "retirements": []
+    },
+    {
+      "scenario": "private-registry-alias-not-activation-proof",
+      "passed": true,
+      "hostResult": {
+        "schema": "sl3.com-registration-result.v1",
+        "registryAliasContainsClass": true,
+        "classNotRegistered": true,
+        "fixtureLoaded": false,
+        "nativeDeviceAccess": false
+      },
+      "retirements": []
+    },
+    {
+      "scenario": "registration-free-com-reopen",
+      "passed": true,
+      "hostResult": {
+        "schema": "sl3.com-registration-result.v1",
+        "registrationFreeContext": true,
+        "comFactoryResolved": true,
+        "coCreateInstances": 2,
+        "callbacksCompleted": 3353,
+        "productionEnumerationOnly": false,
+        "simulatedOnly": true,
+        "nativeDeviceAccess": false
+      },
+      "retirements": [
+        {
+          "session": "session-1",
+          "resultSha256": "1f34d42bf63ac6d4d7039760145a873fa9bfd5c5b8a6323fc39fea7dabd5454d",
+          "ioRetiredVerified": true,
+          "processExited": true,
+          "jobEmpty": true
+        },
+        {
+          "session": "session-2",
+          "resultSha256": "1f34d42bf63ac6d4d7039760145a873fa9bfd5c5b8a6323fc39fea7dabd5454d",
+          "ioRetiredVerified": true,
+          "processExited": true,
+          "jobEmpty": true
+        }
+      ]
+    },
+    {
+      "scenario": "exact-production-com-idle-enumeration",
+      "passed": true,
+      "hostResult": {
+        "schema": "sl3.com-registration-result.v1",
+        "registrationFreeContext": true,
+        "comFactoryResolved": true,
+        "coCreateInstances": 2,
+        "callbacksCompleted": 0,
+        "productionEnumerationOnly": true,
+        "simulatedOnly": false,
+        "nativeDeviceAccess": false
+      },
+      "retirements": []
+    },
+    {
+      "scenario": "after-registration-removal",
+      "passed": true,
+      "hostResult": {
+        "schema": "sl3.com-registration-result.v1",
+        "registryAliasContainsClass": false,
+        "classNotRegistered": true,
+        "fixtureLoaded": false,
+        "nativeDeviceAccess": false
+      },
+      "retirements": []
+    }
+  ],
+  "sourceSha256": {
+    "scripts/test-com-registration-activation.py": "cca3b08a1319fb993de3e618a50ec23c04ad9bfe0b01da0d4b12edde7484d9e0",
+    "scripts/asio-registry.py": "f0b1009fe0a3cee39acc30e295dddeac9171082d8d7029f404a302d0114b7bbf",
+    "scripts/prepare-asio-deployment.py": "87790868d83c7d36afe8d82e00dd3894d618e32bcf99d0929f3a197a107de0c7",
+    "scripts/asio-file-stage.py": "55dd7bce6cfc513b301a155068bc17c5605f0e9ff5d55f67d499373c98d24b60",
+    "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad"
+  },
+  "buildSha256": "f0c8ed9a727608b98e114ffe1501531196976316e081bc7da343766aac65cc27",
+  "hostSha256": "63b6f233f86e37058c5d046b2d435634c6a48f28737832f53da84184338cf278",
+  "simulatedReferenceSha256": "6140b6111397d9918ceb73fd9c3846e266b0e78c10cf0f0fc90f2a7f0c1a1a52",
+  "fixtureDllSha256": "001cf518f8b86c0281b0200329a5d18591a5508dcbdb4a187e1c67b8692fe619",
+  "activationManifestSha256": "d015bff8a41e74cc531c18fdcbfa891aada70f5e9a6fdeb9a5f57e1a0880be28",
+  "registrationRecordsFromInstallerGenerator": true,
+  "processLocalHkcrOverride": true,
+  "privateNamespaceRemoved": true,
+  "liveRegistrationsUnchanged": true,
+  "productionInstallationPerformed": false,
+  "seratoLaunched": false,
+  "nativeDeviceAccess": false,
+  "simulatedProviderConfiguredThroughTestExport": true,
+  "installedRegistryActivationValidated": false,
+  "registrationFreeComActivationValidated": true,
+  "productionBundleManifestSha256": "e7931b5da5f3a051676b595e7925c8c118a95291ef9d1978683e68177bb50094",
+  "productionDllSha256": "ce71618afc06b3d368f841538ac58b20fddf2a7e8abd88b24e124ac11f573625",
+  "productionAsioInitCalled": false,
+  "productionEnumerationPassed": true,
+  "reportPath": "analysis/com-registration-8642143e4a544cabb707f60eb37591ec/result.json",
+  "reportSha256": "386903c4c3bd3e9cc9899022b317e700e7704e9e8b263797642b67a0168dadd6",
+  "buildInputs": {
+    "diagnostics/asio-com-registration/CMakeLists.txt": "5e5d052de66899497f6ecb07de60a9d647b154495ad413ae388e19627d7e7505",
+    "diagnostics/asio-com-registration/host.cpp": "7a66aff0a27ad99424ca277e99f63d49b54ea4ab229700e6a275fda7e20910aa",
+    "src/asio/com_identity.hpp": "358f892e11f17308d37fdcb8c82ceea0171a3421d8472ac675f9e012783904ac",
+    "scripts/build-com-registration-host.ps1": "89b82b017cc5cca61acc768ecce97eb8c7f2350e457060cced68a8d19615b577",
+    "artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/asio.h": "93d2f80d49b4ac9c963514e7c1307ab5111d8104246192233745beb058534ea1",
+    "artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/asiosys.h": "f44a1ed0fd7c056ff047aeebc4c05a8c185f0585a24d8debc55c70107777dbef",
+    "artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/iasiodrv.h": "86ad4788452c74823653cf57d4bd557c48bb6542d7e6eb7fff80102c705a066d"
+  },
+  "buildPlanAndRefusalChecks": 2,
+  "hostPostcheck": {
+    "observed": true,
+    "originalResources": true,
+    "occupiedPaths": [],
+    "registrationPresent": false,
+    "currentSetupClean": true
+  },
+  "normalStartExperimentStillSourceCurrent": true,
+  "normalStartExperimentSha256": "4ca890a6d5e7c2d232919374bc047f86387587b4c4bd7c50648549c964b57073",
+  "profileProjection": {
+    "descriptorSha256": "ad522345d4f5fa4a429d1a5e4f737ddf523bb360ed409bd32346a2a680236a86",
+    "inputsInDeclaredOrder": [
+      "Deck3In",
+      "Deck1In",
+      "Deck2In"
+    ],
+    "outputsInDeclaredOrder": [
+      "Deck3Out",
+      "Deck1Out",
+      "Deck2Out"
+    ],
+    "sampleRateHz": 44100,
+    "audioDriverName": "SL3 Rebuild Development",
+    "phaseNamedConfigurationPresent": false,
+    "physicalVinylTestPerformed": false
+  },
+  "limitations": [
+    "Production DLL factory and objects exercised, but IASIO init never called.",
+    "Manifest-based COM enumeration is not installed registry activation or Serato selection.",
+    "Simulated callbacks are not measured physical timing or audio."
+  ]
+}
