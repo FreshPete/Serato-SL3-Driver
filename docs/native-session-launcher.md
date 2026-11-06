@@ -1,5 +1,7 @@
 # Native reusable launcher candidate
 
+**6 November follow-up:** a newer native candidate includes a complete-session entry bound to application-local PowerShell as well as Python. Its read-only entry passed with two sessions; the earlier build described below is preserved as historical evidence. [Portable runtime, launch contract and remaining live test](portable-powershell-session-entry.md)
+
 The reusable launcher now has a native Windows implementation that does not require an installed .NET runtime. The same 352,256-byte x64 executable passed Plans for two separate sessions and relocated without recompilation. It retains the private Python runtime and existing installation/broker policy. No protected installation, Serato process or device operation ran during these checks. [Image, source and test evidence](evidence/native-launcher-preparation-20261106.json)
 
 ## Behaviour retained

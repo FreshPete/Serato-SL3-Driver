@@ -1,5 +1,11 @@
 # SL3 rebuild progress for the owner's return
 
+## 6 November packaging checkpoint
+
+The native launcher now has a complete-session entry using application-local PowerShell 7.6.6 and the existing private Python runtime. The official ZIP hash and Microsoft executable signatures passed; the same native executable passed complete read-only Plans for two sessions and relocated without rebuilding. Thirteen actual entry/refusal cases, five runtime-preparation tests, eleven existing capsule-launcher cases and eight Windows argument round trips passed. Changed PowerShell files or wrapper source were rejected before execution. A semicolon in the PowerShell runtime directory is explicitly refused after a real CoreCLR startup failure; spaces and Unicode passed. No protected install, Serato or hardware operation ran. The new live startup/close/rollback route remains untested. [Implementation and evidence](portable-powershell-session-entry.md)
+
+The latest attended looped playback run retains both pieces of evidence: the owner reported both Phase decks responsive and a normal close, while the supervisor recorded viewing-limit termination. Automatic rollback with the pointer-redirection fix succeeded and original Serato resources are restored. Clean post-playback shutdown still needs a fresh run completed before the limit. [Live result](evidence/pointer-cleanup-live-retest-20261106.json)
+
 ## 5 November checkpoint
 
 **Assembled public wrapper prepared; no live run yet.** `serato-session.ps1` now coordinates the capsule, exact installer resource, protected archive/permit stage, ordinary application supervisor, broker retirement, rollback and exact cached-launcher removal. Its default Plan passed on the original installation with twenty-five project source bindings and a refreshed fifteen-pin installer capsule. Sixteen Python tests and four actual temporary-file PowerShell failure-flow cases passed. The audit added the installer-base source pin and normalized early failure receipts; existing prototype evidence is preserved. No elevation, protected writes, Serato launch or USB acquisition occurred. The next attended check is startup followed by manual application close through this new route. [Full contract and evidence](serato-complete-session.md)

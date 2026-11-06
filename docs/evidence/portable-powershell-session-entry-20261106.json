@@ -1,0 +1,188 @@
+{
+  "schema": "sl3.portable-powershell-session-entry.v1",
+  "date": "2026-11-06",
+  "powershell": {
+    "version": "7.6.6",
+    "source": "https://github.com/PowerShell/PowerShell/releases/download/v7.6.6/PowerShell-7.6.6-win-x64.zip",
+    "archiveSha256": "02fe458be20493fbdf43f61ea20610b811ee6c738ab1676c61b9cfcd1a33c860",
+    "manifestSha256": "4b4047e7a8153f0aab087356ad4e80f2b9a7855a21cebabe8430c27671d97881",
+    "files": 658,
+    "expandedBytes": 256625143,
+    "authenticode": {
+      "pwsh.exe": "Valid Microsoft Corporation",
+      "System.Management.Automation.dll": "Valid Microsoft Corporation"
+    },
+    "systemInstallationModified": false,
+    "separateDotNetInstallRequired": false
+  },
+  "nativeLauncher": {
+    "sha256": "699503c53529d2a2f59f3808f09d678f17be94acfe64eb5a1e2068d487414bda",
+    "bytes": 549376,
+    "clrDirectoryBytes": 0,
+    "dotNetStartupImport": false,
+    "sourcePins": 29,
+    "pythonRuntimeAndManifestPins": 130,
+    "powershellRuntimeAndManifestPins": 659,
+    "installerResourceSha256": "330279c25460b9549f213aa17dd1094ad9d3e7a2980e57149f9654b679b1739f",
+    "sourceReleaseManifestSha256": "041170eda113d1120c8e67b21a0c09cecb3d3160952d5d3e0f549545d36e8562"
+  },
+  "fullSessionEntryTests": {
+    "schema": "sl3.native-session-entry-tests.v1",
+    "launcherSha256": "699503c53529d2a2f59f3808f09d678f17be94acfe64eb5a1e2068d487414bda",
+    "cases": [
+      {
+        "name": "complete-plan-private-python-and-powershell",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "second-session-same-executable",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "wrong-plan-hash-refused",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "executable-relocated",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "powershell-semicolon-path-refused-clearly",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "powershell-relocated-spaces-unicode-and-dollar-parentheses",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "changed-pwsh.exe-refused-before-powershell",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-pwsh.runtimeconfig.json-refused-before-powershell",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-System.Management.Automation.dll-refused-before-powershell",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "foreign-interpreter",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "foreign-application",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "unsupported-schema",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-wrapper-refused-before-powershell",
+        "passed": true,
+        "exitCode": 1
+      }
+    ],
+    "onlyPlanOrRefusalInvocations": true,
+    "applicationStarted": false,
+    "deviceAccess": false,
+    "registrationWritten": false,
+    "elevationRequested": false,
+    "liveValidated": false
+  },
+  "capsuleEntryTests": {
+    "schema": "sl3.portable-launcher-tests.v1",
+    "launcherSha256": "699503c53529d2a2f59f3808f09d678f17be94acfe64eb5a1e2068d487414bda",
+    "cases": [
+      {
+        "name": "first-session",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "second-session-same-executable",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "no-environment-no-installation",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "unsupported-action",
+        "passed": true,
+        "exitCode": 2
+      },
+      {
+        "name": "wrong-capsule-hash",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "executable-relocated-without-rebuild",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "unicode-space-and-shell-metacharacters-in-capsule-path",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "untrusted-interpreter",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "foreign-helper-root",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-package-binding",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "moved-capsule-binding",
+        "passed": true,
+        "exitCode": 1
+      }
+    ],
+    "sameExecutableAcceptedTwoSessionBindings": true,
+    "binaryRecompiledBetweenSessions": false,
+    "onlyPlanOrRefusalInvocations": true,
+    "registryWritten": false,
+    "deviceAccess": false,
+    "liveValidated": false
+  },
+  "preparationUnitTestsPassed": 5,
+  "windowsArgumentRoundTripsPassed": 8,
+  "completePlanSha256": [
+    "d905b587a0a3fe62a26afbd12b981dd04ec2758132eb39e316bb47996bf0a2cf",
+    "ed2602c78e6ae5338ce5dc3b2911371a090ae09f22739feca103baeda7914214"
+  ],
+  "liveSessionStarted": false,
+  "deviceAccess": false,
+  "registryWritten": false,
+  "elevationRequested": false,
+  "securityPolicyChanged": false,
+  "physicalAudioValidatedByThisWork": false,
+  "wholeKitRelocationValidated": false,
+  "secondPcValidated": false,
+  "publicInstallerReady": false
+}

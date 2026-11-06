@@ -152,13 +152,11 @@ struct Pipe {Handle read,write;Pipe(){
     if(!CreatePipe(&a,&b,&security,0))throw WinError("Create helper output pipe");read=Handle(a);write=Handle(b);
     if(!SetHandleInformation(read.value,HANDLE_FLAG_INHERIT,0))throw WinError("Constrain helper pipe inheritance");
 }};
-int run_helper(const fs::path& python,const fs::path& script,const fs::path& capsule,const std::wstring& capsule_hash,
-               const std::wstring& action,bool elevated){
-    const std::vector<std::wstring> arguments={L"-I",L"-B",script.native(),action,L"--capsule",capsule.native(),L"--expected-capsule-sha256",capsule_hash};
-    const auto parameters=command_line(arguments);const auto directory=script.parent_path().native();
+int run_process(const fs::path& executable,const std::vector<std::wstring>& arguments,const fs::path& working_directory,bool elevated){
+    const auto parameters=command_line(arguments);const auto directory=working_directory.native();
     if(elevated){
         SHELLEXECUTEINFOW info{};info.cbSize=sizeof(info);info.fMask=SEE_MASK_NOCLOSEPROCESS|SEE_MASK_NOASYNC;
-        info.lpVerb=L"runas";info.lpFile=python.c_str();info.lpParameters=parameters.c_str();info.lpDirectory=directory.c_str();info.nShow=SW_HIDE;
+        info.lpVerb=L"runas";info.lpFile=executable.c_str();info.lpParameters=parameters.c_str();info.lpDirectory=directory.c_str();info.nShow=SW_HIDE;
         if(!ShellExecuteExW(&info))throw WinError("Start approved elevated installer");Handle child(info.hProcess);
         require(child.value!=nullptr,"Elevated installer process handle missing");
         // Never terminate a privileged transaction with an unknown commit outcome.
@@ -182,8 +180,8 @@ int run_helper(const fs::path& python,const fs::path& script,const fs::path& cap
     std::thread first,second;
     try{first=std::thread([&]{drain(output.read.value,out,output_error);});second=std::thread([&]{drain(error.read.value,err,error_error);});}
     catch(...){output.write.reset();error.write.reset();if(first.joinable())first.join();throw;}
-    auto command=quote(python.native())+L" "+parameters;PROCESS_INFORMATION process{};
-    if(!CreateProcessW(python.c_str(),command.data(),nullptr,nullptr,TRUE,CREATE_NO_WINDOW|EXTENDED_STARTUPINFO_PRESENT,nullptr,directory.c_str(),&startup.StartupInfo,&process)){
+    auto command=quote(executable.native())+L" "+parameters;PROCESS_INFORMATION process{};
+    if(!CreateProcessW(executable.c_str(),command.data(),nullptr,nullptr,TRUE,CREATE_NO_WINDOW|EXTENDED_STARTUPINFO_PRESENT,nullptr,directory.c_str(),&startup.StartupInfo,&process)){
         const auto failure=GetLastError();output.write.reset();error.write.reset();first.join();second.join();SetLastError(failure);
         throw WinError("Start verified ordinary helper");
     }
@@ -193,7 +191,40 @@ int run_helper(const fs::path& python,const fs::path& script,const fs::path& cap
     require(waited==WAIT_OBJECT_0 && !output_error && !error_error,"Helper wait/output failed; preserve session receipts");
     DWORD code=1;if(!GetExitCodeProcess(child.value,&code))throw WinError("Read helper exit code");return int(code);
 }
+int run_helper(const fs::path& python,const fs::path& script,const fs::path& capsule,const std::wstring& capsule_hash,
+               const std::wstring& action,bool elevated){
+    return run_process(python,{L"-I",L"-B",script.native(),action,L"--capsule",capsule.native(),L"--expected-capsule-sha256",capsule_hash},
+                       script.parent_path(),elevated);
+}
+int session_dispatch(wchar_t** argv){
+    require(!release::powershell_pins.empty(),"This launcher has no reviewed PowerShell runtime binding");
+    const bool plan=std::wstring(argv[1])==L"--plan-session";
+    const auto selected=local_path(argv[3]);const std::wstring identity=argv[5];
+    const auto powershell=local_path(argv[7]);
+    require(powershell.native().find(L';')==std::wstring::npos,
+            "PowerShell runtime directory cannot contain a semicolon; choose another location");
+    std::vector<Handle> leases;
+    const JsonObject record(read_capsule(pin(leases,selected,identity,65536)));
+    require(record.text(L"schema")==L"sl3.serato-session-plan.v1","Expected complete session plan");
+    const auto root=local_path(record.text(L"projectRoot"));
+    // Pin the complete release code closure and both runtimes before starting
+    // PowerShell. Its own verifier then checks the selected session data.
+    for(const auto& item:release::source_pins)pin(leases,child_path(root,item.first),item.second);
+    const auto interpreter=record.object(L"python");const auto python=local_path(interpreter.text(L"path"));
+    require(interpreter.text(L"sha256")==release::python_sha,"Release interpreter differs");pin(leases,python,release::python_sha);
+    for(const auto& item:release::runtime_pins)pin(leases,child_path(python.parent_path(),item.first),item.second);
+    const auto application=record.object(L"application");
+    require(application.text(L"sha256")==release::application_sha,"Release application differs");
+    pin(leases,local_path(application.text(L"path")),release::application_sha);
+    for(const auto& item:release::powershell_pins)pin(leases,child_path(powershell,item.first),item.second);
+    return run_process(powershell/L"pwsh.exe",{L"-NoLogo",L"-NoProfile",L"-NonInteractive",L"-File",
+                       (root/L"scripts/serato-session.ps1").native(),L"-Mode",plan?L"Plan":L"Run",
+                       L"-SessionPlan",selected.native(),L"-ExpectedPlanSha256",identity},root,false);
+}
 int dispatch(int argc,wchar_t** argv){
+    if(argc==8 && (std::wstring(argv[1])==L"--plan-session" || std::wstring(argv[1])==L"--start-session") &&
+       std::wstring(argv[2])==L"--session-plan" && std::wstring(argv[4])==L"--expected-session-plan-sha256" &&
+       std::wstring(argv[6])==L"--powershell-directory")return session_dispatch(argv);
     const bool plan=argc==6 && std::wstring(argv[1])==L"--plan" && std::wstring(argv[2])==L"--capsule" &&
                     std::wstring(argv[4])==L"--expected-capsule-sha256";
     if(!plan && argc!=1)return 2;
