@@ -1,0 +1,96 @@
+{
+  "schema": "sl3.phase-playback-observation.v1",
+  "date": "2026-11-06",
+  "applicationVersion": "5.0.0.1278",
+  "ownerConfirmedBothDecksFollowedPhase": true,
+  "ownerConfirmedResponsiveThroughout": true,
+  "ownerReportedNormalClose": true,
+  "ownerConfirmedDeck1EndedOrStoppedBeforeLateCapture": true,
+  "modeLabelsIndependentlyObserved": false,
+  "fiveMinuteObservationWindowCompleted": true,
+  "continuousTwoDeckOutputProven": false,
+  "lateSampleArmedAtObservationSeconds": 291.274,
+  "lateSample": {
+    "source": "worker-dequeued-output-pcm",
+    "frames": 220500,
+    "rateHz": 44100,
+    "pcmSha256": "a786973591a25f906380ce39fdbb23d1724c2fd45a76701cbcdf7a15025bbf62",
+    "channels": [
+      {
+        "logicalChannel": 1,
+        "peakDbfs": null,
+        "rmsDbfs": null,
+        "nonzeroSamples": 0,
+        "clippedSamples": 0
+      },
+      {
+        "logicalChannel": 2,
+        "peakDbfs": null,
+        "rmsDbfs": null,
+        "nonzeroSamples": 0,
+        "clippedSamples": 0
+      },
+      {
+        "logicalChannel": 3,
+        "peakDbfs": null,
+        "rmsDbfs": null,
+        "nonzeroSamples": 0,
+        "clippedSamples": 0
+      },
+      {
+        "logicalChannel": 4,
+        "peakDbfs": null,
+        "rmsDbfs": null,
+        "nonzeroSamples": 0,
+        "clippedSamples": 0
+      },
+      {
+        "logicalChannel": 5,
+        "peakDbfs": -3.184588784036599,
+        "rmsDbfs": -16.889791597599814,
+        "nonzeroSamples": 220500,
+        "clippedSamples": 0
+      },
+      {
+        "logicalChannel": 6,
+        "peakDbfs": -3.0877273242064596,
+        "rmsDbfs": -15.8701456890788,
+        "nonzeroSamples": 220500,
+        "clippedSamples": 0
+      }
+    ],
+    "physicalOutputVerified": false
+  },
+  "supervisionCompleted": false,
+  "endReason": "viewing_limit",
+  "observerForcedTermination": true,
+  "applicationExitCode": 1,
+  "brokerSuccessful": false,
+  "ownerFailureCode": "client_control_abandoned",
+  "connectionDiagnostic": "Complete broker pipe operation: 109",
+  "ioRetired": true,
+  "deviceReleased": true,
+  "workerExited": true,
+  "jobEmpty": true,
+  "controllerExited": true,
+  "initialAutomaticRollbackSucceeded": false,
+  "cleanupError": "Active pointer resolved into packaged-app cache outside resolved logical parent",
+  "verifiedPointerWithdrawalAndRetirementSucceeded": true,
+  "explicitRecoveryExitCode": 0,
+  "originalResourcesRestored": true,
+  "temporaryStageAndRegistrationRemoved": true,
+  "installerPermitRemoved": true,
+  "exactLauncherCacheAbsent": true,
+  "desktopAutomationUsed": false,
+  "physicalAnalogOutputVerified": false,
+  "permanentInstallationValidated": false,
+  "rawMusicPublished": false,
+  "sha256": {
+    "hostResult": "0b51dcaa9b30c93fe4d0d5b851c2a8e426e866a27353d526d92b32e7ddbd32dc",
+    "brokerResult": "97f834bb0db49184b2c9aa19b0442be798ed1b1d3bc07dec797d31e7a268642d",
+    "initialStageResult": "56ccdbf601fb6c7f6aab550d5f9edb458ad0b1e158010608ce3dc25937fb9d72",
+    "recoveryResult": "35776465134d20d312b31b10d7cfacdd0deb8030caeb45a71707b4bcb28be4f8",
+    "sampleMetadata": "e313d39e0ccb89e076378eda68f28e5c7d3101754f4f8f6c46ba49b2dca3636e",
+    "signalAnalysis": "b0da3fcd8ab328dcbf73a246fefdfdb76c32ef473468fd1696caba8b9522d8ec"
+  }
+}
