@@ -2,6 +2,8 @@
 
 ## 6 November packaging checkpoint
 
+**Progress buffering fixed before graphical launcher work.** The ordinary native helper route now forwards output while children run, preserving bytes, independent four-MiB limits and child exit results. Missing installer console handles are supported. Three real parent/child fixtures, eight argument cases and nineteen moved-kit checks passed. No UI, UAC, Serato or audio operation ran; native audio binaries are unchanged. [Contract and evidence](native-launcher-progress.md)
+
 **Explicit recovery command implemented.** Kit/fresh preparation emits recovery arguments. The native entry runs the ordinary gate first, elevates only a recognised retired interruption, then requires an ordinary postcheck after successful repair. Eighteen policy, six dual-entry owned-process, nineteen moved-kit, eight fresh-preparation and eight argument cases passed. Actual repair/elevation and live audio were not exercised. [Contract and evidence](session-recovery-command.md)
 
 **Shared staging ownership bound to a session.** A protected create-new record and retained read handle now scope staging/recovery to a capsule, bundle and staging process lifetime. Normal cleanup releases only the creating stage's exact record; recovery refuses live, foreign or unrecorded dirty state. Ten real Windows fixture cases passed. Native audio binaries are unchanged; production marker creation/removal and live audio shutdown remain unverified. [Protocol and evidence](protected-session-ownership.md)

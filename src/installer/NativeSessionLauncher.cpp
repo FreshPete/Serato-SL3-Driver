@@ -6,6 +6,7 @@
 #include <windows.data.json.h>
 #include <wrl/client.h>
 #include <wrl/wrappers/corewrappers.h>
+#include <algorithm>
 #include <array>
 #include <filesystem>
 #include <iostream>
@@ -136,15 +137,32 @@ std::string read_capsule(HANDLE file){
     if(!ReadFile(file,text.data(),DWORD(text.size()),&count,nullptr))throw WinError("Read selected session capsule");
     require(count && count<=65536,"Session capsule exceeds bound");text.resize(count);return text;
 }
-void drain(HANDLE pipe,std::string& text,DWORD& failure)noexcept{
+void drain(HANDLE pipe,HANDLE destination,DWORD& failure)noexcept{
     std::array<char,8192> buffer{};DWORD count=0;failure=ERROR_SUCCESS;
+    constexpr std::size_t maximum=4*1024*1024;std::size_t forwarded=0;
     while(true){
         if(!ReadFile(pipe,buffer.data(),DWORD(buffer.size()),&count,nullptr)){
             const auto error=GetLastError();if(error!=ERROR_BROKEN_PIPE)failure=error;return;
         }
         if(!count)return;
-        if(text.size()+count<=4*1024*1024){try{text.append(buffer.data(),count);}catch(...){failure=ERROR_NOT_ENOUGH_MEMORY;}}
-        else failure=ERROR_BUFFER_OVERFLOW; // Keep draining so the child cannot block on its log.
+        {
+            const auto available=DWORD((std::min)(std::size_t(count),maximum-forwarded));
+            if(available<count)failure=ERROR_BUFFER_OVERFLOW;
+            forwarded+=available;
+            // Write bytes directly: a second CRT text-mode pass would turn
+            // the child's CRLF into CRCRLF at every nested launcher hop.
+            DWORD offset=0;
+            // Serato can launch the installer without console handles. In
+            // that case drain silently, retaining the same output bounds.
+            while(destination && destination!=INVALID_HANDLE_VALUE && offset<available){
+                DWORD written=0;
+                if(!WriteFile(destination,buffer.data()+offset,available-offset,&written,nullptr)){
+                    failure=GetLastError();break;
+                }
+                if(!written){failure=ERROR_WRITE_FAULT;break;}
+                offset+=written;
+            }
+        } // Keep draining after a forwarding failure so the child can finish.
     }
 }
 struct Pipe {Handle read,write;Pipe(){
@@ -176,9 +194,10 @@ int run_process(const fs::path& executable,const std::vector<std::wstring>& argu
     std::array<HANDLE,3> allowed={input.value,output.write.value,error.write.value};
     if(!UpdateProcThreadAttribute(startup.lpAttributeList,0,PROC_THREAD_ATTRIBUTE_HANDLE_LIST,allowed.data(),sizeof(allowed),nullptr,nullptr))
         throw WinError("Set exact helper handle inheritance");
-    std::string out,err;DWORD output_error=0,error_error=0;
+    DWORD output_error=0,error_error=0;
     std::thread first,second;
-    try{first=std::thread([&]{drain(output.read.value,out,output_error);});second=std::thread([&]{drain(error.read.value,err,error_error);});}
+    try{first=std::thread([&]{drain(output.read.value,GetStdHandle(STD_OUTPUT_HANDLE),output_error);});
+        second=std::thread([&]{drain(error.read.value,GetStdHandle(STD_ERROR_HANDLE),error_error);});}
     catch(...){output.write.reset();error.write.reset();if(first.joinable())first.join();throw;}
     auto command=quote(executable.native())+L" "+parameters;PROCESS_INFORMATION process{};
     if(!CreateProcessW(executable.c_str(),command.data(),nullptr,nullptr,TRUE,CREATE_NO_WINDOW|EXTENDED_STARTUPINFO_PRESENT,nullptr,directory.c_str(),&startup.StartupInfo,&process)){
@@ -187,7 +206,6 @@ int run_process(const fs::path& executable,const std::vector<std::wstring>& argu
     }
     Handle child(process.hProcess),thread(process.hThread);output.write.reset();error.write.reset();input.reset();
     const auto waited=WaitForSingleObject(child.value,INFINITE);first.join();second.join();
-    std::cout<<out;std::cerr<<err;
     require(waited==WAIT_OBJECT_0 && !output_error && !error_error,"Helper wait/output failed; preserve session receipts");
     DWORD code=1;if(!GetExitCodeProcess(child.value,&code))throw WinError("Read helper exit code");return int(code);
 }
