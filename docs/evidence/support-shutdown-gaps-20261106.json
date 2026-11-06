@@ -1,0 +1,55 @@
+{
+  "applicationStarted": false,
+  "audioIncluded": false,
+  "deviceAccess": false,
+  "interpretation": "Selected saved observations only; inputs are not authenticated. Reports may describe different sessions or times. Clean setup does not prove clean application exit. No physical audio or DVS validation is inferred.",
+  "observations": {
+    "asio": {
+      "reported": {
+        "abandonedCalls": 0,
+        "callIdGapsCount": 0,
+        "completedCalls": 0,
+        "completionMarkerUsed": false,
+        "methods": {},
+        "missingTerminalProvesBlockedCall": false,
+        "moduleCallBudgetReached": false,
+        "observedPairsComplete": false,
+        "orphanTerminalsCount": 0,
+        "pairedCalls": 0,
+        "recordCount": 0,
+        "reportedBuffersLost": null,
+        "reportedEventsLost": null,
+        "seratoCaptureVerified": false,
+        "sessionMetadataComplete": false,
+        "shutdownVerified": false,
+        "sourceHostIdentityVerified": false,
+        "unterminatedBeginsCount": 0,
+        "unterminatedOperations": {},
+        "wholeHostSequenceVerified": false
+      },
+      "sourceSha256": "dbf6ac0e830b8711afd32ef67eb4e76f37382fd8cb93c2300f1a78e08c3e3d6e"
+    },
+    "supervisor": {
+      "reported": {
+        "asioStartObserved": true,
+        "endReason": "viewing_limit",
+        "errorPresent": false,
+        "process": {
+          "closeRequested": true,
+          "exitCode": 1,
+          "jobEmpty": true,
+          "observerForcedTermination": true,
+          "processExited": true,
+          "processStarted": true
+        },
+        "stagedAsioVerified": true,
+        "supervisionCompleted": false,
+        "tracerDetached": true
+      },
+      "sourceSha256": "785677607f6dfb79264b86adf445e0f0334bbf98e784a5078e4f34b7b1b1a6e5"
+    }
+  },
+  "rawMessagesIncluded": false,
+  "schema": "sl3.support-summary.v1",
+  "sourcePathsIncluded": false
+}

@@ -11,9 +11,16 @@ BOOL_FIELDS = {
                  'previousSessionShutdownVerified', 'repairAttempted', 'deviceOpened'),
     'supervisor': ('asioStartObserved', 'stagedAsioVerified', 'tracerDetached',
                    'instrumentationManagerClosedBeforeViewing', 'supervisionCompleted'),
+    'asio': ('sessionMetadataComplete', 'observedPairsComplete', 'moduleCallBudgetReached',
+             'completionMarkerUsed', 'shutdownVerified', 'missingTerminalProvesBlockedCall',
+             'sourceHostIdentityVerified', 'wholeHostSequenceVerified', 'seratoCaptureVerified'),
 }
 SCHEMAS = {'readiness': 'sl3.session-readiness.v1', 'recovery': 'sl3.session-recovery-check.v1',
-           'supervisor': 'sl3.startup-supervisor-result.v1'}
+           'supervisor': 'sl3.startup-supervisor-result.v1',
+           'asio': ('sl3.asio-call-analysis.v1', 'sl3.asio-incomplete-call-analysis.v1')}
+OPERATIONS = ('class_object', 'init', 'name', 'version', 'error_message', 'start', 'stop', 'channels',
+              'latencies', 'buffer_size', 'can_rate', 'get_rate', 'set_rate', 'clocks', 'set_clock',
+              'create_buffers', 'dispose_buffers', 'control_panel')
 CHECKS = ('platform', 'application', 'filter', 'device', 'state', 'dependencies')
 PROCESS_FIELDS = ('processStarted', 'processExited', 'observerForcedTermination', 'closeRequested',
                   'jobEmpty', 'instrumentationManagerClosed', 'ownershipUnproven')
@@ -53,8 +60,51 @@ def booleans(source, names):
     return result
 
 
+def bounded_count(value, maximum=8192):
+    require(type(value) is int and 0 <= value <= maximum, 'Invalid observation count')
+    return value
+
+
+def asio_summary(source):
+    result = booleans(source, BOOL_FIELDS['asio'])
+    for name in ('recordCount', 'pairedCalls', 'completedCalls', 'abandonedCalls'):
+        if name in source:
+            result[name] = bounded_count(source[name])
+    for name in ('reportedEventsLost', 'reportedBuffersLost'):
+        if name in source:
+            result[name] = None if source[name] is None else bounded_count(source[name], 0xffffffff)
+    for name in ('unterminatedBegins', 'orphanTerminals', 'callIdGaps'):
+        if name in source:
+            require(type(source[name]) is list, 'Expected observation list')
+            result[name + 'Count'] = bounded_count(len(source[name]))
+    if 'methods' in source:
+        methods = source['methods']
+        require(type(methods) is dict and all(name in OPERATIONS for name in methods), 'Unknown ASIO method')
+        result['methods'] = {}
+        for name, observation in methods.items():
+            require(type(observation) is dict, 'Expected method observations')
+            result['methods'][name] = {field: bounded_count(observation[field])
+                                      for field in ('paired', 'abandoned', 'returnedErrors') if field in observation}
+    # Only marker-free analysis supplies operation details for unmatched begins.
+    # Keep operations/counts, never object/thread/call identities or raw rows.
+    if 'unterminatedBeginDetails' in source:
+        details = source['unterminatedBeginDetails']
+        require(type(details) is list and len(details) <= 4096, 'Invalid unmatched begin details')
+        operations = {}
+        for row in details:
+            require(type(row) is dict and row.get('operation') in OPERATIONS, 'Unknown unmatched operation')
+            name = row['operation']
+            operations[name] = operations.get(name, 0) + 1
+        result['unterminatedOperations'] = operations
+    return result
+
+
 def summarize(kind, source):
-    require(kind in SCHEMAS and source.get('schema') == SCHEMAS[kind], 'Unsupported report schema')
+    require(kind in SCHEMAS, 'Unsupported report kind')
+    schemas = SCHEMAS[kind] if type(SCHEMAS[kind]) is tuple else (SCHEMAS[kind],)
+    require(source.get('schema') in schemas, 'Unsupported report schema')
+    if kind == 'asio':
+        return asio_summary(source)
     result = booleans(source, BOOL_FIELDS[kind])
     if kind == 'readiness':
         rows = source.get('checks')
@@ -95,6 +145,20 @@ def summarize(kind, source):
                 if name in process:
                     require(type(process[name]) is str, 'Invalid process error observation')
                     result['process'][name + 'Present'] = bool(process[name])
+            for name in ('closeWindowObservation', 'closeTimeoutWindowObservation'):
+                if name in process:
+                    windows = process[name]
+                    require(type(windows) is dict, 'Expected window-close observations')
+                    selected = booleans(windows, ('postCloseRequested', 'enumerationSucceeded'))
+                    for field in ('ownedTopLevelWindows', 'visibleWindows', 'enabledVisibleWindows',
+                                  'closeMessagesPosted', 'closePostFailures'):
+                        if field in windows:
+                            selected[field] = bounded_count(windows[field], 0xffffffff)
+                    if 'callbackError' in windows:
+                        require(windows['callbackError'] is None or type(windows['callbackError']) is str,
+                                'Invalid window callback error observation')
+                        selected['callbackErrorPresent'] = bool(windows['callbackError'])
+                    result['process'][name] = selected
     return result
 
 

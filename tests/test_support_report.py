@@ -96,6 +96,59 @@ class SupportReportTest(unittest.TestCase):
             self.assertNotEqual(second.returncode, 0)
             self.assertEqual(output.read_bytes(), saved)
 
+    def test_markerless_missing_stop_is_preserved_without_deadlock_claim(self):
+        source = {'schema': 'sl3.asio-incomplete-call-analysis.v1', 'pid': 42,
+                  'sessionMetadataComplete': False, 'reportedEventsLost': None,
+                  'shutdownVerified': False, 'missingTerminalProvesBlockedCall': False,
+                  'unterminatedBegins': [9], 'unterminatedBeginDetails': [
+                      {'call': 9, 'operation': 'stop', 'thread': 7, 'object': 1, 'path': 'PRIVATE'}]}
+        result = API['summarize']('asio', source)
+        self.assertEqual(result['unterminatedOperations'], {'stop': 1})
+        self.assertEqual(result['unterminatedBeginsCount'], 1)
+        self.assertIsNone(result['reportedEventsLost'])
+        self.assertFalse(result['missingTerminalProvesBlockedCall'])
+        self.assertFalse(result['shutdownVerified'])
+        for private in ('pid', 'thread', 'object', 'PRIVATE'):
+            self.assertNotIn(private, json.dumps(result))
+
+    def test_completed_trace_keeps_method_errors_without_raw_pairs(self):
+        source = {'schema': 'sl3.asio-call-analysis.v1', 'recordCount': 2,
+                  'methods': {'stop': {'paired': 1, 'abandoned': 0, 'returnedErrors': 1,
+                                       'rawResults': {'PRIVATE': 1}}},
+                  'pairs': [{'path': 'PRIVATE'}], 'sourceHostIdentityVerified': False}
+        result = API['summarize']('asio', source)
+        self.assertEqual(result['methods']['stop']['returnedErrors'], 1)
+        self.assertFalse(result['sourceHostIdentityVerified'])
+        self.assertNotIn('PRIVATE', json.dumps(result))
+
+    def test_empty_trace_does_not_invent_stop_or_complete_session(self):
+        result = API['summarize']('asio', {'schema': 'sl3.asio-incomplete-call-analysis.v1',
+                                          'recordCount': 0, 'methods': {}, 'observedPairsComplete': False})
+        self.assertEqual(result['methods'], {})
+        self.assertFalse(result['observedPairsComplete'])
+        self.assertNotIn('shutdownVerified', result)
+        self.assertNotIn('reportedEventsLost', result)
+
+    def test_unknown_methods_and_malformed_counts_refused(self):
+        for fields in ({'methods': {'PRIVATE': {}}}, {'recordCount': True}, {'recordCount': -1},
+                       {'reportedEventsLost': 'unknown'}, {'methods': {'stop': {'paired': 8193}}},
+                       {'unterminatedBeginDetails': [{'operation': 'PRIVATE'}]}):
+            with self.subTest(fields=fields), self.assertRaises(ValueError):
+                API['summarize']('asio', {'schema': 'sl3.asio-call-analysis.v1', **fields})
+
+    def test_close_post_observations_are_distinct_from_process_exit(self):
+        result = API['summarize']('supervisor', {'schema': API['SCHEMAS']['supervisor'],
+            'process': {'processExited': True, 'observerForcedTermination': True,
+                        'closeWindowObservation': {'postCloseRequested': True, 'enumerationSucceeded': True,
+                            'closeMessagesPosted': 1, 'closePostFailures': 0, 'callbackError': 'PRIVATE'},
+                        'closeTimeoutWindowObservation': {'visibleWindows': 1}}})
+        process = result['process']
+        self.assertEqual(process['closeWindowObservation']['closeMessagesPosted'], 1)
+        self.assertTrue(process['observerForcedTermination'])
+        self.assertEqual(process['closeTimeoutWindowObservation']['visibleWindows'], 1)
+        self.assertTrue(process['closeWindowObservation']['callbackErrorPresent'])
+        self.assertNotIn('PRIVATE', json.dumps(result))
+
 
 if __name__ == '__main__':
     unittest.main()
