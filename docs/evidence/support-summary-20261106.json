@@ -1,0 +1,39 @@
+{
+  "applicationStarted": false,
+  "audioIncluded": false,
+  "deviceAccess": false,
+  "interpretation": "Selected saved observations only; inputs are not authenticated. Reports may describe different sessions or times. Clean setup does not prove clean application exit. No physical audio or DVS validation is inferred.",
+  "observations": {
+    "readiness": {
+      "reported": {
+        "audioStarted": false,
+        "checks": {
+          "application": "pass",
+          "dependencies": "pass",
+          "device": "pass",
+          "filter": "pass",
+          "platform": "pass",
+          "state": "pass"
+        },
+        "deviceOpened": false,
+        "readyForAttempt": true
+      },
+      "sourceSha256": "6d48050203a5109d2c50ad8ff403be37ce0d32c6d5ca0b585596664fbbe7fbf2"
+    },
+    "recovery": {
+      "reported": {
+        "activeSessionObserved": false,
+        "brokerRetirementReported": false,
+        "deviceOpened": false,
+        "issueCount": 0,
+        "originalSetupClean": true,
+        "previousSessionShutdownVerified": false,
+        "repairAttempted": false
+      },
+      "sourceSha256": "04d741e626578485df8430b101a823b776d600a4db86f3da6226dc9906378805"
+    }
+  },
+  "rawMessagesIncluded": false,
+  "schema": "sl3.support-summary.v1",
+  "sourcePathsIncluded": false
+}
