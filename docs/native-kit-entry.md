@@ -1,5 +1,7 @@
 # Native entry for kit preparation and startup
 
+**Follow-up:** kit preparation now [rebinds native package metadata to current-account Windows known folders](deployment-account-rebinding.md). The newer launcher pins 39 sources. The original 38-pin candidate and its evidence below remain historical; actual different-account/PC and live startup testing are still outstanding.
+
 The kit's native executable can now verify and prepare a complete session directly. The user no longer needs to select and invoke Python for that preparation step. Thirteen actual native-entry checks passed in a moved kit with an empty `PATH`, including complete preparation and the resulting native session Plan. The combined live-start entry is implemented but remains untested. [Image and test evidence](evidence/native-kit-entry-20261106.json)
 
 ## Entry modes

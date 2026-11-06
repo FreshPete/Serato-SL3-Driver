@@ -1,0 +1,444 @@
+{
+  "schema": "sl3.deployment-account-rebinding-evidence.v1",
+  "date": "2026-11-06",
+  "launcherSha256": "82aebc5778d0beb46600286bafbc0f364841c88d2e63151c1407b9fb1fc99db9",
+  "releaseManifestSha256": "84dc77a7d84763e86b173371ad787337dbad1fc3c46e0a64d91a663d6e6dc20a",
+  "installerResourceSha256": "1ecf2dc98f86ef3e6f843b1f3ec0dab4175c556f4b5341ab73e4511332e54cf3",
+  "kitManifestSha256": "372cb0bc7994bb8764d9525340d66bf613f2ed73369490ec6f374088e0f332c8",
+  "sourcePins": 39,
+  "deploymentScope": "destinations-bound-at-preparation",
+  "rebindingTests": {
+    "schema": "sl3.deployment-rebinding-tests.v1",
+    "cases": [
+      {
+        "name": "original-package-production-verification",
+        "passed": true
+      },
+      {
+        "name": "portable-inspection-does-not-admit-foreign-pointer",
+        "passed": true
+      },
+      {
+        "name": "production-verifier-still-rejects-foreign-pointer",
+        "passed": true
+      },
+      {
+        "name": "foreign-origin-read-only-rebinding-plan",
+        "passed": true
+      },
+      {
+        "name": "foreign-origin-rebound-and-production-verified-with-identical-binaries",
+        "passed": true
+      },
+      {
+        "name": "existing-output-preserved",
+        "passed": true
+      },
+      {
+        "name": "destination-outside-production-base-refused",
+        "passed": true
+      },
+      {
+        "name": "changed-native-payload-rejected",
+        "passed": true
+      },
+      {
+        "name": "unsafe-origin-policy-rejected",
+        "passed": true
+      },
+      {
+        "name": "extra-origin-file-rejected",
+        "passed": true
+      }
+    ],
+    "originBundleSha256": "898c4e5294aec6a67a7364ed9e47ff602f5228401fa10e8a1ca06d46e7cc8993",
+    "reboundBundleSha256": "17214ac77bb682e58d2829bdefbcde5c60dbb5c22c6f01171e0b78b30bc02e8e",
+    "nativeBinarySha256": {
+      "sl3_asio.dll": "695f87e0cff1733e4aee8ab6b311d1cbc87b087a874fab5dddfef2404dd6e6bc",
+      "sl3_broker_controller.exe": "35c85280310f4bee8788888f4fcab3feb6d27b7cd4e5b07231a96647f0dccb53",
+      "sl3_usbdk.exe": "f4d7e00070ca8a8ef1dbad532dfdb7642775747b71bfeb610fbe1223434eac8f",
+      "UsbDkHelper.dll": "66bbfe6f99b417f97c7a9e97816e24af7dde0e01b8e535c41e91e1c6c19cfeda"
+    },
+    "nativeBinariesUnchanged": true,
+    "testProvenancePreserved": true,
+    "syntheticForeignPointerUsed": true,
+    "otherAccountActuallyTested": false,
+    "secondPcTested": false,
+    "installed": false,
+    "registryWritten": false,
+    "binaryExecuted": false,
+    "deviceAccess": false
+  },
+  "deploymentRegressions": {
+    "cases": [
+      {
+        "name": "default",
+        "passed": true,
+        "expectedExit": 0
+      },
+      {
+        "name": "plan",
+        "passed": true,
+        "expectedExit": 0
+      },
+      {
+        "name": "prepare",
+        "passed": true,
+        "expectedExit": 0
+      },
+      {
+        "name": "verify",
+        "passed": true,
+        "expectedExit": 0
+      },
+      {
+        "name": "existing-output",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "build-hash",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "helper-hash",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "install-scope",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "debug-build",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "missing-asio",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "source-pin",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "ctest-hash",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "missing-coverage",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "controller-kind-collision",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "controller-payload-hash",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "actual-fixture-exports",
+        "passed": true
+      },
+      {
+        "name": "payload-tamper",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "extra-file",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "missing-file",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "duplicate-json",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "retarget-registry",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "unsafe-acl",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "retarget-install-scope",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "retarget-locator",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "verify-manifest-hash",
+        "passed": true,
+        "expectedExit": 1
+      },
+      {
+        "name": "unsupported-options",
+        "passed": true,
+        "expectedExit": 1
+      }
+    ],
+    "testIndexSha256": "1a86816652ca6167d091045076e7dcb1d92e5bf0bde06aeab657c3e74ab8bd4d",
+    "buildManifestSha256": "70e06e7f099eff355dd528593ad08af229d5ec5aedd96d8cf432fa33d1bf93d4",
+    "installed": false
+  },
+  "pointerDestinationRegressionsPassed": 5,
+  "nativeKitTests": {
+    "schema": "sl3.native-kit-entry-tests.v1",
+    "cases": [
+      {
+        "name": "native-kit-plan-relocated-empty-path",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "native-kit-complete-offline-preparation",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "native-prepared-kit-complete-session-plan",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "native-kit-plan-after-preparation",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "wrong-kit-identity-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-kit-preparer-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-specification-evidence-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-private-standard-library-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-powershell-runtime-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "foreign-launcher-release-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "unreviewed-application-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "semicolon-kit-path-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "incomplete-start-context-refused",
+        "passed": true,
+        "exitCode": 2
+      }
+    ],
+    "kitManifestSha256": "372cb0bc7994bb8764d9525340d66bf613f2ed73369490ec6f374088e0f332c8",
+    "launcherSha256": "82aebc5778d0beb46600286bafbc0f364841c88d2e63151c1407b9fb1fc99db9",
+    "generatedSessionPlanSha256": "ca5c4e946b069ac60b7c5f319a760047b066a0728b223d0f3222e289005fecf6",
+    "globalPathEmpty": true,
+    "spacesAndUnicodeInKitPath": true,
+    "onlyPlanPreparationOrRefusalInvocations": true,
+    "liveStartAttempted": false,
+    "applicationStarted": false,
+    "brokerStarted": false,
+    "elevationRequested": false,
+    "registryWritten": false,
+    "deviceAccess": false,
+    "liveValidated": false
+  },
+  "directKitTests": {
+    "schema": "sl3.portable-kit-relocation-tests.v1",
+    "cases": [
+      {
+        "name": "relocated-kit-inventory-private-interpreter-empty-path",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "relocated-kit-read-only-application-plan",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "relocated-kit-complete-offline-preparation",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "relocated-kit-native-complete-session-plan",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "kit-static-inventory-still-valid-after-preparation",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "wrong-kit-hash-refused",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-kit-helper-refused-before-preparation",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "native-entry-refuses-changed-kit-helper",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-kit-runtime-refused-before-preparation",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "unexpected-static-kit-file-refused",
+        "passed": true,
+        "exitCode": 1
+      }
+    ],
+    "kitManifestSha256": "372cb0bc7994bb8764d9525340d66bf613f2ed73369490ec6f374088e0f332c8",
+    "generatedSessionPlanSha256": "2d9a088cf81d16ccd4d2aa9e0cd6f5225a9d0621e04c1029c9baef774eec1afc",
+    "archiveSha256": "d135e6f1c03601cc44b3e5f623eed36af81bbff585332a3fdc8d5d533b2cb66a",
+    "globalPathEmpty": true,
+    "kitInterpreterAndPowerShellUsed": true,
+    "preparedPathsReboundToMovedKit": true,
+    "spacesAndUnicodeInKitPath": true,
+    "deploymentScope": "destinations-bound-at-preparation",
+    "differentWindowsAccountTested": false,
+    "secondPcTested": false,
+    "applicationStarted": false,
+    "elevationRequested": false,
+    "registryWritten": false,
+    "deviceAccess": false,
+    "liveValidated": false
+  },
+  "capsuleTests": {
+    "schema": "sl3.portable-launcher-tests.v1",
+    "launcherSha256": "82aebc5778d0beb46600286bafbc0f364841c88d2e63151c1407b9fb1fc99db9",
+    "cases": [
+      {
+        "name": "first-session",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "second-session-same-executable",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "no-environment-no-installation",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "unsupported-action",
+        "passed": true,
+        "exitCode": 2
+      },
+      {
+        "name": "wrong-capsule-hash",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "executable-relocated-without-rebuild",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "unicode-space-and-shell-metacharacters-in-capsule-path",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "untrusted-interpreter",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "foreign-helper-root",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-package-binding",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "moved-capsule-binding",
+        "passed": true,
+        "exitCode": 1
+      }
+    ],
+    "sameExecutableAcceptedTwoSessionBindings": true,
+    "binaryRecompiledBetweenSessions": false,
+    "onlyPlanOrRefusalInvocations": true,
+    "registryWritten": false,
+    "deviceAccess": false,
+    "liveValidated": false
+  },
+  "windowsArgumentRoundTripsPassed": 8,
+  "runtimeManifestUnchangedAndReverified": true,
+  "runtimeManifestSha256": "08a7aec0dce42a94cd5a5b97f55b40219f9449e74eaf47129f906a9749ecb609",
+  "generatedCacheFilesQuarantined": 5,
+  "nativeAudioBinariesChanged": false,
+  "otherWindowsAccountTested": false,
+  "secondPcTested": false,
+  "liveStartAttempted": false,
+  "applicationStarted": false,
+  "deviceAccess": false,
+  "registryWritten": false,
+  "firmwareChanged": false,
+  "securityPolicyChanged": false,
+  "binaryKitPublished": false,
+  "publicInstallerReady": false
+}

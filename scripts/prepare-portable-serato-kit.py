@@ -96,17 +96,24 @@ def prepare(manifest, expected, application, write=False):
     module('prepare-embedded-python.py')['verify'](python.parent, record['pythonManifestSha256'])
     powershell = ROOT / 'runtime/powershell'
     module('prepare-portable-powershell.py')['verify'](powershell, record['powershellManifestSha256'])
-    bundle = ROOT / 'native-package'
-    module('prepare-asio-deployment.py')['verify'](bundle, record['nativeBundleSha256'])
-    deployment = json.loads((bundle / 'deployment-plan.json').read_bytes())
+    origin_bundle = ROOT / 'native-package'
+    rebind_api = module('rebind-asio-deployment.py')
+    rebinding = rebind_api['rebind'](origin_bundle, record['nativeBundleSha256'])
     capsule_builder = module('prepare-serato-session-capsule.py')
-    capsule_builder['prepare'](application, bundle, record['nativeBundleSha256'])
+    capsule_api = module('serato-session-capsule.py')
+    application = Path(application).absolute()
+    require(application.name == 'Serato DJ Pro.exe' and sha(application) == capsule_api['APP_SHA'],
+            'Reviewed Serato application required')
     if not write:
         return {'planOnly': True, 'kitVerified': True, 'filesWritten': False, 'applicationStarted': False,
                 'registryWritten': False, 'deviceAccess': False, 'deploymentScope': record['deploymentScope']}
     state = ROOT / 'analysis'
     state.mkdir(exist_ok=True)
     tag = uuid.uuid4().hex
+    bundle = state / ('sl3-deployment-rebound-kit-' + tag)
+    rebinding = rebind_api['rebind'](origin_bundle, record['nativeBundleSha256'], bundle)
+    bundle_sha = rebinding['bundleManifestSha256']
+    deployment = json.loads((bundle / 'deployment-plan.json').read_bytes())
     archive_directory = state / ('sl3-archive-candidate-kit-' + tag)
     phase = module('prepare-serato-installed-phase-archive.py')['prepare'](
         application, powershell, record['powershellManifestSha256'], archive_directory)
@@ -114,7 +121,7 @@ def prepare(manifest, expected, application, write=False):
     module('prepare-serato-startup-shim.py')['prepare'](
         application, str(Path(deployment['installationDirectory']) / 'sl3_asio.dll'), shim)
     capsule_directory = state / ('sl3-session-capsule-kit-' + tag)
-    capsule = capsule_builder['prepare'](application, bundle, record['nativeBundleSha256'], capsule_directory)
+    capsule = capsule_builder['prepare'](application, bundle, bundle_sha, capsule_directory)
     plan_api = module('prepare-serato-session-plan.py')
     # The existing binder requires the canonical installer resource basename.
     resource_directory = state / ('sl3-installer-resource-kit-' + tag)
@@ -134,6 +141,8 @@ def prepare(manifest, expected, application, write=False):
     result = {'schema': 'sl3.portable-kit-preparation.v1', 'prepared': True, 'kitManifestSha256': expected,
               'sessionPlan': str(path), 'sessionPlanSha256': identity, 'archiveSha256': phase['archiveSha256'],
               'projectRoot': str(ROOT), 'deploymentScope': record['deploymentScope'],
+              'nativePackageRebound': True, 'nativeBinariesUnchanged': rebinding['nativeBinariesUnchanged'],
+              'originBundleSha256': record['nativeBundleSha256'], 'reboundBundleSha256': bundle_sha,
               'applicationStarted': False, 'registryWritten': False, 'deviceAccess': False, 'liveValidated': False,
               'planArguments': [str(ROOT / 'SL3_Rebuild_Development_x64.exe'), '--plan-session', '--session-plan', str(path),
                                 '--expected-session-plan-sha256', identity, '--powershell-directory', str(powershell)]}

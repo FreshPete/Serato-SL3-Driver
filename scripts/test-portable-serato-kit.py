@@ -49,7 +49,14 @@ def exercise(kit, expected, application):
         assert planned['filesWritten'] is False and not (moved / 'analysis').exists()
         preparation = json.loads(call('relocated-kit-complete-offline-preparation', [*selected, '--prepare']).stdout)
         assert preparation['projectRoot'] == str(moved) and preparation['applicationStarted'] is False
+        assert preparation['nativePackageRebound'] is True and preparation['nativeBinariesUnchanged'] is True
         plan = json.loads(Path(preparation['sessionPlan']).read_bytes())
+        assert Path(plan['nativeBundle']['path']) != moved / 'native-package'
+        assert plan['nativeBundle']['sha256'] == preparation['reboundBundleSha256'] != preparation['originBundleSha256']
+        origin = json.loads((moved / 'native-package/bundle-manifest.json').read_bytes())
+        rebound = json.loads((Path(plan['nativeBundle']['path']) / 'bundle-manifest.json').read_bytes())
+        for name in ('sl3_asio.dll', 'sl3_broker_controller.exe', 'sl3_usbdk.exe', 'UsbDkHelper.dll'):
+            assert rebound['files'][name] == origin['files'][name]
         assert Path(plan['projectRoot']) == moved and Path(plan['python']['path']) == python
         for name in ('capsule', 'preparedShim', 'nativeBundle', 'archiveSource', 'installerResource', 'launcher'):
             assert Path(plan[name]['path']).is_relative_to(moved)

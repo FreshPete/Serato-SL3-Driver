@@ -69,7 +69,7 @@ def assemble(plan, expected, release, expected_release, powershell, output=None)
     add('release-source.json', release, expected_release)
     result = {'schema': 'sl3.portable-kit-assembly.v1', 'planOnly': output is None, 'filesSelected': len(files),
               'selectedBytes': sum(row[2] for row in files.values()), 'applicationStarted': False,
-              'registryWritten': False, 'deviceAccess': False, 'deploymentScope': 'reviewed-windows-host-and-account'}
+              'registryWritten': False, 'deviceAccess': False, 'deploymentScope': 'destinations-bound-at-preparation'}
     if output is None:
         return result
     output = Path(output).absolute()

@@ -37,7 +37,7 @@ def main():
     cases = []; outputs = []
 
     def call(name, args, expected=0):
-        result = subprocess.run([sys.executable, str(TOOL), *map(str, args)], capture_output=True, text=True, encoding='utf-8', timeout=30)
+        result = subprocess.run([sys.executable, '-I', '-B', str(TOOL), *map(str, args)], capture_output=True, text=True, encoding='utf-8', timeout=30)
         (folder/f'{name}-stdout.txt').write_text(result.stdout, encoding='utf-8')
         (folder/f'{name}-stderr.txt').write_text(result.stderr, encoding='utf-8')
         require(result.returncode == expected, f'{name}: {result.returncode}: {result.stdout} {result.stderr}')

@@ -1,5 +1,7 @@
 # Relocatable development-kit assembly
 
+**Current package binding:** the newer kit [creates a separate current-account deployment package during preparation](deployment-account-rebinding.md), preserving the immutable origin and native binaries. It no longer uses the original account's destination paths for the prepared session. Actual different-account/PC and live startup tests remain outstanding; the earlier host-bound checkpoint below is preserved.
+
 **Follow-up:** the newer kit adds a [native preparation/start entry](native-kit-entry.md), removing the need for a direct Python preparation command. Its Plan and Prepare modes passed actual relocated-kit tests; live Start is still untested. The original kit and evidence below are preserved.
 
 A copied kit now prepares and verifies a complete temporary Serato session using its own Python, PowerShell, source helpers, native launcher and native deployment package. The actual relocation check used a folder with spaces and Unicode and an empty process `PATH`. It generated the tested Phase archive, prepared the startup shim and session, and passed the native full-session Plan from the copied folder. No Serato, broker, administrator prompt, registry write or USB operation ran. [Assembly and ten actual checks](evidence/portable-kit-assembly-20261106.json)

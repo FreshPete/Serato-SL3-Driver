@@ -49,6 +49,8 @@ def exercise(kit, expected, application):
         prepare[1] = '--prepare-kit'
         prepared = json.loads(call('native-kit-complete-offline-preparation', prepare).stdout)
         assert prepared['projectRoot'] == str(moved) and prepared['applicationStarted'] is False
+        assert prepared['nativePackageRebound'] is True and prepared['nativeBinariesUnchanged'] is True
+        assert prepared['originBundleSha256'] != prepared['reboundBundleSha256']
         checked = call('native-prepared-kit-complete-session-plan', prepared['planArguments'])
         assert 'Complete session plan passed; no application, broker or elevation started' in checked.stdout
         call('native-kit-plan-after-preparation', command)

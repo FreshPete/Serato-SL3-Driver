@@ -224,7 +224,8 @@ def prepare(manifest, expected, helper, output, installation, pointer, unmeasure
             'files': len(payload), 'installed': False, 'registryWritten': False, 'binaryExecuted': False, **diagnostic_label}
 
 
-def verify(bundle, expected):
+def capture_bundle(bundle, expected):
+    """Capture hash-bound bytes only; this does not admit deployment paths."""
     require(bundle.is_absolute() and bundle.is_dir(), 'Absolute existing bundle directory required')
     for path in (bundle, bundle/'bundle-manifest.json'):
         require(not path.is_symlink() and not (getattr(path.stat(), 'st_file_attributes', 0) & 0x400), 'Reparse bundle/manifest refused')
@@ -239,11 +240,23 @@ def verify(bundle, expected):
         require(not path.is_symlink() and not (getattr(path.stat(), 'st_file_attributes', 0) & 0x400), 'Reparse payload refused')
         data = read(path); require(len(data) == details['bytes'] and digest(data) == sha_value(details['sha256']), f'Payload changed: {name}')
         payload[name] = data
+    return manifest, payload
+
+
+def verify(bundle, expected):
+    manifest, payload = capture_bundle(bundle, expected)
     return verify_payloads(manifest, payload)
 
 
 def verify_payloads(manifest, payload):
     """Verify captured bytes; privileged staging must not re-open source paths."""
+    inspection = inspect_portable_payloads(manifest, payload)
+    destinations(Path(inspection['installationDirectory']), Path(inspection['pointerPath']))
+    return {'verified': True, 'files': len(payload), 'installed': False, 'registryWritten': False, 'binaryExecuted': False}
+
+
+def inspect_portable_payloads(manifest, payload):
+    """Check portable metadata/PE bytes; never authorizes staging or old paths."""
     require(manifest['schema'] == 'sl3.deployment-bundle.v1' and set(manifest['files']) == REQUIRED and set(payload) == REQUIRED, 'Bundle schema/inventory mismatch')
     require(all(manifest[k] is False for k in ('installed', 'registryWritten', 'binaryExecuted', 'protectedInstallationCreated', 'physicalAudioTested', 'currentSeratoAdmissionTested')), 'Review bundle cannot claim installation or hardware validation')
     for name, data in payload.items():
@@ -266,9 +279,12 @@ def verify_payloads(manifest, payload):
             timing_mode == manifest.get('timingMode') == plan.get('timingMode'), 'Bundle timing mode mismatch')
     installation = Path(seed['installationDirectory'])
     pointer = Path(seed['pointerPath'])
-    # Resolve for containment, but retain the hash-bound spelling used by the
-    # locator. Windows app redirection can change resolve() after publication.
-    destinations(installation, pointer)
+    # Inspect foreign destination text without opening or following those paths.
+    # Production verification above always applies the current user's containment.
+    for path in (installation, pointer):
+        require(path.is_absolute() and len(path.drive) == 2 and path.drive[1] == ':' and
+                '..' not in path.parts and ':' not in str(path)[2:] and
+                not any(ord(char) < 32 for char in str(path)), 'Local portable destination syntax required')
     require(payload['sl3-asio.conf'] == locator_text(installation, pointer, digest(payload['sl3_broker_controller.exe']), digest(payload['sl3_usbdk.exe'])), 'Locator does not bind planned binaries/pointer')
     require(plan['schema'] == 'sl3.deployment-plan.v1' and plan['packageId'] == manifest['packageId'] and
             plan['registryView'] == 64 and plan['registryHive'] == 'HKEY_LOCAL_MACHINE' and plan['registryApplied'] is False and
@@ -276,7 +292,8 @@ def verify_payloads(manifest, payload):
             plan['installationDirectory'] == str(installation) and plan['pointerPath'] == str(pointer), 'Plan identity/view/entries mismatch')
     require(plan['proposedAcl'] == PROPOSED_ACL and plan['requiresAdministratorAtInstall'] is True and
             all(plan[k] is False for k in ('automaticStart', 'serviceCreated', 'rateProfileIncluded')), 'Unsafe installation policy proposed')
-    return {'verified': True, 'files': len(payload), 'installed': False, 'registryWritten': False, 'binaryExecuted': False}
+    return {'portableContractVerified': True, 'installationDirectory': str(installation), 'pointerPath': str(pointer),
+            'productionDestinationsAdmitted': False, 'binaryExecuted': False}
 
 
 def main(argv=None):
