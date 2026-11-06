@@ -1,5 +1,7 @@
 # Native read-only recovery check
 
+**Later update:** an [explicit recovery command](session-recovery-command.md) now connects this check to the existing protected transaction. Its no-op/refusal paths are verified; elevated repair remains untested. The Check command itself stays read-only.
+
 **Later update:** [protected session ownership](protected-session-ownership.md) adds a matching protected record prerequisite for dirty-state recovery and observes its stage process. New bindings pin 45 release sources and 33 plan sources; the counts below describe this earlier checkpoint.
 
 Prepared kit and fresh-session records now include `recoveryCheckArguments`. The native launcher exposes:

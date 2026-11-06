@@ -46,6 +46,8 @@ def exercise(launcher, powershell, template):
         assert directory.parent == ROOT / 'analysis' and directory not in before
         assert result['captureOutput'] is False and result['launcherRecompiled'] is False
         assert result['installerResourceRepacked'] is False and result['applicationStarted'] is False
+        assert result['recoveryArguments'][1]=='--recover-session'
+        assert result['recoveryArguments'][2:]==result['planArguments'][2:]
         assert {path.name for path in directory.iterdir()} == {
             'preparation-started.json', 'preparation-complete.json', 'session-capsule.json', 'session-plan.json'}
         plan = json.loads(Path(result['sessionPlan']).read_bytes())

@@ -2,6 +2,8 @@
 
 ## 6 November packaging checkpoint
 
+**Explicit recovery command implemented.** Kit/fresh preparation emits recovery arguments. The native entry runs the ordinary gate first, elevates only a recognised retired interruption, then requires an ordinary postcheck after successful repair. Eighteen policy, six dual-entry owned-process, nineteen moved-kit, eight fresh-preparation and eight argument cases passed. Actual repair/elevation and live audio were not exercised. [Contract and evidence](session-recovery-command.md)
+
 **Shared staging ownership bound to a session.** A protected create-new record and retained read handle now scope staging/recovery to a capsule, bundle and staging process lifetime. Normal cleanup releases only the creating stage's exact record; recovery refuses live, foreign or unrecorded dirty state. Ten real Windows fixture cases passed. Native audio binaries are unchanged; production marker creation/removal and live audio shutdown remain unverified. [Protocol and evidence](protected-session-ownership.md)
 
 **Native recovery check implemented.** Kit/fresh preparation includes its argument vector. The 44-source native release passes the compiled PowerShell runtime identity to a selected-session inspector; full plans now pin 32 sources. Six classification and six actual native owned-process cases passed, including active-owner refusal, stale/malformed/noncanonical records and clean state after retirement. No recovery action, elevation or device operation ran. [Contract and evidence](session-recovery-check.md)

@@ -63,6 +63,17 @@ def exercise(kit, expected, application):
         recovery=json.loads(call('native-prepared-session-recovery-check',prepared['recoveryCheckArguments']).stdout)
         assert recovery['phase']=='clean' and recovery['resourcePlan']['archiveState']=='original'
         assert recovery['recoveryAuthorized'] is False and recovery['repairAttempted'] is False
+        recovered=json.loads(call('native-prepared-session-recovery-no-op',prepared['recoveryArguments']).stdout)
+        assert recovered['noChangesNeeded'] is True and recovered['recoveryCompleted'] is False
+        assert recovered['elevatedTransactionRequired'] is False
+        gate_source=moved/'scripts/recover-serato-session.py'
+        gate_original=gate_source.read_bytes()
+        try:
+            gate_source.write_bytes(gate_original+b'changed')
+            call('changed-recovery-gate-refused-before-python',prepared['recoveryArguments'],1,
+                 'Reviewed launcher input differs: recover-serato-session.py',True)
+        finally:
+            gate_source.write_bytes(gate_original)
         recovery_source=moved/'scripts/inspect-serato-session-recovery.py'
         recovery_original=recovery_source.read_bytes()
         try:

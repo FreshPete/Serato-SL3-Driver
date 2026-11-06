@@ -218,13 +218,26 @@ int session_dispatch(wchar_t** argv){
     pin(leases,local_path(application.text(L"path")),release::application_sha);
     for(const auto& item:release::powershell_pins)pin(leases,child_path(powershell,item.first),item.second);
     const auto action=std::wstring(argv[1]);
-    if(action==L"--check-recovery"){
+    if(action==L"--check-recovery" || action==L"--recover-session"){
         std::wstring runtime_identity;
         for(const auto& item:release::powershell_pins)if(item.first==L"runtime-manifest.json")runtime_identity=item.second;
         require(!runtime_identity.empty(),"Reviewed PowerShell manifest identity is unavailable");
-        return run_process(python,{L"-I",L"-B",(root/L"scripts/inspect-serato-session-recovery.py").native(),L"--session-plan",
+        const bool recover=action==L"--recover-session";
+        const auto helper=root/(recover?L"scripts/recover-serato-session.py":L"scripts/inspect-serato-session-recovery.py");
+        const std::vector<std::wstring> check={L"-I",L"-B",helper.native(),L"--session-plan",
                            selected.native(),L"--expected-session-plan-sha256",identity,L"--powershell-directory",
-                           powershell.native(),L"--expected-powershell-manifest-sha256",runtime_identity},root,false);
+                           powershell.native(),L"--expected-powershell-manifest-sha256",runtime_identity};
+        const int gate=run_process(python,check,root,false);
+        if(!recover || gate!=10)return gate;
+        const int repaired=run_process(powershell/L"pwsh.exe",{L"-NoLogo",L"-NoProfile",L"-NonInteractive",L"-File",
+            (root/L"scripts/serato-session.ps1").native(),L"-Mode",L"Recover",L"-SessionPlan",selected.native(),
+            L"-ExpectedPlanSha256",identity},root,true);
+        if(repaired)return repaired;
+        // A successful child exit alone is insufficient: observe clean state
+        // again under the ordinary token before reporting command success.
+        auto final_check=check;
+        final_check[2]=(root/L"scripts/inspect-serato-session-recovery.py").native();
+        return run_process(python,final_check,root,false);
     }
     if(action==L"--status-session"){
         return run_process(python,{L"-I",L"-B",(root/L"scripts/inspect-serato-session-status.py").native(),L"--session-plan",
@@ -285,7 +298,7 @@ int dispatch(int argc,wchar_t** argv){
     if(argc==8 && (std::wstring(argv[1])==L"--plan-session" || std::wstring(argv[1])==L"--start-session" ||
        std::wstring(argv[1])==L"--prepare-session" || std::wstring(argv[1])==L"--start-fresh-session" ||
        std::wstring(argv[1])==L"--stop-session" || std::wstring(argv[1])==L"--status-session" ||
-       std::wstring(argv[1])==L"--check-recovery") &&
+       std::wstring(argv[1])==L"--check-recovery" || std::wstring(argv[1])==L"--recover-session") &&
        std::wstring(argv[2])==L"--session-plan" && std::wstring(argv[4])==L"--expected-session-plan-sha256" &&
        std::wstring(argv[6])==L"--powershell-directory")return session_dispatch(argv);
     const bool plan=argc==6 && std::wstring(argv[1])==L"--plan" && std::wstring(argv[2])==L"--capsule" &&

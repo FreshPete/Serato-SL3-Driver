@@ -1,0 +1,361 @@
+{
+  "schema": "sl3.session-recovery-command-evidence.v1",
+  "date": "2026-11-06",
+  "policyCases": [
+    {
+      "name": "verified-retired-owned-interruption-requires-handoff",
+      "passed": true,
+      "exitCode": 10
+    },
+    {
+      "name": "clean-needs-no-elevation",
+      "passed": true,
+      "exitCode": 0
+    },
+    {
+      "name": "active_session",
+      "passed": true,
+      "exitCode": 3
+    },
+    {
+      "name": "review_required",
+      "passed": true,
+      "exitCode": 3
+    },
+    {
+      "name": "broker_retirement_required",
+      "passed": true,
+      "exitCode": 3
+    },
+    {
+      "name": "unknown",
+      "passed": true,
+      "exitCode": 3
+    },
+    {
+      "name": "missing-ordinaryToken",
+      "passed": true,
+      "exitCode": 3
+    },
+    {
+      "name": "missing-brokerRetirementReported",
+      "passed": true,
+      "exitCode": 3
+    },
+    {
+      "name": "unexpected-repairAttempted",
+      "passed": true,
+      "exitCode": 3
+    },
+    {
+      "name": "unexpected-filesWritten",
+      "passed": true,
+      "exitCode": 3
+    },
+    {
+      "name": "unexpected-registryWritten",
+      "passed": true,
+      "exitCode": 3
+    },
+    {
+      "name": "unexpected-elevationRequested",
+      "passed": true,
+      "exitCode": 3
+    },
+    {
+      "name": "unexpected-deviceOpened",
+      "passed": true,
+      "exitCode": 3
+    },
+    {
+      "name": "missing-protected-owner",
+      "passed": true,
+      "exitCode": 3
+    },
+    {
+      "name": "live-owner",
+      "passed": true,
+      "exitCode": 3
+    },
+    {
+      "name": "preflight-issue",
+      "passed": true,
+      "exitCode": 3
+    },
+    {
+      "name": "uncertain-clean",
+      "passed": true,
+      "exitCode": 3
+    },
+    {
+      "name": "missing-report",
+      "passed": true,
+      "exitCode": 3
+    }
+  ],
+  "reports": {
+    "native": {
+      "path": "analysis/recovery-entry-native-tests-20261106.json",
+      "sha256": "875c7fac7899f8c2bcbddac6a89894304d27fc251b9472fd8f09a7ccc0b6d8c8",
+      "cases": [
+        {
+          "name": "prepared-session-currently-clean",
+          "passed": true,
+          "exitCode": 0,
+          "phase": "clean",
+          "recoveryEntryAlsoChecked": true
+        },
+        {
+          "name": "live-owner-blocks-without-resource-child",
+          "passed": true,
+          "exitCode": 3,
+          "phase": "active_session",
+          "recoveryEntryAlsoChecked": true
+        },
+        {
+          "name": "stale-owner-does-not-target-current-process",
+          "passed": true,
+          "exitCode": 0,
+          "phase": "clean",
+          "recoveryEntryAlsoChecked": true
+        },
+        {
+          "name": "malformed-owner-refused",
+          "passed": true,
+          "exitCode": 3,
+          "phase": "review_required",
+          "recoveryEntryAlsoChecked": true
+        },
+        {
+          "name": "noncanonical-owner-time-refused",
+          "passed": true,
+          "exitCode": 3,
+          "phase": "review_required",
+          "recoveryEntryAlsoChecked": true
+        },
+        {
+          "name": "retired-owner-currently-clean",
+          "passed": true,
+          "exitCode": 0,
+          "phase": "clean",
+          "recoveryEntryAlsoChecked": true
+        }
+      ]
+    },
+    "kit": {
+      "path": "analysis/recovery-entry-kit-tests-20261106.json",
+      "sha256": "da6532830a922de723008bb451e4fcf45d027b2952fbac0d9e38b491e89359a1",
+      "cases": [
+        {
+          "name": "native-kit-plan-relocated-empty-path",
+          "passed": true,
+          "exitCode": 0
+        },
+        {
+          "name": "native-kit-complete-offline-preparation",
+          "passed": true,
+          "exitCode": 0
+        },
+        {
+          "name": "native-prepared-kit-complete-session-plan",
+          "passed": true,
+          "exitCode": 0
+        },
+        {
+          "name": "native-prepared-session-status",
+          "passed": true,
+          "exitCode": 0
+        },
+        {
+          "name": "native-prepared-session-recovery-check",
+          "passed": true,
+          "exitCode": 0
+        },
+        {
+          "name": "native-prepared-session-recovery-no-op",
+          "passed": true,
+          "exitCode": 0
+        },
+        {
+          "name": "changed-recovery-gate-refused-before-python",
+          "passed": true,
+          "exitCode": 1
+        },
+        {
+          "name": "changed-recovery-helper-refused-before-python",
+          "passed": true,
+          "exitCode": 1
+        },
+        {
+          "name": "changed-status-helper-refused-before-python",
+          "passed": true,
+          "exitCode": 1
+        },
+        {
+          "name": "native-kit-plan-after-preparation",
+          "passed": true,
+          "exitCode": 0
+        },
+        {
+          "name": "wrong-kit-identity-refused-before-python",
+          "passed": true,
+          "exitCode": 1
+        },
+        {
+          "name": "changed-kit-preparer-refused-before-python",
+          "passed": true,
+          "exitCode": 1
+        },
+        {
+          "name": "changed-specification-evidence-refused-before-python",
+          "passed": true,
+          "exitCode": 1
+        },
+        {
+          "name": "changed-private-standard-library-refused-before-python",
+          "passed": true,
+          "exitCode": 1
+        },
+        {
+          "name": "changed-powershell-runtime-refused-before-python",
+          "passed": true,
+          "exitCode": 1
+        },
+        {
+          "name": "foreign-launcher-release-refused-before-python",
+          "passed": true,
+          "exitCode": 1
+        },
+        {
+          "name": "unreviewed-application-refused-before-python",
+          "passed": true,
+          "exitCode": 1
+        },
+        {
+          "name": "semicolon-kit-path-refused-before-python",
+          "passed": true,
+          "exitCode": 1
+        },
+        {
+          "name": "incomplete-start-context-refused",
+          "passed": true,
+          "exitCode": 2
+        }
+      ]
+    },
+    "fresh": {
+      "path": "analysis/recovery-entry-fresh-arguments-tests-20261106.json",
+      "sha256": "dec3b6e291e0805c9835854e14af04c402ae1a4a72d5904761c56b014943c940",
+      "cases": [
+        {
+          "name": "default-read-only-preparation-plan",
+          "passed": true,
+          "exitCode": 0
+        },
+        {
+          "name": "fresh-preparation-1",
+          "passed": true,
+          "exitCode": 0
+        },
+        {
+          "name": "fresh-complete-wrapper-plan-1",
+          "passed": true,
+          "exitCode": 0
+        },
+        {
+          "name": "fresh-preparation-2",
+          "passed": true,
+          "exitCode": 0
+        },
+        {
+          "name": "fresh-complete-wrapper-plan-2",
+          "passed": true,
+          "exitCode": 0
+        },
+        {
+          "name": "wrong-reviewed-plan-hash-writes-no-session",
+          "passed": true,
+          "exitCode": 1
+        },
+        {
+          "name": "other-launcher-release-refused-before-preparation",
+          "passed": true,
+          "exitCode": 1
+        },
+        {
+          "name": "recording-template-refused-before-session-creation",
+          "passed": true,
+          "exitCode": 1
+        }
+      ]
+    }
+  },
+  "currentHostObservation": {
+    "schema": "sl3.session-recovery-gate.v1",
+    "check": {
+      "schema": "sl3.session-recovery-check.v1",
+      "planSha256": "924f9c62dfad5108e8a3cee6ac317f69943de6140882078694e9ba723c0383d1",
+      "phase": "clean",
+      "message": "Original files and temporary registration are already clean.",
+      "originalSetupClean": true,
+      "activeSessionObserved": false,
+      "recoveryAuthorized": false,
+      "owners": {
+        "runner": {
+          "state": "not_recorded"
+        },
+        "stage": {
+          "state": "not_recorded"
+        },
+        "supervisor": {
+          "state": "not_recorded"
+        }
+      },
+      "currentSetup": {
+        "observed": true,
+        "originalResources": true,
+        "occupiedPaths": [],
+        "registrationPresent": false,
+        "currentSetupClean": true
+      },
+      "resourcePlan": {
+        "schema": "sl3.installer-resource-recovery-plan.v1",
+        "archiveState": "original",
+        "bundlePresent": false,
+        "pendingPresent": false,
+        "filesWritten": false,
+        "deviceAccess": false,
+        "protectedSessionOwnerPresent": false,
+        "protectedStageOwner": null,
+        "observed": true
+      },
+      "brokerRetirementReported": false,
+      "issues": [],
+      "pointInTimeObservation": true,
+      "ordinaryToken": true,
+      "previousSessionShutdownVerified": false,
+      "repairAttempted": false,
+      "filesWritten": false,
+      "registryWritten": false,
+      "elevationRequested": false,
+      "deviceOpened": false,
+      "deviceReadinessVerified": false
+    },
+    "elevatedTransactionRequired": false,
+    "recoveryCompleted": false,
+    "noChangesNeeded": true
+  },
+  "launcherSha256": "5aea1730b737dcd9c72f2f82fccec61c1afc243880ce22cd353b1583b3fc2c25",
+  "installerResourceSha256": "1009fe9f2530bf804e8a7fbfdbd67589cd79bae499e87fdbfc69a7806c7776f1",
+  "kitManifestSha256": "6a34498bd88f52d16d3ee3a9a5b17153d45d9695f88d6dfd679624889f93c8f2",
+  "sourceCount": 46,
+  "planSourceCount": 34,
+  "nativeArgumentCases": 8,
+  "elevationRequested": false,
+  "repairExecuted": false,
+  "deviceOpened": false,
+  "applicationStarted": false,
+  "audioBinariesChanged": false,
+  "protectedRepairValidated": false,
+  "liveValidated": false
+}

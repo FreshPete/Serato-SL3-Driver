@@ -36,8 +36,17 @@ def exercise(reference, expected, powershell, launcher, output):
         assert report['ordinaryToken'] is True
         assert report['filesWritten'] is False and report['registryWritten'] is False and report['elevationRequested'] is False
         assert before=={p.name:sha(p) for p in directory.iterdir() if p.is_file()}
+        recovery=subprocess.run([str(launcher),'--recover-session','--session-plan',str(selected),
+            '--expected-session-plan-sha256',sha(selected),'--powershell-directory',str(powershell)],
+            capture_output=True,text=True,timeout=45,creationflags=subprocess.CREATE_NO_WINDOW)
+        assert recovery.returncode==code,(name,recovery.stdout,recovery.stderr)
+        gate=json.loads(recovery.stdout)
+        assert gate['check']['phase']==phase and gate['recoveryCompleted'] is False
+        assert gate['elevatedTransactionRequired'] is False
+        assert gate['noChangesNeeded']==(code==0)
+        assert before=={p.name:sha(p) for p in directory.iterdir() if p.is_file()}
         (directory/(name+'.json')).write_text(result.stdout,encoding='utf-8')
-        cases.append({'name':name,'passed':True,'exitCode':code,'phase':phase})
+        cases.append({'name':name,'passed':True,'exitCode':code,'phase':phase,'recoveryEntryAlsoChecked':True})
         return report
     check('prepared-session-currently-clean',0,'clean')
     code="""$ErrorActionPreference='Stop'

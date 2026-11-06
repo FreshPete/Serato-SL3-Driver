@@ -21,6 +21,7 @@ EXTRA_SOURCES=(
     'scripts/inspect-serato-session-recovery.py','scripts/inspect-sl3-session-readiness.py',
     'scripts/prepare-portable-powershell.py',
     'scripts/serato-protected-session-owner.ps1',
+    'scripts/recover-serato-session.py',
 )
 
 
