@@ -1,0 +1,31 @@
+# Preserve failed ASIO activation and controller cleanup
+
+The lazy ASIO session now preserves the `BrokerActivationError` cleanup observation in its internal `HostReport`, instead of collapsing it into a failure enum and losing the controller state. `IASIO::getErrorMessage` through the facade distinguishes activation failure before readiness, forced controller cleanup and unverified controller cleanup. This does not establish what text Serato will display.
+
+The original failure path supplied only a generic worker/clock inspection error. That is inadequate for the installed-use target: a present driver with failed USB activation is different from an absent ASIO registration, and a failed process retirement must not look like an ordinary unavailable device. The [recent native reopen failure](native-asio-silent-stream-reopen.md) remains a hardware problem; this change improves its future reporting rather than repairing redirection.
+
+## Ownership stays explicit
+
+`src/asio/activation_report.hpp` holds the existing controller-domain report and shared classification helpers. `HostReport::activation_failure` is optional and is populated only for a caught activation error. The controller snapshot does not replace the worker-domain `process` field, set `device_released` or imply I/O retirement. A broker-client report still describes a broker client.
+
+A started controller needs both its process exit and empty job, with no observation error, before its controller retirement is considered complete. Empty job alone is insufficient. A successful termination request remains forced containment even if the process later exits. Controller retirement is explicitly distinct from nested native-worker/USB release and future readiness.
+
+The failed session remains sealed. A host retaining the failed object cannot trigger another acquisition by calling init again; repeated close/release preserves the failure observation. ASIO text uses fixed literals within the existing 124-byte message contract. No message points to an assumed safe delay or certifies recovery.
+
+The successful initialization path, ASIO ABI, broker wire protocol, native USB commands, startup deadlines, diagnostic lifetime and retry policy are unchanged. No persistent service, registry registration, local certificate, driver binding, firmware or security-policy change is introduced.
+
+## Validation and fresh setup candidate
+
+All 73 x64 Release native checks pass. The expanded activation fixture uses actual owned child processes that miss readiness: one exits normally, another is terminated within the existing containment policy. It exercises both the lazy `DriverSession` and the ASIO facade, checks the retained cleanup snapshot while the failed object stays alive, rejects repeat init and verifies that facade release/repeated owner close preserve the result. Separate report checks reject empty-job-only and observation-error retirement claims. These are simulated/controller-only tests; no native acquisition ran.
+
+The fresh native build is `artifacts/build/native-activation-failure-report-20261106`. Its manifest SHA-256 is `2e747d51c5fe7f170793705da55c25208a616a2ef3becc3983a8ce405864f42d`. New locator and lazy-activation bundles were prepared without executing their package binaries or touching protected destinations. Earlier native images and physical results remain archived; do not replace their source pins to claim testing of this version.
+
+The fresh setup-only kit is `artifacts/build/sl3-on-demand-kit-activation-failure-20261106`, manifest SHA-256 `7460d806d560b008c65ca2862bb716fcfd6a806930d07bfd8703fd2b30749bcd`. Its 758 selected payload files retain the minimal 52-file Python runtime and no instrumentation/disassembly dependency. It contains no Serato application or derived resource archive. Compatibility resources are generated locally from the exact original installation.
+
+The native entry is `artifacts/build/native-on-demand-entry-activation-failure-20261106/build/Release/SL3_Setup_Engineering.exe`, SHA-256 `740798c02323b3208a2e4351b92fc1c2e551ec0924d6de1636837db2cb1332b4`. Its inert/refusal and result-channel targets pass; 25 copied-folder preparation/refusal checks pass with no privileged action. The source-current window is `artifacts/build/native-setup-window-activation-failure-20261106/build/Release/SL3_Compatibility_Setup.exe`, SHA-256 `78525b5e909aef3a5939736cbf3393f48fa8fa5759ea4c9c6b7d5185109d22b4`. All 18 window checks pass, including an actual read-only native setup observation. Window sources/behavior are unchanged; only the bound payload/experiment changed. The latest window was not visually inspected or left open on the locked desktop. The older idle window remains separate.
+
+Its local kit-bound experiment SHA-256 is `0d28e2df5b723fa6342619c7839959bc535dec40429ddd277e50c64486f9b9eb`. The preparer correctly refused use of the broader analysis interpreter for that minimal-runtime-bound experiment; rerunning with the kit's own verified interpreter passed without a pin override or code change. The standalone broader-runtime experiment is distinct and has SHA-256 `2e714e8594ce808ef8aa5fd13293f8dd0314c2b7f91c61857dfd88f7168c1f9b`.
+
+This version is prepared and uninstalled. The ten-minute diagnostic limit remains. Physical recovery/tracing of the reopen boundary, ordinary Serato selection, sustained operation and real installed setup/restore still need their separate observations. The new error reporting and green software checks do not satisfy those requirements.
+
+A separate package generated from this same tested native build passes all 21 activation-package contract cases and 261 isolated Windows staging/removal/recovery cases. It has distinct fixture destinations/package identity from the selected setup candidate. These checks use workspace files and private HKCU namespaces; package binaries are not executed, and protected/live installation locations remain unchanged. A final saved read-only native Plan for the selected candidate reports original Serato resources, absent project native installation, stopped Serato and no action steps. [Machine-readable checkpoint](evidence/asio-activation-failure-report-20261106.json) binds the native tests, failure fixture, fresh candidates, installer suites and postcheck.

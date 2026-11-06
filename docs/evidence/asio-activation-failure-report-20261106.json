@@ -1,0 +1,187 @@
+{
+  "schema": "sl3.asio-activation-failure-report-checkpoint.v1",
+  "date": "2026-11-06",
+  "softwareChecksPassed": true,
+  "nativeBuild": {
+    "directory": "artifacts/build/native-activation-failure-report-20261106",
+    "manifestSha256": "2e747d51c5fe7f170793705da55c25208a616a2ef3becc3983a8ce405864f42d",
+    "ctestCount": 73,
+    "ctestLogSha256": "8537b46044e6737738d172ae0ab738cbb7a5a9c73d5a2b8abfa28b324deed876",
+    "diagnosticAsioSha256": "38031e1750120deff2357db3a22623b2a6d3c7ab2b1f4501925056071d25bb36",
+    "sourceSha256": {
+      "src/asio/activation_report.hpp": "2fcf33f19a447ebe27b09bf9123ac00760235649b07f44fd86cc97f7d2cf7097",
+      "src/asio/broker_activation.hpp": "4dfd29a750a5607043d09941b7c91c448826c03227b12dff35c356ea7de110b1",
+      "src/asio/host_session.hpp": "32beab67499bdb49ec196f8be8532d6ab4c849ac4074c103505938bc9d91c7f9",
+      "src/asio/activated_driver_session.cpp": "cb6ef08e5c1089530dc30ff00ccdd2bc63d08d125ca6844bd8054361d1e3a7f9",
+      "src/asio/driver_facade.cpp": "0e8a98a58217eb2e94fccefebd39ca55ab4b601c811dc263ae7630171be897fa",
+      "tests/native/broker_activation_tests.cpp": "549889eddedc02e8abb04f7629e97c085608cddc0254b67565a4dabb15519554"
+    }
+  },
+  "failureFixture": {
+    "reportSha256": "517f7c55ab814d00255ce87a6b5ca927a5246d06abae7aa4ce229139736745a2",
+    "testImageSha256": "73338fb7b215cdb4c45ad3c0afdcb640f55c8ff575b17ae0e9b82fa988b6df69",
+    "normalExitMarkers": {
+      "delayed.fixture-exited": "83d7d4df18591f6a966c7999355338c625e5a2f7c9cb0c35f11d3ed9f725e022",
+      "session-delayed.fixture-exited": "83d7d4df18591f6a966c7999355338c625e5a2f7c9cb0c35f11d3ed9f725e022",
+      "facade-delayed.fixture-exited": "83d7d4df18591f6a966c7999355338c625e5a2f7c9cb0c35f11d3ed9f725e022"
+    },
+    "forcedExitMarkersAbsent": true,
+    "lazySessionAndFacadeFailureChecked": true,
+    "failedObjectsRetainedDuringChecks": true,
+    "workerOwnershipNotInvented": true,
+    "emptyJobAloneRejected": true,
+    "observationErrorRejected": true,
+    "asioMessageLengths": [
+      106,
+      103,
+      108
+    ]
+  },
+  "kit": {
+    "directory": "artifacts/build/sl3-on-demand-kit-activation-failure-20261106",
+    "manifestSha256": "7460d806d560b008c65ca2862bb716fcfd6a806930d07bfd8703fd2b30749bcd",
+    "payloadFiles": 758,
+    "pythonFiles": 52,
+    "instrumentationIncluded": false,
+    "vendorApplicationIncluded": false,
+    "derivedArchiveIncluded": false
+  },
+  "entry": {
+    "directory": "artifacts/build/native-on-demand-entry-activation-failure-20261106",
+    "buildSha256": "fda569a4ed780b613e6a41acf07ac13b231d8b63cdcb46dbba15dccb2e3a4bbf",
+    "executableSha256": "740798c02323b3208a2e4351b92fc1c2e551ec0924d6de1636837db2cb1332b4",
+    "copiedFolderChecks": 25,
+    "checksSha256": "473fbe7c22804a6c881e1ce5945dc157d5a3a047410b936cc25e9d4a82bf1a40",
+    "resultPipeContract": {
+      "schema": "sl3.setup-result-pipe-tests.v1",
+      "passed": true,
+      "cases": 8,
+      "anonymousClientObserved": true,
+      "elevatedProcessExecuted": false,
+      "seratoLaunched": false,
+      "nativeDeviceAccess": false
+    }
+  },
+  "window": {
+    "directory": "artifacts/build/native-setup-window-activation-failure-20261106",
+    "buildSha256": "9f933a888cfe89b0d5934e061d7d209f102ebe1f35e09811aea47ed0f92e3259",
+    "executableSha256": "78525b5e909aef3a5939736cbf3393f48fa8fa5759ea4c9c6b7d5185109d22b4",
+    "contract": {
+      "schema": "sl3.setup-window-tests.v1",
+      "passed": true,
+      "cases": 18,
+      "privilegedActionsExecuted": false,
+      "seratoLaunched": false,
+      "nativeDeviceAccess": false
+    },
+    "lastTestLogSha256": "f3f0aa6f20afe131657a81fc01abf10ee6309cece9e3d0a3eec624ee1b39a67f",
+    "latestVisualInspectionPerformed": false
+  },
+  "standaloneExperimentSha256": "2e714e8594ce808ef8aa5fd13293f8dd0314c2b7f91c61857dfd88f7168c1f9b",
+  "kitBoundExperimentSha256": "0d28e2df5b723fa6342619c7839959bc535dec40429ddd277e50c64486f9b9eb",
+  "originActivationBundleSha256": "ee26d77bc81d17aa8580ea516fd99191034c1599e0797d46c6e201ff54910b07",
+  "postcheckSha256": "a6a1e22f75ddc1fbb4fecd0e43081d8ce1a4ac488b693a29334e1e4db6744240",
+  "postcheck": {
+    "schema": "sl3.on-demand-test-action.v1",
+    "action": "plan",
+    "successful": true,
+    "before": {
+      "archive": "original",
+      "seratoRunning": false,
+      "native": {
+        "state": "absent"
+      }
+    },
+    "after": {
+      "archive": "original",
+      "seratoRunning": false,
+      "native": {
+        "state": "absent"
+      }
+    },
+    "steps": [],
+    "error": null,
+    "applicationLaunched": false,
+    "nativeDeviceOpenedByTool": false,
+    "normalSeratoStartupValidated": false,
+    "combinedAtomicTransaction": false
+  },
+  "runtimeMismatchRefusedBeforeWindowPreparation": true,
+  "productionInstallationPerformed": false,
+  "nativeDeviceAccess": false,
+  "seratoLaunched": false,
+  "elevationRequested": false,
+  "usbReopenRepaired": false,
+  "normalSeratoStartupValidated": false,
+  "seratoErrorDisplayValidated": false,
+  "nativePositiveRunOnNewBuild": false,
+  "isolatedDeployment": {
+    "reportSha256": "6a9512d194c8c0e09132308838c41e1d3b0b88ec78237bdbf2257d426944a926",
+    "contractCases": 21,
+    "isolatedCases": 261,
+    "testBundleManifestSha256": "58bc5f42ddfdf1c3f2a2b6843ed06cd181943a139786580ce5b0ba9fd54b2faa",
+    "sameNativeBuild": true,
+    "distinctFixturePackageFromSelectedCandidate": true,
+    "suites": [
+      {
+        "suite": "test-asio-file-stage.py",
+        "cases": 24,
+        "passed": true,
+        "stdoutSha256": "9d840288881e67f5c73fd79ea87abc5fc4e2ad15affaf89c5204188657dd7018",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "suite": "test-asio-file-cleanup.py",
+        "cases": 26,
+        "passed": true,
+        "stdoutSha256": "53f9e6f219f76ea7eadac544c72bab578517e66f3e3a6b5796df1163d3396b0b",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "suite": "test-asio-install.py",
+        "cases": 20,
+        "passed": true,
+        "stdoutSha256": "ecf2ae102293d9332d4f0252149181b7acb10367d297448e0939fde77540927c",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "suite": "test-asio-uninstall.py",
+        "cases": 20,
+        "passed": true,
+        "stdoutSha256": "58556065d183e303f4a1d0a1a7c705a550d81279240f185a9d3c99a50698d753",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "suite": "test-asio-recover-install.py",
+        "cases": 41,
+        "passed": true,
+        "stdoutSha256": "46f0aa08e4ca041ef57fe9d117233f65e431a1c51086310f993b7b35f38510aa",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "suite": "test-asio-recover-uninstall.py",
+        "cases": 22,
+        "passed": true,
+        "stdoutSha256": "5044455611aea9fdc5a548b4d4f2501b7f29697220ccdd003b641f661f1eb780",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "suite": "test-asio-recover-files.py",
+        "cases": 37,
+        "passed": true,
+        "stdoutSha256": "7634621cd39a8bf1518729f17e1681520c2eb3ee81d9c25140f9a720b2722330",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "suite": "test-asio-recover-copy.py",
+        "cases": 71,
+        "passed": true,
+        "stdoutSha256": "39d1542fc8a85753b9fe4be952e217fd476f62382cc400330c052a8251572f02",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "productionInstallationPerformed": false,
+    "packageBinariesExecuted": false,
+    "plannedDestinationsUnchanged": true
+  }
+}

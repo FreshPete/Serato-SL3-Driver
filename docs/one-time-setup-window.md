@@ -1,5 +1,7 @@
 # One-time SL3 setup window
 
+The [newer native failure-report build and refreshed kit/window](asio-activation-failure-report.md) are now the current prepared payload candidate. Window behavior is unchanged. No privileged install or latest visual inspection is inferred from its contract checks.
+
 Follow-up: [administrator result capture and local diagnostics](setup-result-diagnostics.md) now preserve failure details across the postcheck and show the existing ten-minute diagnostic bound. The earlier build/visual evidence below is historical; the latest rendered review was interrupted by the locked desktop.
 
 The simple Windows setup window is now implemented and built. It offers **Check setup**, **Install**, **Restore original setup** and optional diagnostic details. Opening it runs no command. Sixteen checks pass, and the ordinary/expanded layouts and selected keyboard behavior were inspected on this host. **Administrator installation/restoration and normal Serato startup have not run through this window.** [Source, build and observation evidence](evidence/one-time-setup-window-20261106.json)

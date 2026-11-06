@@ -52,7 +52,12 @@ ASIOBool DriverFacade::init() noexcept {
     if(initialized_)return ASIOTrue;
     if(frames_){error_="Dispose existing buffers before reinitializing.";return ASIOFalse;}
     const bool already_held=session_.report().device_held;
-    if(!session_.inspect() || (already_held && !session_.inspect_rate())){error_="SL3 worker/clock inspection failed; device unavailable.";return ASIOFalse;}
+    if(!session_.inspect() || (already_held && !session_.inspect_rate())){
+        const auto failed=session_.report();
+        error_=failed.activation_failure?activation_failure_message(*failed.activation_failure):
+            "SL3 worker/clock inspection failed; device unavailable.";
+        return ASIOFalse;
+    }
     const auto observed=session_.report().observed_rate_hz;
     if(latency_.rate_hz && latency_.rate_hz!=observed){session_.close();error_="SL3 clock differs from the reviewed timing profile.";return ASIOFalse;}
     rate_=observed;initialized_=true;error_="No error.";return ASIOTrue;

@@ -1,4 +1,5 @@
 #pragma once
+#include "asio/activation_report.hpp"
 #include "asio/audio_owner.hpp"
 #include "core/session_protocol.hpp"
 #include "core/device_session_protocol.hpp"
@@ -40,6 +41,9 @@ struct HostReport {
     // Last decoded control reply, not a continuously refreshed worker view.
     session::Snapshot worker_snapshot{};
     device_session::Snapshot device_snapshot{};
+    // Failed lazy activation retains its own controller-domain observation.
+    // Never place it in process (the owned-worker domain) or invent USB release.
+    std::optional<BrokerActivationReport> activation_failure;
 };
 struct ControlSelectionReport {
     bool command_attempted=false,outcome_unknown=false,device_may_have_changed=false;

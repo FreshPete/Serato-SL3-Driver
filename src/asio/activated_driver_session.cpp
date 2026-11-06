@@ -37,7 +37,8 @@ public:
             delegate_=make_broker_driver_session(*configuration_->broker);
             return delegate_->inspect();
         }catch(const BrokerActivationError& error){
-            state_.failure=error.cleanup.termination_requested || !error.cleanup.cleanup_error.empty()?HostFailure::containment:HostFailure::launch;
+            state_.activation_failure=error.cleanup;
+            state_.failure=activation_cleanup_contained(error.cleanup)?HostFailure::containment:HostFailure::launch;
         }catch(...){state_.failure=HostFailure::launch;}
         closed_=true;return false;
     }

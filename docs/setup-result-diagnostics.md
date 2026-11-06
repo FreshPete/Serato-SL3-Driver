@@ -1,5 +1,7 @@
 # Keep the administrator action result
 
+**Fresh payload follow-up:** [failed ASIO activation reporting and the refreshed setup candidate](asio-activation-failure-report.md) now bind a newer tested native build into a separate kit, entry and window. The result-channel implementation below is unchanged; its earlier candidate identities remain historical.
+
 The setup window now receives and preserves the administrator-run controller's output, rather than replacing it with a later file-state check. This fixes a real reviewability gap: a failed install could previously leave only the final observation visible, losing its detailed component failure. Eight actual IPC scenarios, 25 native-entry checks and 18 window checks pass. **The elevated/UAC result path has not run.** [Bound evidence](evidence/setup-result-diagnostics-20261106.json)
 
 ## Result channel

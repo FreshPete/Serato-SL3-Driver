@@ -77,6 +77,46 @@ int wmain(int argc,wchar_t** argv){
             require(!std::filesystem::exists(root/L"forced.fixture-exited"),"Contained fixture cannot finish its delayed operation");
         }
         {
+            // Preserve the actual startup error through the lazy DriverSession,
+            // rather than testing only the component's thrown exception.
+            for(const bool forced:{false,true}){
+                auto bad=spec;bad.controller=self();bad.controller_sha256=worker::Process::executable_sha256(self());
+                bad.output=root/(forced?L"session-forced":L"session-delayed");
+                bad.startup_timeout_ms=100;bad.startup_failure_grace_ms=forced?0:2000;
+                auto session=make_activated_driver_session(bad);
+                require(!session->inspect(),"Lazy startup must reject a controller that never publishes readiness");
+                const auto failed=session->report();
+                require(failed.activation_failure && failed.activation_failure->attempted &&
+                    failed.activation_failure->controller.started && failed.activation_failure->controller.process_exited &&
+                    failed.activation_failure->controller.job_empty && failed.activation_failure->termination_requested==forced,
+                    "Lazy session preserves exact completed/forced controller cleanup while failed object remains alive");
+                require(failed.failure==(forced?HostFailure::containment:HostFailure::launch) &&
+                    failed.domain==HostDomain::broker_client && !failed.process.started && !failed.device_released,
+                    "Controller-domain failure must not fabricate worker ownership or USB release");
+                require(!session->inspect() && session->close().activation_failure.has_value(),
+                    "Failed session cannot retry and close preserves startup observations");
+                bad.output=root/(forced?L"facade-forced":L"facade-delayed");
+                auto owner=std::make_shared<DriverOwner>(bad);
+                {
+                    DriverFacade driver(owner,{0,0,44100,128,false});
+                    require(driver.init()==ASIOFalse,"Actual ASIO facade rejects failed activation");
+                    std::array<char,124> message{};driver.getErrorMessage(message.data());
+                    require(std::string(message.data()).find(forced?"cleanup was forced":"activation failed before readiness")!=std::string::npos,
+                        "ASIO error distinguishes forced cleanup from normal pre-readiness activation failure");
+                    require(driver.init()==ASIOFalse,"Retained failed facade cannot acquire again");
+                }
+                const auto closed=owner->close();
+                require(closed && closed->activation_failure && closed->activation_failure->termination_requested==forced,
+                    "Facade release and repeated owner close preserve the startup failure report");
+            }
+            BrokerActivationReport unproved;unproved.controller.started=true;unproved.controller.job_empty=true;
+            require(!activation_controller_retired(unproved) && activation_cleanup_contained(unproved) &&
+                std::string(activation_failure_message(unproved)).find("unverified")!=std::string::npos,
+                "Empty job alone is not controller exit or successful cleanup");
+            unproved.controller.process_exited=true;unproved.cleanup_error="observation failed";
+            require(!activation_controller_retired(unproved),"Observation error is not clean retirement");
+        }
+        {
             auto owner=BrokerActivation::start(spec);auto observed=owner->observe();
             require(observed.ready && observed.controller.started && !observed.controller.process_exited,"On-demand owned controller became ready");
             {

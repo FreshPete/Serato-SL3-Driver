@@ -1,4 +1,5 @@
 #pragma once
+#include "asio/activation_report.hpp"
 #include "asio/driver_configuration.hpp"
 #include "windows/worker_process.hpp"
 #include <atomic>
@@ -16,12 +17,6 @@ struct BrokerActivationSpec {
 // Resolves the current user's LocalAppData, creates/verifies one private root,
 // and assigns a fresh random child path. Called only during explicit activation.
 void select_user_activation_output(BrokerActivationSpec&);
-struct BrokerActivationReport {
-    bool attempted=false,ready=false,stop_requested=false,retirement_deferred=false;
-    bool termination_requested=false;
-    worker::ProcessState controller;
-    std::string cleanup_error;
-};
 class BrokerActivationError final : public std::runtime_error {
 public:
     BrokerActivationReport cleanup;
