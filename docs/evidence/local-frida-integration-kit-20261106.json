@@ -1,0 +1,247 @@
+{
+  "schema": "sl3.local-frida-integration-kit.v1",
+  "date": "2026-11-06",
+  "runtimePreparation": {
+    "prepared": true,
+    "manifestSha256": "f11669fa63baa4c6d8fc167061f41cb369044e90624e70763d5ca7137b31c386",
+    "fileCount": 125,
+    "candidateSha256": "8ed5bdde028c484463fc536fa1678b4b5bbfd99d99c387eb40436d18a8d82da3",
+    "scope": "local-frida-startup-integration-candidate",
+    "fridaImported": false,
+    "sessionKitChanged": false
+  },
+  "ownedProcessProbe": {
+    "schema": "sl3.local-frida-owned-supervision.v1",
+    "candidateSha256": "8ed5bdde028c484463fc536fa1678b4b5bbfd99d99c387eb40436d18a8d82da3",
+    "runtimeScope": "local-frida-startup-integration-candidate",
+    "runnerNormalizedSha256": "f0d3ebb5c16f6a13ac54f9ca7967626d6c4ac482fbbc3d9bcb4809e310e20216",
+    "sdkManifestSha256": "f11669fa63baa4c6d8fc167061f41cb369044e90624e70763d5ca7137b31c386",
+    "processStarted": true,
+    "timedOut": false,
+    "forcedJobCleanup": false,
+    "activeProcessLimit": 4,
+    "silentBreakawayAllowed": false,
+    "killOnJobClose": true,
+    "ordinaryToken": true,
+    "securityHoldCleared": false,
+    "deviceOpened": false,
+    "seratoStarted": false,
+    "passed": true,
+    "probePid": 22180,
+    "probeCreated": "134384608944816329",
+    "probeExitCode": 0,
+    "beforeCleanup": {
+      "total": 2,
+      "active": 0,
+      "terminated": 0
+    },
+    "afterCleanup": {
+      "total": 2,
+      "active": 0,
+      "terminated": 0
+    },
+    "probe": {
+      "schema": "sl3.local-frida-owned-probe.v1",
+      "candidateSha256": "8ed5bdde028c484463fc536fa1678b4b5bbfd99d99c387eb40436d18a8d82da3",
+      "runtimeScope": "local-frida-startup-integration-candidate",
+      "runnerNormalizedSha256": "f0d3ebb5c16f6a13ac54f9ca7967626d6c4ac482fbbc3d9bcb4809e310e20216",
+      "stages": [
+        "candidate_imported",
+        "local_backend_ready",
+        "fixture_owned",
+        "fixture_attached",
+        "script_loaded",
+        "health_rpc_passed",
+        "script_unloaded",
+        "fixture_detached",
+        "manager_closed",
+        "fixture_exited"
+      ],
+      "passed": true,
+      "fixtureStarted": true,
+      "deviceOpened": false,
+      "seratoStarted": false,
+      "securityHoldCleared": false,
+      "version": "17.25.2",
+      "fixturePid": 40720,
+      "fixtureCreated": "134384608948160217",
+      "health": {
+        "pid": 40720,
+        "arch": "x64",
+        "runtime": "QJS"
+      },
+      "fixtureExitCode": 0
+    },
+    "finalAccounting": {
+      "total": 2,
+      "active": 0,
+      "terminated": 0
+    }
+  },
+  "nativeRelease": {
+    "releaseSha256": "cc7a9154c322c6466dabf11e884fc4cea486603403d5e4ab20a2b1310bf05e58",
+    "launcherSha256": "3a5675b935f38f1a9635603728a3e23aa418434aa6c98891ed53918b913d5d57",
+    "installerResourceSha256": "fd1aa3d2ac13bf192d753b90434c30fc266cd5d935e7a931c41ead93ab1feca8",
+    "sourcePins": 49,
+    "runtimePins": 126,
+    "powershellPins": 659,
+    "buildExitCode": 0,
+    "buildLogSha256": "9112e1299ec3e3622c2d708670ac4a8cae693eb0940bc39824807e29b39a5d7f"
+  },
+  "plans": {
+    "local-frida-default-20261106": {
+      "sha256": "8458a39a701ccf585873b848b11c30b77b2aba4d38ff54720f3d48b415d4f322",
+      "nativePlanExitCode": 0,
+      "recoveryExitCode": 0,
+      "sourcesPinned": 37,
+      "optionalObservation": false
+    },
+    "local-frida-observed-20261106": {
+      "sha256": "703c3037b4a8e2983b3813bed4b68ba46bccbc3850876d4c4b1a8f55401a299c",
+      "nativePlanExitCode": 0,
+      "recoveryExitCode": 0,
+      "sourcesPinned": 37,
+      "optionalObservation": true
+    }
+  },
+  "tests": {
+    "portableLauncher": {
+      "cases": 11,
+      "allPassed": true,
+      "resultSha256": "8f6c54f729b01d2db2f40f6e2b0d0e806568561b9803e8c17f16816dd306ca2e"
+    },
+    "nativeOutput": {
+      "cases": 3,
+      "allPassed": true,
+      "resultSha256": "5ec0206e7f88f47d9d9b28795bc8dc9599f110703f1e62b74eb9c4e114bb7f6b"
+    },
+    "freshSession": {
+      "cases": 8,
+      "allPassed": true,
+      "resultSha256": "9c771a747f0d07a5c49464406777fda14651bbc90e6f26b380dd1df7ea7fa65e"
+    },
+    "copiedKit": {
+      "cases": 10,
+      "allPassed": true,
+      "resultSha256": "f5e5572327708d647138dd68518ad9866f28f027713162269b2ada408f3ead70"
+    },
+    "nativeArgumentCases": {
+      "cases": 8,
+      "allPassed": true,
+      "logSha256": "0c78eaecfcc8786f584edccc6d4212776c6aee5f11f91acb323251807a57072b"
+    },
+    "runtimeSelection": {
+      "cases": 6,
+      "allPassed": true
+    }
+  },
+  "kitAssembly": {
+    "schema": "sl3.portable-kit-assembly.v1",
+    "planOnly": false,
+    "filesSelected": 849,
+    "selectedBytes": 329290334,
+    "applicationStarted": false,
+    "registryWritten": false,
+    "deviceAccess": false,
+    "deploymentScope": "destinations-bound-at-preparation",
+    "prepared": true,
+    "kitManifestSha256": "f050474f810f7fa6e447d220e846459e21b23b0902684afb9537e202fefb37b2",
+    "filesWritten": true,
+    "liveValidated": false
+  },
+  "originalSetupCheck": {
+    "schema": "sl3.session-recovery-check.v1",
+    "planSha256": "8458a39a701ccf585873b848b11c30b77b2aba4d38ff54720f3d48b415d4f322",
+    "phase": "clean",
+    "message": "Original files and temporary registration are already clean.",
+    "originalSetupClean": true,
+    "activeSessionObserved": false,
+    "recoveryAuthorized": false,
+    "owners": {
+      "runner": {
+        "state": "not_recorded"
+      },
+      "stage": {
+        "state": "not_recorded"
+      },
+      "supervisor": {
+        "state": "not_recorded"
+      }
+    },
+    "currentSetup": {
+      "observed": true,
+      "originalResources": true,
+      "occupiedPaths": [],
+      "registrationPresent": false,
+      "currentSetupClean": true
+    },
+    "resourcePlan": {
+      "schema": "sl3.installer-resource-recovery-plan.v1",
+      "archiveState": "original",
+      "bundlePresent": false,
+      "pendingPresent": false,
+      "filesWritten": false,
+      "deviceAccess": false,
+      "protectedSessionOwnerPresent": false,
+      "protectedStageOwner": null,
+      "observed": true
+    },
+    "brokerRetirementReported": false,
+    "issues": [],
+    "pointInTimeObservation": true,
+    "ordinaryToken": true,
+    "previousSessionShutdownVerified": false,
+    "repairAttempted": false,
+    "filesWritten": false,
+    "registryWritten": false,
+    "elevationRequested": false,
+    "deviceOpened": false,
+    "deviceReadinessVerified": false
+  },
+  "protectionObservation": {
+    "windowStartUtc": "2026-11-06T17:48:13.4816329Z",
+    "observedUtc": "2026-11-06T17:55:52.3237822Z",
+    "detectionEvents": [],
+    "antivirusEnabled": true,
+    "realTimeProtectionEnabled": true,
+    "behaviorMonitorEnabled": true,
+    "holdStillPresent": true,
+    "settingsChanged": false
+  },
+  "oldLauncherRefusal": {
+    "exitCode": 1,
+    "logSha256": "262b5c080dcda9624e846396d1eeb60fb095acaa088f98b9b1fd074addba303e",
+    "expectedForOldRuntimeBinding": true
+  },
+  "seratoStarted": false,
+  "uacRequested": false,
+  "deviceOpened": false,
+  "audioPackageChanged": false,
+  "workingKitReplaced": false,
+  "securityHoldCleared": false,
+  "secondPcValidated": false,
+  "liveSeratoValidated": false,
+  "relocationResult": {
+    "schema": "sl3.portable-kit-relocation-tests.v1",
+    "kitManifestSha256": "f050474f810f7fa6e447d220e846459e21b23b0902684afb9537e202fefb37b2",
+    "generatedSessionPlanSha256": "288bf79d71e871fcc509b3e82de7724e4bab75758cf66626c603b0b5ead8cb5c",
+    "archiveSha256": "d135e6f1c03601cc44b3e5f623eed36af81bbff585332a3fdc8d5d533b2cb66a",
+    "globalPathEmpty": true,
+    "kitInterpreterAndPowerShellUsed": true,
+    "preparedPathsReboundToMovedKit": true,
+    "spacesAndUnicodeInKitPath": true,
+    "deploymentScope": "destinations-bound-at-preparation",
+    "differentWindowsAccountTested": false,
+    "secondPcTested": false,
+    "applicationStarted": false,
+    "elevationRequested": false,
+    "registryWritten": false,
+    "deviceAccess": false,
+    "liveValidated": false
+  },
+  "sourceNormalizedSha256": {
+    "prepare-local-frida-probe-runtime.py": "9fe02866f26f6c45a9d8d8b4b89029a2428eda1bce233226550cb3ccc3d49880",
+    "run-local-frida-owned-probe.py": "f0d3ebb5c16f6a13ac54f9ca7967626d6c4ac482fbbc3d9bcb4809e310e20216",
+    "test-local-frida-runtime-selection.py": "4ee91ada999f22e3bd5e8c34a9a1146a8bd6d7ddd84f553187989c51712c05ca"
+  }
+}

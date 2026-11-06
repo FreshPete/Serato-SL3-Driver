@@ -42,7 +42,7 @@ def verify_sdk(directory, expected):
             directory.name.startswith('embedded-python-local-frida-'), 'Explicit isolated candidate SDK required')
     api = runpy.run_path(str(ROOT / 'scripts/prepare-embedded-python.py'))
     manifest = api['verify'](directory, expected)
-    require(manifest.get('scope') == 'owned-process-local-frida-candidate-only' and
+    require(manifest.get('scope') in ('owned-process-local-frida-candidate-only', 'local-frida-startup-integration-candidate') and
             manifest.get('listedNativeAssetsMatchFinalImage') is True, 'Candidate-only preparation required')
     return manifest
 
@@ -140,6 +140,7 @@ def probe(sdk, expected, output):
     manifest = verify_sdk(sdk, expected)
     require(Path(sys.executable).resolve() == sdk / 'python.exe', 'Wrong private interpreter')
     report = {'schema': 'sl3.local-frida-owned-probe.v1', 'candidateSha256': manifest['candidateSha256'],
+              'runtimeScope': manifest['scope'],
               'runnerNormalizedSha256': source_identity(),
               'stages': [], 'passed': False, 'fixtureStarted': False, 'deviceOpened': False,
               'seratoStarted': False, 'securityHoldCleared': False}
@@ -197,6 +198,7 @@ def run(sdk, expected, output):
             output.name.startswith('local-frida-owned-probe-') and not output.exists(), 'Fresh project-local output required')
     output.mkdir()
     report = {'schema': 'sl3.local-frida-owned-supervision.v1', 'candidateSha256': manifest['candidateSha256'],
+              'runtimeScope': manifest['scope'],
               'runnerNormalizedSha256': source_identity(),
               'sdkManifestSha256': expected, 'processStarted': False, 'timedOut': False,
               'forcedJobCleanup': False, 'activeProcessLimit': 4, 'silentBreakawayAllowed': False,

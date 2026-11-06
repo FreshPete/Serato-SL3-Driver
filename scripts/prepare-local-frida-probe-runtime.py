@@ -25,7 +25,21 @@ def payload(base, manifest, generated):
     return files
 
 
-def prepare(base, base_sha, build, candidate_sha, publics, summary, output):
+def inspection_dependencies(base, manifest):
+    api = module('prepare-embedded-python.py'); files, records = {}, {}
+    for dependency in ('capstone', 'pefile'):
+        candidates = [name for name in manifest['files'] if name.startswith('packages/' + dependency + '-') and
+                      name.endswith('.dist-info/RECORD')]
+        api['require'](len(candidates) == 1, 'Unique reviewed dependency record required: ' + dependency)
+        name, identity, added = api['wheel_files'](base / candidates[0])
+        api['require'](name == dependency and not set(files) & set(added) and
+                       not any(path.startswith(('packages/frida/', 'packages/frida-')) for path in added),
+                       'Unexpected inspection dependency payload')
+        files.update(added); records[name] = {'recordSha256': identity}
+    return files, records
+
+
+def prepare(base, base_sha, build, candidate_sha, publics, summary, output, integration_dependencies=False):
     api = module('prepare-embedded-python.py'); require = api['require']
     base, build, output = Path(base).resolve(), Path(build).resolve(), Path(output).absolute()
     manifest = api['verify'](base, base_sha)
@@ -37,6 +51,11 @@ def prepare(base, base_sha, build, candidate_sha, publics, summary, output):
             output.name.startswith('embedded-python-local-frida-') and not output.exists(), 'Fresh private runtime required')
     generated = build / 'subprojects/frida-python/frida'
     files = payload(base, manifest, generated)
+    dependencies = {}
+    if integration_dependencies:
+        added, dependencies = inspection_dependencies(base, manifest)
+        require(not set(files) & set(added), 'Inspection dependencies collide with candidate payload')
+        files.update(added)
     source = ROOT / 'artifacts/references/frida-local-only-17.25.2'
     for component in ('frida-core', 'frida-gum', 'frida-python', 'efni'):
         files['licenses/' + component + '/COPYING'] = (source / 'subprojects' / component / 'COPYING').read_bytes()
@@ -49,6 +68,9 @@ def prepare(base, base_sha, build, candidate_sha, publics, summary, output):
               'moduleSearch': 'embedded standard library, runtime directory, packages; site disabled',
               'stockSessionKitChanged': False, 'securityHoldCleared': False, 'systemPythonModified': False,
               'liveSeratoValidated': False, 'interpreterExecutedDuringPreparation': False}
+    if integration_dependencies:
+        result.update(scope='local-frida-startup-integration-candidate', dependencyProfile='startup-inspection',
+                      dependencies={**dependencies, 'frida': {'kind': 'reviewed-local-build', 'sha256': candidate_sha}})
     output.mkdir()
     for name, data in files.items():
         target = output / name; target.parent.mkdir(parents=True, exist_ok=True)
@@ -67,6 +89,8 @@ if __name__ == '__main__':
         parser.add_argument('--' + name, type=Path, required=True)
     parser.add_argument('--expected-base-manifest-sha256', required=True)
     parser.add_argument('--expected-candidate-sha256', required=True)
+    parser.add_argument('--integration-dependencies', action='store_true',
+                        help='Also include the reviewed Capstone/pefile wheel payloads for offline startup inspection')
     args = parser.parse_args()
     print(json.dumps(prepare(args.base, args.expected_base_manifest_sha256, args.build, args.expected_candidate_sha256,
-                             args.public_symbols, args.pdb_summary, args.output), indent=2))
+                             args.public_symbols, args.pdb_summary, args.output, args.integration_dependencies), indent=2))
