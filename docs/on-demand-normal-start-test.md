@@ -56,3 +56,5 @@ The next attended test must actually set up the candidate, launch Serato normall
 ## Optional completed-log inspection
 
 An [offline ASIO control-log reader](asio-control-observation.md) is now verified against owned fixtures. It can inspect completed driver-owned logs after an explicitly observed trial without desktop automation or a startup shim. Logging remains disabled for the prepared baseline; no persistent environment or shortcut change was made. A capture cannot be attributed to Serato from its PID/build tag alone, and successful start metadata is not physical-audio or DVS proof.
+
+The existing activation containment also passes [actual forced owned-host termination tests](activation-interruption.md) with simulated transport, including a blocked callback. This does not validate Serato crash recovery, physical USB release/reacquisition or the prepared candidate’s native startup.

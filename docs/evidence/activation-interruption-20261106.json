@@ -1,0 +1,195 @@
+{
+  "schema": "sl3.activation-interruption-checkpoint.v1",
+  "date": "2026-11-06",
+  "diagnosticPlanAndRefusalChecksPassed": 2,
+  "actualProcessScenariosPassed": 3,
+  "outcomes": [
+    {
+      "scenario": "normal",
+      "host": {
+        "pid": 39856,
+        "created": "134384723374731895",
+        "imageSha256": "9be7fba3a83754b7e9afb2f0c1c6d4b6748dddb346e4e7d16100b6686d56cd0d"
+      },
+      "controller": {
+        "pid": 26252,
+        "created": "134384723375184335",
+        "imageSha256": "1d9049e4e00f39a05d6237898341ea9b12c210fc0d3885b1257728320bd435e3"
+      },
+      "worker": {
+        "pid": 29608,
+        "created": "134384723375599969",
+        "imageSha256": "0dbb2f0e7232cbda8da2ae3a56f45871f60f3cdd7f7a979c269966ff70656081"
+      },
+      "hostTerminationRequested": false,
+      "hostExited": true,
+      "controllerExited": true,
+      "workerExited": true,
+      "controllerExitCode": 0,
+      "workerExitCode": 0,
+      "callbacksEnteredAtReady": 1586,
+      "callbacksCompletedAtReady": 1586,
+      "callbackBlockedAtReady": false,
+      "normalRetirementRecorded": true,
+      "normalControllerResultSha256": "1f34d42bf63ac6d4d7039760145a873fa9bfd5c5b8a6323fc39fea7dabd5454d",
+      "hostResultSha256": "3cee13be5783ef390f0393b57ffec1942653d2943fb5b725c34eb8dce79b4f9e",
+      "nativeDeviceAccess": false,
+      "physicalUsbReleaseVerified": false
+    },
+    {
+      "scenario": "stream",
+      "host": {
+        "pid": 40488,
+        "created": "134384723378217084",
+        "imageSha256": "9be7fba3a83754b7e9afb2f0c1c6d4b6748dddb346e4e7d16100b6686d56cd0d"
+      },
+      "controller": {
+        "pid": 2396,
+        "created": "134384723378672066",
+        "imageSha256": "1d9049e4e00f39a05d6237898341ea9b12c210fc0d3885b1257728320bd435e3"
+      },
+      "worker": {
+        "pid": 35388,
+        "created": "134384723379089530",
+        "imageSha256": "0dbb2f0e7232cbda8da2ae3a56f45871f60f3cdd7f7a979c269966ff70656081"
+      },
+      "hostTerminationRequested": true,
+      "hostExited": true,
+      "controllerExited": true,
+      "workerExited": true,
+      "controllerExitCode": 0,
+      "workerExitCode": 0,
+      "callbacksEnteredAtReady": 1588,
+      "callbacksCompletedAtReady": 1588,
+      "callbackBlockedAtReady": false,
+      "normalRetirementRecorded": false,
+      "normalControllerResultSha256": null,
+      "hostResultSha256": null,
+      "nativeDeviceAccess": false,
+      "physicalUsbReleaseVerified": false
+    },
+    {
+      "scenario": "blocked",
+      "host": {
+        "pid": 33272,
+        "created": "134384723380075991",
+        "imageSha256": "9be7fba3a83754b7e9afb2f0c1c6d4b6748dddb346e4e7d16100b6686d56cd0d"
+      },
+      "controller": {
+        "pid": 37532,
+        "created": "134384723380535703",
+        "imageSha256": "1d9049e4e00f39a05d6237898341ea9b12c210fc0d3885b1257728320bd435e3"
+      },
+      "worker": {
+        "pid": 35244,
+        "created": "134384723380944695",
+        "imageSha256": "0dbb2f0e7232cbda8da2ae3a56f45871f60f3cdd7f7a979c269966ff70656081"
+      },
+      "hostTerminationRequested": true,
+      "hostExited": true,
+      "controllerExited": true,
+      "workerExited": true,
+      "controllerExitCode": 0,
+      "workerExitCode": 0,
+      "callbacksEnteredAtReady": 1,
+      "callbacksCompletedAtReady": 0,
+      "callbackBlockedAtReady": true,
+      "normalRetirementRecorded": false,
+      "normalControllerResultSha256": null,
+      "hostResultSha256": null,
+      "nativeDeviceAccess": false,
+      "physicalUsbReleaseVerified": false
+    }
+  ],
+  "sourceSha256": {
+    "scripts/test-activation-interruption.py": "4337cc1fb0ff2d98102d48c258ee8ed542a24edb2837d6867bcdc51d30b36fc5",
+    "scripts/serato-session-stop.py": "6c36da99ba37edd31de2d5c2d0bcf0cdbf3190036c5d087b6b3bd0d7014f0cd3",
+    "scripts/asio-file-stage.py": "55dd7bce6cfc513b301a155068bc17c5605f0e9ff5d55f67d499373c98d24b60",
+    "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad",
+    "diagnostics/asio-interruption/CMakeLists.txt": "8266892041dbc6d561ac2a234d94c0c4401760fba7f65d712ca208559c0277b2",
+    "diagnostics/asio-interruption/host.cpp": "cc0dc093f4e6580cadc302251f773293c81d4d2c6b58ad755ccd4cad94b5f80c",
+    "src/asio/com_identity.hpp": "358f892e11f17308d37fdcb8c82ceea0171a3421d8472ac675f9e012783904ac",
+    "scripts/build-activation-interruption-host.ps1": "0842442caac6da3eab87904b3ecbe7eff6ad1f11dcf63b8a9ffc500660951276",
+    "artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/asio.h": "93d2f80d49b4ac9c963514e7c1307ab5111d8104246192233745beb058534ea1",
+    "artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/asiosys.h": "f44a1ed0fd7c056ff047aeebc4c05a8c185f0585a24d8debc55c70107777dbef",
+    "artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/iasiodrv.h": "86ad4788452c74823653cf57d4bd557c48bb6542d7e6eb7fff80102c705a066d"
+  },
+  "testReportSha256": "8b9024730f2183cb0418585fc57f081436438a25595998ab761e8af927ab7f36",
+  "diagnosticBuildSha256": "ffab5171d1dd17a399a5090f0be7f20091e376bdac3aba5342e553933a997833",
+  "diagnosticHostSha256": "9be7fba3a83754b7e9afb2f0c1c6d4b6748dddb346e4e7d16100b6686d56cd0d",
+  "referenceRunSha256": "6140b6111397d9918ceb73fd9c3846e266b0e78c10cf0f0fc90f2a7f0c1a1a52",
+  "nativeBuildManifestSha256": "6bd7ae8244e568cde351cbd42d3f92528539352f43e57003993e8ba0a1a6ee2a",
+  "nativeInputsStillMatch": true,
+  "actualOwnedProcessTerminationTested": true,
+  "ownedHostsTerminated": 2,
+  "physicalUsbReleaseVerified": false,
+  "preparedNormalStartExperimentStillSourceCurrent": true,
+  "preparedNormalStartExperimentSha256": "f8e0033e57f82e5e54b0f62081033800a20ab2548f6f276c6d8d7a90a9299d14",
+  "staticInitializerNavigationSha256": "928ad7d68eb7684761cf0efb288d0b7d829db02d62725c1534c27a02a68a902d",
+  "staticNavigationSourceSha256": "2a94d277d33f91ad4939b07f01aece6d9ad7a89f4f2ac895301953d4cc4ee93e",
+  "staticNavigationScope": "Direct E8, selected boundary-checked RIP references and data QWORDs only; no vendor execution or exhaustive indirect-flow recovery",
+  "staticTargets": [
+    {
+      "target": "0x140710720",
+      "range": [
+        "0x140710720",
+        "0x14071089b"
+      ],
+      "direct_callers": [
+        {
+          "call_va": "0x141373a93",
+          "range": [
+            "0x141373a40",
+            "0x141373c0d"
+          ]
+        }
+      ],
+      "rip_references": [],
+      "data_qword_pointers": []
+    },
+    {
+      "target": "0x14070fd70",
+      "range": [
+        "0x14070fd70",
+        "0x14070fe59"
+      ],
+      "direct_callers": [
+        {
+          "call_va": "0x140710762",
+          "range": [
+            "0x140710720",
+            "0x14071089b"
+          ]
+        }
+      ],
+      "rip_references": [],
+      "data_qword_pointers": []
+    },
+    {
+      "target": "0x141373a40",
+      "range": [
+        "0x141373a40",
+        "0x141373c0d"
+      ],
+      "direct_callers": [],
+      "rip_references": [],
+      "data_qword_pointers": [
+        "0x142f29b40"
+      ]
+    }
+  ],
+  "postcheck": {
+    "observed": true,
+    "originalResources": true,
+    "occupiedPaths": [],
+    "registrationPresent": false,
+    "currentSetupClean": true
+  },
+  "seratoLaunched": false,
+  "nativeDeviceAccess": false,
+  "registryModified": false,
+  "persistentEnvironmentModified": false,
+  "securityPolicyChanged": false,
+  "firmwareChanged": false,
+  "scope": "Actual forced death of owned simulated ASIO hosts with live exact-image/creation/handle-bound process observations; not Serato or physical USB failure recovery"
+}
