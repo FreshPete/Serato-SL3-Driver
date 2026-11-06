@@ -148,6 +148,8 @@ def prepare(manifest, expected, application, write=False):
                                 '--expected-session-plan-sha256', identity, '--powershell-directory', str(powershell)]}
     result['startArguments'] = [*result['planArguments']]
     result['startArguments'][1] = '--start-session'
+    result['stopArguments'] = [*result['planArguments']]
+    result['stopArguments'][1] = '--stop-session'
     with (capsule_directory / 'kit-preparation-complete.json').open('x', encoding='utf-8') as stream:
         json.dump(result, stream, indent=2)
         stream.write('\n')

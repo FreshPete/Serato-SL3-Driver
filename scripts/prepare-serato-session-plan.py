@@ -16,6 +16,7 @@ EXTRA_SOURCES=(
     'scripts/retire-serato-session-cache.py','scripts/serato-installer-resource-transaction.ps1',
     'scripts/serato-archive-file-transaction.ps1','scripts/inspect-serato-resource-archive.py',
     'scripts/prepare-serato-sl3-installer-bundle.py',
+    'scripts/serato-session-stop.py',
 )
 
 

@@ -18,6 +18,10 @@ PHASE_RESOURCES = 'd135e6f1c03601cc44b3e5f623eed36af81bbff585332a3fdc8d5d533b2cb
 BUNDLE_NAME = '8c7758f23375cee18a9cf3be4a3acc15.bin'
 
 
+class UserStopRequested(Exception):
+    pass
+
+
 def require(value, message):
     if not value:
         raise ValueError(message)
@@ -115,6 +119,8 @@ def supervise(backend, script, verify_driver, stop_requested, clock=time.monoton
     def wait_for(name, seconds):
         deadline = clock() + seconds
         while clock() < deadline:
+            if stop_requested():
+                raise UserStopRequested()
             require(not overflow.is_set(), 'Startup message bound exceeded')
             try:
                 item = incoming.get_nowait()
@@ -152,10 +158,15 @@ def supervise(backend, script, verify_driver, stop_requested, clock=time.monoton
                 break
             if stop_requested():
                 report['endReason'] = 'manual_stop'
+                report['userStopRequested'] = True
+                event('manual_stop_observed',phase='interaction')
                 break
         else:
             report['endReason'] = 'viewing_limit'
         event('viewing_window_ended',reason=report['endReason'])
+    except UserStopRequested:
+        report['endReason'] = 'manual_stop_during_startup'
+        report['userStopRequested'] = True
     except Exception as error:
         report['error'] = str(error)[:1024]
         report['endReason'] = 'failure'
@@ -353,11 +364,15 @@ def main():
     if args.frida_directory:
         sys.path.insert(0,str(args.frida_directory.resolve()))
     output.mkdir()
+    stop_api = runpy.run_path(str(ROOT/'scripts/serato-session-stop.py'))
+    supervisor_owner = stop_api['current_owner'](Path(sys.executable))
     with (output/'intent.json').open('x',encoding='utf-8') as stream:
         json.dump({'schema':'sl3.startup-supervisor-intent.v1','applicationSha256':APP_SHA,
                    'scriptSha256':prepared['scriptSha256'],'preparationSha256':prepared['preparationSha256'],
                    'deploymentManifestSha256':prepared['deploymentManifestSha256'],
-                   'requiresExternalRollback':True,'hardDeadlineSeconds':840,'launcherCapsuleBound':bool(context)},stream,indent=2)
+                   'requiresExternalRollback':True,'hardDeadlineSeconds':840,'launcherCapsuleBound':bool(context),
+                   'launcherCapsuleSha256':args.expected_launcher_capsule_sha256,'supervisorOwner':supervisor_owner},stream,indent=2)
+    intent_sha = digest(output/'intent.json')
     def verify_driver():
         require(digest(prepared['asio']) == prepared['asioSha256'], 'Installed ASIO differs from reviewed package')
     watchdog = HardDeadline()
@@ -368,7 +383,8 @@ def main():
             def publish(item):
                 events.write(json.dumps(item)+'\n'); events.flush()
             report = supervise(WindowsProcess(prepared['application'],frida,launcher_context=context),prepared['script'],verify_driver,
-                               lambda:(output/'stop.txt').exists(),event_sink=publish)
+                               lambda:stop_api['read_request'](output/'stop.txt',args.expected_launcher_capsule_sha256,
+                                                              intent_sha,supervisor_owner),event_sink=publish)
         report['fridaVersion'] = frida.__version__
     except Exception as error:
         if report is None:

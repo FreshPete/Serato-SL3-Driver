@@ -1,5 +1,7 @@
 # Native entry for kit preparation and startup
 
+**Explicit session Stop:** a newer 41-pin candidate adds a [scoped stop-request command](session-stop-channel.md) and includes its arguments in preparation records. The native route passed owned headless-process checks; real Serato shutdown and rollback remain untested through this route.
+
 **Current readiness entry:** the newer launcher pins forty source/license/evidence files and adds [read-only host checks before approvals](session-readiness-check.md). The host passed these prerequisite checks; actual kit Start/audio/shutdown remain untested. Older source-pin counts below describe their dated candidates.
 
 **Follow-up:** kit preparation now [rebinds native package metadata to current-account Windows known folders](deployment-account-rebinding.md). The newer launcher pins 39 sources. The original 38-pin candidate and its evidence below remain historical; actual different-account/PC and live startup testing are still outstanding.

@@ -1,0 +1,228 @@
+{
+  "schema": "sl3.session-stop-channel-evidence.v1",
+  "date": "2026-11-06",
+  "sourcePins": 41,
+  "completePlanSourcePins": 27,
+  "launcherSha256": "d35a75ffa31d862624434964a601a0abee39588fa9e949c27fea876d0dc98120",
+  "releaseManifestSha256": "21babbf6510e82fc2f5c58ef288ee8d0a3a8e8f1442d777f243c828ecb3eefb0",
+  "installerResourceSha256": "470717441cdb335d0d0f6e6cd803a2e03ac7aec2de020b0e3e0546d7541bab0a",
+  "kitManifestSha256": "977bef75d9b8c16013b31969ce687e2257dab18c829698930163672b89f688ba",
+  "stopChannelTests": {
+    "schema": "sl3.session-stop-channel-tests.v1",
+    "cases": [
+      {
+        "name": "live-owned-processes-read-only-stop-plan",
+        "passed": true
+      },
+      {
+        "name": "stale-runner-creation-refused",
+        "passed": true
+      },
+      {
+        "name": "different-runner-file-identity-refused",
+        "passed": true
+      },
+      {
+        "name": "foreign-supervisor-intent-refused",
+        "passed": true
+      },
+      {
+        "name": "finished-session-result-preserved",
+        "passed": true
+      },
+      {
+        "name": "atomic-stop-observed-by-real-owned-headless-child-supervisor",
+        "passed": true
+      },
+      {
+        "name": "repeat-stop-is-idempotent",
+        "passed": true
+      },
+      {
+        "name": "foreign-capsule-stop-record-refused",
+        "passed": true
+      }
+    ],
+    "actualFridaUsed": true,
+    "syntheticStartupEvents": true,
+    "ownedHeadlessChildOnly": true,
+    "normalFixtureExit": true,
+    "forcedFixtureTermination": false,
+    "sessionPlanSha256": "56742c9812bfd52995a6390dfcfe32a25de08bb94d1ea6b585d13e49feb89b15",
+    "fridaVersion": "17.25.2",
+    "nativeStopEntryUsed": true,
+    "vendorApplicationExecuted": false,
+    "packageBinaryLoaded": false,
+    "deviceAccess": false,
+    "registryWritten": false,
+    "elevationRequested": false,
+    "seratoShutdownValidated": false
+  },
+  "supervisorTestsPassed": 14,
+  "completePlanTestsPassed": 4,
+  "resultTestsPassed": 6,
+  "nativeKitRegressions": {
+    "schema": "sl3.native-kit-entry-tests.v1",
+    "cases": [
+      {
+        "name": "native-kit-plan-relocated-empty-path",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "native-kit-complete-offline-preparation",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "native-prepared-kit-complete-session-plan",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "native-kit-plan-after-preparation",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "wrong-kit-identity-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-kit-preparer-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-specification-evidence-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-private-standard-library-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-powershell-runtime-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "foreign-launcher-release-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "unreviewed-application-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "semicolon-kit-path-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "incomplete-start-context-refused",
+        "passed": true,
+        "exitCode": 2
+      }
+    ],
+    "kitManifestSha256": "977bef75d9b8c16013b31969ce687e2257dab18c829698930163672b89f688ba",
+    "launcherSha256": "d35a75ffa31d862624434964a601a0abee39588fa9e949c27fea876d0dc98120",
+    "generatedSessionPlanSha256": "bc981fc481902fa9f5e0cfd5175ea08f6dbca57e72898c085837fa69acee606d",
+    "globalPathEmpty": true,
+    "spacesAndUnicodeInKitPath": true,
+    "onlyPlanPreparationOrRefusalInvocations": true,
+    "liveStartAttempted": false,
+    "applicationStarted": false,
+    "brokerStarted": false,
+    "elevationRequested": false,
+    "registryWritten": false,
+    "deviceAccess": false,
+    "liveValidated": false
+  },
+  "capsuleRegressions": {
+    "schema": "sl3.portable-launcher-tests.v1",
+    "launcherSha256": "d35a75ffa31d862624434964a601a0abee39588fa9e949c27fea876d0dc98120",
+    "cases": [
+      {
+        "name": "first-session",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "second-session-same-executable",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "no-environment-no-installation",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "unsupported-action",
+        "passed": true,
+        "exitCode": 2
+      },
+      {
+        "name": "wrong-capsule-hash",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "executable-relocated-without-rebuild",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "unicode-space-and-shell-metacharacters-in-capsule-path",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "untrusted-interpreter",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "foreign-helper-root",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-package-binding",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "moved-capsule-binding",
+        "passed": true,
+        "exitCode": 1
+      }
+    ],
+    "sameExecutableAcceptedTwoSessionBindings": true,
+    "binaryRecompiledBetweenSessions": false,
+    "onlyPlanOrRefusalInvocations": true,
+    "registryWritten": false,
+    "deviceAccess": false,
+    "liveValidated": false
+  },
+  "windowsArgumentRoundTripsPassed": 8,
+  "nativeAudioBinariesChanged": false,
+  "privateRuntimeInventoryReverified": true,
+  "fixtureStartupEventsSynthetic": true,
+  "seratoWindowCloseTested": false,
+  "seratoStartupAttempted": false,
+  "seratoShutdownValidated": false,
+  "deviceAccess": false,
+  "elevationRequested": false,
+  "registryWritten": false,
+  "securityPolicyChanged": false,
+  "firmwareChanged": false,
+  "kitSessionStatePresent": false,
+  "publicInstallerReady": false
+}

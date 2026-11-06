@@ -95,7 +95,7 @@ class SupervisorTest(unittest.TestCase):
     def run_case(self, **options):
         clock = Clock(); backend = FakeBackend(clock, **options)
         checks = []
-        result = MODULE['supervise'](backend, 'reviewed script', lambda:checks.append('verified'),lambda:True,clock,
+        result = MODULE['supervise'](backend, 'reviewed script', lambda:checks.append('verified'),lambda:'detach' in backend.calls,clock,
                                      click_seconds=.1,start_seconds=.1,viewing_seconds=.1)
         return result,backend,checks
 
@@ -105,6 +105,19 @@ class SupervisorTest(unittest.TestCase):
         self.assertEqual(checks,['verified'])
         self.assertEqual(backend.calls,['start','resume','detach','cleanup'])
         self.assertEqual(result['endReason'],'manual_stop')
+
+    def test_stop_during_startup_does_not_wait_for_installer_or_claim_audio(self):
+        for after_resume in (False, True):
+            with self.subTest(after_resume=after_resume):
+                clock=Clock(); backend=FakeBackend(clock)
+                result=MODULE['supervise'](backend,'fixture',lambda:None,
+                    lambda:(not after_resume or 'resume' in backend.calls),clock,
+                    click_seconds=10,start_seconds=10,viewing_seconds=10)
+                self.assertEqual(result['endReason'],'manual_stop_during_startup')
+                self.assertTrue(result['userStopRequested'])
+                self.assertFalse(result['asioStartObserved'])
+                self.assertFalse(result['supervisionCompleted'])
+                self.assertEqual(backend.calls[-1],'cleanup')
 
     def test_each_failure_still_runs_cleanup_and_preserves_failure(self):
         for failure in ('start','detach','cleanup'):
@@ -135,8 +148,9 @@ class SupervisorTest(unittest.TestCase):
     def test_mismatched_driver_closes_before_manual_interaction(self):
         clock = Clock(); backend = FakeBackend(clock)
         def reject(): raise ValueError('installed driver mismatch')
-        result = MODULE['supervise'](backend,'script',reject,lambda:True,clock)
+        result = MODULE['supervise'](backend,'script',reject,lambda:False,clock)
         self.assertFalse(result['supervisionCompleted'])
+        self.assertIn('installed driver mismatch',result['error'])
         self.assertNotIn('detach',backend.calls)
         self.assertEqual(backend.calls[-1],'cleanup')
 
@@ -144,21 +158,21 @@ class SupervisorTest(unittest.TestCase):
         class ErrorBackend(FakeBackend):
             def start(self, script, callback): callback({'type':'error','description':'bad entry'})
         clock = Clock(); backend = ErrorBackend(clock)
-        result = MODULE['supervise'](backend,'script',lambda:None,lambda:True,clock)
+        result = MODULE['supervise'](backend,'script',lambda:None,lambda:False,clock)
         self.assertIn('bad entry',result['error'])
         self.assertFalse(result['supervisionCompleted'])
 
     def test_event_publication_failure_still_retires_owned_process(self):
         clock = Clock(); backend = FakeBackend(clock)
         def refuse(event): raise OSError('event destination unavailable')
-        result = MODULE['supervise'](backend,'script',lambda:None,lambda:True,clock,event_sink=refuse)
+        result = MODULE['supervise'](backend,'script',lambda:None,lambda:False,clock,event_sink=refuse)
         self.assertFalse(result['supervisionCompleted'])
         self.assertEqual(backend.calls[-1],'cleanup')
 
     def test_hard_deadline_contains_a_blocked_supervisor_without_success_result(self):
         code = ('import runpy,sys,time; m=runpy.run_path(sys.argv[1]); '
                 'guard=m["HardDeadline"](.05); time.sleep(5)')
-        child = subprocess.run([sys.executable,'-c',code,str(Path(__file__).resolve().parents[1]/'scripts/run-serato-startup-session.py')],
+        child = subprocess.run([sys.executable,'-I','-B','-c',code,str(Path(__file__).resolve().parents[1]/'scripts/run-serato-startup-session.py')],
                                capture_output=True,timeout=5)
         self.assertEqual(child.returncode,70)
         self.assertEqual(child.stdout,b'')
@@ -197,7 +211,7 @@ class WindowsOwnershipTest(unittest.TestCase):
                     def spawn(self, argv, **kwargs):
                         self.spawn_environment=kwargs['env']
                         code = 'import pathlib,sys,time; p=pathlib.Path(sys.argv[1]);\nwhile not p.exists(): time.sleep(.01)'
-                        self.child = subprocess.Popen([sys.executable,'-c',code,str(marker)],creationflags=subprocess.CREATE_NO_WINDOW)
+                        self.child = subprocess.Popen([sys.executable,'-I','-B','-c',code,str(marker)],creationflags=subprocess.CREATE_NO_WINDOW)
                         return self.child.pid
                     def attach(self, pid):
                         self.assert_pid = pid
@@ -207,7 +221,7 @@ class WindowsOwnershipTest(unittest.TestCase):
                 frida = type('Frida',(),{'get_local_device':staticmethod(lambda:device)})()
                 try:
                     backend = MODULE['WindowsProcess'](Path(sys.executable),frida,expected_application_sha=MODULE['digest'](sys.executable))
-                    result = MODULE['supervise'](backend,'synthetic script',lambda:None,lambda:not graceful,
+                    result = MODULE['supervise'](backend,'synthetic script',lambda:None,lambda:not graceful and backend.session is None,
                                                 viewing_seconds=2)
                     device.child.wait(timeout=5)
                     self.assertTrue(result['process']['processExited'])

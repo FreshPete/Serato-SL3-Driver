@@ -12,6 +12,8 @@ See the [phone video, working screenshot and version screenshot](docs/demo-20261
 
 The native readiness check now reports this host's prerequisites passing before any administrator prompt, with no device open or package DLL load. Its 43 targeted checks passed; combined live startup is still untested. [Readiness scope and observation](docs/session-readiness-check.md)
 
+An explicit native Stop command is now included in preparation records and passed owned-process checks without elevation or device access. Its 64 targeted checks passed; the real Serato close/rollback path still needs an attended test. [Stop request and evidence](docs/session-stop-channel.md)
+
 This remains an experimental temporary integration. Physical audible SL3 output, independent turntable control and sustained reliability remain unverified. The latest looped run retains the owner's report that both decks worked and closed normally, but the supervisor recorded viewing-limit termination; clean post-playback shutdown is unresolved. Automatic rollback with the pointer-path fix succeeded and original files were restored. The native audio build is unchanged; its latest Release build passed 71 checks and the deployment workflow passed 26 checks. [Latest looped result](docs/evidence/pointer-cleanup-live-retest-20261106.json) · [Software output recorder](docs/two-deck-output-capture.md)
 
 ## Earlier engineering status — 2 November 2026

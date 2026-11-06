@@ -80,6 +80,8 @@ def prepare(reviewed, expected, prepare=False, powershell=None):
                                     '--powershell-directory', str(powershell)]
         result['planArguments'] = [*result['startArguments']]
         result['planArguments'][1] = '--plan-session'
+        result['stopArguments'] = [*result['startArguments']]
+        result['stopArguments'][1] = '--stop-session'
     write_new(directory / 'preparation-complete.json', result)
     return result
 
