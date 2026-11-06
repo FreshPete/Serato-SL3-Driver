@@ -1,0 +1,143 @@
+{
+  "schema": "sl3.on-demand-engineering-kit-checkpoint.v1",
+  "date": "2026-11-06",
+  "passed": true,
+  "cases": [
+    {
+      "name": "moved-kit-readonly-plan",
+      "passed": true
+    },
+    {
+      "name": "moved-kit-real-preparation",
+      "passed": true
+    },
+    {
+      "name": "prepared-default-plan",
+      "passed": true
+    },
+    {
+      "name": "ordinary-setup-refusal",
+      "passed": true
+    },
+    {
+      "name": "ordinary-restore-refusal",
+      "passed": true
+    },
+    {
+      "name": "kit-valid-after-preparation",
+      "passed": true
+    },
+    {
+      "name": "changed-preparer",
+      "passed": true
+    },
+    {
+      "name": "changed-python-library",
+      "passed": true
+    },
+    {
+      "name": "changed-powershell-runtime",
+      "passed": true
+    },
+    {
+      "name": "changed-native-package",
+      "passed": true
+    },
+    {
+      "name": "unexpected-payload-refusal",
+      "passed": true
+    },
+    {
+      "name": "wrong-kit-identity",
+      "passed": true
+    },
+    {
+      "name": "unsupported-application-refusal",
+      "passed": true
+    },
+    {
+      "name": "final-kit-plan",
+      "passed": true
+    },
+    {
+      "name": "final-prepared-plan",
+      "passed": true
+    }
+  ],
+  "report": "artifacts/build/on-demand-kit-tests-6ae66491481749be8739a3e1dfcffb78/result.json",
+  "reportSha256": "4b47e511c388ce951eb9404943a66efeb92a4ce9af660b4d3da4cc8813906aec",
+  "toolSha256": {
+    "scripts/assemble-on-demand-kit.py": "bce083c4af55a63b6f4c40a73c648cdff0a2ee1e84616e1884a585b62fa97926",
+    "scripts/prepare-on-demand-kit.py": "b9c6146bccd02782ab042380a94f3581b50f1b649b18f38b51983c8d87194a0b",
+    "scripts/prepare-on-demand-python.py": "65e4c826a8417a1c8ccaed0509403f9611c97b0cca7b4aab55799a65b348e5f1",
+    "scripts/test-on-demand-kit.py": "2a503d923a128be90c82190bb8aabd34ae8a024eff798179a60461e87a66e64a"
+  },
+  "kit": {
+    "directory": "artifacts/build/sl3-on-demand-kit-setup-only-20261106",
+    "manifestSha256": "1d4f287974ddea51e74b5855270cf61268428e78eaff74069a8443349f2c2f38",
+    "inventorySha256": "ee2ab01190074c7d30daa7e417e172b144c019cf7f3ca1542cdf558de4360764",
+    "payloadFiles": 758,
+    "sourcePins": {
+      "docs/evidence/serato-legacy-sl3-descriptors.json": "a63a02804e5a00cc1da48faff9c9bdfa962da0f1c3b09a7019d9eec0570fab3a",
+      "scripts/asio-diagnostic-session.py": "e58e1ec6842c7b979f39a801032c9acf0938e9af700ca9f4e83abc9f7d134f12",
+      "scripts/asio-file-stage.py": "55dd7bce6cfc513b301a155068bc17c5605f0e9ff5d55f67d499373c98d24b60",
+      "scripts/asio-install-base.py": "5de3e3b1a674d61c8e1da570a24af9998aac9143933817928da7f4079b03b6d2",
+      "scripts/asio-install-journal.py": "df9b9c3376311a35125835910148472419b87fdb3ea18017172281f284364cad",
+      "scripts/asio-install.py": "a5110d99b554f7c7fecdbe07d7e81ad87b708f26a6372b95c3aa92bdbc92d666",
+      "scripts/asio-recover-copy.py": "1269cd647bc44f7a3f766bd24bf821266de2df76e5e6046c1aa6e0745def6d27",
+      "scripts/asio-recover-files.py": "f9f2d874b96522c1180d6bdeb6022d61a470b393f2d312965fe7414d31b3fbae",
+      "scripts/asio-recover-install.py": "4adaddd64656abca3a7418d35703b9a83b436a6b5d9023cbb2c5275fba11def9",
+      "scripts/asio-recover-uninstall.py": "e5d54063cc005a7db353eb7418e43848f7e71b0deecc6306c0dafff856e279b8",
+      "scripts/asio-registry.py": "f0b1009fe0a3cee39acc30e295dddeac9171082d8d7029f404a302d0114b7bbf",
+      "scripts/asio-runtime-check.py": "f7e3d3ee2a9f68a446361854717bc889882328cc721fa6613f5fef2e0498b354",
+      "scripts/asio-uninstall.py": "5210818b800a6a0d8531aadc8dd955499476ae1b3fb65b98cfe0c79565fc61d7",
+      "scripts/inspect-serato-resource-archive.py": "5c8773f42f1bd55d3477cf75e94c8b84be09a066370c97608e1f42f3a7ef15f6",
+      "scripts/on-demand-action-child.ps1": "cec0431b4ea82ac1f3e6ee0694f9f0f2cda34ba8c7756af31e539b9257c23a96",
+      "scripts/on-demand-action-lock.py": "a7443420001e32585ecaea96fd0a56f2d3a5dde02f31b8dbaf6957ca7297464a",
+      "scripts/prepare-asio-deployment.py": "87790868d83c7d36afe8d82e00dd3894d618e32bcf99d0929f3a197a107de0c7",
+      "scripts/prepare-embedded-python.py": "5ebd4fb9ee2a76419dff4eed3fc1e5ccfcaa99c4983cf370ac3eb9d234dc867c",
+      "scripts/prepare-portable-powershell.py": "0407eeef14c8d0ca7a8a5e06083338e9f51eb92aa1c1cb6c30e69fb23cee0553",
+      "scripts/prepare-serato-installed-phase-archive.py": "88588877fd7433ddd011aeb9f4ac4246f4496a195f26340770caf59a64e17e7c",
+      "scripts/prepare-serato-on-demand-test.py": "1ac752745065547089afc1d6d9a7bc734b65d91e82668f955f637496381f7967",
+      "scripts/prepare-serato-sl3-archive.py": "efd96ea25f88af24145d455d8456d6659b376c0f5d098824e93cd6b13b94a19a",
+      "scripts/prepare-serato-sl3-candidate.py": "18afa2a477eef0295f8c9d11bcd547c332478683e41f324883c215e6a3f5e338",
+      "scripts/rebind-asio-deployment.py": "a7b06588a5ba70b72ac2d440f86891f8fb03b11e53addbba542f9b0c89096047",
+      "scripts/serato-archive-deployment-template.ps1": "cd981568e574fc6a6196b33f4a8abeb2414f2004270a6fbcd0793c2b5a5fd862",
+      "scripts/serato-archive-file-transaction.ps1": "5a3001d590acc5311faa689e55f88b53ef1bd9e905c868ad8ef87480fbf4c40e",
+      "scripts/serato-on-demand-test.py": "52a8bc3a7d3bc1f460320199876403f345d7f0635acb42a24d084dd82a435819",
+      "scripts/validate-descriptor-schema.ps1": "4061567b871df8c7a3f6cec240986239e150422b94805d79e99d5a129e2dfbcc"
+    },
+    "nativeBundleSha256": "e7931b5da5f3a051676b595e7925c8c118a95291ef9d1978683e68177bb50094",
+    "pythonManifestSha256": "8844fb82d10df8c34d20d8a450d8f7e38c3271e41175d04cc469655820dc8152",
+    "powershellManifestSha256": "4b4047e7a8153f0aab087356ad4e80f2b9a7855a21cebabe8430c27671d97881",
+    "derivedSeratoArchiveIncluded": false
+  },
+  "setupPython": {
+    "directory": "artifacts/build/embedded-python-setup-20261106",
+    "sourceRuntimeManifestSha256": "f11669fa63baa4c6d8fc167061f41cb369044e90624e70763d5ca7137b31c386",
+    "manifestSha256": "8844fb82d10df8c34d20d8a450d8f7e38c3271e41175d04cc469655820dc8152",
+    "files": 52,
+    "dependencies": [
+      "pefile"
+    ],
+    "instrumentationIncluded": false,
+    "disassemblyPackageIncluded": false
+  },
+  "movedPreparedExperimentSha256": "0e4eb3df8a471c1a473e173d4e0385332ff9efeb7d014baed47f6fc94c3b3499",
+  "hostPostcheck": {
+    "observed": true,
+    "originalResources": true,
+    "occupiedPaths": [],
+    "registrationPresent": false,
+    "currentSetupClean": true
+  },
+  "emptyPath": true,
+  "movedPathContainsSpacesAndUnicode": true,
+  "productionInstallationPerformed": false,
+  "elevationRequested": false,
+  "seratoLaunched": false,
+  "nativeDeviceAccess": false,
+  "anotherAccountOrPcTested": false,
+  "nativePreexecutionVerifierProvided": false,
+  "publicInstallerReady": false
+}
