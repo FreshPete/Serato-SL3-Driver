@@ -1,0 +1,401 @@
+{
+  "schema": "sl3.passive-action-live-evidence.v1",
+  "date": "2026-11-06",
+  "captures": [
+    {
+      "directory": "analysis/serato-passive-action-20261106",
+      "resultSha256": "d895ccabac81454d62f4b408e4312495c36b548fbb5881d41d698041ff413119",
+      "eventsSha256": "f0abd8d7ed3946c6635af7383cb2e5fb943b8be14a1b7dac4a7d9ad3b0c98cd3",
+      "inputInventorySha256": "0c62488b6227ea3dc1a8e24689366da1d73888e0712f2be8d10554bb8aed7787",
+      "originalNativeImagesMatched": 165,
+      "nativeImagesStillUnchanged": true,
+      "result": {
+        "schema": "sl3.passive-action-capture.v1",
+        "inputsSha256": "0c62488b6227ea3dc1a8e24689366da1d73888e0712f2be8d10554bb8aed7787",
+        "observerInvokesCallbacks": false,
+        "observerReadsAudio": false,
+        "observerOpensDevice": false,
+        "applicationUsbBehaviourMeasured": false,
+        "installerRequestedByHost": false,
+        "elevationRequested": false,
+        "error": null,
+        "captureSeconds": 20,
+        "jobPolicy": {
+          "activeProcessLimit": 1,
+          "killOnJobClose": true,
+          "silentBreakawayAllowed": false
+        },
+        "captureCompleted": true,
+        "process": {
+          "processStarted": true,
+          "pid": 20996,
+          "processExited": true,
+          "observerForcedTermination": true,
+          "closeRequested": true,
+          "exitCode": 1,
+          "jobEmpty": true,
+          "closeGraceSeconds": 20,
+          "closeWindowObservation": {
+            "ownedTopLevelWindows": 16,
+            "visibleWindows": 1,
+            "enabledVisibleWindows": 1,
+            "closeMessagesPosted": 1,
+            "closePostFailures": 0,
+            "closePostErrors": [],
+            "postCloseRequested": true,
+            "enumerationSucceeded": true,
+            "enumerationError": null,
+            "callbackError": null
+          },
+          "closeWaitSeconds": 20.011370699998224,
+          "closeTimeoutWindowObservation": {
+            "ownedTopLevelWindows": 16,
+            "visibleWindows": 1,
+            "enabledVisibleWindows": 1,
+            "closeMessagesPosted": 0,
+            "closePostFailures": 0,
+            "closePostErrors": [],
+            "postCloseRequested": false,
+            "enumerationSucceeded": true,
+            "enumerationError": null,
+            "callbackError": null
+          },
+          "processFileTimes": {
+            "first": "134384559483242879",
+            "last": "134384559889619374"
+          },
+          "detachError": "script is destroyed"
+        },
+        "eventsSha256": "f0abd8d7ed3946c6635af7383cb2e5fb943b8be14a1b7dac4a7d9ad3b0c98cd3",
+        "eventCounts": {
+          "action_observer_ready": 1,
+          "driver_action_receiver_observed": 1,
+          "driver_controller_message_returned": 2,
+          "driver_popup_returned": 1,
+          "genuine_sl3_arrival_published": 1
+        },
+        "workspaceInputsUnchanged": true
+      },
+      "events": [
+        {
+          "event": "action_observer_ready",
+          "hostMonotonicSeconds": 198353.0105004,
+          "ordinal": 1,
+          "guardedEntries": 4,
+          "invokesCallbacks": false,
+          "readsAudio": false,
+          "maximumEvents": 128
+        },
+        {
+          "event": "driver_action_receiver_observed",
+          "hostMonotonicSeconds": 198364.3073432,
+          "ordinal": 2,
+          "controller": 1,
+          "thread": 34200,
+          "callbackSlot": 16,
+          "captureOffset": 8,
+          "receiverMatchesPopup": true
+        },
+        {
+          "event": "driver_popup_returned",
+          "hostMonotonicSeconds": 198364.3173571,
+          "ordinal": 3,
+          "controller": 1,
+          "thread": 34200,
+          "callbacks": 1
+        },
+        {
+          "event": "driver_controller_message_returned",
+          "hostMonotonicSeconds": 198364.3174725,
+          "ordinal": 4,
+          "controller": 1,
+          "thread": 34200,
+          "message": 79
+        },
+        {
+          "event": "driver_controller_message_returned",
+          "hostMonotonicSeconds": 198364.3193905,
+          "ordinal": 5,
+          "controller": 1,
+          "thread": 34200,
+          "message": 720
+        },
+        {
+          "event": "genuine_sl3_arrival_published",
+          "hostMonotonicSeconds": 198364.5806485,
+          "ordinal": 6,
+          "thread": 34200
+        }
+      ],
+      "sameObservedThread": true,
+      "popupReturnPrecededArrivalPublication": true,
+      "observerFaults": 0,
+      "actualUiWindowThreadVerified": false,
+      "receiverLifetimeLeaseEstablished": false
+    },
+    {
+      "directory": "analysis/serato-passive-action-detached-20261106",
+      "resultSha256": "9c8120bf69807d9850270ce045a1f0fae50fd3e87b4a8dda25d0d48e6e0b3b08",
+      "eventsSha256": "068f93cc11acb4dd107ea83d6feac002f6d9b350a571dde4e3202160ba85026c",
+      "inputInventorySha256": "0c62488b6227ea3dc1a8e24689366da1d73888e0712f2be8d10554bb8aed7787",
+      "originalNativeImagesMatched": 165,
+      "nativeImagesStillUnchanged": true,
+      "result": {
+        "schema": "sl3.passive-action-capture.v1",
+        "inputsSha256": "0c62488b6227ea3dc1a8e24689366da1d73888e0712f2be8d10554bb8aed7787",
+        "observerInvokesCallbacks": false,
+        "observerReadsAudio": false,
+        "observerOpensDevice": false,
+        "applicationUsbBehaviourMeasured": false,
+        "installerRequestedByHost": false,
+        "elevationRequested": false,
+        "error": null,
+        "captureSeconds": 20,
+        "jobPolicy": {
+          "activeProcessLimit": 1,
+          "killOnJobClose": true,
+          "silentBreakawayAllowed": false
+        },
+        "captureCompleted": true,
+        "observerDetachedBeforeClose": true,
+        "process": {
+          "processStarted": true,
+          "pid": 22240,
+          "processExited": true,
+          "observerForcedTermination": true,
+          "closeRequested": true,
+          "exitCode": 1,
+          "jobEmpty": true,
+          "closeGraceSeconds": 20,
+          "closeWindowObservation": {
+            "ownedTopLevelWindows": 16,
+            "visibleWindows": 1,
+            "enabledVisibleWindows": 1,
+            "closeMessagesPosted": 1,
+            "closePostFailures": 0,
+            "closePostErrors": [],
+            "postCloseRequested": true,
+            "enumerationSucceeded": true,
+            "enumerationError": null,
+            "callbackError": null
+          },
+          "closeWaitSeconds": 20.01203529999475,
+          "closeTimeoutWindowObservation": {
+            "ownedTopLevelWindows": 16,
+            "visibleWindows": 1,
+            "enabledVisibleWindows": 1,
+            "closeMessagesPosted": 0,
+            "closePostFailures": 0,
+            "closePostErrors": [],
+            "postCloseRequested": false,
+            "enumerationSucceeded": true,
+            "enumerationError": null,
+            "callbackError": null
+          },
+          "processFileTimes": {
+            "first": "134384561319234662",
+            "last": "134384561726290803"
+          }
+        },
+        "eventsSha256": "068f93cc11acb4dd107ea83d6feac002f6d9b350a571dde4e3202160ba85026c",
+        "eventCounts": {
+          "action_observer_ready": 1,
+          "driver_action_receiver_observed": 1,
+          "driver_controller_message_returned": 2,
+          "driver_popup_returned": 1,
+          "genuine_sl3_arrival_published": 1
+        },
+        "workspaceInputsUnchanged": true,
+        "normalExitObserved": false
+      },
+      "events": [
+        {
+          "event": "action_observer_ready",
+          "hostMonotonicSeconds": 198536.7322464,
+          "ordinal": 1,
+          "guardedEntries": 4,
+          "invokesCallbacks": false,
+          "readsAudio": false,
+          "maximumEvents": 128
+        },
+        {
+          "event": "driver_action_receiver_observed",
+          "hostMonotonicSeconds": 198549.5772985,
+          "ordinal": 2,
+          "controller": 1,
+          "thread": 35956,
+          "callbackSlot": 16,
+          "captureOffset": 8,
+          "receiverMatchesPopup": true
+        },
+        {
+          "event": "driver_popup_returned",
+          "hostMonotonicSeconds": 198549.5960295,
+          "ordinal": 3,
+          "controller": 1,
+          "thread": 35956,
+          "callbacks": 1
+        },
+        {
+          "event": "driver_controller_message_returned",
+          "hostMonotonicSeconds": 198549.5961495,
+          "ordinal": 4,
+          "controller": 1,
+          "thread": 35956,
+          "message": 79
+        },
+        {
+          "event": "driver_controller_message_returned",
+          "hostMonotonicSeconds": 198549.5982455,
+          "ordinal": 5,
+          "controller": 1,
+          "thread": 35956,
+          "message": 720
+        },
+        {
+          "event": "genuine_sl3_arrival_published",
+          "hostMonotonicSeconds": 198549.8583666,
+          "ordinal": 6,
+          "thread": 35956
+        }
+      ],
+      "sameObservedThread": true,
+      "popupReturnPrecededArrivalPublication": true,
+      "observerFaults": 0,
+      "actualUiWindowThreadVerified": false,
+      "receiverLifetimeLeaseEstablished": false
+    }
+  ],
+  "secondCaptureRunnerSourceSha256": "869c7cf43cecc400612da530ae92abb78405ed731ffc07187d65851d527971e0",
+  "jobLimitTest": {
+    "schema": "sl3.passive-action-job-test.v1",
+    "policy": {
+      "activeProcessLimit": 1,
+      "killOnJobClose": true,
+      "silentBreakawayAllowed": false
+    },
+    "childOutcome": {
+      "spawnAccepted": false,
+      "winerror": 1816
+    },
+    "cleanup": {
+      "processStarted": true,
+      "pid": 2552,
+      "processExited": true,
+      "observerForcedTermination": false,
+      "closeRequested": false,
+      "exitCode": 0,
+      "jobEmpty": true,
+      "closeGraceSeconds": 20,
+      "processFileTimes": {
+        "first": "134384564555999481",
+        "last": "134384564556626623"
+      }
+    },
+    "mockedFridaBoundary": true,
+    "seratoExecuted": false,
+    "deviceOpened": false
+  },
+  "security": {
+    "helperBasename": "idund.exe",
+    "threatName": "Behavior:Win32/DefenseEvasion.A!ml",
+    "events": [
+      {
+        "recordId": 12958,
+        "eventId": 1117,
+        "timeCreated": "2026-11-06T16:29:08.0888808+00:00",
+        "threatName": "Behavior:Win32/DefenseEvasion.A!ml",
+        "action": "Quarantine"
+      },
+      {
+        "recordId": 12957,
+        "eventId": 1116,
+        "timeCreated": "2026-11-06T16:28:52.3608258+00:00",
+        "threatName": "Behavior:Win32/DefenseEvasion.A!ml",
+        "action": "Not Applicable"
+      },
+      {
+        "recordId": 12956,
+        "eventId": 1117,
+        "timeCreated": "2026-11-06T16:27:18.6060658+00:00",
+        "threatName": "Behavior:Win32/DefenseEvasion.A!ml",
+        "action": "Quarantine"
+      },
+      {
+        "recordId": 12955,
+        "eventId": 1116,
+        "timeCreated": "2026-11-06T16:27:01.6319276+00:00",
+        "threatName": "Behavior:Win32/DefenseEvasion.A!ml",
+        "action": "Not Applicable"
+      }
+    ],
+    "privateRuntimeVersion": "Frida 17.25.2",
+    "protectionsChanged": false,
+    "quarantineRestored": false,
+    "furtherFridaLaunchesHeld": true,
+    "readOnlyHoldRefusalVerified": true,
+    "specificHelperFileProvenanceAttested": false,
+    "falsePositiveDetermined": false
+  },
+  "currentHostObservation": {
+    "schema": "sl3.session-recovery-check.v1",
+    "planSha256": "b27d93a6f0de15e410d7846bb88c1ced3c8df5e15bd2949f4b608bb2eeae178e",
+    "phase": "clean",
+    "message": "Original files and temporary registration are already clean.",
+    "originalSetupClean": true,
+    "activeSessionObserved": false,
+    "recoveryAuthorized": false,
+    "owners": {
+      "runner": {
+        "state": "not_recorded"
+      },
+      "stage": {
+        "state": "not_recorded"
+      },
+      "supervisor": {
+        "state": "not_recorded"
+      }
+    },
+    "currentSetup": {
+      "observed": true,
+      "originalResources": true,
+      "occupiedPaths": [],
+      "registrationPresent": false,
+      "currentSetupClean": true
+    },
+    "resourcePlan": {
+      "schema": "sl3.installer-resource-recovery-plan.v1",
+      "archiveState": "original",
+      "bundlePresent": false,
+      "pendingPresent": false,
+      "filesWritten": false,
+      "deviceAccess": false,
+      "protectedSessionOwnerPresent": false,
+      "protectedStageOwner": null,
+      "observed": true
+    },
+    "brokerRetirementReported": false,
+    "issues": [],
+    "pointInTimeObservation": true,
+    "ordinaryToken": true,
+    "previousSessionShutdownVerified": false,
+    "repairAttempted": false,
+    "filesWritten": false,
+    "registryWritten": false,
+    "elevationRequested": false,
+    "deviceOpened": false,
+    "deviceReadinessVerified": false
+  },
+  "preparedPackageBinaryHashes": {
+    "sl3_asio.dll": "695f87e0cff1733e4aee8ab6b311d1cbc87b087a874fab5dddfef2404dd6e6bc",
+    "sl3_broker_controller.exe": "35c85280310f4bee8788888f4fcab3feb6d27b7cd4e5b07231a96647f0dccb53",
+    "sl3_usbdk.exe": "f4d7e00070ca8a8ef1dbad532dfdb7642775747b71bfeb610fbe1223434eac8f",
+    "UsbDkHelper.dll": "66bbfe6f99b417f97c7a9e97816e24af7dde0e01b8e535c41e91e1c6c19cfeda"
+  },
+  "standaloneObserverExecuted": true,
+  "combinedSupervisorModeLiveValidated": false,
+  "automaticActionImplemented": false,
+  "audioStartupTested": false,
+  "physicalDvsTested": false,
+  "normalSeratoShutdownVerified": false
+}

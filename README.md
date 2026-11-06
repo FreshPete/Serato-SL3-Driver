@@ -4,6 +4,8 @@ Restore the physical Rane SL3 for current Serato DJ Pro and two-deck DVS. Window
 
 ## Latest status — 6 November 2026
 
+**Passive runtime observation completed; Frida helper now on hold.** Two isolated no-install startup captures observed the expected receiver, popup return and SL3 arrival publication on the same thread. Both posted-close attempts still required forced exit. Defender quarantined a temporary Frida `idund.exe` helper; protections remain enabled and further Frida launches are held. Driver binaries and original installed files are unchanged. [Findings, security event and limitations](docs/passive-action-capture.md)
+
 **Passive action probe integrated as opt-in:** the receiver diagnostic now shares the startup shim's arrival hook and its fields survive supervision. Combined guard/manual-click checks, preparation, supervisor and copied-kit checks passed. Normal kit preparation keeps the probe off; no live probe or automatic install action ran. [Integration and evidence](docs/session-action-observation.md)
 
 **Original install action identified:** checked RTTI and code connect Download Driver to a popup callback capturing its controller. A bounded passive receiver/thread probe is prepared; nine mocked-boundary cases and actual offline guard/refusal checks passed. No live probe or automatic action ran. [Receiver evidence and limits](docs/serato-download-action-receiver.md)

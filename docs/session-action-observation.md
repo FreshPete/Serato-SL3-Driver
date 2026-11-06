@@ -1,5 +1,7 @@
 # Opt-in action observation in a supervised session
 
+**Runtime follow-up:** the [standalone probe captured the receiver/thread relationship](passive-action-capture.md). Both isolated close attempts required force, and Defender quarantined a Frida helper. Further Frida launches are held under unchanged protection. The combined mode below remains untested live.
+
 The passive Download Driver receiver probe can now be prepared in the same script as the startup-only interoperability shim. This removes their competing arrival hooks and lets the existing supervisor retain the diagnostic fields. It still requires the genuine user click and normal installer approvals. No automatic callback invocation was added. [Evidence](evidence/session-action-observation-20261106.json)
 
 ## Combined preparation
