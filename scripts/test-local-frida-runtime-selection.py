@@ -1,0 +1,42 @@
+"""Check candidate payload selection without starting an interpreter or Frida."""
+from pathlib import Path
+import runpy
+import tempfile
+import unittest
+
+API = runpy.run_path(str(Path(__file__).with_name('prepare-local-frida-probe-runtime.py')))
+
+
+class SelectionTests(unittest.TestCase):
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory()
+        self.root = Path(self.temporary.name); self.base = self.root / 'base'; self.generated = self.root / 'generated'
+        self.manifest = {'files': {}}
+        for name, data in {'python.exe': b'python', 'python3.dll': b'abi', 'LICENSE.txt': b'license',
+                           'packages/frida/_frida.pyd': b'stock binary', 'packages/unrelated.bin': b'other'}.items():
+            path = self.base / name; path.parent.mkdir(parents=True, exist_ok=True); path.write_bytes(data)
+            self.manifest['files'][name] = {}
+        self.generated.mkdir()
+        for name in ('__init__.py', 'aio.py', '_frida.pyi'):
+            (self.generated / name).write_bytes(b'binding')
+            (self.base / 'packages/frida' / name).write_bytes(b'binding')
+        (self.generated / '_frida.pyd').write_bytes(b'reviewed candidate')
+
+    def tearDown(self): self.temporary.cleanup()
+
+    def test_only_candidate_native_extension_selected(self):
+        result = API['payload'](self.base, self.manifest, self.generated)
+        self.assertEqual(result['packages/frida/_frida.pyd'], b'reviewed candidate')
+        self.assertNotIn(b'stock binary', result.values())
+        self.assertNotIn('packages/unrelated.bin', result)
+
+    def test_binding_drift_refused(self):
+        (self.generated / 'aio.py').write_bytes(b'changed')
+        with self.assertRaises(ValueError): API['payload'](self.base, self.manifest, self.generated)
+
+    def test_incomplete_interpreter_refused(self):
+        del self.manifest['files']['python3.dll']
+        with self.assertRaises(ValueError): API['payload'](self.base, self.manifest, self.generated)
+
+
+if __name__ == '__main__': unittest.main()

@@ -1,0 +1,191 @@
+{
+  "schema": "sl3.local-frida-owned-supervision.v1",
+  "candidateSha256": "8ed5bdde028c484463fc536fa1678b4b5bbfd99d99c387eb40436d18a8d82da3",
+  "runnerNormalizedSha256": "b203e83cf25880f047cd2d70e3662e2c16c489cd2b4fd23e2155331dc45fe9f5",
+  "sdkManifestSha256": "1cea6bb307991da6a36d03fa2bd59da4fbd6887b60b3e69a1a223e2836371175",
+  "processStarted": true,
+  "timedOut": false,
+  "forcedJobCleanup": false,
+  "activeProcessLimit": 4,
+  "silentBreakawayAllowed": false,
+  "killOnJobClose": true,
+  "ordinaryToken": true,
+  "securityHoldCleared": false,
+  "deviceOpened": false,
+  "seratoStarted": false,
+  "passed": true,
+  "probePid": 5924,
+  "probeCreated": "134384605657475416",
+  "probeExitCode": 0,
+  "beforeCleanup": {
+    "total": 2,
+    "active": 0,
+    "terminated": 0
+  },
+  "afterCleanup": {
+    "total": 2,
+    "active": 0,
+    "terminated": 0
+  },
+  "probe": {
+    "schema": "sl3.local-frida-owned-probe.v1",
+    "candidateSha256": "8ed5bdde028c484463fc536fa1678b4b5bbfd99d99c387eb40436d18a8d82da3",
+    "runnerNormalizedSha256": "b203e83cf25880f047cd2d70e3662e2c16c489cd2b4fd23e2155331dc45fe9f5",
+    "stages": [
+      "candidate_imported",
+      "local_backend_ready",
+      "fixture_owned",
+      "fixture_attached",
+      "script_loaded",
+      "health_rpc_passed",
+      "script_unloaded",
+      "fixture_detached",
+      "manager_closed",
+      "fixture_exited"
+    ],
+    "passed": true,
+    "fixtureStarted": true,
+    "deviceOpened": false,
+    "seratoStarted": false,
+    "securityHoldCleared": false,
+    "version": "17.25.2",
+    "fixturePid": 10836,
+    "fixtureCreated": "134384605660205493",
+    "health": {
+      "pid": 10836,
+      "arch": "x64",
+      "runtime": "QJS"
+    },
+    "fixtureExitCode": 0
+  },
+  "finalAccounting": {
+    "total": 2,
+    "active": 0,
+    "terminated": 0
+  },
+  "date": "2026-11-06",
+  "runtimePreparation": {
+    "prepared": true,
+    "manifestSha256": "1cea6bb307991da6a36d03fa2bd59da4fbd6887b60b3e69a1a223e2836371175",
+    "fileCount": 47,
+    "candidateSha256": "8ed5bdde028c484463fc536fa1678b4b5bbfd99d99c387eb40436d18a8d82da3",
+    "scope": "owned-process-local-frida-candidate-only",
+    "fridaImported": false,
+    "sessionKitChanged": false
+  },
+  "jobFixture": {
+    "schema": "sl3.local-frida-job-test.v1",
+    "passed": true,
+    "created": "134384603723056586",
+    "childResult": {
+      "children": 3,
+      "winerror": 1816,
+      "pids": [
+        25492,
+        41312,
+        34212
+      ]
+    },
+    "before": {
+      "total": 4,
+      "active": 4,
+      "terminated": 0
+    },
+    "members": [
+      24032,
+      25492,
+      41312,
+      34212
+    ],
+    "after": {
+      "total": 4,
+      "active": 0,
+      "terminated": 0
+    },
+    "fridaImported": false,
+    "deviceOpened": false
+  },
+  "selectionTests": {
+    "count": 3,
+    "passed": true,
+    "stockSdkRefused": true
+  },
+  "protectionObservation": {
+    "schema": "sl3.local-frida-post-probe-protection.v1",
+    "windowStartUtc": "2026-11-06T17:39:50.5472826Z",
+    "observedUtc": "2026-11-06T17:43:40.4080086Z",
+    "detectionEvents": [],
+    "antivirusEnabled": true,
+    "realTimeProtectionEnabled": true,
+    "behaviorMonitorEnabled": true,
+    "settingsChanged": false,
+    "holdStillPresent": true
+  },
+  "postSetupCheck": {
+    "schema": "sl3.session-recovery-check.v1",
+    "planSha256": "b27d93a6f0de15e410d7846bb88c1ced3c8df5e15bd2949f4b608bb2eeae178e",
+    "phase": "clean",
+    "message": "Original files and temporary registration are already clean.",
+    "originalSetupClean": true,
+    "activeSessionObserved": false,
+    "recoveryAuthorized": false,
+    "owners": {
+      "runner": {
+        "state": "not_recorded"
+      },
+      "stage": {
+        "state": "not_recorded"
+      },
+      "supervisor": {
+        "state": "not_recorded"
+      }
+    },
+    "currentSetup": {
+      "observed": true,
+      "originalResources": true,
+      "occupiedPaths": [],
+      "registrationPresent": false,
+      "currentSetupClean": true
+    },
+    "resourcePlan": {
+      "schema": "sl3.installer-resource-recovery-plan.v1",
+      "archiveState": "original",
+      "bundlePresent": false,
+      "pendingPresent": false,
+      "filesWritten": false,
+      "deviceAccess": false,
+      "protectedSessionOwnerPresent": false,
+      "protectedStageOwner": null,
+      "observed": true
+    },
+    "brokerRetirementReported": false,
+    "issues": [],
+    "pointInTimeObservation": true,
+    "ordinaryToken": true,
+    "previousSessionShutdownVerified": false,
+    "repairAttempted": false,
+    "filesWritten": false,
+    "registryWritten": false,
+    "elevationRequested": false,
+    "deviceOpened": false,
+    "deviceReadinessVerified": false
+  },
+  "runtimeFilesReverifiedAfterProbe": true,
+  "sourceNormalizedSha256": {
+    "prepare-local-frida-probe-runtime.py": "70a63025636e924e40c875178d1051db947a8f6bbb7d6ce2b76ae4202d2ec9e0",
+    "run-local-frida-owned-probe.py": "b203e83cf25880f047cd2d70e3662e2c16c489cd2b4fd23e2155331dc45fe9f5",
+    "test-local-frida-runtime-selection.py": "c27da6b713114fd62d50c2321ca1ddc377064aa67b82b694594d7b4241dfda66",
+    "test-local-frida-probe-job.py": "fa6e871af88d85171e6c6c8db555a70027b10dae8396301ab67ed8992718c710"
+  },
+  "consoleModeDiagnostic": {
+    "firstFixtureRefused": true,
+    "ownedPythonProcesses": 4,
+    "additionalConhostProcesses": 4,
+    "resolvedBy": "DETACHED_PROCESS for Python fixtures/probe; process limit and breakaway restrictions unchanged",
+    "diagnosticSha256": "597ce9adf38fee3e8b231c00cba21e1c21c4a4a82ddf646b8489923bbce79b7f"
+  },
+  "seratoIntegrationValidated": false,
+  "audioValidationAdded": false,
+  "wholeRuntimeAttested": false,
+  "unattendedReleaseReady": false
+}

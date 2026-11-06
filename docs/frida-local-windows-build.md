@@ -1,6 +1,6 @@
 # Local Windows instrumentation build investigation
 
-The current Windows SL3 path needs local process instrumentation only. The initial MSVC and Clang/V8 builds recorded here failed. A [follow-up local-only, QuickJS-only candidate](frida-local-qjs-candidate.md) now builds and passes static inspection after additional reviewed portability work. No replacement runtime was imported, installed into the session kit or launched. The existing diagnostic hold remains in place. [Initial evidence](evidence/frida-local-build-20261106.json) · [Clang/V8 attempt](evidence/frida-local-clang-build-20261106.json)
+The current Windows SL3 path needs local process instrumentation only. The initial MSVC and Clang/V8 builds recorded here failed. A [follow-up local-only, QuickJS-only candidate](frida-local-qjs-candidate.md) now builds and passes static inspection after additional reviewed portability work, and a separate [owned-process runtime test](local-frida-owned-probe.md) passes. The existing session kit and its diagnostic hold remain unchanged. [Initial evidence](evidence/frida-local-build-20261106.json) · [Clang/V8 attempt](evidence/frida-local-clang-build-20261106.json)
 
 This work follows the [Defender helper quarantine and passive captures](passive-action-capture.md). It does not establish that the quarantined file was harmless or that a different build will pass protection checks. No exclusion, quarantine restoration, signing change or protection disablement was made.
 

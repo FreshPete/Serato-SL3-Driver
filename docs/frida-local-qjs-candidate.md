@@ -1,6 +1,6 @@
 # Local Windows candidate builds successfully
 
-A project-local Frida 17.25.2 build now produces an x64 Python extension with the local Windows backend and QuickJS enabled. Nonlocal device backends and V8 are disabled. Static inspection and an on-demand Defender file scan completed; the extension has not been imported or used against any process. The live-session diagnostic hold remains in place. [Evidence](evidence/frida-local-qjs-build-20261106.json)
+A project-local Frida 17.25.2 build produces an x64 Python extension with the local Windows backend and QuickJS enabled. Nonlocal device backends and V8 are disabled. Static inspection and an on-demand Defender file scan completed at this build stage. A subsequent [owned-process runtime test](local-frida-owned-probe.md) now passes in a separate private SDK; no new Serato test or session-kit replacement has occurred. The existing session-path hold remains in place. [Build evidence](evidence/frida-local-qjs-build-20261106.json)
 
 ## What resolved the link failures
 
@@ -20,4 +20,4 @@ Defender events 1000/1001 record a matching on-demand scan ID and the candidate 
 
 The current inspector's explicit option is `--allow-reviewed-windows-portability` (the earlier includes option remains an alias). It accepts only the encoded source changes; twenty-two configuration and exact-patch tests pass. Earlier failed attempts and their separate patch files remain preserved.
 
-An [image-level native asset review](frida-embedded-asset-review.md) now matches all twelve agent/helper descriptors and the four non-empty payloads to the final image. The next step is an isolated candidate SDK and a bounded owned-process runtime test. No new binary has replaced the working session kit, no Serato/device test ran, and no further audio, shutdown or DVS validation is claimed.
+An [image-level native asset review](frida-embedded-asset-review.md) matches all twelve agent/helper descriptors and the four non-empty payloads to the final image. The separate SDK's [bounded owned-process test](local-frida-owned-probe.md) also passes. No new binary has replaced the working session kit, no Serato/device test ran, and no further audio, Serato shutdown or DVS validation is claimed.

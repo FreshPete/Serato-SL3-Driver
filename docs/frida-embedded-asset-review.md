@@ -25,4 +25,4 @@ Nine independent machine-code fixtures exercise the decoder, including altered o
 
 Use the verified LLVM `llvm-pdbutil dump -summary` and `dump -publics` commands on the candidate's matching `_frida.pdb`, saving each output. Run the asset inspector with the build directory, explicit expected candidate hash and those two dump files, using the private interpreter with `-I -B`. It requires `pefile` and Capstone for data parsing, not the Frida Python package. The decoder tests are in [test-frida-embedded-assets.py](../scripts/test-frida-embedded-assets.py).
 
-The next step is to prepare an isolated candidate SDK and a bounded test against a process created solely for that test. The existing session kit, old diagnostic hold, Serato files and SL3 state remain unchanged. No new audio, shutdown or DVS result is claimed.
+A subsequent [isolated candidate SDK and owned-process test](local-frida-owned-probe.md) now passes. The existing session kit, old diagnostic hold, Serato files and SL3 state remain unchanged. No new audio, Serato shutdown or DVS result is claimed.
