@@ -1,0 +1,276 @@
+{
+  "schema": "sl3.local-qjs-candidate-build.v1",
+  "date": "2026-11-06",
+  "buildExitCode": 0,
+  "buildLogSha256": "027570380a51077e749535a5cf1cb77371a0b990080a5c7abd17168137535f21",
+  "initialNewlineFailureLogSha256": "2104f18fe8f811a6f1b265cb10f6bd63b8d65cc43872217923028d1a84618d8b",
+  "toolchainProvenanceReference": "frida-local-clang-build-20261106.json",
+  "compiler": "Clang/LLD 21.1.8",
+  "buildCommandSha256": "41f01b57662c6740ae60f505f9c511047ea13e05cc61aa711d59166e146e397a",
+  "nativeFileSha256": "8a5bf73bef6f30c2edc8b3c17fca7b0927bfcfab4b74739f48fc8c3ebaa84974",
+  "inspection": {
+    "schema": "sl3.frida-local-build-inspection.v1",
+    "sourceCommits": {
+      ".": "29016dbd9d8fce836b2b86892b04cc31c2f767aa",
+      "releng": "564352a3eac2ca0f5db776b6929955dbb20cf731",
+      "subprojects/frida-core": "317363ce8064e3ede421ded3e53e1d3ffcfd782d",
+      "subprojects/frida-gum": "c73c1bbf24ab6bab4e46e11faedd051579e1e942",
+      "subprojects/frida-python": "50ad5f65ddcb1270cbc25505f987fac14e763491",
+      "subprojects/efni": "329dd8e94505e95e066251e3d4dfe25d0e55eec3",
+      "releng/meson": "145667c57ed2649ddcc6fbb11b6008e0d451df1d",
+      "releng/tomlkit": "911cccd630965ff423316e25b4685ecf7df0ec0a",
+      "subprojects/frida-python/frida-bindgen": "eace04901ef6300429e8c343095297df042dba0e"
+    },
+    "requiredOptions": {
+      "frida_python": "enabled",
+      "frida-core:local_backend": "enabled",
+      "frida-core:compat": [
+        "disabled"
+      ],
+      "frida-core:tests": "disabled",
+      "frida-gum:tests": "disabled",
+      "frida-gum:quickjs": "enabled",
+      "frida-gum:v8": "disabled",
+      "frida_tools": "disabled",
+      "frida_node": "disabled",
+      "frida_net": "disabled",
+      "frida_swift": "disabled",
+      "frida_qml": "disabled",
+      "server": "disabled",
+      "portal": "disabled",
+      "gadget": "disabled",
+      "inject": "disabled",
+      "graft_tool": "disabled",
+      "frida-core:fruity_backend": "disabled",
+      "frida-core:droidy_backend": "disabled",
+      "frida-core:socket_backend": "disabled",
+      "frida-core:simmy_backend": "disabled",
+      "frida-core:barebone_backend": "disabled",
+      "frida-core:compiler_backend": "disabled"
+    },
+    "targetCount": 36,
+    "buildMetadataSha256": {
+      "intro-buildoptions.json": "fb24c526b18595971d3f9a3b4b227b0f16082bef3f3c2f329877439121611fdc",
+      "intro-targets.json": "914594dede8002ca05916fe437b4a7d88f1f06e1756d0f62d653b67141f7de36",
+      "build.ninja": "384d9def32969f3b6ee278abe4d4860f745797200ffddb66ab15b6866eb57b96"
+    },
+    "configurationOnly": false,
+    "candidateInspected": true,
+    "reviewedWindowsIncludeChangesAllowed": true,
+    "sourceHeaderChanges": [
+      {
+        "path": "gum/backend-windows/gummodule-windows.c",
+        "includeAdded": "gumprocess.h",
+        "originalSha256": "a07c9e4318958899ef802c41efb4348fa6d8f708916c3c47d9afd83adacace35",
+        "normalizedPatchedSha256": "01571181f9fe6bfc3ec8102d8700772b0de57b6ca2a719ac2602b474ba22ad35"
+      },
+      {
+        "path": "gum/backend-windows/gumprocess-windows.c",
+        "includeAdded": "gum-init.h",
+        "originalSha256": "ffaa91f68d669a99f736af51f7d7e3fbfa4825c52a7b0471c410a95123826344",
+        "normalizedPatchedSha256": "332eafe2a88afff1a6da78ead2348adbbac41900130b8d97f6e000ce47f9f8f4"
+      },
+      {
+        "path": "gum/backend-dbghelp/gumdbghelpbacktracer.c",
+        "includeAdded": "gum/gumwindows.h",
+        "originalSha256": "134f0fcd968ae483336572ec1f5757f8d8a1219403c5d8e6ed9a775c719d9025",
+        "normalizedPatchedSha256": "132b80db9672ad7177951c873b3eb9ded2397db495379393578d376768eb0989"
+      }
+    ],
+    "sourceDeclarationChanges": [
+      {
+        "path": "lib/agent/agent-glue.c",
+        "originalSha256": "f5183f84e0598685c3e2deb2572965c58d30685a18812e8d048c81ad3e4b5f13",
+        "normalizedPatchedSha256": "06c917377ac809de2f5a3abc8825b12ffc349d389177a59be1a84502be33fc86"
+      }
+    ],
+    "sourceTlsChanges": [
+      {
+        "path": "gum/backend-windows/gumtls-windows.c",
+        "originalSha256": "566c4e5a95ed0180d7821c4f2c0edc581d016159f293f8682e18d798e2450aaa",
+        "normalizedPatchedSha256": "1025f88d653a39233023bb1cad266af872cf90c88aae95293d9c756e9cfa23e2"
+      }
+    ],
+    "sourceExactGitBlobFiles": [
+      {
+        "path": "src/linux-kernel-image.vala",
+        "sha256": "7e80031ac3a6e084fe824110118949fd8d0ef63bf252472c6e55dc4aed313bd8"
+      }
+    ],
+    "candidateImported": false,
+    "candidateExecuted": false,
+    "seratoStarted": false,
+    "deviceOpened": false,
+    "securityHoldCleared": false,
+    "runtimeCompatibilityVerified": false,
+    "antivirusCompatibilityVerified": false,
+    "embeddedAssetContentsAttested": false,
+    "candidateSha256": "8ed5bdde028c484463fc536fa1678b4b5bbfd99d99c387eb40436d18a8d82da3",
+    "candidateBytes": 34133504,
+    "candidateImports": [
+      "advapi32.dll",
+      "crypt32.dll",
+      "dnsapi.dll",
+      "gdi32.dll",
+      "iphlpapi.dll",
+      "kernel32.dll",
+      "ole32.dll",
+      "psapi.dll",
+      "python3.dll",
+      "shell32.dll",
+      "shlwapi.dll",
+      "user32.dll",
+      "ws2_32.dll"
+    ],
+    "candidateExportCount": 2389,
+    "candidateExportNamesSha256": "28a94d2591a1d257c5ea2aa2aef12810bb6aa0aa125b40d02c8cc0a217e57807",
+    "pythonInitExportPresent": true,
+    "idunNamedExportsPresent": false,
+    "fruityHostSessionExportsPresent": false
+  },
+  "patches": [
+    {
+      "path": "patches/frida-gum-17.25.2-windows-portability.patch",
+      "normalizedSha256": "c22bf55c6d04f6aa9b7514a3536f5422936101cc09347f5a8081716317685885"
+    },
+    {
+      "path": "patches/frida-core-17.25.2-windows-agent-declarations.patch",
+      "normalizedSha256": "de95eb1f3e6518590864b6ef01d0230cf7067fea3fe7304a7d81655f1e7b2873"
+    }
+  ],
+  "tlsStoreFixture": {
+    "result": {
+      "schema": "sl3.clang-gs-store-test.v1",
+      "threads": 4,
+      "ownedTlsKeys": 62,
+      "comparisons": 190464,
+      "failures": 0,
+      "passed": true,
+      "fridaLoaded": false,
+      "deviceOpened": false
+    },
+    "candidateStatementMatchesPatch": true,
+    "referenceCompiler": "MSVC 19.29.30159",
+    "candidateCompiler": "Clang 21.1.8",
+    "optimization": "/O2 /MT /W4 /WX",
+    "sourceSha256": "c8187d659b70ec83a577bdb27a36592c529a0dc16bcd8c2b6678c38579d2a919",
+    "referenceSourceSha256": "e0ac276ddf126d3aba2d4975217704b2958485c984bc8da6e569d04fbc9858cd",
+    "executableSha256": "a36d34548e1f1fd4a1c5c20f1217b5500ab5aa3ec8c6b573d8125553d28e0ce0",
+    "candidateAssemblySha256": "dc0fb260f371da45f9e5a2bd932f8609f411708b6fd39637e7bd774f1f138fbe",
+    "actualGumObjectDisassemblySha256": "71f00ae9392edefb0dd9b395f280b6c67e34567759b9f2d7a2ba7a766be50d95",
+    "actualGumObjectGsInstruction": "65 48 89 3c f5 80 14 00 00: movq %rdi, %gs:0x1480(,%rsi,8)",
+    "actualGumObjectHasUnresolvedWriteGsQword": false,
+    "testsExpansionTlsBranch": false,
+    "testsWholeFridaRuntime": false
+  },
+  "newlineCorrection": {
+    "path": "src/linux-kernel-image.vala",
+    "beforeSha256": "1ada2936233c8ea2b191bfd5fbb9aa2e3a5423f8ee9702d44a7a660a9b129c35",
+    "gitBlobSha256": "7e80031ac3a6e084fe824110118949fd8d0ef63bf252472c6e55dc4aed313bd8",
+    "afterSha256": "7e80031ac3a6e084fe824110118949fd8d0ef63bf252472c6e55dc4aed313bd8",
+    "exactGitBlobRestored": true,
+    "cause": "CRLF checkout added a raw carriage return inside a Vala multiline string; generated C contained an unescaped CR.",
+    "implementationPatched": false
+  },
+  "fileScan": {
+    "schema": "sl3.local-frida-file-scan.v1",
+    "candidateSha256": "8ed5bdde028c484463fc536fa1678b4b5bbfd99d99c387eb40436d18a8d82da3",
+    "requestTimeUtc": "2026-11-06T17:22:02.8134248Z",
+    "requested": true,
+    "commandCompleted": true,
+    "candidateExecuted": false,
+    "settingsChanged": false,
+    "before": {
+      "antivirusEnabled": true,
+      "realTimeProtectionEnabled": true,
+      "behaviorMonitorEnabled": true,
+      "customScanStart": null,
+      "customScanEnd": null
+    },
+    "after": {
+      "antivirusEnabled": true,
+      "realTimeProtectionEnabled": true,
+      "behaviorMonitorEnabled": true,
+      "customScanStart": null,
+      "customScanEnd": null
+    },
+    "scanTimesChanged": false,
+    "candidateStillPresent": true,
+    "afterCandidateSha256": "8ed5bdde028c484463fc536fa1678b4b5bbfd99d99c387eb40436d18a8d82da3",
+    "finishTimeUtc": "2026-11-06T17:22:04.3915371Z",
+    "eventVerifiedScanCompletion": {
+      "startRecordId": 12961,
+      "endRecordId": 12962,
+      "sameScanId": true,
+      "scanId": "{523245CD-00E9-46F6-B4F0-22A03415605F}",
+      "startUtc": "2026-11-06T17:22:04.2268209Z",
+      "endUtc": "2026-11-06T17:22:04.3013174Z",
+      "scanResourcesMatchCandidate": true,
+      "noDetectionEventsInObservedWindow": true
+    }
+  },
+  "inspectionTests": {
+    "count": 22,
+    "passed": true
+  },
+  "candidateSdkImported": false,
+  "candidateRuntimeTested": false,
+  "seratoStarted": false,
+  "deviceOpened": false,
+  "securityHoldCleared": false,
+  "sessionKitReplaced": false,
+  "firmwareChanged": false,
+  "settingsChanged": false,
+  "physicalAudioValidationAdded": false,
+  "postBuildRecovery": {
+    "schema": "sl3.session-recovery-check.v1",
+    "planSha256": "b27d93a6f0de15e410d7846bb88c1ced3c8df5e15bd2949f4b608bb2eeae178e",
+    "phase": "clean",
+    "message": "Original files and temporary registration are already clean.",
+    "originalSetupClean": true,
+    "activeSessionObserved": false,
+    "recoveryAuthorized": false,
+    "owners": {
+      "runner": {
+        "state": "not_recorded"
+      },
+      "stage": {
+        "state": "not_recorded"
+      },
+      "supervisor": {
+        "state": "not_recorded"
+      }
+    },
+    "currentSetup": {
+      "observed": true,
+      "originalResources": true,
+      "occupiedPaths": [],
+      "registrationPresent": false,
+      "currentSetupClean": true
+    },
+    "resourcePlan": {
+      "schema": "sl3.installer-resource-recovery-plan.v1",
+      "archiveState": "original",
+      "bundlePresent": false,
+      "pendingPresent": false,
+      "filesWritten": false,
+      "deviceAccess": false,
+      "protectedSessionOwnerPresent": false,
+      "protectedStageOwner": null,
+      "observed": true
+    },
+    "brokerRetirementReported": false,
+    "issues": [],
+    "pointInTimeObservation": true,
+    "ordinaryToken": true,
+    "previousSessionShutdownVerified": false,
+    "repairAttempted": false,
+    "filesWritten": false,
+    "registryWritten": false,
+    "elevationRequested": false,
+    "deviceOpened": false,
+    "deviceReadinessVerified": false
+  },
+  "combinedGumPatchReverseApplyCheckExitCode": 0,
+  "inspectorNormalizedSha256": "ee9231b9d3c0850806977a830476998445d8a836ab1fe74ac4f7224dc4229582"
+}

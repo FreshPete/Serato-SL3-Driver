@@ -24,6 +24,11 @@ WINDOWS_INCLUDES = {
 AGENT_ANCHOR = b'#include "frida-payload.h"\n'
 AGENT_DECLARATIONS = (b'\n#ifdef _MSC_VER\nvoid frida_libc_shim_init (void);\n'
                       b'void frida_libc_shim_deinit (void);\n#endif\n')
+TLS_ANCHOR = b'    __writegsqword (0x1480 + key * sizeof (gpointer), (guint64) value);\n'
+TLS_REPLACEMENT = (b'#  ifdef __clang__\n'
+                   b'    *((guint64 __attribute__((address_space(256))) *) (guintptr)\n'
+                   b'        (0x1480 + key * sizeof (gpointer))) = (guint64) value;\n'
+                   b'#  else\n' + TLS_ANCHOR + b'#  endif\n')
 
 
 def require(condition, message):
@@ -35,7 +40,7 @@ def check_configuration(options, targets, ninja):
     values = {x['name']: x['value'] for x in options}
     required = {'frida_python': 'enabled', 'frida-core:local_backend': 'enabled',
                 'frida-core:compat': ['disabled'], 'frida-core:tests': 'disabled',
-                'frida-gum:tests': 'disabled'}
+                'frida-gum:tests': 'disabled', 'frida-gum:quickjs': 'enabled', 'frida-gum:v8': 'disabled'}
     required.update({name: 'disabled' for name in
                     ('frida_tools', 'frida_node', 'frida_net', 'frida_swift', 'frida_qml',
                      'server', 'portal', 'gadget', 'inject', 'graft_tool')})
@@ -73,12 +78,20 @@ def verify_agent_change(original, actual):
             'Reviewed agent declarations differ')
 
 
+def verify_tls_change(original, actual):
+    require(original.count(TLS_ANCHOR) == 1 and
+            actual.replace(b'\r\n', b'\n') == original.replace(TLS_ANCHOR, TLS_REPLACEMENT),
+            'Reviewed Clang TLS store differs')
+
+
 def inspect(source, build, configuration_only=False, allow_reviewed_windows_includes=False):
     source, build = source.resolve(), build.resolve()
     git = lambda directory, *args: subprocess.check_output(
         ['git', '-C', str(directory), *args], text=True, timeout=30).strip()
     header_changes = []
     declaration_changes = []
+    tls_changes = []
+    exact_blob_files = []
     for relative, expected in PINS.items():
         directory = source / relative
         require(git(directory, 'rev-parse', 'HEAD') == expected, 'Source commit differs: ' + relative)
@@ -88,15 +101,23 @@ def inspect(source, build, configuration_only=False, allow_reviewed_windows_incl
                     {'M subprojects/frida-gum', 'M subprojects/frida-core'}, 'Unexpected modified submodule')
         elif status and allow_reviewed_windows_includes and relative == 'subprojects/frida-core':
             name = 'lib/agent/agent-glue.c'
-            require(status.strip() == 'M ' + name, 'Only the reviewed agent declarations are permitted')
+            newline_name = 'src/linux-kernel-image.vala'
+            require({line.strip() for line in status.splitlines()} in
+                    ({'M ' + name}, {'M ' + name, 'M ' + newline_name}),
+                    'Only the reviewed agent declarations and exact Git-blob line endings are permitted')
             original = subprocess.check_output(['git', '-C', str(directory), 'show', 'HEAD:' + name], timeout=30)
             actual = (directory / name).read_bytes().replace(b'\r\n', b'\n')
             verify_agent_change(original, actual)
             declaration_changes.append({'path': name, 'originalSha256': hashlib.sha256(original).hexdigest(),
                                         'normalizedPatchedSha256': hashlib.sha256(actual).hexdigest()})
+            original = subprocess.check_output(['git', '-C', str(directory), 'show', 'HEAD:' + newline_name], timeout=30)
+            require((directory / newline_name).read_bytes() == original, 'Vala source must match exact LF Git blob')
+            exact_blob_files.append({'path': newline_name, 'sha256': hashlib.sha256(original).hexdigest()})
         elif status and allow_reviewed_windows_includes and relative == 'subprojects/frida-gum':
-            require({line.strip() for line in status.splitlines()} == {'M ' + name for name in WINDOWS_INCLUDES},
-                    'Only the reviewed Windows include changes are permitted')
+            tls_name = 'gum/backend-windows/gumtls-windows.c'
+            require({line.strip() for line in status.splitlines()} ==
+                    {'M ' + name for name in (*WINDOWS_INCLUDES, tls_name)},
+                    'Only the reviewed Windows portability changes are permitted')
             for name, (anchor, header) in WINDOWS_INCLUDES.items():
                 original = subprocess.check_output(['git', '-C', str(directory), 'show', 'HEAD:' + name], timeout=30)
                 actual = (directory / name).read_bytes()
@@ -104,6 +125,11 @@ def inspect(source, build, configuration_only=False, allow_reviewed_windows_incl
                 header_changes.append({'path': name, 'includeAdded': header,
                                        'originalSha256': hashlib.sha256(original).hexdigest(),
                                        'normalizedPatchedSha256': hashlib.sha256(actual.replace(b'\r\n', b'\n')).hexdigest()})
+            original = subprocess.check_output(['git', '-C', str(directory), 'show', 'HEAD:' + tls_name], timeout=30)
+            actual = (directory / tls_name).read_bytes().replace(b'\r\n', b'\n')
+            verify_tls_change(original, actual)
+            tls_changes.append({'path': tls_name, 'originalSha256': hashlib.sha256(original).hexdigest(),
+                                'normalizedPatchedSha256': hashlib.sha256(actual).hexdigest()})
         else:
             require(not status, 'Tracked source changes present: ' + relative)
     options = build / 'meson-info/intro-buildoptions.json'
@@ -118,6 +144,8 @@ def inspect(source, build, configuration_only=False, allow_reviewed_windows_incl
               'reviewedWindowsIncludeChangesAllowed': allow_reviewed_windows_includes,
               'sourceHeaderChanges': header_changes,
               'sourceDeclarationChanges': declaration_changes,
+              'sourceTlsChanges': tls_changes,
+              'sourceExactGitBlobFiles': exact_blob_files,
               'candidateImported': False, 'candidateExecuted': False, 'seratoStarted': False,
               'deviceOpened': False, 'securityHoldCleared': False,
               'runtimeCompatibilityVerified': False, 'antivirusCompatibilityVerified': False,
@@ -147,8 +175,9 @@ if __name__ == '__main__':
     parser.add_argument('--source', type=Path, required=True)
     parser.add_argument('--build', type=Path, required=True)
     parser.add_argument('--configuration-only', action='store_true')
-    parser.add_argument('--allow-reviewed-windows-includes', action='store_true',
-                        help='Allow only the exact include additions and agent declarations encoded in this inspector')
+    parser.add_argument('--allow-reviewed-windows-portability', '--allow-reviewed-windows-includes',
+                        dest='allow_reviewed_windows_includes', action='store_true',
+                        help='Allow only the exact Windows includes, agent declarations and Clang TLS store encoded here')
     args = parser.parse_args()
     print(json.dumps(inspect(args.source, args.build, args.configuration_only,
                              args.allow_reviewed_windows_includes), indent=2))

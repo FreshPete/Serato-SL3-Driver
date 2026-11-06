@@ -12,7 +12,7 @@ class ConfigurationTests(unittest.TestCase):
     def setUp(self):
         values = {'frida_python': 'enabled', 'frida-core:local_backend': 'enabled',
                   'frida-core:compat': ['disabled'], 'frida-core:tests': 'disabled',
-                  'frida-gum:tests': 'disabled'}
+                  'frida-gum:tests': 'disabled', 'frida-gum:quickjs': 'enabled', 'frida-gum:v8': 'disabled'}
         values.update({x: 'disabled' for x in ('frida_tools', 'frida_node', 'frida_net',
                       'frida_swift', 'frida_qml', 'server', 'portal', 'gadget', 'inject', 'graft_tool')})
         values.update({'frida-core:' + x + '_backend': 'disabled' for x in
@@ -99,6 +99,27 @@ class AgentDeclarationTests(unittest.TestCase):
 
     def test_missing_anchor_rejected(self):
         with self.assertRaises(ValueError): API['verify_agent_change'](b'void body(void) {}\n', self.patched)
+
+
+class TlsPatchTests(unittest.TestCase):
+    def setUp(self):
+        self.original = b'void f(void) {\n' + API['TLS_ANCHOR'] + b'}\n'
+        self.patched = self.original.replace(API['TLS_ANCHOR'], API['TLS_REPLACEMENT'])
+
+    def test_exact_clang_store_allowed(self):
+        API['verify_tls_change'](self.original, self.patched)
+
+    def test_wrong_segment_rejected(self):
+        with self.assertRaises(ValueError):
+            API['verify_tls_change'](self.original, self.patched.replace(b'256', b'257'))
+
+    def test_changed_offset_rejected(self):
+        with self.assertRaises(ValueError):
+            API['verify_tls_change'](self.original, self.patched.replace(b'0x1480', b'0x1490'))
+
+    def test_removed_msvc_path_rejected(self):
+        with self.assertRaises(ValueError):
+            API['verify_tls_change'](self.original, self.patched.replace(API['TLS_ANCHOR'], b''))
 
 
 if __name__ == '__main__':
