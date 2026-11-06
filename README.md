@@ -12,6 +12,8 @@ See the [phone video, working screenshot and version screenshot](docs/demo-20261
 
 Fresh session configuration can now be prepared automatically using the same release executable and installer resource. Two successive preparations passed the complete read-only checks; the new combined startup entry still needs a live test. [Fresh-session preparation](docs/fresh-session-preparation.md)
 
+The exact tested Phase descriptor archive can also be generated from the user's original Serato 5.0 installation using the public recipe, without historical installers or a private intermediate archive. Isolated generation checks and a complete session Plan passed. [Installed-file preparation](docs/installed-phase-archive-preparation.md)
+
 This remains an experimental temporary integration. Physical audible SL3 output, independent turntable control, sustained reliability and a reusable installation/startup process remain unfinished. The two-deck session restored original files and verified device release, but its broker reported `owner_failure` during shutdown; that result remains unresolved. The latest Release build passed 71 native checks and the deployment workflow passed 26 checks. [Software output recorder](docs/two-deck-output-capture.md)
 
 ## Earlier engineering status — 2 November 2026

@@ -23,3 +23,5 @@ The updated executable also passed the thirteen full-session entry checks, eleve
 ## Remaining deployment work
 
 This removes per-launch session assembly, not all release preparation. A reviewed complete plan remains the development template and refers to this checkout and private Serato-derived resources. Whole-kit relocation, generating the resource adaptation from the user's own installed Serato, simple launch/recovery UI, removing the repeated Download Driver click and second-PC installation remain unfinished. The new native installer/context path, actual fresh startup and post-playback manual-close/rollback still require an attended test. Existing physical Phase results do not validate these new entry points.
+
+The subsequent [installed Phase archive recipe](installed-phase-archive-preparation.md) removes the private intermediate archive and historical installer prerequisites from resource generation. It still needs integration into full release-kit preparation; the fresh-session template is not yet a self-contained public distribution.

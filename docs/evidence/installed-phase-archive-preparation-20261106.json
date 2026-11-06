@@ -1,0 +1,132 @@
+{
+  "schema": "sl3.installed-phase-archive-evidence.v1",
+  "date": "2026-11-06",
+  "preparation": {
+    "applicationExecuted": false,
+    "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+    "archiveBytes": 2294568,
+    "archiveSha256": "d135e6f1c03601cc44b3e5f623eed36af81bbff585332a3fdc8d5d533b2cb66a",
+    "descriptorSha256": "ad522345d4f5fa4a429d1a5e4f737ddf523bb360ed409bd32346a2a680236a86",
+    "deviceAccess": false,
+    "historicalExecutablesRead": false,
+    "installedApplicationModified": false,
+    "intermediateCandidateArchiveRead": false,
+    "liveValidatedByThisPreparation": false,
+    "nativeBuildRequired": false,
+    "originalArchiveSha256": "872fc4fdad2eab2ddd34387d2d3c04dd9731c84798d9fdc7bd05ca54e1567db8",
+    "persistentFilesWritten": true,
+    "powershellManifestSha256": "4b4047e7a8153f0aab087356ad4e80f2b9a7855a21cebabe8430c27671d97881",
+    "prepared": true,
+    "preservation": {
+      "allOriginalCodecInverseChecksPassed": true,
+      "allOriginalEncryptedMembersUnchanged": true,
+      "allOriginalMemberCrcsPassed": true,
+      "candidateCrc32": 2917843861,
+      "candidateMember": "audio/audio_rane_sl3_rebuild.xml",
+      "candidateMembers": 230,
+      "candidateXmlSha256": "ad522345d4f5fa4a429d1a5e4f737ddf523bb360ed409bd32346a2a680236a86",
+      "indexSizeDelta": 56,
+      "originalMemberProofsSha256": "3fc239edda75216c4cc92073f7ff4e85c6780423efb5364b5e795bf8050cca75",
+      "originalMembers": 229,
+      "originalPayloadSuffixSha256": "afbda9253b9c0d16b22198a28eefead981b0cb0cda75f389b90d17205ba3b8a8"
+    },
+    "registryWritten": false,
+    "schema": "sl3.installed-phase-archive-preparation.v1",
+    "schemaValidation": {
+      "engine": ".NET XmlSchemaSet",
+      "errors": [],
+      "externalResolution": false,
+      "knownSchemaDtdIgnored": true,
+      "schema": "sl3.xml-schema-validation.v1",
+      "schemaSha256": "9e15093df616f9b9eac7f2f0fc1dbebfc55ce353415e22569fcfa00b98c1cc56",
+      "valid": true,
+      "xmlSha256": "ad522345d4f5fa4a429d1a5e4f737ddf523bb360ed409bd32346a2a680236a86"
+    },
+    "sourcePins": {
+      "docs/evidence/serato-legacy-sl3-descriptors.json": "a63a02804e5a00cc1da48faff9c9bdfa962da0f1c3b09a7019d9eec0570fab3a",
+      "scripts/inspect-serato-resource-archive.py": "5c8773f42f1bd55d3477cf75e94c8b84be09a066370c97608e1f42f3a7ef15f6",
+      "scripts/prepare-portable-powershell.py": "0407eeef14c8d0ca7a8a5e06083338e9f51eb92aa1c1cb6c30e69fb23cee0553",
+      "scripts/prepare-serato-installed-phase-archive.py": "88588877fd7433ddd011aeb9f4ac4246f4496a195f26340770caf59a64e17e7c",
+      "scripts/prepare-serato-sl3-archive.py": "efd96ea25f88af24145d455d8456d6659b376c0f5d098824e93cd6b13b94a19a",
+      "scripts/prepare-serato-sl3-candidate.py": "18afa2a477eef0295f8c9d11bcd547c332478683e41f324883c215e6a3f5e338",
+      "scripts/validate-descriptor-schema.ps1": "4061567b871df8c7a3f6cec240986239e150422b94805d79e99d5a129e2dfbcc"
+    },
+    "temporaryValidationFilesUsed": true
+  },
+  "isolatedTests": {
+    "schema": "sl3.installed-phase-archive-tests.v1",
+    "cases": [
+      {
+        "name": "public-recipe-only-read-only-plan",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "public-recipe-only-preparation",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "existing-output-preserved",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-original-executable",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-original-archive",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-public-specification-evidence",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-runtime-manifest-binding",
+        "passed": true,
+        "exitCode": 1
+      }
+    ],
+    "isolatedRecipeFiles": [
+      "scripts/prepare-serato-installed-phase-archive.py",
+      "scripts/prepare-serato-sl3-archive.py",
+      "scripts/prepare-serato-sl3-candidate.py",
+      "scripts/inspect-serato-resource-archive.py",
+      "scripts/validate-descriptor-schema.ps1",
+      "scripts/prepare-portable-powershell.py",
+      "docs/evidence/serato-legacy-sl3-descriptors.json"
+    ],
+    "historicalExecutablesPresent": false,
+    "intermediateCandidatePresent": false,
+    "nativeBuildPresent": false,
+    "privateAnalysisInputsPresent": false,
+    "archiveSha256": "d135e6f1c03601cc44b3e5f623eed36af81bbff585332a3fdc8d5d533b2cb66a",
+    "originalInputHashesUnchanged": true,
+    "applicationExecuted": false,
+    "registryWritten": false,
+    "deviceAccess": false,
+    "liveValidated": false
+  },
+  "completeWrapperPlan": {
+    "schema": "sl3.installed-phase-wrapper-plan.v1",
+    "sessionPlanSha256": "65ac9fdf2d63d930545b41329d305c93faac05a454a7f47378948f1eced0635e",
+    "archiveSha256": "d135e6f1c03601cc44b3e5f623eed36af81bbff585332a3fdc8d5d533b2cb66a",
+    "launcherSha256": "c6fa9b45219dafd28c06d31e94703eec2268dc4a856d72202e0f16c763bd1770",
+    "exitCode": 0,
+    "stdout": "{\"planVerified\": true, \"sourcesVerified\": 26, \"installerPayloadBound\": true, \"processStarted\": false, \"registryWritten\": false, \"deviceAccess\": false}\n\n{\"planOnly\": true, \"capsuleVerified\": true, \"bundleVerified\": true, \"registrationWritten\": false, \"deviceAccess\": false}\n\nComplete session plan passed; no application, broker or elevation started\n\n",
+    "stderr": "",
+    "applicationStarted": false,
+    "deviceAccess": false,
+    "registryWritten": false
+  },
+  "generatedVendorDerivedArchivePublished": false,
+  "firmwareChanged": false,
+  "securityPolicyChanged": false,
+  "liveValidationPerformed": false,
+  "publicInstallerReady": false
+}
