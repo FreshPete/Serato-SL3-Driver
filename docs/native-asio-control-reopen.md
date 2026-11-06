@@ -1,5 +1,7 @@
 # Production ASIO initialization and reopen — 6 November 2026
 
+**Subsequent result:** a [three-second native stream passed, but reopening afterward failed](native-asio-silent-stream-reopen.md). The two control-only successes below remain valid; they do not prove reliable reopening after audio.
+
 The exact packaged production DLL now initializes the physical SL3 through its lazy ASIO entry, without an administrator prompt or prestarted broker. Two successive fresh COM hosts each report six inputs, six outputs and a 44.1 kHz clock. Between them the SL3 remained connected and was not power-cycled.
 
 Both hosts released the ASIO object normally. The observer retained and validated the exact controller and worker process objects before release, then observed both exit. Each controller reported successful native acquisition, I/O retirement, device release and an empty process job, with no forced termination, lifetime expiry or device/stream failure. Worker journals contain clock reads and normal redirect close/helper unload. No audio buffers or streams were created. This is a control-only result; connected Phase remotes were not sampled.
@@ -26,4 +28,4 @@ Fresh configuration records are checked by the actual passive native parser befo
 
 After both tests Windows still enumerated Rane SL3 under its original MEDIA binding with an error status; this is not a claim that the old Rane driver started. Original Serato resources and absent project ASIO registration were checked. The idle setup window remains open behind the locked desktop; no privileged setup action was started. Security policy and firmware were unchanged.
 
-Next attended step: review the latest setup-window result display, explicitly install the prepared one-time candidate, then launch the original Serato normally and observe actual driver selection. A successful install label alone cannot establish that result. The candidate remains a ten-minute audio diagnostic and is not ready for a public installer release.
+The subsequent stream/reopen finding adds an attended recovery and USB-lifecycle tracing prerequisite before another hardware experiment. Normal Serato startup still requires a separately observed installation/selection test. A successful install label alone cannot establish that result. The candidate remains a ten-minute audio diagnostic and is not ready for a public installer release.

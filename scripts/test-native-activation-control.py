@@ -21,14 +21,15 @@ def module(name): return runpy.run_path(str(ROOT/'scripts'/name))
 def write(path, value):
     with path.open('x', encoding='utf-8') as stream: json.dump(value, stream, indent=2)
 
-def run(args):
+def run(args, silent_duplex=False):
     api = module('prepare-asio-activation-config.py'); base = api['BASE']
     build_path=Path(args.host_build).absolute()
     require(sha(build_path)==args.host_build_sha256,'Exact diagnostic build required')
     build=json.loads(build_path.read_bytes())
-    require(build['schema']=='sl3.native-control-host-build.v1' and build['configuration']=='Release' and build['planAndRefusalTestsPassed'] is True,'Reviewed Release diagnostic required')
+    kind='native-silent-duplex' if silent_duplex else 'native-control'
+    require(build['schema']=='sl3.'+kind+'-host-build.v1' and build['configuration']=='Release' and build['planAndRefusalTestsPassed'] is True,'Reviewed Release diagnostic required')
     for name,value in build['inputs'].items(): require(sha(ROOT/name)==value,'Diagnostic source changed: '+name)
-    host=build_path.parent/'Release/sl3_native_control_host.exe'
+    host=build_path.parent/('Release/sl3_native_silent_duplex_host.exe' if silent_duplex else 'Release/sl3_native_control_host.exe')
     require(sha(host)==build['executableSha256'],'Diagnostic executable changed')
     bundle=Path(args.bundle).absolute(); native_path=Path(args.native_build).absolute()
     manifest,payload=base['capture_bundle'](bundle,args.bundle_sha256);base['verify_payloads'](manifest,payload)
@@ -61,7 +62,7 @@ def run(args):
         if handle:
             with s.Handle(handle): require(wait(handle,0)==0,'Existing activation owner may still be alive')
         else: require(ctypes.get_last_error()==87,'Cannot establish previous activation owner absence')
-    folder=ROOT/'analysis'/('native-activation-control-'+uuid.uuid4().hex);folder.mkdir()
+    folder=ROOT/'analysis'/('native-activation-'+('silent-duplex-' if silent_duplex else 'control-')+uuid.uuid4().hex);folder.mkdir()
     copied=folder/'driver';copied.mkdir();markers=folder/'host';markers.mkdir()
     (copied/'sl3_asio.dll').write_bytes(payload['sl3_asio.dll'])
     records=api['records'](copied,bundle,hashlib.sha256(payload['sl3_broker_controller.exe']).hexdigest(),hashlib.sha256(payload['sl3_usbdk.exe']).hexdigest())
@@ -70,12 +71,15 @@ def run(args):
     for name,data in records.items(): (copied/name).write_bytes(data)
     (copied/'fixture.manifest').write_text('<?xml version="1.0" encoding="utf-8"?><assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0"><assemblyIdentity type="win32" name="SL3.Owned.NativeControl" version="1.0.0.0" processorArchitecture="amd64"/><file name="sl3_asio.dll"><comClass clsid="{5A551CD0-F83E-48EB-8B9D-8614E07852FE}" threadingModel="Both"/></file></assembly>',encoding='utf-8')
     api['inspect'](native_path.parent/'Release/sl3_driver_configuration_tests.exe',native['asioComponent']['activationConfigurationInspectorSha256'].lower(),copied/'sl3-asio.conf')
-    report={'schema':'sl3.native-activation-control-run.v1','successful':False,'audioStarted':False,'buffersCreated':False,
+    report={'schema':'sl3.native-activation-'+('silent-duplex' if silent_duplex else 'control')+'-run.v1','successful':False,
+            'audioStarted':None if silent_duplex else False,'buffersCreated':None if silent_duplex else False,
+            'silentDuplexRequested':silent_duplex,
             'installationPerformed':False,'seratoLaunched':False,'platform':platform,'driver':driver,
             'hostBuildSha256':sha(build_path),'nativeBuildSha256':native_sha,'bundleSha256':args.bundle_sha256,
             'sourceSha256':{str(Path(__file__).relative_to(ROOT)).replace('\\','/'):sha(Path(__file__))},
             'hostSha256':sha(host),'activationRecordSha256':sha(copied/'sl3-asio.conf'),
             'usbReadyForNextAcquire':False,'physicalAudioValidated':False}
+    if silent_duplex: report['sourceSha256']['scripts/test-native-activation-silent.py']=sha(ROOT/'scripts/test-native-activation-silent.py')
     print(json.dumps({'prepared':str(folder),'startingOneNativeInitialization':True}),flush=True)
     @contextmanager
     def live_process(pid,image,created=None):
@@ -95,7 +99,7 @@ def run(args):
     child=None
     try:
         env=dict(os.environ);env.pop('SL3_ASIO_PRIVATE_TRACE',None)
-        child=subprocess.Popen([str(host),'--run-native-control',str(copied/'sl3_asio.dll'),str(markers)],env=env,
+        child=subprocess.Popen([str(host),'--run-native-silent-duplex' if silent_duplex else '--run-native-control',str(copied/'sl3_asio.dll'),str(markers)],env=env,
                                stdout=subprocess.PIPE,stderr=subprocess.PIPE,creationflags=subprocess.CREATE_NO_WINDOW)
         began=time.monotonic();ready_file=markers/'host-ready.json'
         while not ready_file.exists():
@@ -121,6 +125,9 @@ def run(args):
         report['hostResult']=json.loads((markers/'host-result.json').read_bytes())
         retirement=json.loads((session/'result.json').read_bytes());report['retirement']=retirement
         require(child.returncode==0 and report['hostResult']['successful'] is True,'ASIO release failed')
+        if silent_duplex:
+            require(report['hostResult']['silentOutputOnly'] is True and report['hostResult']['callbacksCompleted']>=500 and report['hostResult']['durationMs']==3000,'Silent duplex progress contract failed')
+            report['audioStarted']=report['hostResult']['audioStarted'];report['buffersCreated']=report['hostResult']['buffersCreated']
         require(report['controllerExited'] and report['workerExited'],'Owned native processes did not retire')
         require(retirement['kind']=='native' and retirement['successful'] is True and retirement['nativeDeviceAcquired'] is True and
                 retirement['terminationRequested'] is False and retirement['lifetimeExpired'] is False and

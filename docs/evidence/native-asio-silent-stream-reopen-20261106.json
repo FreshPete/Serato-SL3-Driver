@@ -1,0 +1,218 @@
+{
+  "schema": "sl3.native-asio-silent-stream-reopen-checkpoint.v1",
+  "date": "2026-11-06",
+  "streamPassed": true,
+  "postStreamReopenPassed": false,
+  "furtherHardwareTestsStopped": true,
+  "nativeHostBuildSha256": "97d5f2efa94258902766c07804b772e49a8592b185df8fd87f211a4b1bca24d1",
+  "nativeHostSha256": "957a3713a1e4777a0f8c736fc19346207f2aec395fc9e9c1a7e8a9314b031f0e",
+  "hostSourceSha256": {
+    "diagnostics/asio-native-silent-duplex/CMakeLists.txt": "b670d48c6ccb07a2e57ee2db4c2fd98369a14276d16adcdcc3386605bc95faae",
+    "diagnostics/asio-native-silent-duplex/host.cpp": "fece25e174733012a6134a536b3ea6e0d6fb9322f95c8def4e7f7a79e52ceaa2",
+    "src/asio/com_identity.hpp": "358f892e11f17308d37fdcb8c82ceea0171a3421d8472ac675f9e012783904ac",
+    "scripts/build-native-silent-duplex-host.ps1": "8ad9e71e101b39e808e3b4fcadd443f8d130d5b8a26a00b1e19c6b1af1439cc2",
+    "artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/asio.h": "93d2f80d49b4ac9c963514e7c1307ab5111d8104246192233745beb058534ea1",
+    "artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/asiosys.h": "f44a1ed0fd7c056ff047aeebc4c05a8c185f0585a24d8debc55c70107777dbef",
+    "artifacts/references/asio-sdk-2.3.4/ASIOSDK/common/iasiodrv.h": "86ad4788452c74823653cf57d4bd557c48bb6542d7e6eb7fff80102c705a066d"
+  },
+  "probeSourceSha256": {
+    "scripts/test-native-activation-control.py": "5196057bbfe17e575dd8af897744fdf8a149cf3000b373b00ec06a71284289b5",
+    "scripts/test-native-activation-silent.py": "fbc5e8e157c1ce518614d00aa29732d026230d531c4b2397ae1c558b111a74c4"
+  },
+  "failureObserverSha256": "8045aa6e6d02a3aceaa7e7c2f8d499a35e106590384bf6301e8a7fe777ba4997",
+  "nativeBuildSha256": "6bd7ae8244e568cde351cbd42d3f92528539352f43e57003993e8ba0a1a6ee2a",
+  "bundleSha256": "e7931b5da5f3a051676b595e7925c8c118a95291ef9d1978683e68177bb50094",
+  "stream": {
+    "rawResultSha256": "81971b9eded475841eaa9368981682de2514cea8171e7d4bc4d3db5873c2687d",
+    "analysisIdentity": "native-activation-silent-duplex-51ad707cec5249e7b98a23290fe467fc",
+    "hostReady": {
+      "schema": "sl3.native-silent-ready.v1",
+      "pid": 17364,
+      "initialized": true,
+      "accepted": true,
+      "inputs": 6,
+      "outputs": 6,
+      "rateHz": 44100,
+      "audioStarted": false
+    },
+    "hostResult": {
+      "schema": "sl3.native-silent-result.v1",
+      "successful": true,
+      "released": true,
+      "unloadable": true,
+      "audioStarted": true,
+      "buffersCreated": true,
+      "silentOutputOnly": true,
+      "callbacksCompleted": 1029,
+      "durationMs": 3000,
+      "inputPeaks24": [
+        25464,
+        28887,
+        2829290,
+        2668337,
+        2619994,
+        2803165
+      ]
+    },
+    "retirement": {
+      "schema": "sl3.broker-controller-result.v1",
+      "kind": "native",
+      "successful": true,
+      "acquireAttempted": true,
+      "acquired": true,
+      "published": true,
+      "reason": "stop_requested",
+      "error": "",
+      "lifetimeExpired": false,
+      "failed": false,
+      "snapshotValid": true,
+      "ioRetiredVerified": true,
+      "deviceReleasedVerified": true,
+      "processStarted": true,
+      "processExited": true,
+      "jobEmpty": true,
+      "terminationRequested": false,
+      "processExitCodeKnown": true,
+      "processExitCode": 0,
+      "lastDevicePhase": 6,
+      "lastDeviceFailure": 0,
+      "lastStreamFault": 0,
+      "lastNativeError": 1168,
+      "lastObservedRateHz": 44100,
+      "lastDiagnostic": "",
+      "ownerFailureCode": "none",
+      "ownerFailurePhase": 0,
+      "connectionDiagnostic": "",
+      "nativeDeviceAcquired": true,
+      "helperLoadedInController": false,
+      "usbReadyForNextAcquire": false,
+      "rateRestorationVerified": false
+    },
+    "controllerExited": true,
+    "workerExited": true,
+    "nativeJournalSha256": {
+      "broker-session.txt": "aae3ce8d98049690e7058495c5287f7d65f713c38fb7927c4140fa8a357235b6",
+      "controller-startup.tsv": "b7c06fc2dc59bdc42b38dd03150d80ecc1b01ba33d71c0a59a9da680835bbb31",
+      "intent.json": "555ddf3254e976f5491f4d99fa96b427ec6f87655cdc7299358ad65af2cc96fb",
+      "ready.json": "cf33188377c64ad0d0167f6be1ab1f430c8bea68f62c43ddd8b8023eae74fc0b",
+      "result.json": "b93b7fb92e826510cd8d2e02340abb355e6dfe0453aa19554ea49a4ce73721bc",
+      "sl3-asio.conf": "bc7fff1510c6f20373d667e54ecd8b84414d25a6e8061190cc9bbe11d6d749a0",
+      "worker-startup.tsv": "ce2953f34dac6397fc8b0f42f383ee4289e78438a42c2a6a4c4964f5725d8e4a"
+    }
+  },
+  "reopen": {
+    "rawResultSha256": "fac78c59ec7238db32c655821153b1eae3a0b1aa7396b2213c3cf75bbd471e0d",
+    "analysisIdentity": "native-activation-control-81f99a24752345978691ca0b08e0e0b3",
+    "hostReady": {
+      "schema": "sl3.native-control-ready.v1",
+      "pid": 43568,
+      "initialized": false,
+      "accepted": false,
+      "inputs": -1,
+      "outputs": -1,
+      "rateHz": -1.0,
+      "audioStarted": false
+    },
+    "hostExitCode": 1,
+    "error": "Native initialization/channel/clock contract failed",
+    "nativeJournalSha256": {
+      "controller-startup.tsv": "66c593647d6e8f891eb6da53b30425ad0a160f5aaca20ef7be4c35882d777baa",
+      "intent.json": "555ddf3254e976f5491f4d99fa96b427ec6f87655cdc7299358ad65af2cc96fb",
+      "result.json": "8680b117305c8a80c71af86fe09b6c69bf5d21540f84cdc3736392433ec48917",
+      "worker-startup.tsv": "478c7d42cac728f433940620eb9dd751a11578278c44b01c6209496fb4dd00df"
+    }
+  },
+  "failureObservationSha256": "5370d3d2382cd4a1ee977ed24e83d37a09ef232bdfead9a684e315352dbbc19c",
+  "failureObservation": {
+    "schema": "sl3.native-activation-failure-observation.v1",
+    "completedResultSha256": "fac78c59ec7238db32c655821153b1eae3a0b1aa7396b2213c3cf75bbd471e0d",
+    "probeSuccessful": false,
+    "bundleSha256": "e7931b5da5f3a051676b595e7925c8c118a95291ef9d1978683e68177bb50094",
+    "sessions": [
+      {
+        "sessionIdentity": "session-1c10c0bef5a7b6ddb1ef802e94383285",
+        "records": {
+          "result.json": {
+            "schema": "sl3.broker-controller-result.v1",
+            "kind": "native",
+            "successful": false,
+            "acquireAttempted": true,
+            "acquired": false,
+            "published": false,
+            "reason": "failure",
+            "error": "Broker owner acquisition/handshake failed",
+            "lifetimeExpired": false,
+            "failed": true,
+            "snapshotValid": false,
+            "ioRetiredVerified": false,
+            "deviceReleasedVerified": false,
+            "processStarted": true,
+            "processExited": false,
+            "jobEmpty": true,
+            "terminationRequested": true,
+            "processExitCodeKnown": false,
+            "processExitCode": 0,
+            "lastDevicePhase": 0,
+            "lastDeviceFailure": 0,
+            "lastStreamFault": 0,
+            "lastNativeError": 0,
+            "lastObservedRateHz": 0,
+            "lastDiagnostic": "",
+            "ownerFailureCode": "worker_control_channel",
+            "ownerFailurePhase": 4,
+            "connectionDiagnostic": "",
+            "nativeDeviceAcquired": false,
+            "helperLoadedInController": false,
+            "usbReadyForNextAcquire": false,
+            "rateRestorationVerified": false
+          }
+        },
+        "processObservations": [
+          {
+            "journal": "worker-startup.tsv",
+            "recordedPid": 12792,
+            "lastMarker": "redirect_start.enter",
+            "state": "pid_absent",
+            "recordedProcessExitProved": false
+          },
+          {
+            "journal": "controller-startup.tsv",
+            "recordedPid": 10264,
+            "lastMarker": "owner_close_returned",
+            "state": "pid_absent",
+            "recordedProcessExitProved": false
+          }
+        ]
+      }
+    ],
+    "readOnly": true,
+    "deviceOpened": false,
+    "processTerminated": false,
+    "pointInTimeObservation": true,
+    "journalPidAloneProvesHistoricalProcess": false
+  },
+  "checks": {
+    "silentHostInertBuildChecks": 2,
+    "wrapperDefaultPlans": 3,
+    "alteredCompletedResultRefused": true,
+    "readOnlyFailureObservationCompleted": true
+  },
+  "elevated": false,
+  "installationPerformed": false,
+  "seratoLaunched": false,
+  "firmwareChanged": false,
+  "windowsSecurityChanged": false,
+  "normalSeratoSelectionValidated": false,
+  "phaseTrackingValidatedInThisRun": false,
+  "physicalOutputValidated": false,
+  "postcheck": {
+    "nativeEntrySha256": "c026d647ffeb75132269154f19d31f3a664c5c9977247b6f2b60b1dcd6b1026d",
+    "action": "plan",
+    "successful": true,
+    "archive": "original",
+    "nativeState": "absent",
+    "seratoRunning": false,
+    "steps": [],
+    "nativeDeviceOpenedByTool": false
+  }
+}
