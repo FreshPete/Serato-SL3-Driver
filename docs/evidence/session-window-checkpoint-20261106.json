@@ -1,0 +1,52 @@
+{
+  "schema": "sl3.session-window-checkpoint.v1",
+  "date": "2026-11-06",
+  "scope": "Interim host-bound engineering window; final target is install-once and normal Serato launch",
+  "releaseBuildPassed": true,
+  "compiler": "MSVC 19.29 x64; SDK 19041; static CRT; W4 WX",
+  "fixture": {
+    "schema": "sl3.session-window-tests.v1",
+    "passed": true,
+    "readOnlyActions": 3,
+    "previewDisarmed": true,
+    "uncheckedAndConsumedStartRefused": true,
+    "busyCloseRefused": true,
+    "layoutBoundsChecked": true,
+    "fixtureWindowRendered": true,
+    "seratoStarted": false,
+    "deviceOpened": false
+  },
+  "launcherSha256": "5ca4a68e2ad18a03a8c804d6b22428e52bfc6f7754cafc89018105836c733e0d",
+  "fixtureSha256": "1221e93937fadf3280567d989c9d1ab6e1a5dbc43098d28f0f01a828f2245c13",
+  "preparationSha256": "a09389aa7bb87d1e8919f7584fe429dc52998d069c7df040275a4b9adbfbdb8c",
+  "cliSha256": "bfd8d045e526f4f574d41890fda9a9443cf327f5a01cb0d62efbaeffd6bdd8d8",
+  "kitManifestSha256": "2bfd0e54705f50cda1fe4ab1ff43d6d906f4b4e58b0d80601832e8ec70b19361",
+  "sources": {
+    "src/installer/SessionWindow.cpp": "8c9c3c61f4f2a9bfc497d24f676e127c6acee8334d62616b5e1681f8524ff293",
+    "scripts/prepare-session-window.py": "5f075cf5806970722301ee180bb69a362c5beb154b85748122bbf0cb1262c69e",
+    "tests/native/session_window_tests.cpp": "44b6bf8556110f9a111c5c54fa45bdb96ec79a283e2c755fdfbaa91aa6657c9b"
+  },
+  "clientRenderSha256": {
+    "initial": "04ce6927529b5c319c0ce2e14a5a1ddaf08c2a995e706c6076c3ad583e42f834",
+    "ready": "6d6d6982e4ec1c09db69d2f98d8f10e2100554a9bf69f0f82a51c2f68fd0c5e3",
+    "consumed": "c91fec83144a99833432095a47b0ff2532e571f8c2756d860b38d4ce53422c46",
+    "details": "8be07809383640433e26d1c61715f87bce51cca2c0bb880325afb2b85160f623"
+  },
+  "independentReview": "ship at interim-tool scope; consumed recheck finding resolved",
+  "desktopHelperInputDenied": true,
+  "blankPrintWindowCaptureRejected": true,
+  "finalCaptures": "Fixture-owned WM_PRINT client renders; not desktop captures",
+  "priorVisiblePreviewClosed": true,
+  "originalSetupClean": true,
+  "activeSessionObserved": false,
+  "nativeAudioBinariesChanged": false,
+  "attendedKitChanged": false,
+  "realSeratoStartTested": false,
+  "elevatedRecoveryTested": false,
+  "oneTimeInstallationImplemented": false,
+  "normalSeratoLaunchValidated": false,
+  "physicalVinylTested": false,
+  "firmwareChanged": false,
+  "securityPolicyChanged": false,
+  "binaryPublished": false
+}

@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-06T18:46:58Z",
+  "title": "Design System: SL3 compatibility restoration",
+  "extensions": {
+    "nativePlatform": {
+      "platform": "Windows native desktop (Win32)",
+      "source": "src/installer/SessionWindow.cpp",
+      "status": "Interim prepared-session engineering window; final product is one-time setup followed by normal Serato launch.",
+      "systemColorBindings": {
+        "windowBackground": "GetSysColorBrush(COLOR_WINDOW)",
+        "staticBackground": "GetSysColor(COLOR_WINDOW)",
+        "staticText": "GetSysColor(COLOR_WINDOWTEXT)"
+      },
+      "controlRendering": "Common Controls v6 manifest; standard BUTTON, STATIC and EDIT controls. Native theme owns borders, radii, state colors and focus appearance.",
+      "measurementModel": "Layout values are 96-DPI logical pixels scaled with MulDiv(value, dpi, 96). Fonts use points scaled with MulDiv(pointSize, dpi, 72). Initial outer creation size is 780 by 500 raw pixels.",
+      "dpiBehavior": "Per-monitor v2 requested; WM_DPICHANGED applies suggested bounds and recreates fonts.",
+      "keyboard": {
+        "navigation": "IsDialogMessageW with WS_TABSTOP controls; native dialog behavior, not live-validated.",
+        "order": ["Check setup", "Start session", "Session status", "Recovery", "Show diagnostic details", "Visible diagnostic edit"],
+        "accessKeys": {"check": "C", "start": "S", "status": "T", "recovery": "R", "details": "D"},
+        "defaultButton": "Check setup (BS_DEFPUSHBUTTON)"
+      },
+      "nativeControls": [
+        {"name": "Command buttons", "class": "BUTTON", "behavior": "Start requires successful setup check and permits one attempt per window. All four command buttons disable while busy and in preview. Recovery invalidates readiness."},
+        {"name": "Diagnostic disclosure", "class": "BUTTON", "style": "BS_AUTOCHECKBOX", "behavior": "Remains available while commands run. Toggles the read-only log and changes outer height by 220 DPI-scaled units."},
+        {"name": "Diagnostic output", "class": "EDIT", "style": "ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL | WS_VSCROLL | WS_TABSTOP", "behavior": "Visible output refreshes on a 200 ms UI timer; buffer is bounded to 65,536 bytes."},
+        {"name": "Status and instructions", "class": "STATIC", "behavior": "Inline text reports progress and command completion. Closing while busy is refused with an explanatory message."}
+      ],
+      "limitations": [
+        "Source extraction only; no application launch, device access or administrator prompts were performed for this documentation.",
+        "Live keyboard, high-contrast, DPI, clipping and themed-state rendering have not been validated by this documentation pass.",
+        "No fixed RGB palette, tonal ramps, custom radii, animation curves or web breakpoints are defined.",
+        "No HTML/CSS component preview is supplied: browser equivalents would misrepresent native Windows controls.",
+        "Command completion does not prove audible playback, installation success or clean Serato shutdown."
+      ]
+    }
+  },
+  "components": [],
+  "narrative": {
+    "northStar": "Simple Windows window",
+    "overview": "This documents the owner's chosen native Windows direction as implemented in `src/installer/SessionWindow.cpp`. Familiar controls, plain status text and generous spacing make the prepared session understandable. The phrase above records the existing choice; it is not a newly proposed brand identity.\n\nThe current window is an interim engineering tool. The final product is one-time setup followed by launching Serato normally, as recorded in `PRODUCT.md`. This document captures current visual rules; it does not establish the session launcher as final packaging or report installation success.",
+    "keyCharacteristics": ["Native Win32 controls with Windows-owned rendering and focus treatment.", "Two text sizes, a single content column and paired action rows.", "Inline progress with optional read-only diagnostic output."],
+    "rules": [{"name": "The System Color Rule", "body": "Preserve the Win32 system-color roles rather than freezing their resolved RGB values. No primary accent, tonal ramp or fixed brand palette is established. Color primitives are omitted from frontmatter because Win32 color constants are not portable CSS color values.", "section": "colors"}],
+    "dos": ["**Do** preserve native controls, system-color roles and DPI-scaled layout.", "**Do** retain visible keyboard focus and explicit text for progress and results.", "**Do** identify the current window as an interim engineering tool."],
+    "donts": ["**Don't** invent fixed RGB brand colors, custom corner radii or browser component equivalents.", "**Don't** present a command exit as proof of playback, successful installation or clean Serato shutdown.", "**Don't** claim live keyboard, high-contrast or DPI validation from source inspection alone."]
+  }
+}
