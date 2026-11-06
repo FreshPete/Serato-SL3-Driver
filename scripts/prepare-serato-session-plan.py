@@ -18,6 +18,8 @@ EXTRA_SOURCES=(
     'scripts/prepare-serato-sl3-installer-bundle.py',
     'scripts/serato-session-stop.py',
     'scripts/inspect-serato-session-result.py','scripts/inspect-serato-session-status.py',
+    'scripts/inspect-serato-session-recovery.py','scripts/inspect-sl3-session-readiness.py',
+    'scripts/prepare-portable-powershell.py',
 )
 
 

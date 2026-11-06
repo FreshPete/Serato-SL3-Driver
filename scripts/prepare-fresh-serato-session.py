@@ -84,6 +84,8 @@ def prepare(reviewed, expected, prepare=False, powershell=None):
         result['stopArguments'][1] = '--stop-session'
         result['statusArguments'] = [*result['startArguments']]
         result['statusArguments'][1] = '--status-session'
+        result['recoveryCheckArguments'] = [*result['startArguments']]
+        result['recoveryCheckArguments'][1] = '--check-recovery'
     write_new(directory / 'preparation-complete.json', result)
     return result
 

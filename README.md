@@ -4,6 +4,8 @@ Restore the physical Rane SL3 for current Serato DJ Pro and two-deck DVS. Window
 
 ## Latest status — 6 November 2026
 
+**Recovery check available:** prepared sessions now include a native read-only recovery-check command. It checks active/retired owners, protected resource witnesses and current cleanup state without repair or elevation. Real owned-process tests passed; an automatic recovery action remains unfinished. [Contract and evidence](docs/session-recovery-check.md)
+
 **Interrupted staging recovery:** the recovery code now handles a verified archive stage that was never installed and a matching pending installer copy. It preflights all resource identities before permit/native rollback. Twelve new file-operation cases and the existing 22 archive cases passed in isolation; protected recovery against the installed application remains untested. [Recovery fixes and limits](docs/interrupted-resource-recovery.md)
 
 **Shutdown investigation:** the supervisor now allows twenty seconds for exit after finding that its previous eight seconds was shorter than the driver's independent stop/close budgets. An actual delayed-child test passes without forced termination. Marker-free log inspection is also available; an archived markerless log contained no recoverable calls. These changes prepare the next test and do not establish Serato's root cause. [Evidence and limits](docs/asio-shutdown-evidence.md)

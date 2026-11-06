@@ -1,0 +1,52 @@
+{
+  "schema": "sl3.session-recovery-check-evidence.v1",
+  "date": "2026-11-06",
+  "sourcePins": 44,
+  "completePlanSourcePins": 32,
+  "launcherSha256": "cd9456f31336c413961ce2f4430472269a52e491d736d7dd1918582989bf7c65",
+  "releaseManifestSha256": "0976e12d4845fab8c04efb855cd446be3f8bd8dfb98ac1766c797e8f4099a829",
+  "kitManifestSha256": "c5edbde1239d9f3434b7d16507201a016f1241d5751b55dbe1fe62147aa73a68",
+  "checksPassed": {
+    "classification": 6,
+    "actualNativeOwnedProcesses": 6,
+    "completePlan": 5,
+    "kit": 17,
+    "freshPreparation": 8,
+    "stop": 8
+  },
+  "totalChecksPassed": 50,
+  "reports": {
+    "ownedProcesses": {
+      "sha256": "3ee3f12a7de677ddd21d969fc727ce601964928d07994898fc0ec444ff28a380",
+      "passedCases": 6
+    },
+    "kit": {
+      "sha256": "1ec9f9cc3d5bd8905cfa66c3d3c3304f08e8eb94e2b4af1fb8300627f11475ff",
+      "passedCases": 17
+    },
+    "fresh": {
+      "sha256": "c57f6fe88cff9b1717b68c67e9189acc418b70ba1095a9222d7671d7feb4ebe3",
+      "passedCases": 8
+    },
+    "stop": {
+      "sha256": "bdf2c59cf8936e32abf7f0f5659e41a5c1308671e7034d5eaf375e05cc9ffcd9",
+      "passedCases": 8
+    }
+  },
+  "hostCurrentState": {
+    "reportSha256": "d55f3e245462f643867ebcb6789868969783899e67651abcc6055f399824361d",
+    "phase": "clean",
+    "ordinaryToken": true,
+    "resourceArchiveState": "original",
+    "originalSetupClean": true,
+    "recoveryAuthorized": false
+  },
+  "nativeAudioBundleSha256": "898c4e5294aec6a67a7364ed9e47ff602f5228401fa10e8a1ca06d46e7cc8993",
+  "audioBinariesChanged": false,
+  "repairAttempted": false,
+  "applicationStarted": false,
+  "deviceOpened": false,
+  "elevationRequested": false,
+  "protectedRecoveryValidated": false,
+  "liveSeratoShutdownValidated": false
+}

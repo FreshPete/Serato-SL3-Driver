@@ -152,6 +152,8 @@ def prepare(manifest, expected, application, write=False):
     result['stopArguments'][1] = '--stop-session'
     result['statusArguments'] = [*result['planArguments']]
     result['statusArguments'][1] = '--status-session'
+    result['recoveryCheckArguments'] = [*result['planArguments']]
+    result['recoveryCheckArguments'][1] = '--check-recovery'
     with (capsule_directory / 'kit-preparation-complete.json').open('x', encoding='utf-8') as stream:
         json.dump(result, stream, indent=2)
         stream.write('\n')

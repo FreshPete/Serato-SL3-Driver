@@ -2,6 +2,8 @@
 
 ## 6 November packaging checkpoint
 
+**Native recovery check implemented.** Kit/fresh preparation includes its argument vector. The 44-source native release passes the compiled PowerShell runtime identity to a selected-session inspector; full plans now pin 32 sources. Six classification and six actual native owned-process cases passed, including active-owner refusal, stale/malformed/noncanonical records and clean state after retirement. No recovery action, elevation or device operation ran. [Contract and evidence](session-recovery-check.md)
+
 **Two interrupted resource states fixed.** Recovery now accepts a verified `install-staged` archive and removes a matching pending installer copy. It checks all resource identities before permit revocation/native rollback, then rechecks before resource cleanup. Twelve new real file-operation cases and 22 archive regressions passed; unknown/changed files remain preserved. The fixtures substitute the production ACL callback and do not validate elevated recovery against Serato. A simpler recovery entry remains unfinished. [Contract and evidence](interrupted-resource-recovery.md)
 
 **Exit grace corrected; marker-free inspection added.** The old eight-second observer grace was shorter than the sum of the driver's separate five-second stop/close budgets. The new twenty-second grace passed a real delayed-child exit above eight seconds without force; this is not a Serato result. The marker-free reader preserves unknown session state and strict decoder checks. Completed-fixture pairs are unchanged; an older markerless ETL yielded zero recoverable calls and cannot diagnose shutdown. [Implementation, verification and limits](asio-shutdown-evidence.md)

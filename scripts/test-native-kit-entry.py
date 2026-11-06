@@ -60,6 +60,17 @@ def exercise(kit, expected, application):
         assert status['originalSetupCurrentlyClean'] is True and status['completionEvidenceConsistent'] is False
         assert status['repairAttempted'] is False and status['deviceOpened'] is False
         assert json.loads(Path(prepared['sessionPlan']).read_bytes())['asioPrivateTrace'] is False
+        recovery=json.loads(call('native-prepared-session-recovery-check',prepared['recoveryCheckArguments']).stdout)
+        assert recovery['phase']=='clean' and recovery['resourcePlan']['archiveState']=='original'
+        assert recovery['recoveryAuthorized'] is False and recovery['repairAttempted'] is False
+        recovery_source=moved/'scripts/inspect-serato-session-recovery.py'
+        recovery_original=recovery_source.read_bytes()
+        try:
+            recovery_source.write_bytes(recovery_original+b'changed')
+            call('changed-recovery-helper-refused-before-python',prepared['recoveryCheckArguments'],1,
+                 'Reviewed launcher input differs: inspect-serato-session-recovery.py',True)
+        finally:
+            recovery_source.write_bytes(recovery_original)
         status_source = moved / 'scripts/inspect-serato-session-status.py'
         status_original = status_source.read_bytes()
         try:
