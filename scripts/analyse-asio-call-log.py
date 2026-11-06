@@ -22,11 +22,21 @@ def analyze(rows,marker):
     for k in ['stopStatus','eventsLost','buffersLost']:v.integer(marker[k],0,2**32-1)
     complete=all(marker[k]==0 for k in ['stopStatus','eventsLost','buffersLost'])
     v.require(type(marker['complete']) is bool and marker['complete']==complete,'Consistent session completion required')
+    result=analyze_rows(rows,marker['pid'])
+    result.update(schema='sl3.asio-call-analysis.v1',scope='Selected own-provider calls in one completed ETL; host identity unverified',
+                  sessionMetadataComplete=complete,sessionStopStatus=marker['stopStatus'],
+                  reportedEventsLost=marker['eventsLost'],reportedBuffersLost=marker['buffersLost'])
+    return result
+
+
+def analyze_rows(rows,pid):
+    """Validate observed records without supplying or inventing session metadata."""
+    v.integer(pid,1,2**32-1)
     v.require(len(rows)<=8192,'Provider record bound exceeded')
     pending={};closed=set();pairs=[];orphans=[];build=None;methods={};seen=set();stamps=[]
     for ordinal,row in enumerate(rows):
         v.require(set(row)==OUTER and row['schema']=='sl3.asio-etw-record.v1','Exact event envelope required')
-        v.integer(row['pid'],marker['pid'],marker['pid']);v.integer(row['tid'],1,2**32-1)
+        v.integer(row['pid'],pid,pid);v.integer(row['tid'],1,2**32-1)
         stamp=row['timestampFileTime'];v.require(type(stamp) is str and re.fullmatch('[0-9]{1,20}',stamp),'Bounded FILETIME string required')
         v.integer(int(stamp),1,2**64-1)
         stamps.append(int(stamp))
@@ -57,11 +67,10 @@ def analyze(rows,marker):
             if p['phase']=='end':method['rawResults'][str(p['result'])]=method['rawResults'].get(str(p['result']),0)+1
     gaps=sorted(set(range(min(seen),max(seen)+1))-seen) if seen else []
     abandoned=sum(p['phase']=='abandoned' for p in pairs)
-    return {'schema':'sl3.asio-call-analysis.v1','scope':'Selected own-provider calls in one completed ETL; host identity unverified','build':build,'pid':marker['pid'],
+    return {'build':build,'pid':pid,
             'recordCount':len(rows),'pairedCalls':len(pairs),'completedCalls':len(pairs)-abandoned,'abandonedCalls':abandoned,
             'eventFileTimeRange':{'first':str(min(stamps)),'last':str(max(stamps))} if stamps else None,
             'unterminatedBegins':sorted(pending),'orphanTerminals':orphans,'callIdGaps':gaps,'moduleCallBudgetReached':4096 in seen,
-            'sessionMetadataComplete':complete,'sessionStopStatus':marker['stopStatus'],'reportedEventsLost':marker['eventsLost'],'reportedBuffersLost':marker['buffersLost'],
             'observedPairsComplete':bool(rows) and not pending and not orphans and not abandoned and not gaps,
             'methods':methods,'pairs':pairs,'actualEtwCaptureDecoded':False,'sourceHostIdentityVerified':False,'wholeHostSequenceVerified':False,
             'seratoCaptureVerified':False,'physicalAudioVerified':False,'currentSeratoAdmissionVerified':False,'twoDeckDvsVerified':False}

@@ -180,6 +180,10 @@ class SupervisorTest(unittest.TestCase):
 
 @unittest.skipUnless(os.name == 'nt','Win32 owned-process simulation')
 class WindowsOwnershipTest(unittest.TestCase):
+    def test_close_grace_requires_exact_bounded_integer(self):
+        for value in (True, 0, -1, 21, 1.5, '20'):
+            with self.assertRaisesRegex(ValueError,'bounded integer'):
+                MODULE['WindowsProcess'](Path(sys.executable),None,close_grace_seconds=value)
     def test_private_trace_requires_exact_boolean(self):
         for flag in (1, '1', None):
             with self.assertRaisesRegex(ValueError,'explicit Boolean'):
@@ -197,9 +201,10 @@ class WindowsOwnershipTest(unittest.TestCase):
     def test_actual_owned_process_normal_exit_and_forced_close_are_distinct(self):
         # The Frida interface is mocked. The Windows process/job/wait/termination
         # APIs are real; the child is this interpreter, never Serato or a driver.
-        for graceful, enumeration_failure, private_trace in ((True, False, False), (False, False, False),
-                                                            (False, True, False), (True, False, True)):
-            with self.subTest(graceful=graceful, enumeration_failure=enumeration_failure, private_trace=private_trace), tempfile.TemporaryDirectory() as temporary:
+        for graceful, enumeration_failure, private_trace, delay in ((True, False, False, 0), (False, False, False, 0),
+                (False, True, False, 0), (True, False, True, 0), (True, False, False, 12)):
+            with self.subTest(graceful=graceful, enumeration_failure=enumeration_failure, private_trace=private_trace,
+                              exit_delay=delay), tempfile.TemporaryDirectory() as temporary:
                 marker = Path(temporary)/'exit.txt'
                 class Script:
                     def on(self, name, callback): self.callback = callback
@@ -215,7 +220,8 @@ class WindowsOwnershipTest(unittest.TestCase):
                     child = None
                     def spawn(self, argv, **kwargs):
                         self.spawn_environment=kwargs['env']
-                        code = 'import pathlib,sys,time; p=pathlib.Path(sys.argv[1]);\nwhile not p.exists(): time.sleep(.01)'
+                        code = ('import pathlib,sys,time; p=pathlib.Path(sys.argv[1]);\n'
+                                'while not p.exists(): time.sleep(.01)\n' + f'time.sleep({delay})')
                         self.child = subprocess.Popen([sys.executable,'-I','-B','-c',code,str(marker)],creationflags=subprocess.CREATE_NO_WINDOW)
                         return self.child.pid
                     def attach(self, pid):
@@ -226,18 +232,23 @@ class WindowsOwnershipTest(unittest.TestCase):
                 frida = type('Frida',(),{'get_local_device':staticmethod(lambda:device)})()
                 try:
                     backend = MODULE['WindowsProcess'](Path(sys.executable),frida,expected_application_sha=MODULE['digest'](sys.executable),
-                                                       asio_private_trace=private_trace)
+                                                       asio_private_trace=private_trace,
+                                                       close_grace_seconds=MODULE['CLOSE_GRACE_SECONDS'] if delay else 1)
                     if enumeration_failure:
                         backend.window_snapshot = lambda post_close=False: {
                             'enumerationSucceeded':False, 'enumerationError':5,
                             'visibleWindows':0, 'closeMessagesPosted':0, 'postCloseRequested':post_close}
                     result = MODULE['supervise'](backend,'synthetic script',lambda:None,lambda:not graceful and backend.session is None,
-                                                viewing_seconds=2)
+                                                viewing_seconds=.1)
                     device.child.wait(timeout=5)
                     self.assertTrue(result['process']['processExited'])
                     self.assertTrue(result['process']['jobEmpty'])
                     self.assertEqual(result['process']['observerForcedTermination'],not graceful)
                     self.assertEqual(result['process']['exitCode'],0 if graceful else 1)
+                    if delay:
+                        self.assertEqual(result['process']['closeGraceSeconds'], 20)
+                        self.assertGreater(result['process']['closeWaitSeconds'], 8)
+                        self.assertLess(result['process']['closeWaitSeconds'], 20)
                     if not graceful:
                         close = result['process']['closeWindowObservation']
                         self.assertEqual(close['enumerationSucceeded'],not enumeration_failure)

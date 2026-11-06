@@ -1,0 +1,72 @@
+{
+  "schema": "sl3.asio-shutdown-evidence.v1",
+  "date": "2026-11-06",
+  "closeGraceSeconds": 20,
+  "oldCloseGraceSeconds": 8,
+  "delayedChildAssertionsVerified": {
+    "configuredExitDelaySeconds": 12,
+    "observedCloseWaitGreaterThanSeconds": 8,
+    "observedCloseWaitLessThanSeconds": 20,
+    "forcedTermination": false,
+    "processExitCode": 0,
+    "seratoExecuted": false
+  },
+  "supervisorSha256": "023cb38f1c7df85116465168fbec1dac8fe8d04075966af1e1bb0a0abc4ec0ff",
+  "supervisorTestsSha256": "55274af77c8dbc3c92bfa79f09640afe142f30a07105b256f9579550580b8026",
+  "launcherSha256": "bddbd5bdb743bef3476870321df466bda3dc78108818addbf66093d72febad11",
+  "releaseManifestSha256": "4aed58709b66fcfd7b677a9ab5d43cc16f89d108b397356384723edb2ccc0b6b",
+  "kitManifestSha256": "5e6ea565d17071ed36f659a75b077f320e307da26cbb4fa62b97bc8460267bbe",
+  "sourcePins": 43,
+  "completePlanSourcePins": 29,
+  "checksPassed": {
+    "supervisor": 16,
+    "completedAnalysisModel": 9,
+    "incompleteAnalysisModel": 5,
+    "nativeIncompleteReader": 6,
+    "status": 11,
+    "savedResult": 6,
+    "windowClose": 6,
+    "completePlan": 5,
+    "kit": 15,
+    "stop": 8,
+    "freshPreparation": 8
+  },
+  "totalChecksPassed": 95,
+  "reports": {
+    "kit": {
+      "sha256": "616c65429b3006fe3e3b624243c1bec1f12f48292ce84425319db729fc1160d8",
+      "passedCases": 15
+    },
+    "stop": {
+      "sha256": "0d4ee3108ea0d228a235195b8385bdc4345d4ac2b3a91aa08fc5425d9e2123ad",
+      "passedCases": 8
+    },
+    "fresh-preparation": {
+      "sha256": "92ccae193a2975a07661e9809e802290a04e81b504f9838e7784bf1bea5ed6d8",
+      "passedCases": 8
+    },
+    "nativeIncompleteReader": {
+      "sha256": "9b2fdc295a2739bf727c76062378be36a903d61e6c5a7ffaf12a46d65c524172",
+      "passedCases": 6
+    }
+  },
+  "historicalMarkerlessObservation": {
+    "inputSha256": "46f5bc12b96f6cce43b73b31c3312acd7170543c808e2f420232f43170c02799",
+    "recordCount": 0,
+    "matchingEventsObserved": false,
+    "sessionMetadataComplete": false,
+    "reportedEventsLost": null,
+    "reportedBuffersLost": null,
+    "shutdownVerified": false,
+    "hostIdentityVerified": false
+  },
+  "nativeAudioBundleSha256": "898c4e5294aec6a67a7364ed9e47ff602f5228401fa10e8a1ca06d46e7cc8993",
+  "audioBinariesChanged": false,
+  "postFixtureOriginalSetupClean": true,
+  "statusReportSha256": "195f8554fe39b68d9122a35eb5a4f42bdd51715945026afa99c4b23892d2be2a",
+  "applicationStarted": false,
+  "deviceOpened": false,
+  "elevationRequested": false,
+  "shutdownRootCauseEstablished": false,
+  "liveSeratoShutdownValidated": false
+}

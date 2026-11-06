@@ -16,6 +16,7 @@ APP_SHA = '66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265'
 ORIGINAL_RESOURCES = '872fc4fdad2eab2ddd34387d2d3c04dd9731c84798d9fdc7bd05ca54e1567db8'
 PHASE_RESOURCES = 'd135e6f1c03601cc44b3e5f623eed36af81bbff585332a3fdc8d5d533b2cb66a'
 BUNDLE_NAME = '8c7758f23375cee18a9cf3be4a3acc15.bin'
+CLOSE_GRACE_SECONDS = 20
 
 
 class UserStopRequested(Exception):
@@ -200,13 +201,17 @@ class HardDeadline:
 
 class WindowsProcess:
     """Frida-spawned process and retained Win32 handles; never kills by PID lookup."""
-    def __init__(self, application, frida, expected_application_sha=APP_SHA, launcher_context=None, asio_private_trace=False):
+    def __init__(self, application, frida, expected_application_sha=APP_SHA, launcher_context=None, asio_private_trace=False,
+                 close_grace_seconds=CLOSE_GRACE_SECONDS):
         import ctypes as c
         from ctypes import wintypes as w
         self.c, self.w, self.application = c, w, application
         self.expected_application_sha = expected_application_sha
         require(type(asio_private_trace) is bool, 'ASIO private tracing requires an explicit Boolean')
         self.asio_private_trace = asio_private_trace
+        require(type(close_grace_seconds) is int and 1 <= close_grace_seconds <= CLOSE_GRACE_SECONDS,
+                'Close grace must be a bounded integer from 1 to 20 seconds')
+        self.close_grace_seconds = close_grace_seconds
         self.launcher_context = dict(launcher_context or {})
         require(set(self.launcher_context) in (set(), {'SL3_SESSION_CAPSULE','SL3_SESSION_CAPSULE_SHA256'}),
                 'Unexpected launcher environment fields')
@@ -320,7 +325,8 @@ class WindowsProcess:
     def cleanup(self):
         c, w, k = self.c, self.w, self.k
         result = {'processStarted': self.pid is not None, 'pid':self.pid, 'processExited': False,
-                  'observerForcedTermination': False, 'closeRequested': False, 'exitCode': None, 'jobEmpty': False}
+                  'observerForcedTermination': False, 'closeRequested': False, 'exitCode': None, 'jobEmpty': False,
+                  'closeGraceSeconds': self.close_grace_seconds}
         try:
             if self.handle:
                 if not self.wait(0):
@@ -328,7 +334,10 @@ class WindowsProcess:
                     result['closeWindowObservation'] = self.window_snapshot(post_close=True)
                     # A rejected/enumeration-failed close is evidence, not a
                     # reason to skip the bounded wait and lose the final report.
-                    if not self.wait(8):
+                    close_started = time.monotonic()
+                    exited = self.wait(self.close_grace_seconds)
+                    result['closeWaitSeconds'] = time.monotonic() - close_started
+                    if not exited:
                         result['closeTimeoutWindowObservation'] = self.window_snapshot()
                         self.checked(k.TerminateProcess(self.handle, 1))
                         result['observerForcedTermination'] = True

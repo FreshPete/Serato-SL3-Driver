@@ -1,5 +1,7 @@
 # Evidence for the next Serato shutdown test
 
+**Later update:** the [shutdown-grace and marker-free inspection checkpoint](asio-shutdown-evidence.md) increases the grace from eight to twenty seconds. The eight-second behavior below describes this earlier build.
+
 The latest playback reports establish owner-confirmed two-deck tracking, but not clean post-playback shutdown. The supervisor reached its viewing limit, requested a close, waited eight seconds and forcibly terminated its retained application process. The broker then reported an abandoned control connection. These records do not identify why Serato remained alive or prove that the broker caused a hang.
 
 The supervisor previously ignored the return value of each `PostMessageW(WM_CLOSE)` call. Its result now records window metadata and posting outcomes before the grace period, plus a second observation if that period expires. [Build and test evidence](evidence/serato-close-diagnostics-20261106.json)
