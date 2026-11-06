@@ -1,0 +1,104 @@
+{
+  "schema": "sl3.asio-window-close-evidence.v1",
+  "date": "2026-11-06",
+  "source": "tests/native/broker_asio_tests.cpp",
+  "sourceSha256": "d7b8f7630a91a86e28af3a0b1bd5403269dcc66bc2bf4a44795887352d42ea5f",
+  "targetedTestPassed": true,
+  "targetedLogSha256": "9e24b80bb738fcc23079898c0c0266337c9b8421dc6fd773aa23dace2998cf8e",
+  "ctestCasesPassed": 71,
+  "ctestLogSha256": "325fa23f844ef3ec9d25970cff056086b9315be9fac28a554a69cb6a79738fe0",
+  "buildManifestSha256": "096da851f53e843664eb6f1aa5890ca6525a5e74a03bf6bc37bad98dc1047ee8",
+  "previousBuildManifestPreserved": {
+    "path": "analysis/native-build-before-window-close-20261106.json",
+    "sha256": "70e06e7f099eff355dd528593ad08af229d5ec5aedd96d8cf432fa33d1bf93d4"
+  },
+  "testExecutableSha256": "7bba4d691b91bb4397f7d0d877105d47800308da914f16abbd16e7b8d5c44626",
+  "fixtureDllSha256": "cc288bd0812749143876e642665d37e24f0da0ce8dd3989b53794aa58c5bb4c1",
+  "simulatedWorkerSha256": "eaa5447b8eedf30d5a71a116ffc6609ac0c9683be196ba71f6f561224f09f8bc",
+  "newCases": [
+    {
+      "name": "window-close",
+      "passed": true,
+      "crossProcessClosePosts": 1,
+      "callbacksBeforeCloseAtLeast": 12,
+      "stopResult": "ASE_OK",
+      "brokerFailed": false
+    },
+    {
+      "name": "window-close-blocked",
+      "passed": true,
+      "crossProcessClosePosts": 1,
+      "stopResult": "ASE_HWMalfunction",
+      "assertedStopMilliseconds": {
+        "minimum": 4000,
+        "maximumExclusive": 7500
+      },
+      "activeBufferDisposalRefused": true,
+      "fixtureCallbackReleasedBeforeDisposal": true,
+      "callbacksCompleted": 1,
+      "brokerFailed": false
+    }
+  ],
+  "currentHostObservation": {
+    "schema": "sl3.session-recovery-check.v1",
+    "planSha256": "a577d641f9341665a597e685b01b0131453202ccf7638cade6cd5204b7786ed8",
+    "phase": "clean",
+    "message": "Original files and temporary registration are already clean.",
+    "originalSetupClean": true,
+    "activeSessionObserved": false,
+    "recoveryAuthorized": false,
+    "owners": {
+      "runner": {
+        "state": "not_recorded"
+      },
+      "stage": {
+        "state": "not_recorded"
+      },
+      "supervisor": {
+        "state": "not_recorded"
+      }
+    },
+    "currentSetup": {
+      "observed": true,
+      "originalResources": true,
+      "occupiedPaths": [],
+      "registrationPresent": false,
+      "currentSetupClean": true
+    },
+    "resourcePlan": {
+      "schema": "sl3.installer-resource-recovery-plan.v1",
+      "archiveState": "original",
+      "bundlePresent": false,
+      "pendingPresent": false,
+      "filesWritten": false,
+      "deviceAccess": false,
+      "protectedSessionOwnerPresent": false,
+      "protectedStageOwner": null,
+      "observed": true
+    },
+    "brokerRetirementReported": false,
+    "issues": [],
+    "pointInTimeObservation": true,
+    "ordinaryToken": true,
+    "previousSessionShutdownVerified": false,
+    "repairAttempted": false,
+    "filesWritten": false,
+    "registryWritten": false,
+    "elevationRequested": false,
+    "deviceOpened": false,
+    "deviceReadinessVerified": false
+  },
+  "unchangedPackageBinaryHashes": {
+    "sl3_asio.dll": "695f87e0cff1733e4aee8ab6b311d1cbc87b087a874fab5dddfef2404dd6e6bc",
+    "sl3_broker_controller.exe": "35c85280310f4bee8788888f4fcab3feb6d27b7cd4e5b07231a96647f0dccb53",
+    "sl3_usbdk.exe": "f4d7e00070ca8a8ef1dbad532dfdb7642775747b71bfeb610fbe1223434eac8f",
+    "UsbDkHelper.dll": "66bbfe6f99b417f97c7a9e97816e24af7dde0e01b8e535c41e91e1c6c19cfeda"
+  },
+  "productionDriverSourceChanged": false,
+  "seratoStarted": false,
+  "physicalDeviceOpened": false,
+  "elevationRequested": false,
+  "desktopAutomationUsed": false,
+  "seratoShutdownCauseEstablished": false,
+  "livePostPlaybackShutdownVerified": false
+}

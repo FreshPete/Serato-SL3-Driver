@@ -4,6 +4,8 @@ Restore the physical Rane SL3 for current Serato DJ Pro and two-deck DVS. Window
 
 ## Latest status — 6 November 2026
 
+**Shutdown investigation now covers posted window close:** two simulated integration cases exercise the actual ASIO fixture DLL and broker from a window-owning STA thread, with normal and deliberately blocked callbacks. Both passed, including retained-buffer safety after a failed stop. This does not reproduce or resolve Serato's recorded forced exit. [Test scope and next measurement](docs/asio-window-close-investigation.md)
+
 **Launcher progress is no longer held until session exit:** ordinary helper output now streams to the caller, with bounded byte-preserving forwarding and support for installer launches without console handles. Three real process fixtures and nineteen copied-kit checks passed; the graphical launcher and live session validation remain outstanding. [Progress handling and evidence](docs/native-launcher-progress.md)
 
 **Explicit recovery entry implemented:** prepared sessions now include a command that leaves clean state alone, refuses active/uncertain sessions and can request elevation for a recognised retired interruption. The native no-op/refusal and relocated-kit checks passed without prompts or device access. The actual elevated repair path still needs an attended test. [Recovery command and evidence](docs/session-recovery-command.md)

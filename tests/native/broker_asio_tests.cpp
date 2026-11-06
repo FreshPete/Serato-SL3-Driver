@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <condition_variable>
 #include <cstring>
+#include <cwchar>
 #include <fstream>
 #include <iostream>
 #include <mutex>
@@ -59,7 +60,45 @@ static void cycles(Host& h,const std::filesystem::path& pause={}){
     }
     require(h.device->disposeBuffers()==ASE_OK,"Retired callback planes disposed");
 }
-static void ordinary(const std::filesystem::path& library,const std::wstring& endpoint,HANDLE server,bool blocked,const std::string& worker_hash={},bool activate_com=false,const std::filesystem::path& pause={},bool unmeasured=false){
+static constexpr wchar_t close_window_class[]=L"SL3SimulatedAsioCloseFixture";
+static LRESULT CALLBACK close_window_proc(HWND window,UINT message,WPARAM wparam,LPARAM lparam){
+    if(message==WM_DESTROY){PostQuitMessage(0);return 0;}
+    return DefWindowProcW(window,message,wparam,lparam);
+}
+static void window_shutdown(Host& h){
+    buffers(h);require(h.device->start()==ASE_OK,"Start window-owned simulated ASIO session");
+    const auto ready=GetTickCount64()+2000;
+    while(h.block?WaitForSingleObject(h.entered.value,0)!=WAIT_OBJECT_0:h.calls.load()<12){
+        require(GetTickCount64()<ready,"Window host has executing/completed callbacks before close");Sleep(1);
+    }
+    WNDCLASSW klass{};klass.lpfnWndProc=close_window_proc;klass.hInstance=GetModuleHandleW(nullptr);klass.lpszClassName=close_window_class;
+    require(RegisterClassW(&klass)!=0,"Register owned close-message test window");
+    struct Window {
+        HWND value=nullptr;
+        ~Window(){if(value && IsWindow(value))DestroyWindow(value);UnregisterClassW(close_window_class,GetModuleHandleW(nullptr));}
+    } window;
+    window.value=CreateWindowExW(0,close_window_class,L"Simulated ASIO close test",WS_OVERLAPPEDWINDOW,
+        0,0,320,160,nullptr,nullptr,klass.hInstance,nullptr);
+    require(window.value!=nullptr,"Create hidden ordinary host window");
+    MSG message{};int received=0;
+    while((received=GetMessageW(&message,nullptr,0,0))>0){TranslateMessage(&message);DispatchMessageW(&message);}
+    require(received==0 && !IsWindow(window.value),"Parent-posted WM_CLOSE destroyed owned window and ended UI loop");
+    const auto before=GetTickCount64();const auto stopped=h.device->stop();const auto elapsed=GetTickCount64()-before;
+    if(h.block){
+        require(stopped==ASE_HWMalfunction && elapsed>=4000 && elapsed<7500,
+            "Blocked callback returns a bounded failed stop instead of claiming retirement");
+        require(h.device->disposeBuffers()==ASE_InvalidMode,"Executing callback keeps its planes after stop timeout");
+        SetEvent(h.release.value);const auto retired=GetTickCount64()+3000;
+        ASIOError disposed=ASE_InvalidMode;
+        while((disposed=h.device->disposeBuffers())==ASE_InvalidMode){require(GetTickCount64()<retired,"Released callback retires before plane disposal");Sleep(1);}
+        require(disposed==ASE_OK && h.calls==1 && !h.bad,"Late callback returns once on retained planes");
+    }else{
+        require(stopped==ASE_OK && elapsed<7500 && h.calls>=12 && !h.bad,"Window close stops active callbacks successfully");
+        require(h.device->disposeBuffers()==ASE_OK,"Window close disposes retired planes");
+    }
+    require(h.device->Release()==0,"Window owner releases its final ASIO interface");h.device=nullptr;
+}
+static void ordinary(const std::filesystem::path& library,const std::wstring& endpoint,HANDLE server,bool blocked,const std::string& worker_hash={},bool activate_com=false,const std::filesystem::path& pause={},bool unmeasured=false,bool window_close=false){
     HMODULE module=LoadLibraryExW(library.c_str(),nullptr,LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR|LOAD_LIBRARY_SEARCH_SYSTEM32);require(module!=nullptr,"Load actual unregistered ASIO test DLL");
     using Configure=BOOL(*)(const wchar_t*,HANDLE);using GetClass=HRESULT(__stdcall*)(REFCLSID,REFIID,void**);using Unload=HRESULT(__stdcall*)();
     const auto configure=symbol<Configure>(module,"sl3_test_configure_broker");const auto get=symbol<GetClass>(module,"DllGetClassObject");const auto unload=symbol<Unload>(module,"DllCanUnloadNow");
@@ -73,6 +112,12 @@ static void ordinary(const std::filesystem::path& library,const std::wstring& en
         if(result!=S_OK)std::cerr<<"Create IASIO HRESULT 0x"<<std::hex<<static_cast<unsigned long>(result)<<std::dec<<"\n";
         require(result==S_OK && h.device->init(nullptr)==ASIOTrue,"Ordinary IASIO object initialized without custom scope");
     };
+    if(window_close){
+        Host h;host=&h;h.block=blocked;create(h);window_shutdown(h);
+        const auto deadline=GetTickCount64()+3000;
+        while(unload()!=S_OK){require(GetTickCount64()<deadline,"Window host releases COM/module ownership");Sleep(1);}
+        FreeLibrary(module);return;
+    }
     if(!blocked){
         for(unsigned object=0;object<3;++object){
             Host h;h.rate=unmeasured?44100u:48000u;host=&h;create(h);long in=0,out=0;
@@ -132,13 +177,32 @@ struct Server {
 static void run(const std::filesystem::path& self,const std::filesystem::path& fixture,const std::filesystem::path& library,const std::wstring& mode){
     Server server(fixture);Process child;const auto result_path=server.audit.native()+L"-child.txt";
     child.launch(self,Process::executable_sha256(self),{L"--client",server.listener.name(),std::to_wstring(GetCurrentProcessId()),library.native(),mode,result_path});
+    const bool window_close=mode==L"window-close" || mode==L"window-close-blocked";
+    struct CloseTarget {DWORD pid;unsigned posted=0;bool failed=false;};
+    CloseTarget target{GetProcessId(child.process_handle())};require(target.pid!=0,"Exact owned child PID");
     const auto deadline=GetTickCount64()+15000;
-    while(!child.observe().process_exited){const auto now=GetTickCount64();if(now>=deadline){child.terminate_and_wait(2000);throw std::runtime_error("ASIO child deadline");}child.wait_for_exit(DWORD((std::min)(ULONGLONG(5000),deadline-now)));}
+    while(!child.observe().process_exited){
+        const auto now=GetTickCount64();if(now>=deadline){child.terminate_and_wait(2000);throw std::runtime_error("ASIO child deadline");}
+        if(window_close && !target.posted){
+            require(EnumWindows([](HWND window,LPARAM raw)->BOOL{
+                auto& selected=*reinterpret_cast<CloseTarget*>(raw);DWORD pid=0;GetWindowThreadProcessId(window,&pid);
+                wchar_t klass[64]{};
+                if(pid==selected.pid && GetClassNameW(window,klass,64) && std::wcscmp(klass,close_window_class)==0){
+                    if(PostMessageW(window,WM_CLOSE,0,0))++selected.posted;else selected.failed=true;
+                }
+                return TRUE;
+            },reinterpret_cast<LPARAM>(&target))!=FALSE && !target.failed,"Post WM_CLOSE only to exact owned child/class");
+        }
+        child.wait_for_exit(window_close?10:DWORD((std::min)(ULONGLONG(5000),deadline-now)));
+    }
+    if(window_close)require(target.posted==1,"One cross-process close message accepted");
     server.finish();std::string error;{std::ifstream in{std::filesystem::path(result_path)};std::getline(in,error);}std::error_code ec;std::filesystem::remove(result_path,ec);
     if(!error.empty())std::cerr<<error<<'\n';require(child.observe().exit_code==0,"ASIO broker child succeeds");if(server.error)std::rethrow_exception(server.error);
     const auto rows=server.lines();require(std::count(rows.begin(),rows.end(),"acquire")==1 && std::count(rows.begin(),rows.end(),"release")==1,"One worker acquisition/final release across actual ASIO client lifetimes");
     if(mode==L"ordinary")require(!server.final.failed && std::count(rows.begin(),rows.end(),"rate")==8 && std::count(rows.begin(),rows.end(),"begin")==4 && std::count(rows.begin(),rows.end(),"end")==4,"Three ordinary COM objects/four ASIO starts share one acquired worker");
     else if(mode==L"reports")require(!server.final.failed && std::count(rows.begin(),rows.end(),"begin")==0 && std::count(rows.begin(),rows.end(),"rate")==3,"Client report path refreshes reused owner clock and sends no audio");
+    else if(window_close)require(!server.final.failed && std::count(rows.begin(),rows.end(),"begin")==1 && std::count(rows.begin(),rows.end(),"end")==1,
+        "Posted UI close retires one simulated stream and detaches after actual callback retirement");
     else require(server.final.failed && server.final.process.process_exited && server.final.process.job_empty,"Blocked client destruction seals broker without assuming callback retirement");
 }
 int wmain(int argc,wchar_t** argv){
@@ -166,10 +230,15 @@ int wmain(int argc,wchar_t** argv){
         }
         if(argc==7 && std::wstring(argv[1])==L"--client"){
             Handle server;server.value=OpenProcess(SYNCHRONIZE|PROCESS_QUERY_LIMITED_INFORMATION,FALSE,DWORD(std::stoul(argv[3])));require(server.value!=nullptr,"Fixture-only parent reference");
-            if(std::wstring(argv[5])==L"reports")reports(argv[2],server.value);else ordinary(std::filesystem::absolute(argv[4]),argv[2],server.value,std::wstring(argv[5])==L"blocked");return 0;
+            const std::wstring mode=argv[5];const bool window_close=mode==L"window-close" || mode==L"window-close-blocked";
+            std::unique_ptr<sl3::test::ComApartment> apartment;
+            if(window_close)apartment=std::make_unique<sl3::test::ComApartment>(COINIT_APARTMENTTHREADED);
+            if(mode==L"reports")reports(argv[2],server.value);
+            else ordinary(std::filesystem::absolute(argv[4]),argv[2],server.value,mode==L"blocked" || mode==L"window-close-blocked",{},false,{},false,window_close);
+            return 0;
         }
         require(argc==3,"Fixture and test DLL paths required");const auto self=std::filesystem::absolute(argv[0]);
-        for(const auto mode:{L"ordinary",L"reports",L"blocked"})run(self,argv[1],argv[2],mode);
-        std::cout<<"Broker-backed ordinary IASIO objects, callbacks, domain reports and blocked-module lifetime passed (simulation only)\n";return 0;
+        for(const auto mode:{L"ordinary",L"reports",L"blocked",L"window-close",L"window-close-blocked"})run(self,argv[1],argv[2],mode);
+        std::cout<<"Broker-backed IASIO lifecycle and cross-process window close (normal/blocked callback) passed; simulation only, no USB or Serato\n";return 0;
     }catch(const std::exception& e){if(argc==7){std::ofstream out{std::filesystem::path(argv[6])};out<<e.what()<<'\n';}std::cerr<<e.what()<<'\n';return 1;}
 }
