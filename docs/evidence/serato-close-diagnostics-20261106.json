@@ -1,0 +1,59 @@
+{
+  "schema": "sl3.serato-close-diagnostics-evidence.v1",
+  "date": "2026-11-06",
+  "supervisorSha256": "00e8052273f3593337fdfce03b94286f15f2f68762d2a28112fbc5464327a97b",
+  "launcherSha256": "907dca2d5938997b26e03e099102e52d0ee038f020816b14e426ec1db8066030",
+  "releaseManifestSha256": "02b5f9fd6cbf326853fd46059cf59d12669cdce62eaca4f439abb93e028b0e82",
+  "installerResourceSha256": "33a7077e6ce61f75502ce52f8995cb9047d0533241bcd148482aa797c3bd581f",
+  "sessionPlanSha256": "4ef9ff4c463cae135c5b594ee652c3d2faaadebbcb78208e667944fd9ee12f73",
+  "kitManifestSha256": "36e9ef20e1279c9654cdf0abbaf60d93d74db70b340ad0205b6a00e2e2961f49",
+  "sourcePins": 43,
+  "checksPassed": {
+    "windowCloseDiagnostics": 6,
+    "supervisor": 14,
+    "nativeKit": 15,
+    "capsule": 11,
+    "windowsArguments": 8,
+    "ownedProcessStop": 8,
+    "status": 11,
+    "savedResult": 6,
+    "completePlan": 4
+  },
+  "totalChecksPassed": 83,
+  "reports": {
+    "kit": {
+      "sha256": "30ac6784e89b8322db673820f8194d3cb5f874fd8034265ee27b7876c8d0c21d",
+      "passedCases": 15
+    },
+    "capsule": {
+      "sha256": "a35a70b44e593f9b96c39280c016dc43c7efbcd7c21e9bdb294e8b96059d8c59",
+      "passedCases": 11
+    },
+    "stop": {
+      "sha256": "7f9cd2f75e4790060f1b13e43286b67aaaa8f3105a0c2b4fcd763a2b09b6b5b9",
+      "passedCases": 8
+    }
+  },
+  "actualWindowsFixture": {
+    "hiddenWindowCreated": true,
+    "nativeOwnershipObserved": true,
+    "closeMessageQueuedAndRetrieved": true,
+    "selectionForPostingSynthetic": true,
+    "messageDispatched": false,
+    "visibleUIShown": false,
+    "seratoShutdownValidated": false
+  },
+  "postFixtureCurrentStatus": {
+    "phase": "prepared",
+    "originalSetupCurrentlyClean": true,
+    "reportSha256": "16aaf366c4755eba0f9c67a67149f0e7b3960b6c2d679cd6171b07058d630519"
+  },
+  "nativeAudioBundleSha256": "898c4e5294aec6a67a7364ed9e47ff602f5228401fa10e8a1ca06d46e7cc8993",
+  "audioBinariesChanged": false,
+  "applicationStarted": false,
+  "deviceOpened": false,
+  "elevationRequested": false,
+  "shutdownRootCauseEstablished": false,
+  "liveSeratoShutdownValidated": false,
+  "enumerationFailurePreservesBoundedShutdownReportVerified": true
+}

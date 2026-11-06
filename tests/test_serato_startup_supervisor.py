@@ -193,8 +193,8 @@ class WindowsOwnershipTest(unittest.TestCase):
     def test_actual_owned_process_normal_exit_and_forced_close_are_distinct(self):
         # The Frida interface is mocked. The Windows process/job/wait/termination
         # APIs are real; the child is this interpreter, never Serato or a driver.
-        for graceful in (True, False):
-            with self.subTest(graceful=graceful), tempfile.TemporaryDirectory() as temporary:
+        for graceful, enumeration_failure in ((True, False), (False, False), (False, True)):
+            with self.subTest(graceful=graceful, enumeration_failure=enumeration_failure), tempfile.TemporaryDirectory() as temporary:
                 marker = Path(temporary)/'exit.txt'
                 class Script:
                     def on(self, name, callback): self.callback = callback
@@ -221,6 +221,10 @@ class WindowsOwnershipTest(unittest.TestCase):
                 frida = type('Frida',(),{'get_local_device':staticmethod(lambda:device)})()
                 try:
                     backend = MODULE['WindowsProcess'](Path(sys.executable),frida,expected_application_sha=MODULE['digest'](sys.executable))
+                    if enumeration_failure:
+                        backend.window_snapshot = lambda post_close=False: {
+                            'enumerationSucceeded':False, 'enumerationError':5,
+                            'visibleWindows':0, 'closeMessagesPosted':0, 'postCloseRequested':post_close}
                     result = MODULE['supervise'](backend,'synthetic script',lambda:None,lambda:not graceful and backend.session is None,
                                                 viewing_seconds=2)
                     device.child.wait(timeout=5)
@@ -228,6 +232,14 @@ class WindowsOwnershipTest(unittest.TestCase):
                     self.assertTrue(result['process']['jobEmpty'])
                     self.assertEqual(result['process']['observerForcedTermination'],not graceful)
                     self.assertEqual(result['process']['exitCode'],0 if graceful else 1)
+                    if not graceful:
+                        close = result['process']['closeWindowObservation']
+                        self.assertEqual(close['enumerationSucceeded'],not enumeration_failure)
+                        if enumeration_failure:
+                            self.assertEqual(close['enumerationError'],5)
+                        self.assertEqual(close['visibleWindows'], 0)
+                        self.assertEqual(close['closeMessagesPosted'], 0)
+                        self.assertFalse(result['process']['closeTimeoutWindowObservation']['postCloseRequested'])
                     self.assertEqual(result['supervisionCompleted'],graceful)
                     self.assertTrue(result['tracerDetached'])
                     self.assertEqual(device.spawn_environment,{'SL3_ASIO_PRIVATE_TRACE':'0',

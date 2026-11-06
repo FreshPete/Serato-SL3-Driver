@@ -267,6 +267,53 @@ class WindowsProcess:
         if self.session:
             self.session.detach(); self.session = None
 
+    def window_snapshot(self, post_close=False, user32=None):
+        """Owned top-level metadata only; no titles, screenshots or synchronous messages."""
+        c, w = self.c, self.w
+        u = user32 if user32 is not None else c.WinDLL('user32', use_last_error=True)
+        callback_type = c.WINFUNCTYPE(w.BOOL, w.HWND, w.LPARAM)
+        u.GetWindowThreadProcessId.argtypes = [w.HWND, c.POINTER(w.DWORD)]
+        u.GetWindowThreadProcessId.restype = w.DWORD
+        u.IsWindowVisible.argtypes = [w.HWND]; u.IsWindowVisible.restype = w.BOOL
+        u.IsWindowEnabled.argtypes = [w.HWND]; u.IsWindowEnabled.restype = w.BOOL
+        u.PostMessageW.argtypes = [w.HWND, w.UINT, w.WPARAM, w.LPARAM]; u.PostMessageW.restype = w.BOOL
+        u.EnumWindows.argtypes = [callback_type, w.LPARAM]; u.EnumWindows.restype = w.BOOL
+        result = {'ownedTopLevelWindows': 0, 'visibleWindows': 0, 'enabledVisibleWindows': 0,
+                  'closeMessagesPosted': 0, 'closePostFailures': 0, 'closePostErrors': [],
+                  'postCloseRequested': post_close, 'enumerationSucceeded': False,
+                  'enumerationError': None, 'callbackError': None}
+        @callback_type
+        def visit(hwnd, unused):
+            try:
+                # Keep using the retained process object: never target another
+                # process by a stale PID after our owned child has exited.
+                if self.wait(0):
+                    return True
+                pid = w.DWORD()
+                if not u.GetWindowThreadProcessId(hwnd, c.byref(pid)) or pid.value != self.pid:
+                    return True
+                result['ownedTopLevelWindows'] += 1
+                if u.IsWindowVisible(hwnd):
+                    result['visibleWindows'] += 1
+                    result['enabledVisibleWindows'] += bool(u.IsWindowEnabled(hwnd))
+                    if post_close:
+                        c.set_last_error(0)
+                        if u.PostMessageW(hwnd, 0x10, 0, 0):
+                            result['closeMessagesPosted'] += 1
+                        else:
+                            result['closePostFailures'] += 1
+                            if len(result['closePostErrors']) < 8:
+                                result['closePostErrors'].append(c.get_last_error())
+                return True
+            except Exception as error:
+                result['callbackError'] = str(error)[:256]
+                return False
+        c.set_last_error(0)
+        result['enumerationSucceeded'] = bool(u.EnumWindows(visit, 0))
+        if not result['enumerationSucceeded']:
+            result['enumerationError'] = c.get_last_error()
+        return result
+
     def cleanup(self):
         c, w, k = self.c, self.w, self.k
         result = {'processStarted': self.pid is not None, 'pid':self.pid, 'processExited': False,
@@ -274,21 +321,12 @@ class WindowsProcess:
         try:
             if self.handle:
                 if not self.wait(0):
-                    u = c.WinDLL('user32', use_last_error=True)
-                    callback_type = c.WINFUNCTYPE(w.BOOL, w.HWND, w.LPARAM)
-                    u.GetWindowThreadProcessId.argtypes = [w.HWND,c.POINTER(w.DWORD)]
-                    u.IsWindowVisible.argtypes = [w.HWND]
-                    u.PostMessageW.argtypes = [w.HWND,w.UINT,w.WPARAM,w.LPARAM]
-                    u.EnumWindows.argtypes = [callback_type,w.LPARAM]
-                    @callback_type
-                    def close(hwnd, unused):
-                        pid = w.DWORD(); u.GetWindowThreadProcessId(hwnd,c.byref(pid))
-                        if pid.value == self.pid and u.IsWindowVisible(hwnd):
-                            u.PostMessageW(hwnd, 0x10, 0, 0)
-                        return True
                     result['closeRequested'] = True
-                    self.checked(u.EnumWindows(close, 0))
+                    result['closeWindowObservation'] = self.window_snapshot(post_close=True)
+                    # A rejected/enumeration-failed close is evidence, not a
+                    # reason to skip the bounded wait and lose the final report.
                     if not self.wait(8):
+                        result['closeTimeoutWindowObservation'] = self.window_snapshot()
                         self.checked(k.TerminateProcess(self.handle, 1))
                         result['observerForcedTermination'] = True
                         self.wait(5)
