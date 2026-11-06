@@ -200,11 +200,13 @@ class HardDeadline:
 
 class WindowsProcess:
     """Frida-spawned process and retained Win32 handles; never kills by PID lookup."""
-    def __init__(self, application, frida, expected_application_sha=APP_SHA, launcher_context=None):
+    def __init__(self, application, frida, expected_application_sha=APP_SHA, launcher_context=None, asio_private_trace=False):
         import ctypes as c
         from ctypes import wintypes as w
         self.c, self.w, self.application = c, w, application
         self.expected_application_sha = expected_application_sha
+        require(type(asio_private_trace) is bool, 'ASIO private tracing requires an explicit Boolean')
+        self.asio_private_trace = asio_private_trace
         self.launcher_context = dict(launcher_context or {})
         require(set(self.launcher_context) in (set(), {'SL3_SESSION_CAPSULE','SL3_SESSION_CAPSULE_SHA256'}),
                 'Unexpected launcher environment fields')
@@ -241,7 +243,8 @@ class WindowsProcess:
         limits = Extended(); limits.basic.flags = 0x2000 | 0x1000
         self.job = self.checked(k.CreateJobObjectW(None, None))
         self.checked(k.SetInformationJobObject(self.job, 9, c.byref(limits), c.sizeof(limits)))
-        environment = {'SL3_ASIO_PRIVATE_TRACE':'0','SL3_SESSION_CAPSULE':'','SL3_SESSION_CAPSULE_SHA256':''}
+        environment = {'SL3_ASIO_PRIVATE_TRACE':'1' if self.asio_private_trace else '0',
+                       'SL3_SESSION_CAPSULE':'','SL3_SESSION_CAPSULE_SHA256':''}
         environment.update(self.launcher_context)
         self.pid = self.device.spawn([str(self.application)], cwd=str(self.application.parent), stdio='pipe', env=environment)
         self.handle = self.checked(k.OpenProcess(0x101101, False, self.pid))
@@ -381,6 +384,7 @@ def main():
     parser.add_argument('--frida-directory', type=Path)
     parser.add_argument('--launcher-capsule', type=Path)
     parser.add_argument('--expected-launcher-capsule-sha256')
+    parser.add_argument('--asio-private-trace', action='store_true', help='Opt in to bounded DLL-owned ASIO metadata logs')
     args = parser.parse_args()
     require(not args.run or args.output is not None, 'Fresh output directory required for Run')
     prepared = preflight(args.prepared,args.expected_preparation_sha256,args.app,args.bundle,
@@ -389,6 +393,7 @@ def main():
                                    args.app,args.bundle,args.expected_bundle_sha256)
     if not args.run:
         print(json.dumps({'planOnly':True,'inputsVerified':True,'resourceState':prepared['resourceState'],
+                          'asioPrivateTraceRequested':args.asio_private_trace,
                           'processStarted':False,'filesWritten':False,'registryWritten':False,'deviceAccess':False}))
         return
     import ctypes
@@ -409,7 +414,8 @@ def main():
                    'scriptSha256':prepared['scriptSha256'],'preparationSha256':prepared['preparationSha256'],
                    'deploymentManifestSha256':prepared['deploymentManifestSha256'],
                    'requiresExternalRollback':True,'hardDeadlineSeconds':840,'launcherCapsuleBound':bool(context),
-                   'launcherCapsuleSha256':args.expected_launcher_capsule_sha256,'supervisorOwner':supervisor_owner},stream,indent=2)
+                   'launcherCapsuleSha256':args.expected_launcher_capsule_sha256,'supervisorOwner':supervisor_owner,
+                   'asioPrivateTraceRequested':args.asio_private_trace},stream,indent=2)
     intent_sha = digest(output/'intent.json')
     def verify_driver():
         require(digest(prepared['asio']) == prepared['asioSha256'], 'Installed ASIO differs from reviewed package')
@@ -420,7 +426,8 @@ def main():
         with (output/'events.jsonl').open('x',encoding='utf-8') as events:
             def publish(item):
                 events.write(json.dumps(item)+'\n'); events.flush()
-            report = supervise(WindowsProcess(prepared['application'],frida,launcher_context=context),prepared['script'],verify_driver,
+            report = supervise(WindowsProcess(prepared['application'],frida,launcher_context=context,
+                                             asio_private_trace=args.asio_private_trace),prepared['script'],verify_driver,
                                lambda:stop_api['read_request'](output/'stop.txt',args.expected_launcher_capsule_sha256,
                                                               intent_sha,supervisor_owner),event_sink=publish)
         report['fridaVersion'] = frida.__version__
@@ -433,6 +440,7 @@ def main():
         report['supervisionCompleted'] = False
     finally:
         watchdog.close()
+    report['asioPrivateTraceRequested'] = args.asio_private_trace
     with (output/'result.json').open('x',encoding='utf-8') as stream:
         json.dump(report,stream,indent=2)
         stream.write('\n')

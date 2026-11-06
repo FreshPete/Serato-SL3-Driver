@@ -180,6 +180,10 @@ class SupervisorTest(unittest.TestCase):
 
 @unittest.skipUnless(os.name == 'nt','Win32 owned-process simulation')
 class WindowsOwnershipTest(unittest.TestCase):
+    def test_private_trace_requires_exact_boolean(self):
+        for flag in (1, '1', None):
+            with self.assertRaisesRegex(ValueError,'explicit Boolean'):
+                MODULE['WindowsProcess'](Path(sys.executable),None,asio_private_trace=flag)
     def test_changed_application_never_spawns_a_process(self):
         class Device:
             def spawn(self, *args, **kwargs): raise AssertionError('Must not spawn changed application')
@@ -193,8 +197,9 @@ class WindowsOwnershipTest(unittest.TestCase):
     def test_actual_owned_process_normal_exit_and_forced_close_are_distinct(self):
         # The Frida interface is mocked. The Windows process/job/wait/termination
         # APIs are real; the child is this interpreter, never Serato or a driver.
-        for graceful, enumeration_failure in ((True, False), (False, False), (False, True)):
-            with self.subTest(graceful=graceful, enumeration_failure=enumeration_failure), tempfile.TemporaryDirectory() as temporary:
+        for graceful, enumeration_failure, private_trace in ((True, False, False), (False, False, False),
+                                                            (False, True, False), (True, False, True)):
+            with self.subTest(graceful=graceful, enumeration_failure=enumeration_failure, private_trace=private_trace), tempfile.TemporaryDirectory() as temporary:
                 marker = Path(temporary)/'exit.txt'
                 class Script:
                     def on(self, name, callback): self.callback = callback
@@ -220,7 +225,8 @@ class WindowsOwnershipTest(unittest.TestCase):
                 device = Device()
                 frida = type('Frida',(),{'get_local_device':staticmethod(lambda:device)})()
                 try:
-                    backend = MODULE['WindowsProcess'](Path(sys.executable),frida,expected_application_sha=MODULE['digest'](sys.executable))
+                    backend = MODULE['WindowsProcess'](Path(sys.executable),frida,expected_application_sha=MODULE['digest'](sys.executable),
+                                                       asio_private_trace=private_trace)
                     if enumeration_failure:
                         backend.window_snapshot = lambda post_close=False: {
                             'enumerationSucceeded':False, 'enumerationError':5,
@@ -242,7 +248,7 @@ class WindowsOwnershipTest(unittest.TestCase):
                         self.assertFalse(result['process']['closeTimeoutWindowObservation']['postCloseRequested'])
                     self.assertEqual(result['supervisionCompleted'],graceful)
                     self.assertTrue(result['tracerDetached'])
-                    self.assertEqual(device.spawn_environment,{'SL3_ASIO_PRIVATE_TRACE':'0',
+                    self.assertEqual(device.spawn_environment,{'SL3_ASIO_PRIVATE_TRACE':'1' if private_trace else '0',
                         'SL3_SESSION_CAPSULE':'','SL3_SESSION_CAPSULE_SHA256':''})
                 finally:
                     if device.child is not None and device.child.poll() is None:

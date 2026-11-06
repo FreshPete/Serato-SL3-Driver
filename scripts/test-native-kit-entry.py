@@ -59,6 +59,7 @@ def exercise(kit, expected, application):
         assert status['schema'] == 'sl3.session-status.v1' and status['phase'] == 'prepared'
         assert status['originalSetupCurrentlyClean'] is True and status['completionEvidenceConsistent'] is False
         assert status['repairAttempted'] is False and status['deviceOpened'] is False
+        assert json.loads(Path(prepared['sessionPlan']).read_bytes())['asioPrivateTrace'] is False
         status_source = moved / 'scripts/inspect-serato-session-status.py'
         status_original = status_source.read_bytes()
         try:

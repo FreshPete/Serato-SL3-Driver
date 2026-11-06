@@ -53,6 +53,8 @@ def exercise(launcher, powershell, template):
         assert sha(Path(result['sessionPlan'])) == result['sessionPlanSha256']
         assert capsule['sessionDirectory'] == str(directory)
         assert plan['launcher'] == original['launcher'] and plan['installerResource'] == original['installerResource']
+        assert plan['asioPrivateTrace'] is original['asioPrivateTrace']
+        assert result['asioPrivateTrace'] is original['asioPrivateTrace']
         assert plan['nativeBundle'] == original['nativeBundle'] and plan['hostOutput'] != original['hostOutput']
         assert all(not (directory / name).exists() for name in ('session-run.lock', 'install-receipt.json', 'broker-session'))
         checked = call(f'fresh-complete-wrapper-plan-{number}', result['planArguments'])
@@ -65,7 +67,10 @@ def exercise(launcher, powershell, template):
     refused = call('wrong-reviewed-plan-hash-writes-no-session', wrong, 1)
     assert 'Reviewed launcher input differs:' in refused.stderr and fresh_directories() == before
     with tempfile.TemporaryDirectory(prefix='sl3-session-capsule-preparation-test-', dir=ROOT / 'analysis') as temporary:
-        directory = Path(temporary)
+        # tempfile's suffix may contain underscores; keep the actual capsule
+        # leaf within the production tag grammar instead of weakening it.
+        directory = Path(temporary) / 'sl3-session-capsule-preparation-test'
+        directory.mkdir()
         bad = directory / 'session-plan.json'
         altered = json.loads(json.dumps(original))
         altered['launcher']['sha256'] = '0' * 64

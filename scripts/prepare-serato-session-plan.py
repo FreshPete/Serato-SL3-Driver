@@ -66,7 +66,8 @@ def bind_installer(application,launcher,resource):
     require(plain==expected,'Installer resource does not contain the exact selected launcher')
 
 
-def construct(capsule,capsule_sha,prepared,prepared_sha,archive,resource,launcher,frida):
+def construct(capsule,capsule_sha,prepared,prepared_sha,archive,resource,launcher,frida,asio_private_trace=False):
+    require(type(asio_private_trace) is bool,'ASIO private tracing requires an explicit Boolean')
     capsule,prepared,archive,resource,launcher,frida=(Path(path).absolute() for path in
         (capsule,prepared,archive,resource,launcher,frida))
     api=module('serato-session-capsule.py')
@@ -93,7 +94,7 @@ def construct(capsule,capsule_sha,prepared,prepared_sha,archive,resource,launche
         'hostOutput':str(ROOT/'analysis'/('sl3-startup-session-'+tag)),
         'nativeInstallation':plan['installationDirectory'],'pointerPath':plan['pointerPath'],
         'registryEntries':plan['registryEntries'],'stageLimitSeconds':900,'permitLimitSeconds':300,
-        'installerPayloadBound':True,'liveValidated':False}
+        'asioPrivateTrace':asio_private_trace,'installerPayloadBound':True,'liveValidated':False}
 
 
 def verify(path,expected):
@@ -105,7 +106,8 @@ def verify(path,expected):
     require(path.parent==capsule.parent and re.fullmatch(r'session-plan[-A-Za-z0-9]*\.json',path.name),
             'Session plan must remain in its bound capsule directory')
     actual=construct(capsule,saved['capsule']['sha256'],saved['preparedShim']['path'],saved['preparedShim']['sha256'],
-                     saved['archiveSource']['path'],saved['installerResource']['path'],saved['launcher']['path'],saved['fridaDirectory'])
+                     saved['archiveSource']['path'],saved['installerResource']['path'],saved['launcher']['path'],saved['fridaDirectory'],
+                     saved['asioPrivateTrace'])
     require(saved==actual,'Session inputs or sources changed')
     return saved
 
@@ -123,6 +125,7 @@ if __name__=='__main__':
     parser.add_argument('--launcher',type=Path)
     parser.add_argument('--frida-directory',type=Path)
     parser.add_argument('--prepare',type=Path)
+    parser.add_argument('--asio-private-trace',action='store_true',help='Bind opt-in DLL-owned metadata logging to the session')
     args=parser.parse_args()
     if args.verify:
         require(args.expected_plan_sha256 is not None,'Expected session plan SHA-256 required')
@@ -134,7 +137,7 @@ if __name__=='__main__':
                 args.expected_preparation_sha256,args.archive,args.installer_resource,args.launcher,args.frida_directory)),
                 'Complete source-bound session inputs required')
         result=construct(args.capsule,args.expected_capsule_sha256,args.prepared,args.expected_preparation_sha256,
-                         args.archive,args.installer_resource,args.launcher,args.frida_directory)
+                         args.archive,args.installer_resource,args.launcher,args.frida_directory,args.asio_private_trace)
         if args.prepare:
             output=args.prepare.absolute()
             require(output.parent==args.capsule.absolute().parent and re.fullmatch(r'session-plan[-A-Za-z0-9]*\.json',output.name),

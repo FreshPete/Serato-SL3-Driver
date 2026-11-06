@@ -235,7 +235,9 @@ try {
         $deadline=[Environment]::TickCount64+20000
         while (-not (Test-Path -LiteralPath $ready) -and -not $helper.HasExited -and [Environment]::TickCount64 -lt $deadline) { Start-Sleep -Milliseconds 150 }
         if (-not (Test-Path -LiteralPath $ready) -or $helper.HasExited) { throw 'Protected resources did not stage' }
-        & $python -I -B "$PSScriptRoot/run-serato-startup-session.py" --run --prepared $plan.preparedShim.path `
+        $traceArguments=@()
+        if ($plan.asioPrivateTrace) { $traceArguments=@('--asio-private-trace') }
+        & $python -I -B "$PSScriptRoot/run-serato-startup-session.py" @traceArguments --run --prepared $plan.preparedShim.path `
             --expected-preparation-sha256 $plan.preparedShim.sha256 --app $exe --bundle $plan.nativeBundle.path `
             --expected-bundle-sha256 $plan.nativeBundle.sha256 --expected-installer-bundle-sha256 $plan.installerResource.sha256 `
             --output $plan.hostOutput --frida-directory $plan.fridaDirectory `

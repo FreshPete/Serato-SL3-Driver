@@ -1,0 +1,84 @@
+{
+  "schema": "sl3.session-asio-owned-trace-evidence.v1",
+  "date": "2026-11-06",
+  "defaultEnabled": false,
+  "nativeAudioBundleSha256": "898c4e5294aec6a67a7364ed9e47ff602f5228401fa10e8a1ca06d46e7cc8993",
+  "asioDllSha256": "695f87e0cff1733e4aee8ab6b311d1cbc87b087a874fab5dddfef2404dd6e6bc",
+  "audioBinariesChanged": false,
+  "ownedFixtureReportSha256": "4892ac9a9557794fabd877ae9f9ac54aeed47dc840674f6aece8ce29eab206a1",
+  "ownedFixtureCases": [
+    {
+      "mode": "--self-disabled",
+      "exitCode": 0,
+      "timedOut": false,
+      "childExited": true,
+      "dllUnloaded": true,
+      "traceDirectoryCreated": false,
+      "passed": true
+    },
+    {
+      "mode": "--self-refused",
+      "exitCode": 0,
+      "timedOut": false,
+      "childExited": true,
+      "dllUnloaded": true,
+      "traceDirectoryCreated": false,
+      "passed": true
+    },
+    {
+      "mode": "--self-capture",
+      "exitCode": 0,
+      "timedOut": false,
+      "childExited": true,
+      "decodedEvents": 16,
+      "completedCallPairs": 8,
+      "loggerStopped": true,
+      "dllUnloaded": true,
+      "passed": true
+    }
+  ],
+  "sourcePins": 43,
+  "completePlanSourcePins": 29,
+  "launcherSha256": "1686e5e433349f74994904fd84e438a514e39e10731366954775d3df508809ab",
+  "releaseManifestSha256": "be388aadd2a5fd8eded78041a9847f0f5b220d64d07e094f73cea2f67fb7207d",
+  "kitManifestSha256": "65d0ff0bdf58f4a5f2d64a12ed3ce6524753669d3726df55466ffb3c4c860634",
+  "reports": {
+    "kit": {
+      "sha256": "5846ff293d0caaaefdcdf4bd0ff4be5f151db4a7c040a287c17558b4eebe969d",
+      "passedCases": 15
+    },
+    "stop": {
+      "sha256": "e19165637a0206fa942b14c8718afe8f5e8654643275cf5abfb538eb6ca56c97",
+      "passedCases": 8
+    },
+    "fresh-preparation": {
+      "sha256": "a214522d4adc9cf771265e115b4bdc331995a1eadc2a087e8e07daa86cbcf87d",
+      "passedCases": 8
+    }
+  },
+  "hostPlanTestsSha256": "86191f2fb65880ec21e79134ed1616283de57478bb8af5bddcfd330009d79bf0",
+  "checksPassed": {
+    "supervisor": 15,
+    "windowClose": 6,
+    "status": 11,
+    "savedResult": 6,
+    "completePlan": 5,
+    "kit": 15,
+    "stop": 8,
+    "freshPreparation": 8,
+    "packagedDllLogging": 3,
+    "hostPlanOptions": 2
+  },
+  "totalChecksPassed": 79,
+  "wrapperSyntaxParsed": true,
+  "trueTemplatePreservedAcrossTwoFreshSessions": true,
+  "ordinaryKitPreparationTraceRequested": false,
+  "postFixtureOriginalSetupClean": true,
+  "statusReportSha256": "b16cf42f1f41f223984cb691fa1e8a0d9c6d288a774aa81a214e45dd400c3315",
+  "applicationStarted": false,
+  "deviceOpened": false,
+  "elevationRequested": false,
+  "liveSeratoShutdownValidated": false,
+  "liveSeratoLoggerCreated": false,
+  "physicalAudioVerified": false
+}

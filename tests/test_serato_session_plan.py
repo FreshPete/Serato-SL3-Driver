@@ -21,15 +21,20 @@ class SessionPlanTest(unittest.TestCase):
             record={'schema':'sl3.serato-session-plan.v1','capsule':{'path':str(capsule),'sha256':'1'*64},
                     'preparedShim':{'path':str(root/'prepared'),'sha256':'2'*64},'archiveSource':{'path':'archive'},
                     'installerResource':{'path':'resource'},'launcher':{'path':'launcher'},'fridaDirectory':'frida',
-                    'stageLimitSeconds':900,'liveValidated':False}
+                    'stageLimitSeconds':900,'asioPrivateTrace':False,'liveValidated':False}
             def save(value):path.write_text(json.dumps(value));return PLAN['sha'](path)
             with patch.dict(PLAN['verify'].__globals__,construct=lambda *args:record):
                 identity=save(record);self.assertEqual(PLAN['verify'](path,identity),record)
-                for changes in ({'stageLimitSeconds':0},{'liveValidated':True}):
+                for changes in ({'stageLimitSeconds':0},{'liveValidated':True},{'asioPrivateTrace':True}):
                     with self.assertRaisesRegex(ValueError,'changed'):PLAN['verify'](path,save({**record,**changes}))
                 with self.assertRaisesRegex(ValueError,'identity'):PLAN['verify'](path,'0'*64)
                 other=root/'moved';other.mkdir();moved=other/path.name;moved.write_text(json.dumps(record))
                 with self.assertRaisesRegex(ValueError,'bound capsule'):PLAN['verify'](moved,PLAN['sha'](moved))
+
+    def test_private_trace_requires_exact_boolean_before_reading_inputs(self):
+        for value in (None, 0, 1, '1', {}, []):
+            with self.subTest(value=value), self.assertRaisesRegex(ValueError,'explicit Boolean'):
+                PLAN['construct'](*(['unused']*8),asio_private_trace=value)
 
     def test_installer_resource_must_contain_the_selected_launcher(self):
         with tempfile.TemporaryDirectory() as temporary:

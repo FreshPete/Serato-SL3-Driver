@@ -64,7 +64,7 @@ def prepare(reviewed, expected, prepare=False, powershell=None):
     capsule_sha = write_new(capsule, fresh_record(record, directory))
     constructed = api['construct'](capsule, capsule_sha, saved['preparedShim']['path'], saved['preparedShim']['sha256'],
                                    saved['archiveSource']['path'], saved['installerResource']['path'],
-                                   saved['launcher']['path'], saved['fridaDirectory'])
+                                   saved['launcher']['path'], saved['fridaDirectory'], saved['asioPrivateTrace'])
     plan = directory / 'session-plan.json'
     plan_sha = write_new(plan, constructed)
     api['verify'](plan, plan_sha)
@@ -72,7 +72,7 @@ def prepare(reviewed, expected, prepare=False, powershell=None):
               'sessionDirectory': str(directory), 'capsule': str(capsule), 'capsuleSha256': capsule_sha,
               'sessionPlan': str(plan), 'sessionPlanSha256': plan_sha,
               'launcherRecompiled': False, 'installerResourceRepacked': False,
-              'captureOutput': False, 'applicationStarted': False, 'deviceAccess': False,
+              'captureOutput': False, 'asioPrivateTrace': saved['asioPrivateTrace'], 'applicationStarted': False, 'deviceAccess': False,
               'registryWritten': False, 'liveValidated': False}
     if powershell is not None:
         result['startArguments'] = [saved['launcher']['path'], '--start-session', '--session-plan', str(plan),
