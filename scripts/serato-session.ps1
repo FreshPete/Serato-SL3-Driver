@@ -132,17 +132,13 @@ try {
                 }
             }
         }
+        # Preflight all resource identities before revoking/uninstalling anything.
+        $null=Get-Sl3InstallerResourceRecoveryPlan $tx $plan.installerResource.sha256 `
+            ${function:Assert-Stopped} ${function:Assert-Sl3ArchiveProtectedPath}
         if (Test-Path -LiteralPath $permit) { Invoke-Installer revoke }
         Rollback-OwnInstall
-        $state=(Get-Sl3ArchiveTransactionState $tx).state
-        if ($state -notin @('original','installed','rollback-staged','restored')) { throw 'Conflicting resource witnesses; preserve for review' }
-        if ($state -in @('installed','rollback-staged')) { $null=Restore-Sl3ArchiveFile $tx ${function:Assert-Stopped} }
-        $null=Clear-Sl3ArchiveWitnesses $tx ${function:Assert-Stopped}
-        if (Test-Path -LiteralPath $bundle) {
-            if ((Get-Sl3ArchiveHash $bundle) -cne $plan.installerResource.sha256) { throw 'Installer resource differs; preserve it' }
-            Assert-Sl3ArchiveProtectedPath $bundle
-            [IO.File]::Delete($bundle)
-        }
+        $null=Restore-Sl3InstallerResourceState $tx $plan.installerResource.sha256 `
+            ${function:Assert-Stopped} ${function:Assert-Sl3ArchiveProtectedPath}
         & $python -I -B "$PSScriptRoot/retire-serato-session-cache.py" --local-app-data $localAppData --expected-launcher-sha256 $plan.launcher.sha256 --retire
         if ($LASTEXITCODE) { throw 'Recovered resources but launcher cache retirement needs review' }
         'Owned session resources recovered'; return

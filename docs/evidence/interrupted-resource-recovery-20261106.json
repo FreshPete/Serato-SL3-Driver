@@ -1,0 +1,55 @@
+{
+  "schema": "sl3.interrupted-resource-recovery-evidence.v1",
+  "date": "2026-11-06",
+  "checksPassed": {
+    "resourceRecovery": 12,
+    "existingArchiveTransactions": 22,
+    "completePlan": 5,
+    "kit": 15,
+    "stop": 8,
+    "freshPreparation": 8
+  },
+  "totalChecksPassed": 70,
+  "reports": {
+    "kit": {
+      "sha256": "86bb444082db89c73c4ce1f9a11e02389487f23c029a13c11a8ad7a43d7843ba",
+      "passedCases": 15
+    },
+    "stop": {
+      "sha256": "cb6d04c59dcaa7f284c052d756003fa2ef0797a342f745c93bf18521654c4272",
+      "passedCases": 8
+    },
+    "fresh-preparation": {
+      "sha256": "0245a1cffd2a11549ab365220aa36ab736853ae7a8550ed9f30429bb4ddd5e10",
+      "passedCases": 8
+    },
+    "resourceRecovery": {
+      "sha256": "8b1f19f72fd1f3b4f6328b340e88969b0bee0e79b0bfa2092117d9e9a3c85915",
+      "passedCases": 12
+    }
+  },
+  "hostReadOnlyPreflight": {
+    "reportSha256": "0d90bae96ed08db561bceff9660c1d8479f3fcc826591e6830430833331cb2f7",
+    "archiveState": "original",
+    "bundlePresent": false,
+    "pendingPresent": false,
+    "productionAclChecksUsed": true,
+    "filesWritten": false
+  },
+  "launcherSha256": "016560d7862d65bb2ee3df0f7cdb60c2031aaa98d06c722ac11470b5375399ca",
+  "releaseManifestSha256": "f1625b5b72d1e73305579f40636b1b783667d6a7a5ca5aa48e5c81f957edb5f9",
+  "kitManifestSha256": "c305f6f127c42bdb89b715422a8a4c3369ad3833f06a683973f48e396f58a2e3",
+  "sourcePins": 43,
+  "completePlanSourcePins": 29,
+  "nativeAudioBundleSha256": "898c4e5294aec6a67a7364ed9e47ff602f5228401fa10e8a1ca06d46e7cc8993",
+  "audioBinariesChanged": false,
+  "postFixtureOriginalSetupClean": true,
+  "statusReportSha256": "28ae82065bed13c7faecfc9ec9e7dd1b39b020f3dac7aafa5cc42b1122b33aad",
+  "fixtureProductionAclCallbackSubstituted": true,
+  "protectedRecoveryMutationValidated": false,
+  "userFacingRecoveryEntryImplemented": false,
+  "applicationStarted": false,
+  "deviceOpened": false,
+  "elevationRequested": false,
+  "liveSeratoShutdownValidated": false
+}
