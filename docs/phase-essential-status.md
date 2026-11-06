@@ -1,5 +1,7 @@
 # Phase Essential with Rane SL3 on Windows
 
+The next attended startup also succeeded with the owner instructed to keep SL3 USB and power connected. Serato opened the rebuilt ASIO driver again, the tracer fully detached, and manual shutdown and complete rollback passed. This adds one successful reopening; extended playback, repeated reopening reliability and permanent installation remain separate open requirements. [Reopening result, 6 November](evidence/serato-reopen-success-20261106.json)
+
 **6 November 2026:** the public temporary-session wrapper passed an attended startup and normal manual shutdown with Serato 5.0.0.1278. Its smaller tracer fully detached before interaction; the broker reported a successful stop with no ownership failure, and complete rollback verified. Playback stayed stopped, so the earlier Phase tracking results below remain separate evidence. Reopening, shutdown after sustained playback and a permanent installation remain open. [New wrapper result](evidence/assembled-session-success-20261106.json)
 
 Updated 5 November 2026. The target is to use Phase Essential for two-deck DVS in Serato DJ Pro 5.0 on Windows 11, with the Rane SL3 handling audio. The first milestone is one deck tracking from Phase through the SL3, with Serato playback returning through the SL3 outputs. The current tests use the signed UsbDk transport with Windows driver-signature enforcement enabled.

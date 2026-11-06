@@ -1,0 +1,48 @@
+{
+  "schema": "sl3.session-result-inspection.v1",
+  "planSha256": "b2083e1d7b46d9027418b66a2d00ae7ed5ed76fbbcb215eb729d9e3a8b1c8a70",
+  "reportSha256": {
+    "host": "e7d3166758e8a296a26119c7d13b6ef35c46c3da9163c8cbf7b222d15b0efa55",
+    "intent": "98c548d51b3e6f17c806bef693b9cc0dc5021231332a86229a1d63a1e5b5c904",
+    "broker": "94564e799222db032451f9de587052d669dd668c77a2268283735d0617af7c7b",
+    "worker": "b93b7fb92e826510cd8d2e02340abb355e6dfe0453aa19554ea49a4ce73721bc",
+    "stage": "2da7c93e1bdd913a28f08ec49148b2f515bfb3e05854be53d752ee344486e58f"
+  },
+  "checks": {
+    "intentMatchesReviewedPlan": true,
+    "startupAndDetachReported": true,
+    "hostShutdownReportedClean": true,
+    "exitPrecededObserverClose": true,
+    "workerAndControllerRetirementReported": true,
+    "brokerSessionReportedSuccessful": true,
+    "restorationReported": true
+  },
+  "missingOrInvalidReports": [],
+  "cleanSessionReported": true,
+  "brokerFailure": {
+    "reason": "stop_requested",
+    "ownerFailureCode": "none",
+    "ownerFailurePhase": 0,
+    "connectionDiagnostic": ""
+  },
+  "savedReportsOnly": true,
+  "currentDeviceStateVerified": false,
+  "physicalAudioVerified": false,
+  "permanentInstallationValidated": false,
+  "date": "2026-11-06",
+  "applicationVersion": "5.0.0.1278",
+  "ownerConfirmedNormalClose": true,
+  "powerCycleRequestedBetweenSuccessfulSessions": false,
+  "userInstructedToLeaveUsbAndPowerConnected": true,
+  "electricalContinuityIndependentlyMeasured": false,
+  "precedingSuccessfulSessionEvidenceSha256": "5eb42a15c2b65d1a3f8cc3af723e4a2b32b3276846dbf0f36ddd39c4268d9a61",
+  "lastNativeError": 1168,
+  "lastDeviceFailure": 0,
+  "lastStreamFault": 0,
+  "tenReopenCyclesValidated": false,
+  "longPlaybackValidated": false,
+  "startupJournals": {
+    "worker-startup.tsv": "ee125d18d95409f418c0123c37b963c466d0d0827c2503c49385c79bae6e4bae",
+    "controller-startup.tsv": "aab825557a09b486e66ea72dad0213b3cfe2b15a20d8e4fff6240e782c27c200"
+  }
+}
