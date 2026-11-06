@@ -4,7 +4,9 @@ Restore the physical Rane SL3 for current Serato DJ Pro and two-deck DVS. Window
 
 ## Latest status — 6 November 2026
 
-**Product target: install once, then open Serato normally.** Phase Essential and timecode vinyl must use the same SL3 audio driver with source-appropriate input settings. The temporary session launcher/window is an engineering aid, not the final experience. Normal-start device selection, automatic broker availability, repeated shutdown/reopen and uninstall still need implementation/validation. [Installed-use target and acceptance checks](docs/installed-use-target.md)
+**Product target: install once, then open Serato normally.** Phase Essential and timecode vinyl must use the same SL3 audio driver with source-appropriate input settings. The temporary session launcher/window is an engineering aid, not the final experience. Normal-start Serato selection, streaming/shutdown/reopen under the installed path and uninstall still need validation. [Installed-use target and acceptance checks](docs/installed-use-target.md)
+
+**Production ASIO now initializes the physical SL3 and reopens without a power cycle.** Two fresh ordinary-user COM hosts each start the broker automatically, report six inputs/six outputs at 44.1 kHz and release the exact controller/worker normally. No buffers, audio streams, installer or Serato ran. This validates native control-only activation; normal Serato selection and streaming through this new path remain open. [Hardware result, evidence and limits](docs/native-asio-control-reopen.md)
 
 **Setup result diagnostics now survive the administrator handoff and postcheck.** A one-way process-authenticated channel captures the fixed controller output; ordinary diagnostic copies are saved beside the experiment without authorizing recovery. Eight IPC, 25 native-entry and 18 window checks pass. The existing ten-minute audio diagnostic limit is now visible. No elevated action or USB test ran. Latest visual inspection stopped when Windows locked. [Current candidates, evidence and limits](docs/setup-result-diagnostics.md)
 
