@@ -1,0 +1,57 @@
+{
+  "schema": "sl3.session-status-evidence.v1",
+  "date": "2026-11-06",
+  "launcherSha256": "79105a99eae76c0ecd823272a920f838e91627dad647abe0cb7ef0aa2b623993",
+  "kitManifestSha256": "0c3a4dab9001979001bc5ff4e9ac6f6258121f4dc9c76328f0f1affecc367976",
+  "sourcePins": 43,
+  "completePlanSourcePins": 29,
+  "checks": {
+    "status": 11,
+    "savedResult": 6,
+    "completePlan": 4,
+    "nativeKit": 15,
+    "capsule": 11,
+    "windowsArguments": 8,
+    "ownedProcessStop": 8
+  },
+  "totalChecksPassed": 63,
+  "reports": {
+    "nativeKit": {
+      "sha256": "f193f0acf6264336134953e88658ae0d999d29c6a7b48fdf7e6bfc3c89cfde13",
+      "passedCases": 15
+    },
+    "capsule": {
+      "sha256": "98756596b8a7982f334a1c28fe2781e5d74b6e141fe275a2fc34b98422ae7c37",
+      "passedCases": 11
+    },
+    "stop": {
+      "sha256": "3854724716668c2a74480f276153508f1a7c0239b2342c9e3cfddd2fd7dfbf4d",
+      "passedCases": 8
+    }
+  },
+  "historicalPlaybackObservation": {
+    "planSha256": "490356db36feb35ef3deb4689c0f182cab0280b839e9028cfdf65dcd35c840df",
+    "phase": "ended_unverified",
+    "completionEvidenceConsistent": false,
+    "originalSetupCurrentlyClean": true,
+    "closeKind": "viewing_limit",
+    "hostOutcome": {
+      "processExited": true,
+      "exitCode": 1,
+      "observerForcedTermination": true
+    }
+  },
+  "preservedBrokerFailure": {
+    "reason": "owner_failure",
+    "ownerFailureCode": "client_control_abandoned",
+    "ownerFailurePhase": 3,
+    "connectionDiagnostic": "Complete broker pipe operation: 109"
+  },
+  "ownerReported": "Both decks worked and Serato closed normally. Saved supervisor evidence instead records viewing-limit forced termination.",
+  "applicationStarted": false,
+  "deviceOpened": false,
+  "elevationRequested": false,
+  "liveSeratoShutdownValidated": false,
+  "physicalAudioVerified": false,
+  "binaryDistributionValidated": false
+}

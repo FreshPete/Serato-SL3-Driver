@@ -218,6 +218,11 @@ int session_dispatch(wchar_t** argv){
     pin(leases,local_path(application.text(L"path")),release::application_sha);
     for(const auto& item:release::powershell_pins)pin(leases,child_path(powershell,item.first),item.second);
     const auto action=std::wstring(argv[1]);
+    if(action==L"--status-session"){
+        return run_process(python,{L"-I",L"-B",(root/L"scripts/inspect-serato-session-status.py").native(),L"--session-plan",
+                           selected.native(),L"--expected-session-plan-sha256",identity,L"--powershell-directory",
+                           powershell.native()},root,false);
+    }
     if(action==L"--stop-session"){
         return run_process(python,{L"-I",L"-B",(root/L"scripts/serato-session-stop.py").native(),L"--session-plan",
                            selected.native(),L"--expected-session-plan-sha256",identity,L"--powershell-directory",
@@ -271,7 +276,7 @@ int dispatch(int argc,wchar_t** argv){
        std::wstring(argv[4])==L"--expected-kit-manifest-sha256" && std::wstring(argv[6])==L"--app")return kit_dispatch(argv);
     if(argc==8 && (std::wstring(argv[1])==L"--plan-session" || std::wstring(argv[1])==L"--start-session" ||
        std::wstring(argv[1])==L"--prepare-session" || std::wstring(argv[1])==L"--start-fresh-session" ||
-       std::wstring(argv[1])==L"--stop-session") &&
+       std::wstring(argv[1])==L"--stop-session" || std::wstring(argv[1])==L"--status-session") &&
        std::wstring(argv[2])==L"--session-plan" && std::wstring(argv[4])==L"--expected-session-plan-sha256" &&
        std::wstring(argv[6])==L"--powershell-directory")return session_dispatch(argv);
     const bool plan=argc==6 && std::wstring(argv[1])==L"--plan" && std::wstring(argv[2])==L"--capsule" &&

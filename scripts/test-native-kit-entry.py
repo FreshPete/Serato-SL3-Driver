@@ -55,6 +55,18 @@ def exercise(kit, expected, application):
         assert prepared['stopArguments'][2:] == prepared['planArguments'][2:]
         checked = call('native-prepared-kit-complete-session-plan', prepared['planArguments'])
         assert 'Complete session plan passed; no application, broker or elevation started' in checked.stdout
+        status = json.loads(call('native-prepared-session-status', prepared['statusArguments']).stdout)
+        assert status['schema'] == 'sl3.session-status.v1' and status['phase'] == 'prepared'
+        assert status['originalSetupCurrentlyClean'] is True and status['completionEvidenceConsistent'] is False
+        assert status['repairAttempted'] is False and status['deviceOpened'] is False
+        status_source = moved / 'scripts/inspect-serato-session-status.py'
+        status_original = status_source.read_bytes()
+        try:
+            status_source.write_bytes(status_original + b'changed')
+            call('changed-status-helper-refused-before-python', prepared['statusArguments'], 1,
+                 'Reviewed launcher input differs: inspect-serato-session-status.py', True)
+        finally:
+            status_source.write_bytes(status_original)
         call('native-kit-plan-after-preparation', command)
         before = {path.name for path in (moved / 'analysis').iterdir()}
         wrong = [*prepare]

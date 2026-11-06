@@ -1,5 +1,7 @@
 # Native entry for kit preparation and startup
 
+**Read-only Status:** a newer 43-pin candidate includes selected-session status arguments in preparation records. Its copied-kit entry and helper-tamper refusal passed. It distinguishes current restoration from clean completion without opening the device. [Contract and evidence](session-status.md)
+
 **Explicit session Stop:** a newer 41-pin candidate adds a [scoped stop-request command](session-stop-channel.md) and includes its arguments in preparation records. The native route passed owned headless-process checks; real Serato shutdown and rollback remain untested through this route.
 
 **Current readiness entry:** the newer launcher pins forty source/license/evidence files and adds [read-only host checks before approvals](session-readiness-check.md). The host passed these prerequisite checks; actual kit Start/audio/shutdown remain untested. Older source-pin counts below describe their dated candidates.
