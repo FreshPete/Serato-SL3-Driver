@@ -1,0 +1,114 @@
+{
+  "schema": "sl3.frida-local-build-evidence.v1",
+  "date": "2026-11-06",
+  "purpose": "Build only the local Windows instrumentation backend for the Windows SL3 scope; do not launch it or clear the existing diagnostic hold.",
+  "configurationInspection": {
+    "schema": "sl3.frida-local-build-inspection.v1",
+    "sourceCommits": {
+      ".": "29016dbd9d8fce836b2b86892b04cc31c2f767aa",
+      "releng": "564352a3eac2ca0f5db776b6929955dbb20cf731",
+      "subprojects/frida-core": "317363ce8064e3ede421ded3e53e1d3ffcfd782d",
+      "subprojects/frida-gum": "c73c1bbf24ab6bab4e46e11faedd051579e1e942",
+      "subprojects/frida-python": "50ad5f65ddcb1270cbc25505f987fac14e763491",
+      "subprojects/efni": "329dd8e94505e95e066251e3d4dfe25d0e55eec3",
+      "releng/meson": "145667c57ed2649ddcc6fbb11b6008e0d451df1d",
+      "releng/tomlkit": "911cccd630965ff423316e25b4685ecf7df0ec0a",
+      "subprojects/frida-python/frida-bindgen": "eace04901ef6300429e8c343095297df042dba0e"
+    },
+    "requiredOptions": {
+      "frida_python": "enabled",
+      "frida-core:local_backend": "enabled",
+      "frida-core:compat": [
+        "disabled"
+      ],
+      "frida-core:tests": "disabled",
+      "frida-gum:tests": "disabled",
+      "frida_tools": "disabled",
+      "frida_node": "disabled",
+      "frida_net": "disabled",
+      "frida_swift": "disabled",
+      "frida_qml": "disabled",
+      "server": "disabled",
+      "portal": "disabled",
+      "gadget": "disabled",
+      "inject": "disabled",
+      "graft_tool": "disabled",
+      "frida-core:fruity_backend": "disabled",
+      "frida-core:droidy_backend": "disabled",
+      "frida-core:socket_backend": "disabled",
+      "frida-core:simmy_backend": "disabled",
+      "frida-core:barebone_backend": "disabled",
+      "frida-core:compiler_backend": "disabled"
+    },
+    "targetCount": 36,
+    "buildMetadataSha256": {
+      "intro-buildoptions.json": "5aeb4b3f4f7e40ec34e0263784e8313503b538f20df0409d9d735be3d08d566e",
+      "intro-targets.json": "dd55b29a4dc1eab78a79d7767a9532f5954fabe21440e721af2cd897c552874d",
+      "build.ninja": "64b1c63a83446c02a0dc2baa5e2132e46171dce2a2603cb32ee0db3fbae7c283"
+    },
+    "configurationOnly": true,
+    "candidateInspected": false,
+    "candidateImported": false,
+    "candidateExecuted": false,
+    "seratoStarted": false,
+    "deviceOpened": false,
+    "securityHoldCleared": false,
+    "runtimeCompatibilityVerified": false,
+    "antivirusCompatibilityVerified": false,
+    "embeddedAssetContentsAttested": false
+  },
+  "buildAttempts": [
+    {
+      "log": "compile.log",
+      "result": "failed",
+      "cause": "Installed Windows SDK 10.0.19041.0 lacks PROCESS_MACHINE_INFORMATION, ProcessMachineTypeInfo and MEM_EXTENDED_PARAMETER_EC_CODE.",
+      "logSha256": "b1eb3706b656a0afc7a21e8eb1d281378b6b40f2b2ec7669d3bb8f9c11e8df41"
+    },
+    {
+      "log": "compile-sdk26100.log",
+      "result": "failed",
+      "cause": "Windows SDK 26100 UCRT with installed MSVC 19.29 linker/runtime: unresolved _guard_check_icall_$fo$.",
+      "logSha256": "2b8c511e38594efdbe6df7ce6cba3ca692750f5c1fd3afbecf49b16cf1ced2b5"
+    },
+    {
+      "log": "compile-sdk26100-os.log",
+      "result": "failed",
+      "cause": "Installed MSVC 19.29 rejects empty aggregate initializers in unchanged upstream xnu-syscalls-glue.c (first error C2059 at line 22).",
+      "sdkSelection": "26100 um/shared headers and um/x64 libraries prepended; installed 19041 UCRT retained; full clean before compilation.",
+      "logSha256": "71696b53f1910b43c3fd1ef01a471db36184ed86e57e0d7f09dd79926cec2843"
+    }
+  ],
+  "microsoftSdkPackages": [
+    {
+      "id": "microsoft.windows.sdk.cpp",
+      "version": "10.0.26100.1",
+      "source": "https://api.nuget.org/v3-flatcontainer/microsoft.windows.sdk.cpp/10.0.26100.1/microsoft.windows.sdk.cpp.10.0.26100.1.nupkg",
+      "sha256": "b4730a467a8f29145fc0136b2b3f626767e985f6aa6e32f1352953c38d6ff5d2",
+      "nugetVerifyAllExitCode": 0,
+      "verificationLogSha256": "e92f52b997f6f9ce11f00dfa1b0debd377cc697dd05f4533cf56cae6fb40a453",
+      "installedSystemWide": false
+    },
+    {
+      "id": "microsoft.windows.sdk.cpp.x64",
+      "version": "10.0.26100.1",
+      "source": "https://api.nuget.org/v3-flatcontainer/microsoft.windows.sdk.cpp.x64/10.0.26100.1/microsoft.windows.sdk.cpp.x64.10.0.26100.1.nupkg",
+      "sha256": "7670843ddee568ca1e89b0feb36046ede6a3df5dbf5fa0106ec2eee9e8224e38",
+      "nugetVerifyAllExitCode": 0,
+      "verificationLogSha256": "d84eab7007cbc996ada2150bd6b5530d2cc118a3e8673d2768563b3c3359bd52",
+      "installedSystemWide": false
+    }
+  ],
+  "buildCompiler": "MSVC 19.29.30159 (VS 2019 BuildTools)",
+  "candidateProduced": false,
+  "candidateLoaded": false,
+  "securitySettingsChanged": false,
+  "securityHoldCleared": false,
+  "seratoStarted": false,
+  "deviceOpened": false,
+  "audioPackageChanged": false,
+  "tests": {
+    "configurationRejectionTests": 8,
+    "passed": true
+  },
+  "nextStep": "Obtain a provenance-checked newer compiler in a project-local toolchain, then rebuild the same pinned upstream source and inspect the candidate as data before considering any runtime test."
+}

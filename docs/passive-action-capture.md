@@ -26,7 +26,7 @@ Frida's official [Idun source documentation](https://github.com/frida/idun) desc
 
 Further Frida launches are on hold. No exclusion, protection disablement, quarantine restoration, certificate trust or signing-policy change was attempted. Antivirus, real-time protection and behaviour monitoring remained enabled. The local capture command refuses before importing Frida or creating an application process while `analysis/frida-runtime-security-hold.json` exists; that refusal was checked. This is a local diagnostic hold, not a system policy and not an automatic guard in every historical startup entrypoint. The existing Frida-based session path should not be run again under this unresolved condition.
 
-The next independent work is to establish a compatible local-Windows instrumentation/startup route under unchanged protection. The helper's Apple-device feature is outside the current Windows SL3 scope. A different dependency configuration or toolchain would need its own provenance and checks; bypassing Defender is not the proposed route.
+The next independent work is to establish a compatible local-Windows instrumentation/startup route under unchanged protection. The helper's Apple-device feature is outside the current Windows SL3 scope. A different dependency configuration or toolchain would need its own provenance and checks; bypassing Defender is not the proposed route. An [offline local-only build investigation](frida-local-windows-build.md) now verifies the pinned configuration with nonlocal backends disabled; compilation still needs a newer compiler, and no replacement runtime has been launched.
 
 ## Current state
 
