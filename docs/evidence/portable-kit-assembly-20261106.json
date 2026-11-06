@@ -1,0 +1,98 @@
+{
+  "schema": "sl3.portable-kit-assembly-evidence.v1",
+  "date": "2026-11-06",
+  "kitManifestSha256": "ba3e15dea9d7c203b8fdc16b1b7344eba484753c36eb4b9542602af008fba018",
+  "kitManifest": {
+    "deploymentScope": "reviewed-windows-host-and-account",
+    "derivedSeratoArchiveIncluded": false,
+    "installerResourceSha256": "de1f08582adccf62af104bfaef31626c4ee607410ef7cee5a2388a6c6a89cf82",
+    "inventorySha256": "276aabf863b30269c4e762ef2f502eedcfcf4531fffba2ee10b60ec005027016",
+    "kernelDriverIncluded": false,
+    "launcherSha256": "c6fa9b45219dafd28c06d31e94703eec2268dc4a856d72202e0f16c763bd1770",
+    "liveValidated": false,
+    "nativeBundleSha256": "898c4e5294aec6a67a7364ed9e47ff602f5228401fa10e8a1ca06d46e7cc8993",
+    "powershellManifestSha256": "4b4047e7a8153f0aab087356ad4e80f2b9a7855a21cebabe8430c27671d97881",
+    "pythonManifestSha256": "08a7aec0dce42a94cd5a5b97f55b40219f9449e74eaf47129f906a9749ecb609",
+    "schema": "sl3.portable-serato-kit.v1",
+    "seratoApplicationIncluded": false,
+    "sourceReleaseSha256": "88b3eff59827d377ff5e8842684d476da09250f08f67a70ff7cedcc07281a076"
+  },
+  "filesSelected": 842,
+  "selectedBytes": 464158371,
+  "relocationTests": {
+    "schema": "sl3.portable-kit-relocation-tests.v1",
+    "cases": [
+      {
+        "name": "relocated-kit-inventory-private-interpreter-empty-path",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "relocated-kit-read-only-application-plan",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "relocated-kit-complete-offline-preparation",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "relocated-kit-native-complete-session-plan",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "kit-static-inventory-still-valid-after-preparation",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "wrong-kit-hash-refused",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-kit-helper-refused-before-preparation",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "native-entry-refuses-changed-kit-helper",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-kit-runtime-refused-before-preparation",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "unexpected-static-kit-file-refused",
+        "passed": true,
+        "exitCode": 1
+      }
+    ],
+    "kitManifestSha256": "ba3e15dea9d7c203b8fdc16b1b7344eba484753c36eb4b9542602af008fba018",
+    "generatedSessionPlanSha256": "a433d832a47e99d6add460e2413d34ea55bc1fa7d7ce92c35ea00489151b8f24",
+    "archiveSha256": "d135e6f1c03601cc44b3e5f623eed36af81bbff585332a3fdc8d5d533b2cb66a",
+    "globalPathEmpty": true,
+    "kitInterpreterAndPowerShellUsed": true,
+    "preparedPathsReboundToMovedKit": true,
+    "spacesAndUnicodeInKitPath": true,
+    "deploymentScope": "reviewed-windows-host-and-account",
+    "differentWindowsAccountTested": false,
+    "secondPcTested": false,
+    "applicationStarted": false,
+    "elevationRequested": false,
+    "registryWritten": false,
+    "deviceAccess": false,
+    "liveValidated": false
+  },
+  "kitSessionStatePresentAfterAssembly": false,
+  "binaryKitPublished": false,
+  "securityPolicyChanged": false,
+  "firmwareChanged": false,
+  "liveValidationPerformed": false,
+  "publicInstallerReady": false
+}
