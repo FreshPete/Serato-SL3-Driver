@@ -1,5 +1,7 @@
 # Phase Essential with Rane SL3 on Windows
 
+The path-redirection cleanup fix now passes a live retry, including the actual active redirected pointer and automatic rollback after forced session expiry. The owner confirmed both decks playing and set eight-bar loops; a five-second sample contained music on both logical output pairs with no clipping. The session again reached its viewing limit, so manual shutdown after playback remains unverified. [Cleanup fix and live result](pointer-redirection-cleanup-fix.md)
+
 The subsequent five-minute observation was owner-confirmed responsive with both Phase decks tracking. A late sample contained Deck 2 music; the owner confirmed Deck 1 had already ended or stopped. The session later reached its viewing limit and was force-closed, so manual shutdown after playback is not verified. An AppData path-redirection check interrupted automatic rollback; explicit verified recovery restored the original setup and removed the temporary installation. [Observation and recovery](phase-playback-observation-20261106.md)
 
 The next attended startup also succeeded with the owner instructed to keep SL3 USB and power connected. Serato opened the rebuilt ASIO driver again, the tracer fully detached, and manual shutdown and complete rollback passed. This adds one successful reopening; extended playback, repeated reopening reliability and permanent installation remain separate open requirements. [Reopening result, 6 November](evidence/serato-reopen-success-20261106.json)

@@ -9,8 +9,9 @@
   "focusedTestsPassed": 5,
   "deploymentChecksPassed": 26,
   "sessionChecksPassed": 22,
-  "liveCleanupRetestPassed": false,
+  "liveCleanupRetestPassed": true,
   "hardwareOpened": false,
   "sourceSha256": "7e420606983d1bfdef9c75eda459281b957cc1918db80e28ca85141a17f016cc",
-  "testSha256": "be01f00277dea086465ca9d670e397715f8bc86eebff06b766c37039619c94e0"
+  "testSha256": "be01f00277dea086465ca9d670e397715f8bc86eebff06b766c37039619c94e0",
+  "liveRetestEvidence": "pointer-cleanup-live-retest-20261106.json"
 }

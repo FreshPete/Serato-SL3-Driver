@@ -1,0 +1,100 @@
+{
+  "schema": "sl3.pointer-cleanup-live-retest.v1",
+  "date": "2026-11-06",
+  "applicationVersion": "5.0.0.1278",
+  "activePointerCheck": {
+    "schema": "sl3.active-pointer-verification.v1",
+    "activePointerExists": true,
+    "leafRedirectionObserved": true,
+    "oldContainmentWouldRefuse": true,
+    "sourceBoundCapsuleVerificationPassed": true,
+    "pointerWithdrawn": false,
+    "hardwareCommandsSentByCheck": false,
+    "observedUnixMs": 1793964018144
+  },
+  "ownerConfirmedBothTracksPlayingAndFollowing": true,
+  "ownerReportedEightBarLoopsOnBothDecks": true,
+  "ownerFinalPlaybackAndCloseConfirmation": null,
+  "softwareSample": {
+    "source": "worker-dequeued-output-pcm",
+    "frames": 220500,
+    "rateHz": 44100,
+    "pcmSha256": "b1bbb4a5783e8adb5d2882fc19e086d767bed3165bdfb71b5a7912233e174d3b",
+    "channels": [
+      {
+        "logicalChannel": 1,
+        "peakDbfs": null,
+        "rmsDbfs": null,
+        "nonzeroSamples": 0,
+        "clippedSamples": 0
+      },
+      {
+        "logicalChannel": 2,
+        "peakDbfs": null,
+        "rmsDbfs": null,
+        "nonzeroSamples": 0,
+        "clippedSamples": 0
+      },
+      {
+        "logicalChannel": 3,
+        "peakDbfs": -1.1783498109357788,
+        "rmsDbfs": -15.030090953786125,
+        "nonzeroSamples": 220499,
+        "clippedSamples": 0
+      },
+      {
+        "logicalChannel": 4,
+        "peakDbfs": -1.009389652401272,
+        "rmsDbfs": -14.845231760056636,
+        "nonzeroSamples": 220500,
+        "clippedSamples": 0
+      },
+      {
+        "logicalChannel": 5,
+        "peakDbfs": -1.2712284786908943,
+        "rmsDbfs": -12.722913349175364,
+        "nonzeroSamples": 220500,
+        "clippedSamples": 0
+      },
+      {
+        "logicalChannel": 6,
+        "peakDbfs": -1.2108741800070504,
+        "rmsDbfs": -12.549833609686656,
+        "nonzeroSamples": 220500,
+        "clippedSamples": 0
+      }
+    ],
+    "physicalOutputVerified": false
+  },
+  "detachedViewingSeconds": 540.1002273,
+  "endReason": "viewing_limit",
+  "applicationExitCode": 1,
+  "observerForcedTermination": true,
+  "cleanSessionReported": false,
+  "ownerFailureCode": "client_control_abandoned",
+  "connectionDiagnostic": "Complete broker pipe operation: 109",
+  "ioRetired": true,
+  "deviceReleased": true,
+  "workerExited": true,
+  "jobEmpty": true,
+  "controllerExited": true,
+  "automaticRollbackSucceeded": true,
+  "manualRecoveryRequired": false,
+  "originalResourceHashVerified": true,
+  "nativeStageAndRegistrationAbsent": true,
+  "permitAndSessionPointerAbsent": true,
+  "exactCachedLauncherAbsent": true,
+  "livePointerCleanupFixValidated": true,
+  "physicalAudioOutputVerified": false,
+  "continuousFiveMinutePcmRecorded": false,
+  "desktopAutomationUsed": false,
+  "rawMusicPublished": false,
+  "sha256": {
+    "hostResult": "785677607f6dfb79264b86adf445e0f0334bbf98e784a5078e4f34b7b1b1a6e5",
+    "brokerResult": "97f834bb0db49184b2c9aa19b0442be798ed1b1d3bc07dec797d31e7a268642d",
+    "stageResult": "32b74092e176fd6b643e9424c3e23f1a997adf39682c5c768a648c5269b6699f",
+    "activePointerCheck": "6b84ef59623b7537bea281f96913c4061e773e7279f75c105d89c93bb79b990c",
+    "sampleMetadata": "d5b5d52aec5bf439b46315b22e687e30761a7093f5ca23d73cd84217112d651a",
+    "signalAnalysis": "47bfbd801f1b060e07bf59e4a34105bfe786415550201dbd3e8979ef741a41c1"
+  }
+}
