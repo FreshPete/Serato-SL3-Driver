@@ -1,0 +1,99 @@
+{
+  "schema": "sl3.one-time-setup-window-checkpoint.v1",
+  "date": "2026-11-06",
+  "passed": true,
+  "buildDirectory": "artifacts/build/native-setup-window-release-review-20261106",
+  "buildManifestSha256": "c7211a61cb1599d90c0fa1d58be9866a9f85dddad09907f1250fc27b0f487568",
+  "sourceManifestSha256": "98b555664c02c435b3af9ea1e32a25efc09ea50377fb89d7e7bdabb366164d89",
+  "executableSha256": "b0a976b9f2def6a07abda8966c70aa0f865dfac2541dcb98de8806fa5d27ff8e",
+  "sourcePins": {
+    "src/installer/SetupWindow.cpp": "f964296c5366285bc2b221cd5fdbd315e958a1229d61550fa2d7c5c230836efd",
+    "src/installer/SessionWindow.cpp": "8c9c3c61f4f2a9bfc497d24f676e127c6acee8334d62616b5e1681f8524ff293",
+    "src/installer/NativeSessionLauncher.cpp": "40c6837c2aba5a571d9cf33b348a7b3e367e1403357f9beb0d3304af40bb1bc6",
+    "tests/native/setup_window_tests.cpp": "0d831ecf786714330dcab1b142fcf7f5d608370720b91107d2b33325e7e4fa44",
+    "scripts/prepare-setup-window.py": "0d31adf470d09b3de477538d0f034b8c70170598c07142e779c747c436db8667",
+    "scripts/build-setup-window.ps1": "62c895bfa37f5fd4a492a77c2eb618561c985822e4c4d8d0be6b79d7d472aaeb"
+  },
+  "generatedPins": {
+    "session_window_config.hpp": "a6616c6c875b37ee556ed19382939fe464fb24d288887059b3ace6409bacfa4c",
+    "launcher_config.hpp": "b5e624fe9f47289efdff221b3289979f6b9973281aa84859c6d759161ca03d60",
+    "CMakeLists.txt": "1a9bf2ecaf42ad2d1c8de67ee69396b2ca5eadd04bc1c12c6660ba668072194b"
+  },
+  "nativeEntrySha256": "916ac84c0f1077c8287a5717b1be841cecbcc6e4a2e6c0e93ad7cb0ad9acc0d3",
+  "kitManifestSha256": "1d4f287974ddea51e74b5855270cf61268428e78eaff74069a8443349f2c2f38",
+  "experimentSha256": "e9f5aef47319d3ac2993ea2a69bccec25aeb0f06523269b98161a26f71d84bb3",
+  "contractResult": {
+    "schema": "sl3.setup-window-tests.v1",
+    "passed": true,
+    "cases": 16,
+    "privilegedActionsExecuted": false,
+    "seratoLaunched": false,
+    "nativeDeviceAccess": false
+  },
+  "contractLogSha256": "4075c1ae1f2072638f2c4fd854f68a8b406afc603956075457c08be2b6300fd0",
+  "resolvedFonts": {
+    "body": "Segoe UI",
+    "heading": "Segoe UI"
+  },
+  "imports": [
+    "GDI32.dll",
+    "KERNEL32.dll",
+    "SHELL32.dll",
+    "USER32.dll",
+    "api-ms-win-core-console-l1-1-0.dll",
+    "api-ms-win-core-debug-l1-1-0.dll",
+    "api-ms-win-core-errorhandling-l1-1-0.dll",
+    "api-ms-win-core-file-l1-1-0.dll",
+    "api-ms-win-core-handle-l1-1-0.dll",
+    "api-ms-win-core-heap-l1-1-0.dll",
+    "api-ms-win-core-interlocked-l1-1-0.dll",
+    "api-ms-win-core-job-l2-1-0.dll",
+    "api-ms-win-core-largeinteger-l1-1-0.dll",
+    "api-ms-win-core-libraryloader-l1-2-0.dll",
+    "api-ms-win-core-localization-l1-2-0.dll",
+    "api-ms-win-core-namedpipe-l1-1-0.dll",
+    "api-ms-win-core-processenvironment-l1-1-0.dll",
+    "api-ms-win-core-processthreads-l1-1-0.dll",
+    "api-ms-win-core-processthreads-l1-1-1.dll",
+    "api-ms-win-core-profile-l1-1-0.dll",
+    "api-ms-win-core-rtlsupport-l1-1-0.dll",
+    "api-ms-win-core-string-l1-1-0.dll",
+    "api-ms-win-core-synch-l1-1-0.dll",
+    "api-ms-win-core-sysinfo-l1-1-0.dll",
+    "api-ms-win-core-util-l1-1-0.dll",
+    "api-ms-win-core-winrt-l1-1-0.dll",
+    "api-ms-win-core-winrt-string-l1-1-0.dll",
+    "bcrypt.dll"
+  ],
+  "visualReview": {
+    "exactBuildInspected": true,
+    "ordinaryInitialLayoutObserved": true,
+    "detailsExpandedLayoutObserved": true,
+    "detailsAccessKeyObserved": true,
+    "reverseTabPastDisabledInstallerActionsObserved": true,
+    "minimumSizeValidated": false,
+    "highDpiValidated": false,
+    "highContrastValidated": false,
+    "installerButtonsClicked": false,
+    "inspectedWindowsClosed": true
+  },
+  "mechanicalDesignDetector": {
+    "findings": [],
+    "nativeCppCoverageLimited": true
+  },
+  "hostPostcheck": {
+    "observed": true,
+    "originalResources": true,
+    "occupiedPaths": [],
+    "registrationPresent": false,
+    "currentSetupClean": true
+  },
+  "productionInstallationPerformed": false,
+  "elevationRequested": false,
+  "seratoLaunched": false,
+  "nativeDeviceAccess": false,
+  "setupRestoreViaUacValidated": false,
+  "normalSeratoStartupValidated": false,
+  "normalStartExperimentStillSourceCurrent": true,
+  "normalStartExperimentSha256": "4ca890a6d5e7c2d232919374bc047f86387587b4c4bd7c50648549c964b57073"
+}
