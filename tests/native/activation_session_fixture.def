@@ -1,0 +1,4 @@
+LIBRARY sl3_activation_session_fixture
+EXPORTS
+    DllGetClassObject PRIVATE
+    DllCanUnloadNow PRIVATE

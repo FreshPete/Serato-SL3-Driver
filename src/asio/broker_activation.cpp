@@ -1,5 +1,10 @@
 #include "asio/broker_activation.hpp"
 #include <algorithm>
+#include <array>
+#include <aclapi.h>
+#include <bcrypt.h>
+#include <sddl.h>
+#include <shlobj.h>
 #include <stdexcept>
 
 namespace sl3::asio {
@@ -47,13 +52,57 @@ void request_stop(const BrokerAttachment& binding){
     require(event.value && SetEvent(event.value),"Request owned activation stop");
 }
 }
+void select_user_activation_output(BrokerActivationSpec& spec){
+    ordinary_user();
+    require(spec.output.empty(),"Activation output was already assigned");
+    PWSTR known=nullptr;const auto status=SHGetKnownFolderPath(FOLDERID_LocalAppData,0,nullptr,&known);
+    require(SUCCEEDED(status) && known,"Resolve current-user activation state");
+    const auto root=std::filesystem::path(known)/L"SL3RebuildActivated";CoTaskMemFree(known);
+    local_path(root,true);
+    Handle token;require(OpenProcessToken(GetCurrentProcess(),TOKEN_QUERY,&token.value)!=FALSE,"Read activation owner");
+    DWORD size=0;GetTokenInformation(token.value,TokenUser,nullptr,0,&size);std::vector<BYTE> user(size);
+    require(size && GetTokenInformation(token.value,TokenUser,user.data(),size,&size),"Read activation owner SID");
+    const auto sid=reinterpret_cast<TOKEN_USER*>(user.data())->User.Sid;
+    LPWSTR text=nullptr;require(ConvertSidToStringSidW(sid,&text)!=FALSE,"Format activation owner SID");
+    const auto acl=L"D:P(A;OICI;GA;;;"+std::wstring(text)+L")";LocalFree(text);
+    PSECURITY_DESCRIPTOR descriptor=nullptr;
+    require(ConvertStringSecurityDescriptorToSecurityDescriptorW(acl.c_str(),SDDL_REVISION_1,&descriptor,nullptr)!=FALSE,"Create activation root policy");
+    SECURITY_ATTRIBUTES security{sizeof(security),descriptor,FALSE};
+    const bool created=CreateDirectoryW(root.c_str(),&security)!=FALSE;const auto error=GetLastError();LocalFree(descriptor);
+    require(created || error==ERROR_ALREADY_EXISTS,"Create private activation state root");
+    struct Root {
+        HANDLE handle=INVALID_HANDLE_VALUE;
+        ~Root(){if(handle!=INVALID_HANDLE_VALUE)CloseHandle(handle);}
+    };
+    auto retained=std::make_shared<Root>();retained->handle=CreateFileW(root.c_str(),READ_CONTROL|FILE_READ_ATTRIBUTES,
+        FILE_SHARE_READ|FILE_SHARE_WRITE,nullptr,OPEN_EXISTING,FILE_FLAG_BACKUP_SEMANTICS|FILE_FLAG_OPEN_REPARSE_POINT,nullptr);
+    require(retained->handle!=INVALID_HANDLE_VALUE,"Retain private activation root");
+    FILE_ATTRIBUTE_TAG_INFO attributes{};
+    require(GetFileInformationByHandleEx(retained->handle,FileAttributeTagInfo,&attributes,sizeof(attributes)) &&
+            (attributes.FileAttributes&FILE_ATTRIBUTE_DIRECTORY) && !(attributes.FileAttributes&FILE_ATTRIBUTE_REPARSE_POINT),"Activation root cannot redirect");
+    PSID owner=nullptr;PACL dacl=nullptr;PSECURITY_DESCRIPTOR actual=nullptr;
+    require(GetSecurityInfo(retained->handle,SE_FILE_OBJECT,OWNER_SECURITY_INFORMATION|DACL_SECURITY_INFORMATION,
+                           &owner,nullptr,&dacl,nullptr,&actual)==ERROR_SUCCESS,"Inspect activation root policy");
+    SECURITY_DESCRIPTOR_CONTROL control=0;DWORD revision=0;void* raw=nullptr;
+    const bool owner_only=actual && owner && EqualSid(owner,sid) && dacl && dacl->AceCount==1 &&
+        GetSecurityDescriptorControl(actual,&control,&revision) && (control&SE_DACL_PROTECTED) && GetAce(dacl,0,&raw);
+    bool allowed=false;
+    if(owner_only){const auto ace=static_cast<ACCESS_ALLOWED_ACE*>(raw);
+        allowed=ace->Header.AceType==ACCESS_ALLOWED_ACE_TYPE && (ace->Mask==GENERIC_ALL || ace->Mask==FILE_ALL_ACCESS) &&
+                EqualSid(&ace->SidStart,sid);}
+    LocalFree(actual);require(allowed,"Existing activation root is not private to this user");
+    std::array<UCHAR,16> random{};require(BCryptGenRandom(nullptr,random.data(),ULONG(random.size()),BCRYPT_USE_SYSTEM_PREFERRED_RNG)>=0,"Generate activation identity");
+    std::wstring leaf=L"session-";constexpr wchar_t digits[]=L"0123456789abcdef";
+    for(const auto byte:random){leaf+=digits[byte>>4];leaf+=digits[byte&15];}
+    spec.output=root/leaf;spec.output_root_lease=std::move(retained);
+}
 struct BrokerActivation::Borrow {
     std::shared_ptr<BrokerActivation> owner;
     std::shared_ptr<const void> files;
     Borrow(std::shared_ptr<BrokerActivation> selected,std::shared_ptr<const void> retained):owner(std::move(selected)),files(std::move(retained)){
         owner->borrowed_.fetch_add(1);
     }
-    ~Borrow(){owner->borrowed_.fetch_sub(1);}
+    ~Borrow(){if(owner->borrowed_.fetch_sub(1)==1 && owner->retirement_requested_.load())owner->request_retirement();}
 };
 std::shared_ptr<BrokerActivation> BrokerActivation::start(const BrokerActivationSpec& spec){
     auto result=std::shared_ptr<BrokerActivation>(new BrokerActivation);
@@ -67,6 +116,7 @@ std::shared_ptr<BrokerActivation> BrokerActivation::start(const BrokerActivation
 void BrokerActivation::launch(const BrokerActivationSpec& spec){
     ordinary_user();
     local_path(spec.controller);local_path(spec.input);local_path(spec.output,true);
+    output_root_lease_=spec.output_root_lease;
     require(spec.startup_timeout_ms>=100 && spec.startup_timeout_ms<=30000,"Bounded activation startup deadline required");
     require(spec.startup_failure_grace_ms<=15000,"Bounded activation failure cleanup required");
     require(spec.lifetime_ms>=1000 && spec.lifetime_ms<=43200000 &&
@@ -106,10 +156,23 @@ DriverConfiguration BrokerActivation::configuration(){
     std::lock_guard<std::mutex> lock(mutex_);
     require(report_.ready && configuration_ && !process_.observe().process_exited,"Activation is no longer ready");
     auto result=*configuration_;
-    result.files=std::make_shared<Borrow>(shared_from_this(),result.files);return result;
+    result.files=std::make_shared<Borrow>(shared_from_this(),result.files);
+    result.broker->lifetime=result.files;return result;
 }
 BrokerActivationReport BrokerActivation::observe(){
     std::lock_guard<std::mutex> lock(mutex_);auto result=report_;result.controller=process_.observe();return result;
+}
+BrokerActivationReport BrokerActivation::request_retirement() noexcept {
+    std::lock_guard<std::mutex> lock(mutex_);retirement_requested_=true;report_.ready=false;
+    report_.retirement_deferred=borrowed_.load()!=0;
+    if(report_.retirement_deferred)return report_;
+    try{
+        report_.controller=process_.observe();
+        if(report_.controller.started && !report_.controller.process_exited && configuration_ && !report_.stop_requested){
+            request_stop(*configuration_->broker);report_.stop_requested=true;
+        }
+    }catch(const std::exception& error){report_.cleanup_error=error.what();}
+    return report_;
 }
 BrokerActivationReport BrokerActivation::close(DWORD grace) noexcept {
     std::lock_guard<std::mutex> lock(mutex_);
@@ -119,7 +182,7 @@ BrokerActivationReport BrokerActivation::close(DWORD grace) noexcept {
     try{
         report_.controller=process_.observe();
         report_.ready=false;
-        if(report_.controller.started && !report_.controller.process_exited && configuration_){
+        if(report_.controller.started && !report_.controller.process_exited && configuration_ && !report_.stop_requested){
             request_stop(*configuration_->broker);report_.stop_requested=true;
         }
         const auto began=GetTickCount64();

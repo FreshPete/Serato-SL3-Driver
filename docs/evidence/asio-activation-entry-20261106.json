@@ -1,0 +1,108 @@
+{
+  "schema": "sl3.asio-activation-entry-checkpoint.v1",
+  "date": "2026-11-06",
+  "releaseTestsPassed": 73,
+  "fixture": {
+    "schema": "sl3.activation-asio-tests.v1",
+    "passed": true,
+    "simulatedSessions": 5,
+    "normalSessions": 3,
+    "callbacks": 5007,
+    "registrationChanged": false,
+    "nativeDeviceAccess": false,
+    "lazyCreationVerified": true,
+    "normalReopenVerified": true,
+    "privateUserRootVerified": true,
+    "blockedCallbackLeaseVerified": true,
+    "rejectedInitRetiresWhileObjectHeld": true
+  },
+  "retirements": [
+    {
+      "session": 1,
+      "scenario": "ordinary",
+      "resultSha256": "1f34d42bf63ac6d4d7039760145a873fa9bfd5c5b8a6323fc39fea7dabd5454d",
+      "controllerSucceeded": true,
+      "ioRetired": true,
+      "jobEmpty": true,
+      "forcedTermination": false
+    },
+    {
+      "session": 2,
+      "scenario": "reopen",
+      "resultSha256": "1f34d42bf63ac6d4d7039760145a873fa9bfd5c5b8a6323fc39fea7dabd5454d",
+      "controllerSucceeded": true,
+      "ioRetired": true,
+      "jobEmpty": true,
+      "forcedTermination": false
+    },
+    {
+      "session": 3,
+      "scenario": "scope",
+      "resultSha256": "1f34d42bf63ac6d4d7039760145a873fa9bfd5c5b8a6323fc39fea7dabd5454d",
+      "controllerSucceeded": true,
+      "ioRetired": true,
+      "jobEmpty": true,
+      "forcedTermination": false
+    },
+    {
+      "session": 4,
+      "scenario": "rejected_rate",
+      "resultSha256": "1f34d42bf63ac6d4d7039760145a873fa9bfd5c5b8a6323fc39fea7dabd5454d",
+      "controllerSucceeded": true,
+      "ioRetired": true,
+      "jobEmpty": true,
+      "forcedTermination": false
+    },
+    {
+      "session": 5,
+      "scenario": "destructive_callback",
+      "resultSha256": "9423ab98b839357e443b38dbf9391d746797bd7618f2131a49dc3407a03ae4a0",
+      "controllerSucceeded": false,
+      "ioRetired": true,
+      "jobEmpty": true,
+      "forcedTermination": false
+    }
+  ],
+  "sourceSha256": {
+    "CMakeLists.txt": "2e521d02e174dbdc563d8a3966e39f2cdb4414df3667202293a35d6f4cdfb0e0",
+    "src/asio/activated_driver_session.cpp": "9d3e8b3de41856e6e5c6ef293fba4d57937f461bcacf2c97cdca2e9f629fb6c7",
+    "src/asio/driver_configuration.cpp": "bcecf80d7a7e405dd40723a1fe979ef2ad442612d53efee2b1830946b1c8ebdd",
+    "src/asio/driver_configuration.hpp": "c5172b8468816738761c73a15bb4e5cd275dd032fec45bbb7e00330a2e24d06a",
+    "src/asio/driver_facade.hpp": "89d734360823a75bb72023f1e5ffebfd04933d451062e38f785715150a290ff7",
+    "src/asio/driver_session.hpp": "fc86732bc41c61ef0f26e1f9ffb5cbdd530fe02bd0d7dc5c0c56b45fc6527266",
+    "src/asio/broker_session.cpp": "ef2f8a716fd79ce957ffb50b4d48278493dad4484200334084ca348721802aa0",
+    "src/asio/broker_activation.cpp": "ffa75b17ba9f15e668440c6cdcbf5f27c261f0ba5edadbe6c63c7cb6a7a5481c",
+    "src/asio/broker_activation.hpp": "658170b7e167fb6483b65b972ef34acc1574699ebd95d622a11b7699c3f4b7f1",
+    "tests/native/activation_session_provider.cpp": "dce8f50c9ab909d97fb8b2c359893d5399742fc6fc6d321a9058ea027d8ef59a",
+    "tests/native/activation_session_fixture.def": "1a335a2c35d52e3ed65b98ea376fc744b813e186afbd36ec1858782486c76a22",
+    "tests/native/activation_asio_tests.cpp": "b8446f3e03a8afa980db329064f05c70e7dbc76dca04fb98f6a80ee4c9765eb0",
+    "scripts/test-activation-asio.py": "93e1b06f8f33d360e68ae943e0300436915f1fd5c70ef9ac832f5eca4f558515"
+  },
+  "imageSha256": {
+    "sl3_activation_asio_tests.exe": "f4502d2b75ce6da195445f83b4b7f8cba7f024e2066ab4bf3cf41020a1fb6843",
+    "sl3_activation_session_fixture.dll": "f4249961dd6649d6cfa735b9e94d7765bc42cc418b778f423283a1fd54a9a9b9",
+    "sl3_broker_controller_unmeasured_simulated.exe": "f07735e942a9ae1e71e476ae1beb5a8697a899d953102756f9e6c219a9b23fa8",
+    "sl3_device_session_fixture.exe": "1e14261e261365ebf18a3a278d4b8f8dbf4eaf593984ddc84f8e17584e04ef33",
+    "UsbDkHelper.dll10": "66bbfe6f99b417f97c7a9e97816e24af7dde0e01b8e535c41e91e1c6c19cfeda"
+  },
+  "fixtureRunSha256": "36ce84957f8664f5a15f4e7c9970eebbcd18a251868d0a2862cd996e882d6760",
+  "nativeBuildManifestSha256": "06f778465d2d00183d10a3248f54496302b1065e178da632da6b148bc140fdbc",
+  "ctestLogSha256": "3c44fe6dd65667beeb9db097049efa0587f4d5cc3fc7177d3df177d515da569e",
+  "postcheck": {
+    "observed": true,
+    "originalResources": true,
+    "occupiedPaths": [],
+    "registrationPresent": false,
+    "currentSetupClean": true
+  },
+  "productionSourceEntryWired": true,
+  "stableActivationRecordImplemented": true,
+  "seratoNormalLaunchValidated": false,
+  "nativeDeviceAccess": false,
+  "installedPackageChanged": false,
+  "timecodeVinylTested": false,
+  "serviceInstalled": false,
+  "firmwareChanged": false,
+  "securityPolicyChanged": false,
+  "scope": "Unregistered actual COM/IASIO implementation with test-only simulated transport; not installed or normal Serato startup validation"
+}

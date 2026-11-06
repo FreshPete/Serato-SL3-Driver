@@ -11,7 +11,11 @@ struct BrokerActivationSpec {
     DWORD startup_timeout_ms=15000,startup_failure_grace_ms=5000,lifetime_ms=60000;
     TimingPolicy timing=TimingPolicy::reviewed;
     session::Kind kind=session::Kind::native;
+    std::shared_ptr<const void> output_root_lease;
 };
+// Resolves the current user's LocalAppData, creates/verifies one private root,
+// and assigns a fresh random child path. Called only during explicit activation.
+void select_user_activation_output(BrokerActivationSpec&);
 struct BrokerActivationReport {
     bool attempted=false,ready=false,stop_requested=false,retirement_deferred=false;
     bool termination_requested=false;
@@ -26,7 +30,7 @@ public:
 };
 // Control-thread ordinary-user activation only. No service, registry, locator
 // publication, elevation, firmware operations or automatic acquisition retry.
-// Not yet connected to the production ASIO entry/configuration format.
+// The activation entry format uses a lazy DriverSession around this component.
 class BrokerActivation final : public std::enable_shared_from_this<BrokerActivation> {
 public:
     static std::shared_ptr<BrokerActivation> start(const BrokerActivationSpec&);
@@ -37,6 +41,9 @@ public:
     // to stop its controller while any returned configuration lease survives.
     DriverConfiguration configuration();
     BrokerActivationReport observe();
+    // Seal new borrows and post stop when the final configuration/callback
+    // lease retires. Never waits for or terminates a process.
+    BrokerActivationReport request_retirement() noexcept;
     BrokerActivationReport close(DWORD grace_ms=15000) noexcept;
 private:
     BrokerActivation()=default;
@@ -44,8 +51,10 @@ private:
     struct Borrow;
     std::mutex mutex_;
     std::atomic<unsigned> borrowed_{0};
+    std::atomic<bool> retirement_requested_{false};
     worker::Process process_;
     std::optional<DriverConfiguration> configuration_,input_;
+    std::shared_ptr<const void> output_root_lease_;
     BrokerActivationReport report_;
 };
 }

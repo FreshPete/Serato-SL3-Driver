@@ -20,7 +20,7 @@ try {
     $testNames=@(($testListingText|ConvertFrom-Json).tests|ForEach-Object name)
     if($WithUnmeasuredAsioDiagnostic){
         foreach($name in @('sl3_asio_unmeasured_absent','sl3_broker_unmeasured_plan',
-            'sl3_broker_unmeasured_rejects_long_lifetime','sl3_broker_unmeasured_lifecycle','sl3_broker_activation_lifecycle')){
+            'sl3_broker_unmeasured_rejects_long_lifetime','sl3_broker_unmeasured_lifecycle','sl3_broker_activation_lifecycle','sl3_activation_asio_lifecycle')){
             if($name -notin $testNames){throw "Required unmeasured ASIO diagnostic check missing: $name"}
         }
     }

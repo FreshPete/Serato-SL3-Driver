@@ -6,6 +6,7 @@ inline constexpr char reviewed_helper_sha256[]="66bbfe6f99b417f97c7a9e97816e24af
 struct DriverConfiguration {
     WorkerSpec worker;
     std::optional<BrokerAttachment> broker;
+    std::shared_ptr<const BrokerActivationSpec> activation;
     LatencyProfile latency;
     std::shared_ptr<const void> files;
     std::string keepalive_timing_sha256;
@@ -25,10 +26,15 @@ std::string session_pointer_text(const std::filesystem::path&,const std::string&
 // Strict UTF-8 records, absolute paths, locked bytes and SHA256 bindings only.
 // This verifies consistency, not the truth/quality of a timing measurement.
 DriverConfiguration load_driver_configuration(const std::filesystem::path&,TimingPolicy=TimingPolicy::reviewed);
-// Direct configuration, or one fixed locator -> mutable pointer -> immutable
-// broker configuration. No search, environment expansion, recursion or fallback.
+// Direct configuration, one fixed locator -> mutable pointer -> immutable
+// broker configuration, or a validated lazy activation plan. Activation parsing
+// starts no process and creates no state directory. No recursive fallback.
 DriverConfiguration load_driver_entry_configuration(const std::filesystem::path&,TimingPolicy=TimingPolicy::reviewed);
 std::filesystem::path production_configuration_path();
+// Selects the same production backend from an already validated configuration.
+// Construction and explicit scope preparation do not acquire hardware.
+std::unique_ptr<DriverFacade> make_configured_asio_facade(DriverConfiguration,TimingPolicy=TimingPolicy::reviewed);
+std::shared_ptr<DriverScope> make_configured_asio_scope(DriverConfiguration,TimingPolicy=TimingPolicy::reviewed);
 std::unique_ptr<DriverFacade> make_native_asio_facade(TimingPolicy=TimingPolicy::reviewed);
 std::shared_ptr<DriverScope> make_native_asio_scope(TimingPolicy=TimingPolicy::reviewed);
 }

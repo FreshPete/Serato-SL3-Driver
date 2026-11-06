@@ -40,7 +40,7 @@ public:
         try{
             client_=std::make_unique<worker::BrokerClient>(spec_.endpoint,spec_.server->handle(),spec_.kind,spec_.worker_sha256);
             state_.broker.attached=state_.broker.ever_attached=true;
-            worker_=worker::ProcessWait::duplicate(client_->worker_process_handle());
+            worker_=worker::ProcessWait::duplicate(client_->worker_process_handle(),spec_.lifetime);
             state_.broker.worker_pid=GetProcessId(worker_->handle());accept(client_->observation());usable_=true;
             return idle();
         }catch(...){failure(HostFailure::handshake);request_shutdown();return false;}

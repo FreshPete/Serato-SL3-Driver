@@ -23,6 +23,7 @@ class DriverOwner final {
 public:
     explicit DriverOwner(WorkerSpec,std::shared_ptr<const void> configuration_lease={});
     explicit DriverOwner(BrokerAttachment,std::shared_ptr<const void> configuration_lease={});
+    explicit DriverOwner(const BrokerActivationSpec&,std::shared_ptr<const void> configuration_lease={});
     std::optional<HostReport> close(DWORD total_timeout_ms=5000) noexcept;
 private:
     friend class DriverFacade;

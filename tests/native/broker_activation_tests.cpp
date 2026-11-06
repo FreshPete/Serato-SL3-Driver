@@ -103,6 +103,6 @@ int wmain(int argc,wchar_t** argv){
         std::cout<<"{\"schema\":\"sl3.broker-activation-tests.v1\",\"passed\":true,\"simulatedSessions\":2,"
                    "\"asioStartStopCycles\":2,\"callbacks\":"<<callbacks.load()<<",\"nativeDeviceAccess\":false,"
                    "\"failedStartupNormalExitObserved\":true,\"failedStartupForcedContainmentObserved\":true,"
-                   "\"serviceInstalled\":false,\"productionAsioEntryChanged\":false}\n";return 0;
+                   "\"serviceInstalled\":false,\"productionAsioEntryExercised\":false}\n";return 0;
     }catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}
 }

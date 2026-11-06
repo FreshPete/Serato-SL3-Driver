@@ -46,7 +46,7 @@ def main():
             result['simulatedSessions'] == 2 and result['asioStartStopCycles'] == 2 and result['callbacks'] >= 24 and
             result['failedStartupNormalExitObserved'] is True and result['failedStartupForcedContainmentObserved'] is True and
             result['nativeDeviceAccess'] is False and result['serviceInstalled'] is False and
-            result['productionAsioEntryChanged'] is False, 'Expected simulated activation result')
+            result['productionAsioEntryExercised'] is False, 'Expected simulated activation result')
     retirements = []
     for session in ('session', 'retained'):
         path = output / session / 'result.json'

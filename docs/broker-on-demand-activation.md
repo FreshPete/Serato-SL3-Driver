@@ -1,6 +1,8 @@
 # Ordinary-user on-demand broker activation
 
-The new native `BrokerActivation` component starts and owns the existing audio controller without a session launcher or Windows service. Its simulated integration test obtains a broker-backed configuration, initializes the real ASIO facade and performs two callback-stream start/stop cycles. This is a component toward install-once use, **not yet a production ASIO startup path**. The installed driver, its configuration loader and the existing attended-test kit do not invoke it.
+**Follow-up:** the [ASIO activation entry](asio-activation-entry.md) now connects this component to a validated stable record and lazy driver/session creation. The initial component checkpoint below remains separate; no installed Serato/SL3 test is inferred from the new software path.
+
+The initial native `BrokerActivation` component starts and owns the existing audio controller without a session launcher or Windows service. Its simulated integration test obtains a broker-backed configuration, initializes the real ASIO facade and performs two callback-stream start/stop cycles. At that checkpoint it was not connected to production ASIO creation. The existing installed setup and attended-test kit still do not invoke the new activation mode.
 
 ## Activation and identity
 
@@ -32,4 +34,4 @@ The final Release build passed all 72 CTest checks, including this new case and 
 
 ## Remaining integration
 
-Add a stable installed activation configuration and connect it to ASIO factory/scope creation, preserving the lease through all client/callback retirement paths. Test failed startup, blocked callbacks, process interruption, multiple clients and repeated application opens before any installed activation test. Serato must still select the SL3 first: this component cannot cause an application to load a driver it has not selected. The [normal-start selection investigation](installed-startup-investigation.md) remains a separate dependency. Phase and vinyl remain sources for the same audio path.
+The [stable activation record and lazy ASIO factory/scope integration](asio-activation-entry.md) are now implemented in source. Its unregistered software tests cover lazy ordinary initialization/reopen, failed initialization retained by a host and blocked-callback lifetime. Real native startup/reopen, process interruption and multiple native clients still need validation before installed-use claims. Serato must still select the SL3 first: this component cannot cause an application to load a driver it has not selected. The [normal-start selection investigation](installed-startup-investigation.md) remains a separate dependency. Phase and vinyl remain sources for the same audio path.

@@ -2,11 +2,13 @@
 #include "asio/host_session.hpp"
 
 namespace sl3::asio {
+struct BrokerActivationSpec;
 struct BrokerAttachment {
     std::wstring endpoint;
     std::shared_ptr<worker::ProcessWait> server;
     session::Kind kind=session::Kind::native;
     std::string worker_sha256{}; // Required by reviewed broker configuration.
+    std::shared_ptr<const void> lifetime; // Optional owned activation; retained through callback thread exit.
 };
 // Common ASIO control surface; ownership domain stays explicit in every report.
 class DriverSession {
@@ -26,6 +28,7 @@ public:
 };
 std::unique_ptr<DriverSession> make_owned_driver_session(WorkerSpec);
 std::unique_ptr<DriverSession> make_broker_driver_session(BrokerAttachment);
+std::unique_ptr<DriverSession> make_activated_driver_session(const BrokerActivationSpec&);
 // Successful client retirement does not imply device release or worker exit.
 inline bool driver_session_closed(const HostReport& r) noexcept {
     if(r.failure!=HostFailure::none || r.reentrant || !r.audio.retired || !r.io_retired || r.device_held)return false;

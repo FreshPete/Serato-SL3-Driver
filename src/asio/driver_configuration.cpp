@@ -1,4 +1,5 @@
 #include "asio/driver_configuration.hpp"
+#include "asio/broker_activation.hpp"
 #include <algorithm>
 #include <array>
 #include <charconv>
@@ -135,6 +136,22 @@ DriverConfiguration load_driver_configuration(const std::filesystem::path& locat
 }
 DriverConfiguration load_driver_entry_configuration(const std::filesystem::path& location,TimingPolicy policy){
     auto files=std::make_shared<Files>();const auto bytes=locked_text(*files,location);
+    const std::string activation_prefix="SL3-ASIO-ACTIVATION-";
+    if(bytes.compare(0,activation_prefix.size(),activation_prefix)==0){
+        const auto values=record(bytes,{"SL3-ASIO-ACTIVATION-1","controller=","controller_sha256=","input=","input_sha256=",
+                                        "startup_timeout_ms=","startup_failure_grace_ms=","lifetime_ms="});
+        if(!values[0].empty())throw std::invalid_argument("Unknown ASIO activation version");
+        auto spec=std::make_shared<BrokerActivationSpec>();spec->controller=path(values[1]);spec->controller_sha256=hash(values[2]);
+        spec->input=path(values[3]);spec->input_sha256=hash(values[4]);spec->startup_timeout_ms=number(values[5]);
+        spec->startup_failure_grace_ms=number(values[6]);spec->lifetime_ms=number(values[7]);spec->timing=policy;
+        if(spec->startup_timeout_ms<100 || spec->startup_timeout_ms>30000 || spec->startup_failure_grace_ms>15000 ||
+           spec->lifetime_ms<1000 || spec->lifetime_ms>43200000 || (policy==TimingPolicy::unmeasured_diagnostic && spec->lifetime_ms>600000))
+            throw std::invalid_argument("Invalid ASIO activation deadlines");
+        pin_hash(*files,spec->controller,spec->controller_sha256,256*1024*1024);pin_hash(*files,spec->input,spec->input_sha256,65536);
+        auto input=load_driver_configuration(spec->input,policy);
+        if(input.broker)throw std::invalid_argument("ASIO activation cannot wrap another broker");
+        files->external.push_back(input.files);input.files=files;input.activation=std::move(spec);return input;
+    }
     const std::string prefix="SL3-ASIO-LOCATOR-";
     if(bytes.compare(0,prefix.size(),prefix)!=0){
         // Preserve the explicit direct formats. A malformed locator cannot
@@ -175,16 +192,22 @@ std::filesystem::path production_configuration_path(){
     return std::filesystem::path(std::wstring(buffer.data(),count)).parent_path()/L"sl3-asio.conf";
 }
 std::unique_ptr<DriverFacade> make_native_asio_facade(TimingPolicy policy){
-    auto config=load_driver_entry_configuration(production_configuration_path(),policy);
-    if(policy==TimingPolicy::unmeasured_diagnostic && !config.broker)
+    return make_configured_asio_facade(load_driver_entry_configuration(production_configuration_path(),policy),policy);
+}
+std::unique_ptr<DriverFacade> make_configured_asio_facade(DriverConfiguration config,TimingPolicy policy){
+    if(policy==TimingPolicy::unmeasured_diagnostic && !config.broker && !config.activation)
         throw std::invalid_argument("Unmeasured ASIO requires a retained broker");
+    if(config.activation)return std::make_unique<DriverFacade>(std::make_shared<DriverOwner>(*config.activation,config.files),config.latency);
     if(config.broker)return std::make_unique<DriverFacade>(*config.broker,config.latency,config.files);
     return std::make_unique<DriverFacade>(config.worker,config.latency,config.files);
 }
 std::shared_ptr<DriverScope> make_native_asio_scope(TimingPolicy policy){
-    auto config=load_driver_entry_configuration(production_configuration_path(),policy);
-    if(policy==TimingPolicy::unmeasured_diagnostic && !config.broker)
+    return make_configured_asio_scope(load_driver_entry_configuration(production_configuration_path(),policy),policy);
+}
+std::shared_ptr<DriverScope> make_configured_asio_scope(DriverConfiguration config,TimingPolicy policy){
+    if(policy==TimingPolicy::unmeasured_diagnostic && !config.broker && !config.activation)
         throw std::invalid_argument("Unmeasured ASIO requires a retained broker");
+    if(config.activation)return std::make_shared<DriverScope>(DriverScope{std::make_shared<DriverOwner>(*config.activation,config.files),config.latency});
     if(config.broker)return std::make_shared<DriverScope>(DriverScope{std::make_shared<DriverOwner>(*config.broker,config.files),config.latency});
     return std::make_shared<DriverScope>(DriverScope{std::make_shared<DriverOwner>(config.worker,config.files),config.latency});
 }
