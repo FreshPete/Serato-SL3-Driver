@@ -161,9 +161,24 @@ if __name__ == '__main__':
     parser.add_argument('--app', type=Path)
     parser.add_argument('--prepare', action='store_true')
     parser.add_argument('--start', action='store_true')
+    parser.add_argument('--check', action='store_true')
     args = parser.parse_args()
+    require(not args.check or (args.app is not None and not args.prepare and not args.start),
+            'Readiness checking requires an application and is separate from preparation/start')
     require(not args.start or (args.prepare and args.app is not None),
             'Starting requires explicit preparation and application selection')
+    if args.check or args.start:
+        # Complete static verification precedes host queries. Startup performs
+        # the same check before creating state or requesting any elevation.
+        prepare(args.kit_manifest, args.expected_kit_manifest_sha256, args.app, False)
+        selected = verify(args.kit_manifest, args.expected_kit_manifest_sha256)
+        readiness = module('inspect-sl3-session-readiness.py')['inspect'](
+            ROOT / 'native-package', selected['nativeBundleSha256'], args.app)
+        print(json.dumps(readiness, indent=2), flush=True)
+        if not readiness['readyForAttempt']:
+            raise SystemExit(3)
+        if args.check:
+            raise SystemExit(0)
     if args.app is None:
         require(not args.prepare, 'Application selection required for preparation')
         record = verify(args.kit_manifest, args.expected_kit_manifest_sha256)

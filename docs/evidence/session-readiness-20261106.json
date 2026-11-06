@@ -1,0 +1,293 @@
+{
+  "schema": "sl3.session-readiness-evidence.v1",
+  "date": "2026-11-06",
+  "sourcePins": 40,
+  "launcherSha256": "6c0e4d251ca129d77e4d4092c914c4541e86ea3219f63e06c72a686c2e84ea4e",
+  "releaseManifestSha256": "4bb1f7073d3dfc9bb2c3568db4ecabe01c2b2fbbe0a460d11cc652580feda05d",
+  "installerResourceSha256": "6af91703ea9e64c48bd41a3c04b5ec75d129d239909fd4aa9b995bc10973cf82",
+  "kitManifestSha256": "260464dad7d125934ae40d34e6cbae504e379077c94b6bfeaa693e559cd8f58f",
+  "readinessPolicyUnitTestsPassed": 7,
+  "readinessTests": {
+    "schema": "sl3.native-kit-readiness-tests.v1",
+    "cases": [
+      {
+        "name": "native-readiness-relocated-empty-path-no-session-state",
+        "passed": true,
+        "observedReadyForAttempt": true,
+        "exitCode": 0
+      },
+      {
+        "name": "changed-readiness-code-refused-before-python",
+        "passed": true
+      },
+      {
+        "name": "incomplete-check-context-refused",
+        "passed": true
+      },
+      {
+        "name": "existing-pointer-fixture-preserved-and-blocked",
+        "passed": true
+      }
+    ],
+    "actualHostObservation": {
+      "schema": "sl3.session-readiness.v1",
+      "readyForAttempt": true,
+      "checks": [
+        {
+          "id": "platform",
+          "status": "pass",
+          "message": "Check passed.",
+          "evidence": {
+            "nativeX64": true,
+            "elevated": false,
+            "windowsBuild": 26300
+          }
+        },
+        {
+          "id": "application",
+          "status": "pass",
+          "message": "Check passed.",
+          "evidence": {
+            "running": false,
+            "matchingProcesses": 0
+          }
+        },
+        {
+          "id": "filter",
+          "status": "pass",
+          "message": "Check passed.",
+          "evidence": {
+            "installed": true,
+            "running": true,
+            "serviceState": 4,
+            "reviewedImageOnDisk": true,
+            "imageSha256": "c92b6c15bd550023312ae4cfe49a39757952a3c2ebdc7d1d143ac5e695f69a63",
+            "loadedImageAttested": false,
+            "serviceChanged": false
+          }
+        },
+        {
+          "id": "device",
+          "status": "pass",
+          "message": "Check passed.",
+          "evidence": {
+            "matchingPresentIdentities": 1,
+            "pnpMetadataOnly": true,
+            "deviceOpened": false,
+            "descriptorsReadFromHardware": false
+          }
+        },
+        {
+          "id": "state",
+          "status": "pass",
+          "message": "Check passed.",
+          "evidence": {
+            "occupiedPaths": [],
+            "registrationPresent": false,
+            "originalResources": true
+          }
+        },
+        {
+          "id": "dependencies",
+          "status": "pass",
+          "message": "Check passed.",
+          "evidence": {
+            "directImportsResolved": true,
+            "systemModulesChecked": 16,
+            "systemFilesChecked": 10,
+            "packageBinaryLoaded": false,
+            "systemDependenciesLoaded": true,
+            "transitiveBehaviorVerified": false
+          }
+        }
+      ],
+      "filesWritten": false,
+      "registryWritten": false,
+      "elevationRequested": false,
+      "packageBinaryLoaded": false,
+      "systemDependenciesMayLoad": true,
+      "deviceOpened": false,
+      "usbIoSubmitted": false,
+      "driverChanged": false,
+      "audioStarted": false,
+      "liveStartupValidated": false
+    },
+    "kitManifestSha256": "260464dad7d125934ae40d34e6cbae504e379077c94b6bfeaa693e559cd8f58f",
+    "globalPathEmpty": true,
+    "spacesAndUnicodeInPath": true,
+    "persistentSessionStateCreated": false,
+    "packageBinaryLoaded": false,
+    "deviceOpened": false,
+    "driverChanged": false,
+    "globalPointerWritten": false,
+    "elevationRequested": false,
+    "startupAttempted": false,
+    "audioStarted": false,
+    "physicalAudioValidated": false
+  },
+  "nativeKitRegressions": {
+    "schema": "sl3.native-kit-entry-tests.v1",
+    "cases": [
+      {
+        "name": "native-kit-plan-relocated-empty-path",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "native-kit-complete-offline-preparation",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "native-prepared-kit-complete-session-plan",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "native-kit-plan-after-preparation",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "wrong-kit-identity-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-kit-preparer-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-specification-evidence-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-private-standard-library-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-powershell-runtime-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "foreign-launcher-release-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "unreviewed-application-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "semicolon-kit-path-refused-before-python",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "incomplete-start-context-refused",
+        "passed": true,
+        "exitCode": 2
+      }
+    ],
+    "kitManifestSha256": "260464dad7d125934ae40d34e6cbae504e379077c94b6bfeaa693e559cd8f58f",
+    "launcherSha256": "6c0e4d251ca129d77e4d4092c914c4541e86ea3219f63e06c72a686c2e84ea4e",
+    "generatedSessionPlanSha256": "b3ca63bc085beee6708b180694de6904cd22ae22a45d3bb79a5343127f1208f8",
+    "globalPathEmpty": true,
+    "spacesAndUnicodeInKitPath": true,
+    "onlyPlanPreparationOrRefusalInvocations": true,
+    "liveStartAttempted": false,
+    "applicationStarted": false,
+    "brokerStarted": false,
+    "elevationRequested": false,
+    "registryWritten": false,
+    "deviceAccess": false,
+    "liveValidated": false
+  },
+  "capsuleRegressions": {
+    "schema": "sl3.portable-launcher-tests.v1",
+    "launcherSha256": "6c0e4d251ca129d77e4d4092c914c4541e86ea3219f63e06c72a686c2e84ea4e",
+    "cases": [
+      {
+        "name": "first-session",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "second-session-same-executable",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "no-environment-no-installation",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "unsupported-action",
+        "passed": true,
+        "exitCode": 2
+      },
+      {
+        "name": "wrong-capsule-hash",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "executable-relocated-without-rebuild",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "unicode-space-and-shell-metacharacters-in-capsule-path",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "name": "untrusted-interpreter",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "foreign-helper-root",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "changed-package-binding",
+        "passed": true,
+        "exitCode": 1
+      },
+      {
+        "name": "moved-capsule-binding",
+        "passed": true,
+        "exitCode": 1
+      }
+    ],
+    "sameExecutableAcceptedTwoSessionBindings": true,
+    "binaryRecompiledBetweenSessions": false,
+    "onlyPlanOrRefusalInvocations": true,
+    "registryWritten": false,
+    "deviceAccess": false,
+    "liveValidated": false
+  },
+  "windowsArgumentRoundTripsPassed": 8,
+  "privateRuntimeInventoryReverified": true,
+  "packageBinaryLoadedByReadiness": false,
+  "windowsSystemDependenciesMayLoad": true,
+  "pnpMetadataQueried": true,
+  "deviceOpened": false,
+  "usbIoSubmitted": false,
+  "driverChanged": false,
+  "elevationRequested": false,
+  "startupAttempted": false,
+  "physicalAudioValidated": false,
+  "securityPolicyChanged": false,
+  "firmwareChanged": false,
+  "kitSessionStatePresent": false,
+  "publicInstallerReady": false
+}

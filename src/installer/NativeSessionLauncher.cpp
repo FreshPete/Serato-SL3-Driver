@@ -255,12 +255,13 @@ int kit_dispatch(wchar_t** argv){
     std::vector<std::wstring> arguments={L"-I",L"-B",(root/L"scripts/prepare-portable-serato-kit.py").native(),
             L"--kit-manifest",manifest.native(),L"--expected-kit-manifest-sha256",identity,L"--app",application.native()};
     const auto action=std::wstring(argv[1]);
-    if(action!=L"--plan-kit")arguments.push_back(L"--prepare");
+    if(action==L"--check-kit")arguments.push_back(L"--check");
+    if(action==L"--prepare-kit" || action==L"--start-kit")arguments.push_back(L"--prepare");
     if(action==L"--start-kit")arguments.push_back(L"--start");
     return run_process(python,arguments,root,false);
 }
 int dispatch(int argc,wchar_t** argv){
-    if(argc==8 && (std::wstring(argv[1])==L"--plan-kit" || std::wstring(argv[1])==L"--prepare-kit" ||
+    if(argc==8 && (std::wstring(argv[1])==L"--plan-kit" || std::wstring(argv[1])==L"--check-kit" || std::wstring(argv[1])==L"--prepare-kit" ||
        std::wstring(argv[1])==L"--start-kit") && std::wstring(argv[2])==L"--kit-manifest" &&
        std::wstring(argv[4])==L"--expected-kit-manifest-sha256" && std::wstring(argv[6])==L"--app")return kit_dispatch(argv);
     if(argc==8 && (std::wstring(argv[1])==L"--plan-session" || std::wstring(argv[1])==L"--start-session" ||
