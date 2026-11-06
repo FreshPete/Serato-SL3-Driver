@@ -14,7 +14,11 @@
   },
   "ownerConfirmedBothTracksPlayingAndFollowing": true,
   "ownerReportedEightBarLoopsOnBothDecks": true,
-  "ownerFinalPlaybackAndCloseConfirmation": null,
+  "ownerFinalPlaybackAndCloseConfirmation": {
+    "bothDecksWorked": true,
+    "responsive": true,
+    "ownerReportedNormalClose": true
+  },
   "softwareSample": {
     "source": "worker-dequeued-output-pcm",
     "frames": 220500,
