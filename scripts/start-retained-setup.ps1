@@ -14,7 +14,7 @@ if (([Security.Principal.WindowsPrincipal]::new($identity)).IsInRole([Security.P
 $experiment = Join-Path (Split-Path -Parent $PSScriptRoot) 'analysis/sl3-on-demand-test-retained-idle-guard-20261107/experiment.json'
 $expected = '0d842831f4c1b0a6dfa02ef8f0d07608132aec5128da42b29d8518666f45b538'
 $handoff = Join-Path $PSScriptRoot 'retained-setup-handoff.py'
-$handoffSha = 'cfac264d1a2a6285679aca6f5640c6f8110ae3e2f0844d67cebc20f5796e28e1'
+$handoffSha = '1ea6cecbb07f3b4eeabaf58ac1d9534c1746a711f82910f6f8f04cfeb1675c33'
 $leases = [Collections.Generic.List[IO.FileStream]]::new()
 
 function Hold-ReviewedFile([string]$Path,[string]$Sha) {
@@ -27,6 +27,17 @@ function Hold-ReviewedFile([string]$Path,[string]$Sha) {
     if ((Get-FileHash -InputStream $lease -Algorithm SHA256).Hash -ne $Sha) {
         throw "Reviewed file hash differs for $Path"
     }
+}
+
+function Read-ReviewedPlan([string]$Python) {
+    $raw = & $Python -I -B $handoff plan --experiment $experiment --expected-experiment-sha256 $expected
+    if ($LASTEXITCODE) { throw 'The read-only check of the original Serato setup did not pass.' }
+    $plan = $raw | ConvertFrom-Json
+    if ($plan.schema -ne 'sl3.retained-setup-handoff.v1' -or $plan.planOnly -ne $true -or
+        $plan.experimentSha256 -ne $expected -or $plan.freshSetupRecordDirectory -isnot [bool]) {
+        throw 'Unexpected setup plan result.'
+    }
+    $plan
 }
 
 function Publish-TrialReadout([string]$Python,[string]$Folder,[bool]$SetupExited) {
@@ -103,14 +114,18 @@ function Invoke-ReviewedTrial($Record, $SetupProcess) {
                 if (-not $retired) { Write-Host 'Check the desktop and setup records to verify cleanup.' }
             }
         }
+        $setupExited = $SetupProcess.WaitForExit(25000)
+        if ($setupExited) {
+            $result = Get-Content -LiteralPath (Join-Path $folder 'attended-setup/result.json') -Raw -ErrorAction SilentlyContinue |
+                ConvertFrom-Json -ErrorAction SilentlyContinue
+            if ($result.outcome -in 'restored','restored_after_failed_setup') {
+                try {
+                    Read-ReviewedPlan $Record.python.path | Out-Null
+                    Write-Host 'Original Serato setup restored and independently verified.'
+                } catch { Write-Warning ('Restoration was reported. The independent check failed. ' + $_.Exception.Message) }
+            } else { Write-Host 'See the setup result for restoration status.' }
+        } else { Write-Host 'Restoration is still pending. Check the setup result before retrying.' }
     }
-    $setupExited = $SetupProcess.WaitForExit(25000)
-    if ($setupExited) {
-        $result = Get-Content -LiteralPath (Join-Path $folder 'attended-setup/result.json') -Raw -ErrorAction SilentlyContinue |
-            ConvertFrom-Json -ErrorAction SilentlyContinue
-        if ($result.outcome -eq 'restored') { Write-Host 'Original setup restored.' }
-        else { Write-Host 'See the setup result for restoration status.' }
-    } else { Write-Host 'Restoration is still pending. Check the setup result before retrying.' }
     if ($retired) {
         try { Publish-TrialReadout $Record.python.path $folder $setupExited }
         catch { Write-Warning ('Startup summary unavailable. Review the saved reports. ' + $_.Exception.Message) }
@@ -135,12 +150,9 @@ try {
     $python = $record.python.path
     Hold-ReviewedFile $python $record.python.sha256
     Hold-ReviewedFile $handoff $handoffSha
-    $preflight = & $python -I -B $handoff plan --experiment $Experiment --expected-experiment-sha256 $expected
-    if ($LASTEXITCODE) { throw 'The retained setup preflight did not pass.' }
-    $plan = $preflight | ConvertFrom-Json
-    if ($plan.schema -ne 'sl3.retained-setup-handoff.v1' -or $plan.planOnly -ne $true -or
-        $plan.experimentSha256 -ne $expected) { throw 'Unexpected setup plan result.' }
-    if (-not ($Run -or $Trial)) { $preflight; return }
+    $plan = Read-ReviewedPlan $python
+    if (-not ($Run -or $Trial)) { $plan | ConvertTo-Json -Depth 4; return }
+    if (-not $plan.freshSetupRecordDirectory) { throw 'This trial already has setup records. Preserve them and prepare a fresh trial before requesting approval.' }
     if ($Trial) {
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'retained-desktop-trial.py') '7c91221f259b5affe7ad8a3b2b431083ce9c369df1d4869873bc4da5effcef99'
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'observe-asio-module-load.ps1') '97f15e24e861f8cd82c68ee0723c598382ecf6e41511790c7ea1c12a9147bf0d'

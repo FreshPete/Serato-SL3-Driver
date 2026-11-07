@@ -19,7 +19,7 @@ The last read-only check found the original Serato archive, no temporary ASIO pa
 1. Remove USB and any external power for 30 seconds, reconnect the SL3 and wait another 30 seconds before starting the test. Close Serato. The settling interval is part of this trial because a previous redirect stalled shortly after reconnect. The traces do not establish a safe reopen delay.
 2. Use the local **Run SL3 normal-shortcut test** shortcut. Type `RECOVERED` after reconnecting the SL3 and closing Serato, then approve the Windows prompt. The runner checks the SL3’s USB identity, starts one retained connection and checks what Serato’s libusb library can see during ownership. Wait for the console to report that the module observer is armed.
 3. Open Serato from its usual shortcut and leave playback stopped. Record what Serato shows and leave it open for five seconds after the hardware status appears. If it asks to Download Driver, leave the notice in place so the result reflects the normal launch.
-4. Close Serato normally. Leave the test console open while it retires the connection, signals restoration and observes USB visibility for 15 seconds. Verify the broker’s retirement and original setup independently. [Runbook and recovery](retained-normal-start-trial.md)
+4. Close Serato normally. Leave the test console open while it retires the connection, signals restoration and observes USB visibility for 15 seconds. After the setup process exits, the console independently checks the original archive and absence of the temporary ASIO package. [Runbook and recovery](retained-normal-start-trial.md)
 
 | Result | Next check |
 | --- | --- |

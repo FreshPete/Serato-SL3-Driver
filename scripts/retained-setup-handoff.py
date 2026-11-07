@@ -67,10 +67,11 @@ def run(experiment, expected, execute):
         record = api['verify'](experiment,expected,held)
         require(record.get('retainedBroker') is True,'Reviewed retained experiment required')
         native = api['Native'](Path(record['bundle']['directory']),record['bundle']['sha256'],True)
+        output = experiment.parent/'attended-setup'
+        fresh = native.s.absent(output)
         if execute:
             require(native.s.elevated(),'Run the reviewed handoff as administrator; this tool requests no approval')
-        output = experiment.parent/'attended-setup'
-        require(native.s.absent(output),'Fresh attended-setup record directory required')
+            require(fresh,'Fresh attended-setup record directory required')
 
         def invoke(action):
             command = [sys.executable,'-I','-B',str(TOOL),action,'--experiment',str(experiment),
@@ -96,6 +97,7 @@ def run(experiment, expected, execute):
         native.require_idle()
         result = {'schema':'sl3.retained-setup-handoff.v1','planOnly':not execute,'experimentSha256':expected,
                   'viewSeconds':VIEW_SECONDS,'retirementWaitSeconds':RETIRE_SECONDS,
+                  'freshSetupRecordDirectory':fresh,
                   'before':before['after'],'applicationLaunched':False,'nativeDeviceAccess':False,
                   'elevationRequested':False}
         if not execute:
