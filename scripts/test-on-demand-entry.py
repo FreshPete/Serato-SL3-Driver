@@ -46,6 +46,7 @@ def main():
         cases.append({'name':name,'passed':True});return value
     first=call('native-verification-only',command('--verify'));require(first['filesPinned']==source['compiledPayloadFiles'] and first['pythonStarted'] is False and not (kit/'analysis').exists(),'Native verify must remain idle')
     call('native-readonly-plan',command('--plan'));require(not (kit/'analysis').exists(),'Plan creates no mutable state')
+    call('resume-without-preparation-refused',command('--resume'),False,'No local setup record is available',native_refusal=False)
     prepared=call('native-real-preparation',command('--prepare'));require(prepared['preparedExperiment']['prepared'] is True and prepared['normalStartupValidated'] is False,'Actual copied-kit preparation required')
     experiment=Path(prepared['preparedExperiment']['experiment']);experiment_sha=prepared['preparedExperiment']['experimentSha256']
     experiment_record=json.loads(experiment.read_bytes());bundle=Path(experiment_record['bundle']['directory'])
@@ -60,6 +61,14 @@ def main():
     cases.append({'name':'native-preparation-preserves-activation-mode','passed':True})
     def reviewed(action,selected=experiment,identity=experiment_sha):return command(action)+['--experiment',str(selected),'--expected-experiment-sha256',identity]
     plan=call('native-generated-experiment-check',reviewed('--check-experiment'));require(plan['after']=={'archive':'original','seratoRunning':False,'native':{'state':'absent'}},'Actual restored host observation required')
+    saved_files={p.relative_to(kit/'analysis').as_posix():sha(p) for p in (kit/'analysis').rglob('*') if p.is_file()}
+    resumed=call('native-resumes-exact-existing-experiment',command('--resume'))
+    require(resumed['experiment']==str(experiment) and resumed['experimentSha256']==experiment_sha and
+            resumed['filesWritten'] is False and saved_files=={p.relative_to(kit/'analysis').as_posix():sha(p)
+                for p in (kit/'analysis').rglob('*') if p.is_file()},'Resume must return the same record without writes')
+    ambiguous=kit/'analysis'/('sl3-on-demand-test-'+'0'*32);ambiguous.mkdir()
+    try:call('resume-refuses-ambiguous-preparation',command('--resume'),False,'Exactly one local setup record required',native_refusal=False)
+    finally:ambiguous.rmdir()
     call('native-apply-refuses-ordinary-token',reviewed('--apply-experiment'),False,'Run this exact reviewed setup/restore entry as administrator')
     call('native-restore-refuses-ordinary-token',reviewed('--restore-experiment'),False,'Run this exact reviewed setup/restore entry as administrator')
     result_options=['--result-pipe','\\\\.\\pipe\\SL3SetupResult-'+uuid.uuid4().hex,'--result-server-pid',str(os.getpid())]
@@ -95,6 +104,9 @@ def main():
             asset.write_bytes(altered);experiment.write_text(json.dumps(changed),encoding='utf-8')
             call('rehashed-altered-'+filename,reviewed('--check-experiment',identity=sha(experiment)),False,
                  'Prepared archive assets differ from the reviewed recipe',native_refusal=False)
+            if filename=='archive-test.ps1':
+                call('resume-refuses-rehashed-wrapper',command('--resume'),False,
+                     'Prepared archive assets differ from the reviewed recipe',native_refusal=False)
         finally:
             asset.write_bytes(original_asset);experiment.write_bytes(saved)
     call('native-final-experiment-check',reviewed('--check-experiment'))

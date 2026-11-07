@@ -1,5 +1,6 @@
 """Verify an engineering kit and prepare one-time setup; never installs or launches Serato."""
 import argparse
+from contextlib import ExitStack
 import hashlib
 import json
 from pathlib import Path
@@ -55,14 +56,55 @@ def verify(path,expected):
     return record
 
 
-def prepare(path,expected,application,write=False):
-    record=verify(path,expected);stage=module('asio-install-journal.py')['stage_module']()
+def host_paths(application,api):
+    stage=module('asio-install-journal.py')['stage_module']()
     require(not stage.elevated(),'Prepare engineering inputs as an ordinary user; no elevation is requested')
-    application=Path(application).absolute();api=module('serato-on-demand-test.py')
+    application=Path(application).absolute()
     require(application==stage.known_folder('905e63b6-c1bf-494e-b29c-65b732d3d21a')/'Serato/Serato DJ Pro/Serato DJ Pro.exe' and
-            sha(application)==api['APP_SHA'] and sha(application.with_name('userio_resources.bin'))==api['ORIGINAL_SHA'],'Reviewed original installed Serato build required')
+            sha(application)==api['APP_SHA'],'Reviewed original installed Serato build required')
     installation=stage.known_folder('905e63b6-c1bf-494e-b29c-65b732d3d21a')/'SL3 Rebuild/on-demand-diagnostic-v1'
     pointer=stage.known_folder('f1b32785-6fba-4fcf-9d55-7b8e7f157091')/'SL3Rebuild/on-demand-unused.txt'
+    return application,installation,pointer
+
+
+def resume(path,expected,application):
+    kit=verify(path,expected)
+    api=module('serato-on-demand-test.py')
+    application,installation,pointer=host_paths(application,api)
+    binding=module('rebind-asio-deployment.py')['rebind'](ROOT/'native-package',kit['nativeBundleSha256'],installation=installation,pointer=pointer)
+    analysis=ROOT/'analysis'
+    require(analysis.is_dir() and not analysis.is_symlink() and not analysis.is_junction(),'No local setup record is available')
+    candidates=[item for item in analysis.iterdir() if re.fullmatch('sl3-on-demand-test-[0-9a-f]{32}',item.name)]
+    require(len(candidates)==1,'Exactly one local setup record required')
+    folder=candidates[0]
+    require(folder.is_dir() and not folder.is_symlink() and not folder.is_junction(),'Ordinary local setup directory required')
+    suffix=folder.name.removeprefix('sl3-on-demand-test-')
+    bundle=analysis/('sl3-deployment-rebound-'+suffix)
+    require(bundle.is_dir() and not bundle.is_symlink() and not bundle.is_junction(),'Matching local rebound package required')
+    experiment=folder/'experiment.json'
+    regular(experiment,65536)
+    digest=sha(experiment)
+    with ExitStack() as held:
+        saved=api['verify'](experiment,digest,held)
+        require(saved['application']==str(application) and saved['sources']==kit['sourcePins'] and
+                saved.get('retainedBroker',False) is False and Path(saved['bundle']['directory'])==bundle,
+                'Local setup record does not belong to the reviewed kit')
+        require(saved['powershell']=={'directory':str(ROOT/'runtime/powershell'),'manifestSha256':kit['powershellManifestSha256']} and
+                saved['python']=={'path':str(ROOT/'runtime/python/python.exe'),'sha256':kit['pythonExecutableSha256'],
+                                  'manifestSha256':kit['pythonManifestSha256']},'Local setup runtime differs from the kit')
+        builder=module('prepare-asio-deployment.py')
+        manifest,payload=builder['capture_bundle'](bundle,saved['bundle']['sha256'])
+        builder['verify_payloads'](manifest,payload)
+        require(manifest['packageId']==binding['packageId'],'Local rebound package differs from the reviewed kit')
+    return {'schema':'sl3.on-demand-kit-resume.v1','experiment':str(experiment),'experimentSha256':digest,
+            'filesWritten':False,'elevationRequested':False,'seratoLaunched':False,'nativeDeviceAccess':False}
+
+
+def prepare(path,expected,application,write=False):
+    record=verify(path,expected)
+    api=module('serato-on-demand-test.py')
+    application,installation,pointer=host_paths(application,api)
+    require(sha(application.with_name('userio_resources.bin'))==api['ORIGINAL_SHA'],'Reviewed original installed Serato build required')
     rebinder=module('rebind-asio-deployment.py')
     rebound=rebinder['rebind'](ROOT/'native-package',record['nativeBundleSha256'],installation=installation,pointer=pointer)
     result={'schema':'sl3.on-demand-kit-preparation.v1','planOnly':not write,'kitVerified':True,'bundleBinding':rebound,
@@ -89,5 +131,8 @@ def prepare(path,expected,application,write=False):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--manifest',type=Path,required=True);p.add_argument('--expected-manifest-sha256',required=True)
-    p.add_argument('--application',type=Path,required=True);p.add_argument('--prepare',action='store_true');a=p.parse_args()
-    print(json.dumps(prepare(a.manifest,a.expected_manifest_sha256,a.application,a.prepare),indent=2))
+    p.add_argument('--application',type=Path,required=True)
+    mode=p.add_mutually_exclusive_group();mode.add_argument('--prepare',action='store_true');mode.add_argument('--resume',action='store_true')
+    a=p.parse_args()
+    result=resume(a.manifest,a.expected_manifest_sha256,a.application) if a.resume else prepare(a.manifest,a.expected_manifest_sha256,a.application,a.prepare)
+    print(json.dumps(result,indent=2))
