@@ -60,10 +60,32 @@ def observe_release(result, observe, previous):
     try:
         after = observe('after', POST_RELEASE_SECONDS)
         result['postReleaseIdentity'] = after
-        result['beforeToAfter'] = compare_identity(previous['before'], after)
-        result['duringToAfter'] = compare_identity(previous['during'], after)
+        if previous is not None:
+            result['beforeToAfter'] = compare_identity(previous['before'], after)
+            result['duringToAfter'] = compare_identity(previous['during'], after)
     except (Exception, KeyboardInterrupt) as error:
         result['postReleaseObservationError'] = str(error) or type(error).__name__
+
+
+def finish_trial(result, startup, owned_session, require_idle, retire, request_restore, observe):
+    try:
+        previous = json.loads(startup.read_bytes())
+    except (FileNotFoundError, json.JSONDecodeError):
+        previous = None
+        require(owned_session.is_file(), 'No completed startup or retained broker ownership record')
+    else:
+        require(previous['schema']==result['schema'] and previous['action']=='start' and
+                previous['outcome']=='broker_ready', 'Desktop startup report differs')
+
+    require_idle()
+    try:
+        result['retirement'] = retire()
+        result['retirementObservedUtc'] = datetime.now(timezone.utc).isoformat()
+        result['outcome'] = 'retired_after_interruption' if previous is None else 'retired'
+    finally:
+        request_restore()
+    observe_release(result, observe, previous.get('usbIdentity') if previous is not None else None)
+    return result
 
 
 @contextmanager
@@ -176,16 +198,10 @@ def run(args):
             return {**identity_samples(rows),'startedUtc':checked['started_utc'],'closedUtc':checked['closed_utc']}
 
         if args.action=='finish':
-            previous = json.loads((output/'startup.json').read_bytes())
-            require(previous['schema']==result['schema'] and previous['action']=='start' and
-                    previous['outcome']=='broker_ready', 'Completed desktop startup required')
-            require_idle_serato()
-            try:
-                result.update(outcome='retired', retirement=retire())
-                result['retirementObservedUtc'] = datetime.now(timezone.utc).isoformat()
-            finally:
-                request_restore()
-            observe_release(result, observe, previous['usbIdentity'])
+            held.enter_context(broker['handoff_lock'](output/'lifecycle'))
+            require(not (output/'finish.json').exists(), 'A desktop finish report already exists')
+            finish_trial(result, output/'startup.json', session.with_suffix('.pointer.json'),
+                         require_idle_serato, retire, request_restore, observe)
             write_report(output/'finish.json',result)
             return result
 
@@ -194,6 +210,7 @@ def run(args):
             require_idle_serato()
             check(minimum_start)
             output.mkdir()
+            held.enter_context(broker['handoff_lock'](output/'lifecycle'))
             identities = {}
 
             def snapshot(phase):

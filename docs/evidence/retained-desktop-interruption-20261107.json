@@ -1,0 +1,25 @@
+{
+  "schema": "sl3.retained-desktop-interruption-evidence.v1",
+  "dateUtc": "2026-11-07",
+  "desktopRunnerSha256": "db0498983dba2a61d963685807bdfdaf89597c07244f220c2092aea4c10ac45d",
+  "desktopTestsSha256": "439d70f50bbc822bfba41f9042cd85798b18aabd51881232dd3d29b23eb70409",
+  "retainedTestsPassed": 36,
+  "readOnlyPlanSawOriginalSetup": true,
+  "windowsFixture": {
+    "launcherTerminatedAfterPointerPublication": true,
+    "startupReportAbsent": true,
+    "controllerLiveAfterLauncherExit": true,
+    "desktopLockReacquired": true,
+    "finishRoutineOutcome": "retired_after_interruption",
+    "pointerWithdrawn": true,
+    "controllerAndWorkerRetired": true,
+    "restoreRequested": true,
+    "applicationStateCheckAndUsbObservationSimulated": true,
+    "brokerResultSha256": "fdb06f779ced672df98f3a96da2ff2f9db0b90a8268ddb2f3e6e20d232a11371",
+    "summarySha256": "eb0a38a726b5dd1df3ce0668b59347c31507b2e0c10e10c7b9b8305734ddf7d3"
+  },
+  "protectedSetupChanged": false,
+  "protectedRestorationExecuted": false,
+  "nativeAcquisitionAttempted": false,
+  "seratoLaunched": false
+}

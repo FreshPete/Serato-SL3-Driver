@@ -128,6 +128,74 @@ class IdentityTests(unittest.TestCase):
         self.assertIs(result['usbReadyForNextAcquire'],False)
 
 
+class FinishTests(unittest.TestCase):
+    def finish(self, startup_bytes=None, owned=True, idle=True):
+        calls = []
+        result = {'schema':'sl3.retained-desktop-trial.v1'}
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp)
+            startup, owner = path/'startup.json', path/'broker.pointer.json'
+            if startup_bytes is not None:
+                startup.write_bytes(startup_bytes)
+            if owned:
+                owner.touch()
+
+            def check_idle():
+                calls.append('idle')
+                if not idle:
+                    raise ValueError('Serato is open')
+
+            def retire():
+                calls.append('retire')
+                return {'controllerExited':True}
+
+            def observe(*_):
+                calls.append('observe')
+                return {'completeSamples':1,'incompleteSamples':0,'identitySets':[[]]}
+
+            try:
+                DESKTOP['finish_trial'](result,startup,owner,check_idle,retire,
+                                        lambda:calls.append('restore'),observe)
+            except ValueError as error:
+                result['refusal'] = str(error)
+        return result,calls
+
+    def test_interrupted_record_recovers_owned_broker(self):
+        for raw in (None,b'{"schema":'):
+            with self.subTest(raw=raw):
+                result,calls = self.finish(raw)
+                self.assertEqual(result['outcome'],'retired_after_interruption')
+                self.assertNotIn('duringToAfter',result)
+                self.assertIs(result['usbReadyForNextAcquire'],False)
+                self.assertEqual(calls,['idle','retire','restore','observe'])
+
+    def test_absent_owner_refuses_interrupted_finish(self):
+        result,calls = self.finish(owned=False)
+        self.assertIn('No completed startup',result['refusal'])
+        self.assertEqual(calls,[])
+
+    def test_serato_must_close_before_interrupted_finish(self):
+        result,calls = self.finish(idle=False)
+        self.assertEqual(result['refusal'],'Serato is open')
+        self.assertEqual(calls,['idle'])
+
+    def test_normal_startup_still_produces_phase_comparisons(self):
+        empty = {'completeSamples':1,'incompleteSamples':0,'identitySets':[[]]}
+        record = {'schema':'sl3.retained-desktop-trial.v1','action':'start','outcome':'broker_ready',
+                  'usbIdentity':{'before':empty,'during':empty}}
+        result,calls = self.finish(json.dumps(record).encode('ascii'))
+        self.assertEqual(result['outcome'],'retired')
+        self.assertEqual(result['beforeToAfter'],'same_sampled_identity_set')
+        self.assertEqual(calls,['idle','retire','restore','observe'])
+
+    def test_older_startup_record_can_retire_without_phase_comparisons(self):
+        raw = b'{"schema":"sl3.retained-desktop-trial.v1","action":"start","outcome":"broker_ready"}'
+        result,calls = self.finish(raw)
+        self.assertEqual(result['outcome'],'retired')
+        self.assertNotIn('beforeToAfter',result)
+        self.assertEqual(calls,['idle','retire','restore','observe'])
+
+
 @unittest.skipUnless(sys.platform=='win32','Windows process handles required')
 class WindowTests(unittest.TestCase):
     def test_exact_child_window_is_admitted_only_while_live(self):
