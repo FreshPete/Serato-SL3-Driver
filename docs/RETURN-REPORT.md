@@ -1,5 +1,7 @@
 # SL3 rebuild progress for the owner's return
 
+The [7 November Windows handoff](return-to-testing.md) has the current bench results, restored host state and one-approval normal-launch procedure. The checkpoints below retain the earlier engineering history.
+
 ## 6 November packaging checkpoint
 
 **Owner clarified the final experience: install once, then launch Serato normally.** The prepared-session window is interim engineering tooling. The persistent route must make the audio broker available automatically and resolve Serato's installed-device selection without repeated Download Driver/install actions. Phase and timecode vinyl share the same driver; only Phase RCA tracking has been physically demonstrated so far. [Requirements, current dependencies and next boundary](installed-use-target.md)
