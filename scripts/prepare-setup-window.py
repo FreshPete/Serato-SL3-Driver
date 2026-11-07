@@ -25,7 +25,8 @@ def prepare(build_path,expected,kit,experiment,experiment_sha,output):
     with ExitStack() as held:record=api['verify'](experiment,experiment_sha,held)
     require(record['projectRoot']==str(kit),'Prepared experiment belongs to another kit')
     pins={n:sha(ROOT/n) for n in ['src/installer/SetupWindow.cpp','src/installer/SessionWindow.cpp','src/installer/NativeSessionLauncher.cpp',
-        'tests/native/setup_window_tests.cpp','scripts/prepare-setup-window.py','scripts/build-setup-window.ps1','src/installer/SetupResultPipe.hpp']}
+        'tests/native/setup_window_tests.cpp','scripts/prepare-setup-window.py','scripts/build-setup-window.ps1','src/installer/SetupResultPipe.hpp',
+        'src/installer/SetupUsbPrerequisite.hpp']}
     values={'launcher':str(entry),'launcher_sha':build['executableSha256'],'plan':str(experiment),'plan_sha':experiment_sha,'kit_root':str(kit),
         'kit':str(kit/'kit-manifest.json'),'kit_sha':source['kitManifestSha256'],'application':record['application'],'powershell':str(kit/'runtime/powershell')}
     config='#pragma once\nnamespace session_window_config {\n'+''.join('inline const std::wstring '+k+'=L'+json.dumps(v)+';\n' for k,v in values.items())+'}\n'

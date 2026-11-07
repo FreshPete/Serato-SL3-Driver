@@ -21,7 +21,7 @@ def prepare(kit,expected,output):
     files={**files,'kit-manifest.json':{'sha256':expected,'bytes':manifest.stat().st_size},
         'kit-inventory.json':{'sha256':meta['inventorySha256'],'bytes':inventory.stat().st_size}}
     source_names=['src/installer/OnDemandKitEntry.cpp','src/installer/NativeSessionLauncher.cpp','scripts/prepare-on-demand-entry.py','scripts/build-on-demand-entry.ps1',
-        'src/installer/SetupResultPipe.hpp','tests/native/setup_result_pipe_tests.cpp']
+        'src/installer/SetupResultPipe.hpp','src/installer/SetupUsbPrerequisite.hpp','tests/native/setup_result_pipe_tests.cpp']
     pins={n:sha(ROOT/n) for n in source_names}
     header=('#pragma once\n#include <string>\n#include <vector>\n#include <utility>\nnamespace sl3::launcher::release {\n'
         'inline const std::wstring python_sha=L'+json.dumps(meta['pythonExecutableSha256'])+';\n'

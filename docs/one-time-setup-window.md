@@ -12,12 +12,14 @@ This is a host-bound engineering prototype around the [reviewed native entry](na
 
 | Action | Behavior |
 | --- | --- |
-| Check setup | Runs the native read-only experiment check in the background. It checks the selected files/registration and reported Serato process state; it does not open the SL3. |
+| Check setup | Runs the native read-only experiment check in the background. It checks the selected files and registration, whether Serato is closed, and whether Windows reports the UsbDk kernel driver running. |
 | Install | Enabled only for a recognized install/retry state with Serato stopped. It rechecks before requesting Windows administrator approval for the fixed native setup action, then observes the resulting state. |
 | Restore original setup | Enabled only for a recognized non-clean state with Serato stopped. It requests Windows approval for the fixed native restore action, then observes the resulting state. |
 | Diagnostic details | Shows bounded, read-only command output. No upload or message is sent. |
 
 Unknown/conflicting states do not enable privileged actions. The reported running-Serato Boolean disables both installation and restoration; that rule and typed parsing are tested with fixtures without launching Serato. A successful installer exit alone is insufficient for the success label: the following read-only check must observe the expected installed or restored state. Installation success is labelled readiness for a **startup test**, not working audio or DVS.
+
+If UsbDk is unavailable, **Install** stays disabled and **Restore original setup** stays available for recognized recovery states. The administrator entry rechecks the service before installation. This checks Windows service status without starting the service or opening the SL3.
 
 Commands run on a worker thread. While busy, command buttons are disabled and closing the window is refused. The existing read-only job timeout is retained; privileged transactions are not terminated by the window. Cancelled elevation or failed commands do not trigger another operation automatically. The Install/Restore UAC sequence, failure receipts and real partial-state recovery still need an attended test.
 
@@ -32,11 +34,13 @@ Sixteen actual checks cover clean/installed/partial/conflicting eligibility, the
 ## Current private candidate
 
 ```text
-artifacts/build/native-setup-window-reviewed-assets-20261107/build/Release/SL3_Compatibility_Setup.exe
-SHA256 73551fea6fdc5fd19b9c22de6f4d5278dee65d3f7fa522b97a4b313cf03439ef
+artifacts/build/native-setup-window-usb-prerequisite-20261107/build/Release/SL3_Compatibility_Setup.exe
+SHA256 14656a4b63eaf1b004b2a00ee5ca9fefd97ef3e7753527612dc2a762635c2368
 ```
 
-The setup engine now renders the expected archive scripts and deployment plan from the kit's reviewed sources before running PowerShell. It compares the pinned local files with that recipe and the known candidate archive hash. The 34-case moved-entry check refused edited wrappers, helper, plan and archive even when the caller supplied new matching hashes. The rebuilt window passed all 18 checks. The native fixture report SHA-256 is `429844ee721d39f4d12c19fe3e3399293d31d7c1cdffde58ef8900af114eabed`. The window is bound to this PC's prepared record, and the live test still uses one install and two ordinary Serato launches. [Test steps](return-to-testing.md#next-attended-test)
+All three native build checks and 19 window cases passed. The actual Windows check found the running UsbDk kernel service, and the simulated unavailable-service case preserved restoration while disabling installation. The window is bound to this PC's prepared record, and the live test still uses one install and two ordinary Serato launches. [Test steps](return-to-testing.md#next-attended-test)
+
+The same kit renders the expected archive scripts and deployment plan from reviewed sources before running PowerShell. It compares the pinned local files with that recipe and the known candidate archive hash. The earlier 34-case moved-entry check refused edited wrappers, helper, plan and archive even when the caller supplied new matching hashes. The native fixture report SHA-256 is `429844ee721d39f4d12c19fe3e3399293d31d7c1cdffde58ef8900af114eabed`.
 
 ### Earlier install-once build
 

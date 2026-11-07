@@ -3,6 +3,7 @@
 #include "NativeSessionLauncher.cpp"
 #include "setup_config.hpp"
 #include "SetupResultPipe.hpp"
+#include "SetupUsbPrerequisite.hpp"
 #include <set>
 
 namespace sl3::setup {
@@ -55,6 +56,8 @@ int dispatch(int argc,wchar_t** argv){
             (!experiment || (std::wstring(argv[6])==L"--experiment" && std::wstring(argv[8])==L"--expected-experiment-sha256")),"Exact reviewed setup arguments required");
     require(experiment || action==L"--verify" || action==L"--plan" || action==L"--prepare","Known setup entry action required");
     token_requirement(action==L"--apply-experiment" || action==L"--restore-experiment");
+    if(action==L"--apply-experiment")
+        require(sl3::setup_usb::driver_running(),"The UsbDk USB driver must be running before installation");
     const auto root=local_path(argv[3]).lexically_normal(),application=local_path(argv[5]).lexically_normal();
     require(root.native().find(L';')==std::wstring::npos && GetDriveTypeW(root.root_path().c_str())==DRIVE_FIXED,"Local fixed-drive kit without semicolons required");
     std::vector<Handle> leases;std::set<fs::path> directories;pin_directory(leases,directories,root);

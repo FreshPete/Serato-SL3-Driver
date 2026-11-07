@@ -2,17 +2,18 @@
 #define SL3_SESSION_WINDOW_TEST
 #include "SessionWindow.cpp"
 #include "SetupResultPipe.hpp"
+#include "SetupUsbPrerequisite.hpp"
 
 namespace sl3::setup_window {
 using namespace sl3::launcher;
 namespace config=session_window_config;
 enum Action {check=101,install=102,restore=104,details=105};
 struct Eligibility {bool install=false,restore=false,clean=false,installed=false;};
-Eligibility eligibility(const std::wstring& archive,const std::wstring& native,bool running=false){
+Eligibility eligibility(const std::wstring& archive,const std::wstring& native,bool running=false,bool usb_ready=true){
     const bool known_archive=archive==L"original" || archive==L"installed" || archive==L"restored" || archive==L"install-staged" || archive==L"rollback-staged";
     const bool known_native=native==L"absent" || native==L"installed" || native==L"unregistered";
     const bool clean=archive==L"original" && native==L"absent",installed=archive==L"installed" && native==L"installed";
-    return {!running && known_archive && (archive==L"original" || archive==L"install-staged") && (native==L"absent" || native==L"installed"),
+    return {usb_ready && !running && known_archive && (archive==L"original" || archive==L"install-staged") && (native==L"absent" || native==L"installed"),
             !running && known_archive && known_native && !clean,clean,installed};
 }
 bool serato_running(const std::string& raw){
@@ -24,7 +25,7 @@ bool serato_running(const std::string& raw){
     checked(object->GetNamedObject(Microsoft::WRL::Wrappers::HStringReference(L"after").Get(),after.GetAddressOf()),"Read observed setup state");
     boolean running=false;checked(after->GetNamedBoolean(Microsoft::WRL::Wrappers::HStringReference(L"seratoRunning").Get(),&running),"Typed running-state result required");return running!=false;
 }
-struct State:sl3::window::State {Eligibility allowed{};bool running=false;};
+struct State:sl3::window::State {Eligibility allowed{};bool running=false,usb_ready=false;};
 void text(HWND item,const wchar_t* value){SetWindowTextW(item,value);}
 void enable(State& s){
     EnableWindow(s.check_button,!s.preview && !s.busy);
@@ -45,7 +46,8 @@ int inspect(State& s,bool retain_prior=false){
     if(retain_prior){const auto combined=std::string("\nPost-action observation:\n")+raw;s.append(combined.data(),combined.size());}
     if(!code){
         const JsonObject result(raw);require(result.text(L"schema")==L"sl3.on-demand-test-action.v1","Typed setup observation required");
-        const auto after=result.object(L"after");s.running=serato_running(raw);s.allowed=eligibility(after.text(L"archive"),after.object(L"native").text(L"state"),s.running);}
+        const auto after=result.object(L"after");s.running=serato_running(raw);s.usb_ready=sl3::setup_usb::driver_running();
+        s.allowed=eligibility(after.text(L"archive"),after.object(L"native").text(L"state"),s.running,s.usb_ready);}
     return code;
 }
 struct ActionResult {int code=1;sl3::setup_result::Capture capture;std::string transfer_error;};
@@ -143,8 +145,9 @@ LRESULT message(HWND window,UINT message,WPARAM wparam,LPARAM lparam){
             s->worker.join();s->busy=false;
             if(s->code){text(s->progress,s->code==ERROR_CANCELLED?L"Action cancelled":L"Setup needs attention");text(s->description,L"Open diagnostic details for the result. No further action will start automatically.");}
             else if(s->running){text(s->progress,L"Close Serato before continuing");text(s->description,L"Close Serato normally, then choose Check setup again.\r\nInstall and restore are disabled while it is running.");}
-            else if(s->allowed.installed){text(s->progress,L"Installed — ready for a Serato startup test");text(s->description,L"Open Serato normally to test the SL3.\r\nThis window does not start or control Serato.");}
             else if(s->action==restore && s->allowed.clean){text(s->progress,L"Original setup restored");text(s->description,L"The compatibility files and temporary driver registration have been removed.");}
+            else if(!s->usb_ready){text(s->progress,L"UsbDk is unavailable");text(s->description,L"The UsbDk USB driver must be installed and running.\r\nChoose Check setup again when UsbDk is ready.");}
+            else if(s->allowed.installed){text(s->progress,L"Installed — ready for a Serato startup test");text(s->description,L"Open Serato normally to test the SL3.\r\nThis window does not start or control Serato.");}
             else{text(s->progress,s->allowed.install?L"Ready to install this development build":L"Setup needs review");text(s->description,s->allowed.install?
                 L"Install will ask Windows for administrator approval.\r\nYou will not need this window for normal Serato use after validation.":L"Open diagnostic details. Keep the prepared records for reviewed recovery.");}
             enable(*s);

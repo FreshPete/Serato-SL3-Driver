@@ -9,6 +9,10 @@ int main(){
         const auto installed=eligibility(L"installed",L"installed");require(installed.installed && installed.restore && !installed.install,"Installed setup eligibility");++cases;
         const auto partial=eligibility(L"original",L"installed");require(partial.install && partial.restore && !partial.clean,"Partial install retry/recovery eligibility");++cases;
         const auto running=eligibility(L"original",L"absent",true);require(!running.install && !running.restore,"Running Serato must disable install/restore");++cases;
+        const auto no_usb=eligibility(L"original",L"absent",false,false);
+        const auto recover_no_usb=eligibility(L"original",L"installed",false,false);
+        require(no_usb.clean && !no_usb.install && !no_usb.restore && !recover_no_usb.install && recover_no_usb.restore,
+                "Unavailable UsbDk must disable installation and keep recovery available");++cases;
         checked(RoInitialize(RO_INIT_SINGLETHREADED),"Initialize own result-parser test");
         require(serato_running("{\"after\":{\"seratoRunning\":true}}") && !serato_running("{\"after\":{\"seratoRunning\":false}}"),"Typed running-state parsing");RoUninitialize();++cases;
         for(const auto& pair:std::vector<std::pair<std::wstring,std::wstring>>{{L"conflict",L"absent"},{L"original",L"conflict"},{L"unknown",L"installed"}}){
