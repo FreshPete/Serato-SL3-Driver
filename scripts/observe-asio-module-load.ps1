@@ -5,7 +5,8 @@ param(
     [Parameter(Mandatory)][ValidatePattern('^[0-9a-fA-F]{64}$')][string]$ApplicationSha256,
     [Parameter(Mandatory)][string]$Module,
     [Parameter(Mandatory)][ValidatePattern('^[0-9a-fA-F]{64}$')][string]$ModuleSha256,
-    [ValidateRange(1,120)][int]$TimeoutSeconds = 30
+    [ValidateRange(1,120)][int]$TimeoutSeconds = 30,
+    [ValidateRange(0,15)][int]$FollowUpSeconds = 0
 )
 
 $ErrorActionPreference = 'Stop'
@@ -32,7 +33,10 @@ $armedFileTime = $armedUtc.ToFileTimeUtc()
 $clock = [Diagnostics.Stopwatch]::StartNew()
 $observed = $null
 $modulePath = $null
+$firstModuleSampleMs = 0L
 $samples = 0
+$followUpSamples = 0
+$disappearanceSampled = $false
 $queryErrors = 0
 [Console]::Error.WriteLine('Module observer armed. Launch the application normally.')
 
@@ -53,7 +57,13 @@ do {
                 if (-not $after.alive -or $after.creationFileTimeUtc -ne $before.creationFileTimeUtc -or
                     $after.imagePath -ne $before.imagePath) { continue }
                 $samples++
-                if ($match) { $modulePath = $match.FileName }
+                if ($modulePath) {
+                    $followUpSamples++
+                    if (-not $match) { $disappearanceSampled = $true }
+                } elseif ($match) {
+                    $modulePath = $match.FileName
+                    $firstModuleSampleMs = $clock.ElapsedMilliseconds
+                }
             } catch [ComponentModel.Win32Exception], [Management.Automation.MethodInvocationException],
                     [Management.Automation.GetValueInvocationException] {
                 $queryErrors++
@@ -62,7 +72,8 @@ do {
             $process.Dispose()
         }
     }
-    if ($modulePath -or $clock.Elapsed.TotalSeconds -ge $TimeoutSeconds) { break }
+    if ($clock.Elapsed.TotalSeconds -ge $TimeoutSeconds -or
+        ($modulePath -and $clock.ElapsedMilliseconds - $firstModuleSampleMs -ge $FollowUpSeconds * 1000)) { break }
     Start-Sleep -Milliseconds 250
 } while ($clock.Elapsed.TotalSeconds -lt $TimeoutSeconds)
 
@@ -76,6 +87,8 @@ Confirm-File $Module $ModuleSha256
     moduleFileSha256 = $ModuleSha256.ToLowerInvariant()
     process = $observed
     completedModuleSamples = $samples
+    followUpModuleSamples = $followUpSamples
+    moduleDisappearanceSampled = $disappearanceSampled
     queryErrors = $queryErrors
     modulePathObserved = $modulePath
     asioCallsObserved = $false

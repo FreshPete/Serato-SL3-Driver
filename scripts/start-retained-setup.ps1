@@ -49,6 +49,7 @@ function Publish-TrialReadout([string]$Python,[string]$Folder,[bool]$SetupExited
     $result = $raw | ConvertFrom-Json
     if ($result.schema -ne 'sl3.retained-start-readout.v1') { throw 'Unexpected startup readout.' }
     Write-Host ('Serato process sampled: {0}. ASIO driver sampled: {1}.' -f $result.ordinaryProcessObserved,$result.moduleLoadObserved)
+    if ($result.moduleDisappearanceSampled) { Write-Host 'A later sample of the same Serato process showed the driver had disappeared.' }
     Write-Host ('Broker replies to that process: {0} admissions, {1} stream starts.' -f
         $result.matchingAdmissionReplies,$result.matchingStreamStartReplies)
     Write-Host ('Startup summary saved to {0}' -f $output)
@@ -71,11 +72,12 @@ function Invoke-ReviewedTrial($Record, $SetupProcess) {
         if (($startup | ConvertFrom-Json).outcome -ne 'broker_ready') { throw 'Unexpected retained USB result.' }
 
         Write-Host 'When the observer is armed, open Serato from its usual shortcut. Leave playback stopped.'
-        Write-Host 'Note what Serato shows and close it normally. Leave any Download Driver notice untouched.'
+        Write-Host 'Note what Serato shows. Keep it open for five seconds after hardware status appears, then close it normally.'
+        Write-Host 'Leave any Download Driver notice untouched.'
         $module = Join-Path $env:ProgramFiles 'SL3 Rebuild/on-demand-diagnostic-v2/sl3_asio.dll'
         $observed = & $observer -Application $Record.application -Module $module `
             -ApplicationSha256 $Record.applicationSha256 `
-            -ModuleSha256 '9d41ddcc0de481cd966d6786b15e656a3dcc6e4d71191815e6431a4009a9be55' -TimeoutSeconds 45
+            -ModuleSha256 '9d41ddcc0de481cd966d6786b15e656a3dcc6e4d71191815e6431a4009a9be55' -TimeoutSeconds 45 -FollowUpSeconds 5
         if (($observed | ConvertFrom-Json).schema -ne 'sl3.asio-module-observation.v1') {
             throw 'Unexpected module observation result.'
         }
@@ -141,9 +143,9 @@ try {
     if (-not ($Run -or $Trial)) { $preflight; return }
     if ($Trial) {
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'retained-desktop-trial.py') 'db0498983dba2a61d963685807bdfdaf89597c07244f220c2092aea4c10ac45d'
-        Hold-ReviewedFile (Join-Path $PSScriptRoot 'observe-asio-module-load.ps1') '37112dd7dc325d4deb7be713fb83dcde9bf86b20dcb3856316c74a810ffb3a0b'
+        Hold-ReviewedFile (Join-Path $PSScriptRoot 'observe-asio-module-load.ps1') '97f15e24e861f8cd82c68ee0723c598382ecf6e41511790c7ea1c12a9147bf0d'
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'inspect-process.psm1') '6ffb8427f79ebd173fd31e9824442293eb66689107fe63307204f76a6db4a290'
-        Hold-ReviewedFile (Join-Path $PSScriptRoot 'read-retained-start-result.py') 'f2c363d6a71f0e3cda33e169cb1a7d55e94124fe15bda0fdc43477d1d5bce9c7'
+        Hold-ReviewedFile (Join-Path $PSScriptRoot 'read-retained-start-result.py') 'd4b91ac3dd7fffa24a6f2ce25a5347d61dfcf1928ccb1f29f711a776e103f012'
         $confirmation = Read-Host 'Power-cycle the SL3 for 30 seconds, reconnect it, wait 30 seconds, close Serato and type RECOVERED'
         if ($confirmation -cne 'RECOVERED') { Write-Host 'Test canceled before setup.'; return }
     }

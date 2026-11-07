@@ -40,6 +40,18 @@ class ReadoutTests(unittest.TestCase):
         self.assertFalse(result['moduleLoadObserved'])
         self.assertEqual(result['matchingAdmissionReplies'],1)
 
+    def test_module_disappearance_requires_a_later_same_process_sample(self):
+        observer = {**OBSERVER,'completedModuleSamples':3,'followUpModuleSamples':2,'moduleDisappearanceSampled':True}
+        result = API['summarize'](observer,BROKER)
+        self.assertTrue(result['moduleDisappearanceSampled'])
+        self.assertEqual(result['followUpModuleSamples'],2)
+        self.assertFalse(result['applicationCallbacksVerified'])
+        self.assertIsNone(API['summarize'](OBSERVER,BROKER)['moduleDisappearanceSampled'])
+        for invalid in ({**observer,'followUpModuleSamples':0},{**observer,'modulePathObserved':None},
+                        {**observer,'completedModuleSamples':2}):
+            with self.subTest(observer=invalid), self.assertRaises(ValueError):
+                API['summarize'](invalid,BROKER)
+
     def test_interrupted_client_and_worker_release_are_separate(self):
         broker = {**BROKER,'failed':True,'clientObservations':[{**CLIENT,'detachAcknowledged':False}]}
         result = API['summarize'](OBSERVER,broker)

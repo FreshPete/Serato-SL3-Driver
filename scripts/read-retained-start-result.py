@@ -51,6 +51,13 @@ def summarize(observer, broker, restore=None):
     require(module is None or (isinstance(module,str) and module and selected is not None and
                                type(observer.get('completedModuleSamples')) is int and observer['completedModuleSamples']>0),
             'Module observation lacks a matching sampled process')
+    follow_up = observer.get('followUpModuleSamples')
+    disappeared = observer.get('moduleDisappearanceSampled')
+    if 'followUpModuleSamples' in observer or 'moduleDisappearanceSampled' in observer:
+        total = observer.get('completedModuleSamples')
+        require(type(total) is int and type(follow_up) is int and 0<=follow_up<=total and
+                type(disappeared) is bool and (not follow_up or (module and follow_up<total)) and
+                (not disappeared or follow_up>0),'Inconsistent module follow-up observation')
 
     require(broker.get('schema')=='sl3.broker-controller-result.v1' and broker.get('kind') in ('native','simulated'),
             'Expected the completed broker result')
@@ -80,6 +87,7 @@ def summarize(observer, broker, restore=None):
     return {'schema':'sl3.retained-start-readout.v1','brokerKind':broker['kind'],'nativeAcquisitionReported':acquired,
             'applicationFileSha256':observer['applicationSha256'],'moduleFileSha256':observer['moduleFileSha256'],
             'ordinaryProcessObserved':selected is not None,'moduleLoadObserved':bool(module),
+            'followUpModuleSamples':follow_up,'moduleDisappearanceSampled':disappeared,
             'matchingChallengedConnections':len(matched),
             'matchingAdmissionReplies':sum(row['admissionReplySent'] for row in matched),
             'matchingStreamStartReplies':sum(row['streamStartReplies'] for row in matched),
