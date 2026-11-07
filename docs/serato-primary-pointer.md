@@ -63,3 +63,21 @@ The second positive trace also confirms the selected pointer is an SL3 descripto
 The manager initializer and constructor probes were armed and recorded no calls in the saved windows. The installer path still provides a directly observed route from primary selection to audio. The old handler probe cannot establish whether an arrival reached the USB manager. It read the third argument, while the handler reads the message ID at offset `0x0c` of the message passed as the second argument. A future delivery trace needs to read that field and distinguish queue admission, listener lookup and handler entry. [Handler instructions](evidence/serato500-usb-audio-removal.json) · [Dispatch boundaries](serato-usb-subscription.md)
 
 Run `scripts/export-serato-startup-routes.py --workspace <workspace-trace> --two-deck <phase-trace> --selection <selection-trace>` with the three private trace files and their adjacent saved observer sources identified by the hashes in the report. Two regenerations matched byte for byte, and substituting the wrong capture was refused. These captures establish the earlier assisted route. The prepared launch from the usual shortcut with the retained broker still needs a live test.
+
+## Other callers of the primary pointer message
+
+The original 5.0.0.1278 image has five checked direct paths that construct pointer message `0x2ca` with a descriptor. MIDI selection, installer completion and the USB audio manager call the generic publisher. Two HID paths construct the message directly, so a probe on the generic publisher alone misses both. Five other checked calls use a null payload, which clears selection. The installed-driver notice uses its own message ID. [Caller and instruction inventory](evidence/serato-primary-publishers-20261107.json)
+
+| Descriptor source | Call site | Boundary for the SL3 |
+| --- | --- | --- |
+| MIDI selection | `1405294b2` | The observed MIDI path requires readiness and a matching primary candidate. |
+| Installer completion | `1405b0c48` | The attended captures used this route. |
+| USB audio manager | `140710280` | This route still needs a live arrival and selection trace. |
+| Existing HID connection | `140545b53` | The retained HID descriptor passes slot `+0x90` and the manager's state checks. |
+| New HID connection | `140546aa6` | The incoming descriptor passes HID section, slot `+0x90` and manager state checks. |
+
+The actual prepared SL3 archive contains a `native_pro_device` with `has_hid=false` and no HID or MIDI sections. For the concrete [ControllerDescriptor getter](serato-hid-verifier.md#the-preceding-virtual-check-is-now-identified-conditionally), slot `+0x90` requires `has_hid` and kind `native_intro_device`. The HID paths therefore provide no selection route for that prepared descriptor through this implementation. The historical SL3 definition also lacked those sections and used its separate DriverAPI handshake. Phase's own HID connection remains distinct from SL3 primary selection. [Historical descriptor comparison](serato-legacy-sl3-descriptor.md)
+
+The [inspector](../scripts/inspect-serato-primary-publishers.py) checks 99 direct call sites across the generic publisher, the pointer constructor and two forwarding helpers. It verifies each candidate at a decoded instruction boundary in the pinned executable and checks the exact prepared archive. Two callers of the second publisher load message IDs from object fields, so the result leaves those IDs and indirect calls unresolved. It does not infer runtime call order from the local instruction windows.
+
+If the ordinary launch stays offline, the next private selection trace can watch the pointer constructor for `0x2ca` and record its caller and whether the payload is null. The constructor probe passed four software cases for both HID call sites, a null selection and an unrelated message. The passive module observation remains the first live check, and the constructor probe has yet to run in Serato.

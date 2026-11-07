@@ -17,6 +17,8 @@ This is a local control-flow conclusion. It does not identify the complete seman
 
 The working temporary route obtains the handoff through actual installer completion and the genuine SL3 descriptor. Before changing startup, the prepared attended manual-close test should establish whether the smaller shim and new shutdown diagnostics work. A future installed-driver reconnection experiment must verify the selected driver and live broker first, preserve the real registered descriptor and normal authorization checks, and report actual ASIO start. A permanent route has not been implemented or validated by this branch inspection.
 
+The later [pointer-message inventory](serato-primary-pointer.md#other-callers-of-the-primary-pointer-message) verifies two direct HID publishers as well as the MIDI, USB and installer paths. The checked HID gates exclude the prepared SL3 profile. Use the ordinary launch to observe actual USB discovery and ASIO activation before choosing a deeper selection trace.
+
 Reproduce against the unchanged installed executable:
 
 ```powershell

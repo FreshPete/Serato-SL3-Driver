@@ -1,0 +1,891 @@
+{
+  "schema": "sl3.serato-primary-publishers.v1",
+  "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "directCallArguments": {
+    "0x1404db170": [
+      {
+        "call": "0x140527b28",
+        "function": "0x140527740",
+        "argumentInstruction": "0x140527b1c",
+        "idSource": "0x2ca",
+        "literalId": "0x2ca"
+      },
+      {
+        "call": "0x1405294b2",
+        "function": "0x140529090",
+        "argumentInstruction": "0x1405294a6",
+        "idSource": "0x2ca",
+        "literalId": "0x2ca"
+      },
+      {
+        "call": "0x140545666",
+        "function": "0x1405452b0",
+        "argumentInstruction": "0x14054565a",
+        "idSource": "0x2ca",
+        "literalId": "0x2ca"
+      },
+      {
+        "call": "0x1405b0c16",
+        "function": "0x1405b0a40",
+        "argumentInstruction": "0x1405b0c0a",
+        "idSource": "0x51",
+        "literalId": "0x51"
+      },
+      {
+        "call": "0x1405b0c48",
+        "function": "0x1405b0a40",
+        "argumentInstruction": "0x1405b0c3c",
+        "idSource": "0x2ca",
+        "literalId": "0x2ca"
+      },
+      {
+        "call": "0x140710280",
+        "function": "0x1407100b0",
+        "argumentInstruction": "0x140710274",
+        "idSource": "0x2ca",
+        "literalId": "0x2ca"
+      },
+      {
+        "call": "0x1421739d4",
+        "function": "0x142173830",
+        "argumentInstruction": "0x1421739c8",
+        "idSource": "0x590",
+        "literalId": "0x590"
+      },
+      {
+        "call": "0x142173b60",
+        "function": "0x142173830",
+        "argumentInstruction": "0x142173b54",
+        "idSource": "0x590",
+        "literalId": "0x590"
+      },
+      {
+        "call": "0x1421752b0",
+        "function": "0x142174b40",
+        "argumentInstruction": "0x1421752a7",
+        "idSource": "0x590",
+        "literalId": "0x590"
+      },
+      {
+        "call": "0x142176107",
+        "function": "0x142176030",
+        "argumentInstruction": "0x1421760fb",
+        "idSource": "0x590",
+        "literalId": "0x590"
+      }
+    ],
+    "0x14185ee90": [
+      {
+        "call": "0x1404db0eb",
+        "function": "0x1404db050",
+        "argumentInstruction": "0x1404db0e3",
+        "idSource": "0x14",
+        "literalId": "0x14"
+      },
+      {
+        "call": "0x1404db1d1",
+        "function": "0x1404db170",
+        "argumentInstruction": "0x1404db1cc",
+        "idSource": "ebp",
+        "literalId": null
+      },
+      {
+        "call": "0x1404dfe71",
+        "function": "0x1404dfe10",
+        "argumentInstruction": "0x1404dfe6c",
+        "idSource": "ebp",
+        "literalId": null
+      },
+      {
+        "call": "0x1404e2f95",
+        "function": "0x1404e2a90",
+        "argumentInstruction": "0x1404e2f8d",
+        "idSource": "0x263",
+        "literalId": "0x263"
+      },
+      {
+        "call": "0x1404e32d2",
+        "function": "0x1404e2a90",
+        "argumentInstruction": "0x1404e32ca",
+        "idSource": "0x255",
+        "literalId": "0x255"
+      },
+      {
+        "call": "0x140545b53",
+        "function": "0x140545890",
+        "argumentInstruction": "0x140545b4b",
+        "idSource": "0x2ca",
+        "literalId": "0x2ca"
+      },
+      {
+        "call": "0x140546aa6",
+        "function": "0x140546110",
+        "argumentInstruction": "0x140546a9e",
+        "idSource": "0x2ca",
+        "literalId": "0x2ca"
+      },
+      {
+        "call": "0x14056902a",
+        "function": "0x140568fd0",
+        "argumentInstruction": "0x140569022",
+        "idSource": "0x11a",
+        "literalId": "0x11a"
+      },
+      {
+        "call": "0x1405690c5",
+        "function": "0x140569070",
+        "argumentInstruction": "0x1405690bd",
+        "idSource": "0x11a",
+        "literalId": "0x11a"
+      },
+      {
+        "call": "0x140569cdf",
+        "function": "0x140569c20",
+        "argumentInstruction": "0x140569cd7",
+        "idSource": "0x11a",
+        "literalId": "0x11a"
+      },
+      {
+        "call": "0x14056af0d",
+        "function": "0x14056aea0",
+        "argumentInstruction": "0x14056af05",
+        "idSource": "0x11a",
+        "literalId": "0x11a"
+      },
+      {
+        "call": "0x14056bd52",
+        "function": "0x14056bc60",
+        "argumentInstruction": "0x14056bd4a",
+        "idSource": "0x11a",
+        "literalId": "0x11a"
+      },
+      {
+        "call": "0x14056bfa9",
+        "function": "0x14056bf30",
+        "argumentInstruction": "0x14056bfa1",
+        "idSource": "0x11a",
+        "literalId": "0x11a"
+      },
+      {
+        "call": "0x1405b64c2",
+        "function": "0x1405b6330",
+        "argumentInstruction": "0x1405b64ba",
+        "idSource": "0x727",
+        "literalId": "0x727"
+      },
+      {
+        "call": "0x140608bb9",
+        "function": "0x140608630",
+        "argumentInstruction": "0x140608bb1",
+        "idSource": "0x2af",
+        "literalId": "0x2af"
+      },
+      {
+        "call": "0x14061d241",
+        "function": "0x14061cd50",
+        "argumentInstruction": "0x14061d239",
+        "idSource": "0x3d9",
+        "literalId": "0x3d9"
+      },
+      {
+        "call": "0x14061e4a8",
+        "function": "0x14061e410",
+        "argumentInstruction": "0x14061e4a0",
+        "idSource": "0x3da",
+        "literalId": "0x3da"
+      },
+      {
+        "call": "0x14066edd6",
+        "function": "0x14066e970",
+        "argumentInstruction": "0x14066edce",
+        "idSource": "0x3f4",
+        "literalId": "0x3f4"
+      },
+      {
+        "call": "0x14066f227",
+        "function": "0x14066f190",
+        "argumentInstruction": "0x14066f21f",
+        "idSource": "0x3f4",
+        "literalId": "0x3f4"
+      },
+      {
+        "call": "0x14068d03a",
+        "function": "0x14068ce20",
+        "argumentInstruction": "0x14068d032",
+        "idSource": "0x350",
+        "literalId": "0x350"
+      },
+      {
+        "call": "0x14068d414",
+        "function": "0x14068ce20",
+        "argumentInstruction": "0x14068d40c",
+        "idSource": "0x3bb",
+        "literalId": "0x3bb"
+      },
+      {
+        "call": "0x14068d48b",
+        "function": "0x14068ce20",
+        "argumentInstruction": "0x14068d483",
+        "idSource": "0x354",
+        "literalId": "0x354"
+      },
+      {
+        "call": "0x14068d595",
+        "function": "0x14068ce20",
+        "argumentInstruction": "0x14068d58d",
+        "idSource": "0x350",
+        "literalId": "0x350"
+      },
+      {
+        "call": "0x140690fec",
+        "function": "0x140690f70",
+        "argumentInstruction": "0x140690fe4",
+        "idSource": "0x389",
+        "literalId": "0x389"
+      },
+      {
+        "call": "0x14069123e",
+        "function": "0x140691110",
+        "argumentInstruction": "0x140691236",
+        "idSource": "0x384",
+        "literalId": "0x384"
+      },
+      {
+        "call": "0x1406913e1",
+        "function": "0x140691280",
+        "argumentInstruction": "0x1406913d9",
+        "idSource": "0x378",
+        "literalId": "0x378"
+      },
+      {
+        "call": "0x14069286f",
+        "function": "0x1406927f0",
+        "argumentInstruction": "0x140692867",
+        "idSource": "0x370",
+        "literalId": "0x370"
+      },
+      {
+        "call": "0x140692ace",
+        "function": "0x1406929a0",
+        "argumentInstruction": "0x140692ac6",
+        "idSource": "0x36c",
+        "literalId": "0x36c"
+      },
+      {
+        "call": "0x140692c7a",
+        "function": "0x140692b10",
+        "argumentInstruction": "0x140692c72",
+        "idSource": "0x365",
+        "literalId": "0x365"
+      },
+      {
+        "call": "0x1406e3ff7",
+        "function": "0x1406e3f60",
+        "argumentInstruction": "0x1406e3fef",
+        "idSource": "0x11a",
+        "literalId": "0x11a"
+      },
+      {
+        "call": "0x1406fec69",
+        "function": "0x1406febb0",
+        "argumentInstruction": "0x1406fec61",
+        "idSource": "0x11a",
+        "literalId": "0x11a"
+      },
+      {
+        "call": "0x14071062c",
+        "function": "0x1407103b0",
+        "argumentInstruction": "0x140710624",
+        "idSource": "0x2ca",
+        "literalId": "0x2ca"
+      },
+      {
+        "call": "0x140718ae2",
+        "function": "0x1407188e0",
+        "argumentInstruction": "0x140718ada",
+        "idSource": "0x2e0",
+        "literalId": "0x2e0"
+      },
+      {
+        "call": "0x140718d6c",
+        "function": "0x140718b20",
+        "argumentInstruction": "0x140718d64",
+        "idSource": "0x2ca",
+        "literalId": "0x2ca"
+      },
+      {
+        "call": "0x140746b1d",
+        "function": "0x140746ad0",
+        "argumentInstruction": "0x140746b15",
+        "idSource": "0x37b",
+        "literalId": "0x37b"
+      },
+      {
+        "call": "0x14074997d",
+        "function": "0x140749930",
+        "argumentInstruction": "0x140749975",
+        "idSource": "0x366",
+        "literalId": "0x366"
+      },
+      {
+        "call": "0x1407648a3",
+        "function": "0x140764800",
+        "argumentInstruction": "0x14076489b",
+        "idSource": "0x55c",
+        "literalId": "0x55c"
+      },
+      {
+        "call": "0x14076499a",
+        "function": "0x1407648e0",
+        "argumentInstruction": "0x140764992",
+        "idSource": "0x559",
+        "literalId": "0x559"
+      },
+      {
+        "call": "0x140764aa0",
+        "function": "0x1407649e0",
+        "argumentInstruction": "0x140764a98",
+        "idSource": "0x55a",
+        "literalId": "0x55a"
+      },
+      {
+        "call": "0x140764ba9",
+        "function": "0x140764ae0",
+        "argumentInstruction": "0x140764ba1",
+        "idSource": "0x55b",
+        "literalId": "0x55b"
+      },
+      {
+        "call": "0x1407943a9",
+        "function": "0x140794320",
+        "argumentInstruction": "0x1407943a1",
+        "idSource": "0x5e8",
+        "literalId": "0x5e8"
+      },
+      {
+        "call": "0x1407974fb",
+        "function": "0x1407974a0",
+        "argumentInstruction": "0x1407974f3",
+        "idSource": "0x5e6",
+        "literalId": "0x5e6"
+      },
+      {
+        "call": "0x14079756c",
+        "function": "0x1407974a0",
+        "argumentInstruction": "0x140797564",
+        "idSource": "0x5e7",
+        "literalId": "0x5e7"
+      },
+      {
+        "call": "0x1407a285a",
+        "function": "0x1407a2810",
+        "argumentInstruction": "0x1407a2852",
+        "idSource": "0x590",
+        "literalId": "0x590"
+      },
+      {
+        "call": "0x1407bb704",
+        "function": "0x1407bb5d0",
+        "argumentInstruction": "0x1407bb6fc",
+        "idSource": "0x2ad",
+        "literalId": "0x2ad"
+      },
+      {
+        "call": "0x1407bb7df",
+        "function": "0x1407bb750",
+        "argumentInstruction": "0x1407bb7da",
+        "idSource": "0x2ae",
+        "literalId": "0x2ae"
+      },
+      {
+        "call": "0x1407bbf32",
+        "function": "0x1407bbeb0",
+        "argumentInstruction": "0x1407bbf2a",
+        "idSource": "0x2b0",
+        "literalId": "0x2b0"
+      },
+      {
+        "call": "0x1407bbf92",
+        "function": "0x1407bbeb0",
+        "argumentInstruction": "0x1407bbf8a",
+        "idSource": "0x2b1",
+        "literalId": "0x2b1"
+      },
+      {
+        "call": "0x1407bc040",
+        "function": "0x1407bbfe0",
+        "argumentInstruction": "0x1407bc038",
+        "idSource": "0x2b1",
+        "literalId": "0x2b1"
+      },
+      {
+        "call": "0x1407bc33a",
+        "function": "0x1407bc080",
+        "argumentInstruction": "0x1407bc332",
+        "idSource": "0x2ae",
+        "literalId": "0x2ae"
+      },
+      {
+        "call": "0x1407c33ff",
+        "function": "0x1407c31d0",
+        "argumentInstruction": "0x1407c33f7",
+        "idSource": "0x61f",
+        "literalId": "0x61f"
+      },
+      {
+        "call": "0x14082aa5b",
+        "function": "0x14082a960",
+        "argumentInstruction": "0x14082aa53",
+        "idSource": "0x314",
+        "literalId": "0x314"
+      },
+      {
+        "call": "0x1413737f6",
+        "function": "0x1413735f0",
+        "argumentInstruction": "0x1413737ee",
+        "idSource": "0x2cb",
+        "literalId": "0x2cb"
+      },
+      {
+        "call": "0x141373ba0",
+        "function": "0x141373a40",
+        "argumentInstruction": "0x141373b98",
+        "idSource": "0x2ca",
+        "literalId": "0x2ca"
+      },
+      {
+        "call": "0x14153b3a8",
+        "function": "0x14153b280",
+        "argumentInstruction": "0x14153b3a0",
+        "idSource": "0x2cb",
+        "literalId": "0x2cb"
+      },
+      {
+        "call": "0x14154be5e",
+        "function": "0x14154bdc0",
+        "argumentInstruction": "0x14154be58",
+        "idSource": "r15d",
+        "literalId": null
+      },
+      {
+        "call": "0x14154bec0",
+        "function": "0x14154bdc0",
+        "argumentInstruction": "0x14154beba",
+        "idSource": "r15d",
+        "literalId": null
+      },
+      {
+        "call": "0x14213ead4",
+        "function": "0x14213ddc0",
+        "argumentInstruction": "0x14213eacc",
+        "idSource": "0x2d4",
+        "literalId": "0x2d4"
+      },
+      {
+        "call": "0x14213f06e",
+        "function": "0x14213f020",
+        "argumentInstruction": "0x14213f066",
+        "idSource": "0x4fd",
+        "literalId": "0x4fd"
+      },
+      {
+        "call": "0x14213f12e",
+        "function": "0x14213f0e0",
+        "argumentInstruction": "0x14213f126",
+        "idSource": "0x4fe",
+        "literalId": "0x4fe"
+      },
+      {
+        "call": "0x14213f1f4",
+        "function": "0x14213f1a0",
+        "argumentInstruction": "0x14213f1ec",
+        "idSource": "0x4fe",
+        "literalId": "0x4fe"
+      },
+      {
+        "call": "0x14213f6ce",
+        "function": "0x14213f680",
+        "argumentInstruction": "0x14213f6c6",
+        "idSource": "0x50",
+        "literalId": "0x50"
+      },
+      {
+        "call": "0x14213f78e",
+        "function": "0x14213f740",
+        "argumentInstruction": "0x14213f786",
+        "idSource": "0x52",
+        "literalId": "0x52"
+      },
+      {
+        "call": "0x142140e1f",
+        "function": "0x142140100",
+        "argumentInstruction": "0x142140e17",
+        "idSource": "0x2d5",
+        "literalId": "0x2d5"
+      }
+    ],
+    "0x1404dfe10": [
+      {
+        "call": "0x140567703",
+        "function": "0x1405676a0",
+        "argumentInstruction": "0x1405676fa",
+        "idSource": "0x11a",
+        "literalId": "0x11a"
+      },
+      {
+        "call": "0x140567798",
+        "function": "0x14056774c",
+        "argumentInstruction": "0x14056778b",
+        "idSource": "0x11a",
+        "literalId": "0x11a"
+      },
+      {
+        "call": "0x140568de2",
+        "function": "0x140568da0",
+        "argumentInstruction": "0x140568dd9",
+        "idSource": "0x11a",
+        "literalId": "0x11a"
+      },
+      {
+        "call": "0x140568ee2",
+        "function": "0x140568ea0",
+        "argumentInstruction": "0x140568ed9",
+        "idSource": "0x11a",
+        "literalId": "0x11a"
+      },
+      {
+        "call": "0x140569bf1",
+        "function": "0x140569ba0",
+        "argumentInstruction": "0x140569be8",
+        "idSource": "0x11a",
+        "literalId": "0x11a"
+      },
+      {
+        "call": "0x14056bec9",
+        "function": "0x14056bd90",
+        "argumentInstruction": "0x14056bebd",
+        "idSource": "0x11a",
+        "literalId": "0x11a"
+      },
+      {
+        "call": "0x140584373",
+        "function": "0x1405842b7",
+        "argumentInstruction": "0x14058435e",
+        "idSource": "0x11a",
+        "literalId": "0x11a"
+      },
+      {
+        "call": "0x140587703",
+        "function": "0x140587670",
+        "argumentInstruction": "0x1405876f7",
+        "idSource": "0x11a",
+        "literalId": "0x11a"
+      },
+      {
+        "call": "0x14061e53a",
+        "function": "0x14061e410",
+        "argumentInstruction": "0x14061e52e",
+        "idSource": "0x3da",
+        "literalId": "0x3da"
+      },
+      {
+        "call": "0x14066f29e",
+        "function": "0x14066f190",
+        "argumentInstruction": "0x14066f292",
+        "idSource": "0x3f4",
+        "literalId": "0x3f4"
+      },
+      {
+        "call": "0x140718e32",
+        "function": "0x140718b20",
+        "argumentInstruction": "0x140718e26",
+        "idSource": "0x2e0",
+        "literalId": "0x2e0"
+      },
+      {
+        "call": "0x14079580d",
+        "function": "0x140795400",
+        "argumentInstruction": "0x1407957d9",
+        "idSource": "dword ptr [rdi + 0x2c0]",
+        "literalId": null
+      },
+      {
+        "call": "0x140795841",
+        "function": "0x140795400",
+        "argumentInstruction": "0x140795835",
+        "idSource": "0x5e6",
+        "literalId": "0x5e6"
+      },
+      {
+        "call": "0x140795881",
+        "function": "0x140795400",
+        "argumentInstruction": "0x14079584d",
+        "idSource": "dword ptr [rdi + 0x2d0]",
+        "literalId": null
+      },
+      {
+        "call": "0x1407958b5",
+        "function": "0x140795400",
+        "argumentInstruction": "0x1407958a9",
+        "idSource": "0x5e7",
+        "literalId": "0x5e7"
+      },
+      {
+        "call": "0x14214fe05",
+        "function": "0x14214f460",
+        "argumentInstruction": "0x14214fdf9",
+        "idSource": "0x5a3",
+        "literalId": "0x5a3"
+      },
+      {
+        "call": "0x14214fe2d",
+        "function": "0x14214f460",
+        "argumentInstruction": "0x14214fe21",
+        "idSource": "0x5a2",
+        "literalId": "0x5a2"
+      },
+      {
+        "call": "0x142174f6e",
+        "function": "0x142174b40",
+        "argumentInstruction": "0x142174f65",
+        "idSource": "0x590",
+        "literalId": "0x590"
+      },
+      {
+        "call": "0x14217583d",
+        "function": "0x142174b40",
+        "argumentInstruction": "0x142175834",
+        "idSource": "0x590",
+        "literalId": "0x590"
+      },
+      {
+        "call": "0x142175868",
+        "function": "0x142174b40",
+        "argumentInstruction": "0x14217585f",
+        "idSource": "0x590",
+        "literalId": "0x590"
+      }
+    ],
+    "0x14154bdc0": [
+      {
+        "call": "0x140745fe3",
+        "function": "0x1407457b0",
+        "argumentInstruction": "0x140745fda",
+        "idSource": "0x37b",
+        "literalId": "0x37b"
+      },
+      {
+        "call": "0x140748f89",
+        "function": "0x140748840",
+        "argumentInstruction": "0x140748f80",
+        "idSource": "0x366",
+        "literalId": "0x366"
+      },
+      {
+        "call": "0x140792e5a",
+        "function": "0x140792d90",
+        "argumentInstruction": "0x140792e52",
+        "idSource": "0x5ff",
+        "literalId": "0x5ff"
+      },
+      {
+        "call": "0x14212cb26",
+        "function": "0x14212c870",
+        "argumentInstruction": "0x14212cb1d",
+        "idSource": "0x5ff",
+        "literalId": "0x5ff"
+      },
+      {
+        "call": "0x14217316c",
+        "function": "0x142172a80",
+        "argumentInstruction": "0x142173164",
+        "idSource": "0x590",
+        "literalId": "0x590"
+      }
+    ]
+  },
+  "nonNullSelectionPaths": {
+    "0x1405294b2": "midi",
+    "0x1405b0c48": "installer_completion",
+    "0x140710280": "usb_audio_manager",
+    "0x140545b53": "hid_existing_connection",
+    "0x140546aa6": "hid_new_connection"
+  },
+  "nullSelectionCalls": [
+    "0x140527b28",
+    "0x140545666",
+    "0x14071062c",
+    "0x140718d6c",
+    "0x141373ba0"
+  ],
+  "instructionChecks": [
+    {
+      "va": "0x140527afa",
+      "bytes": "4d85c0",
+      "assembly": "test r8, r8"
+    },
+    {
+      "va": "0x140527afd",
+      "bytes": "754a",
+      "assembly": "jne 0x140527b49"
+    },
+    {
+      "va": "0x140545657",
+      "bytes": "4533c0",
+      "assembly": "xor r8d, r8d"
+    },
+    {
+      "va": "0x140529482",
+      "bytes": "7435",
+      "assembly": "je 0x1405294b9"
+    },
+    {
+      "va": "0x1405294a3",
+      "bytes": "4d8bc4",
+      "assembly": "mov r8, r12"
+    },
+    {
+      "va": "0x1405b0c39",
+      "bytes": "4c8bc3",
+      "assembly": "mov r8, rbx"
+    },
+    {
+      "va": "0x140710271",
+      "bytes": "4c8bc3",
+      "assembly": "mov r8, rbx"
+    },
+    {
+      "va": "0x140710621",
+      "bytes": "4533c0",
+      "assembly": "xor r8d, r8d"
+    },
+    {
+      "va": "0x140718d61",
+      "bytes": "4533c0",
+      "assembly": "xor r8d, r8d"
+    },
+    {
+      "va": "0x141373b95",
+      "bytes": "4533c0",
+      "assembly": "xor r8d, r8d"
+    },
+    {
+      "va": "0x140545923",
+      "bytes": "488b6b50",
+      "assembly": "mov rbp, qword ptr [rbx + 0x50]"
+    },
+    {
+      "va": "0x14054593b",
+      "bytes": "488d4d10",
+      "assembly": "lea rcx, [rbp + 0x10]"
+    },
+    {
+      "va": "0x140545942",
+      "bytes": "ff9090000000",
+      "assembly": "call qword ptr [rax + 0x90]"
+    },
+    {
+      "va": "0x14054594a",
+      "bytes": "0f8426020000",
+      "assembly": "je 0x140545b76"
+    },
+    {
+      "va": "0x140545958",
+      "bytes": "0f8518020000",
+      "assembly": "jne 0x140545b76"
+    },
+    {
+      "va": "0x140545a37",
+      "bytes": "0f85db000000",
+      "assembly": "jne 0x140545b18"
+    },
+    {
+      "va": "0x140545a4f",
+      "bytes": "0f85c3000000",
+      "assembly": "jne 0x140545b18"
+    },
+    {
+      "va": "0x140545b48",
+      "bytes": "4c8bc5",
+      "assembly": "mov r8, rbp"
+    },
+    {
+      "va": "0x140545b72",
+      "bytes": "ff5058",
+      "assembly": "call qword ptr [rax + 0x58]"
+    },
+    {
+      "va": "0x140546560",
+      "bytes": "8b8814030000",
+      "assembly": "mov ecx, dword ptr [rax + 0x314]"
+    },
+    {
+      "va": "0x140546569",
+      "bytes": "0f8495000000",
+      "assembly": "je 0x140546604"
+    },
+    {
+      "va": "0x140546572",
+      "bytes": "0f848c000000",
+      "assembly": "je 0x140546604"
+    },
+    {
+      "va": "0x140546892",
+      "bytes": "ff9090000000",
+      "assembly": "call qword ptr [rax + 0x90]"
+    },
+    {
+      "va": "0x14054689a",
+      "bytes": "0f842e020000",
+      "assembly": "je 0x140546ace"
+    },
+    {
+      "va": "0x1405468a8",
+      "bytes": "0f8520020000",
+      "assembly": "jne 0x140546ace"
+    },
+    {
+      "va": "0x1405468ae",
+      "bytes": "498b3e",
+      "assembly": "mov rdi, qword ptr [r14]"
+    },
+    {
+      "va": "0x140546989",
+      "bytes": "0f85dc000000",
+      "assembly": "jne 0x140546a6b"
+    },
+    {
+      "va": "0x1405469a1",
+      "bytes": "0f85c4000000",
+      "assembly": "jne 0x140546a6b"
+    },
+    {
+      "va": "0x140546a9b",
+      "bytes": "4c8bc7",
+      "assembly": "mov r8, rdi"
+    },
+    {
+      "va": "0x140546ac5",
+      "bytes": "ff5058",
+      "assembly": "call qword ptr [rax + 0x58]"
+    },
+    {
+      "va": "0x1404dfe90",
+      "bytes": "ff5050",
+      "assembly": "call qword ptr [rax + 0x50]"
+    }
+  ],
+  "preparedProfile": {
+    "archiveSha256": "d135e6f1c03601cc44b3e5f623eed36af81bbff585332a3fdc8d5d533b2cb66a",
+    "descriptorSha256": "ad522345d4f5fa4a429d1a5e4f737ddf523bb360ed409bd32346a2a680236a86",
+    "type": "native_pro_device",
+    "hasHid": false,
+    "hidSection": false,
+    "midiSection": false
+  },
+  "limits": [
+    "Immediate IDs at decoded direct calls only",
+    "Forwarded and indirect message IDs are unresolved",
+    "No Serato process, USB access or runtime route verified"
+  ]
+}
