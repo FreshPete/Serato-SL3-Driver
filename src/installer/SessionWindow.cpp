@@ -42,12 +42,7 @@ std::vector<std::wstring> session_arguments(const wchar_t* action){
     return {action,L"--session-plan",config::plan,L"--expected-session-plan-sha256",config::plan_sha,
             L"--powershell-directory",config::powershell};
 }
-int execute(State& s,const std::vector<std::wstring>& args,bool readonly){
-    std::vector<Handle> leases;
-    const auto executable=local_path(config::launcher);
-    pin(leases,executable,config::launcher_sha);
-    pin(leases,local_path(config::plan),config::plan_sha,65536);
-    // Deny replacement of the reviewed inputs while their CLI executes.
+int execute_child(State& s,const fs::path& executable,const std::vector<std::wstring>& args,bool readonly){
     Pipe output;SECURITY_ATTRIBUTES security{sizeof(security),nullptr,TRUE};
     Handle input(CreateFileW(L"NUL",GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE,&security,OPEN_EXISTING,0,nullptr));
     if(input.value==INVALID_HANDLE_VALUE)throw WinError("Open session input");
@@ -95,10 +90,10 @@ int execute(State& s,const std::vector<std::wstring>& args,bool readonly){
                 throw WinError("Read session details");
             s.append(bytes.data(),read);
         }
+        if(exited && !available)break;
         const auto wait=WaitForSingleObject(process.value,available?0:25);
         require(wait==WAIT_OBJECT_0 || wait==WAIT_TIMEOUT,"Session process wait failed");
         if(wait==WAIT_OBJECT_0 && !exited){exited=true;retired=GetTickCount64();}
-        if(exited && !available)break;
         // Do not wait forever for an inherited writer after the CLI has exited.
         require(!exited || GetTickCount64()-retired<2000,"Session output did not retire; retain saved reports");
         if(readonly && !exited && GetTickCount64()-began>120000){
@@ -111,6 +106,13 @@ int execute(State& s,const std::vector<std::wstring>& args,bool readonly){
     }
     DWORD result=1;if(!GetExitCodeProcess(process.value,&result))throw WinError("Read session result");
     return int(result);
+}
+int execute(State& s,const std::vector<std::wstring>& args,bool readonly){
+    std::vector<Handle> leases;
+    const auto executable=local_path(config::launcher);
+    pin(leases,executable,config::launcher_sha);
+    pin(leases,local_path(config::plan),config::plan_sha,65536);
+    return execute_child(s,executable,args,readonly);
 }
 void begin(State& s,int action){
     if(s.preview || s.busy || (action==start && (!s.ready || s.used)))return;

@@ -3,6 +3,8 @@
 #include "SessionWindow.cpp"
 #include "SetupResultPipe.hpp"
 #include "SetupUsbPrerequisite.hpp"
+#include <shlobj.h>
+#include <memory>
 
 namespace sl3::setup_window {
 using namespace sl3::launcher;
@@ -25,20 +27,51 @@ bool serato_running(const std::string& raw){
     checked(object->GetNamedObject(Microsoft::WRL::Wrappers::HStringReference(L"after").Get(),after.GetAddressOf()),"Read observed setup state");
     boolean running=false;checked(after->GetNamedBoolean(Microsoft::WRL::Wrappers::HStringReference(L"seratoRunning").Get(),&running),"Typed running-state result required");return running!=false;
 }
-struct State:sl3::window::State {Eligibility allowed{};bool running=false,usb_ready=false;};
+struct State:sl3::window::State {
+    Eligibility allowed{};bool running=false,usb_ready=false;
+    std::wstring launcher=config::launcher,kit=config::kit_root,application=config::application,plan=config::plan,plan_sha=config::plan_sha;
+};
 void text(HWND item,const wchar_t* value){SetWindowTextW(item,value);}
 void enable(State& s){
     EnableWindow(s.check_button,!s.preview && !s.busy);
     EnableWindow(s.start_button,!s.preview && !s.busy && s.allowed.install);
     EnableWindow(s.recover_button,!s.preview && !s.busy && s.allowed.restore);
 }
-std::vector<std::wstring> arguments(const wchar_t* action){return {action,L"--kit",config::kit_root,L"--app",config::application,
-    L"--experiment",config::plan,L"--expected-experiment-sha256",config::plan_sha};}
+std::vector<std::wstring> arguments(const State& s,const wchar_t* action){return {action,L"--kit",s.kit,L"--app",s.application,
+    L"--experiment",s.plan,L"--expected-experiment-sha256",s.plan_sha};}
+int select_setup(State& s){
+    std::wstring image(32768,L'\0');const auto count=GetModuleFileNameW(nullptr,image.data(),DWORD(image.size()));
+    require(count && count<image.size(),"Locate the setup executable");image.resize(count);
+    const auto parent=local_path(image).parent_path();
+    s.launcher=(parent/L"SL3_Setup_Engineering.exe").native();s.kit=(parent/L"kit").native();
+    constexpr GUID program_files{0x905e63b6,0xc1bf,0x494e,{0xb2,0x9c,0x65,0xb7,0x32,0xd3,0xd2,0x1a}};
+    PWSTR known=nullptr;checked(SHGetKnownFolderPath(program_files,0,nullptr,&known),"Locate Program Files");
+    const std::unique_ptr<wchar_t,decltype(&CoTaskMemFree)> folder(known,CoTaskMemFree);
+    s.application=(fs::path(folder.get())/L"Serato/Serato DJ Pro/Serato DJ Pro.exe").native();
+    std::vector<Handle> leases;pin(leases,local_path(s.launcher),config::launcher_sha);
+    const auto code=sl3::window::execute_child(s,local_path(s.launcher),{L"--select-setup",L"--kit",s.kit,L"--app",s.application},true);
+    if(code)return code;
+    std::string raw;{std::lock_guard<std::mutex> lock(s.mutex);raw=s.output;}
+    const JsonObject result(raw);require(result.text(L"schema")==L"sl3.on-demand-kit-resume.v1","Typed selected setup required");
+    const auto plan=local_path(result.text(L"experiment"));const auto sha=result.text(L"experimentSha256");
+    require(plan.filename()==L"experiment.json" && equal(plan.parent_path().parent_path().native(),(local_path(s.kit)/L"analysis").native()),
+            "Selected setup record must belong to this kit");
+    pin(leases,plan,sha,65536);s.plan=plan.native();s.plan_sha=sha;
+    {std::lock_guard<std::mutex> lock(s.mutex);s.output.clear();++s.log_revision;}
+    return 0;
+}
 int inspect(State& s,bool retain_prior=false){
     std::string prior;
     {std::lock_guard<std::mutex> lock(s.mutex);if(retain_prior)prior=s.output;s.output.clear();++s.log_revision;}
     s.allowed={};s.running=false;int code=1;
-    try{code=sl3::window::execute(s,arguments(L"--check-experiment"),true);}
+    try{
+        if(s.plan.empty()){
+            code=select_setup(s);if(code)return code;
+        }
+        std::vector<Handle> leases;pin(leases,local_path(s.launcher),config::launcher_sha);
+        pin(leases,local_path(s.plan),s.plan_sha,65536);
+        code=sl3::window::execute_child(s,local_path(s.launcher),arguments(s,L"--check-experiment"),true);
+    }
     catch(...){if(retain_prior){std::string failed;{std::lock_guard<std::mutex> lock(s.mutex);failed=s.output;s.output=prior;}
         const auto combined=std::string("\nPost-action observation failed:\n")+failed;s.append(combined.data(),combined.size());}throw;}
     std::string raw;{std::lock_guard<std::mutex> lock(s.mutex);raw=s.output;}
@@ -51,10 +84,10 @@ int inspect(State& s,bool retain_prior=false){
     return code;
 }
 struct ActionResult {int code=1;sl3::setup_result::Capture capture;std::string transfer_error;};
-ActionResult elevated_action(const std::vector<std::wstring>& selected){
+ActionResult elevated_action(const State& s,const std::vector<std::wstring>& selected){
     sl3::setup_result::Server server;auto args=selected;
     args.insert(args.end(),{L"--result-pipe",server.name,L"--result-server-pid",std::to_wstring(GetCurrentProcessId())});
-    const auto executable=local_path(config::launcher);const auto parameters=command_line(args);const auto directory=executable.parent_path().native();
+    const auto executable=local_path(s.launcher);const auto parameters=command_line(args);const auto directory=executable.parent_path().native();
     SHELLEXECUTEINFOW info{};info.cbSize=sizeof(info);info.fMask=SEE_MASK_NOCLOSEPROCESS|SEE_MASK_NOASYNC;
     info.lpVerb=L"runas";info.lpFile=executable.c_str();info.lpParameters=parameters.c_str();info.lpDirectory=directory.c_str();info.nShow=SW_HIDE;
     if(!ShellExecuteExW(&info))throw WinError("Start approved native setup action");Handle process(info.hProcess);require(process.value!=nullptr,"Launched setup process identity required");
@@ -64,14 +97,14 @@ ActionResult elevated_action(const std::vector<std::wstring>& selected){
     require(WaitForSingleObject(process.value,INFINITE)==WAIT_OBJECT_0,"Wait for the actual administrator action");DWORD code=1;
     require(GetExitCodeProcess(process.value,&code)!=FALSE,"Read actual administrator action exit");result.code=int(code);return result;
 }
-std::string result_text(const ActionResult& result){
-    return "SL3 setup diagnostic (not a recovery authorization)\nexperiment_sha256="+utf8(config::plan_sha)+
+std::string result_text(const State& s,const ActionResult& result){
+    return "SL3 setup diagnostic (not a recovery authorization)\nexperiment_sha256="+utf8(s.plan_sha)+
         "\nprocess_exit_code="+std::to_string(result.code)+"\nwriter_authenticated="+(result.capture.authenticated?"true":"false")+
         "\nover_limit="+(result.capture.over_limit?"true":"false")+"\nchannel_error="+std::to_string(result.capture.error)+
         "\ntransfer_error="+result.transfer_error+"\n\nAdministrator output:\n"+result.capture.bytes;
 }
-fs::path preserve_result(const std::string& result){
-    const auto directory=local_path(config::plan).parent_path()/(L"ui-action-"+sl3::setup_result::token());
+fs::path preserve_result(const State& s,const std::string& result){
+    const auto directory=local_path(s.plan).parent_path()/(L"ui-action-"+sl3::setup_result::token());
     require(CreateDirectoryW(directory.c_str(),nullptr)!=FALSE,"Create fresh local diagnostic directory");
     const auto path=directory/L"administrator-result.txt";
     Handle file(CreateFileW(path.c_str(),GENERIC_WRITE,0,nullptr,CREATE_NEW,FILE_FLAG_OPEN_REPARSE_POINT,nullptr));
@@ -81,11 +114,11 @@ fs::path preserve_result(const std::string& result){
 int apply(State& s,int action){
     auto code=inspect(s);if(code)return code;
     require(action==install?s.allowed.install:s.allowed.restore,"Current setup state does not admit this action");
-    std::vector<Handle> leases;pin(leases,local_path(config::launcher),config::launcher_sha);pin(leases,local_path(config::plan),config::plan_sha,65536);
-    const auto operation=elevated_action(arguments(action==install?L"--apply-experiment":L"--restore-experiment"));
-    const auto report=result_text(operation);std::string persistence_error;
+    std::vector<Handle> leases;pin(leases,local_path(s.launcher),config::launcher_sha);pin(leases,local_path(s.plan),s.plan_sha,65536);
+    const auto operation=elevated_action(s,arguments(s,action==install?L"--apply-experiment":L"--restore-experiment"));
+    const auto report=result_text(s,operation);std::string persistence_error;
     {std::lock_guard<std::mutex> lock(s.mutex);s.output.clear();++s.log_revision;}s.append(report.data(),report.size());
-    try{const auto saved=std::string("\nFull administrator result saved: ")+utf8(preserve_result(report).native())+"\n";s.append(saved.data(),saved.size());}
+    try{const auto saved=std::string("\nFull administrator result saved: ")+utf8(preserve_result(s,report).native())+"\n";s.append(saved.data(),saved.size());}
     catch(const std::exception& error){persistence_error=error.what();s.append(persistence_error.data(),persistence_error.size());}
     code=inspect(s,true);if(operation.code)return operation.code;if(code)return code;
     require(operation.capture.authenticated && !operation.capture.over_limit && !operation.capture.error && operation.transfer_error.empty() && persistence_error.empty(),"Administrator result was not completely received and preserved; retain the observed state");
@@ -96,7 +129,7 @@ void begin(State& s,int action){
     if(s.preview || s.busy || (action==install && !s.allowed.install) || (action==restore && !s.allowed.restore))return;
     if(s.worker.joinable())s.worker.join();s.allowed={};s.busy=true;s.action=action;s.finished=false;s.code=1;
     text(s.progress,action==check?L"Checking your setup…":action==install?L"Installing the compatibility build…":L"Restoring the original setup…");
-    text(s.description,action==check?L"This check does not change Serato or open the SL3.":L"Windows may ask for administrator approval. Keep this window open until the action finishes.");enable(s);
+    text(s.description,action==check?L"This check can prepare local setup files. It does not change Serato or open the SL3.":L"Windows may ask for administrator approval. Keep this window open until the action finishes.");enable(s);
     try{s.worker=std::thread([&s,action]{
         bool initialized=false;
         try{checked(RoInitialize(RO_INIT_SINGLETHREADED),"Initialize setup result parser");initialized=true;s.code=action==check?inspect(s):apply(s,action);}

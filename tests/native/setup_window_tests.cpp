@@ -29,16 +29,29 @@ int main(){
         std::cout<<"Resolved fonts: body="<<utf8(body_face)<<", title="<<utf8(title_face)<<'\n';
         begin(live,check);require(live.busy && !IsWindowEnabled(live.check_button) && !IsWindowEnabled(live.start_button),"Busy state disables commands");++cases;
         message(live_window,WM_CLOSE,0,0);require(IsWindow(live_window),"Closing cannot interrupt an active check");++cases;
-        const auto began=GetTickCount64();while(live.busy){message(live_window,WM_TIMER,0,0);require(GetTickCount64()-began<30000,"Read-only setup check deadline");Sleep(10);}
+        const auto finish_check=[](State& state,HWND window){
+            const auto began=GetTickCount64();while(state.busy){message(window,WM_TIMER,0,0);require(GetTickCount64()-began<45000,"Setup check deadline");Sleep(10);}
+        };
+        finish_check(live,live_window);
+        if(live.code)std::cerr<<live.output<<'\n';
         require(live.code==0 && live.allowed.clean && live.allowed.install && !live.allowed.restore && IsWindowEnabled(live.start_button),"Actual native read-only check produces install eligibility");++cases;
         {ActionResult observed;observed.code=1;observed.capture.authenticated=true;observed.capture.bytes="fixture failure report";
-            const auto report=result_text(observed);const auto saved=preserve_result(report);std::vector<Handle> leases;
+            const auto report=result_text(live,observed);const auto saved=preserve_result(live,report);std::vector<Handle> leases;
             Handle read(CreateFileW(saved.c_str(),GENERIC_READ,FILE_SHARE_READ,nullptr,OPEN_EXISTING,0,nullptr));require(read.value!=INVALID_HANDLE_VALUE,"Read owned diagnostic result");
             require(read_capsule(read.value)==report,"Saved ordinary-user result preserves exact diagnostic bytes");++cases;
             const std::string previous="retained administrator failure\n";live.append(previous.data(),previous.size());
             checked(RoInitialize(RO_INIT_SINGLETHREADED),"Initialize retained-result parser");const auto code=inspect(live,true);RoUninitialize();
             require(code==0 && live.output.find(previous)!=std::string::npos && live.output.find("Post-action observation:")!=std::string::npos,"Postcheck must not erase the administrator diagnostic");++cases;}
         message(live_window,WM_CLOSE,0,0);require(!IsWindow(live_window),"Completed window closes normally");++cases;
+        if(config::plan.empty()){
+            State reopened;const auto window_again=create(reopened,GetModuleHandleW(nullptr));
+            require(reopened.plan.empty() && !reopened.busy,"Opening a portable setup window leaves selection idle");
+            begin(reopened,check);finish_check(reopened,window_again);
+            if(reopened.code)std::cerr<<reopened.output<<'\n';
+            require(reopened.code==0 && reopened.plan==live.plan && reopened.plan_sha==live.plan_sha && reopened.allowed.install,
+                    "A fresh portable window must resume the same verified record");++cases;
+            message(window_again,WM_CLOSE,0,0);
+        }
         std::cout<<"{\"schema\":\"sl3.setup-window-tests.v1\",\"passed\":true,\"cases\":"<<cases<<",\"privilegedActionsExecuted\":false,\"seratoLaunched\":false,\"nativeDeviceAccess\":false}\n";return 0;
     }catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}
 }

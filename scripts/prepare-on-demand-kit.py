@@ -100,7 +100,7 @@ def resume(path,expected,application):
             'filesWritten':False,'elevationRequested':False,'seratoLaunched':False,'nativeDeviceAccess':False}
 
 
-def prepare(path,expected,application,write=False):
+def prepare(path,expected,application,write=False,first_only=False):
     record=verify(path,expected)
     api=module('serato-on-demand-test.py')
     application,installation,pointer=host_paths(application,api)
@@ -110,7 +110,7 @@ def prepare(path,expected,application,write=False):
     result={'schema':'sl3.on-demand-kit-preparation.v1','planOnly':not write,'kitVerified':True,'bundleBinding':rebound,
             'installed':False,'elevationRequested':False,'seratoLaunched':False,'nativeDeviceAccess':False,'normalStartupValidated':False}
     if not write:return result
-    analysis=ROOT/'analysis';require(not analysis.is_symlink() and not analysis.is_junction(),'Ordinary analysis state directory required');analysis.mkdir(exist_ok=True)
+    analysis=ROOT/'analysis';require(not analysis.is_symlink() and not analysis.is_junction(),'Ordinary analysis state directory required');analysis.mkdir(exist_ok=not first_only)
     identity=uuid.uuid4().hex
     rebound=rebinder['rebind'](ROOT/'native-package',record['nativeBundleSha256'],analysis/('sl3-deployment-rebound-'+identity),installation,pointer)
     python=ROOT/'runtime/python/python.exe';require(sha(python)==record['pythonExecutableSha256'],'Kit Python image differs')
@@ -133,6 +133,16 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--manifest',type=Path,required=True);p.add_argument('--expected-manifest-sha256',required=True)
     p.add_argument('--application',type=Path,required=True)
     mode=p.add_mutually_exclusive_group();mode.add_argument('--prepare',action='store_true');mode.add_argument('--resume',action='store_true')
+    mode.add_argument('--select-setup',action='store_true')
     a=p.parse_args()
-    result=resume(a.manifest,a.expected_manifest_sha256,a.application) if a.resume else prepare(a.manifest,a.expected_manifest_sha256,a.application,a.prepare)
+    if a.select_setup:
+        fresh=not (ROOT/'analysis').exists()
+        if fresh:
+            prepare(a.manifest,a.expected_manifest_sha256,a.application,write=True,first_only=True)
+        result=resume(a.manifest,a.expected_manifest_sha256,a.application)
+        result['filesWritten']=fresh
+    elif a.resume:
+        result=resume(a.manifest,a.expected_manifest_sha256,a.application)
+    else:
+        result=prepare(a.manifest,a.expected_manifest_sha256,a.application,a.prepare)
     print(json.dumps(result,indent=2))

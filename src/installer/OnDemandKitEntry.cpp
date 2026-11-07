@@ -47,14 +47,14 @@ void local_state(const fs::path& root,const fs::path& directory,const std::wstri
 }
 int dispatch(int argc,wchar_t** argv){
     if(argc==1 || (argc==2 && std::wstring(argv[1])==L"--help")){
-        std::cout<<"SL3 setup engineering entry: --verify|--plan|--prepare|--resume --kit ABSOLUTE_DIRECTORY --app ABSOLUTE_SERATO_EXE\n"
+        std::cout<<"SL3 setup engineering entry: --verify|--plan|--prepare|--resume|--select-setup --kit ABSOLUTE_DIRECTORY --app ABSOLUTE_SERATO_EXE\n"
                  <<"Prepared actions: --check-experiment|--apply-experiment|--restore-experiment with --experiment PATH --expected-experiment-sha256 SHA256.\n"
                  <<"Apply/restore require an already elevated process. No automatic approval prompt or Serato launch.\n";return 0;
     }
     const std::wstring action=argv[1];const bool experiment=action==L"--check-experiment" || action==L"--apply-experiment" || action==L"--restore-experiment";
     require((argc==(experiment?10:6)) && std::wstring(argv[2])==L"--kit" && std::wstring(argv[4])==L"--app" &&
             (!experiment || (std::wstring(argv[6])==L"--experiment" && std::wstring(argv[8])==L"--expected-experiment-sha256")),"Exact reviewed setup arguments required");
-    require(experiment || action==L"--verify" || action==L"--plan" || action==L"--prepare" || action==L"--resume","Known setup entry action required");
+    require(experiment || action==L"--verify" || action==L"--plan" || action==L"--prepare" || action==L"--resume" || action==L"--select-setup","Known setup entry action required");
     token_requirement(action==L"--apply-experiment" || action==L"--restore-experiment");
     if(action==L"--apply-experiment")
         require(sl3::setup_usb::driver_running(),"The UsbDk USB driver must be running before installation");
@@ -121,7 +121,7 @@ int dispatch(int argc,wchar_t** argv){
     }
     std::vector<std::wstring> arguments={L"-I",L"-B",(root/L"scripts/prepare-on-demand-kit.py").native(),L"--manifest",(root/L"kit-manifest.json").native(),
         L"--expected-manifest-sha256",release::kit_manifest_sha,L"--application",application.native()};
-    if(action==L"--prepare" || action==L"--resume")arguments.push_back(action);
+    if(action==L"--prepare" || action==L"--resume" || action==L"--select-setup")arguments.push_back(action);
     return run_process(root/L"runtime/python/python.exe",arguments,root,false);
 }
 }

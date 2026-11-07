@@ -6,7 +6,7 @@ Follow-up: [administrator result capture and local diagnostics](setup-result-dia
 
 The simple Windows setup window is now implemented and built. It offers **Check setup**, **Install**, **Restore original setup** and optional diagnostic details. Opening it runs no command. Sixteen checks pass, and the ordinary/expanded layouts and selected keyboard behavior were inspected on this host. **Administrator installation/restoration and normal Serato startup have not run through this window.** [Source, build and observation evidence](evidence/one-time-setup-window-20261106.json)
 
-This is a host-bound engineering prototype around the [reviewed native entry](native-on-demand-experiment-entry.md), not a public installer. It preserves the intended experience: install once, close the setup window and use the original Serato shortcut. Phase and timecode vinyl share the driver; the UI has no Phase-specific installation mode.
+The prebound build and the portable development build both use the [reviewed native entry](native-on-demand-experiment-entry.md). Install once, close the setup window and use the original Serato shortcut. Phase and timecode vinyl share the driver.
 
 ## Actions and state
 
@@ -41,6 +41,12 @@ SHA256 14656a4b63eaf1b004b2a00ee5ca9fefd97ef3e7753527612dc2a762635c2368
 All three native build checks and 19 window cases passed. The actual Windows check found the running UsbDk kernel service, and the simulated unavailable-service case preserved restoration while disabling installation. The window is bound to this PC's prepared record, and the live test still uses one install and two ordinary Serato launches. [Test steps](return-to-testing.md#next-attended-test)
 
 The same kit renders the expected archive scripts and deployment plan from reviewed sources before running PowerShell. It compares the pinned local files with that recipe and the known candidate archive hash. The earlier 34-case moved-entry check refused edited wrappers, helper, plan and archive even when the caller supplied new matching hashes. The native fixture report SHA-256 is `429844ee721d39f4d12c19fe3e3399293d31d7c1cdffde58ef8900af114eabed`.
+
+### Portable development build
+
+The private `artifacts/build/SL3 Portable Setup` folder keeps the setup window, native entry and `kit` together. **Check setup** locates Serato through Windows and prepares local files on first use. Reopening the window selects the same verified record. Opening the window alone is idle. A second simultaneous preparation cannot create another record because the first must create the local state directory exclusively. Existing partial or ambiguous state requires review.
+
+The fresh portable fixture passed 20 cases and the prebound fixture passed 19. The first build exposed an output race where the window could miss the helper's last reply. Both builds passed after checking the pipe again after helper exit. The portable window SHA-256 is `2f9a0740c2740572fd52119741bb4d986b49ef77c0e7c8c622a31d9caf933efe`. The local package still needs an attended Install and Restore test, and normal Serato startup on another PC remains unverified.
 
 ### Earlier install-once build
 

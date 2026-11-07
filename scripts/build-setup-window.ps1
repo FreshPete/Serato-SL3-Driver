@@ -12,6 +12,20 @@ foreach($windowPin in $windowSource.generatedPins.PSObject.Properties){if((Get-F
 if($LASTEXITCODE -ne 0){throw 'Window configuration failed'}
 & cmake --build (Join-Path $windowDirectory 'build') --config Release
 if($LASTEXITCODE -ne 0){throw 'Window build failed'}
+if($windowSource.portableLayout){
+    $release=Join-Path $windowDirectory 'build/Release'
+    $kit=Join-Path $release 'kit'
+    $entry=Join-Path $release 'SL3_Setup_Engineering.exe'
+    if((Get-FileHash -LiteralPath $windowSource.portableLayout.entry).Hash.ToLowerInvariant() -ne $windowSource.nativeEntrySha256 -or
+       (Get-FileHash -LiteralPath (Join-Path $windowSource.portableLayout.kit 'kit-manifest.json')).Hash.ToLowerInvariant() -ne $windowSource.kitManifestSha256){throw 'Portable setup inputs differ'}
+    if(-not (Test-Path -LiteralPath $entry)){Copy-Item -LiteralPath $windowSource.portableLayout.entry -Destination $entry}
+    if(-not (Test-Path -LiteralPath $kit)){
+        New-Item -ItemType Directory -Path $kit | Out-Null
+        Get-ChildItem -LiteralPath $windowSource.portableLayout.kit -Force | Where-Object Name -CNE 'analysis' | ForEach-Object {
+            Copy-Item -LiteralPath $_.FullName -Destination $kit -Recurse
+        }
+    }
+}
 & ctest --test-dir (Join-Path $windowDirectory 'build') -C Release --output-on-failure -V
 if($LASTEXITCODE -ne 0){throw 'Window contract checks failed'}
 [ordered]@{schema='sl3.setup-window-build.v1';configuration='Release';sourceManifestSha256=$ExpectedSourceManifestSha256;
