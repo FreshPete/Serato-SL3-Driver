@@ -79,8 +79,8 @@ function Invoke-ReviewedTrial($Record, $SetupProcess) {
         Write-Host 'Checking the USB connection. Keep Serato closed.'
         $startup = & $Record.python.path -I -B $desktop start @desktopArgs --recovery-confirmed
         if ($LASTEXITCODE) { throw 'The retained USB check stopped. See the desktop startup records.' }
-        $started = $true
         if (($startup | ConvertFrom-Json).outcome -ne 'broker_ready') { throw 'Unexpected retained USB result.' }
+        $started = $true
 
         Write-Host 'When the observer is armed, open Serato from its usual shortcut. Leave playback stopped.'
         Write-Host 'Note what Serato shows. Keep it open for five seconds after hardware status appears, then close it normally.'
@@ -112,6 +112,20 @@ function Invoke-ReviewedTrial($Record, $SetupProcess) {
                 $finished = & $Record.python.path -I -B $desktop finish @desktopArgs
                 $retired = $LASTEXITCODE -eq 0 -and ($finished | ConvertFrom-Json).outcome -eq 'retired'
                 if (-not $retired) { Write-Host 'Check the desktop and setup records to verify cleanup.' }
+            }
+        } elseif (-not $SetupProcess.HasExited) {
+            # Startup can fail before the desktop runner installs its own cleanup path.
+            $request = Join-Path $folder 'attended-setup/restore.request'
+            if (-not (Test-Path -LiteralPath $request -PathType Leaf)) {
+                try {
+                    $stream = [IO.File]::Open($request,'CreateNew','Write','Read')
+                    $stream.Dispose()
+                    Write-Host 'Startup stopped. Requesting restoration of the original Serato setup.'
+                } catch {
+                    if (-not (Test-Path -LiteralPath $request -PathType Leaf)) {
+                        Write-Warning 'Could not request early restoration. The setup process still has its timed cleanup.'
+                    }
+                }
             }
         }
         $setupExited = $SetupProcess.WaitForExit(25000)
