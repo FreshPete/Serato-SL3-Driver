@@ -873,6 +873,116 @@
       "va": "0x1404dfe90",
       "bytes": "ff5050",
       "assembly": "call qword ptr [rax + 0x50]"
+    },
+    {
+      "va": "0x140793413",
+      "bytes": "c787c0020000ffffffff",
+      "assembly": "mov dword ptr [rdi + 0x2c0], 0xffffffff"
+    },
+    {
+      "va": "0x14079342b",
+      "bytes": "c787d0020000ffffffff",
+      "assembly": "mov dword ptr [rdi + 0x2d0], 0xffffffff"
+    },
+    {
+      "va": "0x140793589",
+      "bytes": "c787c0020000ffffffff",
+      "assembly": "mov dword ptr [rdi + 0x2c0], 0xffffffff"
+    },
+    {
+      "va": "0x1407935a0",
+      "bytes": "c787d0020000ffffffff",
+      "assembly": "mov dword ptr [rdi + 0x2d0], 0xffffffff"
+    },
+    {
+      "va": "0x140795419",
+      "bytes": "488bf9",
+      "assembly": "mov rdi, rcx"
+    },
+    {
+      "va": "0x1407957df",
+      "bytes": "83faff",
+      "assembly": "cmp edx, -1"
+    },
+    {
+      "va": "0x1407957e2",
+      "bytes": "7433",
+      "assembly": "je 0x140795817"
+    },
+    {
+      "va": "0x140795803",
+      "bytes": "4c8bc7",
+      "assembly": "mov r8, rdi"
+    },
+    {
+      "va": "0x140795835",
+      "bytes": "bae6050000",
+      "assembly": "mov edx, 0x5e6"
+    },
+    {
+      "va": "0x140795853",
+      "bytes": "83faff",
+      "assembly": "cmp edx, -1"
+    },
+    {
+      "va": "0x140795856",
+      "bytes": "7433",
+      "assembly": "je 0x14079588b"
+    },
+    {
+      "va": "0x140795877",
+      "bytes": "4c8bc7",
+      "assembly": "mov r8, rdi"
+    },
+    {
+      "va": "0x1407958a9",
+      "bytes": "bae7050000",
+      "assembly": "mov edx, 0x5e7"
+    },
+    {
+      "va": "0x1404dfe27",
+      "bytes": "498bf0",
+      "assembly": "mov rsi, r8"
+    },
+    {
+      "va": "0x1404dfe69",
+      "bytes": "4c8bc6",
+      "assembly": "mov r8, rsi"
+    },
+    {
+      "va": "0x1404dfe71",
+      "bytes": "e81af03701",
+      "assembly": "call 0x14185ee90"
+    },
+    {
+      "va": "0x14185eea6",
+      "bytes": "498bd8",
+      "assembly": "mov rbx, r8"
+    },
+    {
+      "va": "0x14185eec7",
+      "bytes": "48895f38",
+      "assembly": "mov qword ptr [rdi + 0x38], rbx"
+    },
+    {
+      "va": "0x14050591e",
+      "bytes": "488bfa",
+      "assembly": "mov rdi, rdx"
+    },
+    {
+      "va": "0x140505940",
+      "bytes": "488b08",
+      "assembly": "mov rcx, qword ptr [rax]"
+    },
+    {
+      "va": "0x140505943",
+      "bytes": "483bcf",
+      "assembly": "cmp rcx, rdi"
+    },
+    {
+      "va": "0x140505946",
+      "bytes": "0f84fd000000",
+      "assembly": "je 0x140505a49"
     }
   ],
   "preparedProfile": {
@@ -883,9 +993,31 @@
     "hidSection": false,
     "midiSection": false
   },
+  "editBoxNotifications": {
+    "type": "CGUIEditBox",
+    "vtable": "0x14286ff10",
+    "slot": "0x98",
+    "handler": "0x140795400",
+    "defaultId": "disabled_minus_one",
+    "fieldOffsets": [
+      "0x2c0",
+      "0x2d0"
+    ],
+    "defaultNotificationIds": [
+      "0x5e6",
+      "0x5e7"
+    ],
+    "configuredCalls": [
+      "0x14079580d",
+      "0x140795881"
+    ],
+    "payload": "complete_edit_box_receiver",
+    "pointerIsRegisteredDescriptor": false,
+    "laterMessageIdWritersExhausted": false
+  },
   "limits": [
     "Immediate IDs at decoded direct calls only",
-    "Forwarded and indirect message IDs are unresolved",
+    "Later edit-box field assignments and indirect call targets are unresolved",
     "No Serato process, USB access or runtime route verified"
   ]
 }

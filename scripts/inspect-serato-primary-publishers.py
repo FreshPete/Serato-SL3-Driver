@@ -83,6 +83,31 @@ def profile(app, candidate_path, require):
             'hasHid':False,'hidSection':False,'midiSection':False}
 
 
+def edit_box_contract(app, require):
+    table, slot, handler = 0x14286ff10, 0x98, 0x140795400
+    locator = struct.unpack('<Q',app.data(table-8,8))[0]
+    signature, offset, _, type_rva, _, self_rva = struct.unpack('<6I',app.data(locator,24))
+    require(signature==1 and offset==0 and app.base+self_rva==locator and
+            app.text(app.base+type_rva+16)=='.?AVCGUIEditBox@@','Edit-box RTTI differs')
+    require(struct.unpack('<Q',app.data(table+slot,8))[0]==handler,'Edit-box virtual target differs')
+    for constructor, store in ((0x140793386,0x14079338d),(0x1407934fc,0x140793503)):
+        require(app.rip(app.at(constructor,'lea'))==table,'Edit-box constructor table differs')
+        app.at(store,'mov','qword ptr [rdi], rax')
+    for start, end, aliases in (
+        (0x140795419,0x140795881,{'rdi','edi','di','dil'}),
+        (0x1404dfe27,0x1404dfe69,{'rsi','esi','si','sil'}),
+        (0x14185eea6,0x14185eec7,{'rbx','ebx','bx','bl','bh'}),
+    ):
+        writes = [row.address for row in app.function(start) if start<=row.address<=end and
+                  aliases.intersection(map(row.reg_name,row.regs_access()[1]))]
+        require(writes==[start],'Edit-box pointer register changed before forwarding')
+    return {'type':'CGUIEditBox','vtable':hex(table),'slot':hex(slot),'handler':hex(handler),
+            'defaultId':'disabled_minus_one','fieldOffsets':['0x2c0','0x2d0'],
+            'defaultNotificationIds':['0x5e6','0x5e7'],
+            'configuredCalls':['0x14079580d','0x140795881'],'payload':'complete_edit_box_receiver',
+            'pointerIsRegisteredDescriptor':False,'laterMessageIdWritersExhausted':False}
+
+
 def inspect(application, candidate):
     api = module('export-serato-clock-handshake-evidence.py')
     require = api['require']
@@ -90,6 +115,9 @@ def inspect(application, candidate):
     calls = direct_calls(app,(PUBLISH,CONSTRUCT,SECOND_PUBLISH,BOUND_PUBLISH))
     require(tuple(map(len,calls.values()))==(10,64,20,5),'Direct pointer call inventory differs')
     groups = {hex(target):[argument(app,address) for address in addresses] for target,addresses in calls.items()}
+    require({row['call']:row['idSource'] for row in groups[hex(SECOND_PUBLISH)] if row['literalId'] is None}
+            == {'0x14079580d':'dword ptr [rdi + 0x2c0]', '0x140795881':'dword ptr [rdi + 0x2d0]'},
+            'Forwarded nonliteral message arguments differ')
     positive = {
         0x1405294b2: 'midi', 0x1405b0c48: 'installer_completion', 0x140710280: 'usb_audio_manager',
         0x140545b53: 'hid_existing_connection', 0x140546aa6: 'hid_new_connection',
@@ -113,6 +141,18 @@ def inspect(application, candidate):
         0x1405468ae:'mov rdi, qword ptr [r14]',0x140546989:'jne 0x140546a6b',
         0x1405469a1:'jne 0x140546a6b',0x140546a9b:'mov r8, rdi',
         0x140546ac5:'call qword ptr [rax + 0x58]',0x1404dfe90:'call qword ptr [rax + 0x50]',
+        0x140793413:'mov dword ptr [rdi + 0x2c0], 0xffffffff',
+        0x14079342b:'mov dword ptr [rdi + 0x2d0], 0xffffffff',
+        0x140793589:'mov dword ptr [rdi + 0x2c0], 0xffffffff',
+        0x1407935a0:'mov dword ptr [rdi + 0x2d0], 0xffffffff',
+        0x140795419:'mov rdi, rcx',0x1407957df:'cmp edx, -1',0x1407957e2:'je 0x140795817',
+        0x140795803:'mov r8, rdi',0x140795835:'mov edx, 0x5e6',
+        0x140795853:'cmp edx, -1',0x140795856:'je 0x14079588b',
+        0x140795877:'mov r8, rdi',0x1407958a9:'mov edx, 0x5e7',
+        0x1404dfe27:'mov rsi, r8',0x1404dfe69:'mov r8, rsi',0x1404dfe71:'call 0x14185ee90',
+        0x14185eea6:'mov rbx, r8',0x14185eec7:'mov qword ptr [rdi + 0x38], rbx',
+        0x14050591e:'mov rdi, rdx',0x140505940:'mov rcx, qword ptr [rax]',
+        0x140505943:'cmp rcx, rdi',0x140505946:'je 0x140505a49',
     }
     checked = []
     for address, expected in facts.items():
@@ -123,8 +163,9 @@ def inspect(application, candidate):
             'directCallArguments':groups,'nonNullSelectionPaths':{hex(k):v for k,v in positive.items()},
             'nullSelectionCalls':[hex(k) for k in sorted(clear)],'instructionChecks':checked,
             'preparedProfile':profile(app,candidate,require),
+            'editBoxNotifications':edit_box_contract(app,require),
             'limits':['Immediate IDs at decoded direct calls only',
-                      'Forwarded and indirect message IDs are unresolved',
+                      'Later edit-box field assignments and indirect call targets are unresolved',
                       'No Serato process, USB access or runtime route verified']}
 
 
