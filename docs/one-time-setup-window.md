@@ -32,6 +32,15 @@ Sixteen actual checks cover clean/installed/partial/conflicting eligibility, the
 ## Current private candidate
 
 ```text
+artifacts/build/native-setup-window-install-once-startup-stop-20261107/build/Release/SL3_Compatibility_Setup.exe
+SHA256 bf412432079280204e5defdf285a30d8874c0db171655cb73b81b09339789989
+```
+
+This build wraps the reviewed [application-bound startup package](application-bound-broker.md#stop-during-automatic-startup). Its three native entry checks and all 18 window cases passed. A separate check through the compiled entry found the original Serato archive, Serato closed and no temporary driver installed. The kit manifest SHA-256 is `4eb3ac3e1f925dcf46d36609bc31f4b13563f8c1c17aa6df6081f74a4574b196`. The native entry and kit are bound to their local paths. The setup window is ready for the first live install-once test, with a ten-minute diagnostic audio limit. [Test steps](return-to-testing.md#next-attended-test)
+
+### Earlier idle-guard build
+
+```text
 artifacts/build/native-setup-window-application-idle-guard-20261107/build/Release/SL3_Compatibility_Setup.exe
 SHA256 4cdcbbb74ea55a85527ef93e90a74179808ec70a24e8eccbbc846624f39bd23e
 ```

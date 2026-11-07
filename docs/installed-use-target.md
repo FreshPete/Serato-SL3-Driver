@@ -2,6 +2,8 @@
 
 The owner clarified the intended product on 6 November 2026: setup should normally be a one-time operation. After that, opening the existing Serato application with the SL3 connected should select the interface without a session launcher, repeated Download Driver actions, repeated installation or routine administrator prompts. The prepared-session window is an engineering tool, not that final experience.
 
+The immediate Windows milestone is one installation followed by two launches from the usual Serato shortcut. Use the setup window once, close it, and open Serato. If the SL3 connects and the decks appear without Download Driver, close Serato normally and reopen it from the same shortcut without touching the setup or cycling the SL3. The existing Phase recordings are sufficient for this milestone. Physical output and vinyl checks can follow separately. [One-time setup window](one-time-setup-window.md)
+
 ## Source-independent audio
 
 The driver transports the SL3's audio channels. Serato performs DVS decoding. Phase Essential's RCA signal and timecode vinyl therefore use the same driver/audio path; the driver must not require a Phase-specific mode or recognize the controller brand. Source-appropriate LINE/PHONO settings, Serato control-source settings and calibration remain user setup. Current evidence demonstrates Phase RCA tracking; it does not establish a physical timecode-vinyl test.

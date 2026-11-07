@@ -1,6 +1,6 @@
 # SL3 Windows handoff, 7 November 2026
 
-The rebuilt Windows driver has carried Phase Essential tracking in Serato DJ Pro 5.0.0.1278 through the temporary installer-assisted setup. The next test is whether Serato selects the SL3 when opened from its usual shortcut, with the rebuilt driver staged and one USB connection already held open. That separates Serato’s selection decision from a failed first USB open. [Normal-launch trial](retained-normal-start-trial.md)
+The rebuilt Windows driver has carried Phase Essential tracking in Serato DJ Pro 5.0.0.1278 through the temporary installer-assisted setup. The next test is one install followed by two launches from the usual Serato shortcut. The earlier audio recordings are sufficient for this milestone. [One-time setup window](one-time-setup-window.md)
 
 ## Verified on the bench
 
@@ -15,6 +15,13 @@ The rebuilt Windows driver has carried Phase Essential tracking in Serato DJ Pro
 The last read-only check found the original Serato archive, no temporary ASIO package and no running Serato or project audio processes. Windows listed the SL3 under its original `strmdrv` binding with Code 39, the signed UsbDk service was running, and Windows reported Secure Boot enabled. A fresh five-second idle libusb check returned four complete snapshots with one unchanged SL3 identity. The private observation file SHA-256 is `4f3826ee80f67b5fde7ad2b344e34fd2e60683c7a57a66d743f528a003559178`. This confirms idle visibility. [USB baseline](evidence/retained-release-identity-20261107.json) · [Original driver rejection](serato-usb-discovery.md#what-the-retained-usb-connection-exposes)
 
 ## Next attended test
+
+1. Close Serato. In **SL3 Compatibility Setup**, click **Check setup**, then **Install** and approve the Windows prompt. Wait for **Installed — ready for a Serato startup test**, then close the setup window.
+2. Open Serato from the usual shortcut. Check that it connects to the SL3 and shows deck controls. Leave any Download Driver notice untouched and report it if it appears.
+3. If the SL3 connects, close Serato normally and reopen it from the usual shortcut with the SL3 still connected. The result should be the same without a second install, prompt or power cycle. This build has a ten-minute diagnostic audio limit.
+4. If the trial fails, close Serato and use **Check setup** and **Restore original setup** in the setup window. Save any status message first. [Setup and restoration](one-time-setup-window.md)
+
+## Fallback if ordinary startup fails
 
 1. Remove USB and any external power for 30 seconds, reconnect the SL3 and wait another 30 seconds before starting the test. Close Serato. The settling interval is part of this trial because a previous redirect stalled shortly after reconnect. The traces do not establish a safe reopen delay.
 2. Use the local **Run SL3 normal-start test** shortcut. Type `RECOVERED` after reconnecting the SL3 and closing Serato, then approve the Windows prompt. The runner checks the SL3’s USB identity and starts one retained connection. The module observer opens the installed Serato executable under the ordinary account once the connection is ready.
