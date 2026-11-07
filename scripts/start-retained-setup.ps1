@@ -166,7 +166,14 @@ try {
     try {
         $arguments = @('-I','-B',('"{0}"' -f $handoff),'run','--experiment',('"{0}"' -f $Experiment),
                        '--expected-experiment-sha256',$expected)
-        $child = Start-Process -FilePath $python -ArgumentList $arguments -Verb RunAs -WindowStyle Hidden -PassThru
+        $startInfo = [Diagnostics.ProcessStartInfo]::new($python, ($arguments -join ' '))
+        $startInfo.WorkingDirectory = Split-Path -Parent $PSScriptRoot
+        $startInfo.UseShellExecute = $true
+        $startInfo.Verb = 'runas'
+        $startInfo.WindowStyle = [Diagnostics.ProcessWindowStyle]::Hidden
+        # Preserve the Win32 error code if the shell cancels elevation.
+        $child = [Diagnostics.Process]::Start($startInfo)
+        if ($null -eq $child) { throw 'Windows returned no setup process.' }
     } catch {
         $cause = $_.Exception
         while ($cause.InnerException) { $cause = $cause.InnerException }
