@@ -26,6 +26,12 @@ The completion function at `1405b0a40` does more than announce an installer exit
 
 The static facts establish these local guards, not runtime object identity, lifetime, delivery or successful audio selection. They do not prove that an arbitrary synthetic event would be accepted. Registration by itself was already shown insufficient in the separate [installed-driver startup branch](serato-installed-startup-boundary.md).
 
+### What installed-driver detection shares with installer completion
+
+The original 5.0.0.1278 notice receiver uses the same message switch for installer completion's `0x51` and installed-driver action 6's `0x52`. Both extract a key through `141380440`. `0x51` calls the keyed notice helper `14137b670` directly and then exits the switch. `0x52` looks up the key in the receiver's collection at `+0xb0` first. Its matching branch can skip the helper when the entry's byte at `+8` is nonzero. The helper has its own entry checks and conditionally calls a stored object's virtual slot `+0x40` before updating the collection. The byte and virtual slot's full semantics remain open. [Checked switch entries and instructions](evidence/serato-installer-handoff-20261106.json)
+
+The installer callback publishes `0x2ca` separately from `0x51`, through the same message system and with the live controller descriptor. The `connect_on_finish_install` check is in that callback, after the notice publication. The two successful traces observed this separate primary request before ASIO opened. For the ordinary launch test, a cleared notice or activity in the shared notice helper still needs to be paired with an actual selection event or ASIO load. [Installed-driver notification](serato-driver-notification.md) · [Captured installer selection](serato-primary-pointer.md#installer-assisted-selection-observed-in-serato-50)
+
 ## Consequence for the simpler launcher
 
 Widening the shim's click token to the generic helper address is not a justified automatic-start change. It could mistake unrelated helper traffic for the user's install action and does not provide the missing descriptor lifetime or successful-install evidence.

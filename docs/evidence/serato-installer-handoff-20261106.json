@@ -16,6 +16,22 @@
       "start": "0x1405b0a40",
       "endExclusive": "0x1405b0ca4",
       "sha256": "a4c10996a00402850ec6a51212d4d0cfddb1643b55d3c157001cef8f959a6f88"
+    },
+    "installedDriverNotice": {
+      "start": "0x14213f740",
+      "endExclusive": "0x14213f7f3",
+      "sha256": "e21eafb3a213d8335e59de594f7d123eded82bcc58991601183b59d16a97aeca"
+    },
+    "noticeDispatch": {
+      "start": "0x14137b790",
+      "endExclusive": "0x14137c928",
+      "sha256": "62a5503ec22c2e8b4510c97b8cfdd5d39f57464599d7cfe96fcf2961a96b42a4",
+      "codeEndExclusive": "0x14137c8a0"
+    },
+    "keyedNoticeHelper": {
+      "start": "0x14137b670",
+      "endExclusive": "0x14137b74d",
+      "sha256": "e378fbc9599f645309a3adebe1c35b93d8c1fd1f8641bcd8fd30e46171fa6bbc"
     }
   },
   "instructions": [
@@ -264,10 +280,208 @@
       "va": "0x1405b0c48",
       "bytes": "e823a5f2ff",
       "instruction": "call 0x1404db170"
+    },
+    {
+      "group": "installedDriverNotice",
+      "va": "0x14213f77c",
+      "bytes": "896c2420",
+      "instruction": "mov dword ptr [rsp + 0x20], ebp"
+    },
+    {
+      "group": "installedDriverNotice",
+      "va": "0x14213f786",
+      "bytes": "ba52000000",
+      "instruction": "mov edx, 0x52"
+    },
+    {
+      "group": "installedDriverNotice",
+      "va": "0x14213f78e",
+      "bytes": "e8fdf671ff",
+      "instruction": "call 0x14185ee90"
+    },
+    {
+      "group": "installedDriverNotice",
+      "va": "0x14213f7ad",
+      "bytes": "ff5058",
+      "instruction": "call qword ptr [rax + 0x58]"
+    },
+    {
+      "group": "noticeDispatch",
+      "va": "0x14137b7cb",
+      "bytes": "8b4a0c",
+      "instruction": "mov ecx, dword ptr [rdx + 0xc]"
+    },
+    {
+      "group": "noticeDispatch",
+      "va": "0x14137b7e0",
+      "bytes": "ffc9",
+      "instruction": "dec ecx"
+    },
+    {
+      "group": "noticeDispatch",
+      "va": "0x14137b7f5",
+      "bytes": "0fb68402d4c83701",
+      "instruction": "movzx eax, byte ptr [rdx + rax + 0x137c8d4]"
+    },
+    {
+      "group": "noticeDispatch",
+      "va": "0x14137b7fd",
+      "bytes": "8b8c82a0c83701",
+      "instruction": "mov ecx, dword ptr [rdx + rax*4 + 0x137c8a0]"
+    },
+    {
+      "group": "noticeDispatch",
+      "va": "0x14137b807",
+      "bytes": "ffe1",
+      "instruction": "jmp rcx"
+    },
+    {
+      "group": "noticeDispatch",
+      "va": "0x14137bde1",
+      "bytes": "e85a460000",
+      "instruction": "call 0x141380440"
+    },
+    {
+      "group": "noticeDispatch",
+      "va": "0x14137bde7",
+      "bytes": "488dbeb0000000",
+      "instruction": "lea rdi, [rsi + 0xb0]"
+    },
+    {
+      "group": "noticeDispatch",
+      "va": "0x14137bec5",
+      "bytes": "e8a6f7ffff",
+      "instruction": "call 0x14137b670"
+    },
+    {
+      "group": "noticeDispatch",
+      "va": "0x14137bf2d",
+      "bytes": "e81ef5ffff",
+      "instruction": "call 0x14137b450"
+    },
+    {
+      "group": "noticeDispatch",
+      "va": "0x14137bf32",
+      "bytes": "80780800",
+      "instruction": "cmp byte ptr [rax + 8], 0"
+    },
+    {
+      "group": "noticeDispatch",
+      "va": "0x14137bf36",
+      "bytes": "0f8475ffffff",
+      "instruction": "je 0x14137beb1"
+    },
+    {
+      "group": "noticeDispatch",
+      "va": "0x14137bf78",
+      "bytes": "e9f3080000",
+      "instruction": "jmp 0x14137c870"
+    },
+    {
+      "group": "noticeDispatch",
+      "va": "0x14137bfb6",
+      "bytes": "e885440000",
+      "instruction": "call 0x141380440"
+    },
+    {
+      "group": "noticeDispatch",
+      "va": "0x14137bfbb",
+      "bytes": "488bd0",
+      "instruction": "mov rdx, rax"
+    },
+    {
+      "group": "noticeDispatch",
+      "va": "0x14137bfbe",
+      "bytes": "488bce",
+      "instruction": "mov rcx, rsi"
+    },
+    {
+      "group": "noticeDispatch",
+      "va": "0x14137bfc1",
+      "bytes": "e8aaf6ffff",
+      "instruction": "call 0x14137b670"
+    },
+    {
+      "group": "noticeDispatch",
+      "va": "0x14137bfc6",
+      "bytes": "e9a5080000",
+      "instruction": "jmp 0x14137c870"
+    },
+    {
+      "group": "keyedNoticeHelper",
+      "va": "0x14137b6a1",
+      "bytes": "4881c1b0000000",
+      "instruction": "add rcx, 0xb0"
+    },
+    {
+      "group": "keyedNoticeHelper",
+      "va": "0x14137b6a8",
+      "bytes": "e8837012ff",
+      "instruction": "call 0x1404a2730"
+    },
+    {
+      "group": "keyedNoticeHelper",
+      "va": "0x14137b6b6",
+      "bytes": "756e",
+      "instruction": "jne 0x14137b726"
+    },
+    {
+      "group": "keyedNoticeHelper",
+      "va": "0x14137b6cd",
+      "bytes": "7557",
+      "instruction": "jne 0x14137b726"
+    },
+    {
+      "group": "keyedNoticeHelper",
+      "va": "0x14137b6e5",
+      "bytes": "e85643baff",
+      "instruction": "call 0x140f1fa40"
+    },
+    {
+      "group": "keyedNoticeHelper",
+      "va": "0x14137b6ed",
+      "bytes": "7409",
+      "instruction": "je 0x14137b6f8"
+    },
+    {
+      "group": "keyedNoticeHelper",
+      "va": "0x14137b6f5",
+      "bytes": "ff5240",
+      "instruction": "call qword ptr [rdx + 0x40]"
+    },
+    {
+      "group": "keyedNoticeHelper",
+      "va": "0x14137b707",
+      "bytes": "e8649227ff",
+      "instruction": "call 0x1405f4970"
+    },
+    {
+      "group": "keyedNoticeHelper",
+      "va": "0x14137b720",
+      "bytes": "e83b4b0000",
+      "instruction": "call 0x141380260"
     }
   ],
   "helperOrigin": "0x154b5b5 is a return within a generic message helper, not unique evidence of a startup action",
   "clickOrigin": "0x13801ba follows the fixed 0x4ff click-message construction",
+  "noticeHandoff": {
+    "messageSystemGlobal": "0x143eac9c8",
+    "keyedNoticeHelper": "0x14137b670",
+    "keyedCollectionOffset": "0xb0",
+    "installerMessage": {
+      "id": 81,
+      "dispatchIndex": 8,
+      "case": "0x14137bfaf",
+      "callsHelperDirectly": true
+    },
+    "installedDriverMessage": {
+      "id": 82,
+      "dispatchIndex": 9,
+      "case": "0x14137bdd9",
+      "canSkipHelperWhenKeyedByteNonzero": true
+    },
+    "separatePrimaryPublication": true
+  },
   "primaryPublication": {
     "message": 714,
     "descriptorArgumentRegister": "r8",
