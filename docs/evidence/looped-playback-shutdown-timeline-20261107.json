@@ -1,0 +1,24 @@
+{
+  "schema": "sl3.looped-playback-shutdown-timeline.v1",
+  "sourcesSha256": {
+    "host": "785677607f6dfb79264b86adf445e0f0334bbf98e784a5078e4f34b7b1b1a6e5",
+    "broker": "97f834bb0db49184b2c9aa19b0442be798ed1b1d3bc07dec797d31e7a268642d",
+    "interaction": "f09f35e28ab53c16aaa88a8ab06b4c32763f00b7ed31bb8eb505251c85f89ce2",
+    "controller-journal": "5106ccac00f49aec22697550d498955085b3552d0c2e2d50c2bb0b7a2296b366",
+    "worker-journal": "9d96505cf3318a27320ecfe78c9407ca81221372b8fe73b29cfd4055f08dbbcb"
+  },
+  "viewingSecondsFromHostClock": "540.1002273",
+  "closeInstructionSentUtc": "2026-11-06T11:25:28.368Z",
+  "applicationExitFileTimeUtc": "134384381163843715",
+  "closeConfirmationReceivedUtc": "2026-11-06T11:30:43.293Z",
+  "instructionToForcedExit100ns": 1880163715,
+  "forcedExitToConfirmation100ns": 1269086285,
+  "brokerFailure": "client_control_abandoned",
+  "brokerFailurePhase": "running",
+  "brokerRetirementVerified": true,
+  "workerReleaseWithinControllerClose": true,
+  "nativeStreamFaultInFinalReport": 0,
+  "actualManualWindowCloseTimeKnown": false,
+  "asioShutdownCallsObserved": false,
+  "rootCauseEstablished": false
+}

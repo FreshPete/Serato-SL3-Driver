@@ -1,5 +1,17 @@
 # Serato shutdown after the two-deck test
 
+## Timing of the looped playback retest
+
+The close instruction was sent at 11:25:28.368 UTC. Windows recorded exit of the supervisor's exact Serato process 188.016 seconds later, and the supervisor identifies that exit as forced at its viewing limit. The owner's normal-close confirmation reached the chat 126.909 seconds after the process exit. These timestamps identify the instruction, process exit and receipt of the confirmation. The time of any manual window-close action remains unknown. [Bound timeline](evidence/looped-playback-shutdown-timeline-20261107.json)
+
+The broker reported `client_control_abandoned` in its running phase. The controller and worker journals place redirect close and helper unload within the controller's shutdown tick. The final broker report verifies I/O retirement, device release, worker exit and an empty job. The saved trace had already detached after ASIO start and contains no ASIO stop or dispose calls for this run. The failure therefore identifies an abandoned running connection and the verified cleanup that followed. The cause of the delayed application exit remains open. [Looped playback and rollback](evidence/pointer-cleanup-live-retest-20261106.json)
+
+The [offline exporter](../scripts/export-looped-playback-shutdown.py) binds the exact host and broker reports, both journals and a timing-only interaction receipt. It uses the Windows exit FILETIME for the application timestamp and keeps the separate host-monotonic and worker/controller tick clocks in their original domains. Two regenerations matched, and substituting the unwrapped broker result was refused. The interaction text and source records remain private.
+
+For the next playback retest, arrange the manual-close point before the run and use the observer's actual process exit to verify it. A chat reply alone cannot establish when the window closed.
+
+## Earlier shutdown observations
+
 A second attended startup/manual-close cycle passed without a requested power-cycle between successful sessions. Both application exits were code 0 without observer close or forced termination, and both broker outcomes were successful with no ownership failure. This still does not reproduce the older shutdown failure after two-deck playback. [Second cycle evidence](evidence/serato-reopen-success-20261106.json)
 
 **6 November 2026 update:** the assembled temporary wrapper has now passed an attended manual-close test after USB recovery. Serato exited with code 0 before any observer close request, and the new broker reported `ownerFailureCode=none` and a successful requested stop, with complete retirement and rollback. Playback stayed stopped. This establishes one clean startup/shutdown with the smaller fully detached tracer; it does not reproduce or definitively explain the older two-deck failure, or prove shutdown after sustained playback. [Successful session evidence](evidence/assembled-session-success-20261106.json)
