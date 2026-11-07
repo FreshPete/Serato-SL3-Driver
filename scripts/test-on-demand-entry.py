@@ -47,8 +47,19 @@ def main():
     first=call('native-verification-only',command('--verify'));require(first['filesPinned']==source['compiledPayloadFiles'] and first['pythonStarted'] is False and not (kit/'analysis').exists(),'Native verify must remain idle')
     call('native-readonly-plan',command('--plan'));require(not (kit/'analysis').exists(),'Plan creates no mutable state')
     call('resume-without-preparation-refused',command('--resume'),False,'No local setup record is available',native_refusal=False)
-    prepared=call('native-real-preparation',command('--prepare'));require(prepared['preparedExperiment']['prepared'] is True and prepared['normalStartupValidated'] is False,'Actual copied-kit preparation required')
-    experiment=Path(prepared['preparedExperiment']['experiment']);experiment_sha=prepared['preparedExperiment']['experimentSha256']
+    analysis=kit/'analysis';interrupted=analysis/('sl3-on-demand-test-preparing-'+'0'*32)
+    interrupted.mkdir(parents=True)
+    partial=interrupted/'experiment.json';partial.write_bytes(b'{"incomplete":')
+    stage=runpy.run_path(str(ROOT/'scripts/asio-install-journal.py'))['stage_module']()
+    with stage.open_file(analysis/'select-setup.lock',share=0,create=4):
+        call('selection-refuses-a-concurrent-check',command('--select-setup'),False,'WinError 32',native_refusal=False)
+    prepared=call('selection-recovers-interrupted-preparation',command('--select-setup'))
+    experiment=Path(prepared['experiment']);experiment_sha=prepared['experimentSha256']
+    require(prepared['filesWritten'] is True and partial.read_bytes()==b'{"incomplete":' and experiment.parent!=interrupted,
+            'Select must preserve interrupted files and publish a separate complete setup')
+    selected_again=call('selection-reuses-the-committed-record',command('--select-setup'))
+    require(selected_again['experiment']==str(experiment) and selected_again['experimentSha256']==experiment_sha and
+            selected_again['filesWritten'] is False,'Reopening setup must reuse the published record')
     experiment_record=json.loads(experiment.read_bytes());bundle=Path(experiment_record['bundle']['directory'])
     origin_manifest=json.loads((kit/'native-package/bundle-manifest.json').read_bytes())
     rebound_manifest=json.loads((bundle/'bundle-manifest.json').read_bytes())

@@ -67,6 +67,10 @@ def host_paths(application,api):
     return application,installation,pointer
 
 
+def setup_records(analysis):
+    return [item for item in analysis.iterdir() if re.fullmatch('sl3-on-demand-test-[0-9a-f]{32}',item.name)]
+
+
 def resume(path,expected,application):
     kit=verify(path,expected)
     api=module('serato-on-demand-test.py')
@@ -74,7 +78,7 @@ def resume(path,expected,application):
     binding=module('rebind-asio-deployment.py')['rebind'](ROOT/'native-package',kit['nativeBundleSha256'],installation=installation,pointer=pointer)
     analysis=ROOT/'analysis'
     require(analysis.is_dir() and not analysis.is_symlink() and not analysis.is_junction(),'No local setup record is available')
-    candidates=[item for item in analysis.iterdir() if re.fullmatch('sl3-on-demand-test-[0-9a-f]{32}',item.name)]
+    candidates=setup_records(analysis)
     require(len(candidates)==1,'Exactly one local setup record required')
     folder=candidates[0]
     require(folder.is_dir() and not folder.is_symlink() and not folder.is_junction(),'Ordinary local setup directory required')
@@ -100,7 +104,7 @@ def resume(path,expected,application):
             'filesWritten':False,'elevationRequested':False,'seratoLaunched':False,'nativeDeviceAccess':False}
 
 
-def prepare(path,expected,application,write=False,first_only=False):
+def prepare(path,expected,application,write=False,publish_selected=False):
     record=verify(path,expected)
     api=module('serato-on-demand-test.py')
     application,installation,pointer=host_paths(application,api)
@@ -110,11 +114,12 @@ def prepare(path,expected,application,write=False,first_only=False):
     result={'schema':'sl3.on-demand-kit-preparation.v1','planOnly':not write,'kitVerified':True,'bundleBinding':rebound,
             'installed':False,'elevationRequested':False,'seratoLaunched':False,'nativeDeviceAccess':False,'normalStartupValidated':False}
     if not write:return result
-    analysis=ROOT/'analysis';require(not analysis.is_symlink() and not analysis.is_junction(),'Ordinary analysis state directory required');analysis.mkdir(exist_ok=not first_only)
+    analysis=ROOT/'analysis';require(not analysis.is_symlink() and not analysis.is_junction(),'Ordinary analysis state directory required');analysis.mkdir(exist_ok=True)
     identity=uuid.uuid4().hex
     rebound=rebinder['rebind'](ROOT/'native-package',record['nativeBundleSha256'],analysis/('sl3-deployment-rebound-'+identity),installation,pointer)
     python=ROOT/'runtime/python/python.exe';require(sha(python)==record['pythonExecutableSha256'],'Kit Python image differs')
-    output=analysis/('sl3-on-demand-test-'+identity)
+    selected=analysis/('sl3-on-demand-test-'+identity)
+    output=analysis/('sl3-on-demand-test-preparing-'+identity) if publish_selected else selected
     command=[str(python),'-I','-B',str(ROOT/'scripts/prepare-serato-on-demand-test.py'),'--application',str(application),
         '--bundle',rebound['directory'],'--expected-bundle-sha256',rebound['bundleManifestSha256'],
         '--powershell',str(ROOT/'runtime/powershell'),'--expected-powershell-manifest-sha256',record['powershellManifestSha256'],
@@ -122,11 +127,35 @@ def prepare(path,expected,application,write=False,first_only=False):
     child=subprocess.run(command,capture_output=True,timeout=90,creationflags=subprocess.CREATE_NO_WINDOW)
     require(child.returncode==0,'Local one-time preparation refused: '+child.stderr.decode('utf-8',errors='replace'))
     prepared=json.loads(child.stdout);verify(path,expected)
+    if publish_selected:
+        require(prepared['experiment']==str(output/'experiment.json') and
+                sha(output/'experiment.json')==prepared['experimentSha256'],'Incomplete local setup preparation')
+        output.rename(selected)
+        prepared['experiment']=str(selected/'experiment.json')
     common=['--experiment',prepared['experiment'],'--expected-experiment-sha256',prepared['experimentSha256']]
     entry=[str(python),'-I','-B',str(ROOT/'scripts/serato-on-demand-test.py')]
     return {**result,'bundleBinding':rebound,'preparedExperiment':prepared,'planArguments':entry+['plan']+common,
             'setupArguments':entry+['setup']+common,'restoreArguments':entry+['restore']+common,
             'setupAndRestoreRequireAlreadyElevatedProcess':True}
+
+
+def select_setup(path,expected,application):
+    stage=module('asio-install-journal.py')['stage_module']()
+    require(not stage.elevated(),'Select setup as an ordinary user')
+    analysis=ROOT/'analysis'
+    require(not analysis.is_symlink() and not analysis.is_junction(),'Ordinary analysis state directory required')
+    analysis.mkdir(exist_ok=True)
+    lock=analysis/'select-setup.lock'
+    lock_existed=lock.exists()
+    with stage.pinned_parents(lock), stage.open_file(lock,share=0,create=4) as handle:
+        info=stage.information(handle,False)
+        require(Path(info['path'])==lock and info['links']==1 and info['size']==0,'Exact local selection lock required')
+        fresh=not setup_records(analysis)
+        if fresh:
+            prepare(path,expected,application,write=True,publish_selected=True)
+        result=resume(path,expected,application)
+        result['filesWritten']=fresh or not lock_existed
+        return result
 
 
 if __name__=='__main__':
@@ -136,11 +165,7 @@ if __name__=='__main__':
     mode.add_argument('--select-setup',action='store_true')
     a=p.parse_args()
     if a.select_setup:
-        fresh=not (ROOT/'analysis').exists()
-        if fresh:
-            prepare(a.manifest,a.expected_manifest_sha256,a.application,write=True,first_only=True)
-        result=resume(a.manifest,a.expected_manifest_sha256,a.application)
-        result['filesWritten']=fresh
+        result=select_setup(a.manifest,a.expected_manifest_sha256,a.application)
     elif a.resume:
         result=resume(a.manifest,a.expected_manifest_sha256,a.application)
     else:

@@ -44,11 +44,13 @@ The same kit renders the expected archive scripts and deployment plan from revie
 
 ### Portable development build
 
-The private `artifacts/build/SL3 Portable Setup` folder keeps the setup window, native entry and `kit` together. **Check setup** locates Serato through Windows and prepares local files on first use. Reopening the window selects the same verified record. Opening the window alone is idle. A second simultaneous preparation cannot create another record because the first must create the local state directory exclusively. Existing partial or ambiguous state requires review.
+The private portable package keeps the setup window, native entry and `kit` together. **Check setup** locates Serato through Windows and prepares local files on first use. Reopening the window selects the same verified record. Opening the window alone is idle. Windows holds an exclusive file handle during selection, and the installer publishes the complete record by renaming its preparation directory. An interruption before publication leaves the unfinished files separate, so the next check can retry with Serato's original setup in place. Ambiguous published records still require review.
 
 The fresh portable fixture passed 20 cases and the prebound fixture passed 19. The first build exposed an output race where the window could miss the helper's last reply. Both builds passed after checking the pipe again after helper exit. The portable window SHA-256 is `2f9a0740c2740572fd52119741bb4d986b49ef77c0e7c8c622a31d9caf933efe`. The local package still needs an attended Install and Restore test, and normal Serato startup on another PC remains unverified.
 
 The private archive `artifacts/build/SL3-Portable-Setup-20261107.zip` contains 762 reviewed files, including the two setup executables and the kit. It omits generated setup state and the Serato executable and archive. The [packaging command](../scripts/package-setup-window.py) verified every ZIP member against the reviewed build and kit. A fresh extraction into a path with spaces and Unicode passed all 20 window cases, including local preparation and reopening. Its SHA-256 is `38eb3a229c6870227bd1002178f8e315da6af21cb336af7e8807a15b8d31cea1`. Extract the entire ZIP to a local folder and open `SL3_Compatibility_Setup.exe`. The trial uses Serato DJ Pro 5.0.0.1278 and requires the UsbDk service running.
+
+The interruption recovery build is `artifacts/build/SL3-Portable-Setup-20261107-r2.zip`, SHA-256 `66596c2a92471e62dd3c8d99e10cfb6614ff786999638b03801e29344436b999`. The relocated native entry passed 40 cases, including refusal while the selection lock was held, preparation after a simulated interruption, and reuse of the exact committed record. The window passed 20 checks and the ZIP packager verified all 762 files. These checks left the original Serato setup in place.
 
 ### Earlier install-once build
 
