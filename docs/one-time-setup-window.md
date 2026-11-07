@@ -38,6 +38,8 @@ SHA256 bf412432079280204e5defdf285a30d8874c0db171655cb73b81b09339789989
 
 This build wraps the reviewed [application-bound startup package](application-bound-broker.md#stop-during-automatic-startup). Its three native entry checks and all 18 window cases passed. A separate check through the compiled entry found the original Serato archive, Serato closed and no temporary driver installed. The kit manifest SHA-256 is `4eb3ac3e1f925dcf46d36609bc31f4b13563f8c1c17aa6df6081f74a4574b196`. The native entry and kit are bound to their local paths. The setup window is ready for the first live install-once test, with a ten-minute diagnostic audio limit. [Test steps](return-to-testing.md#next-attended-test)
 
+The exact rebound package (`ed0b35e9576b9b927acc843f06e570ccaa4af4c569706fbd53cfee02d0f4ff3b`) passed 20 isolated setup and restore checks. The repeat install returned no write steps and preserved the staged archive witnesses. Restore removed the fixture package, and the real registration was unchanged. The fixture used a synthetic archive and private registry keys. Its report SHA-256 is `fd2ba3a4edd5d01405e45a4968e0345e6184a419c20956f42c36f7a6f52cb862`.
+
 ### Earlier idle-guard build
 
 ```text
