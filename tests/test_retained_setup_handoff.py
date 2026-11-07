@@ -1,7 +1,13 @@
 """Retained administrator handoff decisions with no privileged fixture operations."""
+from contextlib import nullcontext
+import hashlib
+import json
+import os
 from pathlib import Path
 import runpy
+from tempfile import TemporaryDirectory
 import unittest
+from unittest.mock import patch
 
 API = runpy.run_path(str(Path(__file__).resolve().parents[1]/'scripts/retained-setup-handoff.py'))
 INSTALLED = {'archive':'installed','seratoRunning':False,'native':{'state':'installed'}}
@@ -50,6 +56,34 @@ class HandoffTests(unittest.TestCase):
         self.assertEqual(self.scenario({'successful':True,'after':INSTALLED},
                                       {'successful':False,'after':INSTALLED}),
                          ('restore_outcome_unverified',['setup','request','idle','restore']))
+
+    def test_window_is_published_only_after_complete_json_is_written(self):
+        with TemporaryDirectory() as directory:
+            folder = Path(directory)
+            receipt = b'{"fixture":true}'
+            (folder/'setup-stdout.json').write_bytes(receipt)
+            window = folder/'window.json'
+            dump = json.dump
+
+            def check_partial_write(record, stream):
+                stream.write('{')
+                stream.flush()
+                self.assertFalse(window.exists())
+                stream.seek(0)
+                dump(record, stream)
+
+            def process_handle(pid):
+                self.assertEqual(pid, os.getpid())
+                return nullcontext((123, None))
+
+            with patch.object(json, 'dump', side_effect=check_partial_write):
+                deadline = API['publish_window'](folder, 'fixture-sha', process_handle)
+
+            record = json.loads(window.read_bytes())
+            self.assertEqual(record['setupReceiptSha256'], hashlib.sha256(receipt).hexdigest())
+            self.assertEqual(record['creationFileTimeUtc'], '123')
+            self.assertEqual(record['deadlineMonotonicNs'], deadline)
+            self.assertFalse((folder/'window.pending').exists())
 
 
 if __name__=='__main__':

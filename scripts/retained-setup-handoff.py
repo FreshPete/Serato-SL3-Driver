@@ -51,11 +51,13 @@ def publish_window(output, expected, process_handle):
     with process_handle(os.getpid()) as process:
         require(process is not None, 'Cannot identify the administrator handoff')
         receipt = (output/'setup-stdout.json').read_bytes()
-        with (output/'window.json').open('x', encoding='utf-8') as stream:
+        pending = output/'window.pending'
+        with pending.open('x', encoding='utf-8') as stream:
             json.dump({'schema':'sl3.retained-setup-window.v1','experimentSha256':expected,
                        'setupReceiptSha256':hashlib.sha256(receipt).hexdigest(),
                        'pid':os.getpid(),'creationFileTimeUtc':str(process[0]),
                        'deadlineMonotonicNs':deadline},stream)
+        pending.rename(output/'window.json')
     return deadline
 
 

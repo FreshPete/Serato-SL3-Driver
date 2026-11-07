@@ -11,7 +11,7 @@ if (([Security.Principal.WindowsPrincipal]::new($identity)).IsInRole([Security.P
 $experiment = Join-Path (Split-Path -Parent $PSScriptRoot) 'analysis/sl3-on-demand-test-retained-idle-guard-20261107/experiment.json'
 $expected = '0d842831f4c1b0a6dfa02ef8f0d07608132aec5128da42b29d8518666f45b538'
 $handoff = Join-Path $PSScriptRoot 'retained-setup-handoff.py'
-$handoffSha = '3d36ee3a89ce9b87413330fa65541200ddc39969308cbdb530afa406afedb49b'
+$handoffSha = 'cfac264d1a2a6285679aca6f5640c6f8110ae3e2f0844d67cebc20f5796e28e1'
 $leases = [Collections.Generic.List[IO.FileStream]]::new()
 
 function Hold-ReviewedFile([string]$Path,[string]$Sha) {
