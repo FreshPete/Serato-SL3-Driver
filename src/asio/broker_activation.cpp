@@ -156,10 +156,16 @@ DriverConfiguration BrokerActivation::application_configuration(BrokerActivation
     claim.value=CreateFileW(claim_path.c_str(),GENERIC_WRITE,0,nullptr,CREATE_NEW,FILE_ATTRIBUTE_NORMAL,nullptr);
     if(claim.value!=INVALID_HANDLE_VALUE){
         auto owner=start(spec);
-        const auto receipt=expected_prefix+worker::Process::executable_sha256(config_path)+"\n";
-        DWORD written=0;
-        require(WriteFile(claim.value,receipt.data(),DWORD(receipt.size()),&written,nullptr) &&
-                written==receipt.size() && FlushFileBuffers(claim.value),"Publish application activation receipt");
+        try{
+            const auto receipt=expected_prefix+worker::Process::executable_sha256(config_path)+"\n";
+            DWORD written=0;
+            // A complete synchronous write commits this process-local receipt.
+            // The exclusive handle prevents readers from seeing it before handoff.
+            require(WriteFile(claim.value,receipt.data(),DWORD(receipt.size()),&written,nullptr) &&
+                    written==receipt.size(),"Publish application activation receipt");
+        }catch(const std::exception& error){
+            throw BrokerActivationError(error.what(),owner->close(std::min<DWORD>(spec.startup_failure_grace_ms,15000)));
+        }
         owner->handed_off_=true;
         return std::move(*owner->configuration_);
     }
@@ -167,13 +173,24 @@ DriverConfiguration BrokerActivation::application_configuration(BrokerActivation
     require(error==ERROR_FILE_EXISTS || error==ERROR_ALREADY_EXISTS || error==ERROR_SHARING_VIOLATION,
             "Cannot claim application activation");
     open_existing_claim(claim,claim_path,spec.startup_timeout_ms);
-    auto selected=load_driver_configuration(config_path,spec.timing);
-    require(selected.broker.has_value(),"Application activation receipt requires a live broker");
-    const auto expected=expected_prefix+worker::Process::executable_sha256(config_path)+"\n";
-    std::string actual(expected.size()+1,'\0');DWORD count=0;
+    constexpr std::size_t digest_and_newline=65;
+    const auto receipt_size=expected_prefix.size()+digest_and_newline;
+    std::string actual(receipt_size+1,'\0');DWORD count=0;
     require(ReadFile(claim.value,actual.data(),DWORD(actual.size()),&count,nullptr)!=FALSE,"Read application activation receipt");
     actual.resize(count);
-    require(actual==expected,"Previous application activation differs or failed; restart only after checking recovery");
+    const auto prefix_read=std::min(actual.size(),expected_prefix.size());
+    if(actual.size()<receipt_size && actual.compare(0,prefix_read,expected_prefix,0,prefix_read)==0){
+        BrokerActivationReport previous;
+        previous.cleanup_error="Previous application activation did not publish a complete receipt";
+        throw BrokerActivationError(previous.cleanup_error,previous);
+    }
+    require(actual.size()==receipt_size && actual.compare(0,expected_prefix.size(),expected_prefix)==0,
+            "Previous application activation uses a different receipt or configuration");
+    auto selected=load_driver_configuration(config_path,spec.timing);
+    require(selected.broker.has_value(),"Application activation receipt requires a live broker");
+    require(actual.compare(expected_prefix.size(),digest_and_newline,
+                           worker::Process::executable_sha256(config_path)+"\n")==0,
+            "Previous application activation configuration differs");
     selected.broker->kind=spec.kind;
     return selected;
 }

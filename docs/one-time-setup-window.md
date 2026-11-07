@@ -32,11 +32,11 @@ Sixteen actual checks cover clean/installed/partial/conflicting eligibility, the
 ## Current private candidate
 
 ```text
-artifacts/build/native-setup-window-app-bound-20261107/build/Release/SL3_Compatibility_Setup.exe
-SHA256 9dd0520ba010efe26602253ace5daa8c9782d6197c40a431218d82d88579df86
+artifacts/build/native-setup-window-application-claim-failure-20261107/build/Release/SL3_Compatibility_Setup.exe
+SHA256 c416cd29e2601ea3b9b517bea28ce8be06ae8d735358ea5f0444a564dad132e9
 ```
 
-The setup-only kit is `artifacts/build/sl3-on-demand-kit-app-bound-20261107`. All 27 moved-kit checks and 18 window checks passed. The moved kit preserved `asio-init-application-v2` and its native binaries, and the entry rejected an altered activation header before starting the helper. The read-only host check found the original Serato archive, Serato stopped and no temporary native package. This build used the existing window code and had no new visual inspection or privileged actions. Normal Serato startup and physical use of this package still need an attended test. [Build and test evidence](evidence/application-bound-setup-window-20261107.json)
+The setup-only kit is `artifacts/build/sl3-on-demand-kit-application-claim-failure-20261107`. It carries the revised driver that reports an incomplete first activation and refuses to start another controller in the same application process. The read-only host check found the original Serato archive, Serato stopped and no temporary native package. This build used the existing window code and had no new visual inspection or privileged actions. Normal Serato startup and physical use of this package still need an attended test. [Current build evidence](evidence/application-claim-failure-20261107.json) · [Earlier application-bound window verification](evidence/application-bound-setup-window-20261107.json)
 
 ### Earlier review build
 

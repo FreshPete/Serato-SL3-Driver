@@ -42,7 +42,8 @@ int wmain(int argc,wchar_t** argv){
     try{
         // A separate owned child deliberately misses startup readiness. It
         // accepts no input contents and does not open a worker/helper/device.
-        if(argc==8 && std::wstring(argv[1])==L"--run"){
+        if((argc==8 || (argc==10 && std::wstring(argv[8])==L"--application-process")) &&
+           std::wstring(argv[1])==L"--run"){
             Sleep(1000);write(std::filesystem::path(std::wstring(argv[5])+L".fixture-exited"),"normal\n");return 0;
         }
         require(argc==5,"Expected simulated controller, worker, reviewed helper and fresh output directory");
@@ -117,6 +118,34 @@ int wmain(int argc,wchar_t** argv){
             require(!activation_controller_retired(unproved),"Observation error is not clean retirement");
         }
         {
+            auto bad=spec;bad.application_bound=true;
+            bad.controller=self();bad.controller_sha256=worker::Process::executable_sha256(self());
+            bad.output=root/L"application-failed";bad.startup_timeout_ms=100;bad.startup_failure_grace_ms=0;
+            {
+                auto first=make_activated_driver_session(bad);
+                require(!first->inspect(),"Application startup without readiness must fail");
+                const auto failed=first->close();
+                require(failed.activation_failure && failed.activation_failure->controller.started &&
+                        failed.activation_failure->controller.process_exited && failed.activation_failure->controller.job_empty &&
+                        failed.activation_failure->termination_requested,"First application object retains owned cleanup evidence");
+            }
+            const auto claim=root/L"application-failed.claim";
+            require(std::filesystem::file_size(claim)==0,"Failed activation leaves its exclusive claim");
+            const auto next=std::make_shared<DriverOwner>(bad);
+            {
+                DriverFacade driver(next,{0,0,44100,128,false});
+                require(driver.init()==ASIOFalse,"A new object cannot reuse an incomplete application receipt");
+                std::array<char,124> message{};driver.getErrorMessage(message.data());
+                require(std::string(message.data()).find("cleanup is unverified")!=std::string::npos,
+                        "Reopen explains the previous incomplete application startup");
+            }
+            const auto failure=next->close();
+            require(failure && failure->activation_failure && !failure->activation_failure->attempted &&
+                    !failure->activation_failure->controller.started && !failure->device_released &&
+                    std::filesystem::file_size(claim)==0 && !std::filesystem::exists(bad.output),
+                    "Refusal preserves the claim without another launch or inferred device release");
+        }
+        {
             auto owner=BrokerActivation::start(spec);auto observed=owner->observe();
             require(observed.ready && observed.controller.started && !observed.controller.process_exited,"On-demand owned controller became ready");
             {
@@ -143,6 +172,7 @@ int wmain(int argc,wchar_t** argv){
         std::cout<<"{\"schema\":\"sl3.broker-activation-tests.v1\",\"passed\":true,\"simulatedSessions\":2,"
                    "\"asioStartStopCycles\":2,\"callbacks\":"<<callbacks.load()<<",\"nativeDeviceAccess\":false,"
                    "\"failedStartupNormalExitObserved\":true,\"failedStartupForcedContainmentObserved\":true,"
+                   "\"incompleteApplicationClaimRefused\":true,"
                    "\"serviceInstalled\":false,\"productionAsioEntryExercised\":false}\n";return 0;
     }catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}
 }
