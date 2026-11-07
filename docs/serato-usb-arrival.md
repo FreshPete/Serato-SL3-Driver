@@ -61,3 +61,5 @@ Both native builds' input, trace/launcher and selected binary hashes remain unch
 The later [authorization-service receiver proof](serato-authorization-service.md) identifies the helper's +0xa0/+0x90 receiver as RLMAuthorization or JWTAuthorization, distinct from DriverAPI. It does not query account state, establish a permitted service result or validate current SL3/audio/DVS.
 
 The later [LicenseController property proof](serato-license-state-binding.md) identifies construction of 0x692/0x693 and a conditional 0x692 update from two controller flags. It does not query live licensing, establish every producer/delivery or demonstrate SL3/audio/DVS readiness.
+
+The [subscription follow-up](serato-usb-subscription.md) distinguishes the ordinary arrival listener from the state registration that marks matching existing records for processing.
