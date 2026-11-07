@@ -21,6 +21,8 @@ The last read-only check found the original Serato archive, no temporary ASIO pa
 3. If the SL3 connects, close Serato normally and reopen it from the usual shortcut with the SL3 still connected. The result should be the same without a second install, prompt or power cycle. This build has a ten-minute diagnostic audio limit.
 4. If the trial fails, close Serato and use **Check setup** and **Restore original setup** in the setup window. Save any status message first. [Setup and restoration](one-time-setup-window.md)
 
+After Serato closes, the existing application-bound driver records can corroborate the result. The [read-only startup readout](../scripts/read-installed-asio-start.py) takes the reviewed activation configuration and the new `application-<PID>-<creation FILETIME>` session folders in `%LOCALAPPDATA%\SL3RebuildActivated`. Use one `--session` argument for each launch. It checks that the startup receipt and readiness record match the configuration, then reports stream-start replies for the exact host identity and the worker retirement result. A missing or incomplete record stays inconclusive. The readout does not identify the host executable on its own. The two-process Windows fixture returned two start replies and application-exit retirement for each simulated host. Its readout SHA-256 is `ffbc19ed30cef5cee2d0abc1fc52978b702f8859e5f6343b74d40c6454e8c6df`.
+
 ## Fallback if ordinary startup fails
 
 1. Remove USB and any external power for 30 seconds, reconnect the SL3 and wait another 30 seconds before starting the test. Close Serato. The settling interval is part of this trial because a previous redirect stalled shortly after reconnect. The traces do not establish a safe reopen delay.
