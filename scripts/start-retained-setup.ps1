@@ -79,8 +79,16 @@ function Invoke-ReviewedTrial($Record, $SetupProcess) {
         Write-Host 'Checking the USB connection. Keep Serato closed.'
         $startup = & $Record.python.path -I -B $desktop start @desktopArgs --recovery-confirmed
         if ($LASTEXITCODE) { throw 'The retained USB check stopped. See the desktop startup records.' }
-        if (($startup | ConvertFrom-Json).outcome -ne 'broker_ready') { throw 'Unexpected retained USB result.' }
+        $startup = $startup | ConvertFrom-Json
+        if ($startup.outcome -ne 'broker_ready') { throw 'Unexpected retained USB result.' }
         $started = $true
+        if ($null -eq $startup.sl3VisibleDuring) {
+            Write-Host 'USB visibility was inconclusive while the connection was held. The broker is ready for the Serato check.'
+        } elseif ($startup.sl3VisibleDuring) {
+            Write-Host 'The USB snapshots showed the SL3 while the connection was held.'
+        } else {
+            Write-Host 'The USB snapshots did not show the SL3 while the connection was held. The Serato check can still run.'
+        }
 
         Write-Host 'When the observer is armed, open Serato from its usual shortcut. Leave playback stopped.'
         Write-Host 'Note what Serato shows. Keep it open for five seconds after hardware status appears, then close it normally.'
@@ -168,7 +176,7 @@ try {
     if (-not ($Run -or $Trial)) { $plan | ConvertTo-Json -Depth 4; return }
     if (-not $plan.freshSetupRecordDirectory) { throw 'This trial already has setup records. Preserve them and prepare a fresh trial before requesting approval.' }
     if ($Trial) {
-        Hold-ReviewedFile (Join-Path $PSScriptRoot 'retained-desktop-trial.py') '7c91221f259b5affe7ad8a3b2b431083ce9c369df1d4869873bc4da5effcef99'
+        Hold-ReviewedFile (Join-Path $PSScriptRoot 'retained-desktop-trial.py') '50f748fcc01407ef9f38e32a7d64eeb750d274e01b42b35fb9f6b60be245560c'
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'observe-asio-module-load.ps1') '97f15e24e861f8cd82c68ee0723c598382ecf6e41511790c7ea1c12a9147bf0d'
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'inspect-process.psm1') '6ffb8427f79ebd173fd31e9824442293eb66689107fe63307204f76a6db4a290'
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'read-retained-start-result.py') 'd4b91ac3dd7fffa24a6f2ce25a5347d61dfcf1928ccb1f29f711a776e103f012'

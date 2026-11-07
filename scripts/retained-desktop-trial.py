@@ -60,6 +60,13 @@ def stable_single_identity(summary):
             len(sets)==1 and len(sets[0])==1)
 
 
+def sampled_visibility(summary):
+    sets = summary['identitySets']
+    if summary['incompleteSamples'] or len(sets)!=1:
+        return None
+    return bool(sets[0])
+
+
 def observe_release(result, observe, previous):
     """A USB observation failure cannot change the completed retirement result."""
     result['usbReadyForNextAcquire'] = False
@@ -68,7 +75,8 @@ def observe_release(result, observe, previous):
         result['postReleaseIdentity'] = after
         if previous is not None:
             result['beforeToAfter'] = compare_identity(previous['before'], after)
-            result['duringToAfter'] = compare_identity(previous['during'], after)
+            during = previous.get('during')
+            result['duringToAfter'] = compare_identity(during, after) if during is not None else 'indeterminate'
     except (Exception, KeyboardInterrupt) as error:
         result['postReleaseObservationError'] = str(error) or type(error).__name__
 
@@ -123,8 +131,11 @@ def start_trial(snapshot, start, retire, request_restore, record_ready):
         before = snapshot('before')
         require(before, 'Need two complete pre-acquisition snapshots of one unchanged SL3 and no incomplete samples')
         started = start()
-        during = snapshot('during')
-        result = {'outcome':'broker_ready','broker':started,'sl3VisibleBefore':before,'sl3VisibleDuring':during}
+        result = {'outcome':'broker_ready','broker':started,'sl3VisibleBefore':before,'sl3VisibleDuring':None}
+        try:
+            result['sl3VisibleDuring'] = snapshot('during')
+        except (OSError, ValueError, subprocess.SubprocessError) as error:
+            result['duringObservationError'] = str(error) or type(error).__name__
         record_ready(result)
         return result
     except (Exception, KeyboardInterrupt) as error:
@@ -224,7 +235,7 @@ def run(args):
                 identities[phase] = summary
                 if phase=='before':
                     return stable_single_identity(summary)
-                return any(summary['identitySets']) if summary['completeSamples'] else None
+                return sampled_visibility(summary)
 
             def start():
                 with broker['handoff_lock'](session):
@@ -240,8 +251,9 @@ def run(args):
                 with broker['process_handle'](pid) as process:
                     require(process and str(process[0])==owner['controllerCreatedFileTime'] and not process[1](0),
                             'The retained controller exited during the USB observation')
-                    ready.update(usbIdentity=identities,
-                                 beforeToDuring=compare_identity(identities['before'],identities['during']))
+                    during = identities.get('during')
+                    ready.update(usbIdentity=identities, beforeToDuring=(
+                        compare_identity(identities['before'], during) if during is not None else 'indeterminate'))
                     write_report(output/'startup.json',{**result,**ready})
 
             trial = start_trial(snapshot,start,retire,request_restore,record_ready)

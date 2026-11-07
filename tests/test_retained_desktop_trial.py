@@ -23,7 +23,7 @@ class StartupTests(unittest.TestCase):
         def snapshot(phase):
             calls.append(phase)
             value = before if phase=='before' else during
-            if isinstance(value, Exception):
+            if isinstance(value, BaseException):
                 raise value
             return value
 
@@ -68,8 +68,20 @@ class StartupTests(unittest.TestCase):
         self.assertIn('acquisition failed',result['error'])
         self.assertEqual(calls,['before','start','restore'])
 
-    def test_observer_failure_retires_started_broker(self):
+    def test_during_observer_failure_still_checks_live_broker(self):
         result,calls = self.trial(during=OSError('observer failed'))
+        self.assertEqual(result['outcome'],'broker_ready')
+        self.assertIsNone(result['sl3VisibleDuring'])
+        self.assertEqual(result['duringObservationError'],'observer failed')
+        self.assertEqual(calls,['before','start','during','record'])
+
+    def test_before_observer_failure_prevents_acquisition(self):
+        result,calls = self.trial(before=OSError('observer failed'))
+        self.assertEqual(result['outcome'],'startup_failed')
+        self.assertEqual(calls,['before','restore'])
+
+    def test_interruption_retires_started_broker(self):
+        result,calls = self.trial(during=KeyboardInterrupt())
         self.assertIs(result['retirement']['controllerExited'],True)
         self.assertEqual(calls,['before','start','during','retire','restore'])
 
@@ -102,6 +114,12 @@ class IdentityTests(unittest.TestCase):
             with self.subTest(samples=samples):
                 changed = DESKTOP['identity_samples'](samples)
                 self.assertEqual(DESKTOP['compare_identity'](original,changed),'indeterminate')
+                self.assertIsNone(DESKTOP['sampled_visibility'](changed))
+
+    def test_visibility_distinguishes_stable_absence_from_no_samples(self):
+        for samples, expected in (([],None),([self.sample(None)]*2,False),([self.sample(2)]*2,True)):
+            with self.subTest(samples=samples):
+                self.assertIs(DESKTOP['sampled_visibility'](DESKTOP['identity_samples'](samples)),expected)
 
     def test_before_acquisition_requires_two_complete_unchanged_single_device_samples(self):
         one, changed, absent, incomplete = self.sample(2), self.sample(3), self.sample(None), self.sample(2,False)
@@ -127,6 +145,11 @@ class IdentityTests(unittest.TestCase):
         self.assertEqual(result['beforeToAfter'],'same_sampled_identity_set')
         self.assertEqual(result['duringToAfter'],'different_sampled_identity_set')
         self.assertIs(result['usbReadyForNextAcquire'],False)
+
+        result = {'outcome':'retired'}
+        DESKTOP['observe_release'](result,observe,{'before':original})
+        self.assertEqual(result['beforeToAfter'],'same_sampled_identity_set')
+        self.assertEqual(result['duringToAfter'],'indeterminate')
 
         def fail(*_):
             raise OSError('USB observer failed')

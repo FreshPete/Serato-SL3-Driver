@@ -23,6 +23,21 @@
     "bothSignalledRestore": true,
     "summarySha256": "f050f1c1d115832b8876389d69ddeb39f88fc18db64b78cd971361e03d3b4d49"
   },
+  "duringObservationFailureRehearsal": {
+    "desktopRunnerSha256": "50f748fcc01407ef9f38e32a7d64eeb750d274e01b42b35fb9f6b60be245560c",
+    "desktopTestsSha256": "3fd955fc928a562e21bd53eb45ed611c16c1e14327e7e56f2d16565ccd8e3447",
+    "retainedTestsPassed": 42,
+    "injectedObserverTimeout": true,
+    "startupSha256": "41d54d527e844a3e822ec1410d91405bef2af18bf697578741b21b9e7c80f0a3",
+    "finishSha256": "8038d07a1f70014b0988058f59d43d095e329c65f50593138bd98640c1032ec3",
+    "readoutSha256": "2c69c0c921b8098460fc477c1c3f8c02dc1c9be6f1eb24be0eeb9c9dc1923337",
+    "brokerKind": "simulated",
+    "matchingAdmissionReplies": 3,
+    "matchingStreamStartReplies": 4,
+    "workerRetirementReported": true,
+    "fixtureSetupRestored": true,
+    "nativeAcquisitionReported": false
+  },
   "ordinaryToElevatedWindowVerifiedLive": false,
   "protectedSetupChanged": false,
   "seratoLaunched": false,
