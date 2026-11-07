@@ -1,0 +1,31 @@
+{
+  "schema": "sl3.retained-desktop-trial-evidence.v1",
+  "dateUtc": "2026-11-07",
+  "sourceSha256": {
+    "desktopRunner": "05b1ce45d8e2b023bacee4983b1bbd9a902a5903d461196af541cd595c6b8e0c",
+    "administratorHandoff": "3d36ee3a89ce9b87413330fa65541200ddc39969308cbdb530afa406afedb49b",
+    "desktopTests": "75b28117c5b7a8a3a15ed80c2a1c1e04472b3cf7775e5eae422e087f8a52c8f3"
+  },
+  "preparedInputsSha256": {
+    "experiment": "0d842831f4c1b0a6dfa02ef8f0d07608132aec5128da42b29d8518666f45b538",
+    "launchRecord": "c2ca50acac0acd6296a85471d00e30249a92c4c2159f5564acadbffae8d1abf8"
+  },
+  "retainedTestsPassed": 28,
+  "newDesktopTestsPassed": 7,
+  "exactWindowsProcessWindowVerifiedWithOrdinaryFixture": true,
+  "readOnlyDesktopPlanPassed": true,
+  "readOnlyAdministratorPlanSawOriginalSetup": true,
+  "wrongLaunchHashRefused": true,
+  "absentHandoffRefused": true,
+  "simulatedWindowsBroker": {
+    "successRetiredAndWithdrewPointer": true,
+    "failedPostObservationRetiredAndWithdrewPointer": true,
+    "bothSignalledRestore": true,
+    "summarySha256": "f050f1c1d115832b8876389d69ddeb39f88fc18db64b78cd971361e03d3b4d49"
+  },
+  "ordinaryToElevatedWindowVerifiedLive": false,
+  "protectedSetupChanged": false,
+  "seratoLaunched": false,
+  "nativeDeviceAcquired": false,
+  "elevationRequested": false
+}

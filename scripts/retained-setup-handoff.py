@@ -1,7 +1,9 @@
 """Run one reviewed retained setup and restoration in an attended administrator session."""
 import argparse
 from contextlib import ExitStack
+import hashlib
 import json
+import os
 from pathlib import Path
 import runpy
 import subprocess
@@ -42,6 +44,19 @@ def coordinate(invoke, wait_request, wait_idle):
     if not restore or restore.get('successful') is not True or restore.get('after')!=CLEAN:
         return 'restore_outcome_unverified'
     return 'restored' if ready else 'restored_after_failed_setup'
+
+
+def publish_window(output, expected, process_handle):
+    deadline = time.monotonic_ns()+VIEW_SECONDS*10**9
+    with process_handle(os.getpid()) as process:
+        require(process is not None, 'Cannot identify the administrator handoff')
+        receipt = (output/'setup-stdout.json').read_bytes()
+        with (output/'window.json').open('x', encoding='utf-8') as stream:
+            json.dump({'schema':'sl3.retained-setup-window.v1','experimentSha256':expected,
+                       'setupReceiptSha256':hashlib.sha256(receipt).hexdigest(),
+                       'pid':os.getpid(),'creationFileTimeUtc':str(process[0]),
+                       'deadlineMonotonicNs':deadline},stream)
+    return deadline
 
 
 def run(experiment, expected, execute):
@@ -87,10 +102,17 @@ def run(experiment, expected, execute):
         output.mkdir()
         held.enter_context(native.s.pinned_parents(output/'result.json'))
 
-        def wait_request():
-            deadline = time.monotonic()+VIEW_SECONDS
-            while time.monotonic()<deadline and native.s.absent(output/'restore.request'):
+        def wait_window():
+            desktop = api['module']('asio-diagnostic-session.py')
+            deadline = publish_window(output,expected,desktop['process_handle'])
+            while time.monotonic_ns()<deadline and native.s.absent(output/'restore.request'):
                 time.sleep(.25)
+
+        def wait_request():
+            try:
+                wait_window()
+            except (OSError, ValueError) as error:
+                result['windowError'] = str(error)
 
         def wait_idle():
             deadline = time.monotonic()+RETIRE_SECONDS
@@ -126,7 +148,7 @@ def main():
     args = parser.parse_args()
     result = run(args.experiment.absolute(),args.expected_experiment_sha256,args.action=='run')
     print(json.dumps(result,indent=2))
-    return 0 if result['planOnly'] or result['outcome']=='restored' else 1
+    return 0 if result['planOnly'] or (result['outcome']=='restored' and 'windowError' not in result) else 1
 
 
 if __name__ == '__main__':
