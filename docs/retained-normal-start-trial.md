@@ -10,6 +10,8 @@ After another power cycle, Windows canceled the administrator prompt for the ins
 
 At the later retry, the owner confirmed a 30-second power cycle and the read-only port query reported the expected SL3 descriptor. The original Rane binding still reported Code 39. Windows canceled the administrator launch before setup began. The postcheck showed the original Serato archive and no temporary driver installed. This retry made no UsbDk acquisition and did not open Serato.
 
+The subsequent handoff attempt added a baseline from Serato's installed libusb library. All four complete snapshots showed the same SL3 identity before acquisition. Windows canceled the handoff's administrator launch before setup began, and the read-only Plan again confirmed the original archive and no temporary driver. This records visibility before USB ownership. The comparison while the broker owns the SL3 still needs to run. [Handoff baseline](evidence/retained-normal-start-trial-20261107.json)
+
 ## Next Serato check
 
 The setup scripts offer an explicit `--retained-broker` mode for the bounded 44.1 kHz, 128-frame diagnostic bundle. This mode checks that the locator is absent and that neither staged runtime image is in use before setup or restoration. It uses the existing external controller for the USB connection. The default setup path continues to require the on-demand bundle.

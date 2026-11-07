@@ -31,6 +31,21 @@
     "setupStarted": false,
     "seratoLaunched": false
   },
+  "handoffRetry": {
+    "observationUtc": "2026-11-07T17:34:07.323125Z",
+    "expectedDescriptorReportedByHub": true,
+    "preAcquisitionLibusbCompleteSnapshots": 4,
+    "preAcquisitionLibusbSnapshotsWithSl3": 4,
+    "preAcquisitionLibusbIdentityChanges": 0,
+    "administratorLaunchCanceled": true,
+    "setupStarted": false,
+    "usbAcquisitionStarted": false,
+    "seratoLaunched": false,
+    "originalResourcesVerifiedAfterAttempt": true,
+    "temporaryNativePackageAbsentAfterAttempt": true,
+    "libusbSupervisorSha256": "6f6d32bb153ef2d934254dfe2f8f853c547c8d7437464aa4a1d463d1f576d30f",
+    "libusbObservationsSha256": "72d4cf3c82d6a434fa924d69e487076450da8f0e73c1bdb4a1fcd02a6794b8bc"
+  },
   "privateProof": {
     "admittedUtc": "2026-11-07T15:26:17.5090906Z",
     "sampleRateHz": 44100,
