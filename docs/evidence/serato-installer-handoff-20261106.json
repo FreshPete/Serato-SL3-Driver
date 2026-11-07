@@ -32,6 +32,16 @@
       "start": "0x14137b670",
       "endExclusive": "0x14137b74d",
       "sha256": "e378fbc9599f645309a3adebe1c35b93d8c1fd1f8641bcd8fd30e46171fa6bbc"
+    },
+    "compositeDescriptorCopy": {
+      "start": "0x140c00570",
+      "endExclusive": "0x140c005a1",
+      "sha256": "6747cfe55866084b1115e7ebd0e9b92de101dff807c6b96d8651331a7dbe2457"
+    },
+    "commonDescriptorMove": {
+      "start": "0x1421de670",
+      "endExclusive": "0x1421de6ac",
+      "sha256": "ae79001034284b67ebcb9b3db91aafb62161d454bdd927c3a53ff9fab0fdba4d"
     }
   },
   "instructions": [
@@ -139,6 +149,12 @@
     },
     {
       "group": "installerCompletion",
+      "va": "0x1405b0a50",
+      "bytes": "488bf2",
+      "instruction": "mov rsi, rdx"
+    },
+    {
+      "group": "installerCompletion",
       "va": "0x1405b0ac7",
       "bytes": "c6851801000000",
       "instruction": "mov byte ptr [rbp + 0x118], 0"
@@ -235,6 +251,30 @@
     },
     {
       "group": "installerCompletion",
+      "va": "0x1405b0be9",
+      "bytes": "488b4608",
+      "instruction": "mov rax, qword ptr [rsi + 8]"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0bed",
+      "bytes": "4c634004",
+      "instruction": "movsxd r8, dword ptr [rax + 4]"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0bf1",
+      "bytes": "4983c008",
+      "instruction": "add r8, 8"
+    },
+    {
+      "group": "installerCompletion",
+      "va": "0x1405b0bf5",
+      "bytes": "4c03c6",
+      "instruction": "add r8, rsi"
+    },
+    {
+      "group": "installerCompletion",
       "va": "0x1405b0c0a",
       "bytes": "ba51000000",
       "instruction": "mov edx, 0x51"
@@ -280,6 +320,18 @@
       "va": "0x1405b0c48",
       "bytes": "e823a5f2ff",
       "instruction": "call 0x1404db170"
+    },
+    {
+      "group": "installedDriverNotice",
+      "va": "0x14213f75d",
+      "bytes": "488b32",
+      "instruction": "mov rsi, qword ptr [rdx]"
+    },
+    {
+      "group": "installedDriverNotice",
+      "va": "0x14213f783",
+      "bytes": "4c8bc6",
+      "instruction": "mov r8, rsi"
     },
     {
       "group": "installedDriverNotice",
@@ -460,6 +512,84 @@
       "va": "0x14137b720",
       "bytes": "e83b4b0000",
       "instruction": "call 0x141380260"
+    },
+    {
+      "group": "noticeDescriptor",
+      "va": "0x1421dea7b",
+      "bytes": "488b5838",
+      "instruction": "mov rbx, qword ptr [rax + 0x38]"
+    },
+    {
+      "group": "noticeDescriptor",
+      "va": "0x1421dea83",
+      "bytes": "498b4e18",
+      "instruction": "mov rcx, qword ptr [r14 + 0x18]"
+    },
+    {
+      "group": "noticeDescriptor",
+      "va": "0x1421dea87",
+      "bytes": "e8e41aa2fe",
+      "instruction": "call 0x140c00570"
+    },
+    {
+      "group": "noticeDescriptor",
+      "va": "0x1421dea94",
+      "bytes": "e8d7fbffff",
+      "instruction": "call 0x1421de670"
+    },
+    {
+      "group": "noticeDescriptor",
+      "va": "0x1421dea99",
+      "bytes": "488bd0",
+      "instruction": "mov rdx, rax"
+    },
+    {
+      "group": "noticeDescriptor",
+      "va": "0x1421dea9f",
+      "bytes": "ffd3",
+      "instruction": "call rbx"
+    },
+    {
+      "group": "noticeDescriptor",
+      "va": "0x1405beaf0",
+      "bytes": "48894108",
+      "instruction": "mov qword ptr [rcx + 8], rax"
+    },
+    {
+      "group": "noticeDescriptor",
+      "va": "0x1405beb76",
+      "bytes": "4889443908",
+      "instruction": "mov qword ptr [rcx + rdi + 8], rax"
+    },
+    {
+      "group": "noticeDescriptor",
+      "va": "0x141380470",
+      "bytes": "ff5238",
+      "instruction": "call qword ptr [rdx + 0x38]"
+    },
+    {
+      "group": "noticeDescriptor",
+      "va": "0x141380479",
+      "bytes": "4c8b4110",
+      "instruction": "mov r8, qword ptr [rcx + 0x10]"
+    },
+    {
+      "group": "noticeDescriptor",
+      "va": "0x141380480",
+      "bytes": "41ffd0",
+      "instruction": "call r8"
+    },
+    {
+      "group": "noticeDescriptor",
+      "va": "0x1405c6a99",
+      "bytes": "488d91f0f8ffff",
+      "instruction": "lea rdx, [rcx - 0x710]"
+    },
+    {
+      "group": "noticeDescriptor",
+      "va": "0x1405c6aa3",
+      "bytes": "e858c8edff",
+      "instruction": "call 0x1404a3300"
     }
   ],
   "helperOrigin": "0x154b5b5 is a return within a generic message helper, not unique evidence of a startup action",
@@ -481,6 +611,17 @@
       "canSkipHelperWhenKeyedByteNonzero": true
     },
     "separatePrimaryPublication": true
+  },
+  "descriptorHandoff": {
+    "completeType": "ControllerDescriptor",
+    "completionInputBase": "driver::Descriptor",
+    "completionInputBaseOffset": "0x0",
+    "noticePayloadBase": "common::DeviceDescriptor",
+    "noticePayloadBaseOffset": "0x738",
+    "installedDriverDeferredAction": 6,
+    "notificationKeyGetter": "0x1405c6a90",
+    "notificationKeySourceOffset": "0x28",
+    "observedRuntimePointerIdentity": false
   },
   "primaryPublication": {
     "message": 714,

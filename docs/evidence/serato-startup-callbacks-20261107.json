@@ -1,7 +1,7 @@
 {
   "schema": "sl3.serato-startup-callbacks.v1",
   "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
-  "inspectorSha256": "d4bf28bf353872e7cf34ae6facbfe565a9f35483795d86d22dad2aad1a817a6b",
+  "inspectorSha256": "00357d68f36fba0389915335f78d38a3b9ee3bd4e12effb78ef3fd6390d0965d",
   "registration": {
     "callbackConstructor": "0x1419669a0",
     "storage": "0x14197f720",
@@ -32,6 +32,43 @@
     "rlmCheckedMethodSlot": "0xa8",
     "rlmCheckedMethodCategory": 5,
     "rlmCheckedMethodMatchesRegistrationCategory": false
+  },
+  "updaterPublication": {
+    "backendSlot": "0x98",
+    "rlmMethod": "0x141988390",
+    "jwtMethod": "0x141981b30",
+    "jwtNormalReturnIsNull": true,
+    "rlmMethodCanReturnNullOrStoredPointer": true,
+    "onNormalAllocationAndCallReturn": [
+      {
+        "combinedState": false,
+        "overridePointerPresent": false,
+        "messages": [
+          "0x2cb",
+          "0x5d4"
+        ]
+      },
+      {
+        "combinedState": false,
+        "overridePointerPresent": true,
+        "messages": [
+          "0x5d4"
+        ]
+      },
+      {
+        "combinedState": true,
+        "overridePointerPresent": false,
+        "messages": [
+          "0x5d4"
+        ]
+      },
+      {
+        "combinedState": true,
+        "overridePointerPresent": true,
+        "messages": []
+      }
+    ],
+    "checkedDelivery": false
   },
   "checkedInstructions": [
     {
@@ -349,6 +386,142 @@
     {
       "va": "0x14198fb16",
       "bytes": "e835fbfeff"
+    },
+    {
+      "va": "0x14153b294",
+      "bytes": "4038b188020000"
+    },
+    {
+      "va": "0x14153b29d",
+      "bytes": "4038b189020000"
+    },
+    {
+      "va": "0x14153b2ab",
+      "bytes": "40b701"
+    },
+    {
+      "va": "0x14153b2dc",
+      "bytes": "e89f5c4200"
+    },
+    {
+      "va": "0x14153b2e4",
+      "bytes": "488b9198000000"
+    },
+    {
+      "va": "0x14153b2ee",
+      "bytes": "ffd2"
+    },
+    {
+      "va": "0x14153b2f0",
+      "bytes": "4084ff"
+    },
+    {
+      "va": "0x14153b2f3",
+      "bytes": "7475"
+    },
+    {
+      "va": "0x14153b2f5",
+      "bytes": "4885c0"
+    },
+    {
+      "va": "0x14153b2f8",
+      "bytes": "0f8529010000"
+    },
+    {
+      "va": "0x14153b317",
+      "bytes": "7425"
+    },
+    {
+      "va": "0x14153b32f",
+      "bytes": "bad4050000"
+    },
+    {
+      "va": "0x14153b337",
+      "bytes": "e8c4383200"
+    },
+    {
+      "va": "0x14153b356",
+      "bytes": "ff5058"
+    },
+    {
+      "va": "0x14153b369",
+      "bytes": "c3"
+    },
+    {
+      "va": "0x14153b36a",
+      "bytes": "4885c0"
+    },
+    {
+      "va": "0x14153b36d",
+      "bytes": "755c"
+    },
+    {
+      "va": "0x14153b388",
+      "bytes": "7425"
+    },
+    {
+      "va": "0x14153b3a0",
+      "bytes": "bacb020000"
+    },
+    {
+      "va": "0x14153b3a8",
+      "bytes": "e8e33a3200"
+    },
+    {
+      "va": "0x14153b3c7",
+      "bytes": "ff5058"
+    },
+    {
+      "va": "0x14153b3e4",
+      "bytes": "7425"
+    },
+    {
+      "va": "0x14153b3fc",
+      "bytes": "bad4050000"
+    },
+    {
+      "va": "0x14153b404",
+      "bytes": "e8f7373200"
+    },
+    {
+      "va": "0x14153b423",
+      "bytes": "ff5058"
+    },
+    {
+      "va": "0x141988396",
+      "bytes": "4c8b4148"
+    },
+    {
+      "va": "0x14198839d",
+      "bytes": "4d85c0"
+    },
+    {
+      "va": "0x1419883a0",
+      "bytes": "7426"
+    },
+    {
+      "va": "0x1419883b0",
+      "bytes": "e8dbcdc5fe"
+    },
+    {
+      "va": "0x1419883b5",
+      "bytes": "483b83a8000000"
+    },
+    {
+      "va": "0x1419883bc",
+      "bytes": "740a"
+    },
+    {
+      "va": "0x1419883be",
+      "bytes": "488b4348"
+    },
+    {
+      "va": "0x1419883c8",
+      "bytes": "33c0"
+    },
+    {
+      "va": "0x141981ba3",
+      "bytes": "33c0"
     }
   ],
   "liveCallbackInvocationObserved": false,

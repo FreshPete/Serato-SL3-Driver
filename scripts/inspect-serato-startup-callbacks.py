@@ -89,7 +89,72 @@ FACTS = """
 14198fa71 call 0x14197fb30
 14198fb0c mov r8d, r15d
 14198fb16 call 0x14197f650
+14153b294 cmp byte ptr [rcx + 0x288], sil
+14153b29d cmp byte ptr [rcx + 0x289], sil
+14153b2ab mov dil, 1
+14153b2dc call 0x141960f80
+14153b2e4 mov rdx, qword ptr [rcx + 0x98]
+14153b2ee call rdx
+14153b2f0 test dil, dil
+14153b2f3 je 0x14153b36a
+14153b2f5 test rax, rax
+14153b2f8 jne 0x14153b427
+14153b317 je 0x14153b33e
+14153b32f mov edx, 0x5d4
+14153b337 call 0x14185ec00
+14153b356 call qword ptr [rax + 0x58]
+14153b369 ret
+14153b36a test rax, rax
+14153b36d jne 0x14153b3cb
+14153b388 je 0x14153b3af
+14153b3a0 mov edx, 0x2cb
+14153b3a8 call 0x14185ee90
+14153b3c7 call qword ptr [rax + 0x58]
+14153b3e4 je 0x14153b40b
+14153b3fc mov edx, 0x5d4
+14153b404 call 0x14185ec00
+14153b423 call qword ptr [rax + 0x58]
+141988396 mov r8, qword ptr [rcx + 0x48]
+14198839d test r8, r8
+1419883a0 je 0x1419883c8
+1419883b0 call 0x1405e5190
+1419883b5 cmp rax, qword ptr [rbx + 0xa8]
+1419883bc je 0x1419883c8
+1419883be mov rax, qword ptr [rbx + 0x48]
+1419883c8 xor eax, eax
+141981ba3 xor eax, eax
 """
+
+
+def updater_messages(app, require, combined_state, override_present):
+    rows = {row.address: row for row in app.function(0x14153b280)}
+    branches = {
+        0x14153b2f3: not combined_state,
+        0x14153b2f8: override_present,
+        0x14153b36d: override_present,
+        0x14153b317: False,  # Normal allocation and call return.
+        0x14153b388: False,
+        0x14153b3e4: False,
+    }
+    publications = {0x14153b356:'0x5d4', 0x14153b3c7:'0x2cb', 0x14153b423:'0x5d4'}
+    messages = []
+    address = 0x14153b2f0
+    for _ in range(len(rows)):
+        require(address in rows, 'Updater path left its reviewed instruction extent')
+        row = rows[address]
+        if address in publications:
+            messages.append(publications[address])
+        if row.mnemonic == 'ret':
+            return messages
+        next_address = address + row.size
+        if row.mnemonic == 'jmp':
+            next_address = int(row.op_str, 16)
+        elif row.mnemonic.startswith('j'):
+            require(address in branches, 'Unexpected condition on updater publication path')
+            if branches[address]:
+                next_address = int(row.op_str, 16)
+        address = next_address
+    raise ValueError('Updater publication path did not return')
 
 
 def inspect(path):
@@ -98,7 +163,8 @@ def inspect(path):
     require = helpers['require']
     checked = []
     for line in FACTS.strip().splitlines():
-        address, mnemonic, operands = line.split(maxsplit=2)
+        address, instruction = line.split(maxsplit=1)
+        mnemonic, _, operands = instruction.partition(' ')
         row = app.at(int(address,16), mnemonic, operands)
         checked.append({'va':hex(row.address), 'bytes':row.bytes.hex()})
     require(app.rip(app.at(0x141539715))==0x14153b500, 'Callback target differs')
@@ -128,6 +194,14 @@ def inspect(path):
             app.text(app.base+name+16)=='.?AVRLMAuthorization@authorization@serato@@' and
             struct.unpack('<Q',app.data(rlm_table+0xa8,8))[0]==0x14198f940,
             'RLM dispatch receiver differs')
+    jwt_table = 0x142fd09c8
+    locator, = struct.unpack('<Q',app.data(jwt_table-8,8))
+    signature, offset, displacement, name, _, self_rva = struct.unpack('<6I',app.data(locator,24))
+    require((signature,offset,displacement)==(1,0,0) and app.base+self_rva==locator and
+            app.text(app.base+name+16)=='.?AVJWTAuthorization@authorization@serato@@' and
+            struct.unpack('<Q',app.data(rlm_table+0x98,8))[0]==0x141988390 and
+            struct.unpack('<Q',app.data(jwt_table+0x98,8))[0]==0x141981b30,
+            'Startup updater service slots differ')
     return {'schema':'sl3.serato-startup-callbacks.v1','applicationSha256':app.sha,
             'inspectorSha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
             'registration':{'callbackConstructor':'0x1419669a0','storage':'0x14197f720',
@@ -140,6 +214,14 @@ def inspect(path):
                         'refresh':'0x1405a5aa0','directRefreshCalls':[hex(a) for a in callers],
                         'rlmCheckedMethodSlot':'0xa8','rlmCheckedMethodCategory':5,
                         'rlmCheckedMethodMatchesRegistrationCategory':False},
+            'updaterPublication':{
+                'backendSlot':'0x98','rlmMethod':'0x141988390','jwtMethod':'0x141981b30',
+                'jwtNormalReturnIsNull':True,'rlmMethodCanReturnNullOrStoredPointer':True,
+                'onNormalAllocationAndCallReturn':[
+                    {'combinedState':state, 'overridePointerPresent':override,
+                     'messages':updater_messages(app, require, state, override)}
+                    for state in (False, True) for override in (False, True)],
+                'checkedDelivery':False},
             'checkedInstructions':checked,'liveCallbackInvocationObserved':False,
             'vendorCodeExecuted':False,'installedFilesChanged':False,'deviceAccess':False}
 

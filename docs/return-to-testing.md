@@ -1,6 +1,6 @@
 # SL3 Windows handoff, 7 November 2026
 
-The rebuilt Windows driver has carried Phase Essential tracking in Serato DJ Pro 5.0.0.1278 through the temporary installer-assisted setup. The next test is one install followed by two launches from the usual Serato shortcut. The earlier audio recordings are sufficient for this milestone. [One-time setup window](one-time-setup-window.md)
+The rebuilt Windows driver has carried Phase Essential tracking in Serato DJ Pro 5.0.0.1278 through the temporary installer-assisted setup. A separately armed watcher then enabled [two consecutive starts from the usual shortcut](serato-installer-handoff.md#two-shortcut-launches-with-the-windows-helper) under one trial install. The next attended check is to repeat those two starts after the installer sets up the watcher and the user signs back in to Windows. Playback can stay stopped.
 
 ## Verified on the bench
 
@@ -12,9 +12,15 @@ The rebuilt Windows driver has carried Phase Essential tracking in Serato DJ Pro
 | Retained USB | Two independent ASIO host processes completed 1,031 and 1,032 callbacks over a single retained USB connection. The controller and worker retired after both clients closed. This used a private host and silent output. [Retained hardware result](evidence/retained-normal-start-trial-20261107.json) |
 | Shutdown | The installer-assisted session closed cleanly with playback stopped and reopened successfully without a requested power cycle. In the longer looped run, Windows recorded the supervisor's forced exit before the close confirmation reached the chat. The time of the manual window close remains unknown. The supervisor verified restoration afterward. [Stopped-playback reopen](evidence/serato-reopen-success-20261106.json) · [Looped playback timeline](serato-shutdown-diagnostic.md#timing-of-the-looped-playback-retest) |
 
-The last read-only check found the original Serato archive, no temporary ASIO package and no running Serato or project audio processes. Windows listed the SL3 under its original `strmdrv` binding with Code 39, the signed UsbDk service was running, and Windows reported Secure Boot enabled. A fresh five-second idle libusb check returned four complete snapshots with one unchanged SL3 identity. The private observation file SHA-256 is `4f3826ee80f67b5fde7ad2b344e34fd2e60683c7a57a66d743f528a003559178`. This confirms idle visibility. [USB baseline](evidence/retained-release-identity-20261107.json) · [Original driver rejection](serato-usb-discovery.md#what-the-retained-usb-connection-exposes)
+Before the one-time install trial, a read-only check found the original Serato archive, no temporary ASIO package and no running Serato or project audio processes. Windows listed the SL3 under its original `strmdrv` binding with Code 39, the signed UsbDk service was running, and Windows reported Secure Boot enabled. A five-second idle libusb check returned four complete snapshots with one unchanged SL3 identity. The private observation file SHA-256 is `4f3826ee80f67b5fde7ad2b344e34fd2e60683c7a57a66d743f528a003559178`. This confirms idle visibility. [USB baseline](evidence/retained-release-identity-20261107.json) · [Original driver rejection](serato-usb-discovery.md#what-the-retained-usb-connection-exposes)
 
-## Next attended test
+## One-time install trial
+
+The portable r2 setup reported a successful install and passed its postcheck. Both starts used the original desktop shortcut. The first process exited normally before the second was launched, with the SL3 still connected and no repeat install. The owner reported offline audio on both launches. The candidate resource archive was in place, Windows still enumerated the SL3, and module snapshots from both Serato processes showed libusb loaded without the rebuilt ASIO DLL. No application-bound activation receipts appeared. These observations narrow the next check to Serato's device selection and request for ASIO. They do not show which selection step failed. [Arrival and selection boundaries](serato-usb-subscription.md)
+
+The same setup window restored the original installation. A separate check matched the original archive hash and found no staged package, rebuilt ASIO or COM registration, or running Serato or SL3 audio process.
+
+## Repeat after a device-selection change
 
 1. Close Serato. In **SL3 Compatibility Setup**, click **Check setup**, then **Install** and approve the Windows prompt. Wait for **Installed — ready for a Serato startup test**, then close the setup window.
 2. Open Serato from the usual shortcut. Check that it connects to the SL3 and shows deck controls. Leave any Download Driver notice untouched and report it if it appears.
