@@ -1,5 +1,7 @@
 # Protected on-demand ASIO package
 
+The [application-bound follow-up](#application-bound-candidate) adds a separate opt-in mode. The original per-session package remains the default.
+
 The persistent-install route now has a separate, versioned native diagnostic package. Its ASIO entry, private worker configuration and timing record reference the same final protected installation directory. It does not depend on a prepublished session pointer. The [earlier configuration review](asio-activation-configuration-review.md) could only bind a writable engineering bundle; this package carries all three records for normal installer staging and owned removal.
 
 This implements package construction and installer-library support, not the finished install-once experience. No production installation, SL3 acquisition or normal Serato startup has been performed through this package. A current Serato profile/admission route, native activation/reopen/shutdown tests, latency measurement and longer reliability tests remain required.
@@ -41,3 +43,15 @@ Another **100 legacy checks** passed: preparation 26, diagnostic rebinding 10, s
 A preliminary copy suite exceeded the wrapper's 180-second observation limit. Its result was not counted as a pass; its marked private registry branch was verified and removed, and fixture files were preserved. The complete final run used a 900-second per-suite limit and verified source hashes remained unchanged throughout. A legacy staging check also hit a shared-input file lock when run concurrently; its isolated rerun passed. Neither harness issue involved production registration, package execution or the SL3.
 
 The final bundle is private engineering material under `artifacts/build/deployment-bundles/activation-deployment-78bb2eb631de46599c927f8327dd9b8b`, manifest SHA-256 `5a2114b125da044bb827e8efccd2b0d261ba0deedff09f19f58755df77400e6b`. It remains **uninstalled**. Read-only postchecks found original Serato resources, no occupied session paths and no temporary registration; no matching test/controller/worker or Serato process remained. Windows trust/security policy and firmware were unchanged.
+
+## Application-bound candidate
+
+Add `--application-bound` to the preparation command to select `asio-init-application-v2`. The package still uses the same fixed version 2 inventory and binds the same three record paths. The activation mode participates in the package identity, and the verifier regenerates the corresponding `SL3-ASIO-ACTIVATION-2` entry. Rebinding preserves the mode and all native images. A package with the other activation header and recomputed file hashes is refused.
+
+Preparation runs the exact build's passive native configuration inspector on temporary records pointing at the workspace binaries. The inspector checks that the build can parse version 2 before the package is emitted. The package retains the 44.1 kHz, 128-frame, ten-minute diagnostic limit. Its controller [follows the application's lifetime](application-bound-broker.md#automatic-asio-activation) within that limit.
+
+The no-shim Serato setup checks for held controller and worker images in the application-bound installation before changing the setup. This is an idle check at the start of the action. Existing archive and uninstall checks still verify actual ownership and final cleanup. The diagnostic package is prepared locally and remains uninstalled.
+
+All 22 package checks, 261 isolated installer and recovery checks, 20 paired setup and restoration checks, and 13 read-only preparation checks passed. The paired tests held each runtime image in turn and verified that the guard preserved the staged files and registration. The earlier per-session bundle still verifies. [Test counts, scope and exact manifest hashes](evidence/application-bound-deployment-20261107.json).
+
+Two separate setup manifests passed the read-only host plan. The prestarted retained broker comparison uses the earlier locator bundle to test Serato's normal selection path. The application-bound package tests automatic activation only when Serato actually requests ASIO. The retained comparison has a fresh source-bound manifest and a refreshed local probe. The live comparison still needs a fresh SL3 power cycle and an attended administrator approval for temporary setup.

@@ -20,6 +20,9 @@ REQUIRED = {'sl3_asio.dll', 'sl3_broker_controller.exe', 'sl3_usbdk.exe', 'UsbDk
             'deployment-plan.json', 'provenance.json', 'README.txt'}
 ACTIVATION_REQUIRED = REQUIRED | {'sl3-worker.conf', 'sl3-timing.conf'}
 ACTIVATION_MODE = 'asio-init-v1'
+APPLICATION_ACTIVATION_MODE = 'asio-init-application-v2'
+ACTIVATION_HEADERS = {ACTIVATION_MODE: 'SL3-ASIO-ACTIVATION-1',
+                      APPLICATION_ACTIVATION_MODE: 'SL3-ASIO-ACTIVATION-2'}
 
 
 def required_files(manifest):
@@ -28,7 +31,7 @@ def required_files(manifest):
         require('activationMode' not in manifest, 'Legacy bundle cannot select activation')
         return REQUIRED
     require(manifest.get('schema') == 'sl3.deployment-bundle.v2' and
-            manifest.get('activationMode') == ACTIVATION_MODE and
+            manifest.get('activationMode') in tuple(ACTIVATION_HEADERS) and
             manifest.get('timingMode') == 'unmeasured-diagnostic-44100-128', 'Unsupported deployment bundle mode/version')
     return ACTIVATION_REQUIRED
 
@@ -150,14 +153,16 @@ def locator_text(installation, pointer, controller_sha, worker_sha):
             '\nbroker_sha256='+controller_sha+'\nworker_sha256='+worker_sha+'\n').encode('utf-8')
 
 
-def activation_records(installation, controller_sha, worker_sha):
+def activation_records(installation, controller_sha, worker_sha, mode=ACTIVATION_MODE, binaries=None):
     """Records bind final protected destinations, without a session pointer."""
+    require(mode in tuple(ACTIVATION_HEADERS), 'Unknown activation record mode')
+    binaries = installation if binaries is None else binaries
     timing = ('SL3-ASIO-DIAGNOSTIC-TIMING-1\nworker_sha256=' + worker_sha + '\nhelper_sha256=' + HELPER_SHA +
               '\nrate_hz=44100\nbuffer_frames=128\n').encode('utf-8')
-    worker = ('SL3-ASIO-CONFIG-1\nworker=' + str(installation/'sl3_usbdk.exe') + '\nworker_sha256=' + worker_sha +
-              '\nhelper=' + str(installation/'UsbDkHelper.dll') + '\ntiming_record=' + str(installation/'sl3-timing.conf') +
+    worker = ('SL3-ASIO-CONFIG-1\nworker=' + str(binaries/'sl3_usbdk.exe') + '\nworker_sha256=' + worker_sha +
+              '\nhelper=' + str(binaries/'UsbDkHelper.dll') + '\ntiming_record=' + str(installation/'sl3-timing.conf') +
               '\ntiming_record_sha256=' + digest(timing) + '\n').encode('utf-8')
-    entry = ('SL3-ASIO-ACTIVATION-1\ncontroller=' + str(installation/'sl3_broker_controller.exe') +
+    entry = (ACTIVATION_HEADERS[mode] + '\ncontroller=' + str(binaries/'sl3_broker_controller.exe') +
              '\ncontroller_sha256=' + controller_sha + '\ninput=' + str(installation/'sl3-worker.conf') +
              '\ninput_sha256=' + digest(worker) + '\nstartup_timeout_ms=15000\nstartup_failure_grace_ms=5000\nlifetime_ms=600000\n').encode('utf-8')
     return {'sl3-asio.conf': entry, 'sl3-worker.conf': worker, 'sl3-timing.conf': timing}
@@ -329,7 +334,8 @@ def inspect_portable_payloads(manifest, payload):
                 '..' not in path.parts and ':' not in str(path)[2:] and
                 not any(ord(char) < 32 for char in str(path)), 'Local portable destination syntax required')
     if activation:
-        expected_records = activation_records(installation, digest(payload['sl3_broker_controller.exe']), digest(payload['sl3_usbdk.exe']))
+        expected_records = activation_records(installation, digest(payload['sl3_broker_controller.exe']),
+                                              digest(payload['sl3_usbdk.exe']), manifest['activationMode'])
         require(all(payload[name] == data for name, data in expected_records.items()), 'Activation records do not bind protected destinations/binaries/timing')
     else:
         require(payload['sl3-asio.conf'] == locator_text(installation, pointer, digest(payload['sl3_broker_controller.exe']), digest(payload['sl3_usbdk.exe'])), 'Locator does not bind planned binaries/pointer')

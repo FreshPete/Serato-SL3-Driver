@@ -14,6 +14,8 @@ The setup scripts offer an explicit `--retained-broker` mode for the bounded 44.
 
 The next attended test needs a fresh SL3 recovery and temporary protected setup. Bring up the retained connection, then open the original Serato 5.0 executable normally and check whether it selects the SL3 and starts the rebuilt ASIO driver. Keep playback stopped for startup observation and close Serato before retiring the controller and restoring the installation. Normal Serato startup, automatic background startup and USB reacquisition after release remain open.
 
+Use the refreshed retained comparison described in the [package handoff](asio-on-demand-deployment.md#application-bound-candidate). Its setup manifest pins the current helper sources and the same locator bundle as this trial.
+
 ### Observe the normal launch
 
 With the reviewed retained package installed and the broker ready, start the [read-only module observer](../scripts/observe-asio-module-load.ps1) in 64-bit PowerShell under the ordinary desktop account. Open Serato from its usual shortcut after the observer reports that it is armed. The observer samples Windows process and module metadata without attaching to the desktop, launching Serato or setting trace environment variables.

@@ -19,7 +19,11 @@ SUITES = ('test-asio-file-stage.py', 'test-asio-file-cleanup.py', 'test-asio-ins
 
 
 def main():
+    require(len(sys.argv) == 2 or (len(sys.argv) == 3 and sys.argv[2] == '--application-bound'),
+            'Build manifest and optional --application-bound required')
     build = Path(sys.argv[1]).absolute()
+    application_bound = len(sys.argv) == 3
+    mode = API['APPLICATION_ACTIVATION_MODE'] if application_bound else API['ACTIVATION_MODE']
     source_paths = sorted(set([TOOL, Path(__file__), ROOT/'scripts/rebind-asio-deployment.py',
         ROOT/'scripts/prepare-serato-session-capsule.py', ROOT/'scripts/serato-session-capsule.py',
         *(ROOT/'scripts'/name for name in SUITES),
@@ -48,7 +52,7 @@ def main():
                    installation, pointer, True)
     origin_sha = sha(origin/'bundle-manifest.json')
     origin_before = {p.name: sha(p) for p in origin.iterdir()}
-    result = good('prepare-protected-destination-activation-records', lambda: NEW['prepare'](origin, origin_sha, build, sha(build), bundle))
+    result = good('prepare-protected-destination-activation-records', lambda: NEW['prepare'](origin, origin_sha, build, sha(build), bundle, application_bound))
     expected = result['bundleManifestSha256']
     good('verify-v2', lambda: API['verify'](bundle, expected))
     good('legacy-v1-still-verifies', lambda: API['verify'](origin, origin_sha))
@@ -59,7 +63,8 @@ def main():
     refused('actual-capsule-preparation-refuses-before-session-output', lambda: prepare_capsule(
         Path(os.environ['ProgramFiles'])/'Serato/Serato DJ Pro/Serato DJ Pro.exe', bundle, expected))
     require(len(payload) == len(API['REQUIRED'])+2 and manifest['schema'] == 'sl3.deployment-bundle.v2', 'Versioned exact activation inventory')
-    require(payload['sl3-asio.conf'].startswith(b'SL3-ASIO-ACTIVATION-1\n') and
+    header = API['ACTIVATION_HEADERS'][mode].encode() + b'\n'
+    require(manifest['activationMode'] == mode and payload['sl3-asio.conf'].startswith(header) and
             str(pointer).encode() not in payload['sl3-asio.conf'] and str(pointer).encode() not in payload['sl3-worker.conf'],
             'Runtime activation records do not use the legacy pointer')
     good('all-native-payload-bytes-preserved', lambda: require(all(payload[n] == (origin/n).read_bytes() for n in
@@ -75,6 +80,12 @@ def main():
         changed = {**payload, name: payload[name]+b'kind=simulated\n'}
         bad = copy.deepcopy(manifest); bad['files'][name] = {'bytes':len(changed[name]), 'sha256':API['digest'](changed[name])}
         refused('rehashed-'+name+'-refused', lambda bad=bad,changed=changed: API['verify_payloads'](bad,changed))
+    other = API['ACTIVATION_MODE'] if application_bound else API['APPLICATION_ACTIVATION_MODE']
+    entry = payload['sl3-asio.conf'].replace(header, API['ACTIVATION_HEADERS'][other].encode() + b'\n', 1)
+    changed = {**payload, 'sl3-asio.conf': entry}
+    bad = copy.deepcopy(manifest)
+    bad['files']['sl3-asio.conf'] = {'bytes': len(entry), 'sha256': API['digest'](entry)}
+    refused('rehashed-entry-for-other-mode-refused', lambda: API['verify_payloads'](bad, changed))
     for name, key, value in [('unbounded-lifetime','maximumLifetimeMs',43200000), ('service-policy','serviceCreated',True),
                              ('claimed-measured-latency','latencyAvailable',True), ('pointer-runtime-policy','sessionPointerUsed',True)]:
         plan = API['record'](payload['deployment-plan.json']); plan[key] = value
@@ -90,7 +101,9 @@ def main():
     rebound = good('v2-account-path-rebinding', lambda: rebind(bundle, expected,
         ROOT/'analysis'/('sl3-deployment-rebound-activation-'+identity),
         installation.with_name('activation-rebound-'+identity), pointer.with_name('other-reserved.txt')))
-    _, rebound_payload = API['capture_bundle'](Path(rebound['directory']), rebound['bundleManifestSha256'])
+    rebound_manifest, rebound_payload = API['capture_bundle'](Path(rebound['directory']), rebound['bundleManifestSha256'])
+    require(rebound_manifest['activationMode'] == mode and rebound_payload['sl3-asio.conf'].startswith(header),
+            'Rebinding preserves the activation mode')
     require({name for name in payload if payload[name] != rebound_payload[name]} ==
             {'provenance.json','deployment-plan.json','sl3-asio.conf','sl3-worker.conf'}, 'Rebinding changes metadata/path records only')
     folder.mkdir(parents=True)
@@ -121,7 +134,7 @@ def main():
     require(all(sha(ROOT/name) == value for name,value in source_pins.items()), 'Deployment test source changed during run')
     require(not installation.exists() and not pointer.parent.exists(), 'No planned native installation or user pointer writes')
     report = {'schema':'sl3.activation-deployment-tests.v1','passed':True,'cases':cases,'suites':suite_reports,
-              'bundle':str(bundle),'bundleManifestSha256':expected,'buildManifestSha256':sha(build),
+              'bundle':str(bundle),'bundleManifestSha256':expected,'buildManifestSha256':sha(build),'activationMode':mode,
               'sourceSha256':source_pins,
               'productionInstallationPerformed':False,'nativeDeviceAccess':False,'seratoLaunched':False,
               'nativePackageBinariesExecuted':False,'originBundleUnchanged':True,'plannedDestinationsUnchanged':True}

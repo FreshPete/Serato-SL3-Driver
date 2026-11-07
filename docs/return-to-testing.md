@@ -1,5 +1,7 @@
 # Return to SL3 testing — 6 November 2026
 
+The current [application-bound package and retained comparison](asio-on-demand-deployment.md#application-bound-candidate) are both prepared and uninstalled. Use the refreshed retained comparison first to test Serato's normal selection with USB already available. The automatic package is the separate test of activation from Serato's first ASIO open.
+
 The 7 November follow-up verified two physical ASIO streams on one retained USB connection and clean retirement afterward. The temporary installation was restored. The next live step is to start the retained background process with the protected setup in place and open the original Serato executable. [Latest trial and host state](retained-normal-start-trial.md).
 
 The owner returned and completed the recovery and trace steps on 7 November. The refreshed build streamed and released successfully, then the original Windows stack timed out after re-enumeration. [Attended release trace](attended-native-stream-release.md).

@@ -136,11 +136,21 @@ class Native:
             require(self.manifest['schema'] == 'sl3.deployment-bundle.v2', 'On-demand native package required')
         self.base, self.destination = self.s.production_destination(self.plan)
 
-    def require_idle_pointer(self):
+    def require_idle(self):
         if self.retained_broker:
             pointer = Path(self.plan['pointerPath'])
             require(self.s.absent(pointer) and self.s.absent(pointer.with_name(pointer.name + '.pending')),
                     'Stop the retained broker and withdraw its pointer before changing setup')
+        if self.plan.get('activationMode') == self.api['APPLICATION_ACTIVATION_MODE']:
+            with ExitStack() as held:
+                for name in ('sl3_broker_controller.exe', 'sl3_usbdk.exe'):
+                    path = self.destination/name
+                    if not self.s.absent(path):
+                        try:
+                            handle = held.enter_context(self.s.open_file(path, share=0))
+                            self.s.information(handle, False)
+                        except OSError as error:
+                            raise ValueError('Wait for the application-bound SL3 controller and worker to retire before changing setup') from error
 
     def observe(self):
         import winreg
@@ -214,7 +224,7 @@ def main():
             locking=module('on-demand-action-lock.py')
             lock_path=Path(record['application']).with_name(locking['LOCK_NAME'])
             with locking['hold'](native.s,lock_path,native.s.PRODUCTION) as lease:
-                native.require_idle_pointer()
+                native.require_idle()
                 result=coordinate(args.action,archive,native)
             result['actionLock']=lease.report
         print(json.dumps(result,indent=2))

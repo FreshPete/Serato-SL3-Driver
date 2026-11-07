@@ -4,7 +4,7 @@ Restore the physical Rane SL3 for current Serato DJ Pro and two-deck DVS. Window
 
 ## Latest status — 7 November 2026
 
-**ASIO can now start and reuse a broker for one application.** The opt-in version 2 configuration passed the Windows test for two streams across real ASIO DLL unloads, then verified controller exit after the host closed. All 73 Release checks passed. Installed packaging and the attended Serato launch remain open. [Implementation and evidence](docs/application-bound-broker.md)
+**The application-bound Windows package is prepared for testing.** Its opt-in configuration starts a broker on the first ASIO open and reuses it until the application exits. The earlier retained-broker comparison is also prepared with current source checks. Both remain uninstalled pending the attended Serato test. [Package and test handoff](docs/asio-on-demand-deployment.md#application-bound-candidate)
 
 **Two separate ASIO clients streamed through one retained SL3 connection.** The clients completed 1,031 and 1,032 callbacks, and the background process released the device after both clients exited. This used a private ASIO host. Normal Serato 5.0 startup with the retained connection still needs an installed test. [Trial and evidence](docs/retained-normal-start-trial.md)
 

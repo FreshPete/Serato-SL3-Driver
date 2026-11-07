@@ -128,6 +128,19 @@ switch($Action){
             before={p.name:sha(p) for p in f[3].parent.iterdir()}
             case('repeat-setup-does-not-reinstall',lambda:passed(run(f,'setup')))
             require(before=={p.name:sha(p) for p in f[3].parent.iterdir()} and f[2]['installs']==1,'No second installation/witness write')
+            if plan.get('activationMode') == deployment['APPLICATION_ACTIVATION_MODE']:
+                guard=API['Native'](bundle,expected);guard.destination=f[6]/'stage'
+                def busy(name):
+                    with s.open_file(guard.destination/name):
+                        try:guard.require_idle()
+                        except ValueError as error:
+                            require('controller and worker to retire' in str(error),'Expected owner-in-use refusal')
+                        else:raise AssertionError('Live image lease was accepted')
+                    require(before=={p.name:sha(p) for p in f[3].parent.iterdir()} and
+                            f[1].observe()['state']=='installed','Busy-owner guard preserves archive and registration')
+                case('application-controller-in-use-refused',lambda:busy('sl3_broker_controller.exe'))
+                case('application-worker-in-use-refused',lambda:busy('sl3_usbdk.exe'))
+                case('released-application-images-admitted',guard.require_idle)
             case('archive-then-native-restoration',lambda:passed(run(f,'restore')))
             require(f[1].observe()['state']=='absent' and len(list(f[3].parent.iterdir()))==1,'Original archive, no native stage or witnesses')
             case('repeat-restoration-is-idle',lambda:passed(run(f,'restore')))

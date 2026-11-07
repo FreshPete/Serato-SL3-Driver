@@ -21,7 +21,7 @@ def prepare(application,bundle,bundle_sha,powershell,powershell_sha,python_sha,o
     API['module']('prepare-embedded-python.py')['verify'](Path(sys.executable).parent,python_sha)
     pins = {name:sha(ROOT/name) for name in API['source_names']()}
     native = API['Native'](bundle,bundle_sha,retained_broker)
-    native.require_idle_pointer()
+    native.require_idle()
     require(native.observe()['state'] == 'absent', 'New experiment requires absent native registration/stage')
     recipe = API['module']('prepare-serato-installed-phase-archive.py')
     candidate_output = ROOT/'analysis'/('sl3-archive-candidate-'+output.name.removeprefix('sl3-on-demand-test-'))

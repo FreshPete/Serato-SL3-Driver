@@ -42,7 +42,8 @@ def rebind(bundle, expected, output=None, installation=None, pointer=None):
     updated['deployment-plan.json'] = api['encoded'](plan)
     if manifest['schema'] == 'sl3.deployment-bundle.v2':
         updated.update(api['activation_records'](installation,
-            api['digest'](payload['sl3_broker_controller.exe']), api['digest'](payload['sl3_usbdk.exe'])))
+            api['digest'](payload['sl3_broker_controller.exe']), api['digest'](payload['sl3_usbdk.exe']),
+            manifest['activationMode']))
     else:
         updated['sl3-asio.conf'] = api['locator_text'](installation, pointer,
             api['digest'](payload['sl3_broker_controller.exe']), api['digest'](payload['sl3_usbdk.exe']))
