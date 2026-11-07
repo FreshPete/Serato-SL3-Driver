@@ -116,7 +116,7 @@ def observe_owned_native(s, r, plan, destination, expected, policy, root, overla
 
 
 class Native:
-    def __init__(self, bundle, expected):
+    def __init__(self, bundle, expected, retained_broker=False):
         self.install_api = module('asio-install.py')
         self.i = self.install_api['sibling']('asio-install-journal')
         self.s = self.i.stage_module(); self.r = self.install_api['sibling']('asio-registry')
@@ -124,9 +124,23 @@ class Native:
         self.api = module('prepare-asio-deployment.py')
         self.manifest, payload = self.api['capture_bundle'](bundle, expected)
         self.api['verify_payloads'](self.manifest, payload)
-        require(self.manifest['schema'] == 'sl3.deployment-bundle.v2', 'On-demand native package required')
+        require(type(retained_broker) is bool, 'Typed retained broker mode required')
         self.plan = self.api['record'](payload['deployment-plan.json'])
+        self.retained_broker = retained_broker
+        if retained_broker:
+            require(self.manifest['schema'] == 'sl3.deployment-bundle.v1' and
+                    self.manifest['timingMode'] == 'unmeasured-diagnostic-44100-128' and
+                    self.plan['automaticStart'] is False,
+                    'Explicit retained broker test requires a bounded diagnostic locator bundle')
+        else:
+            require(self.manifest['schema'] == 'sl3.deployment-bundle.v2', 'On-demand native package required')
         self.base, self.destination = self.s.production_destination(self.plan)
+
+    def require_idle_pointer(self):
+        if self.retained_broker:
+            pointer = Path(self.plan['pointerPath'])
+            require(self.s.absent(pointer) and self.s.absent(pointer.with_name(pointer.name + '.pending')),
+                    'Stop the retained broker and withdraw its pointer before changing setup')
 
     def observe(self):
         import winreg
@@ -179,7 +193,7 @@ def main():
     args.experiment = args.experiment.absolute()
     with ExitStack() as held:
         record = verify(args.experiment,args.expected_experiment_sha256,held)
-        native = Native(Path(record['bundle']['directory']),record['bundle']['sha256'])
+        native = Native(Path(record['bundle']['directory']),record['bundle']['sha256'],record.get('retainedBroker', False))
         if args.action != 'plan':
             require(native.s.elevated(), 'Run this exact reviewed action as administrator; no automatic approval prompt is requested')
         lease=None
@@ -200,6 +214,7 @@ def main():
             locking=module('on-demand-action-lock.py')
             lock_path=Path(record['application']).with_name(locking['LOCK_NAME'])
             with locking['hold'](native.s,lock_path,native.s.PRODUCTION) as lease:
+                native.require_idle_pointer()
                 result=coordinate(args.action,archive,native)
             result['actionLock']=lease.report
         print(json.dumps(result,indent=2))

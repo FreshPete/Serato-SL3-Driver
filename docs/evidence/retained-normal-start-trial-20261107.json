@@ -1,0 +1,59 @@
+{
+  "schema": "sl3.retained-normal-start-trial-evidence.v1",
+  "dateUtc": "2026-11-07",
+  "seratoVersion": "5.0.0.1278",
+  "identitiesSha256": {
+    "diagnosticBundleManifest": "fc6274f914737a3d287f0729896e5dad6aed5a736ee2394b877dd4584d819349",
+    "asioDll": "38031e1750120deff2357db3a22623b2a6d3c7ab2b1f4501925056071d25bb36",
+    "controller": "bfe5843489720e0c7ba27e7bef1dd52980a9aeb94fa2e34fa266c988eaf14f64",
+    "worker": "32f298b9a41c960cc733affcbc0baa55bcf634cd468879afaa8bd1b397c841dc",
+    "silentDuplexHost": "97d5f2efa94258902766c07804b772e49a8592b185df8fd87f211a4b1bca24d1",
+    "originalSeratoResources": "872fc4fdad2eab2ddd34387d2d3c04dd9731c84798d9fdc7bd05ca54e1567db8"
+  },
+  "installedAttempt": {
+    "setupSuccessful": true,
+    "arrivalUtc": "2026-11-07T15:16:57.448054Z",
+    "workerCreatedUtc": "2026-11-07T15:17:04.865751Z",
+    "secondsFromArrivalToWorkerStart": 7.418,
+    "lastWorkerStage": "redirect_start.enter",
+    "controllerFailure": "worker_control_channel",
+    "workerExitedAtFailureReport": false,
+    "workerLaterObservedAbsent": true,
+    "locatorPublished": false,
+    "restoreSuccessful": true,
+    "originalResourcesVerified": true,
+    "temporaryNativePackageAbsent": true,
+    "seratoLaunched": false
+  },
+  "installedRetry": {
+    "arrivalUtc": "2026-11-07T15:22:29.2942590Z",
+    "administratorLaunchCanceled": true,
+    "setupStarted": false,
+    "seratoLaunched": false
+  },
+  "privateProof": {
+    "admittedUtc": "2026-11-07T15:26:17.5090906Z",
+    "sampleRateHz": 44100,
+    "bufferFrames": 128,
+    "silentDuplexDurationMsPerClient": 3000,
+    "callbacksByIndependentClient": [1031, 1032],
+    "bothClientsReleasedAndUnloadable": true,
+    "usbAcquisitions": 1,
+    "sameControllerAndWorkerAcrossBothClients": true,
+    "releasedDuringClientProbe": false,
+    "ioRetiredVerified": true,
+    "deviceReleasedVerified": true,
+    "workerExited": true,
+    "controllerExited": true,
+    "pointerAndPendingAbsent": true,
+    "usbReadinessForNextAcquireVerified": false,
+    "seratoLaunched": false
+  },
+  "localRecordSha256": {
+    "failedControllerResult": "8680b117305c8a80c71af86fe09b6c69bf5d21540f84cdc3736392433ec48917",
+    "restoreResult": "b95ec644fa156d7d792367e42b370e59ac3c7af710b8744b23f896df19b9df2d",
+    "privateTwoClientResult": "510acd97f5fcb857a5f35effc1c5b6ba89cddd68ee969d1c48f8d3129013259b",
+    "privateRetirementResult": "4a5a880541d156f275304540e32d90b53c71a7d085f277bdcce05fc40e0d899a",
+    "privateWorkerJournal": "e037270bc248ef87aff6feed6e554c73b28a8b103ed6a0bc545bea81a3f9356e"
+  }
+}

@@ -4,7 +4,9 @@ Restore the physical Rane SL3 for current Serato DJ Pro and two-deck DVS. Window
 
 ## Latest status — 7 November 2026
 
-**The attended release trace located a Windows startup timeout after a successful silent stream.** The refreshed ASIO build completed 1,034 callbacks and UsbDk removed the redirect. Windows enumerated the SL3 again on port 4, then timed out starting the original device stack and disabled the port. The next engineering question is how to keep USB ownership across Serato’s successive ASIO opens. [Trace and evidence](docs/attended-native-stream-release.md)
+**Two separate ASIO clients streamed through one retained SL3 connection.** The clients completed 1,031 and 1,032 callbacks, and the background process released the device after both clients exited. This used a private ASIO host. Normal Serato 5.0 startup with the retained connection still needs an installed test. [Trial and evidence](docs/retained-normal-start-trial.md)
+
+**The attended release trace located a Windows startup timeout after a successful silent stream.** The refreshed ASIO build completed 1,034 callbacks and UsbDk removed the redirect. Windows enumerated the SL3 again on port 4, then timed out starting the original device stack and disabled the port. [Trace and evidence](docs/attended-native-stream-release.md)
 
 [Return-to-testing packet](docs/return-to-testing.md): exact current candidate, last host observation, established results and the attended recovery/trace sequence. The compatibility candidate is uninstalled. Unattended hardware tests are on hold; the install-once goal is incomplete.
 

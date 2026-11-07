@@ -11,7 +11,7 @@ API = runpy.run_path(str(ROOT/'scripts/serato-on-demand-test.py'))
 require, sha = API['require'], API['sha']
 
 
-def prepare(application,bundle,bundle_sha,powershell,powershell_sha,python_sha,output):
+def prepare(application,bundle,bundle_sha,powershell,powershell_sha,python_sha,output,retained_broker=False):
     application,bundle,powershell,output = (Path(p).absolute() for p in (application,bundle,powershell,output))
     require(output.parent == ROOT/'analysis' and output.name.startswith('sl3-on-demand-test-') and not output.exists(),
             'Fresh direct analysis/sl3-on-demand-test-* output required')
@@ -20,7 +20,8 @@ def prepare(application,bundle,bundle_sha,powershell,powershell_sha,python_sha,o
             'Reviewed original installation path required')
     API['module']('prepare-embedded-python.py')['verify'](Path(sys.executable).parent,python_sha)
     pins = {name:sha(ROOT/name) for name in API['source_names']()}
-    native = API['Native'](bundle,bundle_sha)
+    native = API['Native'](bundle,bundle_sha,retained_broker)
+    native.require_idle_pointer()
     require(native.observe()['state'] == 'absent', 'New experiment requires absent native registration/stage')
     recipe = API['module']('prepare-serato-installed-phase-archive.py')
     candidate_output = ROOT/'analysis'/('sl3-archive-candidate-'+output.name.removeprefix('sl3-on-demand-test-'))
@@ -59,6 +60,8 @@ def prepare(application,bundle,bundle_sha,powershell,powershell_sha,python_sha,o
         'python':{'path':str(Path(sys.executable).absolute()),'sha256':sha(Path(sys.executable)),'manifestSha256':python_sha},'sources':pins,
         'assets':{name:API['hashlib'].sha256(raw).hexdigest() for name,raw in files.items()},'maximumOwnerLifetimeMs':600000,
         'applicationLaunched':False,'startupShimUsed':False,'installed':False,'nativeDeviceAccess':False,'combinedAtomicTransaction':False}
+    if retained_broker:
+        record['retainedBroker'] = True
     (output/'archive').mkdir(parents=True)
     for name,raw in files.items():
         with (output/name).open('xb') as stream:stream.write(raw)
@@ -72,6 +75,7 @@ if __name__ == '__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ('application','bundle','expected-bundle-sha256','powershell','expected-powershell-manifest-sha256','expected-python-manifest-sha256','output'):
         parser.add_argument('--'+name,required=True)
+    parser.add_argument('--retained-broker',action='store_true')
     args=parser.parse_args()
     print(json.dumps(prepare(args.application,args.bundle,args.expected_bundle_sha256,args.powershell,
-        args.expected_powershell_manifest_sha256,args.expected_python_manifest_sha256,args.output),indent=2))
+        args.expected_powershell_manifest_sha256,args.expected_python_manifest_sha256,args.output,args.retained_broker),indent=2))
