@@ -1,5 +1,7 @@
 # Lazy activation through the ASIO entry path
 
+The [version 2 follow-up](application-bound-broker.md#automatic-asio-activation) adds an opt-in process-lifetime mode. This page describes the version 1 activation and retirement behavior.
+
 The ASIO configuration provider now understands a stable activation record. It can construct an ordinary driver or explicit factory scope without starting a process; the first `IASIO::init` attempt activates the configured controller and attaches to its authenticated broker. This connects the earlier [activation component](broker-on-demand-activation.md) to the native driver path. Nothing has been installed or validated in Serato through this new mode.
 
 ## Stable record

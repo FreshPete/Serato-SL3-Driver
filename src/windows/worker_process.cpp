@@ -88,8 +88,8 @@ struct Process::State {
     Handle executable,job,process,thread;
     bool assigned=false;
     ~State(){
-        // The job is never inherited. Closing its sole handle contains remaining
-        // child work even during exception unwinding/abrupt owner process exit.
+        // The job is never inherited. Owner jobs kill remaining child work
+        // when closed. An application controller instead watches its bound host.
         // This requests OS teardown; destructor does not claim it has completed.
         if(process.value && !assigned)TerminateProcess(process.value,71);
         job.reset();
@@ -100,7 +100,7 @@ Process::~Process()=default;
 std::string Process::executable_sha256(const std::filesystem::path& path){
     Handle file;open_executable(file,path);return hash_file(file.value);
 }
-void Process::launch(const std::filesystem::path& path,const std::string& expected,const std::vector<std::wstring>& arguments){
+void Process::launch(const std::filesystem::path& path,const std::string& expected,const std::vector<std::wstring>& arguments,JobLifetime lifetime){
     if(state_)throw std::logic_error("A worker owner can launch only once; retain its existing process handle");
     if(expected.size()!=64 || !std::all_of(expected.begin(),expected.end(),[](unsigned char c){return std::isxdigit(c)!=0;}))
         throw std::invalid_argument("Expected worker SHA256 is required");
@@ -115,9 +115,11 @@ void Process::launch(const std::filesystem::path& path,const std::string& expect
     if(hash_file(candidate->executable.value)!=identity)throw std::runtime_error("Worker executable differs from the expected tested build");
     candidate->job.value=CreateJobObjectW(nullptr,nullptr);
     if(!candidate->job.value)failed("Create private worker job");
-    JOBOBJECT_EXTENDED_LIMIT_INFORMATION limits{};
-    limits.BasicLimitInformation.LimitFlags=JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
-    if(!SetInformationJobObject(candidate->job.value,JobObjectExtendedLimitInformation,&limits,sizeof(limits)))failed("Configure private worker job");
+    if(lifetime==JobLifetime::owner){
+        JOBOBJECT_EXTENDED_LIMIT_INFORMATION limits{};
+        limits.BasicLimitInformation.LimitFlags=JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+        if(!SetInformationJobObject(candidate->job.value,JobObjectExtendedLimitInformation,&limits,sizeof(limits)))failed("Configure private worker job");
+    }
     STARTUPINFOW startup{};startup.cb=sizeof(startup);
     PROCESS_INFORMATION child{};
     BOOL created=FALSE;DWORD creation_error=0;

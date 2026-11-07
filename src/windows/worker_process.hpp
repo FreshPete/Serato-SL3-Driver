@@ -20,6 +20,7 @@ struct StopResult {
 // private child job. No inherited handles, USB access, registration or elevation.
 class Process final {
 public:
+    enum class JobLifetime { owner, application_controller };
     Process() noexcept;
     ~Process();
     Process(const Process&)=delete;
@@ -28,7 +29,7 @@ public:
     // A failure after child creation retains its handle for observation/stop.
     // Never infer "no child" from an exception; inspect observe().started.
     void launch(const std::filesystem::path&,const std::string& expected_sha256,
-                const std::vector<std::wstring>& arguments);
+                const std::vector<std::wstring>& arguments,JobLifetime lifetime=JobLifetime::owner);
     ProcessState observe() const;
     bool wait_for_exit(DWORD timeout_ms) const;
     StopResult terminate_and_wait(DWORD timeout_ms=2000);

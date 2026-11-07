@@ -39,7 +39,8 @@ std::size_t sessions(const std::filesystem::path& root){
 int wmain(int argc,wchar_t** argv){
     HMODULE library=nullptr;IClassFactory* factory=nullptr;IASIO* device=nullptr;sl3::asio::DeviceScope* scope=nullptr;
     try{
-        require(argc==6,"Activation DLL, simulated controller/worker, reviewed helper and fresh output required");
+        const bool application=argc==7 && std::wstring(argv[6])==L"--application-bound";
+        require(argc==6 || application,"Activation DLL, simulated controller/worker, reviewed helper and fresh output required");
         require(SUCCEEDED(CoInitializeEx(nullptr,COINIT_APARTMENTTHREADED)),"Initialize fixture COM apartment");
         const auto root=std::filesystem::absolute(argv[5]);require(!std::filesystem::exists(root),"Fresh activation ASIO root");std::filesystem::create_directory(root);
         const auto worker=std::filesystem::absolute(argv[3]),helper=std::filesystem::absolute(argv[4]);
@@ -48,18 +49,61 @@ int wmain(int argc,wchar_t** argv){
         write(timing,"SL3-ASIO-DIAGNOSTIC-TIMING-1\nworker_sha256="+worker_hash+"\nhelper_sha256="+helper_hash+"\nrate_hz=44100\nbuffer_frames=128\n");
         write(input,"SL3-ASIO-CONFIG-1\nworker="+worker.u8string()+"\nworker_sha256="+worker_hash+"\nhelper="+helper.u8string()+
             "\ntiming_record="+timing.u8string()+"\ntiming_record_sha256="+worker::Process::executable_sha256(timing)+"\n");
-        write(entry,"SL3-ASIO-ACTIVATION-1\ncontroller="+controller.u8string()+"\ncontroller_sha256="+worker::Process::executable_sha256(controller)+
+        const auto header=std::string(application?"SL3-ASIO-ACTIVATION-2":"SL3-ASIO-ACTIVATION-1");
+        const auto content=header+"\ncontroller="+controller.u8string()+"\ncontroller_sha256="+worker::Process::executable_sha256(controller)+
             "\ninput="+input.u8string()+"\ninput_sha256="+worker::Process::executable_sha256(input)+
-            "\nstartup_timeout_ms=15000\nstartup_failure_grace_ms=5000\nlifetime_ms=60000\n");
+            "\nstartup_timeout_ms=15000\nstartup_failure_grace_ms=5000\nlifetime_ms=60000\n";
+        write(entry,content);
         {auto inspected=load_driver_entry_configuration(entry,TimingPolicy::unmeasured_diagnostic);
-            require(inspected.activation && inspected.activation->kind==session::Kind::native && inspected.activation->output.empty() && sessions(root)==0,
+            require(inspected.activation && inspected.activation->application_bound==application &&
+                    inspected.activation->kind==session::Kind::native && inspected.activation->output.empty() && sessions(root)==0,
                     "Production activation parse is native-only and creates no controller/output");}
+        if(application){
+            BrokerActivationSpec first,second;first.application_bound=second.application_bound=true;
+            select_user_activation_output(first);select_user_activation_output(second);
+            require(first.output.is_absolute() && first.output==second.output && first.output_root_lease &&
+                    !std::filesystem::exists(first.output),"Application output is stable and passive for this process");
+            const auto image=std::filesystem::absolute(argv[1]);const auto owner=root/L"application-owner";
+            const auto conflicting=root/L"conflicting.conf";
+            auto changed=content;changed.replace(changed.find("lifetime_ms=60000"),17,"lifetime_ms=59000");write(conflicting,changed);
+            std::string ready_hash;
+            for(unsigned pass=0;pass<3;++pass){
+                library=LoadLibraryExW(image.c_str(),nullptr,LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR|LOAD_LIBRARY_SEARCH_SYSTEM32);
+                require(library!=nullptr,"Load application-bound ASIO DLL");
+                const auto configure=function<BOOL(*)(const wchar_t*,const wchar_t*)>(library,"sl3_test_activation_configure");
+                const auto get=function<HRESULT(WINAPI*)(REFCLSID,REFIID,void**)>(library,"DllGetClassObject");
+                const auto unload=function<HRESULT(WINAPI*)()>(library,"DllCanUnloadNow");
+                require(configure((pass==1?conflicting:entry).c_str(),root.c_str())!=FALSE &&
+                        get(driver_clsid,IID_IClassFactory,reinterpret_cast<void**>(&factory))==S_OK &&
+                        factory->CreateInstance(nullptr,driver_clsid,reinterpret_cast<void**>(&device))==S_OK,
+                        "Construct application-bound IASIO object lazily");
+                require(sessions(root)==(pass?1:0),"Object creation does not launch a controller");
+                factory->Release();factory=nullptr;
+                if(pass==1)require(device->init(nullptr)==ASIOFalse,"Changed activation specification refuses reuse");
+                else play(device);
+                device->Release();device=nullptr;
+                require(unload()==S_OK && FreeLibrary(library)!=FALSE,"Unload the ASIO DLL between opens");
+                library=nullptr;require(!GetModuleHandleW(image.c_str()),"Actual ASIO module unload between opens");
+                const auto hash=worker::Process::executable_sha256(owner/L"ready.json");
+                if(!pass)ready_hash=hash;
+                require(hash==ready_hash && sessions(root)==1 && !std::filesystem::exists(owner/L"result.json"),
+                        "One unchanged controller remains live across DLL unload and reopen");
+            }
+            write(root/L"host-ready-to-exit","All ASIO modules unloaded\n");
+            const auto deadline=GetTickCount64()+10000;
+            while(!std::filesystem::exists(root/L"release-host")){
+                require(GetTickCount64()<deadline,"Application-bound exit observation barrier");Sleep(10);
+            }
+            CoUninitialize();
+            std::cout<<"{\"applicationBound\":true,\"streams\":2,\"moduleUnloads\":3,\"conflictingSpecRefused\":true,\"callbacks\":"
+                     <<callbacks.load()<<"}\n";return 0;
+        }
         {
             std::ifstream source(entry,std::ios::binary);const std::string original((std::istreambuf_iterator<char>(source)),{});
             std::vector<std::string> invalid;
             auto change=[&](const std::string& from,const std::string& to){auto changed=original;const auto at=changed.find(from);
                 require(at!=std::string::npos,"Activation mutation exists");changed.replace(at,from.size(),to);invalid.push_back(std::move(changed));};
-            change("SL3-ASIO-ACTIVATION-1","SL3-ASIO-ACTIVATION-2");change("startup_timeout_ms=15000","startup_timeout_ms=99");
+            change("SL3-ASIO-ACTIVATION-1","SL3-ASIO-ACTIVATION-3");change("startup_timeout_ms=15000","startup_timeout_ms=99");
             change("startup_failure_grace_ms=5000","startup_failure_grace_ms=15001");change("lifetime_ms=60000","lifetime_ms=600001");
             change("lifetime_ms=60000","lifetime_ms=060000");change("controller_sha256="+worker::Process::executable_sha256(controller),"controller_sha256="+std::string(64,'0'));
             invalid.push_back(original+"kind=simulated\n");invalid.push_back(original.substr(0,original.size()-1));

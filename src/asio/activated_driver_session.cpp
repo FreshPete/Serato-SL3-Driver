@@ -32,8 +32,12 @@ public:
         if(delegate_)return delegate_->inspect();
         if(attempted_)return false;attempted_=true;
         try{
-            if(spec_.output.empty())select_user_activation_output(spec_);
-            activation_=BrokerActivation::start(spec_);configuration_=activation_->configuration();
+            if(spec_.application_bound){
+                configuration_=BrokerActivation::application_configuration(spec_);
+            }else{
+                if(spec_.output.empty())select_user_activation_output(spec_);
+                activation_=BrokerActivation::start(spec_);configuration_=activation_->configuration();
+            }
             delegate_=make_broker_driver_session(*configuration_->broker);
             return delegate_->inspect();
         }catch(const BrokerActivationError& error){

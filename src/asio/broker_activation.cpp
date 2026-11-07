@@ -51,6 +51,26 @@ void request_stop(const BrokerAttachment& binding){
     Handle event;event.value=OpenEventW(EVENT_MODIFY_STATE,FALSE,name.c_str());
     require(event.value && SetEvent(event.value),"Request owned activation stop");
 }
+std::wstring application_identity(wchar_t separator){
+    FILETIME start{},exit{},kernel{},user{};
+    require(GetProcessTimes(GetCurrentProcess(),&start,&exit,&kernel,&user)!=FALSE,"Read host creation time");
+    const auto creation=(std::uint64_t(start.dwHighDateTime)<<32)|start.dwLowDateTime;
+    return std::to_wstring(GetCurrentProcessId())+separator+std::to_wstring(creation);
+}
+void open_existing_claim(Handle& claim,const std::filesystem::path& path,DWORD timeout){
+    const auto began=GetTickCount64();
+    for(;;){
+        claim.value=CreateFileW(path.c_str(),GENERIC_READ,FILE_SHARE_READ,nullptr,OPEN_EXISTING,FILE_FLAG_OPEN_REPARSE_POINT,nullptr);
+        if(claim.value!=INVALID_HANDLE_VALUE)break;
+        require(GetLastError()==ERROR_SHARING_VIOLATION && GetTickCount64()-began<timeout,
+                "Previous application activation is unavailable or still starting");
+        Sleep(10);
+    }
+    BY_HANDLE_FILE_INFORMATION info{};
+    require(GetFileType(claim.value)==FILE_TYPE_DISK && GetFileInformationByHandle(claim.value,&info) &&
+            !(info.dwFileAttributes&(FILE_ATTRIBUTE_DIRECTORY|FILE_ATTRIBUTE_REPARSE_POINT)) && info.nNumberOfLinks==1,
+            "Application activation claim must be one regular file");
+}
 }
 void select_user_activation_output(BrokerActivationSpec& spec){
     ordinary_user();
@@ -88,9 +108,16 @@ void select_user_activation_output(BrokerActivationSpec& spec){
         GetSecurityDescriptorControl(actual,&control,&revision) && (control&SE_DACL_PROTECTED) && GetAce(dacl,0,&raw);
     bool allowed=false;
     if(owner_only){const auto ace=static_cast<ACCESS_ALLOWED_ACE*>(raw);
+        constexpr BYTE inherited=OBJECT_INHERIT_ACE|CONTAINER_INHERIT_ACE;
         allowed=ace->Header.AceType==ACCESS_ALLOWED_ACE_TYPE && (ace->Mask==GENERIC_ALL || ace->Mask==FILE_ALL_ACCESS) &&
+                (!spec.application_bound || (ace->Header.AceFlags&inherited)==inherited) &&
                 EqualSid(&ace->SidStart,sid);}
     LocalFree(actual);require(allowed,"Existing activation root is not private to this user");
+    if(spec.application_bound){
+        spec.output=root/(L"application-"+application_identity(L'-'));
+        spec.output_root_lease=std::move(retained);
+        return;
+    }
     std::array<UCHAR,16> random{};require(BCryptGenRandom(nullptr,random.data(),ULONG(random.size()),BCRYPT_USE_SYSTEM_PREFERRED_RNG)>=0,"Generate activation identity");
     std::wstring leaf=L"session-";constexpr wchar_t digits[]=L"0123456789abcdef";
     for(const auto byte:random){leaf+=digits[byte>>4];leaf+=digits[byte&15];}
@@ -113,6 +140,43 @@ std::shared_ptr<BrokerActivation> BrokerActivation::start(const BrokerActivation
         throw BrokerActivationError(reason,cleanup);
     }
 }
+DriverConfiguration BrokerActivation::application_configuration(BrokerActivationSpec spec){
+    ordinary_user();
+    require(spec.application_bound,"Application-bound activation is required");
+    if(spec.output.empty())select_user_activation_output(spec);
+    local_path(spec.output,true);
+    const auto claim_path=std::filesystem::path(spec.output.native()+L".claim");
+    const auto config_path=spec.output/L"sl3-asio.conf";
+    const auto expected_prefix="SL3-ASIO-APPLICATION-1\n"+spec.controller.u8string()+"\n"+spec.controller_sha256+"\n"+
+        spec.input.u8string()+"\n"+spec.input_sha256+"\n"+std::to_string(spec.startup_timeout_ms)+"\n"+
+        std::to_string(spec.startup_failure_grace_ms)+"\n"+std::to_string(spec.lifetime_ms)+"\n";
+    Handle claim;
+    // This create-new file is both the exclusive startup claim and the receipt.
+    // An empty or partial receipt preserves a failed attempt across DLL unloads.
+    claim.value=CreateFileW(claim_path.c_str(),GENERIC_WRITE,0,nullptr,CREATE_NEW,FILE_ATTRIBUTE_NORMAL,nullptr);
+    if(claim.value!=INVALID_HANDLE_VALUE){
+        auto owner=start(spec);
+        const auto receipt=expected_prefix+worker::Process::executable_sha256(config_path)+"\n";
+        DWORD written=0;
+        require(WriteFile(claim.value,receipt.data(),DWORD(receipt.size()),&written,nullptr) &&
+                written==receipt.size() && FlushFileBuffers(claim.value),"Publish application activation receipt");
+        owner->handed_off_=true;
+        return std::move(*owner->configuration_);
+    }
+    const auto error=GetLastError();
+    require(error==ERROR_FILE_EXISTS || error==ERROR_ALREADY_EXISTS || error==ERROR_SHARING_VIOLATION,
+            "Cannot claim application activation");
+    open_existing_claim(claim,claim_path,spec.startup_timeout_ms);
+    auto selected=load_driver_configuration(config_path,spec.timing);
+    require(selected.broker.has_value(),"Application activation receipt requires a live broker");
+    const auto expected=expected_prefix+worker::Process::executable_sha256(config_path)+"\n";
+    std::string actual(expected.size()+1,'\0');DWORD count=0;
+    require(ReadFile(claim.value,actual.data(),DWORD(actual.size()),&count,nullptr)!=FALSE,"Read application activation receipt");
+    actual.resize(count);
+    require(actual==expected,"Previous application activation differs or failed; restart only after checking recovery");
+    selected.broker->kind=spec.kind;
+    return selected;
+}
 void BrokerActivation::launch(const BrokerActivationSpec& spec){
     ordinary_user();
     local_path(spec.controller);local_path(spec.input);local_path(spec.output,true);
@@ -134,7 +198,12 @@ void BrokerActivation::launch(const BrokerActivationSpec& spec){
     if(!input_->keepalive_timing_sha256.empty()){
         arguments.push_back(L"--playback-keepalive");arguments.push_back(L"on");
     }
-    process_.launch(spec.controller,spec.controller_sha256,arguments);
+    if(spec.application_bound){
+        arguments.push_back(L"--application-process");
+        arguments.push_back(application_identity(L':'));
+    }
+    process_.launch(spec.controller,spec.controller_sha256,arguments,spec.application_bound?
+                    worker::Process::JobLifetime::application_controller:worker::Process::JobLifetime::owner);
     const auto began=GetTickCount64();
     while(!is_regular(spec.output/L"ready.json")){
         require(!process_.observe().process_exited,"Activation controller exited before readiness");
@@ -151,7 +220,7 @@ void BrokerActivation::launch(const BrokerActivationSpec& spec){
     selected.broker->kind=spec.kind; // The client still checks the actual pipe greeting.
     configuration_=std::move(selected);report_.ready=true;
 }
-BrokerActivation::~BrokerActivation(){(void)close();}
+BrokerActivation::~BrokerActivation(){if(!handed_off_)(void)close();}
 DriverConfiguration BrokerActivation::configuration(){
     std::lock_guard<std::mutex> lock(mutex_);
     require(report_.ready && configuration_ && !process_.observe().process_exited,"Activation is no longer ready");

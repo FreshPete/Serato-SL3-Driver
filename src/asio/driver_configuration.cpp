@@ -138,10 +138,12 @@ DriverConfiguration load_driver_entry_configuration(const std::filesystem::path&
     auto files=std::make_shared<Files>();const auto bytes=locked_text(*files,location);
     const std::string activation_prefix="SL3-ASIO-ACTIVATION-";
     if(bytes.compare(0,activation_prefix.size(),activation_prefix)==0){
-        const auto values=record(bytes,{"SL3-ASIO-ACTIVATION-1","controller=","controller_sha256=","input=","input_sha256=",
+        const bool application_bound=bytes.rfind("SL3-ASIO-ACTIVATION-2",0)==0;
+        const auto values=record(bytes,{application_bound?"SL3-ASIO-ACTIVATION-2":"SL3-ASIO-ACTIVATION-1","controller=","controller_sha256=","input=","input_sha256=",
                                         "startup_timeout_ms=","startup_failure_grace_ms=","lifetime_ms="});
         if(!values[0].empty())throw std::invalid_argument("Unknown ASIO activation version");
-        auto spec=std::make_shared<BrokerActivationSpec>();spec->controller=path(values[1]);spec->controller_sha256=hash(values[2]);
+        auto spec=std::make_shared<BrokerActivationSpec>();spec->application_bound=application_bound;
+        spec->controller=path(values[1]);spec->controller_sha256=hash(values[2]);
         spec->input=path(values[3]);spec->input_sha256=hash(values[4]);spec->startup_timeout_ms=number(values[5]);
         spec->startup_failure_grace_ms=number(values[6]);spec->lifetime_ms=number(values[7]);spec->timing=policy;
         if(spec->startup_timeout_ms<100 || spec->startup_timeout_ms>30000 || spec->startup_failure_grace_ms>15000 ||

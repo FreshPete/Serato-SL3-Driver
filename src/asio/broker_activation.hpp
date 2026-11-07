@@ -12,6 +12,7 @@ struct BrokerActivationSpec {
     DWORD startup_timeout_ms=15000,startup_failure_grace_ms=5000,lifetime_ms=60000;
     TimingPolicy timing=TimingPolicy::reviewed;
     session::Kind kind=session::Kind::native;
+    bool application_bound=false;
     std::shared_ptr<const void> output_root_lease;
 };
 // Resolves the current user's LocalAppData, creates/verifies one private root,
@@ -29,6 +30,7 @@ public:
 class BrokerActivation final : public std::enable_shared_from_this<BrokerActivation> {
 public:
     static std::shared_ptr<BrokerActivation> start(const BrokerActivationSpec&);
+    static DriverConfiguration application_configuration(BrokerActivationSpec);
     ~BrokerActivation();
     BrokerActivation(const BrokerActivation&)=delete;
     BrokerActivation& operator=(const BrokerActivation&)=delete;
@@ -51,5 +53,6 @@ private:
     std::optional<DriverConfiguration> configuration_,input_;
     std::shared_ptr<const void> output_root_lease_;
     BrokerActivationReport report_;
+    bool handed_off_=false;
 };
 }
