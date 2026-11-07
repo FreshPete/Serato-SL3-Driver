@@ -1,0 +1,169 @@
+{
+  "schema": "sl3.serato-startup-routes.v1",
+  "seratoVersion": "5.0.0.1278",
+  "captures": {
+    "workspace": {
+      "traceSha256": "ee5c0821d96165cc0aee15fb94424338bfb0f00b22c9546c9f5990013fe54cea",
+      "savedObserverSha256": "b9683b15c868a9550e6af4659caa8d5cf131d88247575ee3fa28c57a6d258e9a",
+      "eventCount": 82,
+      "initialEventIndices": {
+        "integerZeroCreated": 8,
+        "defaultAudio": 61,
+        "engineReceivedIntegerZero": 74,
+        "sl3ArrivalConstructed": 81
+      },
+      "managerLifecycleEvents": {
+        "usb_manager_initializer": 0,
+        "usb_manager_constructor": 0
+      },
+      "usbHandlerDeliveryCoverage": "unconfirmed_wrong_argument_in_saved_probe",
+      "selectionOrNamedAudioObserved": false
+    },
+    "two-deck": {
+      "traceSha256": "f814c4bb7f124711cd2680a55cbcaededb3cdf9190d77c31a211443eb3c06f6e",
+      "savedObserverSha256": "d75ec449c83a5b48bcf8fc58da5876d3f7cef7538933145f7b49203aa3fbdb22",
+      "eventCount": 216,
+      "initialEventIndices": {
+        "integerZeroCreated": 7,
+        "defaultAudio": 58,
+        "engineReceivedIntegerZero": 71,
+        "sl3ArrivalConstructed": 78
+      },
+      "managerLifecycleEvents": {
+        "usb_manager_initializer": 0,
+        "usb_manager_constructor": 0
+      },
+      "usbHandlerDeliveryCoverage": "unconfirmed_wrong_argument_in_saved_probe",
+      "installerClickEventIndex": 79,
+      "timeline": {
+        "installerComplete": {
+          "eventIndex": 116,
+          "msAfterInstallerComplete": 0
+        },
+        "installerPrimaryPointerRequest": {
+          "eventIndex": 119,
+          "msAfterInstallerComplete": 1
+        },
+        "primarySetterEntered": {
+          "eventIndex": 120,
+          "msAfterInstallerComplete": 11
+        },
+        "integerOneCreated": {
+          "eventIndex": 121,
+          "msAfterInstallerComplete": 11
+        },
+        "engineReceivedIntegerOne": {
+          "eventIndex": 123,
+          "msAfterInstallerComplete": 27
+        },
+        "rebuiltAsioRequested": {
+          "eventIndex": 127,
+          "msAfterInstallerComplete": 166
+        },
+        "rebuiltAsioModuleLoaded": {
+          "eventIndex": 128,
+          "msAfterInstallerComplete": 201
+        },
+        "firstInitSucceeded": {
+          "eventIndex": 130,
+          "msAfterInstallerComplete": 210
+        },
+        "namedConnectionReturned": {
+          "eventIndex": 161,
+          "msAfterInstallerComplete": 533
+        },
+        "buffer192Rejected": {
+          "eventIndex": 207,
+          "msAfterInstallerComplete": 888
+        },
+        "buffer128Accepted": {
+          "eventIndex": 209,
+          "msAfterInstallerComplete": 888
+        },
+        "asioStartSucceeded": {
+          "eventIndex": 213,
+          "msAfterInstallerComplete": 913
+        },
+        "tracerDetached": {
+          "eventIndex": 214,
+          "msAfterInstallerComplete": 931
+        }
+      }
+    },
+    "selection": {
+      "traceSha256": "0c19d62c462de4ec1bcad020e6f10be23647805b4729aa1bb32f62e40a90891b",
+      "savedObserverSha256": "f987a68dc67fcd30bf9d581f4af802b59b9b8a83ea3d124c0a1b79b14a290ad9",
+      "eventCount": 222,
+      "initialEventIndices": {
+        "integerZeroCreated": 7,
+        "defaultAudio": 58,
+        "engineReceivedIntegerZero": 71,
+        "sl3ArrivalConstructed": 78
+      },
+      "managerLifecycleEvents": {
+        "usb_manager_initializer": 0,
+        "usb_manager_constructor": 0
+      },
+      "usbHandlerDeliveryCoverage": "unconfirmed_wrong_argument_in_saved_probe",
+      "installerClickEventIndex": 79,
+      "timeline": {
+        "installerComplete": {
+          "eventIndex": 116,
+          "msAfterInstallerComplete": 0
+        },
+        "installerPrimaryPointerRequest": {
+          "eventIndex": 119,
+          "msAfterInstallerComplete": 1
+        },
+        "primarySetterEntered": {
+          "eventIndex": 120,
+          "msAfterInstallerComplete": 22
+        },
+        "integerOneCreated": {
+          "eventIndex": 121,
+          "msAfterInstallerComplete": 22
+        },
+        "engineReceivedIntegerOne": {
+          "eventIndex": 123,
+          "msAfterInstallerComplete": 34
+        },
+        "rebuiltAsioRequested": {
+          "eventIndex": 127,
+          "msAfterInstallerComplete": 176
+        },
+        "rebuiltAsioModuleLoaded": {
+          "eventIndex": 128,
+          "msAfterInstallerComplete": 207
+        },
+        "firstInitSucceeded": {
+          "eventIndex": 130,
+          "msAfterInstallerComplete": 216
+        },
+        "namedConnectionReturned": {
+          "eventIndex": 161,
+          "msAfterInstallerComplete": 539
+        },
+        "buffer192Rejected": {
+          "eventIndex": 207,
+          "msAfterInstallerComplete": 896
+        },
+        "buffer128Accepted": {
+          "eventIndex": 209,
+          "msAfterInstallerComplete": 896
+        },
+        "asioStartSucceeded": {
+          "eventIndex": 213,
+          "msAfterInstallerComplete": 924
+        },
+        "selectedSl3Confirmed": {
+          "eventIndex": 214,
+          "msAfterInstallerComplete": 937
+        },
+        "laterSl3ArrivalConstructed": {
+          "eventIndex": 221,
+          "msAfterInstallerComplete": 8491
+        }
+      }
+    }
+  }
+}
