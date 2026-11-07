@@ -91,6 +91,8 @@ For an offline readout, save the observer's stdout and keep the completed broker
 
 The one-command shortcut runs this readout automatically after verified broker retirement. It uses that trial's module and broker files, adds the restore receipt if the setup process has exited, and creates `desktop-start/start-readout.json`. The console reports whether it sampled the module and how many admission and stream-start replies match the observed Serato process. A saved simulated Windows run matched three admissions and four stream-start replies. The readout preserved existing output and kept pending restoration separate in fixture checks.
 
+A later integrated rehearsal used a live ordinary-user handoff fixture and synthetic USB identities with a real simulated controller, worker and ASIO host. It verified the handoff process identity, applied the stable identity check, started and retired the broker, withdrew its pointer, and sent the restoration request back to the fixture. A fixture-only 20 ms observer interval caught the brief ASIO module load and matched three admissions, four stream starts and three detaches. A separate run with the standard 250 ms interval sampled the same application process but missed its DLL load. The readout still matched four stream-start replies from that process. The Serato shortcut retains the standard interval. Protected setup and physical USB remain outside this rehearsal. [Rehearsal evidence](evidence/retained-start-readout-20261107.json)
+
 ```powershell
 python scripts/read-retained-start-result.py `
   --module-report $moduleReport --module-report-sha256 $moduleReportSha `

@@ -35,6 +35,26 @@
     }
   },
   "readoutSha256": "02a1c26469f22e158e14f0895a6914a94f7393713ad75877e35ae8de6e9d3474",
+  "integratedRehearsal": {
+    "setupAndRestoreReceipts": "ordinary_user_fixture",
+    "usbIdentitySamples": "synthetic",
+    "liveHandoffProcessIdentityVerified": true,
+    "fixtureOnlyObserverIntervalMs": 20,
+    "startupSha256": "87413057ac2e27d3239df242f0e94ea8ba91c4a5d0a437256dd16f9ed62b8863",
+    "finishSha256": "cd5393d1cf0b7d992ad25e2b488c59643f846c8278aac27d2f605df30ec124d3",
+    "readoutSha256": "ec5974ee4886c4c28220600a645b49aeb7511c455e17540b9d14f1111611c83b",
+    "matchingAdmissionReplies": 3,
+    "matchingStreamStartReplies": 4,
+    "matchingDetachAcknowledgements": 3,
+    "moduleLoadObserved": true,
+    "workerAndControllerExited": true,
+    "privatePointerWithdrawn": true,
+    "restoreRequestObservedByFixture": true,
+    "standardObserverIntervalMs": 250,
+    "standardObserverSampledProcessButMissedModule": true,
+    "standardObserverMatchingStreamStartReplies": 4,
+    "standardObserverReadoutSha256": "1620a412e6ca5b4680bb8dfbc93c88f0086885c095a60ed846ba9ca98d633d41"
+  },
   "independentHostPlan": {
     "schema": "sl3.retained-setup-handoff.v1",
     "planOnly": true,
