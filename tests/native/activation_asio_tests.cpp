@@ -39,31 +39,43 @@ std::size_t sessions(const std::filesystem::path& root){
 int wmain(int argc,wchar_t** argv){
     HMODULE library=nullptr;IClassFactory* factory=nullptr;IASIO* device=nullptr;sl3::asio::DeviceScope* scope=nullptr;
     try{
-        const bool application=argc==7 && std::wstring(argv[6])==L"--application-bound";
+        const bool application=argc==8 && std::wstring(argv[6])==L"--application-bound";
         require(argc==6 || application,"Activation DLL, simulated controller/worker, reviewed helper and fresh output required");
         require(SUCCEEDED(CoInitializeEx(nullptr,COINIT_APARTMENTTHREADED)),"Initialize fixture COM apartment");
         const auto root=std::filesystem::absolute(argv[5]);require(!std::filesystem::exists(root),"Fresh activation ASIO root");std::filesystem::create_directory(root);
+        const auto state=application?std::filesystem::absolute(argv[7]):root;
+        require(std::filesystem::is_directory(state),"Shared fixture state directory required");
+        const auto previous_sessions=sessions(state);
+        const auto configure_file=[&](const auto& path,const std::string& bytes){
+            if(!std::filesystem::exists(path)){
+                write(path,bytes);
+                return;
+            }
+            std::ifstream stream(path,std::ios::binary);
+            require(bool(stream) && std::string(std::istreambuf_iterator<char>(stream),{})==bytes,
+                    "The next fixture must reuse the same configuration bytes");
+        };
         const auto worker=std::filesystem::absolute(argv[3]),helper=std::filesystem::absolute(argv[4]);
-        const auto controller=std::filesystem::absolute(argv[2]);const auto timing=root/L"timing.txt",input=root/L"input.conf",entry=root/L"activation.conf";
+        const auto controller=std::filesystem::absolute(argv[2]);const auto timing=state/L"timing.txt",input=state/L"input.conf",entry=state/L"activation.conf";
         const auto worker_hash=worker::Process::executable_sha256(worker),helper_hash=worker::Process::executable_sha256(helper);
-        write(timing,"SL3-ASIO-DIAGNOSTIC-TIMING-1\nworker_sha256="+worker_hash+"\nhelper_sha256="+helper_hash+"\nrate_hz=44100\nbuffer_frames=128\n");
-        write(input,"SL3-ASIO-CONFIG-1\nworker="+worker.u8string()+"\nworker_sha256="+worker_hash+"\nhelper="+helper.u8string()+
+        configure_file(timing,"SL3-ASIO-DIAGNOSTIC-TIMING-1\nworker_sha256="+worker_hash+"\nhelper_sha256="+helper_hash+"\nrate_hz=44100\nbuffer_frames=128\n");
+        configure_file(input,"SL3-ASIO-CONFIG-1\nworker="+worker.u8string()+"\nworker_sha256="+worker_hash+"\nhelper="+helper.u8string()+
             "\ntiming_record="+timing.u8string()+"\ntiming_record_sha256="+worker::Process::executable_sha256(timing)+"\n");
         const auto header=std::string(application?"SL3-ASIO-ACTIVATION-2":"SL3-ASIO-ACTIVATION-1");
         const auto content=header+"\ncontroller="+controller.u8string()+"\ncontroller_sha256="+worker::Process::executable_sha256(controller)+
             "\ninput="+input.u8string()+"\ninput_sha256="+worker::Process::executable_sha256(input)+
             "\nstartup_timeout_ms=15000\nstartup_failure_grace_ms=5000\nlifetime_ms=60000\n";
-        write(entry,content);
+        configure_file(entry,content);
         {auto inspected=load_driver_entry_configuration(entry,TimingPolicy::unmeasured_diagnostic);
             require(inspected.activation && inspected.activation->application_bound==application &&
-                    inspected.activation->kind==session::Kind::native && inspected.activation->output.empty() && sessions(root)==0,
+                    inspected.activation->kind==session::Kind::native && inspected.activation->output.empty() && sessions(state)==previous_sessions,
                     "Production activation parse is native-only and creates no controller/output");}
         if(application){
             BrokerActivationSpec first,second;first.application_bound=second.application_bound=true;
             select_user_activation_output(first);select_user_activation_output(second);
             require(first.output.is_absolute() && first.output==second.output && first.output_root_lease &&
                     !std::filesystem::exists(first.output),"Application output is stable and passive for this process");
-            const auto image=std::filesystem::absolute(argv[1]);const auto owner=root/L"application-owner";
+            const auto image=std::filesystem::absolute(argv[1]);const auto owner=state/first.output.filename();
             const auto conflicting=root/L"conflicting.conf";
             auto changed=content;changed.replace(changed.find("lifetime_ms=60000"),17,"lifetime_ms=59000");write(conflicting,changed);
             std::string ready_hash;
@@ -73,11 +85,11 @@ int wmain(int argc,wchar_t** argv){
                 const auto configure=function<BOOL(*)(const wchar_t*,const wchar_t*)>(library,"sl3_test_activation_configure");
                 const auto get=function<HRESULT(WINAPI*)(REFCLSID,REFIID,void**)>(library,"DllGetClassObject");
                 const auto unload=function<HRESULT(WINAPI*)()>(library,"DllCanUnloadNow");
-                require(configure((pass==1?conflicting:entry).c_str(),root.c_str())!=FALSE &&
+                require(configure((pass==1?conflicting:entry).c_str(),state.c_str())!=FALSE &&
                         get(driver_clsid,IID_IClassFactory,reinterpret_cast<void**>(&factory))==S_OK &&
                         factory->CreateInstance(nullptr,driver_clsid,reinterpret_cast<void**>(&device))==S_OK,
                         "Construct application-bound IASIO object lazily");
-                require(sessions(root)==(pass?1:0),"Object creation does not launch a controller");
+                require(sessions(state)==previous_sessions+(pass?1u:0u),"Object creation does not launch a controller");
                 factory->Release();factory=nullptr;
                 if(pass==1)require(device->init(nullptr)==ASIOFalse,"Changed activation specification refuses reuse");
                 else play(device);
@@ -86,9 +98,10 @@ int wmain(int argc,wchar_t** argv){
                 library=nullptr;require(!GetModuleHandleW(image.c_str()),"Actual ASIO module unload between opens");
                 const auto hash=worker::Process::executable_sha256(owner/L"ready.json");
                 if(!pass)ready_hash=hash;
-                require(hash==ready_hash && sessions(root)==1 && !std::filesystem::exists(owner/L"result.json"),
+                require(hash==ready_hash && sessions(state)==previous_sessions+1 && !std::filesystem::exists(owner/L"result.json"),
                         "One unchanged controller remains live across DLL unload and reopen");
             }
+            write(root/L"application-key.txt",owner.filename().u8string()+"\n");
             write(root/L"host-ready-to-exit","All ASIO modules unloaded\n");
             const auto deadline=GetTickCount64()+10000;
             while(!std::filesystem::exists(root/L"release-host")){

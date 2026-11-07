@@ -1,0 +1,27 @@
+{
+  "schema": "sl3.retained-usb-visibility-checkpoint.v1",
+  "seratoVersion": "5.0.0.1278",
+  "configuration": {"rateHz": 44100, "bufferFrames": 128},
+  "observedUsbId": {"vid": "1cc5", "pid": "0001"},
+  "completeSamples": {"before": 4, "held": 20, "afterRelease": 10},
+  "incompleteSamples": 0,
+  "sameIdentityAcrossPhases": true,
+  "nativeAcquisitionSucceeded": true,
+  "moduleObserverSeconds": 45,
+  "seratoProcessObserved": false,
+  "asioClientConnections": 0,
+  "workerRetired": true,
+  "deviceReleaseReported": true,
+  "controllerExitObserved": true,
+  "forcedTermination": false,
+  "physicalReacquisitionVerified": false,
+  "originalSetupIndependentlyVerified": true,
+  "privateReportSha256": {
+    "startup": "f32b2dc120935926d5011622c808ba283194f9f0d18f13fb6cdefda2c07d8926",
+    "finish": "b6c5827d539defff7af9e944d3a0c2e2a48270f25343a4d216eb183794cb48bc",
+    "moduleObservation": "74741ff17679f6e374e1437b91b0493e1e32651590cf130fe693fe4a028dc926",
+    "joinedReadout": "83592d1b338c0028ad5f5c242877493c7768949161914128369e3c27a5ee5574",
+    "brokerResult": "6f37c1a3c0518b330f2147e846765970c8270ca797df98c5814b7382d79024f6",
+    "restorationPostcheck": "37ad7d71e9478200f9d1c8216db4175b3fa9854468cf3e82c98a51ded72c9cef"
+  }
+}

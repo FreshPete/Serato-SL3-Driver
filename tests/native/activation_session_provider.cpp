@@ -14,7 +14,10 @@ sl3::asio::DriverConfiguration selected(){
     if(!config.activation)throw std::runtime_error("Activation fixture requires an activation record");
     auto spec=std::make_shared<sl3::asio::BrokerActivationSpec>(*config.activation);
     spec->kind=sl3::session::Kind::simulated;
-    spec->output=output/(spec->application_bound?L"application-owner":L"session-"+std::to_wstring(++ordinal));
+    if(spec->application_bound){
+        sl3::asio::select_user_activation_output(*spec);
+        spec->output=output/spec->output.filename();
+    }else spec->output=output/(L"session-"+std::to_wstring(++ordinal));
     config.activation=std::move(spec);if(required_rate)config.latency.rate_hz=required_rate;return config;
 }
 }

@@ -1,4 +1,4 @@
-# Sample ordinary Windows process/module metadata during a manual application launch.
+# Sample ordinary Windows process/module metadata during application startup.
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)][string]$Application,
@@ -6,7 +6,8 @@ param(
     [Parameter(Mandatory)][string]$Module,
     [Parameter(Mandatory)][ValidatePattern('^[0-9a-fA-F]{64}$')][string]$ModuleSha256,
     [ValidateRange(1,120)][int]$TimeoutSeconds = 30,
-    [ValidateRange(0,15)][int]$FollowUpSeconds = 0
+    [ValidateRange(0,15)][int]$FollowUpSeconds = 0,
+    [switch]$Launch
 )
 
 $ErrorActionPreference = 'Stop'
@@ -38,7 +39,15 @@ $samples = 0
 $followUpSamples = 0
 $disappearanceSampled = $false
 $queryErrors = 0
-[Console]::Error.WriteLine('Module observer armed. Launch the application normally.')
+if ($Launch) {
+    if (Get-Process -Name $name -ErrorAction SilentlyContinue) {
+        throw 'Close the application before starting an observed launch.'
+    }
+    [Console]::Error.WriteLine('Module observer armed. Opening the application normally.')
+    Start-Process -FilePath $Application -WorkingDirectory (Split-Path -Parent $Application) -ErrorAction Stop
+} else {
+    [Console]::Error.WriteLine('Module observer armed. Launch the application normally.')
+}
 
 do {
     foreach ($process in [Diagnostics.Process]::GetProcessesByName($name)) {

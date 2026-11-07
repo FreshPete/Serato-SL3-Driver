@@ -11,7 +11,7 @@ if (([Security.Principal.WindowsPrincipal]::new($identity)).IsInRole([Security.P
     throw 'Start from your normal Windows desktop session.'
 }
 
-$experiment = Join-Path (Split-Path -Parent $PSScriptRoot) 'analysis/sl3-on-demand-test-retained-idle-guard-20261107/experiment.json'
+$experiment = Join-Path (Split-Path -Parent $PSScriptRoot) 'analysis/sl3-on-demand-test-retained-observed-launch-20261107/experiment.json'
 $expected = '0d842831f4c1b0a6dfa02ef8f0d07608132aec5128da42b29d8518666f45b538'
 $handoff = Join-Path $PSScriptRoot 'retained-setup-handoff.py'
 $handoffSha = '1ea6cecbb07f3b4eeabaf58ac1d9534c1746a711f82910f6f8f04cfeb1675c33'
@@ -84,7 +84,7 @@ function Invoke-ReviewedTrial($Record, $SetupProcess) {
     $desktop = Join-Path $PSScriptRoot 'retained-desktop-trial.py'
     $observer = Join-Path $PSScriptRoot 'observe-asio-module-load.ps1'
     $desktopArgs = @('--experiment',$experiment,'--expected-experiment-sha256',$expected,
-        '--expected-launch-sha256','c2ca50acac0acd6296a85471d00e30249a92c4c2159f5564acadbffae8d1abf8')
+        '--expected-launch-sha256','24f71a6b7656b45874724b499bd2ed530f87d802ec5f358332af6eb9156cc674')
     $folder = Split-Path -Parent $experiment
     $name = [IO.Path]::GetFileNameWithoutExtension($Record.application)
     $started = $false
@@ -105,13 +105,13 @@ function Invoke-ReviewedTrial($Record, $SetupProcess) {
             Write-Host 'The USB snapshots did not show the SL3 while the connection was held. The Serato check can still run.'
         }
 
-        Write-Host 'When the observer is armed, open Serato from its usual shortcut. Leave playback stopped.'
+        Write-Host 'The test opens Serato from its installed executable. Leave playback stopped.'
         Write-Host 'Note what Serato shows. Keep it open for five seconds after hardware status appears, then close it normally.'
         Write-Host 'Leave any Download Driver notice untouched.'
         $module = Join-Path $env:ProgramFiles 'SL3 Rebuild/on-demand-diagnostic-v2/sl3_asio.dll'
         $observed = & $observer -Application $Record.application -Module $module `
             -ApplicationSha256 $Record.applicationSha256 `
-            -ModuleSha256 '9d41ddcc0de481cd966d6786b15e656a3dcc6e4d71191815e6431a4009a9be55' -TimeoutSeconds 45 -FollowUpSeconds 5
+            -ModuleSha256 '9d41ddcc0de481cd966d6786b15e656a3dcc6e4d71191815e6431a4009a9be55' -TimeoutSeconds 45 -FollowUpSeconds 5 -Launch
         if (($observed | ConvertFrom-Json).schema -ne 'sl3.asio-module-observation.v1') {
             throw 'Unexpected module observation result.'
         }
@@ -191,9 +191,10 @@ try {
     if (-not $plan.freshSetupRecordDirectory) { throw 'This trial already has setup records. Preserve them and prepare a fresh trial before requesting approval.' }
     if ($Trial) {
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'retained-desktop-trial.py') '50f748fcc01407ef9f38e32a7d64eeb750d274e01b42b35fb9f6b60be245560c'
-        Hold-ReviewedFile (Join-Path $PSScriptRoot 'observe-asio-module-load.ps1') '97f15e24e861f8cd82c68ee0723c598382ecf6e41511790c7ea1c12a9147bf0d'
+        Hold-ReviewedFile (Join-Path $PSScriptRoot 'observe-asio-module-load.ps1') '8526c08514cafee031e5facb9f9f17856600c73df04eb886f5d9c150a707e153'
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'inspect-process.psm1') '6ffb8427f79ebd173fd31e9824442293eb66689107fe63307204f76a6db4a290'
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'read-retained-start-result.py') '22701bc60b065b87b277066faf82e5c3716d2f81619eec41ec639e38665b64b4'
+        Write-Host 'After USB is ready, the test will open Serato normally. You will close it manually.'
         $confirmation = Read-Host 'Power-cycle the SL3 for 30 seconds, reconnect it, wait 30 seconds, close Serato and type RECOVERED'
         if ($confirmation -cne 'RECOVERED') { Write-Host 'Test canceled before setup.'; return }
     }
