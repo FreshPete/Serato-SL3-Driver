@@ -12,8 +12,15 @@
 #include <thread>
 
 namespace sl3::diagnostic {
+class Win32Failure final : public std::runtime_error {
+    DWORD code_;
+public:
+    Win32Failure(const char* operation, DWORD code)
+        : std::runtime_error(std::string(operation) + " failed, Win32=" + std::to_string(code)), code_(code) {}
+    DWORD code() const noexcept { return code_; }
+};
 [[noreturn]] inline void failed(const char* operation) {
-    throw std::runtime_error(std::string(operation) + " failed, Win32=" + std::to_string(GetLastError()));
+    throw Win32Failure(operation, GetLastError());
 }
 inline std::string quote(const std::string& value) {
     std::string out = "\"";

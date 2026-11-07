@@ -167,6 +167,14 @@ int wmain(int argc,wchar_t** argv){
         Audit audit(audit_path);
         return serve_device_session(*control,session::Kind::simulated,[&]{
             if(mode==L"hang-acquire")Sleep(INFINITE);
+            if(mode==L"fail-acquire-busy" || mode==L"fail-acquire-generic"){
+                struct Unwind {~Unwind(){SetLastError(ERROR_ACCESS_DENIED);}} unwind;
+                if(mode==L"fail-acquire-busy"){
+                    SetLastError(ERROR_BUSY);
+                    diagnostic::failed("Acquire fixture redirect");
+                }
+                throw std::runtime_error("Fixture validation failed");
+            }
             if(mode==L"fail-acquire")throw std::runtime_error("Fixture acquire rollback");
             return std::make_unique<Device>(mode,audit);
         },SessionTimeouts{mode==L"slow-selection"?8000u:250u,500,250,200});

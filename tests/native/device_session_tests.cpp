@@ -116,6 +116,20 @@ static void lifecycle(const std::filesystem::path& fixture){
     c.quit();require(c.marks()==std::vector<std::string>({"acquire","rate","rate","begin","end","rate","begin","end","release"}),"One physical lease, fresh clock and target per stream, final release once");
 }
 static void admission_failures(const std::filesystem::path& fixture){
+    for(const auto mode:{L"fail-acquire-busy",L"fail-acquire-generic"}){
+        Client c(fixture,mode);c.hello();
+        const auto response=c.call(protocol::Command::acquire);
+        const auto state=protocol::decode_snapshot(response.bytes);
+        const bool busy=std::wstring(mode)==L"fail-acquire-busy";
+        require(response.status==unsigned(session::Status::operation_failed) &&
+            state.phase==protocol::Phase::failed && state.failure==session::Failure::startup &&
+            state.native_error==DWORD(busy?ERROR_BUSY:ERROR_SUCCESS) && state.device_released &&
+            !state.stats.input_submissions && !state.stats.output_submissions,
+            "Acquisition reports only the originating native error after cleanup");
+        require(c.call(protocol::Command::acquire).status==unsigned(session::Status::bad_state),
+            "A failed open cannot attempt acquisition again");
+        c.quit(1);
+    }
     for(const auto mode:{L"normal",L"invalid-clock",L"fail-start",L"fail-acquire"}){
         Client c(fixture,mode);c.hello();const auto acquired=c.call(protocol::Command::acquire);
         if(std::wstring(mode)==L"invalid-clock" || std::wstring(mode)==L"fail-acquire"){

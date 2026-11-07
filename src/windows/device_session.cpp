@@ -128,7 +128,9 @@ class Runtime {
                 const auto rate=device_->read_rate();session::encode_clock(rate);snapshot_.rate_hz=rate;
                 snapshot_.phase=Phase::ready;heartbeat_.pulse(timeouts_.live_ms);reply(Status::ok);
             }catch(const std::exception& e){
-                snapshot_.native_error=GetLastError();failure(session::Failure::startup,e.what());release_device();
+                const auto* native=dynamic_cast<const diagnostic::Win32Failure*>(&e);
+                snapshot_.native_error=native?native->code():ERROR_SUCCESS;
+                failure(session::Failure::startup,e.what());release_device();
                 snapshot_.phase=Phase::failed;heartbeat_.pulse(timeouts_.live_ms);reply(Status::operation_failed);
             }
             return;
