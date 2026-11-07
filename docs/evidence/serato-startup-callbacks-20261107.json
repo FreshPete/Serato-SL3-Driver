@@ -1,0 +1,358 @@
+{
+  "schema": "sl3.serato-startup-callbacks.v1",
+  "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "inspectorSha256": "d4bf28bf353872e7cf34ae6facbfe565a9f35483795d86d22dad2aad1a817a6b",
+  "registration": {
+    "callbackConstructor": "0x1419669a0",
+    "storage": "0x14197f720",
+    "recordBytes": 216,
+    "product": "dj",
+    "version": "1.1",
+    "category": 4,
+    "adjacentRequestCategories": [
+      3,
+      6
+    ],
+    "callbackSetter": "0x14153b500",
+    "stateUpdater": "0x14153b280"
+  },
+  "dispatch": {
+    "matchesProductAndCategory": true,
+    "checkedSet": "0x14197f650",
+    "checkedClear": "0x14197fb30",
+    "setRequiresServiceResultZeroAndClearState": true,
+    "refresh": "0x1405a5aa0",
+    "directRefreshCalls": [
+      "0x1405a239e",
+      "0x1405a2460",
+      "0x1405a2497",
+      "0x1405a25cc",
+      "0x1405a37e2"
+    ],
+    "rlmCheckedMethodSlot": "0xa8",
+    "rlmCheckedMethodCategory": 5,
+    "rlmCheckedMethodMatchesRegistrationCategory": false
+  },
+  "checkedInstructions": [
+    {
+      "va": "0x141539715",
+      "bytes": "488d3de41d0000"
+    },
+    {
+      "va": "0x141539739",
+      "bytes": "4c89bdf8000000"
+    },
+    {
+      "va": "0x14153974c",
+      "bytes": "c6851001000000"
+    },
+    {
+      "va": "0x141539785",
+      "bytes": "4c897d78"
+    },
+    {
+      "va": "0x141539795",
+      "bytes": "c6859000000001"
+    },
+    {
+      "va": "0x1415397ae",
+      "bytes": "4c8d85f8000000"
+    },
+    {
+      "va": "0x1415397b5",
+      "bytes": "488d5578"
+    },
+    {
+      "va": "0x1415397c0",
+      "bytes": "e8dbd14200"
+    },
+    {
+      "va": "0x1415397d9",
+      "bytes": "e802f4ffff"
+    },
+    {
+      "va": "0x1415397de",
+      "bytes": "488bf8"
+    },
+    {
+      "va": "0x14153986c",
+      "bytes": "4181f081000000"
+    },
+    {
+      "va": "0x14153987d",
+      "bytes": "41d3e1"
+    },
+    {
+      "va": "0x141539882",
+      "bytes": "41d3e8"
+    },
+    {
+      "va": "0x141539885",
+      "bytes": "450bc8"
+    },
+    {
+      "va": "0x14153989f",
+      "bytes": "4983fa02"
+    },
+    {
+      "va": "0x1415398a5",
+      "bytes": "48897c2420"
+    },
+    {
+      "va": "0x1415398aa",
+      "bytes": "41b904000000"
+    },
+    {
+      "va": "0x1415398b0",
+      "bytes": "4c8d4598"
+    },
+    {
+      "va": "0x1415398b4",
+      "bytes": "488d542468"
+    },
+    {
+      "va": "0x1415398bc",
+      "bytes": "e8ef764200"
+    },
+    {
+      "va": "0x14153956e",
+      "bytes": "41b903000000"
+    },
+    {
+      "va": "0x141539580",
+      "bytes": "e82b7a4200"
+    },
+    {
+      "va": "0x1415396fe",
+      "bytes": "41b906000000"
+    },
+    {
+      "va": "0x141539710",
+      "bytes": "e89b784200"
+    },
+    {
+      "va": "0x141966a31",
+      "bytes": "e84aa5ffff"
+    },
+    {
+      "va": "0x141966a47",
+      "bytes": "e874feffff"
+    },
+    {
+      "va": "0x1419668f2",
+      "bytes": "488911"
+    },
+    {
+      "va": "0x1419668f5",
+      "bytes": "488d6908"
+    },
+    {
+      "va": "0x14196691a",
+      "bytes": "488d6b48"
+    },
+    {
+      "va": "0x14196693c",
+      "bytes": "c6838800000000"
+    },
+    {
+      "va": "0x14196109b",
+      "bytes": "e880e60100"
+    },
+    {
+      "va": "0x14197f86f",
+      "bytes": "8945f0"
+    },
+    {
+      "va": "0x14197f8f1",
+      "bytes": "e85afcffff"
+    },
+    {
+      "va": "0x14197f8f6",
+      "bytes": "49814518d8000000"
+    },
+    {
+      "va": "0x14197f90b",
+      "bytes": "e8a0f9ffff"
+    },
+    {
+      "va": "0x14197f5d0",
+      "bytes": "e89b64b3fe"
+    },
+    {
+      "va": "0x14197f5e3",
+      "bytes": "e88864b3fe"
+    },
+    {
+      "va": "0x14197f6b9",
+      "bytes": "e8320b7a00"
+    },
+    {
+      "va": "0x14197f6c0",
+      "bytes": "751c"
+    },
+    {
+      "va": "0x14197f6c6",
+      "bytes": "453bce"
+    },
+    {
+      "va": "0x14197f6c9",
+      "bytes": "7513"
+    },
+    {
+      "va": "0x14197f6cf",
+      "bytes": "488d4b48"
+    },
+    {
+      "va": "0x14197f6d6",
+      "bytes": "e8d573feff"
+    },
+    {
+      "va": "0x14197f6de",
+      "bytes": "4881c3d8000000"
+    },
+    {
+      "va": "0x14197fb99",
+      "bytes": "e852067a00"
+    },
+    {
+      "va": "0x14197fba0",
+      "bytes": "7519"
+    },
+    {
+      "va": "0x14197fba2",
+      "bytes": "44397340"
+    },
+    {
+      "va": "0x14197fba6",
+      "bytes": "7513"
+    },
+    {
+      "va": "0x14197fbac",
+      "bytes": "488d4b48"
+    },
+    {
+      "va": "0x14197fbb3",
+      "bytes": "e8486ffeff"
+    },
+    {
+      "va": "0x141966abf",
+      "bytes": "ff5010"
+    },
+    {
+      "va": "0x141966ac9",
+      "bytes": "7521"
+    },
+    {
+      "va": "0x141966ad1",
+      "bytes": "7519"
+    },
+    {
+      "va": "0x141966ad3",
+      "bytes": "c6838800000001"
+    },
+    {
+      "va": "0x141966ada",
+      "bytes": "488b4b40"
+    },
+    {
+      "va": "0x141966ae6",
+      "bytes": "ff5010"
+    },
+    {
+      "va": "0x141966b04",
+      "bytes": "c6818800000000"
+    },
+    {
+      "va": "0x141966b0b",
+      "bytes": "488b8980000000"
+    },
+    {
+      "va": "0x141966b1e",
+      "bytes": "48ff6010"
+    },
+    {
+      "va": "0x14153b504",
+      "bytes": "3a9188020000"
+    },
+    {
+      "va": "0x14153b50a",
+      "bytes": "740b"
+    },
+    {
+      "va": "0x14153b512",
+      "bytes": "e869fdffff"
+    },
+    {
+      "va": "0x1405a5b02",
+      "bytes": "e839b03b01"
+    },
+    {
+      "va": "0x1405a5b18",
+      "bytes": "0f8453050000"
+    },
+    {
+      "va": "0x1405a5da8",
+      "bytes": "418b5c2448"
+    },
+    {
+      "va": "0x1405a5dba",
+      "bytes": "448bc3"
+    },
+    {
+      "va": "0x1405a5dc3",
+      "bytes": "e838ac3b01"
+    },
+    {
+      "va": "0x1405a5eb8",
+      "bytes": "418b5c2448"
+    },
+    {
+      "va": "0x1405a5eca",
+      "bytes": "448bc3"
+    },
+    {
+      "va": "0x1405a5ed3",
+      "bytes": "e808ac3b01"
+    },
+    {
+      "va": "0x1405a6053",
+      "bytes": "4983c478"
+    },
+    {
+      "va": "0x141960a39",
+      "bytes": "e812ec0100"
+    },
+    {
+      "va": "0x141960b19",
+      "bytes": "e812f00100"
+    },
+    {
+      "va": "0x14198f9a4",
+      "bytes": "4183ff05"
+    },
+    {
+      "va": "0x14198f9a8",
+      "bytes": "0f858a010000"
+    },
+    {
+      "va": "0x14198fa64",
+      "bytes": "41b805000000"
+    },
+    {
+      "va": "0x14198fa71",
+      "bytes": "e8ba00ffff"
+    },
+    {
+      "va": "0x14198fb0c",
+      "bytes": "458bc7"
+    },
+    {
+      "va": "0x14198fb16",
+      "bytes": "e835fbfeff"
+    }
+  ],
+  "liveCallbackInvocationObserved": false,
+  "vendorCodeExecuted": false,
+  "installedFilesChanged": false,
+  "deviceAccess": false
+}
