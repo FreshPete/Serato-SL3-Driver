@@ -1,0 +1,92 @@
+{
+  "schema": "sl3.serato-historical-usb-startup.v1",
+  "currentImageSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "exporterSha256": "3eb95f9351e2bfe8035f0dd41a1fb2cf2e9c2979ccb517cc398067f3543eaf86",
+  "usbManager": {
+    "historical": {
+      "caller": "0x140488da0",
+      "bootstrap": "0x1402afb50",
+      "initializer": "0x1401474c0",
+      "constructor": "0x140146c00",
+      "listenerOffset": "0x10",
+      "arrivalId": 261,
+      "bootstrapCall": "0x1402b1004",
+      "messageHandler": "0x140114740",
+      "stateMessage": 281,
+      "stateMessageCall": "0x140117e3f"
+    },
+    "current": {
+      "engineHandler": "0x141373a40",
+      "message": 1492,
+      "initializer": "0x140710720",
+      "constructor": "0x14070fd70",
+      "calls": [
+        "0x141373a93",
+        "0x140710762"
+      ]
+    }
+  },
+  "aggregationWorkers": {
+    "2.5.5": {
+      "imageSha256": "ba8641d0329fe0c955147d2b45f247eeea82ac0f812fe30a339834dbe0c0a503",
+      "range": [
+        "0x1406a6da0",
+        "0x1406a946c"
+      ],
+      "instructions": 2211,
+      "replacedCleanupInstructions": 7,
+      "relocatedReferences": 353,
+      "falseBranch": {
+        "visitedInstructions": 20,
+        "reachedTargets": [],
+        "unresolvedExits": [],
+        "normalCallReturnAssumed": true,
+        "exceptionsAndCallbacksModeled": false
+      },
+      "trueBranch": {
+        "visitedInstructions": 1723,
+        "reachedTargets": [
+          "0x1406a7601",
+          "0x1406a785e",
+          "0x1406a7eee"
+        ],
+        "unresolvedExits": [],
+        "normalCallReturnAssumed": true,
+        "exceptionsAndCallbacksModeled": false
+      }
+    },
+    "2.5.6": {
+      "imageSha256": "3b04472cd5597fd56266e1c2c86dc298431b0026001aefe4b43aa3b909ee35c5",
+      "range": [
+        "0x1406a96d0",
+        "0x1406abd8e"
+      ],
+      "instructions": 2206,
+      "replacedCleanupInstructions": 2,
+      "relocatedReferences": 354,
+      "falseBranch": {
+        "visitedInstructions": 20,
+        "reachedTargets": [],
+        "unresolvedExits": [],
+        "normalCallReturnAssumed": true,
+        "exceptionsAndCallbacksModeled": false
+      },
+      "trueBranch": {
+        "visitedInstructions": 1718,
+        "reachedTargets": [
+          "0x1406a9f31",
+          "0x1406aa18e",
+          "0x1406aa81e"
+        ],
+        "unresolvedExits": [],
+        "normalCallReturnAssumed": true,
+        "exceptionsAndCallbacksModeled": false
+      }
+    },
+    "matchedInstructionsOutsideCleanup": 2204,
+    "matchedLocalEdgesOutsideCleanup": 232
+  },
+  "runtimeSelectionObserved": false,
+  "vendorCodeExecuted": false,
+  "deviceAccess": false
+}
