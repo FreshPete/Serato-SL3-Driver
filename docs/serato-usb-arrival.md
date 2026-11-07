@@ -21,7 +21,13 @@ At `1421dcbf0` the worker calls predicate `140c00af0` and tests AL. Its nonzero 
 
 The presence helpers operate on composite members at +0 and +0x10. Their complete checked bodies call the QWORD-null primitive and invert its result. These are component-pointer presence checks, not audio readiness or authentication predicates.
 
-The [previous primary-pointer proof](serato-primary-pointer.md) follows the matching 0x2d4 consumer through numeric descriptor lookup, kind-zero/helper-result conditions and message 0x2ca toward the registered-instance setter. Together these checks identify a longer conditional handoff. They are not a captured call chain. All packed-payload word provenance and every other producer branch remain unexhausted; the emitted third word is not promoted into a verified physical USB revision.
+The [previous primary-pointer proof](serato-primary-pointer.md) follows the matching 0x2d4 consumer through numeric descriptor lookup, kind-zero/helper-result conditions and message 0x2ca toward the registered-instance setter. Together these checks identify a longer conditional handoff. Runtime delivery still needs a live observation.
+
+### Source of the arrival identity
+
+On the selected descriptor-present branch, callback `14213ddc0` copies the composite's shared descriptor from `+0x30` through `140c00570`. It calls the descriptor identity slots `+0x18`, `+0x20` and `+0x28` and zero-extends each return to sixteen bits. For the checked `ControllerDescriptor` interface at complete-object offset `+0x738`, those getters read VID, PID and revision at complete-object `+0xa8`, `+0xaa` and `+0xac`. The message packs these fields in that order from high to low and contains no bus or device address. The descriptor-absent path initializes the word storage to zero. [Arrival identity checks](evidence/serato-usb-arrival-identity-20261107.json)
+
+`14213ead4` calls the same constructor that the old `scalar_message` probe watched. `UserIO_VoidPtrMessageData` stores the packed value at `+0x38` and the receiver uses it as a scalar. A repeated `(1CC5, 0001, 0)` in the saved trace therefore establishes repeated descriptor-derived notifications. It does not establish a new physical USB arrival, a hardware revision read or continuous ownership. Use the independent libusb snapshots for bus and address. [Retained observation](retained-normal-start-trial.md#observe-the-normal-launch)
 
 ## The action predicate checks a declared minimum version
 
