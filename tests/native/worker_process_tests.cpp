@@ -121,6 +121,24 @@ int wmain(int argc,wchar_t** argv){
         }
         const auto closed=WaitForSingleObject(observer,2000);CloseHandle(observer);
         require(closed==WAIT_OBJECT_0,"Owner destruction closes job and kills child");
+        {
+            Process controller;
+            controller.launch(fixture,hash,{L"--hang"},Process::JobLifetime::application_controller);
+            const auto live=controller.observe();
+            if(!live.job_assigned || live.associated_processes!=1 || live.process_exited){
+                stopped(controller);
+                throw std::runtime_error("Controller must be live in its private job at creation");
+            }
+            if(!DuplicateHandle(GetCurrentProcess(),controller.process_handle(),GetCurrentProcess(),
+                                &observer,SYNCHRONIZE|PROCESS_TERMINATE,FALSE,0)){
+                stopped(controller);
+                throw std::runtime_error("Retain the exact controller for fixture cleanup");
+            }
+        }
+        const auto controller_alive=WaitForSingleObject(observer,0)==WAIT_TIMEOUT;
+        const auto controller_stopped=TerminateProcess(observer,72) && WaitForSingleObject(observer,2000)==WAIT_OBJECT_0;
+        CloseHandle(observer);
+        require(controller_alive && controller_stopped,"Controller may survive launcher cleanup and remains observable");
         Process abrupt;
         std::wstring wide_hash(hash.begin(),hash.end());
         abrupt.launch(fixture,hash,{L"--abrupt-owner",wide_hash});

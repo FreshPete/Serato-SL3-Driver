@@ -83,6 +83,25 @@ struct LaunchErrorMode {
     }
     ~LaunchErrorMode(){SetThreadErrorMode(previous,nullptr);}
 };
+struct JobStartupInfo {
+    STARTUPINFOEXW startup{};
+    std::vector<unsigned char> storage;
+
+    void bind(HANDLE& job){
+        SIZE_T size=0;
+        InitializeProcThreadAttributeList(nullptr,1,0,&size);
+        if(!size)failed("Size controller startup attributes");
+        storage.resize(size);
+        const auto list=reinterpret_cast<LPPROC_THREAD_ATTRIBUTE_LIST>(storage.data());
+        if(!InitializeProcThreadAttributeList(list,1,0,&size))failed("Initialize controller startup attributes");
+        startup.lpAttributeList=list;
+        startup.StartupInfo.cb=sizeof(startup);
+        if(!UpdateProcThreadAttribute(list,0,PROC_THREAD_ATTRIBUTE_JOB_LIST,&job,sizeof(job),nullptr,nullptr))
+            failed("Bind controller job at process creation");
+    }
+
+    ~JobStartupInfo(){if(startup.lpAttributeList)DeleteProcThreadAttributeList(startup.lpAttributeList);}
+};
 }
 struct Process::State {
     Handle executable,job,process,thread;
@@ -115,23 +134,32 @@ void Process::launch(const std::filesystem::path& path,const std::string& expect
     if(hash_file(candidate->executable.value)!=identity)throw std::runtime_error("Worker executable differs from the expected tested build");
     candidate->job.value=CreateJobObjectW(nullptr,nullptr);
     if(!candidate->job.value)failed("Create private worker job");
-    if(lifetime==JobLifetime::owner){
+    const bool application_controller=lifetime==JobLifetime::application_controller;
+    JobStartupInfo controller_startup;
+    STARTUPINFOW worker_startup{};worker_startup.cb=sizeof(worker_startup);
+    DWORD flags=CREATE_NO_WINDOW;
+    if(application_controller){
+        // This job survives host exit so the controller can retire its worker.
+        // Assign at creation without leaving a suspended child to resume.
+        controller_startup.bind(candidate->job.value);
+        flags|=EXTENDED_STARTUPINFO_PRESENT;
+    }else{
         JOBOBJECT_EXTENDED_LIMIT_INFORMATION limits{};
         limits.BasicLimitInformation.LimitFlags=JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
         if(!SetInformationJobObject(candidate->job.value,JobObjectExtendedLimitInformation,&limits,sizeof(limits)))failed("Configure private worker job");
+        flags|=CREATE_SUSPENDED;
     }
-    STARTUPINFOW startup{};startup.cb=sizeof(startup);
     PROCESS_INFORMATION child{};
     BOOL created=FALSE;DWORD creation_error=0;
     {
         LaunchErrorMode error_mode;
-        created=CreateProcessW(path.c_str(),command.data(),nullptr,nullptr,FALSE,CREATE_SUSPENDED|CREATE_NO_WINDOW,
-                               nullptr,path.parent_path().c_str(),&startup,&child);
+        created=CreateProcessW(path.c_str(),command.data(),nullptr,nullptr,FALSE,flags,nullptr,path.parent_path().c_str(),
+                               application_controller?&controller_startup.startup.StartupInfo:&worker_startup,&child);
         creation_error=GetLastError();
     }
     if(!created){SetLastError(creation_error);failed("Create private worker suspended");}
     candidate->process.value=child.hProcess;candidate->thread.value=child.hThread;
-    if(!AssignProcessToJobObject(candidate->job.value,candidate->process.value)){
+    if(!application_controller && !AssignProcessToJobObject(candidate->job.value,candidate->process.value)){
         const auto error=GetLastError();
         // Retain the exact handle even on assignment failure. The child has
         // executed no code; terminate only this owned suspended process.
@@ -141,7 +169,8 @@ void Process::launch(const std::filesystem::path& path,const std::string& expect
             "; process exit confirmed="+std::to_string(stopped.state.process_exited));
     }
     candidate->assigned=true;state_=std::move(candidate);
-    if(ResumeThread(state_->thread.value)==DWORD(-1))failed("Resume assigned worker; owned handle retained");
+    if(!application_controller && ResumeThread(state_->thread.value)==DWORD(-1))
+        failed("Resume assigned worker; owned handle retained");
     state_->thread.reset();
 }
 ProcessState Process::observe() const {
