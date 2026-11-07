@@ -1,4 +1,4 @@
-"""Verify the USB arrival and state subscription paths in the pinned Serato PE."""
+"""Verify USB arrival publication, dispatch and subscription in the pinned Serato PE."""
 import argparse
 import hashlib
 import json
@@ -10,21 +10,41 @@ ROOT = Path(__file__).resolve().parents[1]
 
 # The complete PE extents bind each selected instruction to its decoded body.
 SPANS = {
+    0x1404c0000: 0x1404c3966,
+    0x1404c4300: 0x1404c437c,
     0x1404c65c0: 0x1404c671c,
+    0x140520efe: 0x140521018,
     0x14070fd70: 0x14070fe59,
     0x141543cf0: 0x14154426c,
     0x141544850: 0x141544a2e,
     0x141544a30: 0x141544c5e,
     0x141545210: 0x14154549d,
     0x141545800: 0x141545ae0,
+    0x141545ae0: 0x141545c11,
+    0x141546370: 0x141546703,
     0x141546710: 0x141546a7f,
     0x1415477e0: 0x1415479ff,
+    0x14154c370: 0x14154c59f,
+    0x14154c5a0: 0x14154c872,
     0x14154cd50: 0x14154cf87,
     0x14154cf90: 0x14154d1f0,
+    0x14185ec90: 0x14185ecdf,
+    0x14185ee90: 0x14185eee3,
     0x14213ddc0: 0x14213eeca,
 }
 
+# These leaf bodies have no PE unwind entry.
+LEAF_SPANS = {
+    0x140625870: 0x1406258db,
+    0x140ff9740: 0x140ff9747,
+    0x14154c960: 0x14154c964,
+}
+
 FACTS = """
+1404c3367 mov rcx, qword ptr [rip + 0x39e965a]
+1404c336e call 0x141546370
+1404c4318 mov rcx, qword ptr [rip + 0x39e86a9]
+1404c431f call 0x141546370
 1404c662d call 0x141543cf0
 1404c6632 mov rdi, rax
 1404c6635 jmp 0x1404c6639
@@ -32,6 +52,8 @@ FACTS = """
 14070fd92 mov rdx, qword ptr [rip + 0x379cc2f]
 14070fd99 lea rcx, [rdi + 0x10]
 14070fd9d call 0x14154c960
+14070fdad lea rax, [rip + 0x21333b4]
+14070fdb4 mov qword ptr [rdi + 0x10], rax
 14070fdd9 mov r9d, 7
 14070fddf xor r8d, r8d
 14070fde2 mov edx, 0x2d4
@@ -59,7 +81,14 @@ FACTS = """
 14154c4be call qword ptr [rax + 0x20]
 1415452c7 call 0x141544850
 1415452f9 call 0x141544850
+141544874 mov rax, qword ptr [r9 + 8]
+14154487b imul rcx, qword ptr [r9 + 0x20]
+141544880 mov r8, qword ptr [rax + rbp*8]
+141544884 add r8, rcx
+141544887 add r8, rsi
+14154488a lea rcx, [r8 + r8*2]
 14154488e mov rax, qword ptr [r9 + 0x28]
+141544892 lea rcx, [rax + rcx*8]
 1415448b0 cmp qword ptr [rax], r8
 1415448b5 add rax, 0x10
 1415448dd movups xmmword ptr [rdx], xmm0
@@ -94,12 +123,68 @@ FACTS = """
 14154793c cmp dword ptr [rbx + rcx + 8], r12d
 141547943 cmp dword ptr [rbx + rcx + 0xc], r15d
 14154794f mov dword ptr [rbx + rcx + 0x30], eax
+14185ee9e mov r10d, r9d
+14185eea1 mov r9d, dword ptr [rsp + 0x60]
+14185eead mov r8d, r10d
+14185eebb call 0x14185ec90
+14185ecc2 mov dword ptr [rcx + 0xc], edx
+14185ecc5 mov dword ptr [rcx + 0x10], r8d
+14185ecc9 mov dword ptr [rcx + 0x14], r9d
 14213ea99 mov rdi, qword ptr [rip + 0x1d6df28]
 14213eabe mov dword ptr [rsp + 0x20], 7
+14213eac6 xor r9d, r9d
 14213eacc mov edx, 0x2d4
 14213ead4 call 0x14185ee90
 14213eaf8 call qword ptr [rax + 0x58]
+1415469bf je 0x141546a4a
+1415469d5 call qword ptr [rax + 0x18]
+1415469d8 sub eax, 1
+1415469db je 0x1415469e4
+1415469dd cmp eax, 1
+1415469e0 jne 0x141546a38
+1415469e2 jmp 0x141546a4a
+141546a19 call 0x14185ec00
+141546a26 mov qword ptr [rdi], rax
+141546a38 mov rdx, qword ptr [rdi]
 141546a44 call 0x141545ae0
+141545b25 mov qword ptr [rsp + 0x30], rbp
+141545b2f add rdi, 0x158
+141545ba0 movups xmm0, xmmword ptr [rsp + 0x30]
+141545ba5 movups xmmword ptr [rcx], xmm0
+141545ba8 inc qword ptr [rdi + 0x20]
+1415463e9 lea rcx, [r14 + 0x158]
+1415463f0 lea rdx, [rbp + 7]
+1415463f4 call 0x140625870
+1406258d2 mov qword ptr [r9 + 0x20], rax
+1406258d6 mov qword ptr [rdx + 0x20], rcx
+141546429 mov r8, qword ptr [rbp + 0x27]
+14154645a movups xmm0, xmmword ptr [rcx]
+141546465 mov qword ptr [rbp + 0x27], rax
+14154647f movq r13, xmm0
+141546484 mov eax, dword ptr [r13 + 0xc]
+141546488 mov dword ptr [r14 + 0x1f0], eax
+141546531 movsxd rdx, dword ptr [r13 + 0x14]
+141546535 mov rax, qword ptr [r14 + 8]
+141546539 movsxd rcx, dword ptr [r14 + 0x1f0]
+141546540 imul rcx, qword ptr [r14 + 0x20]
+141546545 mov r8, qword ptr [rax + rdx*8]
+141546549 add r8, rcx
+14154654c movsxd rax, dword ptr [r13 + 0x10]
+141546550 add r8, rax
+141546553 lea rcx, [r8 + r8*2]
+141546557 mov rax, qword ptr [r14 + 0x28]
+14154655b lea r12, [rax + rcx*8]
+1415465b1 mov rdi, qword ptr [r12 + 8]
+1415465b6 mov rbx, qword ptr [r12]
+1415465c3 call 0x1405207d0
+141546622 mov rcx, qword ptr [rbx]
+141546625 mov rax, qword ptr [rcx]
+141546628 mov rdx, r13
+14154662b call qword ptr [rax + 8]
+14154662e add rbx, 0x10
+141546643 call qword ptr [rax]
+140ff9740 mov rax, qword ptr [rcx]
+140ff9743 jmp qword ptr [rax + 0x18]
 """
 
 
@@ -112,24 +197,28 @@ def inspect(application):
     app = helpers['Image'](application, helpers['CURRENT_SHA'])
     require = helpers['require']
     ranges = []
-    for first, end in SPANS.items():
-        require((first, end) in app.spans, 'PE function extent differs: '+hex(first))
-        body = app.function(first)
+    decoded = {}
+    for first, end in sorted((SPANS | LEAF_SPANS).items()):
+        if first in LEAF_SPANS:
+            body = list(app.dis.disasm(app.data(first,end-first),first))
+        else:
+            require((first, end) in app.spans, 'PE function extent differs: '+hex(first))
+            body = app.function(first)
         require(sum(row.size for row in body) == end-first, 'Incomplete decode: '+hex(first))
-        ranges.append({'start':hex(first), 'endExclusive':hex(end), 'sha256':sha(app.data(first,end-first))})
+        decoded.update((row.address,row) for row in body)
+        ranges.append({'start':hex(first), 'endExclusive':hex(end), 'sha256':sha(app.data(first,end-first)),
+                       'peUnwindExtent':first in SPANS})
 
     facts = []
     for line in FACTS.strip().splitlines():
         address, mnemonic, operands = line.split(maxsplit=2)
         va = int(address,16)
-        if va == 0x14154c960:
-            row = next(app.dis.disasm(app.data(va,4),va))
-        else:
-            row = app.at(va,mnemonic,operands)
-        require((row.mnemonic,row.op_str)==(mnemonic,operands),'Instruction differs: '+hex(va))
+        row = decoded.get(va)
+        require(row is not None and (row.mnemonic,row.op_str)==(mnemonic,operands),
+                'Instruction differs: '+hex(va))
         facts.append({'va':hex(va), 'bytes':row.bytes.hex(), 'assembly':mnemonic+' '+operands})
 
-    for address in (0x1404c667a,0x14070fd92,0x14213ea99):
+    for address in (0x1404c3367,0x1404c4318,0x1404c667a,0x14070fd92,0x14213ea99):
         require(app.rip(app.at(address))==0x143eac9c8,'Message system global differs')
     table=0x142f520d8
     require(app.rip(app.at(0x141543d0e))==table,'Message system constructor table differs')
@@ -140,16 +229,27 @@ def inspect(application):
     slots={0x10:0x141545210,0x20:0x141545800,0x58:0x141546710}
     for slot,target in slots.items():
         require(struct.unpack('<Q',app.data(table+slot,8))[0]==target,'Message system slot differs')
+    listener_table=0x142843168
+    require(app.rip(app.at(0x14070fdad))==listener_table,'USB manager listener table differs')
+    listener_slots={0x08:0x140ff9740,0x18:0x1407108e0}
+    for slot,target in listener_slots.items():
+        require(struct.unpack('<Q',app.data(listener_table+slot,8))[0]==target,'USB manager listener slot differs')
 
-    return {'schema':'sl3.serato-usb-subscription.v1','applicationSha256':app.sha,
+    return {'schema':'sl3.serato-usb-subscription.v2','applicationSha256':app.sha,
             'inspectorSha256':sha(Path(__file__).read_bytes()),
             'messageSystem':{'global':'0x143eac9c8','table':hex(table),'slots':{hex(k):hex(v) for k,v in slots.items()}},
             'arrival':{'message':0x2d4,'route':7,'subscriptionSlot':'0x10','dispatchPublishSlot':'0x58',
                        'entryBytes':16,'stateRefreshCallInCheckedRegistrationPath':False},
             'state':{'message':0x692,'route':7,'subscriptionSlot':'0x20','refreshHelper':'0x1415477e0',
                      'matchingStateRecordMarkOffset':'0x30','actualDeliveryObserved':False},
+            'dispatch':{'queueOffset':'0x158','enqueue':'0x141545ae0','drain':'0x141546370',
+                        'matchingKey':{'message':0x2d4,'address':0,'route':7},
+                        'listenerTableOffset':'0x28','listenerLookupAtDrain':True,
+                        'managerListenerTable':hex(listener_table),
+                        'managerListenerSlots':{hex(k):hex(v) for k,v in listener_slots.items()},
+                        'actualEnqueueOrDeliveryObserved':False},
             'ranges':ranges,'instructionFacts':facts,
-            'scope':'Static selected message publication and registration paths. Pending delivery, later publication, and other replay paths remain open.',
+            'scope':'Selected static publish, enqueue, drain and registration paths. Actual publish-filter outcome, registration order, delivery and other replay paths remain open.',
             'normalSeratoSelectionVerified':False,'vendorCodeExecuted':False,'installedFilesChanged':False,'deviceAccess':False}
 
 
