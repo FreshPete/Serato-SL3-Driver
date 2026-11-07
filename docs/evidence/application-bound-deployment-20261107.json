@@ -83,6 +83,22 @@
       "nativePackageAbsent": true
     }
   },
+  "currentCandidatePairRegression": {
+    "retainedComparison": {
+      "bundleManifestSha256": "8bd9e9c70c4c04f1d7b8f52faa6712c752271e18922b931ba391478f067e70d1",
+      "passedCases": 23,
+      "reportSha256": "cecb9c9370b0ff8ced3748759d3a784d01a34b7346d35c8e12e23c28dcef47bc"
+    },
+    "applicationBoundFollowUp": {
+      "bundleManifestSha256": "767e3b975048d8df09f8bd5bf978a92986a0adf7af00bdcdcf0e1163ca2a39d0",
+      "passedCases": 22,
+      "reportSha256": "31fb591ed5a2e9349254c20c1353c68672a3fc0a17334b5f4c26513565edb5ff"
+    },
+    "privateRegistryNamespacesRemoved": true,
+    "liveRegistrationsUnchanged": true,
+    "archiveBytesSynthetic": true,
+    "productionInstallationPerformed": false
+  },
   "productionInstallationPerformed": false,
   "seratoLaunched": false,
   "nativeDeviceAccess": false
