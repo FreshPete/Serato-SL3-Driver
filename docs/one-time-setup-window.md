@@ -40,6 +40,8 @@ This build wraps the reviewed [application-bound startup package](application-bo
 
 The exact rebound package (`ed0b35e9576b9b927acc843f06e570ccaa4af4c569706fbd53cfee02d0f4ff3b`) passed 20 isolated setup and restore checks. The repeat install returned no write steps and preserved the staged archive witnesses. Restore removed the fixture package, and the real registration was unchanged. The fixture used a synthetic archive and private registry keys. Its report SHA-256 is `fd2ba3a4edd5d01405e45a4968e0345e6184a419c20956f42c36f7a6f52cb862`.
 
+The current setup engine and its kit also passed all 27 checks when both were copied to a different folder with spaces and Unicode in the kit path and an empty `PATH`. The engine pinned 760 files, prepared a fresh local record, preserved application-bound activation and verified the original installed state. The test covered read-only preparation and refusal cases. Its report SHA-256 is `fb427fddd7601fcffec14c73f39cdf77ac3aa965df810fe45fa49b0e07e00abc`. A distributable setup window still needs to prepare and reuse the exact local record through its interface. [Relocation test](../scripts/test-on-demand-entry.py)
+
 ### Earlier idle-guard build
 
 ```text

@@ -20,15 +20,19 @@ def main():
     build=json.loads(build_path.read_bytes());require(build['schema']=='sl3.native-setup-entry-build.v1' and build['configuration']=='Release' and build['inertChecksPassed'],'Successful Release entry build required')
     source_path=build_path.parent/'entry-source.json';require(sha(source_path)==build['sourceManifestSha256'],'Exact native source binding required');source=json.loads(source_path.read_bytes())
     require(all(sha(ROOT/n)==v for n,v in source['sourcePins'].items()) and all(sha(source_path.parent/n)==v for n,v in source['generatedPins'].items()),'Native entry source changed')
-    host=build_path.parent/'build/Release/SL3_Setup_Engineering.exe';require(sha(host)==build['executableSha256'],'Native entry image changed')
+    built_entry=build_path.parent/'build/Release/SL3_Setup_Engineering.exe'
+    require(sha(built_entry)==build['executableSha256'],'Native entry image changed')
     original=Path(sys.argv[3]).absolute();require(sha(original/'kit-manifest.json')==source['kitManifestSha256'],'Compiled kit binding required')
     identity=uuid.uuid4().hex;folder=ROOT/'artifacts/build'/('native-entry-tests-'+identity);folder.mkdir();kit=folder/'Moved kit é'
     shutil.copytree(original,kit,ignore=lambda directory,names:['analysis'] if Path(directory)==original else [])
+    host=folder/built_entry.name
+    shutil.copyfile(built_entry,host)
+    require(sha(host)==build['executableSha256'],'Moved entry image differs')
     env=dict(os.environ);env['PATH']='';env['PYTHONDONTWRITEBYTECODE']='1';env.pop('SL3_ASIO_PRIVATE_TRACE',None)
     app=r'C:\Program Files\Serato\Serato DJ Pro\Serato DJ Pro.exe';cases=[];details={}
     def command(action):return [str(host),action,'--kit',str(kit),'--app',app]
     def call(name,args,success=True,reason=None):
-        child=subprocess.run(args,env=env,capture_output=True,timeout=120,creationflags=subprocess.CREATE_NO_WINDOW)
+        child=subprocess.run(args,cwd=folder,env=env,capture_output=True,timeout=120,creationflags=subprocess.CREATE_NO_WINDOW)
         (folder/(name+'-stdout.txt')).write_bytes(child.stdout);(folder/(name+'-stderr.txt')).write_bytes(child.stderr)
         require((child.returncode==0)==success,name+': '+child.stderr.decode('utf-8',errors='replace'))
         if success:
@@ -101,7 +105,7 @@ def main():
     report={'schema':'sl3.native-setup-entry-tests.v1','passed':True,'cases':cases,'details':details,'testSourceSha256':sha(Path(__file__)),
         'buildSha256':sha(build_path),'sourceManifestSha256':sha(source_path),'sourcePins':source['sourcePins'],'generatedPins':source['generatedPins'],
         'executableSha256':sha(host),'kitManifestSha256':source['kitManifestSha256'],'filesPinnedBeforeHelper':source['compiledPayloadFiles'],
-        'imports':imports,'emptyPath':True,'movedKitTested':True,'modifiedHelperExecuted':False,'productionInstallationPerformed':False,'elevationRequested':False,
+        'imports':imports,'emptyPath':True,'movedKitTested':True,'movedEntryTested':True,'modifiedHelperExecuted':False,'productionInstallationPerformed':False,'elevationRequested':False,
         'seratoLaunched':False,'nativeDeviceAccess':False,'hostPostcheck':state,'graphicalSetupProvided':False,'installedRegistryActivationValidated':False,
         'preparedExperimentNativeCheckPassed':True,'activationMode':mode,'mutableActionsTestedOnlyAsOrdinaryTokenRefusals':True,'elevatedSetupOrRestoreValidated':False}
     output=folder/'result.json';output.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8');print(json.dumps({'passed':True,'cases':len(cases),'report':str(output)},indent=2))
