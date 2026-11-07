@@ -1,6 +1,9 @@
 # Start the retained setup from the operator's desktop. Plan is the default.
-[CmdletBinding()]
-param([switch]$Run)
+[CmdletBinding(DefaultParameterSetName='Plan')]
+param(
+    [Parameter(ParameterSetName='Setup')][switch]$Run,
+    [Parameter(ParameterSetName='Trial')][switch]$Trial
+)
 
 $ErrorActionPreference = 'Stop'
 $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
@@ -26,11 +29,64 @@ function Hold-ReviewedFile([string]$Path,[string]$Sha) {
     }
 }
 
+function Invoke-ReviewedTrial($Record, $SetupProcess) {
+    $desktop = Join-Path $PSScriptRoot 'retained-desktop-trial.py'
+    $observer = Join-Path $PSScriptRoot 'observe-asio-module-load.ps1'
+    $desktopArgs = @('--experiment',$experiment,'--expected-experiment-sha256',$expected,
+        '--expected-launch-sha256','c2ca50acac0acd6296a85471d00e30249a92c4c2159f5564acadbffae8d1abf8')
+    $folder = Split-Path -Parent $experiment
+    $name = [IO.Path]::GetFileNameWithoutExtension($Record.application)
+    $started = $false
+    try {
+        Write-Host 'Checking the USB connection. Keep Serato closed.'
+        $startup = & $Record.python.path -I -B $desktop start @desktopArgs --recovery-confirmed
+        if ($LASTEXITCODE) { throw 'The retained USB check stopped. See the desktop startup records.' }
+        $started = $true
+        if (($startup | ConvertFrom-Json).outcome -ne 'broker_ready') { throw 'Unexpected retained USB result.' }
+
+        Write-Host 'When the observer is armed, open Serato from its usual shortcut. Leave playback stopped.'
+        Write-Host 'Note what Serato shows and close it normally. Leave any Download Driver notice untouched.'
+        $module = Join-Path $env:ProgramFiles 'SL3 Rebuild/on-demand-diagnostic-v2/sl3_asio.dll'
+        $observed = & $observer -Application $Record.application -Module $module `
+            -ApplicationSha256 $Record.applicationSha256 `
+            -ModuleSha256 '9d41ddcc0de481cd966d6786b15e656a3dcc6e4d71191815e6431a4009a9be55' -TimeoutSeconds 45
+        if (($observed | ConvertFrom-Json).schema -ne 'sl3.asio-module-observation.v1') {
+            throw 'Unexpected module observation result.'
+        }
+        $path = Join-Path $folder 'desktop-start/module-observation.json'
+        $stream = [IO.File]::Open($path,'CreateNew','Write','Read')
+        try {
+            $bytes = [Text.Encoding]::UTF8.GetBytes(($observed -join "`n") + "`n")
+            $stream.Write($bytes,0,$bytes.Length)
+        } finally { $stream.Dispose() }
+    } finally {
+        if (($started -or (Test-Path -LiteralPath (Join-Path $folder 'broker.pointer.json') -PathType Leaf)) -and
+            -not $SetupProcess.HasExited) {
+            $close = [Diagnostics.Stopwatch]::StartNew()
+            while ((Get-Process -Name $name -ErrorAction SilentlyContinue) -and $close.Elapsed.TotalSeconds -lt 35) {
+                Start-Sleep -Milliseconds 250
+            }
+            if (Get-Process -Name $name -ErrorAction SilentlyContinue) {
+                Write-Host 'Serato is still open. Close it normally so the setup process can restore the original files.'
+            } else {
+                Write-Host 'Retiring the USB connection and requesting restoration.'
+                & $Record.python.path -I -B $desktop finish @desktopArgs
+                if ($LASTEXITCODE) { Write-Host 'Check the desktop and setup records to verify cleanup.' }
+            }
+        }
+    }
+    if ($SetupProcess.WaitForExit(25000)) {
+        $result = Get-Content -LiteralPath (Join-Path $folder 'attended-setup/result.json') -Raw | ConvertFrom-Json
+        if ($result.outcome -eq 'restored') { Write-Host 'Original setup restored.' }
+        else { Write-Host 'See the setup result for restoration status.' }
+    } else { Write-Host 'Restoration is still pending. Check the setup result before retrying.' }
+}
+
 $mutex = $null
 $claimed = $false
 $child = $null
 try {
-    if ($Run) {
+    if ($Run -or $Trial) {
         $mutex = [Threading.Mutex]::new($false, "Local\SL3RetainedSetup-$expected")
         try { $claimed = $mutex.WaitOne(0) }
         catch [Threading.AbandonedMutexException] { $claimed = $true }
@@ -49,7 +105,14 @@ try {
     $plan = $preflight | ConvertFrom-Json
     if ($plan.schema -ne 'sl3.retained-setup-handoff.v1' -or $plan.planOnly -ne $true -or
         $plan.experimentSha256 -ne $expected) { throw 'Unexpected setup plan result.' }
-    if (-not $Run) { $preflight; return }
+    if (-not ($Run -or $Trial)) { $preflight; return }
+    if ($Trial) {
+        Hold-ReviewedFile (Join-Path $PSScriptRoot 'retained-desktop-trial.py') 'db0498983dba2a61d963685807bdfdaf89597c07244f220c2092aea4c10ac45d'
+        Hold-ReviewedFile (Join-Path $PSScriptRoot 'observe-asio-module-load.ps1') '37112dd7dc325d4deb7be713fb83dcde9bf86b20dcb3856316c74a810ffb3a0b'
+        Hold-ReviewedFile (Join-Path $PSScriptRoot 'inspect-process.psm1') 'fd76680e42127feeb4d8da952b5e04a49b48d3bb6df159b9c77a236a3c8f0752'
+        $confirmation = Read-Host 'Power-cycle the SL3 for 30 seconds, reconnect it, wait 30 seconds, close Serato and type RECOVERED'
+        if ($confirmation -cne 'RECOVERED') { Write-Host 'Test canceled before setup.'; return }
+    }
 
     Write-Host 'Approve the Windows prompt for temporary SL3 setup. Leave Serato closed for now.'
     try {
@@ -74,6 +137,7 @@ try {
             catch { $window = $null }
             if ($window -and $window.schema -eq 'sl3.retained-setup-window.v1' -and
                 $window.experimentSha256 -eq $expected -and $window.pid -eq $child.Id -and -not $child.HasExited) {
+                if ($Trial) { Invoke-ReviewedTrial $record $child; return }
                 Write-Host 'Temporary setup is ready. Leave Serato closed until the USB check and observer are ready.'
                 $window | ConvertTo-Json
                 return

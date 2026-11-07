@@ -16,10 +16,10 @@ The last read-only check found the original Serato archive, no temporary ASIO pa
 
 ## Next attended test
 
-1. Confirm the SL3 recovery and close Serato. If recovery is needed, remove USB and any external power for 30 seconds before reconnecting. A previous redirect stalled shortly after reconnect. The traces do not establish a safe reopen delay.
-2. Use the local **Approve temporary SL3 setup** shortcut when ready for the test. After one Windows approval, the desktop runner checks the SL3’s USB identity, starts one retained connection and checks what Serato’s libusb library can see during ownership. Wait for the module observer to be armed.
+1. Remove USB and any external power for 30 seconds, reconnect the SL3 and wait another 30 seconds before starting the test. Close Serato. The settling interval is part of this trial because a previous redirect stalled shortly after reconnect. The traces do not establish a safe reopen delay.
+2. Use the local **Run SL3 normal-shortcut test** shortcut. Type `RECOVERED` after reconnecting the SL3 and closing Serato, then approve the Windows prompt. The runner checks the SL3’s USB identity, starts one retained connection and checks what Serato’s libusb library can see during ownership. Wait for the console to report that the module observer is armed.
 3. Open Serato from its usual shortcut and leave playback stopped. Record what Serato shows. If it asks to Download Driver, leave the notice in place so the result reflects the normal launch.
-4. Close Serato normally. The runner retires the retained connection and signals restoration, then observes USB visibility for 15 seconds. Verify the broker’s retirement and original setup independently. [Runbook and recovery](retained-normal-start-trial.md)
+4. Close Serato normally. Leave the test console open while it retires the connection, signals restoration and observes USB visibility for 15 seconds. Verify the broker’s retirement and original setup independently. [Runbook and recovery](retained-normal-start-trial.md)
 
 | Result | Next check |
 | --- | --- |
