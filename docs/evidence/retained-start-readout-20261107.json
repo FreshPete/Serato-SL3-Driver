@@ -1,0 +1,59 @@
+{
+  "schema": "sl3.retained-start-readout-evidence.v1",
+  "dateUtc": "2026-11-07",
+  "readerSourceSha256": "de16cf1434456c174a844a5b2535f26a88e4f77bb765fcdf73050558aaa0c669",
+  "unitTestSourceSha256": "2098c3d129a2d5ef9078d069e6e534f0a081dec1fd1b7dc4fcb64cab35dd523a",
+  "decisionCasesPassed": 7,
+  "wrongReportHashRefused": true,
+  "restoreWithoutHashRefused": true,
+  "moduleObserverSourceSha256": "37112dd7dc325d4deb7be713fb83dcde9bf86b20dcb3856316c74a810ffb3a0b",
+  "actualWindowsSimulatedReadout": {
+    "schema": "sl3.retained-start-readout.v1",
+    "brokerKind": "simulated",
+    "nativeAcquisitionReported": false,
+    "applicationFileSha256": "d9cad76bc58e978238c92d90ef55086f311cc13fd371d7e1c37b39a71ab50c38",
+    "moduleFileSha256": "dc7b449bad659a673e2e9f415b90128a83d286cf827373c0afde2814144c988c",
+    "ordinaryProcessObserved": true,
+    "moduleLoadObserved": true,
+    "matchingChallengedConnections": 3,
+    "matchingAdmissionReplies": 3,
+    "matchingStreamStartReplies": 4,
+    "matchingDetachAcknowledgements": 3,
+    "brokerObservationsTruncated": false,
+    "workerRetirementReported": true,
+    "brokerFailureReported": false,
+    "terminationRequested": false,
+    "originalSetupReportedByRestore": null,
+    "applicationCallbacksVerified": false,
+    "audibleOutputVerified": false,
+    "dvsVerified": false,
+    "absenceProved": false,
+    "inputReportSha256": {
+      "module": "f2635188ce9f4f4fdeffa57ac8ff55f94399194eb4c2cfa004d62bc7f975432e",
+      "broker": "6e562aa8be91531fe562231a3c50c528a91e3cf0889f6fe5328b9d61e7bbe3c4",
+      "restore": null
+    }
+  },
+  "readoutSha256": "02a1c26469f22e158e14f0895a6914a94f7393713ad75877e35ae8de6e9d3474",
+  "independentHostPlan": {
+    "schema": "sl3.retained-setup-handoff.v1",
+    "planOnly": true,
+    "experimentSha256": "0d842831f4c1b0a6dfa02ef8f0d07608132aec5128da42b29d8518666f45b538",
+    "viewSeconds": 240,
+    "retirementWaitSeconds": 120,
+    "before": {
+      "archive": "original",
+      "seratoRunning": false,
+      "native": {
+        "state": "absent"
+      }
+    },
+    "applicationLaunched": false,
+    "nativeDeviceAccess": false,
+    "elevationRequested": false
+  },
+  "productionSetupChanged": false,
+  "seratoLaunched": false,
+  "nativeDeviceAccess": false,
+  "elevationRequested": false
+}

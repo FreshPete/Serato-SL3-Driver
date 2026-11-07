@@ -57,6 +57,16 @@ After Serato closes and the same retained controller retires, compare `process.p
 
 A session reply can come from a short ASIO enumeration open. The count of stream-start replies distinguishes it from a request that starts the worker. These observations do not establish callbacks, audible output or DVS. The result holds up to 16 challenged connections, with an explicit truncation flag. An absent row or missing final result is inconclusive. The broker records no audio or account data and writes this evidence with its existing final report.
 
+For an offline readout, save the observer's stdout and keep the completed broker result from the same trial. Supply those two reviewed files and their SHA-256 hashes to `scripts/read-retained-start-result.py`. If available, supply `attended-setup/restore-stdout.json` and its hash with `--restore-report` and `--restore-report-sha256`. The readout keeps the matching process's admission, start and detach counts separate from the broker's worker-retirement flags and the restore receipt. It verifies the supplied file identities and joins both process identifiers. The operator still selects the records belonging to one trial.
+
+```powershell
+python scripts/read-retained-start-result.py `
+  --module-report $moduleReport --module-report-sha256 $moduleReportSha `
+  --broker-report $brokerReport --broker-report-sha256 $brokerReportSha
+```
+
+The readout matched an actual Windows module sample to three connections from one unregistered simulated ASIO host. It counted four stream-start replies and three detach acknowledgements, and kept the worker retirement result separate. The fixture did not launch Serato or open the SL3. [Readout verification](evidence/retained-start-readout-20261107.json)
+
 The simulated controller tests compare the exact process identity and the sequence of three ASIO opens, with zero, two and two stream-start replies. They also check an interrupted application, where the completed stream-start reply survives and the final detach remains unacknowledged. The physically tested prior package predates these report fields. [Build and evidence](evidence/retained-client-observation-20261107.json)
 
 If Serato stays offline and the DLL is absent from the observation, the [USB dispatch analysis](serato-usb-subscription.md) identifies where to check next. The original arrival must reach the queue, the manager must be in the listener snapshot when the message is dispatched, and its handler must receive the message. Comparing arrival construction with subscription time alone cannot tell which step was missed.
