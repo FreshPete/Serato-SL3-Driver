@@ -37,6 +37,10 @@ def main():
     identity=uuid.uuid4().hex;namespace=BASE+'\\'+identity;folder=ROOT/'artifacts/build/on-demand-pair-tests'/identity;folder.mkdir(parents=True)
     sid=s.user_sid();policy=s.Policy(sid,(s.SYSTEM,s.ADMINS,sid));cases=[];details={}
     sources={name:sha(ROOT/name) for name in API['source_names']()};sources[Path(__file__).relative_to(ROOT).as_posix()]=sha(Path(__file__))
+    if retained:
+        handoff_path=ROOT/'scripts/retained-setup-handoff.py'
+        sources[handoff_path.relative_to(ROOT).as_posix()]=sha(handoff_path)
+        handoff=runpy.run_path(str(handoff_path))['coordinate']
     def live():
         with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,'',0,r.READ) as root,winreg.OpenKey(winreg.HKEY_CURRENT_USER,'',0,r.READ) as overlay:
             return r.inspect(root,plan),r.inspect_overlay(overlay,plan)
@@ -185,6 +189,16 @@ switch($Action){
             case('archive-then-native-restoration',lambda:passed(run(f,'restore')))
             require(f[1].observe()['state']=='absent' and len(list(f[3].parent.iterdir()))==1,'Original archive, no native stage or witnesses')
             case('repeat-restoration-is-idle',lambda:passed(run(f,'restore')))
+        if retained:
+            with fixture('attended-handoff') as f:
+                def viewing_window():
+                    state=passed(run(f,'plan'))['after']
+                    require(state['archive']=='installed' and state['native']['state']=='installed',
+                            'Ordinary launch window opens after both setup components')
+                outcome=case('one-window-setup-and-restoration',lambda:handoff(
+                    lambda action:run(f,action),viewing_window,lambda:True))
+                require(outcome=='restored' and f[2]['installs']==1 and f[2]['removals']==1 and
+                        f[1].observe()['state']=='absent','One staged setup and full restoration required')
         with fixture('partial-setup') as f:
             f[2]['archiveInstallFailure']=True
             value=case('failure-after-native-install-preserves-observed-state',lambda:failed(run(f,'setup')))

@@ -1,0 +1,54 @@
+{
+  "schema": "sl3.retained-setup-handoff-evidence.v1",
+  "dateUtc": "2026-11-07",
+  "handoffSourceSha256": "fbf88b0b97fdec9f05263c6826e76d36d86aa4a609241d0662c01f4b4f461a5e",
+  "decisionTestSourceSha256": "9dc35fde41f5bf67ba8e91d31f9f241a358aa0b972533e09b4eca3d4a8db078e",
+  "decisionCasesPassed": 6,
+  "isolatedWindowsCasesPassed": 23,
+  "isolatedSetupAndRestorationOutcome": "restored",
+  "isolatedReportSha256": "f557331aa0737b6ab8f94cf1895964636373f3ba7b597074b038a6acd829a02e",
+  "cliCases": [
+    {
+      "case": "default-plan",
+      "passed": true,
+      "exitCode": 0
+    },
+    {
+      "case": "ordinary-run",
+      "passed": true,
+      "exitCode": 1
+    },
+    {
+      "case": "wrong-hash",
+      "passed": true,
+      "exitCode": 1
+    },
+    {
+      "case": "wrong-mode",
+      "passed": true,
+      "exitCode": 1
+    }
+  ],
+  "cliReportSha256": "92d7b9bd5376bf3cfc873fdbc31c2dcfaddf39df99b73e0d9649c439015259c8",
+  "defaultPlan": {
+    "schema": "sl3.retained-setup-handoff.v1",
+    "planOnly": true,
+    "experimentSha256": "0d842831f4c1b0a6dfa02ef8f0d07608132aec5128da42b29d8518666f45b538",
+    "viewSeconds": 240,
+    "retirementWaitSeconds": 120,
+    "before": {
+      "archive": "original",
+      "seratoRunning": false,
+      "native": {
+        "state": "absent"
+      }
+    },
+    "applicationLaunched": false,
+    "nativeDeviceAccess": false,
+    "elevationRequested": false
+  },
+  "liveAdministratorRunExecuted": false,
+  "realSetupChanged": false,
+  "seratoLaunched": false,
+  "nativeDeviceAccess": false
+}

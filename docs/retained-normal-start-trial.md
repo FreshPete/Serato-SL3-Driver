@@ -18,11 +18,19 @@ The next attended test needs a fresh SL3 recovery and temporary protected setup.
 
 The current retained comparison uses the client-observation build described below. Its refreshed private setup and broker input are in `analysis/sl3-on-demand-test-retained-idle-guard-20261107`. The setup passed the read-only Plan and the controller parsed the matching 44.1 kHz/128-frame profile against the workspace images. The earlier locator bundle is the one used in the physical two-client proof above. [Refreshed experiment identities](evidence/on-demand-idle-guard-20261107.json)
 
+### One approval for the attended comparison
+
+`scripts/retained-setup-handoff.py` uses the exact retained experiment and its reviewed SHA-256. With the prepared Python runtime, the default action verifies the restored host without creating an output directory. The explicit `run` action requires an already approved administrator process. It runs the existing guarded setup, waits for the desktop session and then runs the existing guarded restore in the same elevated process. The helper does not launch Serato or the USB broker.
+
+After the handoff publishes a successful `attended-setup/setup-stdout.json` and its process is still live, run the USB snapshots, broker and module observer under the ordinary Windows account. Open Serato from its usual shortcut. After closing Serato and stopping the broker, create the empty `attended-setup/restore.request` file. The handoff begins its idle check at that signal or after four minutes. It requires confirmation within two minutes that Serato and the broker have closed. It does not close either process. Verify the original setup in `restore-stdout.json` and the handoff's `result.json`.
+
+The helper skips the viewing window if setup fails with a recognized partial state. It can restore that state using the same existing guards. Unknown outcomes and busy owners defer restoration, with records preserved for review. The handoff exits after this attempt and creates no scheduled task or service. Its decisions passed unit tests and a full round trip with isolated Windows staging, synthetic archive contents and private registry keys. The live elevated run remains pending. [Handoff verification](evidence/retained-setup-handoff-20261107.json)
+
 ### Observe the normal launch
 
 Take a short [libusb identity snapshot](serato-usb-discovery.md#what-the-retained-usb-connection-exposes) before acquisition and again while the broker is ready. Use the existing ordinary-user `scripts/supervise-usb-identity.py --run --seconds 5 --result-directory <fresh-local-directory>` for each snapshot. This distinguishes successful USB ownership from whether Serato's library can still discover the SL3 in that state. Keep the broker in the same session for the manual launch.
 
-Once temporary setup has succeeded and the attended recovery check permits acquisition, use the prepared `retained-launch.json` with `scripts/asio-diagnostic-session.py start`. Its reviewed controller path and hash, input, session and pointer identify one bounded acquisition. After closing Serato normally, use `stop` with the same controller, hash, session and pointer, omitting the input. Verify the broker result and then run the separately approved restoration.
+Once temporary setup has succeeded and the attended recovery check permits acquisition, use the prepared `retained-launch.json` with `scripts/asio-diagnostic-session.py start`. Its reviewed controller path and hash, input, session and pointer identify one bounded acquisition. After closing Serato normally, use `stop` with the same controller, hash, session and pointer, omitting the input. Verify the broker result and then request restoration through the active handoff.
 
 With the reviewed retained package installed and the broker ready, start the [read-only module observer](../scripts/observe-asio-module-load.ps1) in 64-bit PowerShell under the ordinary desktop account. Open Serato from its usual shortcut after the observer reports that it is armed. The observer samples Windows process and module metadata without attaching to the desktop, launching Serato or setting trace environment variables.
 
