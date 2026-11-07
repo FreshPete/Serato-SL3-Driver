@@ -157,6 +157,13 @@ int wmain(int argc,wchar_t** argv){
         std::filesystem::path audit_path=(!native_cli && argc==4)?argv[3]:L"";
         if(mode.rfind(L"audit:",0)==0){audit_path=mode.substr(6);mode=L"normal";}
         if(mode.rfind(L"rate-audit:",0)==0){audit_path=mode.substr(11);mode=L"rate-normal";}
+        if(mode.rfind(L"cancel-acquire:",0)==0){
+            const auto signal=OpenEventW(EVENT_MODIFY_STATE,FALSE,mode.c_str()+15);
+            if(!signal)throw std::runtime_error("Open fixture cancellation event");
+            const auto signalled=SetEvent(signal);CloseHandle(signal);
+            if(!signalled)throw std::runtime_error("Signal fixture cancellation event");
+            mode=L"fail-acquire";
+        }
         Audit audit(audit_path);
         return serve_device_session(*control,session::Kind::simulated,[&]{
             if(mode==L"hang-acquire")Sleep(INFINITE);

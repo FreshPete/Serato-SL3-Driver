@@ -9,6 +9,12 @@ bool ready(const ds::Snapshot& s) noexcept {
         s.stream_fault==StreamFault::none && s.io_retired && !s.device_released &&
         !s.stats.pending_mask && !s.stats.retained_mask;
 }
+bool signalled(HANDLE handle){
+    if(!handle)return false;
+    const auto wait=WaitForSingleObject(handle,0);
+    if(wait!=WAIT_OBJECT_0 && wait!=WAIT_TIMEOUT)throw std::runtime_error("Cannot observe broker startup cancellation");
+    return wait==WAIT_OBJECT_0;
+}
 }
 RetainedBroker::RetainedBroker(BrokerSpec spec):spec_(std::move(spec)){
     if(spec_.kind!=session::Kind::native && spec_.kind!=session::Kind::simulated)
@@ -48,11 +54,16 @@ ds::Snapshot RetainedBroker::snapshot(ds::Command command,const std::vector<std:
         return state_.device;
     }catch(...){seal(BrokerFailure::worker_operation);throw;}
 }
-bool RetainedBroker::open() noexcept {
+bool RetainedBroker::open(HANDLE stop_event,HANDLE application) noexcept {
     if(state_.phase!=BrokerPhase::dormant)return false;
     // Seal before launch, including partial child-creation failures.
     state_.phase=BrokerPhase::sealed;
+    const auto cancelled=[&]{
+        if(!signalled(stop_event) && !signalled(application))return false;
+        seal(BrokerFailure::acquisition_cancelled);close();return true;
+    };
     try{
+        if(cancelled())return false;
         control_=Mailbox::create();
         auto args=spec_.kind==session::Kind::native?
             std::vector<std::wstring>{L"--device-worker",L"--channel",control_->name(),L"--helper",spec_.helper.native()}:
@@ -66,6 +77,7 @@ bool RetainedBroker::open() noexcept {
         process_.launch(spec_.executable,spec_.sha256,args);control_ok_=true;
         const auto hello=call(ds::Command::hello);
         if(hello.status || ds::decode_hello(hello.bytes)!=spec_.kind)throw std::runtime_error("Broker worker kind mismatch");
+        if(cancelled())return false;
         state_.acquire_attempted=true;
         if(!ready(snapshot(ds::Command::acquire)))throw std::runtime_error("Broker did not acquire an idle device");
         state_.phase=BrokerPhase::idle;return true;

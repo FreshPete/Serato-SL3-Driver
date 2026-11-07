@@ -163,8 +163,11 @@ int run(const std::filesystem::path& input,const std::filesystem::path& output,D
     }else spec.fixture_mode=L"audit:"+(output/L"worker-audit.txt").native();
     RetainedBroker owner(spec);RunEvidence evidence;
     try{
-        require(!application || WaitForSingleObject(application,0)==WAIT_TIMEOUT,"Bound application exited before acquisition");
-        journal.mark("owner_open_begin");require(owner.open(),"Broker owner acquisition/handshake failed");evidence.acquired=true;journal.mark("owner_open_ready");
+        journal.mark("owner_open_begin");
+        if(!owner.open(stop.value,application))
+            throw std::runtime_error(owner.report().first_failure==BrokerFailure::acquisition_cancelled?
+                "Broker stopped before device acquisition":"Broker owner acquisition/handshake failed");
+        evidence.acquired=true;journal.mark("owner_open_ready");
         require(owner.report().snapshot_valid && owner.report().device.rate_hz==config.latency.rate_hz,"Observed clock differs from reviewed timing profile");
         require(WaitForSingleObject(stop.value,0)==WAIT_TIMEOUT &&
                 (!application || WaitForSingleObject(application,0)==WAIT_TIMEOUT),"Controller stopped before publication");

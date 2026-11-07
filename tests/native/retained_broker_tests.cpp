@@ -153,11 +153,31 @@ static void failures(const std::filesystem::path& worker,const std::filesystem::
     auto wrong=spec(worker);wrong.kind=session::Kind::native;wrong.helper=std::filesystem::absolute(L"absent-broker-helper.dll");
     RetainedBroker typed(wrong);require(!typed.open(),"Simulated handshake never admitted as native");
 }
+static void cancellation(const std::filesystem::path& worker){
+    const auto name=L"Local\\SL3BrokerCancel-"+std::to_wstring(GetCurrentProcessId())+L"-"+std::to_wstring(GetTickCount64());
+    struct Event { HANDLE value=nullptr;~Event(){if(value)CloseHandle(value);} } signal;
+    signal.value=CreateEventW(nullptr,TRUE,TRUE,name.c_str());
+    require(signal.value && GetLastError()!=ERROR_ALREADY_EXISTS,"Create private test cancellation event");
+    {
+        RetainedBroker owner(spec(worker));
+        require(!owner.open(signal.value) && !owner.open(),"A canceled owner cannot launch or retry");
+        const auto s=owner.report();
+        require(s.first_failure==BrokerFailure::acquisition_cancelled && !s.acquire_attempted && !s.process.started,
+            "Cancellation before startup must precede worker launch");
+    }
+    require(ResetEvent(signal.value)!=FALSE,"Reset fixture cancellation event");
+    RetainedBroker owner(spec(worker,L"cancel-acquire:"+name));
+    require(!owner.open(nullptr,signal.value) && !owner.open(),"Cancellation during greeting must seal the owner");
+    const auto s=owner.report();
+    require(s.first_failure==BrokerFailure::acquisition_cancelled && !s.acquire_attempted && s.snapshot_valid &&
+        s.phase==BrokerPhase::closed && s.process.started && s.process.process_exited && s.process.job_empty && !s.termination_requested,
+        "Greeting cancellation must skip acquisition and retire the exact worker normally");
+}
 int wmain(int argc,wchar_t** argv){
     try{
         if(argc==3 && std::wstring(argv[1])==L"--audio-client")return audio_client(argv[2]);
         require(argc==2,"Fixture executable required");const auto self=std::filesystem::absolute(argv[0]);
-        lifecycle(argv[1],self);death(argv[1],self);failures(argv[1],self);
+        lifecycle(argv[1],self);death(argv[1],self);failures(argv[1],self);cancellation(argv[1]);
         std::cout<<"Retained broker: separate clients, direct audio, exclusive leases, death and failure tests passed (simulation only)\n";return 0;
     }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}
 }

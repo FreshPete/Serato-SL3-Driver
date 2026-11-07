@@ -18,7 +18,7 @@ struct BrokerSpec {
 };
 enum class BrokerPhase {dormant,idle,leased,running,sealed,closed};
 enum class BrokerFailure {none,control_channel,worker_operation,acquisition,admission,worker_observation,
-    clock,start,stop,client_exited_running,client_wait,worker_exited,process_observation,abandoned,shutdown};
+    clock,start,stop,client_exited_running,client_wait,worker_exited,process_observation,abandoned,shutdown,acquisition_cancelled};
 inline const char* broker_failure_name(BrokerFailure value) noexcept {
     switch(value){
     case BrokerFailure::none:return "none";
@@ -36,6 +36,7 @@ inline const char* broker_failure_name(BrokerFailure value) noexcept {
     case BrokerFailure::process_observation:return "process_observation";
     case BrokerFailure::abandoned:return "client_control_abandoned";
     case BrokerFailure::shutdown:return "owner_shutdown";
+    case BrokerFailure::acquisition_cancelled:return "acquisition_cancelled";
     }
     return "unknown";
 }
@@ -58,7 +59,9 @@ public:
     RetainedBroker& operator=(const RetainedBroker&)=delete;
     // Explicit acquisition once. Failure seals; neither attach nor stream start
     // launches a worker. No retry, reconnect, rate/control writes or elevation.
-    bool open() noexcept;
+    // Borrowed stop event and application process handle, if supplied, are
+    // checked before launching the worker and before sending acquire.
+    bool open(HANDLE stop_event=nullptr,HANDLE application=nullptr) noexcept;
     session::Kind kind() const noexcept {return spec_.kind;}
     const std::string& worker_sha256() const noexcept {return spec_.sha256;}
     // One exclusive live client, bound to a duplicated process object. Fresh
