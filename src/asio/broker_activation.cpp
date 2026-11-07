@@ -1,4 +1,5 @@
 #include "asio/broker_activation.hpp"
+#include "windows/broker_record.hpp"
 #include <algorithm>
 #include <array>
 #include <aclapi.h>
@@ -43,11 +44,11 @@ bool is_regular(const std::filesystem::path& path){
     }
     require(!(attributes&(FILE_ATTRIBUTE_DIRECTORY|FILE_ATTRIBUTE_REPARSE_POINT)),"Activation readiness must be a regular file");return true;
 }
-void request_stop(const BrokerAttachment& binding){
+void request_stop(const std::wstring& endpoint){
     const std::wstring prefix=L"\\\\.\\pipe\\SL3Broker-";
-    require(binding.endpoint.size()==prefix.size()+32 && binding.endpoint.compare(0,prefix.size(),prefix)==0,
+    require(endpoint.size()==prefix.size()+32 && endpoint.compare(0,prefix.size(),prefix)==0,
             "Unexpected activation endpoint");
-    const auto name=L"Local\\SL3BrokerStop-"+binding.endpoint.substr(prefix.size());
+    const auto name=L"Local\\SL3BrokerStop-"+endpoint.substr(prefix.size());
     Handle event;event.value=OpenEventW(EVENT_MODIFY_STATE,FALSE,name.c_str());
     require(event.value && SetEvent(event.value),"Request owned activation stop");
 }
@@ -136,7 +137,7 @@ std::shared_ptr<BrokerActivation> BrokerActivation::start(const BrokerActivation
     try{result->launch(spec);return result;}
     catch(const std::exception& error){
         const std::string reason=error.what();
-        const auto cleanup=result->close(std::min<DWORD>(spec.startup_failure_grace_ms,15000));
+        const auto cleanup=result->close_impl(std::min<DWORD>(spec.startup_failure_grace_ms,15000),&spec);
         throw BrokerActivationError(reason,cleanup);
     }
 }
@@ -255,12 +256,15 @@ BrokerActivationReport BrokerActivation::request_retirement() noexcept {
     try{
         report_.controller=process_.observe();
         if(report_.controller.started && !report_.controller.process_exited && configuration_ && !report_.stop_requested){
-            request_stop(*configuration_->broker);report_.stop_requested=true;
+            request_stop(configuration_->broker->endpoint);report_.stop_requested=true;
         }
     }catch(const std::exception& error){report_.cleanup_error=error.what();}
     return report_;
 }
 BrokerActivationReport BrokerActivation::close(DWORD grace) noexcept {
+    return close_impl(grace,nullptr);
+}
+BrokerActivationReport BrokerActivation::close_impl(DWORD grace,const BrokerActivationSpec* starting) noexcept {
     std::lock_guard<std::mutex> lock(mutex_);
     report_.retirement_deferred=borrowed_.load()!=0;
     if(report_.retirement_deferred)return report_;
@@ -268,11 +272,24 @@ BrokerActivationReport BrokerActivation::close(DWORD grace) noexcept {
     try{
         report_.controller=process_.observe();
         report_.ready=false;
-        if(report_.controller.started && !report_.controller.process_exited && configuration_ && !report_.stop_requested){
-            request_stop(*configuration_->broker);report_.stop_requested=true;
-        }
         const auto began=GetTickCount64();
         while(report_.controller.started && (!report_.controller.process_exited || !report_.controller.job_empty)){
+            if(!report_.controller.process_exited && !report_.stop_requested){
+                if(configuration_){
+                    request_stop(configuration_->broker->endpoint);report_.stop_requested=true;
+                }else if(starting){
+                    const auto record=starting->output/L"startup-stop.txt";
+                    if(is_regular(record)){
+                        const auto binding=worker::bind_broker_record(record,worker::Process::executable_sha256(record),
+                            starting->controller,starting->controller_sha256,input_->worker.sha256,input_->keepalive_timing_sha256);
+                        const auto owned=process_.process_handle();
+                        require(GetProcessId(binding.server->handle())==GetProcessId(owned) &&
+                                WaitForSingleObject(owned,0)==WAIT_TIMEOUT,
+                                "Startup stop record must bind the exact owned controller");
+                        request_stop(binding.endpoint);report_.stop_requested=true;
+                    }
+                }
+            }
             if(GetTickCount64()-began>=grace)break;
             Sleep(10);report_.controller=process_.observe();
         }
@@ -281,6 +298,11 @@ BrokerActivationReport BrokerActivation::close(DWORD grace) noexcept {
             report_.controller=stopped.state;
         }
     }catch(const std::exception& error){
+        try{
+            report_.controller=process_.observe();
+            if(report_.controller.started && report_.controller.process_exited && report_.controller.job_empty)
+                return report_;
+        }catch(...){ }
         report_.cleanup_error=error.what();
         // Process retains exact child/job handles; no PID/name lookup or retry.
         try{const auto stopped=process_.terminate_and_wait(2000);report_.termination_requested|=stopped.termination_requested;

@@ -45,6 +45,7 @@ def main():
     require(result['schema'] == 'sl3.broker-activation-tests.v1' and result['passed'] is True and
             result['simulatedSessions'] == 2 and result['asioStartStopCycles'] == 2 and result['callbacks'] >= 24 and
             result['failedStartupNormalExitObserved'] is True and result['failedStartupForcedContainmentObserved'] is True and
+            result['failedStartupStopRequested'] is True and
             result['nativeDeviceAccess'] is False and result['serviceInstalled'] is False and
             result['productionAsioEntryExercised'] is False, 'Expected simulated activation result')
     retirements = []

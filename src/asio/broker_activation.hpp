@@ -45,6 +45,7 @@ public:
 private:
     BrokerActivation()=default;
     void launch(const BrokerActivationSpec&);
+    BrokerActivationReport close_impl(DWORD grace_ms,const BrokerActivationSpec* starting) noexcept;
     struct Borrow;
     std::mutex mutex_;
     std::atomic<unsigned> borrowed_{0};

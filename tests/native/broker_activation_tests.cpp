@@ -1,4 +1,6 @@
 #include "asio/broker_activation.hpp"
+#include "windows/broker_pipe.hpp"
+#include "windows/broker_record.hpp"
 #include <array>
 #include <cstring>
 #include <fstream>
@@ -44,6 +46,24 @@ int wmain(int argc,wchar_t** argv){
         // accepts no input contents and does not open a worker/helper/device.
         if((argc==8 || (argc==10 && std::wstring(argv[8])==L"--application-process")) &&
            std::wstring(argv[1])==L"--run"){
+            const auto output=std::filesystem::path(argv[5]);
+            if(output.filename()==L"cancel-during-startup"){
+                Sleep(400);
+                worker::BrokerListener listener;
+                const auto name=L"Local\\SL3BrokerStop-"+listener.name().substr(listener.name().size()-32);
+                const auto config=load_driver_configuration(argv[3],TimingPolicy::unmeasured_diagnostic);
+                const auto text=worker::broker_record_text(listener.name(),config.worker.sha256);
+                require(std::filesystem::create_directory(output),"Fresh startup cancellation fixture");
+                const auto stop=CreateEventW(nullptr,TRUE,FALSE,name.c_str());
+                require(stop && GetLastError()!=ERROR_ALREADY_EXISTS,"Create startup cancellation fixture event");
+                const auto pending=output/L"startup-stop.pending";
+                write(pending,text);
+                std::filesystem::rename(pending,output/L"startup-stop.txt");
+                const auto observed=WaitForSingleObject(stop,5000);
+                CloseHandle(stop);
+                require(observed==WAIT_OBJECT_0,"Owned controller received startup stop");
+                write(output/L"stop-observed.txt","stop\n");return 0;
+            }
             Sleep(1000);write(std::filesystem::path(std::wstring(argv[5])+L".fixture-exited"),"normal\n");return 0;
         }
         require(argc==5,"Expected simulated controller, worker, reviewed helper and fresh output directory");
@@ -76,6 +96,16 @@ int wmain(int argc,wchar_t** argv){
             catch(const BrokerActivationError& error){require(error.cleanup.termination_requested && error.cleanup.controller.process_exited &&
                 error.cleanup.controller.job_empty,"Failed startup exposes forced containment separately");}
             require(!std::filesystem::exists(root/L"forced.fixture-exited"),"Contained fixture cannot finish its delayed operation");
+            bad.output=root/L"cancel-during-startup";bad.startup_failure_grace_ms=3000;
+            try{BrokerActivation::start(bad);throw std::runtime_error("Expected startup deadline without readiness");}
+            catch(const BrokerActivationError& error){
+                require(error.cleanup.stop_requested && error.cleanup.controller.process_exited &&
+                        error.cleanup.controller.job_empty && error.cleanup.controller.exit_code_known &&
+                        error.cleanup.controller.exit_code==0 && !error.cleanup.termination_requested,
+                        "Startup timeout signals the exact controller before force containment");
+            }
+            require(std::filesystem::exists(bad.output/L"stop-observed.txt") &&
+                    !std::filesystem::exists(bad.output/L"ready.json"),"Cooperative stop before readiness");
         }
         {
             // Preserve the actual startup error through the lazy DriverSession,
@@ -172,7 +202,7 @@ int wmain(int argc,wchar_t** argv){
         std::cout<<"{\"schema\":\"sl3.broker-activation-tests.v1\",\"passed\":true,\"simulatedSessions\":2,"
                    "\"asioStartStopCycles\":2,\"callbacks\":"<<callbacks.load()<<",\"nativeDeviceAccess\":false,"
                    "\"failedStartupNormalExitObserved\":true,\"failedStartupForcedContainmentObserved\":true,"
-                   "\"incompleteApplicationClaimRefused\":true,"
+                   "\"incompleteApplicationClaimRefused\":true,\"failedStartupStopRequested\":true,"
                    "\"serviceInstalled\":false,\"productionAsioEntryExercised\":false}\n";return 0;
     }catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}
 }

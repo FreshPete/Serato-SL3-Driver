@@ -262,6 +262,7 @@ def main():
                     'Published executable/worker/clock consistency')
             published = output/'sl3-asio.conf'
             require(ready['configSha256'] == sha(published) and ready['recordSha256'] == sha(output/'broker-session.txt'), 'Published record/config digest binding')
+            require(ready['recordSha256'] == sha(output/'startup-stop.txt'), 'Startup stop record binds the same controller')
             try:
                 with published.open('r+b'):
                     pass
