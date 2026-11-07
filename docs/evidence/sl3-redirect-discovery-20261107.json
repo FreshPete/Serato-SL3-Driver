@@ -1,0 +1,206 @@
+{
+  "schema": "sl3.redirect-discovery-evidence.v1",
+  "inspectorSha256": "3dce11482035c96eece2d0f74c878b1e43005520f464c5087681db5e6bab02ba",
+  "installedLibrary": {
+    "sha256": "68883bc3254dbb4129cf68b49f9efe149cd50fd15e990c58a94a53d3ed4f7151",
+    "hubIoctl": "0x220448",
+    "descriptorBytesFromHubResponse": 18,
+    "backendDescriptorOffset": "0x5b8",
+    "exportedDescriptorOffset": "0x64",
+    "observedLibusbWhileRedirected": false,
+    "instructionFacts": [
+      {
+        "va": "0x18000141f",
+        "bytes": "e97c490000",
+        "assembly": "jmp 0x180005da0"
+      },
+      {
+        "va": "0x180005dca",
+        "bytes": "0f104364",
+        "assembly": "movups xmm0, xmmword ptr [rbx + 0x64]"
+      },
+      {
+        "va": "0x180005dce",
+        "bytes": "0f1107",
+        "assembly": "movups xmmword ptr [rdi], xmm0"
+      },
+      {
+        "va": "0x180005dd1",
+        "bytes": "0fb74374",
+        "assembly": "movzx eax, word ptr [rbx + 0x74]"
+      },
+      {
+        "va": "0x180005dda",
+        "bytes": "66894710",
+        "assembly": "mov word ptr [rdi + 0x10], ax"
+      },
+      {
+        "va": "0x180007a36",
+        "bytes": "488b0553db0100",
+        "assembly": "mov rax, qword ptr [rip + 0x1db53]"
+      },
+      {
+        "va": "0x180007a3d",
+        "bytes": "488d5164",
+        "assembly": "lea rdx, [rcx + 0x64]"
+      },
+      {
+        "va": "0x180007a51",
+        "bytes": "ffd0",
+        "assembly": "call rax"
+      },
+      {
+        "va": "0x18000cd33",
+        "bytes": "488d05469d0100",
+        "assembly": "lea rax, [rip + 0x19d46]"
+      },
+      {
+        "va": "0x18000cd3c",
+        "bytes": "48898320020000",
+        "assembly": "mov qword ptr [rbx + 0x220], rax"
+      },
+      {
+        "va": "0x18000d1a0",
+        "bytes": "488b4130",
+        "assembly": "mov rax, qword ptr [rcx + 0x30]"
+      },
+      {
+        "va": "0x18000d1ab",
+        "bytes": "488b8020020000",
+        "assembly": "mov rax, qword ptr [rax + 0x220]"
+      },
+      {
+        "va": "0x18000d1b2",
+        "bytes": "4c8b4028",
+        "assembly": "mov r8, qword ptr [rax + 0x28]"
+      },
+      {
+        "va": "0x18000d1b6",
+        "bytes": "49ffe0",
+        "assembly": "jmp r8"
+      },
+      {
+        "va": "0x1800172ff",
+        "bytes": "e83c3b0000",
+        "assembly": "call 0x18001ae40"
+      },
+      {
+        "va": "0x180017309",
+        "bytes": "754e",
+        "assembly": "jne 0x180017359"
+      },
+      {
+        "va": "0x180017315",
+        "bytes": "e81ea1feff",
+        "assembly": "call 0x180001438"
+      },
+      {
+        "va": "0x180017b90",
+        "bytes": "0f1081b8050000",
+        "assembly": "movups xmm0, xmmword ptr [rcx + 0x5b8]"
+      },
+      {
+        "va": "0x180017b97",
+        "bytes": "0f1102",
+        "assembly": "movups xmmword ptr [rdx], xmm0"
+      },
+      {
+        "va": "0x180017b9a",
+        "bytes": "0fb781c8050000",
+        "assembly": "movzx eax, word ptr [rcx + 0x5c8]"
+      },
+      {
+        "va": "0x180017ba1",
+        "bytes": "66894210",
+        "assembly": "mov word ptr [rdx + 0x10], ax"
+      },
+      {
+        "va": "0x18001afe7",
+        "bytes": "488b8ba0000000",
+        "assembly": "mov rcx, qword ptr [rbx + 0xa0]"
+      },
+      {
+        "va": "0x18001b004",
+        "bytes": "ff155ea10100",
+        "assembly": "call qword ptr [rip + 0x1a15e]"
+      },
+      {
+        "va": "0x18001b081",
+        "bytes": "448965cf",
+        "assembly": "mov dword ptr [rbp - 0x31], r12d"
+      },
+      {
+        "va": "0x18001b0ae",
+        "bytes": "4c8d45cf",
+        "assembly": "lea r8, [rbp - 0x31]"
+      },
+      {
+        "va": "0x18001b0c9",
+        "bytes": "ba48042200",
+        "assembly": "mov edx, 0x220448"
+      },
+      {
+        "va": "0x18001b0ce",
+        "bytes": "488bcf",
+        "assembly": "mov rcx, rdi"
+      },
+      {
+        "va": "0x18001b0d1",
+        "bytes": "ff15a9a00100",
+        "assembly": "call qword ptr [rip + 0x1a0a9]"
+      },
+      {
+        "va": "0x18001b0ed",
+        "bytes": "0f1045d3",
+        "assembly": "movups xmm0, xmmword ptr [rbp - 0x2d]"
+      },
+      {
+        "va": "0x18001b0e9",
+        "bytes": "0fb745e3",
+        "assembly": "movzx eax, word ptr [rbp - 0x1d]"
+      },
+      {
+        "va": "0x18001b0f1",
+        "bytes": "0f1186b8050000",
+        "assembly": "movups xmmword ptr [rsi + 0x5b8], xmm0"
+      },
+      {
+        "va": "0x18001b0f8",
+        "bytes": "668986c8050000",
+        "assembly": "mov word ptr [rsi + 0x5c8], ax"
+      },
+      {
+        "va": "0x18001b2eb",
+        "bytes": "0fb645e8",
+        "assembly": "movzx eax, byte ptr [rbp - 0x18]"
+      },
+      {
+        "va": "0x18001b2f1",
+        "bytes": "884648",
+        "assembly": "mov byte ptr [rsi + 0x48], al"
+      }
+    ]
+  },
+  "savedRelease": {
+    "port": 4,
+    "redirectedWindowsInterfaceVidPid": "2b23:cafe",
+    "redirectedInterfaceObservedUtc": "2026-11-07T13:31:44.505713800+00:00",
+    "postReleaseEnumerationUtc": "2026-11-07T13:31:47.830871300+00:00",
+    "codeIntegrityUtc": "2026-11-07T13:31:47.8391443Z",
+    "kernelPnpUtc": "2026-11-07T13:31:47.8392848Z",
+    "enumerationToPolicyBlockTicks": "82730",
+    "codeIntegrityStatus": "0xc0e90002",
+    "policy": "Microsoft Windows Cross Certificates for Code Integrity Exceptions Policy",
+    "policyGuid": "{8f9cb695-5d48-48d6-a329-7202b44607e3}",
+    "policyVersion": "10.29611.0.0",
+    "originalDriverFlatSha256": "e8e992a8ece1a57eab337d815a406b9f815954176c03db545fcf6d951ec615f5",
+    "savedInputSha256": {
+      "usbTraceXml": "54d930b440299ada740dc14ce687978558cacc49395b1604e1fdbb61ef518f4b",
+      "ci3077Xml": "58ab0ddb8b7fee94391a4fca7b95a1d29db3d5dd471a728c4ef4a3e3fe095cde",
+      "pnp219Xml": "16ecf063ef947fa49e478661e802082f4b80b79867ea6f479c259dca2b29a5cc"
+    }
+  },
+  "liveTestPerformed": false,
+  "seratoSelectionVerified": false,
+  "readinessAdmission": false
+}

@@ -20,6 +20,8 @@ Use the refreshed retained comparison described in the [package handoff](asio-on
 
 ### Observe the normal launch
 
+Take a short [libusb identity snapshot](serato-usb-discovery.md#what-the-retained-usb-connection-exposes) before acquisition and again while the broker is ready. Use the existing ordinary-user `scripts/supervise-usb-identity.py --run --seconds 5 --result-directory <fresh-local-directory>` for each snapshot. This distinguishes successful USB ownership from whether Serato's library can still discover the SL3 in that state. Keep the broker in the same session for the manual launch.
+
 With the reviewed retained package installed and the broker ready, start the [read-only module observer](../scripts/observe-asio-module-load.ps1) in 64-bit PowerShell under the ordinary desktop account. Open Serato from its usual shortcut after the observer reports that it is armed. The observer samples Windows process and module metadata without attaching to the desktop, launching Serato or setting trace environment variables.
 
 ```powershell
