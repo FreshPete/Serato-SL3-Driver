@@ -76,6 +76,13 @@ def main():
     saved=experiment.read_bytes();changed=json.loads(saved);changed['projectRoot']=str(folder);experiment.write_text(json.dumps(changed),encoding='utf-8')
     try:call('native-foreign-project-root',reviewed('--check-experiment',identity=sha(experiment)),False,'Prepared experiment root/application differs')
     finally:experiment.write_bytes(saved)
+    for name, runtime, field, value, error in (
+            ('foreign-powershell-directory','powershell','directory',str(original/'runtime/powershell'),'Prepared PowerShell differs'),
+            ('foreign-powershell-manifest','powershell','manifestSha256','0'*64,'Prepared PowerShell differs'),
+            ('foreign-python-manifest','python','manifestSha256','0'*64,'Prepared interpreter differs')):
+        changed=json.loads(saved);changed[runtime][field]=value;experiment.write_text(json.dumps(changed),encoding='utf-8')
+        try:call(name,reviewed('--check-experiment',identity=sha(experiment)),False,error)
+        finally:experiment.write_bytes(saved)
     call('native-final-experiment-check',reviewed('--check-experiment'))
     call('native-verification-after-preparation',command('--verify'))
     before={p.relative_to(kit/'analysis').as_posix():sha(p) for p in (kit/'analysis').rglob('*') if p.is_file()}

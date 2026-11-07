@@ -90,7 +90,12 @@ int dispatch(int argc,wchar_t** argv){
                 equal(record.text(L"application"),application.native()) && record.text(L"applicationSha256")==release::application_sha,
                 "Prepared experiment root/application differs");
         const auto python=record.object(L"python");
-        require(equal(local_path(python.text(L"path")).lexically_normal().native(),(root/L"runtime/python/python.exe").lexically_normal().native()) && python.text(L"sha256")==sl3::launcher::release::python_sha,"Prepared interpreter differs");
+        require(equal(local_path(python.text(L"path")).lexically_normal().native(),(root/L"runtime/python/python.exe").lexically_normal().native()) &&
+                python.text(L"sha256")==sl3::launcher::release::python_sha &&
+                python.text(L"manifestSha256")==release::python_manifest_sha,"Prepared interpreter differs from the reviewed kit");
+        const auto powershell=record.object(L"powershell");
+        require(equal(local_path(powershell.text(L"directory")).lexically_normal().native(),(root/L"runtime/powershell").lexically_normal().native()) &&
+                powershell.text(L"manifestSha256")==release::powershell_manifest_sha,"Prepared PowerShell differs from the reviewed kit");
         const auto assets=record.object(L"assets");
         for(const auto& name:std::vector<std::wstring>{L"archive/candidate-userio_resources.bin",L"archive/serato-archive-file-transaction.ps1",L"archive/deployment-plan.json",L"archive/archive-test.ps1",L"archive/action-child.ps1"})
             pin_input(leases,directories,child_path(selected.parent_path(),name),assets.text(name.c_str()),dynamic_size);

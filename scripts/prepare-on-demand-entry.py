@@ -29,6 +29,8 @@ def prepare(kit,expected,output):
         'inline const std::vector<std::pair<std::wstring,std::wstring>> source_pins={},runtime_pins={},powershell_pins={};\n}\n')
     setup=('#pragma once\nnamespace sl3::setup::release {\nstruct File {std::wstring name,sha;unsigned long long bytes;};\n'
         'inline const std::wstring kit_manifest_sha=L'+json.dumps(expected)+';\ninline const std::wstring application_sha=sl3::launcher::release::application_sha;\n'
+        'inline const std::wstring python_manifest_sha=L'+json.dumps(meta['pythonManifestSha256'])+';\n'
+        'inline const std::wstring powershell_manifest_sha=L'+json.dumps(meta['powershellManifestSha256'])+';\n'
         'inline const std::vector<File> files={\n'+',\n'.join(' {L'+json.dumps(n)+',L'+json.dumps(x['sha256'])+','+str(x['bytes'])+'ull}' for n,x in sorted(files.items()))+'\n};\n}\n')
     cmake=('cmake_minimum_required(VERSION 3.20)\nproject(sl3_setup_entry LANGUAGES CXX)\n'
         'if(NOT WIN32 OR NOT MSVC OR NOT CMAKE_SIZEOF_VOID_P EQUAL 8)\nmessage(FATAL_ERROR "Windows x64 MSVC required")\nendif()\n'
