@@ -73,6 +73,22 @@ class ReadoutTests(unittest.TestCase):
         self.assertFalse(API['summarize'](OBSERVER,BROKER,{**restore,'successful':False})['originalSetupReportedByRestore'])
         self.assertIsNone(API['summarize'](OBSERVER,BROKER)['originalSetupReportedByRestore'])
 
+    def test_independent_postcheck_requires_matching_completed_trial(self):
+        experiment = '3'*64
+        restore = {'schema':'sl3.on-demand-test-action.v1','action':'restore','successful':True,'after':API['CLEAN']}
+        postcheck = {'schema':'sl3.retained-setup-handoff.v1','planOnly':True,'experimentSha256':experiment,
+                     'freshSetupRecordDirectory':False,'before':API['CLEAN'],'applicationLaunched':False,
+                     'nativeDeviceAccess':False,'elevationRequested':False}
+        original = API['summarize'](OBSERVER,BROKER,restore)
+        self.assertNotIn('originalSetupIndependentlyVerified',original)
+        self.assertTrue(API['summarize'](OBSERVER,BROKER,restore,postcheck,experiment)['originalSetupIndependentlyVerified'])
+        for update in ({'experimentSha256':'4'*64}, {'freshSetupRecordDirectory':True},
+                       {'elevationRequested':True}, {'before':{**API['CLEAN'],'archive':'installed'}}):
+            with self.subTest(update=update), self.assertRaisesRegex(ValueError,'independent clean postcheck'):
+                API['summarize'](OBSERVER,BROKER,restore,{**postcheck,**update},experiment)
+        with self.assertRaisesRegex(ValueError,'independent clean postcheck'):
+            API['summarize'](OBSERVER,BROKER,{**restore,'successful':False},postcheck,experiment)
+
     def test_malformed_identity_and_contradictory_rows_refused(self):
         for bad in ({**CLIENT,'pid':True},{**CLIENT,'creationFileTimeUtc':'01'},
                     {**CLIENT,'streamStartReplies':1,'admissionReplySent':False}):

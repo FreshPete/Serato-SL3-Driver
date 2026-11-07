@@ -34,7 +34,7 @@ def identity(row, allow_unknown_creation=False):
     return pid,created
 
 
-def summarize(observer, broker, restore=None):
+def summarize(observer, broker, restore=None, postcheck=None, experiment_sha=None):
     require(observer.get('schema')=='sl3.asio-module-observation.v1' and
             observer.get('asioCallsObserved') is False and observer.get('moduleAbsenceProved') is False,
             'Expected the passive module observation')
@@ -84,7 +84,7 @@ def summarize(observer, broker, restore=None):
         require(restore.get('schema')=='sl3.on-demand-test-action.v1' and restore.get('action')=='restore' and
                 type(restore.get('successful')) is bool,'Expected the restore action receipt')
         restored = restore['successful'] and restore.get('after')==CLEAN
-    return {'schema':'sl3.retained-start-readout.v1','brokerKind':broker['kind'],'nativeAcquisitionReported':acquired,
+    result = {'schema':'sl3.retained-start-readout.v1','brokerKind':broker['kind'],'nativeAcquisitionReported':acquired,
             'applicationFileSha256':observer['applicationSha256'],'moduleFileSha256':observer['moduleFileSha256'],
             'ordinaryProcessObserved':selected is not None,'moduleLoadObserved':bool(module),
             'followUpModuleSamples':follow_up,'moduleDisappearanceSampled':disappeared,
@@ -97,6 +97,14 @@ def summarize(observer, broker, restore=None):
             'brokerFailureReported':broker['failed'],'terminationRequested':broker['terminationRequested'],
             'originalSetupReportedByRestore':restored,'applicationCallbacksVerified':False,
             'audibleOutputVerified':False,'dvsVerified':False,'absenceProved':False}
+    if postcheck is not None:
+        require(restored is True and isinstance(experiment_sha,str) and re.fullmatch('[0-9a-f]{64}',experiment_sha) and
+                postcheck.get('schema')=='sl3.retained-setup-handoff.v1' and postcheck.get('planOnly') is True and
+                postcheck.get('experimentSha256')==experiment_sha and postcheck.get('freshSetupRecordDirectory') is False and
+                all(postcheck.get(name) is False for name in ('applicationLaunched','nativeDeviceAccess','elevationRequested')) and
+                postcheck.get('before')==CLEAN, 'Expected the independent clean postcheck of this completed trial')
+        result['originalSetupIndependentlyVerified'] = True
+    return result
 
 
 def main():
@@ -107,15 +115,25 @@ def main():
     parser.add_argument('--broker-report-sha256',required=True)
     parser.add_argument('--restore-report',type=Path)
     parser.add_argument('--restore-report-sha256')
+    parser.add_argument('--postcheck-report',type=Path)
+    parser.add_argument('--postcheck-report-sha256')
+    parser.add_argument('--expected-experiment-sha256')
     parser.add_argument('--output',type=Path)
     args = parser.parse_args()
     require(bool(args.restore_report)==bool(args.restore_report_sha256),'Restore report and hash must be supplied together')
+    require(bool(args.postcheck_report)==bool(args.postcheck_report_sha256)==bool(args.expected_experiment_sha256) and
+            (args.postcheck_report is None or args.restore_report is not None),
+            'Postcheck requires its report and hash, the experiment hash and a restore receipt')
     observer = read_pinned(args.module_report,args.module_report_sha256)
     broker = read_pinned(args.broker_report,args.broker_report_sha256)
     restore = read_pinned(args.restore_report,args.restore_report_sha256) if args.restore_report else None
-    result = summarize(observer,broker,restore)
+    postcheck = read_pinned(args.postcheck_report,args.postcheck_report_sha256) if args.postcheck_report else None
+    result = summarize(observer,broker,restore,postcheck,args.expected_experiment_sha256)
     result['inputReportSha256'] = {'module':args.module_report_sha256,'broker':args.broker_report_sha256,
                                    'restore':args.restore_report_sha256}
+    if postcheck is not None:
+        result['inputReportSha256']['postcheck'] = args.postcheck_report_sha256
+        result['experimentSha256'] = args.expected_experiment_sha256
     rendered = json.dumps(result,indent=2)+'\n'
     if args.output:
         with args.output.open('x',encoding='utf-8',newline='\n') as stream:

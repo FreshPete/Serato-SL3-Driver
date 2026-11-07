@@ -40,10 +40,19 @@ function Read-ReviewedPlan([string]$Python) {
     $plan
 }
 
-function Publish-TrialReadout([string]$Python,[string]$Folder,[bool]$SetupExited) {
+function Save-TrialReport([string]$Path,[string]$Json) {
+    $stream = [IO.File]::Open($Path,'CreateNew','Write','Read')
+    try {
+        $bytes = [Text.Encoding]::UTF8.GetBytes($Json + "`n")
+        $stream.Write($bytes,0,$bytes.Length)
+    } finally { $stream.Dispose() }
+}
+
+function Publish-TrialReadout([string]$Python,[string]$Folder,[bool]$SetupExited,[bool]$PostcheckSaved) {
     $moduleReport = Join-Path $Folder 'desktop-start/module-observation.json'
     $brokerReport = Join-Path $Folder 'broker/result.json'
     $restoreReport = Join-Path $Folder 'attended-setup/restore-stdout.json'
+    $postcheckReport = Join-Path $Folder 'attended-setup/restore-postcheck.json'
     $output = Join-Path $Folder 'desktop-start/start-readout.json'
     $reader = Join-Path $PSScriptRoot 'read-retained-start-result.py'
     $arguments = @('--module-report',$moduleReport,
@@ -54,6 +63,11 @@ function Publish-TrialReadout([string]$Python,[string]$Folder,[bool]$SetupExited
     if ($SetupExited -and (Test-Path -LiteralPath $restoreReport -PathType Leaf)) {
         $arguments += @('--restore-report',$restoreReport,
             '--restore-report-sha256',(Get-FileHash -LiteralPath $restoreReport).Hash.ToLowerInvariant())
+        if ($PostcheckSaved) {
+            $arguments += @('--postcheck-report',$postcheckReport,
+                '--postcheck-report-sha256',(Get-FileHash -LiteralPath $postcheckReport).Hash.ToLowerInvariant(),
+                '--expected-experiment-sha256',$expected)
+        }
     }
     $raw = & $Python -I -B $reader @arguments
     if ($LASTEXITCODE) { throw 'The saved startup reports could not be matched.' }
@@ -75,6 +89,7 @@ function Invoke-ReviewedTrial($Record, $SetupProcess) {
     $name = [IO.Path]::GetFileNameWithoutExtension($Record.application)
     $started = $false
     $retired = $false
+    $postcheckSaved = $false
     try {
         Write-Host 'Checking the USB connection. Keep Serato closed.'
         $startup = & $Record.python.path -I -B $desktop start @desktopArgs --recovery-confirmed
@@ -101,11 +116,7 @@ function Invoke-ReviewedTrial($Record, $SetupProcess) {
             throw 'Unexpected module observation result.'
         }
         $path = Join-Path $folder 'desktop-start/module-observation.json'
-        $stream = [IO.File]::Open($path,'CreateNew','Write','Read')
-        try {
-            $bytes = [Text.Encoding]::UTF8.GetBytes(($observed -join "`n") + "`n")
-            $stream.Write($bytes,0,$bytes.Length)
-        } finally { $stream.Dispose() }
+        Save-TrialReport $path ($observed -join "`n")
     } finally {
         if (($started -or (Test-Path -LiteralPath (Join-Path $folder 'broker.pointer.json') -PathType Leaf)) -and
             -not $SetupProcess.HasExited) {
@@ -142,14 +153,17 @@ function Invoke-ReviewedTrial($Record, $SetupProcess) {
                 ConvertFrom-Json -ErrorAction SilentlyContinue
             if ($result.outcome -in 'restored','restored_after_failed_setup') {
                 try {
-                    Read-ReviewedPlan $Record.python.path | Out-Null
+                    $postcheck = Read-ReviewedPlan $Record.python.path
+                    $postcheckPath = Join-Path $folder 'attended-setup/restore-postcheck.json'
+                    Save-TrialReport $postcheckPath ($postcheck | ConvertTo-Json -Depth 5)
+                    $postcheckSaved = $true
                     Write-Host 'Original Serato setup restored and independently verified.'
-                } catch { Write-Warning ('Restoration was reported. The independent check failed. ' + $_.Exception.Message) }
+                } catch { Write-Warning ('Restoration was reported. The independent check could not be verified or saved. ' + $_.Exception.Message) }
             } else { Write-Host 'See the setup result for restoration status.' }
         } else { Write-Host 'Restoration is still pending. Check the setup result before retrying.' }
     }
     if ($retired) {
-        try { Publish-TrialReadout $Record.python.path $folder $setupExited }
+        try { Publish-TrialReadout $Record.python.path $folder $setupExited $postcheckSaved }
         catch { Write-Warning ('Startup summary unavailable. Review the saved reports. ' + $_.Exception.Message) }
     }
 }
@@ -179,7 +193,7 @@ try {
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'retained-desktop-trial.py') '50f748fcc01407ef9f38e32a7d64eeb750d274e01b42b35fb9f6b60be245560c'
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'observe-asio-module-load.ps1') '97f15e24e861f8cd82c68ee0723c598382ecf6e41511790c7ea1c12a9147bf0d'
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'inspect-process.psm1') '6ffb8427f79ebd173fd31e9824442293eb66689107fe63307204f76a6db4a290'
-        Hold-ReviewedFile (Join-Path $PSScriptRoot 'read-retained-start-result.py') 'd4b91ac3dd7fffa24a6f2ce25a5347d61dfcf1928ccb1f29f711a776e103f012'
+        Hold-ReviewedFile (Join-Path $PSScriptRoot 'read-retained-start-result.py') '22701bc60b065b87b277066faf82e5c3716d2f81619eec41ec639e38665b64b4'
         $confirmation = Read-Host 'Power-cycle the SL3 for 30 seconds, reconnect it, wait 30 seconds, close Serato and type RECOVERED'
         if ($confirmation -cne 'RECOVERED') { Write-Host 'Test canceled before setup.'; return }
     }
