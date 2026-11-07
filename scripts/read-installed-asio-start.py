@@ -48,6 +48,30 @@ def configuration(path):
     return values,sha(raw)
 
 
+def unpublished_result(folder, activation):
+    intent_path, final_path = folder/'intent.json', folder/'result.json'
+    if not intent_path.exists() or not final_path.exists():
+        return {}
+    intent = record(read(intent_path))
+    require(intent.get('schema')=='sl3.broker-controller-intent.v1' and intent.get('applicationBound') is True and
+            intent.get('brokerSha256')==activation[1] and intent.get('limitMs')==int(activation[-1]) and
+            intent.get('kind') in ('native','simulated'),'Startup intent differs from selected configuration')
+    raw = read(final_path)
+    final = record(raw)
+    require(final.get('schema')=='sl3.broker-controller-result.v1' and final.get('kind')==intent['kind'] and
+            type(final.get('published')) is bool,'Expected a broker result for this startup intent')
+    if final['published']:
+        return {}  # The driver never committed the receipt that would bind published readiness.
+    native_error = final.get('lastNativeError')
+    require(type(native_error) is int and 0<=native_error<=0xffffffff,'Invalid startup error number')
+    overlap_refused = (intent['kind']=='native' and final.get('acquireAttempted') is True and
+        final.get('acquired') is False and final.get('snapshotValid') is True and final.get('failed') is True and
+        type(final.get('lastDeviceFailure')) is int and final['lastDeviceFailure']==1 and
+        native_error==170 and final.get('lastDiagnostic')=='Acquire exclusive SL3 redirect owner failed, Win32=170')
+    return {'outcome':'redirect_owner_busy' if overlap_refused else 'broker_result_before_readiness',
+            'brokerKind':intent['kind'],'lastNativeError':native_error,'resultSha256':sha(raw)}
+
+
 def summarize(folder, activation):
     match = re.fullmatch(r'application-([1-9][0-9]{0,9})-([1-9][0-9]{0,19})',folder.name)
     require(match and not folder.is_symlink() and not folder.is_junction(),'Expected an application-bound session path')
@@ -56,7 +80,7 @@ def summarize(folder, activation):
     prefix = ('\n'.join(['SL3-ASIO-APPLICATION-1',*activation])+'\n').encode('utf-8')
     claim = read(folder.with_name(folder.name+'.claim'))
     if len(claim)<len(prefix)+65 and claim[:len(prefix)]==prefix[:len(claim)]:
-        return result
+        return {**result,**unpublished_result(folder,activation)}
     require(claim.startswith(prefix) and len(claim)==len(prefix)+65,'Activation receipt differs from selected configuration')
     config_hash = sha(read(folder/'sl3-asio.conf'))
     require(claim==prefix+config_hash.encode('ascii')+b'\n','Published configuration differs from activation receipt')

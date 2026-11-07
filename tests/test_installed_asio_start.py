@@ -45,3 +45,27 @@ class InstalledAsioStartTest(unittest.TestCase):
         final['clientObservations'][0]['creationFileTimeUtc'] = '456'
         path.write_text(json.dumps(final))
         self.assertEqual(API['summarize'](self.folder,ACTIVATION)['streamStartReplies'],1)
+
+    def test_unpublished_result_distinguishes_overlap_from_another_busy_error(self):
+        self.claim.write_bytes(b'')
+        intent = {'schema':'sl3.broker-controller-intent.v1','kind':'native','applicationBound':True,
+                  'brokerSha256':ACTIVATION[1],'limitMs':600000}
+        intent_path = self.folder/'intent.json'
+        intent_path.write_text(json.dumps(intent))
+        final = {'schema':'sl3.broker-controller-result.v1','kind':'native','published':False,
+                 'acquireAttempted':True,'acquired':False,'snapshotValid':True,'failed':True,
+                 'lastNativeError':170,'lastDeviceFailure':1,
+                 'lastDiagnostic':'Acquire exclusive SL3 redirect owner failed, Win32=170'}
+        final_path = self.folder/'result.json'
+        final_path.write_text(json.dumps(final))
+        self.assertEqual(API['summarize'](self.folder,ACTIVATION)['outcome'],'redirect_owner_busy')
+        final['lastDiagnostic'] = 'Redirect exact SL3 failed, Win32=170'
+        final_path.write_text(json.dumps(final))
+        self.assertEqual(API['summarize'](self.folder,ACTIVATION)['outcome'],'broker_result_before_readiness')
+        final['published'] = True
+        final_path.write_text(json.dumps(final))
+        self.assertEqual(API['summarize'](self.folder,ACTIVATION)['outcome'],'activation_receipt_incomplete')
+        intent['brokerSha256'] = 'a'*64
+        intent_path.write_text(json.dumps(intent))
+        with self.assertRaisesRegex(ValueError,'Startup intent differs'):
+            API['summarize'](self.folder,ACTIVATION)
