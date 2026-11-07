@@ -40,6 +40,16 @@ def main():
     call('native-readonly-plan',command('--plan'));require(not (kit/'analysis').exists(),'Plan creates no mutable state')
     prepared=call('native-real-preparation',command('--prepare'));require(prepared['preparedExperiment']['prepared'] is True and prepared['normalStartupValidated'] is False,'Actual copied-kit preparation required')
     experiment=Path(prepared['preparedExperiment']['experiment']);experiment_sha=prepared['preparedExperiment']['experimentSha256']
+    experiment_record=json.loads(experiment.read_bytes());bundle=Path(experiment_record['bundle']['directory'])
+    origin_manifest=json.loads((kit/'native-package/bundle-manifest.json').read_bytes())
+    rebound_manifest=json.loads((bundle/'bundle-manifest.json').read_bytes())
+    mode=origin_manifest['activationMode']
+    require(mode in ('asio-init-v1','asio-init-application-v2') and rebound_manifest['activationMode']==mode,
+            'Native kit preparation must preserve the reviewed activation mode')
+    configuration=bundle/'sl3-asio.conf';entry_bytes=configuration.read_bytes()
+    header=b'SL3-ASIO-ACTIVATION-2\n' if mode=='asio-init-application-v2' else b'SL3-ASIO-ACTIVATION-1\n'
+    require(entry_bytes.startswith(header),'Rebound driver configuration must match the reviewed activation mode')
+    cases.append({'name':'native-preparation-preserves-activation-mode','passed':True})
     def reviewed(action,selected=experiment,identity=experiment_sha):return command(action)+['--experiment',str(selected),'--expected-experiment-sha256',identity]
     plan=call('native-generated-experiment-check',reviewed('--check-experiment'));require(plan['after']=={'archive':'original','seratoRunning':False,'native':{'state':'absent'}},'Actual restored host observation required')
     call('native-apply-refuses-ordinary-token',reviewed('--apply-experiment'),False,'Run this exact reviewed setup/restore entry as administrator')
@@ -52,7 +62,11 @@ def main():
     asset=experiment.parent/'archive/archive-test.ps1';saved=asset.read_bytes();asset.write_bytes(saved+b'changed')
     try:call('native-changed-prepared-asset',reviewed('--check-experiment'),False,'Reviewed setup input hash differs')
     finally:asset.write_bytes(saved)
-    experiment_record=json.loads(experiment.read_bytes());bundle=Path(experiment_record['bundle']['directory']);image=bundle/'sl3_usbdk.exe';saved=image.read_bytes();image.write_bytes(saved[:-1]+bytes([saved[-1]^1]))
+    other_header=b'SL3-ASIO-ACTIVATION-1\n' if mode=='asio-init-application-v2' else b'SL3-ASIO-ACTIVATION-2\n'
+    configuration.write_bytes(other_header+entry_bytes[len(header):])
+    try:call('native-changed-rebound-activation-mode',reviewed('--check-experiment'),False,'Reviewed setup input hash differs')
+    finally:configuration.write_bytes(entry_bytes)
+    image=bundle/'sl3_usbdk.exe';saved=image.read_bytes();image.write_bytes(saved[:-1]+bytes([saved[-1]^1]))
     try:call('native-changed-rebound-worker',reviewed('--check-experiment'),False,'Reviewed setup input hash differs')
     finally:image.write_bytes(saved)
     saved=experiment.read_bytes();changed=json.loads(saved);changed['projectRoot']=str(folder);experiment.write_text(json.dumps(changed),encoding='utf-8')
@@ -89,7 +103,7 @@ def main():
         'executableSha256':sha(host),'kitManifestSha256':source['kitManifestSha256'],'filesPinnedBeforeHelper':source['compiledPayloadFiles'],
         'imports':imports,'emptyPath':True,'movedKitTested':True,'modifiedHelperExecuted':False,'productionInstallationPerformed':False,'elevationRequested':False,
         'seratoLaunched':False,'nativeDeviceAccess':False,'hostPostcheck':state,'graphicalSetupProvided':False,'installedRegistryActivationValidated':False,
-        'preparedExperimentNativeCheckPassed':True,'mutableActionsTestedOnlyAsOrdinaryTokenRefusals':True,'elevatedSetupOrRestoreValidated':False}
+        'preparedExperimentNativeCheckPassed':True,'activationMode':mode,'mutableActionsTestedOnlyAsOrdinaryTokenRefusals':True,'elevatedSetupOrRestoreValidated':False}
     output=folder/'result.json';output.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8');print(json.dumps({'passed':True,'cases':len(cases),'report':str(output)},indent=2))
 
 

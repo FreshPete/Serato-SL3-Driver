@@ -1,6 +1,6 @@
 # One-time SL3 setup window
 
-The [newer native failure-report build and refreshed kit/window](asio-activation-failure-report.md) are now the current prepared payload candidate. Window behavior is unchanged. No privileged install or latest visual inspection is inferred from its contract checks.
+The current local build binds the setup window to the [application-bound ASIO package](asio-on-demand-deployment.md#application-bound-candidate). The window still offers **Check setup**, **Install** and **Restore original setup**. Install and Restore request separate Windows approvals when invoked. Serato starts separately from its usual shortcut.
 
 Follow-up: [administrator result capture and local diagnostics](setup-result-diagnostics.md) now preserve failure details across the postcheck and show the existing ten-minute diagnostic bound. The earlier build/visual evidence below is historical; the latest rendered review was interrupted by the locked desktop.
 
@@ -32,10 +32,19 @@ Sixteen actual checks cover clean/installed/partial/conflicting eligibility, the
 ## Current private candidate
 
 ```text
+artifacts/build/native-setup-window-app-bound-20261107/build/Release/SL3_Compatibility_Setup.exe
+SHA256 9dd0520ba010efe26602253ace5daa8c9782d6197c40a431218d82d88579df86
+```
+
+The setup-only kit is `artifacts/build/sl3-on-demand-kit-app-bound-20261107`. All 27 moved-kit checks and 18 window checks passed. The moved kit preserved `asio-init-application-v2` and its native binaries, and the entry rejected an altered activation header before starting the helper. The read-only host check found the original Serato archive, Serato stopped and no temporary native package. This build used the existing window code and had no new visual inspection or privileged actions. Normal Serato startup and physical use of this package still need an attended test. [Build and test evidence](evidence/application-bound-setup-window-20261107.json)
+
+### Earlier review build
+
+```text
 artifacts/build/native-setup-window-release-review-20261106/build/Release/SL3_Compatibility_Setup.exe
 SHA256 b0a976b9f2def6a07abda8966c70aa0f865dfac2541dcb98de8806fa5d27ff8e
 ```
 
-Build metadata binds the exact native entry, setup-only kit, generated experiment and source/header files. It is an x64 Windows GUI executable with no CLR or external MSVC runtime imports. The earlier `native-setup-window-*` prototypes are preserved but are not the current source-bound candidate. Keep the selected kit, its prepared state and native entry at their bound paths; this is not a general-purpose installer chooser.
+Build metadata binds the exact native entry, setup-only kit, generated experiment and source/header files. The review build is an x64 Windows GUI executable with no CLR or external MSVC runtime imports. Each window build requires the selected kit, its prepared state and the native entry at their bound paths.
 
 `prepare-setup-window.py` creates the bound project; `build-setup-window.ps1` builds and runs the owned-window tests. Preparation on this host generated fresh local compatibility resources from the original Serato installation; no vendor archive or application is published with the source. Final postchecks show original installed resources, no occupied session paths or temporary registration, no action lock and no running SL3/Serato process. The earlier standalone normal-start candidate remains source-current. Actual installation, normal Serato selection, physical output/vinyl and reliable native lifetime remain separate requirements.

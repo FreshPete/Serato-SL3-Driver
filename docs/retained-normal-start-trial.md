@@ -8,6 +8,8 @@ The temporary setup installed a diagnostic ASIO locator and a locally generated 
 
 After another power cycle, Windows canceled the administrator prompt for the installed retry before setup began. The subsequent private proof used the same driver, controller and worker binaries with a private locator and registration-free COM activation. It began several minutes after the reconnect, so this trial cannot establish a minimum wait. At the end, the controller verified I/O retirement, device release and worker exit. The private locator was withdrawn, and the controller exited.
 
+At the later retry, the owner confirmed a 30-second power cycle and the read-only port query reported the expected SL3 descriptor. The original Rane binding still reported Code 39. Windows canceled the administrator launch before setup began. The postcheck showed the original Serato archive and no temporary driver installed. This retry made no UsbDk acquisition and did not open Serato.
+
 ## Next Serato check
 
 The setup scripts offer an explicit `--retained-broker` mode for the bounded 44.1 kHz, 128-frame diagnostic bundle. This mode requires the idle locator check before setup or restoration. It uses the existing external controller for the USB connection. The default setup path continues to require the on-demand bundle.

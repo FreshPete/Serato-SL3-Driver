@@ -1,0 +1,33 @@
+{
+  "schema": "sl3.application-bound-setup-window-evidence.v1",
+  "dateUtc": "2026-11-07",
+  "mode": "asio-init-application-v2",
+  "activationHeader": "SL3-ASIO-ACTIVATION-2",
+  "reboundNativeImagesMatch": true,
+  "kitManifestSha256": "75a3d22d36cb47f9c5b1f40793d4f6c1555a17fcc65fcf2a068ee1f74c6c953e",
+  "entrySourceManifestSha256": "f0127fba2d57108663828c555fc873908a38e11097f990c91bc7040ef09fd00c",
+  "entryBuildManifestSha256": "b57716185f1128a5b7c7b31306f79ce37971edeb89c67cea7358b8084d6beb81",
+  "entryExecutableSha256": "eb75f6618e38c591a153fd0e60ffd6c879c3d590595ecc8c24cd1eb574239faf",
+  "entryCTestTargetsPassed": 3,
+  "movedKitCasesPassed": 27,
+  "movedKitReportSha256": "530b9a30b24a876f2d163a1c9981d4fc5200ca0e969ced8f512d00dbd5f3397f",
+  "movedKitTestSourceSha256": "ac391563677933c86729559e34280e0fad4fb0b0d7d0dccfefb0d9d977246561",
+  "reboundExperimentSha256": "93afc51cc1f9ab2df9e4c6da250dd0d7bd0696678be95cf92b8d91f4029605e4",
+  "reboundPackageManifestSha256": "13caccb6b1943c90761ffd6bf9df2bf96db1d14918187108a8741aa214cbdecc",
+  "windowSourceManifestSha256": "eeb752906d6197a309c7b2cecc10ccd9bd617b69f68927d7e6365587d878530e",
+  "windowBuildManifestSha256": "e822581e7d1f8d5eb17285093de446ba57b67b09dd4fc06778d2f7f8f80751f1",
+  "windowExecutableSha256": "9dd0520ba010efe26602253ace5daa8c9782d6197c40a431218d82d88579df86",
+  "windowCasesPassed": 18,
+  "windowSourceChanged": false,
+  "hostCheck": {
+    "archive": "original",
+    "seratoRunning": false,
+    "nativePackage": "absent",
+    "actions": 0
+  },
+  "elevationRequested": false,
+  "privilegedActionsExecuted": false,
+  "seratoLaunched": false,
+  "nativeDeviceAccess": false,
+  "visualInspectionPerformed": false
+}
