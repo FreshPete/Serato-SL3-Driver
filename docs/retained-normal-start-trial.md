@@ -22,7 +22,7 @@ The setup scripts offer an explicit `--retained-broker` mode for the bounded 44.
 
 The next attended test needs a fresh SL3 recovery and temporary protected setup. Bring up the retained connection, then open the original Serato 5.0 executable normally and check whether it selects the SL3 and starts the rebuilt ASIO driver. Keep playback stopped for startup observation and close Serato before retiring the controller and restoring the installation. Normal Serato startup, automatic background startup and USB reacquisition after release remain open.
 
-The current retained comparison uses the client-observation build described below. Its fresh private setup and broker input are in `analysis/sl3-on-demand-test-retained-observed-launch-20261107`. It uses the same reviewed package as the attended visibility test and passed both read-only plans. The earlier locator bundle is the one used in the physical two-client proof above. [Previous experiment identities](evidence/on-demand-idle-guard-20261107.json)
+The current retained comparison uses the client-observation build described below. Its fresh private setup and broker input are in `analysis/sl3-on-demand-test-retained-reviewed-assets-20261107`. It uses the same reviewed package as the attended visibility test and passed both read-only plans. The earlier locator bundle is the one used in the physical two-client proof above. [Previous experiment identities](evidence/on-demand-idle-guard-20261107.json)
 
 ### One approval for the attended comparison
 

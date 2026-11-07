@@ -31,14 +31,18 @@ def main():
     env=dict(os.environ);env['PATH']='';env['PYTHONDONTWRITEBYTECODE']='1';env.pop('SL3_ASIO_PRIVATE_TRACE',None)
     app=r'C:\Program Files\Serato\Serato DJ Pro\Serato DJ Pro.exe';cases=[];details={}
     def command(action):return [str(host),action,'--kit',str(kit),'--app',app]
-    def call(name,args,success=True,reason=None):
+    def call(name,args,success=True,reason=None,native_refusal=True):
         child=subprocess.run(args,cwd=folder,env=env,capture_output=True,timeout=120,creationflags=subprocess.CREATE_NO_WINDOW)
         (folder/(name+'-stdout.txt')).write_bytes(child.stdout);(folder/(name+'-stderr.txt')).write_bytes(child.stderr)
         require((child.returncode==0)==success,name+': '+child.stderr.decode('utf-8',errors='replace'))
         if success:
             value=json.loads(child.stdout);details[name]=value
         else:
-            error=child.stderr.decode('utf-8',errors='replace');require('SL3 setup entry refused:' in error and 'Traceback' not in error and not child.stdout and reason in error,'Expected native pre-helper refusal: '+name);value=None
+            error=child.stderr.decode('utf-8',errors='replace')
+            require(not child.stdout and reason in error,'Expected setup refusal: '+name)
+            if native_refusal:
+                require('SL3 setup entry refused:' in error and 'Traceback' not in error,'Expected native pre-helper refusal: '+name)
+            value=None
         cases.append({'name':name,'passed':True});return value
     first=call('native-verification-only',command('--verify'));require(first['filesPinned']==source['compiledPayloadFiles'] and first['pythonStarted'] is False and not (kit/'analysis').exists(),'Native verify must remain idle')
     call('native-readonly-plan',command('--plan'));require(not (kit/'analysis').exists(),'Plan creates no mutable state')
@@ -83,6 +87,16 @@ def main():
         changed=json.loads(saved);changed[runtime][field]=value;experiment.write_text(json.dumps(changed),encoding='utf-8')
         try:call(name,reviewed('--check-experiment',identity=sha(experiment)),False,error)
         finally:experiment.write_bytes(saved)
+    for filename in ('archive-test.ps1','action-child.ps1','deployment-plan.json','candidate-userio_resources.bin'):
+        member='archive/'+filename;asset=experiment.parent/member;original_asset=asset.read_bytes()
+        altered=original_asset+(b'\n' if filename=='deployment-plan.json' else b'\n# altered')
+        changed=json.loads(saved);changed['assets'][member]=hashlib.sha256(altered).hexdigest()
+        try:
+            asset.write_bytes(altered);experiment.write_text(json.dumps(changed),encoding='utf-8')
+            call('rehashed-altered-'+filename,reviewed('--check-experiment',identity=sha(experiment)),False,
+                 'Prepared archive assets differ from the reviewed recipe',native_refusal=False)
+        finally:
+            asset.write_bytes(original_asset);experiment.write_bytes(saved)
     call('native-final-experiment-check',reviewed('--check-experiment'))
     call('native-verification-after-preparation',command('--verify'))
     before={p.relative_to(kit/'analysis').as_posix():sha(p) for p in (kit/'analysis').rglob('*') if p.is_file()}

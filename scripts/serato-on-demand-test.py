@@ -4,6 +4,7 @@ from contextlib import ExitStack
 import hashlib
 import json
 from pathlib import Path
+import re
 import runpy
 import subprocess
 import sys
@@ -27,6 +28,28 @@ def sha(path):
 
 def module(name):
     return runpy.run_path(str(ROOT/'scripts'/name))
+
+
+def archive_assets(application, signature):
+    """Render the fixed archive transaction for the selected signed Serato image."""
+    require(isinstance(signature,dict) and set(signature)=={'status','thumbprint'} and
+            signature['status']=='Valid' and isinstance(signature['thumbprint'],str) and
+            re.fullmatch('[0-9A-F]{40}',signature['thumbprint']), 'Original executable signature must verify')
+    core = (ROOT/'scripts/serato-archive-file-transaction.ps1').read_bytes()
+    plan = {'schema':'sl3.on-demand-archive-plan.v1','target':str(application.with_name('userio_resources.bin')),
+        'originalArchiveSha256':ORIGINAL_SHA,'candidateArchiveSha256':CANDIDATE_SHA,
+        'originalApplicationSha256':APP_SHA,'originalExecutableSignature':signature,'installed':False}
+    raw_plan = (json.dumps(plan,indent=2)+'\n').encode('utf-8')
+    template = (ROOT/'scripts/serato-archive-deployment-template.ps1').read_text(encoding='utf-8-sig')
+    values = {'TARGET':plan['target'].replace("'","''"),'ORIGINAL_SHA':ORIGINAL_SHA,
+        'CANDIDATE_SHA':CANDIDATE_SHA,'EXE_SHA':APP_SHA,'SIGNER':signature['thumbprint'],
+        'CORE_SHA':hashlib.sha256(core).hexdigest(),'PLAN_SHA':hashlib.sha256(raw_plan).hexdigest()}
+    for name,value in values.items():
+        token='@@'+name+'@@'; require(template.count(token)==1,'Archive wrapper token changed'); template=template.replace(token,value)
+    require('@@' not in template,'Unresolved archive token')
+    return {'archive/serato-archive-file-transaction.ps1':core,'archive/deployment-plan.json':raw_plan,
+        'archive/archive-test.ps1':template.encode('utf-8'),
+        'archive/action-child.ps1':(ROOT/'scripts/on-demand-action-child.ps1').read_bytes()}
 
 
 def source_names():
@@ -171,8 +194,10 @@ def verify(path, expected, held):
     path = Path(path).absolute()
     require(path.name == 'experiment.json' and path.parent.parent == ROOT/'analysis' and
             path.parent.name.startswith('sl3-on-demand-test-'), 'Prepared local experiment path required')
-    require(sha(path) == expected, 'Experiment manifest identity changed')
-    record = json.loads(path.read_bytes())
+    s = module('asio-install-journal.py')['stage_module']()
+    manifest = s.read_handle(held.enter_context(s.open_file(path)),65536)
+    require(hashlib.sha256(manifest).hexdigest() == expected, 'Experiment manifest identity changed')
+    record = json.loads(manifest)
     require(record['schema'] == 'sl3.on-demand-normal-start-test.v1' and record['applicationSha256'] == APP_SHA and
             record['originalArchiveSha256'] == ORIGINAL_SHA and record['candidateArchiveSha256'] == CANDIDATE_SHA,
             'Pinned normal-start experiment required')
@@ -181,15 +206,24 @@ def verify(path, expected, held):
             'Bounded unexecuted no-shim experiment required')
     require(record['projectRoot'] == str(ROOT) and set(record['sources']) == set(source_names()) and
             set(record['assets']) == ASSETS, 'Exact source/asset inventory required')
-    s = module('asio-install-journal.py')['stage_module']()
-    for name, expected_sha in [(str(path),expected),
-            *((str(ROOT/name),value) for name,value in record['sources'].items()),
-            *((str(path.parent/name),value) for name,value in record['assets'].items())]:
-        handle = held.enter_context(s.open_file(Path(name)))
-        require(hashlib.sha256(s.read_handle(handle, 16*1024*1024)).hexdigest() == expected_sha, 'Pinned source/asset differs')
+    for name, expected_sha in record['sources'].items():
+        handle = held.enter_context(s.open_file(ROOT/name))
+        require(hashlib.sha256(s.read_handle(handle,16*1024*1024)).hexdigest() == expected_sha,'Pinned source differs')
     application = Path(record['application'])
     require(application == s.known_folder('905e63b6-c1bf-494e-b29c-65b732d3d21a')/'Serato/Serato DJ Pro/Serato DJ Pro.exe' and
             sha(application) == APP_SHA, 'Original application path and identity required')
+    plan_path = 'archive/deployment-plan.json'
+    raw_plan = s.read_handle(held.enter_context(s.open_file(path.parent/plan_path)),65536)
+    inner = json.loads(raw_plan)
+    require(isinstance(inner,dict),'Typed archive plan required')
+    generated = archive_assets(application,inner.get('originalExecutableSignature'))
+    generated_hashes = {name:hashlib.sha256(raw).hexdigest() for name,raw in generated.items()}
+    generated_hashes['archive/candidate-userio_resources.bin'] = CANDIDATE_SHA
+    require(record['assets']==generated_hashes and raw_plan==generated[plan_path],'Prepared archive assets differ from the reviewed recipe')
+    for name, expected_sha in generated_hashes.items():
+        if name == plan_path: continue
+        handle = held.enter_context(s.open_file(path.parent/name))
+        require(hashlib.sha256(s.read_handle(handle,16*1024*1024)).hexdigest() == expected_sha,'Pinned archive asset differs')
     require(sha(Path(sys.executable)) == record['python']['sha256'], 'Prepared Python runtime required')
     module('prepare-embedded-python.py')['verify'](Path(sys.executable).parent,record['python']['manifestSha256'])
     module('prepare-portable-powershell.py')['verify'](Path(record['powershell']['directory']), record['powershell']['manifestSha256'])

@@ -32,25 +32,9 @@ def prepare(application,bundle,bundle_sha,powershell,powershell_sha,python_sha,o
         capture_output=True,timeout=30,creationflags=subprocess.CREATE_NO_WINDOW)
     require(signature_result.returncode == 0, 'Original executable signature query failed')
     signature = json.loads(signature_result.stdout)
-    require(signature['status'] == 'Valid' and isinstance(signature['thumbprint'],str) and len(signature['thumbprint']) == 40,
-            'Original executable signature must verify')
     encode = lambda value:(json.dumps(value,indent=2)+'\n').encode('utf-8')
-    core = (ROOT/'scripts/serato-archive-file-transaction.ps1').read_bytes()
-    inner = {'schema':'sl3.on-demand-archive-plan.v1','target':str(application.with_name('userio_resources.bin')),
-        'originalArchiveSha256':API['ORIGINAL_SHA'],'candidateArchiveSha256':API['CANDIDATE_SHA'],
-        'originalApplicationSha256':API['APP_SHA'],'originalExecutableSignature':signature,'installed':False}
-    raw_inner = encode(inner)
-    template = (ROOT/'scripts/serato-archive-deployment-template.ps1').read_text(encoding='utf-8-sig')
-    values = {'TARGET':inner['target'].replace("'","''"),'ORIGINAL_SHA':API['ORIGINAL_SHA'],
-        'CANDIDATE_SHA':API['CANDIDATE_SHA'],'EXE_SHA':API['APP_SHA'],'SIGNER':signature['thumbprint'],
-        'CORE_SHA':API['hashlib'].sha256(core).hexdigest(),'PLAN_SHA':API['hashlib'].sha256(raw_inner).hexdigest()}
-    for name,value in values.items():
-        token='@@'+name+'@@'; require(template.count(token) == 1,'Archive wrapper token changed'); template=template.replace(token,value)
-    require('@@' not in template,'Unresolved archive token')
-    files = {'archive/candidate-userio_resources.bin':(candidate_output/'userio_resources.bin').read_bytes(),
-        'archive/serato-archive-file-transaction.ps1':core,'archive/deployment-plan.json':raw_inner,
-        'archive/archive-test.ps1':template.encode('utf-8'),
-        'archive/action-child.ps1':(ROOT/'scripts/on-demand-action-child.ps1').read_bytes()}
+    files = API['archive_assets'](application,signature)
+    files['archive/candidate-userio_resources.bin'] = (candidate_output/'userio_resources.bin').read_bytes()
     require(all(sha(ROOT/name)==value for name,value in pins.items()),'Experiment sources changed during preparation')
     require(sha(application)==API['APP_SHA'] and sha(application.with_name('userio_resources.bin'))==API['ORIGINAL_SHA'],
             'Original inputs changed')

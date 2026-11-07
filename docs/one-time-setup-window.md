@@ -32,6 +32,15 @@ Sixteen actual checks cover clean/installed/partial/conflicting eligibility, the
 ## Current private candidate
 
 ```text
+artifacts/build/native-setup-window-reviewed-assets-20261107/build/Release/SL3_Compatibility_Setup.exe
+SHA256 73551fea6fdc5fd19b9c22de6f4d5278dee65d3f7fa522b97a4b313cf03439ef
+```
+
+The setup engine now renders the expected archive scripts and deployment plan from the kit's reviewed sources before running PowerShell. It compares the pinned local files with that recipe and the known candidate archive hash. The 34-case moved-entry check refused edited wrappers, helper, plan and archive even when the caller supplied new matching hashes. The rebuilt window passed all 18 checks. The native fixture report SHA-256 is `429844ee721d39f4d12c19fe3e3399293d31d7c1cdffde58ef8900af114eabed`. The window is bound to this PC's prepared record, and the live test still uses one install and two ordinary Serato launches. [Test steps](return-to-testing.md#next-attended-test)
+
+### Earlier install-once build
+
+```text
 artifacts/build/native-setup-window-install-once-startup-stop-20261107/build/Release/SL3_Compatibility_Setup.exe
 SHA256 bf412432079280204e5defdf285a30d8874c0db171655cb73b81b09339789989
 ```

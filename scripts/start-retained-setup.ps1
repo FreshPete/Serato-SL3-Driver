@@ -11,8 +11,8 @@ if (([Security.Principal.WindowsPrincipal]::new($identity)).IsInRole([Security.P
     throw 'Start from your normal Windows desktop session.'
 }
 
-$experiment = Join-Path (Split-Path -Parent $PSScriptRoot) 'analysis/sl3-on-demand-test-retained-observed-launch-20261107/experiment.json'
-$expected = '0d842831f4c1b0a6dfa02ef8f0d07608132aec5128da42b29d8518666f45b538'
+$experiment = Join-Path (Split-Path -Parent $PSScriptRoot) 'analysis/sl3-on-demand-test-retained-reviewed-assets-20261107/experiment.json'
+$expected = 'a336be3825a784e1e45a2b23d3e0943045e9d50dd0972a40d0f4526b99fd3cbd'
 $handoff = Join-Path $PSScriptRoot 'retained-setup-handoff.py'
 $handoffSha = '1ea6cecbb07f3b4eeabaf58ac1d9534c1746a711f82910f6f8f04cfeb1675c33'
 $leases = [Collections.Generic.List[IO.FileStream]]::new()
@@ -84,7 +84,7 @@ function Invoke-ReviewedTrial($Record, $SetupProcess) {
     $desktop = Join-Path $PSScriptRoot 'retained-desktop-trial.py'
     $observer = Join-Path $PSScriptRoot 'observe-asio-module-load.ps1'
     $desktopArgs = @('--experiment',$experiment,'--expected-experiment-sha256',$expected,
-        '--expected-launch-sha256','24f71a6b7656b45874724b499bd2ed530f87d802ec5f358332af6eb9156cc674')
+        '--expected-launch-sha256','1d45dcd2cbde4edeb4326ad60c3278b7db13e5bb11231fe6cc69c5710f547b09')
     $folder = Split-Path -Parent $experiment
     $name = [IO.Path]::GetFileNameWithoutExtension($Record.application)
     $started = $false
