@@ -112,6 +112,9 @@ struct Impersonation {
     ~Impersonation(){if(!RevertToSelf())std::terminate();}
 };
 }
+bool same_broker_user(HANDLE process){
+    return same(process_identity(GetCurrentProcess()),process_identity(process));
+}
 struct BrokerListener::State {Handle pipe;std::wstring name;};
 BrokerListener::BrokerListener():state_(std::make_unique<State>()){
     std::array<UCHAR,16> random{};if(BCryptGenRandom(nullptr,random.data(),ULONG(random.size()),BCRYPT_USE_SYSTEM_PREFERRED_RNG)<0)throw std::runtime_error("Generate broker endpoint");
@@ -132,7 +135,7 @@ class BrokerConnection {
 public:
     BrokerConnection(BrokerListener& listener,RetainedBroker& owner,std::string* diagnostic,BrokerAccess access):pipe_(listener.state_->pipe.value),owner_(owner),diagnostic_(diagnostic),access_(access){}
     ~BrokerConnection(){if(accepted_)DisconnectNamedPipe(pipe_);}
-    BrokerServeResult run(HANDLE stop){
+    BrokerServeResult run(HANDLE stop,HANDLE application){
         Handle event;event.value=CreateEventW(nullptr,TRUE,FALSE,nullptr);if(!event.value)fail("Create broker accept event");
         OVERLAPPED operation{};operation.hEvent=event.value;DWORD ignored=0;
         const auto immediate=ConnectNamedPipe(pipe_,&operation);const auto error=GetLastError();
@@ -153,6 +156,8 @@ public:
             DWORD pid=0;if(!GetNamedPipeClientProcessId(pipe_,&pid) || !pid || pid==GetCurrentProcessId())throw std::runtime_error("Invalid broker client PID");
             client_.value=OpenProcess(SYNCHRONIZE|PROCESS_QUERY_LIMITED_INFORMATION|PROCESS_DUP_HANDLE,FALSE,pid);
             if(!client_.value || WaitForSingleObject(client_.value,0)!=WAIT_TIMEOUT)throw std::runtime_error("Broker client not live");
+            if(application && (GetProcessId(application)!=pid || WaitForSingleObject(application,0)!=WAIT_TIMEOUT))
+                throw std::runtime_error("Broker client is outside the bound application process");
             const auto owner_identity=process_identity(GetCurrentProcess()),process=process_identity(client_.value);
             {Impersonation impersonate(pipe_);Handle token;if(!OpenThreadToken(GetCurrentThread(),TOKEN_QUERY,TRUE,&token.value))fail("Read pipe identity token");
                 if(!same(owner_identity,process) || !same(owner_identity,identity(token.value)))throw std::runtime_error("Broker client token differs from ordinary owner");}
@@ -174,7 +179,10 @@ public:
             const auto snapshot=device_session::encode_snapshot(owner_.report().device);admitted.bytes.insert(admitted.bytes.end(),snapshot.begin(),snapshot.end());write(pipe_,admitted,client_.value);
             unsigned sequence=3;
             for(;;){
-                if(WaitForSingleObject(stop,0)!=WAIT_TIMEOUT){owner_.abandon();return BrokerServeResult::stopped;}
+                if(WaitForSingleObject(stop,0)!=WAIT_TIMEOUT){
+                    if(!application || owner_.report().client_attached)owner_.abandon();
+                    return BrokerServeResult::stopped;
+                }
                 owner_.poll_client();const auto state=owner_.report();
                 if(state.failed || state.phase==BrokerPhase::closed)return BrokerServeResult::owner_failed;
                 if(!state.client_attached){lease_=0;return BrokerServeResult::detached;}
@@ -217,11 +225,11 @@ public:
         }
     }
 };
-BrokerServeResult serve_broker_client(BrokerListener& listener,RetainedBroker& owner,HANDLE stop,std::string* diagnostic,BrokerAccess access){
+BrokerServeResult serve_broker_client(BrokerListener& listener,RetainedBroker& owner,HANDLE stop,std::string* diagnostic,BrokerAccess access,HANDLE application){
     if(diagnostic)diagnostic->clear();
     if(!stop)throw std::invalid_argument("Explicit broker stop event required");
     if(WaitForSingleObject(stop,0)!=WAIT_TIMEOUT)return BrokerServeResult::stopped;
-    BrokerConnection connection(listener,owner,diagnostic,access);return connection.run(stop);
+    BrokerConnection connection(listener,owner,diagnostic,access);return connection.run(stop,application);
 }
 
 struct BrokerClient::State {

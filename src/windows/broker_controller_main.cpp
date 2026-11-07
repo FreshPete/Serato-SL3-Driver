@@ -67,19 +67,49 @@ std::wstring stop_name(const std::wstring& endpoint){require(endpoint.size()>=32
 bool helper_loaded(){return GetModuleHandleW(L"UsbDkHelper.dll") || GetModuleHandleW(L"UsbDkHelper.dll10");}
 DWORD limit(const std::wstring& s){require(!s.empty() && s[0]!=L'0',"Noncanonical controller lifetime");std::string ascii;for(auto c:s){require(c>=L'0' && c<=L'9',"Invalid controller lifetime");ascii+=char(c);}DWORD n=0;
     const auto parsed=std::from_chars(ascii.data(),ascii.data()+ascii.size(),n);require(parsed.ec==std::errc{} && parsed.ptr==ascii.data()+ascii.size() && n>=1000 && n<=43200000,"Controller lifetime must be 1000..43200000 ms");return n;}
+template<class T> T process_number(const std::wstring& text){
+    require(!text.empty() && text.size()<=20 && text.front()!=L'0',"Invalid application process identity");
+    std::string ascii;
+    for(const auto digit:text){
+        require(digit>=L'0' && digit<=L'9',"Invalid application process identity");ascii+=char(digit);
+    }
+    T value=0;const auto end=ascii.data()+ascii.size();
+    const auto parsed=std::from_chars(ascii.data(),end,value);
+    require(parsed.ec==std::errc{} && parsed.ptr==end,"Invalid application process identity");
+    return value;
+}
+void bind_application(Handle& application,const std::wstring& identity){
+    const auto separator=identity.find(L':');
+    require(separator!=std::wstring::npos,"Application identity requires PID and creation FILETIME");
+    const auto pid=process_number<DWORD>(identity.substr(0,separator));
+    const auto expected=process_number<std::uint64_t>(identity.substr(separator+1));
+    require(pid!=GetCurrentProcessId(),"Application must be separate from the controller");
+    application.value=OpenProcess(SYNCHRONIZE|PROCESS_QUERY_LIMITED_INFORMATION,FALSE,pid);
+    require(application.value && WaitForSingleObject(application.value,0)==WAIT_TIMEOUT,"Bound application process is unavailable");
+    FILETIME start{},end{},kernel{},user{};
+    require(GetProcessTimes(application.value,&start,&end,&kernel,&user)!=FALSE,"Read application creation time");
+    require(((std::uint64_t(start.dwHighDateTime)<<32)|start.dwLowDateTime)==expected &&
+            same_broker_user(application.value),"Bound application creation identity or user differs");
+}
 struct Timer {
     HANDLE stop;std::atomic<bool> expired{false};std::thread thread;
-    Timer(HANDLE event,DWORD duration):stop(event),thread([this,duration]{if(WaitForSingleObject(stop,duration)==WAIT_TIMEOUT){expired=true;SetEvent(stop);}}){}
+    Timer(HANDLE event,DWORD duration,HANDLE application):stop(event),thread([this,duration,application]{
+        const HANDLE waits[]={stop,application};
+        const auto wait=WaitForMultipleObjects(application?2:1,waits,FALSE,duration);
+        if(wait==WAIT_TIMEOUT)expired=true;
+        if(wait!=WAIT_OBJECT_0)SetEvent(stop);
+    }){}
     ~Timer(){SetEvent(stop);thread.join();}
 };
-struct RunEvidence {bool acquired=false,published=false;std::string error,reason="failure",connection_diagnostic;BrokerReport final;};
+struct RunEvidence {bool acquired=false,published=false,application_exited=false;std::string error,reason="failure",connection_diagnostic;BrokerReport final;};
 std::string result(const RunEvidence& e,bool expired){
     const auto& r=e.final;const bool retired=e.acquired && r.snapshot_valid && r.device.io_retired;
     const bool released=e.acquired && r.snapshot_valid && r.device.device_released;
     const bool successful=e.published && e.error.empty() && !r.failed && retired && released && r.process.process_exited && r.process.job_empty && !r.termination_requested;
     std::ostringstream o;o<<std::boolalpha<<"{\"schema\":\"sl3.broker-controller-result.v1\",\"kind\":"<<json_string(kind_name)<<",\"successful\":"<<successful
         <<",\"acquireAttempted\":"<<r.acquire_attempted<<",\"acquired\":"<<e.acquired<<",\"published\":"<<e.published<<",\"reason\":"<<json_string(e.reason)<<",\"error\":"<<json_string(e.error)
-        <<",\"lifetimeExpired\":"<<expired<<",\"failed\":"<<r.failed<<",\"snapshotValid\":"<<r.snapshot_valid<<",\"ioRetiredVerified\":"<<retired<<",\"deviceReleasedVerified\":"<<released
+        <<",\"lifetimeExpired\":"<<expired<<",\"applicationExitObserved\":"<<e.application_exited
+        <<",\"failed\":"<<r.failed<<",\"snapshotValid\":"<<r.snapshot_valid<<",\"ioRetiredVerified\":"<<retired<<",\"deviceReleasedVerified\":"<<released
         <<",\"processStarted\":"<<r.process.started<<",\"processExited\":"<<r.process.process_exited<<",\"jobEmpty\":"<<r.process.job_empty<<",\"terminationRequested\":"<<r.termination_requested
         <<",\"processExitCodeKnown\":"<<r.process.exit_code_known<<",\"processExitCode\":"<<r.process.exit_code
         <<",\"lastDevicePhase\":"<<unsigned(r.device.phase)<<",\"lastDeviceFailure\":"<<unsigned(r.device.failure)<<",\"lastStreamFault\":"<<unsigned(r.device.stream_fault)
@@ -88,7 +118,7 @@ std::string result(const RunEvidence& e,bool expired){
         <<",\"connectionDiagnostic\":"<<json_string(e.connection_diagnostic)
         <<",\"nativeDeviceAcquired\":"<<(kind==session::Kind::native && e.acquired)<<",\"helperLoadedInController\":"<<helper_loaded()<<",\"usbReadyForNextAcquire\":false,\"rateRestorationVerified\":false}\n";return o.str();
 }
-int run(const std::filesystem::path& input,const std::filesystem::path& output,DWORD duration,bool keepalive){
+int run(const std::filesystem::path& input,const std::filesystem::path& output,DWORD duration,bool keepalive,HANDLE application){
     require(!keepalive || kind==session::Kind::native,"Playback keepalive requires the native controller");
     if constexpr(timing_policy==asio::TimingPolicy::unmeasured_diagnostic)
         require(duration<=600000,"Unmeasured diagnostic lifetime must not exceed ten minutes");
@@ -103,10 +133,10 @@ int run(const std::filesystem::path& input,const std::filesystem::path& output,D
     diagnostic::StartupJournal journal(output/L"controller-startup.tsv");journal.mark("controller_intent");
     std::ostringstream intent;intent<<"{\"schema\":\"sl3.broker-controller-intent.v1\",\"kind\":"<<json_string(kind_name)<<",\"workerSha256\":"<<json_string(config.worker.sha256)
         <<",\"brokerSha256\":"<<json_string(image_hash)<<",\"limitMs\":"<<duration<<",\"controllerGeneratesAudio\":false,\"rateWritesAllowed\":false,\"automaticRestart\":false"
-        <<",\"playbackKeepalive\":"<<(keepalive?"true":"false")<<"}\n";
+        <<",\"playbackKeepalive\":"<<(keepalive?"true":"false")<<",\"applicationBound\":"<<(application?"true":"false")<<"}\n";
     published.push_back(write_new(output/L"intent.json",intent.str()));
     Handle stop;stop.value=CreateEventW(&security.attributes,TRUE,FALSE,stop_name(listener.name()).c_str());require(stop.value && GetLastError()!=ERROR_ALREADY_EXISTS,"Create unique owner-only stop event");
-    Timer timer(stop.value,duration);BrokerSpec spec;spec.executable=config.worker.executable;spec.sha256=config.worker.sha256;spec.helper=config.worker.helper;spec.kind=kind;
+    Timer timer(stop.value,duration,application);BrokerSpec spec;spec.executable=config.worker.executable;spec.sha256=config.worker.sha256;spec.helper=config.worker.helper;spec.kind=kind;
     spec.playback_keepalive=keepalive;
     if constexpr(kind==session::Kind::native)spec.startup_journal=output/L"worker-startup.tsv";
     else if constexpr(timing_policy==asio::TimingPolicy::unmeasured_diagnostic){
@@ -116,9 +146,11 @@ int run(const std::filesystem::path& input,const std::filesystem::path& output,D
     }else spec.fixture_mode=L"audit:"+(output/L"worker-audit.txt").native();
     RetainedBroker owner(spec);RunEvidence evidence;
     try{
+        require(!application || WaitForSingleObject(application,0)==WAIT_TIMEOUT,"Bound application exited before acquisition");
         journal.mark("owner_open_begin");require(owner.open(),"Broker owner acquisition/handshake failed");evidence.acquired=true;journal.mark("owner_open_ready");
         require(owner.report().snapshot_valid && owner.report().device.rate_hz==config.latency.rate_hz,"Observed clock differs from reviewed timing profile");
-        require(WaitForSingleObject(stop.value,0)==WAIT_TIMEOUT,"Controller stopped before publication");
+        require(WaitForSingleObject(stop.value,0)==WAIT_TIMEOUT &&
+                (!application || WaitForSingleObject(application,0)==WAIT_TIMEOUT),"Controller stopped before publication");
         const auto record=output/L"broker-session.txt";published.push_back(write_new(record,broker_record_text(listener.name(),owner.worker_sha256(),config.keepalive_timing_sha256)));journal.mark("session_record_published");
         auto native_config=source_text;const std::string header="SL3-ASIO-CONFIG-1";require(native_config.compare(0,header.size(),header)==0,"Controller input header changed");native_config.replace(0,header.size(),"SL3-ASIO-BROKER-CONFIG-1");
         native_config+="broker="+image.u8string()+"\nbroker_sha256="+image_hash+"\nsession_record="+record.u8string()+"\nsession_record_sha256="+Process::executable_sha256(record)+"\n";
@@ -128,21 +160,25 @@ int run(const std::filesystem::path& input,const std::filesystem::path& output,D
         require(!ready_state.failed && ready_state.phase==BrokerPhase::idle && ready_state.snapshot_valid && ready_state.device.io_retired &&
             !ready_state.device.device_released && ready_state.process.started && ready_state.process.job_assigned && !ready_state.process.process_exited,
             "Owner became unavailable during publication");
-        require(WaitForSingleObject(stop.value,0)==WAIT_TIMEOUT,"Controller stopped during publication");
+        require(WaitForSingleObject(stop.value,0)==WAIT_TIMEOUT &&
+                (!application || WaitForSingleObject(application,0)==WAIT_TIMEOUT),"Controller stopped during publication");
         std::ostringstream ready;ready<<"{\"schema\":\"sl3.broker-controller-ready.v1\",\"kind\":"<<json_string(kind_name)<<",\"controllerPid\":"<<GetCurrentProcessId()<<",\"workerPid\":"<<GetProcessId(owner.worker_process_handle())
             <<",\"configFile\":"<<json_string(consumer.u8string())<<",\"configSha256\":"<<json_string(Process::executable_sha256(consumer))<<",\"recordSha256\":"<<json_string(Process::executable_sha256(record))
             <<",\"brokerSha256\":"<<json_string(image_hash)<<",\"workerSha256\":"<<json_string(config.worker.sha256)<<",\"rateHz\":"<<ready_state.device.rate_hz<<",\"limitMs\":"<<duration<<",\"readyIsSnapshot\":true}\n";
         published.push_back(write_new(output/L"ready.json",ready.str()));evidence.published=true;journal.mark("serve_begin");
         while(WaitForSingleObject(stop.value,0)==WAIT_TIMEOUT){
             std::string connection_diagnostic;
-            const auto served=serve_broker_client(listener,owner,stop.value,&connection_diagnostic);
+            const auto served=serve_broker_client(listener,owner,stop.value,&connection_diagnostic,BrokerAccess::audio,application);
             if(served==BrokerServeResult::owner_failed || owner.report().failed){
                 evidence.reason="owner_failure";evidence.connection_diagnostic=connection_diagnostic.substr(0,512);break;
             }
             if(served==BrokerServeResult::stopped)break;
         }
-        if(evidence.reason!="owner_failure")evidence.reason=timer.expired?"lifetime_limit":"stop_requested";
     }catch(const std::exception& e){evidence.error=e.what();journal.mark("controller_failure");}
+    SetEvent(stop.value);
+    evidence.application_exited=application && WaitForSingleObject(application,0)==WAIT_OBJECT_0;
+    if(evidence.error.empty() && evidence.reason!="owner_failure")
+        evidence.reason=timer.expired?"lifetime_limit":evidence.application_exited?"application_exit":"stop_requested";
     journal.mark("owner_close_begin");evidence.final=owner.close();journal.mark("owner_close_returned");
     const auto text=result(evidence,timer.expired);published.push_back(write_new(output/L"result.json",text));std::cout<<text;
     return evidence.published && evidence.error.empty() && !evidence.final.failed && evidence.final.snapshot_valid && evidence.final.device.io_retired &&
@@ -234,10 +270,13 @@ int wmain(int argc,wchar_t** argv){
             const auto option=args.find(L"--playback-keepalive");
             const bool keepalive=option!=args.end();
             require(!keepalive || option->second==L"on","Playback keepalive value must be on");
-            require(args.size()==(keepalive?4u:3u) && args.count(L"--input") && args.count(L"--output") &&
+            const auto bound=args.find(L"--application-process");
+            require(args.size()==3u+keepalive+(bound!=args.end()) && args.count(L"--input") && args.count(L"--output") &&
                     args.count(L"--limit-ms"),"Run requires input, output and limit-ms");
+            Handle application;
+            if(bound!=args.end())bind_application(application,bound->second);
             return run(std::filesystem::path(args.at(L"--input")),std::filesystem::path(args.at(L"--output")),
-                       limit(args.at(L"--limit-ms")),keepalive);
+                       limit(args.at(L"--limit-ms")),keepalive,bound!=args.end()?application.value:nullptr);
         }
         if(std::wstring(argv[1])==L"--publish-pointer"){require(args.size()==2 && args.count(L"--config") && args.count(L"--pointer"),"Pointer publication requires config/pointer only");return publish_pointer(std::filesystem::path(args.at(L"--config")),std::filesystem::path(args.at(L"--pointer")));}
         if(std::wstring(argv[1])==L"--withdraw-pointer"){require(args.size()==2 && args.count(L"--pointer") && args.count(L"--sha256"),"Pointer withdrawal requires pointer/sha256 only");return withdraw_pointer(std::filesystem::path(args.at(L"--pointer")),args.at(L"--sha256"));}

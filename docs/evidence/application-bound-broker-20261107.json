@@ -1,0 +1,74 @@
+{
+  "schema": "sl3.application-bound-broker-evidence.v1",
+  "dateUtc": "2026-11-07",
+  "releaseCtestPassed": 73,
+  "releaseCtestFailed": 0,
+  "controllerLifecycleCasesPassed": 12,
+  "checkoutSourceSha256": {
+    "scripts/test-broker-controller.py": "bd37d20084f9d98d872954f268e0a8934cf18a732b91030b0b75a5945c68fd1f",
+    "src/windows/broker_controller_main.cpp": "62185d5ed9c983c4635708af4f7893a05faa1aac77d5999cfc0e9f8c55a29401",
+    "src/windows/broker_pipe.cpp": "9078590d679d1cc46b06b6ec4b087344587563b847d31729fef1bd7bba9ba022",
+    "src/windows/broker_pipe.hpp": "4478116df61a5190e927cbe1e57377bf09fd0e014209d6f1b38135c8e1a6745a",
+    "tests/native/broker_asio_tests.cpp": "eef2993007b6a91e63af4acacf4a342f2118931f63cc462dbe50d97b432e8615"
+  },
+  "buildManifestSha256": "1a98971f921a6ea740b50eed7194f231e7f34f1e7de1a5c1e67f95b041c48032",
+  "ctestLogSha256": "9aabfbe76be21dce55f2bb561298285081d2ddabb8c053e2a232fa2bc54482de",
+  "controllerTestIndexSha256": "2ae28e12d63f3603d63efc4c8c9cd516b6b47233eddb4879079f721c4c355061",
+  "compiledControllerSha256": {
+    "sl3_broker_controller.exe": "13d52d9d42b3b1ab5a15b5da212d0544e2e4c2b3c22c7e0b1f1a30faa03cbd1a",
+    "sl3_broker_controller_simulated.exe": "d0b876fa525d8b48ca5869bf73dcefe27b5520f6857eb4571719c3c9293a44c2",
+    "sl3_broker_controller_unmeasured.exe": "77106164b12e5fb59e47a090b5e34cc9df0ecb489306946fa8580ba4abb680f3",
+    "sl3_broker_controller_unmeasured_simulated.exe": "1d85ed0cf3b27b4c3b3c0f262a8f2379f450029caf96299ec0ee55571f678500"
+  },
+  "simulatedCases": {
+    "reviewedProfileNormalExit": {
+      "recordSha256": "db00e32ce79d697e66b9c1c63998a8b1f415e6f47f821864816dbc57bbecf2d5",
+      "reason": "application_exit",
+      "successful": true,
+      "applicationExitObserved": true,
+      "lifetimeExpired": false,
+      "ownerFailure": "none",
+      "ioAndDeviceRetirementVerified": true,
+      "workerExitedAndJobEmpty": true
+    },
+    "reviewedProfileInterruptedExit": {
+      "recordSha256": "9b925964dada8338098620b11823a5d8c2c0d61147880cbbabfef4bcea6eeb78",
+      "reason": "owner_failure",
+      "successful": false,
+      "applicationExitObserved": true,
+      "lifetimeExpired": false,
+      "ownerFailure": "client_control_abandoned",
+      "ioAndDeviceRetirementVerified": true,
+      "workerExitedAndJobEmpty": true
+    },
+    "diagnostic44100NormalExit": {
+      "recordSha256": "2fd17af6459cd979ddfc7c2a4540024058938a14606ca5eb1221fc7a6330474c",
+      "reason": "application_exit",
+      "successful": true,
+      "applicationExitObserved": true,
+      "lifetimeExpired": false,
+      "ownerFailure": "none",
+      "ioAndDeviceRetirementVerified": true,
+      "workerExitedAndJobEmpty": true
+    },
+    "diagnostic44100LifetimeWhileAppAlive": {
+      "recordSha256": "180863ce0abc262293b7303411c7459ee20a66ef9e046222e60d32e042618236",
+      "reason": "lifetime_limit",
+      "successful": true,
+      "applicationExitObserved": false,
+      "lifetimeExpired": true,
+      "ownerFailure": "none",
+      "ioAndDeviceRetirementVerified": true,
+      "workerExitedAndJobEmpty": true
+    }
+  },
+  "reviewedProfileNormalExitStreams": 4,
+  "reviewedProfileNormalExitAsioObjects": 3,
+  "reviewedProfileNormalExitWorkerAcquisitions": 1,
+  "reviewedProfileNormalExitWorkerReleases": 1,
+  "unrelatedClientRefused": true,
+  "staleOrMalformedIdentityRefusedBeforeContextCreation": true,
+  "hardwareOpened": false,
+  "seratoLaunched": false,
+  "nativePositiveRun": false
+}

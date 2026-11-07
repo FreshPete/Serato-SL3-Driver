@@ -207,7 +207,14 @@ static void run(const std::filesystem::path& self,const std::filesystem::path& f
 }
 int wmain(int argc,wchar_t** argv){
     try{
-        if(argc==5 && std::wstring(argv[1])==L"--published"){
+        const bool await=argc==6 && std::wstring(argv[1])==L"--await-published";
+        if(await || (argc==5 && std::wstring(argv[1])==L"--published")){
+            if(await){
+                const auto deadline=GetTickCount64()+15000;
+                while(!std::filesystem::exists(std::filesystem::path(argv[5]))){
+                    require(GetTickCount64()<deadline,"Published fixture launch barrier deadline");Sleep(10);
+                }
+            }
             if(std::wstring(argv[4])==L"unmeasured"){
                 const auto config=load_driver_entry_configuration(std::filesystem::absolute(argv[2]),TimingPolicy::unmeasured_diagnostic);
                 require(config.broker && !config.latency.report_latency && config.latency.rate_hz==44100 &&

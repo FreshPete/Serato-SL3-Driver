@@ -1,4 +1,6 @@
 """Actual controller/publication/ASIO processes. Positive cases are simulated only."""
+import ctypes
+from ctypes import wintypes
 import hashlib
 import json
 import os
@@ -28,6 +30,17 @@ def call(args, expected=0, timeout=15):
                             encoding='utf-8', timeout=timeout, creationflags=subprocess.CREATE_NO_WINDOW)
     require(result.returncode == expected, f'{args[0]}: code {result.returncode}\n{result.stdout}\n{result.stderr}')
     return result
+
+
+def process_identity(process):
+    kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+    kernel.GetProcessTimes.argtypes = (wintypes.HANDLE,) + (ctypes.POINTER(wintypes.FILETIME),) * 4
+    kernel.GetProcessTimes.restype = wintypes.BOOL
+    times = [wintypes.FILETIME() for _ in range(4)]
+    if not kernel.GetProcessTimes(int(process._handle), *(ctypes.byref(value) for value in times)):
+        raise ctypes.WinError(ctypes.get_last_error())
+    created = (times[0].dwHighDateTime << 32) | times[0].dwLowDateTime
+    return f'{process.pid}:{created}'
 
 
 def unmeasured(production, simulated, worker, helper, client, library):
@@ -155,6 +168,73 @@ def main():
         require(isinstance(result['connectionDiagnostic'], str) and len(result['connectionDiagnostic']) <= 512,
                 'Bounded connection diagnostic must survive final publication')
         return result
+
+    def application_bound(interrupted):
+        name = 'application-exits-streaming' if interrupted else 'application-exits-after-reopens'
+        output = root/name
+        published = output/'sl3-asio.conf'
+        gate = root/f'{name}.go'
+        mode = 'ordinary-sta-withdrawal' if interrupted else 'ordinary-sta'
+        app = subprocess.Popen([str(x) for x in (client, '--await-published', published, library, mode, gate)],
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding='utf-8',
+                               creationflags=subprocess.CREATE_NO_WINDOW)
+        controller = None
+        try:
+            identity = process_identity(app)
+            args = command(simulated, normal, output, 20000)
+            if not interrupted:
+                for bad in (str(app.pid), f'{app.pid}:1', '4294967296:1'):
+                    call([*args, '--application-process', bad], expected=1)
+                    require(not output.exists(), 'Wrong application identity refused before session creation')
+            controller = subprocess.Popen([*args, '--application-process', identity], stdout=subprocess.PIPE,
+                                          stderr=subprocess.PIPE, text=True, encoding='utf-8',
+                                          creationflags=subprocess.CREATE_NO_WINDOW)
+            deadline = time.monotonic()+8
+            while not (output/'ready.json').exists():
+                require(controller.poll() is None and app.poll() is None and time.monotonic()<deadline,
+                        'Application-bound controller readiness')
+                time.sleep(.01)
+            require(load(output/'intent.json')['applicationBound'] is True, 'Bound lifetime recorded')
+            if not interrupted:
+                call([client, '--published', published, library, 'ordinary-sta'], expected=1)
+                require(controller.poll() is None, 'Out-of-process refusal preserves the bound broker')
+            gate.touch(exist_ok=False)
+            if interrupted:
+                deadline = time.monotonic()+8
+                while not (output/'client-running.txt').exists():
+                    require(controller.poll() is None and app.poll() is None and time.monotonic()<deadline,
+                            'Bound application callback barrier')
+                    time.sleep(.01)
+                app.kill()
+            stdout, stderr = app.communicate(timeout=12)
+            (output/'application-stdout.txt').write_text(stdout, encoding='utf-8')
+            (output/'application-stderr.txt').write_text(stderr, encoding='utf-8')
+            require((app.returncode != 0) if interrupted else (app.returncode == 0),
+                    f'Application exit matches scenario: {stdout} {stderr}')
+            final = finish_case(output, controller, 1 if interrupted else 0)
+            require(final['applicationExitObserved'] and not final['lifetimeExpired'], 'Exact app exit observed before lifetime cap')
+            audit = (output/'worker-audit.txt').read_text().splitlines()
+            require(audit.count('acquire') == 1 and audit.count('release') == 1, 'One acquisition and release')
+            if interrupted:
+                require(final['failed'] and not final['successful'] and final['ownerFailureCode'] != 'none' and
+                        final['deviceReleasedVerified'] and final['ioRetiredVerified'],
+                        'Interrupted stream retains the ownership failure separately from worker retirement')
+            else:
+                require(final['reason'] == 'application_exit' and final['successful'] and
+                        final['deviceReleasedVerified'] and final['ioRetiredVerified'] and
+                        audit.count('begin') == audit.count('end') == 4,
+                        'Four streams through three ASIO objects share one application-bound controller')
+                call([*command(simulated, normal, root/'exited-application'), '--application-process', identity], expected=1)
+                require(not (root/'exited-application').exists(), 'Exited application cannot start a controller')
+        finally:
+            for process in (app, controller):
+                if process is not None and process.poll() is None:
+                    process.kill()
+                    process.communicate(timeout=5)
+        cases.append({'name':name, 'passed':True, 'result':final})
+
+    application_bound(False)
+    application_bound(True)
 
     def active(name, mode='ordinary', lifetime=10000):
         output = root/name
