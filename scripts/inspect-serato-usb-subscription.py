@@ -18,7 +18,11 @@ SPANS = {
     0x14070fd70: 0x14070fe59,
     0x140710720: 0x14071089b,
     0x1407108a0: 0x1407108dd,
+    0x141370760: 0x141371957,
+    0x1413735f0: 0x1413738f4,
     0x141373a40: 0x141373c0d,
+    0x141373c10: 0x141373c65,
+    0x14153b280: 0x14153b437,
     0x141543cf0: 0x14154426c,
     0x141544850: 0x141544a2e,
     0x141544a30: 0x141544c5e,
@@ -53,6 +57,10 @@ FACTS = """
 1404c6632 mov rdi, rax
 1404c6635 jmp 0x1404c6639
 1404c667a mov qword ptr [rip + 0x39e6347], rdi
+1413718cd mov r9d, 7
+1413718d3 xor r8d, r8d
+1413718d6 mov edx, 0x2cb
+1413718de call 0x14154cd50
 141373a5a mov r8d, dword ptr [rdx + 0xc]
 141373a5e sub r8d, 0x2ca
 141373a65 je 0x141373bce
@@ -66,6 +74,48 @@ FACTS = """
 141373a93 call 0x140710720
 141373a99 mov rcx, qword ptr [rax]
 141373a9c call 0x1407108a0
+141373afa call 0x141373c10
+141373aff test al, al
+141373b01 je 0x141373bf8
+141373b0d call qword ptr [rax + 0x38]
+141373b10 test rax, rax
+141373b13 je 0x141373b5b
+141373b56 call 0x1404c5d70
+141373b62 call 0x140528f40
+141373b8a mov dword ptr [rsp + 0x20], 7
+141373b95 xor r8d, r8d
+141373b98 mov edx, 0x2ca
+141373ba0 call 0x14185ee90
+141373bc8 call qword ptr [rax + 0x58]
+141373bcc jmp 0x141373bf8
+141373bd4 call qword ptr [rax + 0x10]
+141373bd7 cmp al, byte ptr [rbx + 0x2b0]
+141373bdd je 0x141373bf8
+141373bea je 0x141373bf3
+141373bec call 0x141372960
+141373bf3 call 0x141373130
+141373c19 mov rcx, qword ptr [rcx + 0x1c8]
+141373c23 call qword ptr [rax + 0x70]
+141373c28 je 0x141373c5d
+141373c55 mov al, 1
+141373c5d xor al, al
+14137360f jne 0x1413736b0
+1413736cd cmp rcx, rax
+1413736d0 jne 0x141373870
+1413736ef je 0x14137375c
+1413737dc mov dword ptr [rsp + 0x20], 7
+1413737e7 lea r8, [rip + 0x1bb651a]
+1413737ee mov edx, 0x2cb
+1413737f6 call 0x14185ee90
+14137381e call qword ptr [rax + 0x50]
+14153b2f3 je 0x14153b36a
+14153b36a test rax, rax
+14153b36d jne 0x14153b3cb
+14153b392 mov dword ptr [rsp + 0x20], 7
+14153b39d xor r8d, r8d
+14153b3a0 mov edx, 0x2cb
+14153b3a8 call 0x14185ee90
+14153b3c7 call qword ptr [rax + 0x58]
 140530595 mov edx, 0x2d0
 14053059d call 0x14185ec00
 1405305ef mov edx, 0x645
@@ -292,6 +342,19 @@ def inspect(application):
     steps=[row.op_str for row in app.function(0x141373a40) if
            0x141373a82<=row.address<=0x141373a9c and row.mnemonic=='call']
     require(steps==['0x140530500','0x140710720','0x1407108a0'],'Engine startup call order differs')
+    message_data=0x142fbf4b8
+    require(app.rip(app.at(0x14185eec0,'lea'))==message_data and
+            app.data(struct.unpack('<Q',app.data(message_data+0x10,8))[0],3)==b'\x32\xc0\xc3',
+            'Pointer message Boolean getter differs')
+    require(app.text(app.rip(decoded[0x1413737e7]))=='Error: Failed to connect audio!!',
+            'Engine producer payload differs')
+    publishers=runpy.run_path(str(ROOT/'scripts/inspect-serato-primary-publishers.py'))
+    targets=tuple(publishers[name] for name in ('PUBLISH','CONSTRUCT','SECOND_PUBLISH','BOUND_PUBLISH'))
+    direct=publishers['direct_calls'](app,targets)
+    calls=[publishers['argument'](app,address) for addresses in direct.values() for address in addresses]
+    disconnect=[row for row in calls if row['literalId']=='0x2cb']
+    require(len(calls)==99 and [row['call'] for row in disconnect]==['0x1413737f6','0x14153b3a8'],
+            'Literal disconnect request publishers differ')
 
     return {'schema':'sl3.serato-usb-subscription.v2','applicationSha256':app.sha,
             'inspectorSha256':sha(Path(__file__).read_bytes()),
@@ -302,6 +365,11 @@ def inspect(application):
                              'postConstructionUsbHelper':{'authorizationSlot':'0x98','requiresNonNullResult':True,
                                  'identityArguments':[0x13e5]*3,'usesMessageDeviceIdentity':False,
                                  'stateHelper':'0x14070ff10'}},
+            'engineDisconnectRequest':{'message':0x2cb,'subscriptionRoute':7,'handlerCase':'0x141373afa',
+                                       'guard':'0x141373c10','outgoingPointerMessage':0x2ca,
+                                       'outgoingPointerIsNull':True,'outgoingBoolean':False,
+                                       'checkedDirectPublisherCalls':len(calls),'literalPublishers':disconnect,
+                                       'liveDeliveryObserved':False},
             'arrival':{'message':0x2d4,'route':7,'subscriptionSlot':'0x10','dispatchPublishSlot':'0x58',
                        'entryBytes':16,'stateRefreshCallInCheckedRegistrationPath':False},
             'state':{'message':0x692,'route':7,'subscriptionSlot':'0x20','refreshHelper':'0x1415477e0',
@@ -313,7 +381,7 @@ def inspect(application):
                         'managerListenerSlots':{hex(k):hex(v) for k,v in listener_slots.items()},
                         'actualEnqueueOrDeliveryObserved':False},
             'ranges':ranges,'instructionFacts':facts,
-            'scope':'Selected static publish, enqueue, drain and registration paths. Actual publish-filter outcome, registration order, delivery and other replay paths remain open.',
+            'scope':'Selected static publish, enqueue, drain, registration and Engine paths. Actual publish-filter outcome, registration order, delivery and other replay paths remain open.',
             'normalSeratoSelectionVerified':False,'vendorCodeExecuted':False,'installedFilesChanged':False,'deviceAccess':False}
 
 
