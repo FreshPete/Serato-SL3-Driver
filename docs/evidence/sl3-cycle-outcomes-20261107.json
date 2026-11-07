@@ -1,0 +1,95 @@
+{
+  "schema": "sl3.saved-cycle-outcomes.v1",
+  "timeUnitNanoseconds": 100,
+  "exporterSha256": "8647013a8e702d0509febc0c99dad21de02feb95f45389f0d58635d06ebfb043",
+  "symbolReportSha256": "aec5bcc3254c582cbb6e71771e69a08cbc6af1b2dd88bd42dd63f2ee1c9ef55d",
+  "symbolicLabelsAreVersionQualified": true,
+  "captures": {
+    "failed-reopen": {
+      "xmlSha256": "8d3f834be39c188be2625cd2cbf568e30f95caa5378f9567e4d37d632cffaccc",
+      "decodedEvents": 14368,
+      "port": 3,
+      "cycles": [
+        {
+          "role": "acquire",
+          "dispatchStatus": 0,
+          "dispatchStartAfterRequestTicks": 578,
+          "dispatchCompleteAfterRequestTicks": 581,
+          "detachAfterRequestTicks": 78,
+          "detachState": "DsmStateEtwReportingDeviceMissing",
+          "replacementAfterRequestTicks": 991900
+        },
+        {
+          "role": "release",
+          "dispatchStatus": 0,
+          "dispatchStartAfterRequestTicks": 380,
+          "dispatchCompleteAfterRequestTicks": 383,
+          "detachAfterRequestTicks": 238,
+          "detachState": "DsmStateEtwPurgingDeviceIoOnDetachInConfigured",
+          "replacementAfterRequestTicks": 1019944
+        },
+        {
+          "role": "reacquire",
+          "dispatchStatus": 0,
+          "dispatchStartAfterRequestTicks": 34,
+          "dispatchCompleteAfterRequestTicks": 39,
+          "unhandledAfterRequestTicks": 26,
+          "unhandledState": "DsmStateEtwStoppedEnumerated",
+          "replacementAfterRequestTicks": null
+        }
+      ]
+    },
+    "control-release": {
+      "xmlSha256": "fe6fe7ebbafc41435440fcce94fd5c6da4f71ccf68e007a639b028a7395c48a2",
+      "decodedEvents": 6536,
+      "port": 4,
+      "cycles": [
+        {
+          "role": "acquire",
+          "dispatchStatus": 0,
+          "dispatchStartAfterRequestTicks": 679,
+          "dispatchCompleteAfterRequestTicks": 683,
+          "detachAfterRequestTicks": 84,
+          "detachState": "DsmStateEtwReportingDeviceMissing",
+          "replacementAfterRequestTicks": 977729
+        },
+        {
+          "role": "release",
+          "dispatchStatus": 0,
+          "dispatchStartAfterRequestTicks": 464,
+          "dispatchCompleteAfterRequestTicks": 467,
+          "detachAfterRequestTicks": 305,
+          "detachState": "DsmStateEtwPurgingDeviceIoOnDetachInConfigured",
+          "replacementAfterRequestTicks": 1016745
+        }
+      ]
+    },
+    "audio-release": {
+      "xmlSha256": "54d930b440299ada740dc14ce687978558cacc49395b1604e1fdbb61ef518f4b",
+      "decodedEvents": 147471,
+      "port": 4,
+      "cycles": [
+        {
+          "role": "acquire",
+          "dispatchStatus": 0,
+          "dispatchStartAfterRequestTicks": 569,
+          "dispatchCompleteAfterRequestTicks": 572,
+          "detachAfterRequestTicks": 79,
+          "detachState": "DsmStateEtwReportingDeviceMissing",
+          "replacementAfterRequestTicks": 992527
+        },
+        {
+          "role": "release",
+          "dispatchStatus": 0,
+          "dispatchStartAfterRequestTicks": 493,
+          "dispatchCompleteAfterRequestTicks": 499,
+          "detachAfterRequestTicks": 318,
+          "detachState": "DsmStateEtwPurgingDeviceIoOnDetachInConfigured",
+          "replacementAfterRequestTicks": 1031404
+        }
+      ]
+    }
+  },
+  "readinessEstablished": false,
+  "newHardwareOperation": false
+}

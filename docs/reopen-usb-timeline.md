@@ -26,4 +26,12 @@ The next supervised capture should correlate the prepared shared UsbDk WPP/USB t
 
 The subsequent [current-image symbol analysis](reopen-state-context.md) distinguishes ETW from internal state values and conditionally labels the unhandled event as a client cycle in StoppedEnumerated. The saved child then follows a roughly ten-second driver-start-timeout sequence to Stopped. Historical loaded-image identity was not captured, so this narrows the candidate readiness fault without proving a repair.
 
+## Compare the hub response with successful cycles
+
+The failed-reopen capture also contains a successful acquisition and release on the same port. Those two cycles, the later controls-only pair and the silent-stream pair all returned hub dispatch status zero. Each also recorded a detach transition for the exact original child followed by a successful enumeration of a different child on the same port. Across those six cycles, enumeration completed 97.77 to 103.14 ms after the request.
+
+The failed reacquisition returned the same dispatch status. It recorded the unhandled client-cycle event 2.6 microseconds after the request, with no matching detach transition or replacement enumeration in the saved window. The next traced acquisition can use this difference to distinguish hub dispatch completion from a cycle that produced a replacement. The successful captures establish the transition after each request. They do not establish a supported way to check the hub's readiness before another request. [Comparison evidence](evidence/sl3-cycle-outcomes-20261107.json)
+
+The [read-only comparator](../scripts/compare-sl3-cycle-outcomes.py) pins the three saved XML files and the state-name report. It joins each cycle to its dispatch using worker PID and child identity, then checks the separate hub and port fields for replacement enumeration. Two exports matched byte for byte. Four altered-outcome checks refused the supplied data. The symbolic names retain the image qualification of the original traces.
+
 The ASIO metadata review also ruled out substituting a configured expected rate for a live clock observation: `DriverFacade::init()` obtains the observed rate, while a timing profile records an expected/reviewed rate. Removing that acquisition would alter the current-rate contract. No such shortcut was implemented. Safe acquisition across Serato's object recreation remains required.
