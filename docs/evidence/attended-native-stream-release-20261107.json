@@ -1,0 +1,168 @@
+{
+  "schema": "sl3.attended-native-stream-release.v1",
+  "date": "2026-11-07",
+  "ownerReportedPowerCycleSeconds": 30,
+  "nativeBuildSha256": "2e747d51c5fe7f170793705da55c25208a616a2ef3becc3983a8ce405864f42d",
+  "bundleSha256": "ee26d77bc81d17aa8580ea516fd99191034c1599e0797d46c6e201ff54910b07",
+  "traceIdentity": "native-activation-release-df1a615d163247d4b2c7553cdec308f3",
+  "probeIdentity": "native-activation-silent-duplex-50a425db10e24ac496cc84357f7f1f09",
+  "probeExitCode": 0,
+  "hostReady": {
+    "schema": "sl3.native-silent-ready.v1",
+    "pid": 43564,
+    "initialized": true,
+    "accepted": true,
+    "inputs": 6,
+    "outputs": 6,
+    "rateHz": 44100,
+    "audioStarted": false
+  },
+  "hostResult": {
+    "schema": "sl3.native-silent-result.v1",
+    "successful": true,
+    "released": true,
+    "unloadable": true,
+    "audioStarted": true,
+    "buffersCreated": true,
+    "silentOutputOnly": true,
+    "callbacksCompleted": 1034,
+    "durationMs": 3000,
+    "inputPeaks24": [
+      7909771,
+      8388071,
+      8345983,
+      8386111,
+      8367222,
+      8232234
+    ]
+  },
+  "retirement": {
+    "schema": "sl3.broker-controller-result.v1",
+    "kind": "native",
+    "successful": true,
+    "acquireAttempted": true,
+    "acquired": true,
+    "published": true,
+    "reason": "stop_requested",
+    "error": "",
+    "lifetimeExpired": false,
+    "failed": false,
+    "snapshotValid": true,
+    "ioRetiredVerified": true,
+    "deviceReleasedVerified": true,
+    "processStarted": true,
+    "processExited": true,
+    "jobEmpty": true,
+    "terminationRequested": false,
+    "processExitCodeKnown": true,
+    "processExitCode": 0,
+    "lastDevicePhase": 6,
+    "lastDeviceFailure": 0,
+    "lastStreamFault": 0,
+    "lastNativeError": 1168,
+    "lastObservedRateHz": 44100,
+    "lastDiagnostic": "",
+    "ownerFailureCode": "none",
+    "ownerFailurePhase": 0,
+    "connectionDiagnostic": "",
+    "nativeDeviceAcquired": true,
+    "helperLoadedInController": false,
+    "usbReadyForNextAcquire": false,
+    "rateRestorationVerified": false
+  },
+  "controllerExited": true,
+  "workerExited": true,
+  "traceHeader": {
+    "EventsLost": 0,
+    "BuffersLost": 0,
+    "StartTime": 134385319018295352,
+    "EndTime": 134385319618491032
+  },
+  "decode": {
+    "events": 147471,
+    "lost": 0,
+    "errors": 0,
+    "unknown": 0
+  },
+  "traceDurationSeconds": 60.019568,
+  "collectorDeleted": true,
+  "stopReportedAlreadyStopped": true,
+  "decodedUsbDkRecords": 27,
+  "selectedStagesUtc": {
+    "powerQuery": "2026-11-07T13:31:44.4018994Z",
+    "powerCompletion": "2026-11-07T13:31:44.4019213Z",
+    "redirectHandle": "2026-11-07T13:31:44.5387650Z",
+    "close": "2026-11-07T13:31:47.7277242Z",
+    "waitDetach": "2026-11-07T13:31:47.7277821Z",
+    "detached": "2026-11-07T13:31:47.7290326Z",
+    "removalFinished": "2026-11-07T13:31:47.7290345Z"
+  },
+  "cancelledTransfersByEndpoint": {
+    "130": 3,
+    "6": 3
+  },
+  "removalReportedSuccessful": true,
+  "detachmentWaitTicks": "12505",
+  "port": {
+    "scope": "Trace-local exact-port/child correlation; no readiness decision",
+    "port": 4,
+    "workerVidPidCycles": 2,
+    "successfulPortEnumerations": 2,
+    "distinctTargetDsmContexts": 3,
+    "contextRows": {
+      "initial": 11,
+      "redirect": 214,
+      "postRelease": 97
+    },
+    "postReleaseContextMappedToSl3Port": true,
+    "firstStoppedEnumeratedAfterProbeTicks": "276321",
+    "postProbePendingStartFileTime": "134385319078344058",
+    "lastSuccessfulEntryToTimerTicks": "100001095",
+    "stoppedAfterProbeTicks": "100313277",
+    "timeoutTail": [
+      {
+        "timestampFileTime": "134385319178345153",
+        "state": "DsmStateEtwCheckIfDeviceCanBeDisabledOnDriverNotFound",
+        "event": "DsmEventTimerFired",
+        "depth": 0
+      },
+      {
+        "timestampFileTime": "134385319178345165",
+        "state": "DsmStateEtwDisablingDeviceInControllerOnStartTimeout",
+        "event": "DsmEventYes",
+        "depth": 0
+      },
+      {
+        "timestampFileTime": "134385319178345522",
+        "state": "DsmStateEtwDisablingPortOnStartTimeout",
+        "event": "DsmEventUCXIoctlSuccess",
+        "depth": 0
+      },
+      {
+        "timestampFileTime": "134385319178345685",
+        "state": "DsmStateEtwStopped",
+        "event": "DsmEventPortDisabled",
+        "depth": 0
+      }
+    ],
+    "readinessAdmission": false,
+    "successiveAcquisitionVerified": false,
+    "normalUserReadinessObservationVerified": false
+  },
+  "hubImageOnDiskSha256": "f93fa3a32037c597fd19ca9d65f59e53a1e337123582ed2479d5c16a4848df16",
+  "stateSymbolsScope": "Pinned cached PDB and matching on-disk image",
+  "loadedHubImageAttested": false,
+  "postCaptureProblemCode": 39,
+  "secondAcquisitionAttempted": false,
+  "normalSeratoStartupValidated": false,
+  "bindings": {
+    "etl": "a08d54175d17a6aaf1d1af21da2b4c4b1e286fbf64f155898a5cbec32dd7fea7",
+    "xml": "54d930b440299ada740dc14ce687978558cacc49395b1604e1fdbb61ef518f4b",
+    "decoder": "eaea5926c9806cd998c27282e4a6a03b0b6e5f9619938583a663d32572c0c84d",
+    "messages": "48e61a12a2f823f39c4e854997a98c826ccded750d3135d1e4f4521483580a66",
+    "probe": "0c729a1a83f1c532dd7dc9ec483599cc7e2507f65b9084f0ff78eefaa96c4934",
+    "capture": "e8a8eb7dbb6e99f5ee276c53888184c2cd4f6b9611b797fd54a81e4f3661c59d",
+    "probeWindow": "5224bb56375949ab1903a36e44910e774beea7130c79a21f1c12bc8bb4209a79",
+    "offlineAnalysis": "9c49ecfb9308a05310595e2bc9a7a410f14593b915bb8a9ee3f23fcc7baa883a"
+  }
+}

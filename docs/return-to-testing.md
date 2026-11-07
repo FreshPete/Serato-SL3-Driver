@@ -1,5 +1,7 @@
 # Return to SL3 testing — 6 November 2026
 
+The owner returned and completed the recovery and trace steps on 7 November. The refreshed build streamed and released successfully, then the original Windows stack timed out after re-enumeration. The next test depends on addressing that handoff. [Attended release trace](attended-native-stream-release.md).
+
 The unattended work is committed and pushed. The latest candidate is **prepared, not installed**. The remaining goal is still install once, launch the original Serato normally, and use the same driver for Phase RCA or timecode vinyl. That experience is not yet verified.
 
 ## Last observed host state

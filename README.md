@@ -2,7 +2,9 @@
 
 Restore the physical Rane SL3 for current Serato DJ Pro and two-deck DVS. Windows 11 x64 is first; macOS 26 Tahoe is second. Driver loading, independent audio, Serato recognition and working DVS are separate milestones.
 
-## Latest status — 6 November 2026
+## Latest status — 7 November 2026
+
+**The attended release trace located a Windows startup timeout after a successful silent stream.** The refreshed ASIO build completed 1,034 callbacks and UsbDk removed the redirect. Windows enumerated the SL3 again on port 4, then timed out starting the original device stack and disabled the port. The next engineering question is how to keep USB ownership across Serato’s successive ASIO opens. [Trace and evidence](docs/attended-native-stream-release.md)
 
 [Return-to-testing packet](docs/return-to-testing.md): exact current candidate, last host observation, established results and the attended recovery/trace sequence. The compatibility candidate is uninstalled. Unattended hardware tests are on hold; the install-once goal is incomplete.
 
