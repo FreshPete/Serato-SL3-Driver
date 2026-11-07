@@ -55,6 +55,66 @@ def event_name(event):
     return name
 
 
+def summarize_arrival_dispatch(events, armed, errors):
+    phases = [event for event in events if event['event'] == 'sl3_arrival_phase']
+    if not phases and 'sl3_arrival_phase' not in armed:
+        return None
+    # The private observer emits at most 24 phase events and tracks 16 live objects.
+    limited = len(phases) >= 24 or any(event['event'] == 'sl3_arrival_tracking_limit' for event in events)
+    clean = 'sl3_arrival_phase' in armed and not limited and not errors
+    arrivals = {}
+    for index, event in enumerate(events):
+        if event['event'] != 'sl3_arrival_phase':
+            continue
+        sequence = event.get('sequence')
+        phase = event.get('phase')
+        if type(sequence) is not int or sequence < 1:
+            raise ValueError('Invalid SL3 arrival sequence')
+        arrival = arrivals.setdefault(sequence, {'sequence': sequence, 'timeline': []})
+        timeline = arrival['timeline']
+        previous = timeline[-1]['phase'] if timeline else None
+        allowed = {
+            None: ('constructed',),
+            'constructed': ('publish_policy', 'enqueued'),
+            'publish_policy': ('enqueued',) if arrival.get('policyDecision') == 'queue_original' else (),
+            'enqueued': ('listener_lookup',),
+            'listener_lookup': ('usb_handler_entry', 'dispatch_finished'),
+            'usb_handler_entry': ('usb_handler_entry', 'dispatch_finished'),
+            'dispatch_finished': (),
+        }
+        if phase not in allowed[previous]:
+            raise ValueError('Invalid SL3 arrival phase order')
+        if phase == 'publish_policy':
+            decision = event.get('decision')
+            if 'sl3_arrival_publish_policy' not in armed or decision not in ('queue_original', 'replace', 'discard'):
+                raise ValueError('Invalid or unarmed SL3 arrival policy observation')
+            arrival['policyDecision'] = decision
+        if phase == 'listener_lookup':
+            count = event.get('listenerCount')
+            if type(count) is not int or not 0 <= count <= 0xffffffff:
+                raise ValueError('Invalid SL3 listener count')
+            arrival['listenerCount'] = count
+        if phase == 'usb_handler_entry' and not arrival['listenerCount']:
+            raise ValueError('SL3 handler sampled with an empty listener vector')
+        timeline.append({'index': index, 'phase': phase})
+    for arrival in arrivals.values():
+        observed = {row['phase'] for row in arrival['timeline']}
+        if 'usb_handler_entry' in observed:
+            boundary = 'usb_handler_observed'
+        elif arrival.get('policyDecision') in ('replace', 'discard'):
+            boundary = 'policy_' + arrival['policyDecision']
+        elif arrival.get('listenerCount') == 0:
+            boundary = 'empty_listener_vector_observed'
+        elif clean and 'dispatch_finished' in observed:
+            boundary = 'dispatch_finished_without_usb_handler_sample'
+        else:
+            boundary = 'inconclusive_after_' + arrival['timeline'][-1]['phase']
+        arrival['boundary'] = boundary
+    return {'phaseProbeArmed': 'sl3_arrival_phase' in armed,
+            'policyProbeArmed': 'sl3_arrival_publish_policy' in armed,
+            'trackingMayBeIncomplete': not clean, 'arrivals': list(arrivals.values())}
+
+
 def summarize(trace, call_analysis=None):
     events = trace['events']
     aliases = {'driver_web_dispatch': 'driver_web_action_prepared'}
@@ -137,6 +197,9 @@ def summarize(trace, call_analysis=None):
         ],
         'hardwareStreamingVerified': False,
     }
+    arrival_dispatch = summarize_arrival_dispatch(events, armed, trace['errors'])
+    if arrival_dispatch is not None:
+        summary['sl3ArrivalDispatch'] = arrival_dispatch
     if call_analysis is not None:
         if (
             call_analysis.get('schema') != 'sl3.asio-call-analysis.v1'

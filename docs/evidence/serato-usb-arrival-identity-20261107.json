@@ -26,10 +26,20 @@
   "payload": "(descriptor_vid << 32) + (descriptor_pid << 16) + descriptor_revision",
   "selectedRevisionSource": "controller_descriptor",
   "payloadIncludesBusOrAddress": false,
+  "publishPolicy": {
+    "replaceResult": 1,
+    "dropResult": 2,
+    "originalPathQueueFlag": 0,
+    "nonzeroQueueFlagSkipsListenerType": 1
+  },
   "observationPoints": {
     "constructor": {
       "va": "0x14185ee90",
       "entryBytes": "48895c2408574883"
+    },
+    "publishPolicyResult": {
+      "va": "0x1415469d8",
+      "entryBytes": "83e801740783f801"
     },
     "enqueued": {
       "va": "0x141545bac",
@@ -280,6 +290,86 @@
       "assembly": "mov dword ptr [rcx + 0x14], r9d"
     },
     {
+      "va": "0x14213eaf8",
+      "bytes": "ff5058",
+      "assembly": "call qword ptr [rax + 0x58]"
+    },
+    {
+      "va": "0x141546731",
+      "bytes": "488bfa",
+      "assembly": "mov rdi, rdx"
+    },
+    {
+      "va": "0x1415469bf",
+      "bytes": "0f8485000000",
+      "assembly": "je 0x141546a4a"
+    },
+    {
+      "va": "0x1415469d2",
+      "bytes": "488b17",
+      "assembly": "mov rdx, qword ptr [rdi]"
+    },
+    {
+      "va": "0x1415469d5",
+      "bytes": "ff5018",
+      "assembly": "call qword ptr [rax + 0x18]"
+    },
+    {
+      "va": "0x1415469d8",
+      "bytes": "83e801",
+      "assembly": "sub eax, 1"
+    },
+    {
+      "va": "0x1415469db",
+      "bytes": "7407",
+      "assembly": "je 0x1415469e4"
+    },
+    {
+      "va": "0x1415469dd",
+      "bytes": "83f801",
+      "assembly": "cmp eax, 1"
+    },
+    {
+      "va": "0x1415469e0",
+      "bytes": "7556",
+      "assembly": "jne 0x141546a38"
+    },
+    {
+      "va": "0x1415469e2",
+      "bytes": "eb66",
+      "assembly": "jmp 0x141546a4a"
+    },
+    {
+      "va": "0x141546a14",
+      "bytes": "33d2",
+      "assembly": "xor edx, edx"
+    },
+    {
+      "va": "0x141546a19",
+      "bytes": "e8e2813100",
+      "assembly": "call 0x14185ec00"
+    },
+    {
+      "va": "0x141546a26",
+      "bytes": "488907",
+      "assembly": "mov qword ptr [rdi], rax"
+    },
+    {
+      "va": "0x141546a38",
+      "bytes": "488b17",
+      "assembly": "mov rdx, qword ptr [rdi]"
+    },
+    {
+      "va": "0x141546a3e",
+      "bytes": "4533c0",
+      "assembly": "xor r8d, r8d"
+    },
+    {
+      "va": "0x141546a44",
+      "bytes": "e897f0ffff",
+      "assembly": "call 0x141545ae0"
+    },
+    {
       "va": "0x141545af8",
       "bytes": "488bea",
       "assembly": "mov rbp, rdx"
@@ -288,6 +378,16 @@
       "va": "0x141545b25",
       "bytes": "48896c2430",
       "assembly": "mov qword ptr [rsp + 0x30], rbp"
+    },
+    {
+      "va": "0x141545af4",
+      "bytes": "410fb6f0",
+      "assembly": "movzx esi, r8b"
+    },
+    {
+      "va": "0x141545b2a",
+      "bytes": "4088742438",
+      "assembly": "mov byte ptr [rsp + 0x38], sil"
     },
     {
       "va": "0x141545ba0",
@@ -333,6 +433,36 @@
       "va": "0x14154656e",
       "bytes": "4885db",
       "assembly": "test rbx, rbx"
+    },
+    {
+      "va": "0x14154645d",
+      "bytes": "0f1145c7",
+      "assembly": "movups xmmword ptr [rbp - 0x39], xmm0"
+    },
+    {
+      "va": "0x141546612",
+      "bytes": "440fb665cf",
+      "assembly": "movzx r12d, byte ptr [rbp - 0x31]"
+    },
+    {
+      "va": "0x141546617",
+      "bytes": "4584e4",
+      "assembly": "test r12b, r12b"
+    },
+    {
+      "va": "0x14154661a",
+      "bytes": "7406",
+      "assembly": "je 0x141546622"
+    },
+    {
+      "va": "0x14154661c",
+      "bytes": "837b0801",
+      "assembly": "cmp dword ptr [rbx + 8], 1"
+    },
+    {
+      "va": "0x141546620",
+      "bytes": "740c",
+      "assembly": "je 0x14154662e"
     },
     {
       "va": "0x141546628",

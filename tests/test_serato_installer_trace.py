@@ -9,6 +9,48 @@ summarize = runpy.run_path(
 
 
 class InstallerTraceTest(unittest.TestCase):
+    def test_arrival_dispatch_distinguishes_policy_and_listener_outcomes(self):
+        events = [{"event": "trace_ready", "points": ["sl3_arrival_phase", "sl3_arrival_publish_policy"]}]
+
+        def phase(sequence, name, **fields):
+            events.append({"event": "sl3_arrival_phase", "sequence": sequence, "phase": name, **fields})
+
+        for sequence in range(1, 6):
+            phase(sequence, "constructed")
+        phase(1, "publish_policy", decision="discard")
+        phase(2, "publish_policy", decision="replace")
+        for sequence, count in [(3, 0), (4, 1), (5, 2)]:
+            phase(sequence, "publish_policy", decision="queue_original")
+            phase(sequence, "enqueued")
+            phase(sequence, "listener_lookup", listenerCount=count)
+            if sequence == 5:
+                phase(sequence, "usb_handler_entry")
+            phase(sequence, "dispatch_finished")
+        trace = {"pid": 1, "errors": [], "events": events}
+        dispatch = summarize(trace)["sl3ArrivalDispatch"]
+        self.assertFalse(dispatch["trackingMayBeIncomplete"])
+        self.assertEqual([arrival["boundary"] for arrival in dispatch["arrivals"]], [
+            "policy_discard", "policy_replace", "empty_listener_vector_observed",
+            "dispatch_finished_without_usb_handler_sample", "usb_handler_observed",
+        ])
+        for extra_events, errors in [([{"event": "sl3_arrival_tracking_limit"}], []), ([], ["probe failed"])]:
+            limited = summarize(dict(trace, events=events + extra_events, errors=errors))["sl3ArrivalDispatch"]
+            self.assertTrue(limited["trackingMayBeIncomplete"])
+            self.assertEqual(limited["arrivals"][3]["boundary"], "inconclusive_after_dispatch_finished")
+            self.assertEqual(limited["arrivals"][4]["boundary"], "usb_handler_observed")
+
+    def test_incomplete_arrival_and_impossible_sequence_are_distinct(self):
+        events = [
+            {"event": "trace_ready", "points": ["sl3_arrival_phase"]},
+            {"event": "sl3_arrival_phase", "sequence": 1, "phase": "constructed"},
+        ]
+        trace = {"pid": 1, "errors": [], "events": events}
+        self.assertEqual(summarize(trace)["sl3ArrivalDispatch"]["arrivals"][0]["boundary"],
+                         "inconclusive_after_constructed")
+        events.append({"event": "sl3_arrival_phase", "sequence": 1, "phase": "usb_handler_entry"})
+        with self.assertRaisesRegex(ValueError, "phase order"):
+            summarize(trace)
+
     def test_generic_helper_and_click_use_the_same_message_id(self):
         events = [
             {"event": "message_create", "id": 0x4FF, "caller": "0x154b5b5"},

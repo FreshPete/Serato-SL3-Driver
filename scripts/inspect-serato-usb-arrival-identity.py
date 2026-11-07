@@ -32,18 +32,31 @@ FACTS = {
     0x14213eac9:'mov r8, rbx',0x14213eacc:'mov edx, 0x2d4',0x14213ead4:'call 0x14185ee90',
     0x14185eea6:'mov rbx, r8',0x14185eec7:'mov qword ptr [rdi + 0x38], rbx',
     0x14185ecc2:'mov dword ptr [rcx + 0xc], edx',0x14185ecc9:'mov dword ptr [rcx + 0x14], r9d',
+    0x14213eaf8:'call qword ptr [rax + 0x58]',0x141546731:'mov rdi, rdx',
+    0x1415469bf:'je 0x141546a4a',0x1415469d2:'mov rdx, qword ptr [rdi]',
+    0x1415469d5:'call qword ptr [rax + 0x18]',0x1415469d8:'sub eax, 1',
+    0x1415469db:'je 0x1415469e4',0x1415469dd:'cmp eax, 1',
+    0x1415469e0:'jne 0x141546a38',0x1415469e2:'jmp 0x141546a4a',
+    0x141546a14:'xor edx, edx',0x141546a19:'call 0x14185ec00',
+    0x141546a26:'mov qword ptr [rdi], rax',0x141546a38:'mov rdx, qword ptr [rdi]',
+    0x141546a3e:'xor r8d, r8d',0x141546a44:'call 0x141545ae0',
     0x141545af8:'mov rbp, rdx',0x141545b25:'mov qword ptr [rsp + 0x30], rbp',
+    0x141545af4:'movzx esi, r8b',0x141545b2a:'mov byte ptr [rsp + 0x38], sil',
     0x141545ba0:'movups xmm0, xmmword ptr [rsp + 0x30]',0x141545ba5:'movups xmmword ptr [rcx], xmm0',
     0x141545ba8:'inc qword ptr [rdi + 0x20]',0x141545bac:'mov eax, 0x80000000',
     0x14154647f:'movq r13, xmm0',0x14154655f:'mov rbx, qword ptr [r12 + 8]',
     0x141546564:'sub rbx, qword ptr [r12]',0x141546568:'sar rbx, 4',0x14154656e:'test rbx, rbx',
-    0x141546628:'mov rdx, r13',0x14154662b:'call qword ptr [rax + 8]',
+    0x14154645d:'movups xmmword ptr [rbp - 0x39], xmm0',
+    0x141546612:'movzx r12d, byte ptr [rbp - 0x31]',0x141546617:'test r12b, r12b',
+    0x14154661a:'je 0x141546622',0x14154661c:'cmp dword ptr [rbx + 8], 1',
+    0x141546620:'je 0x14154662e',0x141546628:'mov rdx, r13',0x14154662b:'call qword ptr [rax + 8]',
     0x141546637:'mov rax, qword ptr [r13]',0x141546640:'mov rcx, r13',
     0x141546643:'call qword ptr [rax]',0x1407108e6:'mov r8d, dword ptr [rdx + 0xc]',
 }
 
 POINTS = {
-    'constructor':0x14185ee90,'enqueued':0x141545bac,'listenerLookup':0x14154656e,
+    'constructor':0x14185ee90,'publishPolicyResult':0x1415469d8,
+    'enqueued':0x141545bac,'listenerLookup':0x14154656e,
     'handlerEntry':0x1407108e0,'dispatchFinished':0x141546637,
 }
 
@@ -77,6 +90,8 @@ def inspect(application):
     return {'schema':'sl3.serato-usb-arrival-identity.v1','applicationSha256':app.sha,
             'descriptorGetters':getters,'messageId':'0x2d4','route':7,'payload':'(descriptor_vid << 32) + (descriptor_pid << 16) + descriptor_revision',
             'selectedRevisionSource':'controller_descriptor','payloadIncludesBusOrAddress':False,
+            'publishPolicy':{'replaceResult':1,'dropResult':2,'originalPathQueueFlag':0,
+                             'nonzeroQueueFlagSkipsListenerType':1},
             'observationPoints':{name:{'va':hex(va),'entryBytes':app.data(va,8).hex()} for name,va in POINTS.items()},
             'checkedInstructions':facts,'liveDispatchObserved':False}
 
