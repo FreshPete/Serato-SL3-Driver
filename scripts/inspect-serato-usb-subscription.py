@@ -14,7 +14,11 @@ SPANS = {
     0x1404c4300: 0x1404c437c,
     0x1404c65c0: 0x1404c671c,
     0x140520efe: 0x140521018,
+    0x140530500: 0x14053078b,
     0x14070fd70: 0x14070fe59,
+    0x140710720: 0x14071089b,
+    0x1407108a0: 0x1407108dd,
+    0x141373a40: 0x141373c0d,
     0x141543cf0: 0x14154426c,
     0x141544850: 0x141544a2e,
     0x141544a30: 0x141544c5e,
@@ -49,6 +53,54 @@ FACTS = """
 1404c6632 mov rdi, rax
 1404c6635 jmp 0x1404c6639
 1404c667a mov qword ptr [rip + 0x39e6347], rdi
+141373a5a mov r8d, dword ptr [rdx + 0xc]
+141373a5e sub r8d, 0x2ca
+141373a65 je 0x141373bce
+141373a6b sub r8d, 1
+141373a6f je 0x141373afa
+141373a75 cmp r8d, 0x309
+141373a7c jne 0x141373bf8
+141373a82 mov rcx, qword ptr [rip + 0x2b38f2f]
+141373a89 call 0x140530500
+141373a8e lea rcx, [rsp + 0x40]
+141373a93 call 0x140710720
+141373a99 mov rcx, qword ptr [rax]
+141373a9c call 0x1407108a0
+140530595 mov edx, 0x2d0
+14053059d call 0x14185ec00
+1405305ef mov edx, 0x645
+1405305f7 call 0x14185ec00
+140530617 lea rcx, [rsi + 0x1c2]
+140530627 test cl, cl
+140530629 jne 0x140530643
+14053062b lea rcx, [rsi + 0x1c3]
+14053063b test cl, cl
+14053063d je 0x14053071c
+140530643 mov rdi, qword ptr [rsi + 0x1c8]
+14053064a mov r15, qword ptr [rsi + 0x1d0]
+140530682 call 0x140502ae0
+140530689 jne 0x1405306db
+1405306ac call 0x14052c650
+1405306b3 jne 0x1405306db
+1405306d5 call 0x140525710
+14053070f add rdi, 0x10
+140530716 jne 0x140530660
+14071073e cmp qword ptr [rip + 0x37bef53], rdi
+140710745 jne 0x14071085d
+140710762 call 0x14070fd70
+1407108a6 mov rbx, rcx
+1407108a9 call 0x141960f80
+1407108ae mov rcx, rax
+1407108b1 mov rdx, qword ptr [rax]
+1407108b4 call qword ptr [rdx + 0x98]
+1407108ba test rax, rax
+1407108bd je 0x1407108d7
+1407108bf mov edx, 0x13e5
+1407108c4 mov rcx, rbx
+1407108c7 mov r9d, edx
+1407108ca mov r8d, edx
+1407108d2 jmp 0x14070ff10
+1407108dc ret
 14070fd92 mov rdx, qword ptr [rip + 0x379cc2f]
 14070fd99 lea rcx, [rdi + 0x10]
 14070fd9d call 0x14154c960
@@ -211,12 +263,13 @@ def inspect(application):
 
     facts = []
     for line in FACTS.strip().splitlines():
-        address, mnemonic, operands = line.split(maxsplit=2)
+        address, mnemonic, *parts = line.split(maxsplit=2)
+        operands = parts[0] if parts else ''
         va = int(address,16)
         row = decoded.get(va)
         require(row is not None and (row.mnemonic,row.op_str)==(mnemonic,operands),
                 'Instruction differs: '+hex(va))
-        facts.append({'va':hex(va), 'bytes':row.bytes.hex(), 'assembly':mnemonic+' '+operands})
+        facts.append({'va':hex(va), 'bytes':row.bytes.hex(), 'assembly':' '.join((mnemonic,*parts))})
 
     for address in (0x1404c3367,0x1404c4318,0x1404c667a,0x14070fd92,0x14213ea99):
         require(app.rip(app.at(address))==0x143eac9c8,'Message system global differs')
@@ -234,10 +287,21 @@ def inspect(application):
     listener_slots={0x08:0x140ff9740,0x18:0x1407108e0}
     for slot,target in listener_slots.items():
         require(struct.unpack('<Q',app.data(listener_table+slot,8))[0]==target,'USB manager listener slot differs')
+    engine_table=0x142f29b28
+    require(struct.unpack('<Q',app.data(engine_table+0x18,8))[0]==0x141373a40,'Engine handler slot differs')
+    steps=[row.op_str for row in app.function(0x141373a40) if
+           0x141373a82<=row.address<=0x141373a9c and row.mnemonic=='call']
+    require(steps==['0x140530500','0x140710720','0x1407108a0'],'Engine startup call order differs')
 
     return {'schema':'sl3.serato-usb-subscription.v2','applicationSha256':app.sha,
             'inspectorSha256':sha(Path(__file__).read_bytes()),
             'messageSystem':{'global':'0x143eac9c8','table':hex(table),'slots':{hex(k):hex(v) for k,v in slots.items()}},
+            'engineStartup':{'message':0x5d4,'handler':'0x141373a40','callOrder':steps,
+                             'existingMidiSelection':{'requiresEitherManagerByte':['0x1c2','0x1c3'],
+                                                      'selectionCallback':'0x140525710'},
+                             'postConstructionUsbHelper':{'authorizationSlot':'0x98','requiresNonNullResult':True,
+                                 'identityArguments':[0x13e5]*3,'usesMessageDeviceIdentity':False,
+                                 'stateHelper':'0x14070ff10'}},
             'arrival':{'message':0x2d4,'route':7,'subscriptionSlot':'0x10','dispatchPublishSlot':'0x58',
                        'entryBytes':16,'stateRefreshCallInCheckedRegistrationPath':False},
             'state':{'message':0x692,'route':7,'subscriptionSlot':'0x20','refreshHelper':'0x1415477e0',
