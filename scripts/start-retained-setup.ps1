@@ -109,7 +109,7 @@ try {
     if ($Trial) {
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'retained-desktop-trial.py') 'db0498983dba2a61d963685807bdfdaf89597c07244f220c2092aea4c10ac45d'
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'observe-asio-module-load.ps1') '37112dd7dc325d4deb7be713fb83dcde9bf86b20dcb3856316c74a810ffb3a0b'
-        Hold-ReviewedFile (Join-Path $PSScriptRoot 'inspect-process.psm1') 'fd76680e42127feeb4d8da952b5e04a49b48d3bb6df159b9c77a236a3c8f0752'
+        Hold-ReviewedFile (Join-Path $PSScriptRoot 'inspect-process.psm1') '6ffb8427f79ebd173fd31e9824442293eb66689107fe63307204f76a6db4a290'
         $confirmation = Read-Host 'Power-cycle the SL3 for 30 seconds, reconnect it, wait 30 seconds, close Serato and type RECOVERED'
         if ($confirmation -cne 'RECOVERED') { Write-Host 'Test canceled before setup.'; return }
     }
