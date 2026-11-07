@@ -99,6 +99,7 @@ def main():
     parser.add_argument('--broker-report-sha256',required=True)
     parser.add_argument('--restore-report',type=Path)
     parser.add_argument('--restore-report-sha256')
+    parser.add_argument('--output',type=Path)
     args = parser.parse_args()
     require(bool(args.restore_report)==bool(args.restore_report_sha256),'Restore report and hash must be supplied together')
     observer = read_pinned(args.module_report,args.module_report_sha256)
@@ -107,7 +108,11 @@ def main():
     result = summarize(observer,broker,restore)
     result['inputReportSha256'] = {'module':args.module_report_sha256,'broker':args.broker_report_sha256,
                                    'restore':args.restore_report_sha256}
-    print(json.dumps(result,indent=2))
+    rendered = json.dumps(result,indent=2)+'\n'
+    if args.output:
+        with args.output.open('x',encoding='utf-8',newline='\n') as stream:
+            stream.write(rendered)
+    print(rendered,end='')
 
 
 if __name__ == '__main__':

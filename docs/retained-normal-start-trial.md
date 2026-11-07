@@ -85,6 +85,8 @@ A session reply can come from a short ASIO enumeration open. The count of stream
 
 For an offline readout, save the observer's stdout and keep the completed broker result from the same trial. Supply those two reviewed files and their SHA-256 hashes to `scripts/read-retained-start-result.py`. If available, supply `attended-setup/restore-stdout.json` and its hash with `--restore-report` and `--restore-report-sha256`. The readout keeps the matching process's admission, start and detach counts separate from the broker's worker-retirement flags and the restore receipt. It verifies the supplied file identities and joins both process identifiers. The operator still selects the records belonging to one trial.
 
+The one-command shortcut runs this readout automatically after verified broker retirement. It uses that trial's module and broker files, adds the restore receipt if the setup process has exited, and creates `desktop-start/start-readout.json`. The console reports whether it sampled the module and how many admission and stream-start replies match the observed Serato process. A saved simulated Windows run matched three admissions and four stream-start replies. The readout preserved existing output and kept pending restoration separate in fixture checks.
+
 ```powershell
 python scripts/read-retained-start-result.py `
   --module-report $moduleReport --module-report-sha256 $moduleReportSha `

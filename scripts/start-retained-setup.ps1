@@ -29,6 +29,31 @@ function Hold-ReviewedFile([string]$Path,[string]$Sha) {
     }
 }
 
+function Publish-TrialReadout([string]$Python,[string]$Folder,[bool]$SetupExited) {
+    $moduleReport = Join-Path $Folder 'desktop-start/module-observation.json'
+    $brokerReport = Join-Path $Folder 'broker/result.json'
+    $restoreReport = Join-Path $Folder 'attended-setup/restore-stdout.json'
+    $output = Join-Path $Folder 'desktop-start/start-readout.json'
+    $reader = Join-Path $PSScriptRoot 'read-retained-start-result.py'
+    $arguments = @('--module-report',$moduleReport,
+        '--module-report-sha256',(Get-FileHash -LiteralPath $moduleReport).Hash.ToLowerInvariant(),
+        '--broker-report',$brokerReport,
+        '--broker-report-sha256',(Get-FileHash -LiteralPath $brokerReport).Hash.ToLowerInvariant(),
+        '--output',$output)
+    if ($SetupExited -and (Test-Path -LiteralPath $restoreReport -PathType Leaf)) {
+        $arguments += @('--restore-report',$restoreReport,
+            '--restore-report-sha256',(Get-FileHash -LiteralPath $restoreReport).Hash.ToLowerInvariant())
+    }
+    $raw = & $Python -I -B $reader @arguments
+    if ($LASTEXITCODE) { throw 'The saved startup reports could not be matched.' }
+    $result = $raw | ConvertFrom-Json
+    if ($result.schema -ne 'sl3.retained-start-readout.v1') { throw 'Unexpected startup readout.' }
+    Write-Host ('Serato process sampled: {0}. ASIO driver sampled: {1}.' -f $result.ordinaryProcessObserved,$result.moduleLoadObserved)
+    Write-Host ('Broker replies to that process: {0} admissions, {1} stream starts.' -f
+        $result.matchingAdmissionReplies,$result.matchingStreamStartReplies)
+    Write-Host ('Startup summary saved to {0}' -f $output)
+}
+
 function Invoke-ReviewedTrial($Record, $SetupProcess) {
     $desktop = Join-Path $PSScriptRoot 'retained-desktop-trial.py'
     $observer = Join-Path $PSScriptRoot 'observe-asio-module-load.ps1'
@@ -37,6 +62,7 @@ function Invoke-ReviewedTrial($Record, $SetupProcess) {
     $folder = Split-Path -Parent $experiment
     $name = [IO.Path]::GetFileNameWithoutExtension($Record.application)
     $started = $false
+    $retired = $false
     try {
         Write-Host 'Checking the USB connection. Keep Serato closed.'
         $startup = & $Record.python.path -I -B $desktop start @desktopArgs --recovery-confirmed
@@ -70,16 +96,23 @@ function Invoke-ReviewedTrial($Record, $SetupProcess) {
                 Write-Host 'Serato is still open. Close it normally so the setup process can restore the original files.'
             } else {
                 Write-Host 'Retiring the USB connection and requesting restoration.'
-                & $Record.python.path -I -B $desktop finish @desktopArgs
-                if ($LASTEXITCODE) { Write-Host 'Check the desktop and setup records to verify cleanup.' }
+                $finished = & $Record.python.path -I -B $desktop finish @desktopArgs
+                $retired = $LASTEXITCODE -eq 0 -and ($finished | ConvertFrom-Json).outcome -eq 'retired'
+                if (-not $retired) { Write-Host 'Check the desktop and setup records to verify cleanup.' }
             }
         }
     }
-    if ($SetupProcess.WaitForExit(25000)) {
-        $result = Get-Content -LiteralPath (Join-Path $folder 'attended-setup/result.json') -Raw | ConvertFrom-Json
+    $setupExited = $SetupProcess.WaitForExit(25000)
+    if ($setupExited) {
+        $result = Get-Content -LiteralPath (Join-Path $folder 'attended-setup/result.json') -Raw -ErrorAction SilentlyContinue |
+            ConvertFrom-Json -ErrorAction SilentlyContinue
         if ($result.outcome -eq 'restored') { Write-Host 'Original setup restored.' }
         else { Write-Host 'See the setup result for restoration status.' }
     } else { Write-Host 'Restoration is still pending. Check the setup result before retrying.' }
+    if ($retired) {
+        try { Publish-TrialReadout $Record.python.path $folder $setupExited }
+        catch { Write-Warning ('Startup summary unavailable. Review the saved reports. ' + $_.Exception.Message) }
+    }
 }
 
 $mutex = $null
@@ -110,6 +143,7 @@ try {
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'retained-desktop-trial.py') 'db0498983dba2a61d963685807bdfdaf89597c07244f220c2092aea4c10ac45d'
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'observe-asio-module-load.ps1') '37112dd7dc325d4deb7be713fb83dcde9bf86b20dcb3856316c74a810ffb3a0b'
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'inspect-process.psm1') '6ffb8427f79ebd173fd31e9824442293eb66689107fe63307204f76a6db4a290'
+        Hold-ReviewedFile (Join-Path $PSScriptRoot 'read-retained-start-result.py') 'f2c363d6a71f0e3cda33e169cb1a7d55e94124fe15bda0fdc43477d1d5bce9c7'
         $confirmation = Read-Host 'Power-cycle the SL3 for 30 seconds, reconnect it, wait 30 seconds, close Serato and type RECOVERED'
         if ($confirmation -cne 'RECOVERED') { Write-Host 'Test canceled before setup.'; return }
     }
