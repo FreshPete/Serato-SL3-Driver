@@ -5,6 +5,7 @@ import ctypes
 from ctypes import wintypes as W
 import hashlib
 import json
+import re
 from pathlib import Path
 import runpy
 
@@ -15,7 +16,8 @@ def sha(path): return hashlib.sha256(path.read_bytes()).hexdigest()
 def inspect(path,expected,bundle,bundle_sha):
     require(sha(path)==expected,'Exact completed result required')
     raw=json.loads(path.read_bytes())
-    require(raw['schema'] in ('sl3.native-activation-control-run.v1','sl3.native-activation-silent-duplex-run.v1'),'Known owned probe result required')
+    require(raw['schema'] in ('sl3.native-activation-control-run.v1','sl3.native-activation-silent-duplex-run.v1',
+                              'sl3.native-activation-application-reopen-run.v1'),'Known owned probe result required')
     require(raw['bundleSha256']==bundle_sha,'Result must bind selected reviewed bundle')
     base=runpy.run_path(str(ROOT/'scripts/prepare-asio-deployment.py'))
     manifest,payload=base['capture_bundle'](bundle,bundle_sha);base['verify_payloads'](manifest,payload)
@@ -25,7 +27,9 @@ def inspect(path,expected,bundle,bundle_sha):
     outcomes=[]
     for name in raw['observedNewSessions']:
         session=Path(name)
-        require(session.parent==owners and session.name.startswith('session-') and len(session.name)==40 and all(c in '0123456789abcdef' for c in session.name[8:]),'Exact user activation session required')
+        pattern=(r'application-[1-9][0-9]{0,9}-[1-9][0-9]{0,19}' if raw['schema']=='sl3.native-activation-application-reopen-run.v1'
+                 else r'session-[0-9a-f]{32}')
+        require(session.parent==owners and re.fullmatch(pattern,session.name),'Exact user activation session required')
         require(not session.is_symlink() and not session.is_junction() and not owners.is_symlink() and not owners.is_junction(),'Redirected session refused')
         result={'sessionIdentity':session.name,'records':{},'processObservations':[]}
         for key in ('result.json','ready.json','worker-startup.tsv','controller-startup.tsv'):

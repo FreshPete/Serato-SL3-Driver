@@ -1,0 +1,49 @@
+{
+  "schema": "sl3.native-application-reopen-preflight-evidence.v1",
+  "dateUtc": "2026-11-07",
+  "hostBuildChecksPassed": 3,
+  "preflightChecksPassed": 5,
+  "hostBuildSha256": "00e09e2aafc3da7895ab4f40ae8e78bcc365e70301f90b66ccc63dbfc56150fa",
+  "hostExecutableSha256": "1c3e3a5a6632ee3d250e3dc1534076b498fc7f7ba869bc2e7a923da59e928b0e",
+  "nativeBuildSha256": "f749641c59ba95bdfe4e5489fa4a9ccee8f3e5a80cdb2254e6cb6fde71d6525f",
+  "packageManifestSha256": "91d1af8fa5cfb2bf8502b3dc3637b7bfef84e4de35af99005ffaffcb5b91d5d7",
+  "preparationSha256": "07e5dffb234a72fba31ac22f1b5bc2e113495c1cb2c10814292655379453dbcd",
+  "localPreflightReportSha256": "37766c918bb20424577e2604ac6b531acd7a5319b7e24a3663c34131185f1833",
+  "localPreparedProbeDirectory": "analysis/native-activation-application-reopen-bbb226ec264649428e303a15b45b8c06",
+  "preparedRecordHashes": {
+    "fixture.manifest": "e4b081ec451b4e1e7422ad14797679d3f9f43b8d6cf59ff194195a9ac9ac1c40",
+    "sl3-asio.conf": "26e9341b4103c4265bd9ab89a24acc20268fd883e73954f9418fa353f2827f24",
+    "sl3-timing.conf": "c97b01a7049076615431960055fbc465a6090151e9d215bcf303d95dce710989",
+    "sl3-worker.conf": "a2febdc381fc514b801c582ee97fc8479eb463378abd3f9c5f64c296dc6e9213",
+    "sl3_asio.dll": "5076a25d9022cedbff256e16049767692cee60e77d27aab7f98f7bbfe78b0278"
+  },
+  "sourceSha256": {
+    "diagnostics/asio-native-silent-duplex/CMakeLists.txt": "fb85f7951827177b1360acb902e609ba0afda42cb960738c62b7280a24d638d8",
+    "diagnostics/asio-native-silent-duplex/host.cpp": "6dd2e89a4b2d16d3f19f74da7499b9fd25fe5e0086cddf99837b42bd6506293a",
+    "scripts/build-native-silent-duplex-host.ps1": "0121f168f5db1027c69e96181fd438fdadbb94421d414e8d5c68335d07d19237",
+    "scripts/test-native-activation-control.py": "129007c71f0274fc4972b04eb640c05a372bfb0b9a3e791e5008f71e6cd6d445",
+    "scripts/test-native-activation-silent.py": "3f491f1a12af4d8221c9fbacd20160d274e119c24489aaeac42faeb96cac403e",
+    "scripts/inspect-native-activation-failure.py": "b8c189f8a03c128bbae23e4d1c92bfda8972f7065f717948b04ff1026e512dee"
+  },
+  "wrongModeRefused": true,
+  "incompleteV2RejectedAtInit": true,
+  "newActivationOwnersObserved": 0,
+  "physicalReopenRunPerformed": false,
+  "audioStarted": false,
+  "deviceAccess": false,
+  "seratoLaunched": false,
+  "installedTestPlans": {
+    "retained-broker-repin-20261107": {
+      "experimentSha256": "0ce0b59a2afb0848c26b6a7ca40ec81b2b7185831c4004613e8d9233425dc2cb",
+      "originalArchive": true,
+      "packageAbsent": true,
+      "seratoStopped": true
+    },
+    "application-bound-20261107": {
+      "experimentSha256": "b62df6181bb29771db02f34d04ada9e286787ea198c4cd3c10c1dc8a68abf20e",
+      "originalArchive": true,
+      "packageAbsent": true,
+      "seratoStopped": true
+    }
+  }
+}

@@ -40,6 +40,14 @@ void callback(long bank,ASIOBool){
     }
     callbacks.fetch_add(1,std::memory_order_relaxed);
 }
+void await_marker(const fs::path& marker,const fs::path& abort){
+    const auto began=GetTickCount64();
+    while(!fs::exists(marker)){
+        need(!fs::exists(abort),"Observer canceled the diagnostic");
+        need(GetTickCount64()-began<15000,"Observer release deadline");Sleep(10);
+    }
+    need(!fs::exists(abort),"Observer canceled the diagnostic");
+}
 }
 int wmain(int argc,wchar_t** argv){
     if(argc==1 || (argc==2 && std::wstring(argv[1])==L"--plan")){
@@ -48,49 +56,67 @@ int wmain(int argc,wchar_t** argv){
     IASIO* device=nullptr;HANDLE context=INVALID_HANDLE_VALUE;ULONG_PTR cookie=0;
     bool com=false,buffers=false,started=false;
     try{
-        need(argc==4 && std::wstring(argv[1])==L"--run-native-silent-duplex","Explicit native silent-duplex arguments required");
+        const bool reopen=argc==4 && std::wstring(argv[1])==L"--run-native-application-reopen";
+        need(reopen || (argc==4 && std::wstring(argv[1])==L"--run-native-silent-duplex"),"Explicit native silent-duplex arguments required");
         const auto dll=fs::absolute(argv[2]),markers=fs::absolute(argv[3]);
         need(dll.filename()==L"sl3_asio.dll" && fs::is_directory(markers) && fs::is_empty(markers),"Fresh private diagnostic paths required");
+        if(reopen){
+            std::ifstream config(dll.parent_path()/L"sl3-asio.conf",std::ios::binary);
+            std::array<char,64> header{};config.getline(header.data(),header.size());
+            need(config && (std::string(header.data())=="SL3-ASIO-ACTIVATION-2" ||
+                            std::string(header.data())=="SL3-ASIO-ACTIVATION-2\r"),
+                 "Application-bound ASIO configuration required");
+        }
         ACTCTXW specification{};specification.cbSize=sizeof(specification);
         const auto manifest=dll.parent_path()/L"fixture.manifest";specification.lpSource=manifest.c_str();
         context=CreateActCtxW(&specification);need(context!=INVALID_HANDLE_VALUE && ActivateActCtx(context,&cookie),"Activate private COM manifest");
         need(SUCCEEDED(CoInitializeEx(nullptr,COINIT_MULTITHREADED)),"Initialize COM");com=true;
-        need(CoCreateInstance(sl3::asio::driver_clsid,nullptr,CLSCTX_INPROC_SERVER,sl3::asio::driver_clsid,reinterpret_cast<void**>(&device))==S_OK && device,"Create production ASIO object");
-        const auto module=GetModuleHandleW(L"sl3_asio.dll");need(module!=nullptr,"COM-loaded module required");
-        std::array<wchar_t,32768> image{};const auto size=GetModuleFileNameW(module,image.data(),DWORD(image.size()));
-        need(size && size<image.size() && fs::equivalent(dll,fs::path(image.data())),"Exact production module required");
-        need(GetProcAddress(module,"sl3_test_activation_configure")==nullptr,"Production image must exclude fixture seam");
-        need(device->init(nullptr)==ASIOTrue,"Production silent-duplex init failed");
-        long inputs=-1,outputs=-1;ASIOSampleRate rate=-1;
-        need(device->getChannels(&inputs,&outputs)==ASE_OK && inputs==6 && outputs==6 && device->getSampleRate(&rate)==ASE_OK && rate==44100,"Six-channel 44.1 kHz profile required");
-        publish(markers/L"host-ready.json","{\"schema\":\"sl3.native-silent-ready.v1\",\"pid\":"+std::to_string(GetCurrentProcessId())+
-            ",\"initialized\":true,\"accepted\":true,\"inputs\":6,\"outputs\":6,\"rateHz\":44100,\"audioStarted\":false}\n");
-        const auto began=GetTickCount64();
-        while(!fs::exists(markers/L"release")){need(GetTickCount64()-began<15000,"Observer release deadline");Sleep(10);}
-        for(unsigned channel=0;channel<12;++channel){
-            ASIOChannelInfo info{};info.channel=long(channel%6);info.isInput=channel<6?ASIOTrue:ASIOFalse;
-            need(device->getChannelInfo(&info)==ASE_OK && info.type==ASIOSTInt24LSB,"Packed 24-bit little-endian channel required");
-            planes[channel]={channel<6?ASIOTrue:ASIOFalse,long(channel%6),{}};
-        }
-        ASIOCallbacks calls{};calls.bufferSwitch=callback;
-        need(device->createBuffers(planes.data(),12,frames,&calls)==ASE_OK,"Silent-duplex buffers failed");buffers=true;
-        for(unsigned channel=0;channel<12;++channel)for(unsigned bank=0;bank<2;++bank){
-            need(planes[channel].buffers[bank]!=nullptr,"Returned audio plane required");
-            if(channel>=6)std::memset(planes[channel].buffers[bank],0,frames*3);
-        }
-        need(device->start()==ASE_OK,"Silent-duplex start failed");started=true;
-        const auto stream_began=GetTickCount64();
-        while(GetTickCount64()-stream_began<3000){need(!invalid_bank.load(),"Invalid callback bank");Sleep(5);}
-        need(device->stop()==ASE_OK,"Silent-duplex stop failed");started=false;
-        need(device->disposeBuffers()==ASE_OK,"Silent-duplex dispose failed");buffers=false;
-        need(callbacks.load()>=500,"Insufficient callback progress over three seconds");
-        device->Release();device=nullptr;
-        const auto address=GetProcAddress(module,"DllCanUnloadNow");need(address!=nullptr,"Production unload export required");
-        HRESULT(WINAPI* unload)();static_assert(sizeof(unload)==sizeof(address));std::memcpy(&unload,&address,sizeof(unload));
-        need(unload()==S_OK,"Production object not unloadable after release");
-        std::string values="[";for(unsigned channel=0;channel<6;++channel){if(channel)values+=",";values+=std::to_string(peaks[channel].load());}values+="]";
-        publish(markers/L"host-result.json","{\"schema\":\"sl3.native-silent-result.v1\",\"successful\":true,\"released\":true,\"unloadable\":true,\"audioStarted\":true,\"buffersCreated\":true,\"silentOutputOnly\":true,\"callbacksCompleted\":"+
-            std::to_string(callbacks.load())+",\"durationMs\":3000,\"inputPeaks24\":"+values+"}\n");
+        const auto stream=[&](const fs::path& output){
+            need(!fs::exists(markers/L"abort"),"Observer canceled the diagnostic");
+            callbacks=0;invalid_bank=false;for(auto& peak:peaks)peak=0;
+            need(CoCreateInstance(sl3::asio::driver_clsid,nullptr,CLSCTX_INPROC_SERVER,sl3::asio::driver_clsid,reinterpret_cast<void**>(&device))==S_OK && device,"Create production ASIO object");
+            const auto module=GetModuleHandleW(L"sl3_asio.dll");need(module!=nullptr,"COM-loaded module required");
+            std::array<wchar_t,32768> image{};const auto size=GetModuleFileNameW(module,image.data(),DWORD(image.size()));
+            need(size && size<image.size() && fs::equivalent(dll,fs::path(image.data())),"Exact production module required");
+            need(GetProcAddress(module,"sl3_test_activation_configure")==nullptr,"Production image must exclude fixture seam");
+            need(device->init(nullptr)==ASIOTrue,"Production silent-duplex init failed");
+            long inputs=-1,outputs=-1;ASIOSampleRate rate=-1;
+            need(device->getChannels(&inputs,&outputs)==ASE_OK && inputs==6 && outputs==6 && device->getSampleRate(&rate)==ASE_OK && rate==44100,"Six-channel 44.1 kHz profile required");
+            publish(output/L"host-ready.json","{\"schema\":\"sl3.native-silent-ready.v1\",\"pid\":"+std::to_string(GetCurrentProcessId())+
+                ",\"initialized\":true,\"accepted\":true,\"inputs\":6,\"outputs\":6,\"rateHz\":44100,\"audioStarted\":false}\n");
+            await_marker(output/L"release",markers/L"abort");
+            for(unsigned channel=0;channel<12;++channel){
+                ASIOChannelInfo info{};info.channel=long(channel%6);info.isInput=channel<6?ASIOTrue:ASIOFalse;
+                need(device->getChannelInfo(&info)==ASE_OK && info.type==ASIOSTInt24LSB,"Packed 24-bit little-endian channel required");
+                planes[channel]={channel<6?ASIOTrue:ASIOFalse,long(channel%6),{}};
+            }
+            ASIOCallbacks calls{};calls.bufferSwitch=callback;
+            need(device->createBuffers(planes.data(),12,frames,&calls)==ASE_OK,"Silent-duplex buffers failed");buffers=true;
+            for(unsigned channel=0;channel<12;++channel)for(unsigned bank=0;bank<2;++bank){
+                need(planes[channel].buffers[bank]!=nullptr,"Returned audio plane required");
+                if(channel>=6)std::memset(planes[channel].buffers[bank],0,frames*3);
+            }
+            need(device->start()==ASE_OK,"Silent-duplex start failed");started=true;
+            const auto stream_began=GetTickCount64();
+            while(GetTickCount64()-stream_began<3000){need(!invalid_bank.load(),"Invalid callback bank");Sleep(5);}
+            need(device->stop()==ASE_OK,"Silent-duplex stop failed");started=false;
+            need(device->disposeBuffers()==ASE_OK,"Silent-duplex dispose failed");buffers=false;
+            need(callbacks.load()>=500,"Insufficient callback progress over three seconds");
+            device->Release();device=nullptr;
+            const auto address=GetProcAddress(module,"DllCanUnloadNow");need(address!=nullptr,"Production unload export required");
+            HRESULT(WINAPI* unload)();static_assert(sizeof(unload)==sizeof(address));std::memcpy(&unload,&address,sizeof(unload));
+            need(unload()==S_OK,"Production object not unloadable after release");
+            std::string values="[";for(unsigned channel=0;channel<6;++channel){if(channel)values+=",";values+=std::to_string(peaks[channel].load());}values+="]";
+            publish(output/L"host-result.json","{\"schema\":\"sl3.native-silent-result.v1\",\"successful\":true,\"released\":true,\"unloadable\":true,\"audioStarted\":true,\"buffersCreated\":true,\"silentOutputOnly\":true,\"callbacksCompleted\":"+
+                std::to_string(callbacks.load())+",\"durationMs\":3000,\"inputPeaks24\":"+values+"}\n");
+        };
+        if(reopen){
+            for(const auto name:{L"open-1",L"open-2"}){
+                const auto output=markers/name;need(fs::create_directory(output),"Fresh reopen marker directory required");
+                stream(output);
+            }
+            await_marker(markers/L"finish",markers/L"abort");
+        }else stream(markers);
         CoUninitialize();com=false;need(DeactivateActCtx(0,cookie)!=FALSE,"Deactivate private context");cookie=0;ReleaseActCtx(context);context=INVALID_HANDLE_VALUE;return 0;
     }catch(const std::exception& error){
         if(device){if(started)device->stop();if(buffers)device->disposeBuffers();device->Release();}

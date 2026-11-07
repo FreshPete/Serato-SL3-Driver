@@ -21,7 +21,7 @@ def module(name): return runpy.run_path(str(ROOT/'scripts'/name))
 def write(path, value):
     with path.open('x', encoding='utf-8') as stream: json.dump(value, stream, indent=2)
 
-def run(args, silent_duplex=False):
+def run(args, silent_duplex=False, application_reopen=False, prepare_only=False):
     api = module('prepare-asio-activation-config.py'); base = api['BASE']
     build_path=Path(args.host_build).absolute()
     require(sha(build_path)==args.host_build_sha256,'Exact diagnostic build required')
@@ -33,7 +33,8 @@ def run(args, silent_duplex=False):
     require(sha(host)==build['executableSha256'],'Diagnostic executable changed')
     bundle=Path(args.bundle).absolute(); native_path=Path(args.native_build).absolute()
     manifest,payload=base['capture_bundle'](bundle,args.bundle_sha256);base['verify_payloads'](manifest,payload)
-    require(manifest.get('activationMode')=='asio-init-v1','Lazy production bundle required')
+    expected_mode=base['APPLICATION_ACTIVATION_MODE'] if application_reopen else base['ACTIVATION_MODE']
+    require(manifest.get('activationMode')==expected_mode,'Production bundle must match the selected activation mode')
     native_sha=json.loads(payload['provenance.json'])['identitySeed']['buildManifestSha256']
     native=api['sources'](native_path,native_sha)
     require(hashlib.sha256(payload['sl3_asio.dll']).hexdigest()==native['unmeasuredAsioDiagnostic']['dllSha256'].lower(),'Production ASIO mismatch')
@@ -42,6 +43,8 @@ def run(args, silent_duplex=False):
     platform=readiness['platform_state'](); driver=readiness['driver_state'](); serato=readiness['running_serato']()
     require(platform['nativeX64'] and not platform['elevated'] and not serato['running'],'Ordinary x64 host with Serato stopped required')
     require(driver['running'] and driver['reviewedImageOnDisk'],'Running reviewed UsbDk dependency required')
+    if application_reopen and not prepare_only:
+        require(readiness['sl3_presence']()['matchingPresentIdentities']==1,'One present SL3 required for an attended reopen test')
     app=Path('C:/Program Files/Serato/Serato DJ Pro')
     original=app/'userio_resources.bin'
     require(sha(original)==readiness['ORIGINAL_ARCHIVE_SHA'],'Original Serato resource state required')
@@ -62,16 +65,27 @@ def run(args, silent_duplex=False):
         if handle:
             with s.Handle(handle): require(wait(handle,0)==0,'Existing activation owner may still be alive')
         else: require(ctypes.get_last_error()==87,'Cannot establish previous activation owner absence')
-    folder=ROOT/'analysis'/('native-activation-'+('silent-duplex-' if silent_duplex else 'control-')+uuid.uuid4().hex);folder.mkdir()
+    probe='application-reopen' if application_reopen else ('silent-duplex' if silent_duplex else 'control')
+    folder=ROOT/'analysis'/('native-activation-'+probe+'-'+uuid.uuid4().hex);folder.mkdir()
     copied=folder/'driver';copied.mkdir();markers=folder/'host';markers.mkdir()
     (copied/'sl3_asio.dll').write_bytes(payload['sl3_asio.dll'])
-    records=api['records'](copied,bundle,hashlib.sha256(payload['sl3_broker_controller.exe']).hexdigest(),hashlib.sha256(payload['sl3_usbdk.exe']).hexdigest())
+    records=base['activation_records'](copied,hashlib.sha256(payload['sl3_broker_controller.exe']).hexdigest(),
+        hashlib.sha256(payload['sl3_usbdk.exe']).hexdigest(),expected_mode,bundle)
     # A new private diagnostic record, never an override of the installed candidate.
     records['sl3-asio.conf']=records['sl3-asio.conf'].replace(b'lifetime_ms=600000\n',b'lifetime_ms=60000\n')
     for name,data in records.items(): (copied/name).write_bytes(data)
     (copied/'fixture.manifest').write_text('<?xml version="1.0" encoding="utf-8"?><assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0"><assemblyIdentity type="win32" name="SL3.Owned.NativeControl" version="1.0.0.0" processorArchitecture="amd64"/><file name="sl3_asio.dll"><comClass clsid="{5A551CD0-F83E-48EB-8B9D-8614E07852FE}" threadingModel="Both"/></file></assembly>',encoding='utf-8')
     api['inspect'](native_path.parent/'Release/sl3_driver_configuration_tests.exe',native['asioComponent']['activationConfigurationInspectorSha256'].lower(),copied/'sl3-asio.conf')
-    report={'schema':'sl3.native-activation-'+('silent-duplex' if silent_duplex else 'control')+'-run.v1','successful':False,
+    if prepare_only:
+        report={'schema':'sl3.native-application-reopen-preparation.v1','prepared':True,'mode':expected_mode,
+                'bundleSha256':args.bundle_sha256,'nativeBuildSha256':native_sha,'hostBuildSha256':sha(build_path),
+                'driverFiles':{name:sha(copied/name) for name in sorted(p.name for p in copied.iterdir())},
+                'nativeParserAccepted':True,'initializationAttempted':False,'audioStarted':False,
+                'installationPerformed':False,'seratoLaunched':False}
+        write(folder/'preparation.json',report)
+        print(json.dumps({'prepared':str(folder),'initializationAttempted':False,'nativeParserAccepted':True}))
+        return 0
+    report={'schema':'sl3.native-activation-'+probe+'-run.v1','successful':False,
             'audioStarted':None if silent_duplex else False,'buffersCreated':None if silent_duplex else False,
             'silentDuplexRequested':silent_duplex,
             'installationPerformed':False,'seratoLaunched':False,'platform':platform,'driver':driver,
@@ -97,48 +111,92 @@ def run(args, silent_duplex=False):
             require(s.information(expected_file,False)['identity']==s.information(actual_file,False)['identity'],'Observed process image differs')
             yield handle,{'pid':pid,'created':timestamp,'imageSha256':sha(image)}
     child=None
+    def await_record(path,seconds):
+        deadline=time.monotonic()+seconds
+        while not path.is_file():
+            require(child.poll() is None,'Host exited before '+path.name)
+            require(time.monotonic()<deadline,'Observation deadline for '+path.name)
+            time.sleep(.02)
+        return json.loads(path.read_bytes())
+
+    def ready_client(path,seconds):
+        ready=await_record(path/'host-ready.json',seconds)
+        require(ready['pid']==child.pid and ready['initialized'] is True and ready['accepted'] is True and ready['audioStarted'] is False,
+                'Native initialization/channel/clock contract failed')
+        return ready
+
     try:
         env=dict(os.environ);env.pop('SL3_ASIO_PRIVATE_TRACE',None)
-        child=subprocess.Popen([str(host),'--run-native-silent-duplex' if silent_duplex else '--run-native-control',str(copied/'sl3_asio.dll'),str(markers)],env=env,
+        option='--run-native-application-reopen' if application_reopen else ('--run-native-silent-duplex' if silent_duplex else '--run-native-control')
+        child=subprocess.Popen([str(host),option,str(copied/'sl3_asio.dll'),str(markers)],env=env,
                                stdout=subprocess.PIPE,stderr=subprocess.PIPE,creationflags=subprocess.CREATE_NO_WINDOW)
-        began=time.monotonic();ready_file=markers/'host-ready.json'
-        while not ready_file.exists():
-            require(child.poll() is None,'Host exited before initialization report')
-            require(time.monotonic()-began<26,'Initialization observation deadline');time.sleep(.02)
-        ready=json.loads(ready_file.read_bytes());report['hostReady']=ready
-        require(ready['pid']==child.pid and ready['initialized'] is True and ready['accepted'] is True and ready['audioStarted'] is False,'Native initialization/channel/clock contract failed')
+        first=markers/'open-1' if application_reopen else markers
+        report['hostReady']=ready_client(first,26)
         after=set(owners.iterdir()) if owners.exists() else set();fresh=after-before
-        require(len(fresh)==1,'Exactly one new production activation owner required');session=fresh.pop()
+        if application_reopen:
+            with live_process(child.pid,host) as (_,identity):
+                session=owners/('application-'+str(child.pid)+'-'+identity['created'])
+            require(fresh=={session,session.with_suffix('.claim')},'Exact host-bound owner and startup claim required')
+        else:
+            require(len(fresh)==1,'Exactly one new production activation owner required');session=fresh.pop()
         require(not session.is_symlink() and not session.is_junction(),'Redirected owner refused')
         report['session']=str(session)
-        published=json.loads((session/'ready.json').read_bytes())
+        if application_reopen:
+            require(json.loads((session/'intent.json').read_bytes())['applicationBound'] is True,'Application-bound controller required')
+            report['claimSha256']=sha(session.with_suffix('.claim'))
+        ready_path=session/'ready.json';ready_hash=sha(ready_path)
+        published=json.loads(ready_path.read_bytes())
         binding=dict(line.split('=',1) for line in (session/'broker-session.txt').read_text().splitlines()[1:])
         require(published['kind']=='native' and int(binding['server_pid'])==published['controllerPid'],'Native controller binding required')
         with live_process(published['controllerPid'],bundle/'sl3_broker_controller.exe',binding['server_created']) as (controller,controller_identity), \
              live_process(published['workerPid'],bundle/'sl3_usbdk.exe') as (worker,worker_identity):
             report['controller']=controller_identity;report['worker']=worker_identity
-            (markers/'release').write_bytes(b'one-shot release\n')
+            (first/'release').write_bytes(b'one-shot release\n')
+            if application_reopen:
+                outcomes=report['opens']=[await_record(first/'host-result.json',12)]
+                second=markers/'open-2'
+                report['secondHostReady']=ready_client(second,12)
+                require(wait(controller,0)==258 and wait(worker,0)==258,'Original controller and worker must survive first ASIO release')
+                (second/'release').write_bytes(b'second open on the retained owner\n')
+                outcomes.append(await_record(second/'host-result.json',12))
+                require(wait(controller,0)==258 and wait(worker,0)==258,'Original controller and worker must survive both releases')
+                require(sha(ready_path)==ready_hash and set(owners.iterdir())-before==fresh,
+                        'A second owner or changed publication cannot count as a retained reopen')
+                journal=(session/'worker-startup.tsv').read_text().splitlines()
+                events=[line.rsplit('\t',1)[-1] for line in journal]
+                require(events.count('redirect_start.return')==1 and 'redirect_close.enter' not in events,
+                        'One physical acquisition must cover both ASIO opens')
+                report['oneAcquisitionObserved']=True
+                (markers/'finish').write_bytes(b'host may exit\n')
             stdout,stderr=child.communicate(timeout=20)
             (folder/'stdout.txt').write_bytes(stdout);(folder/'stderr.txt').write_bytes(stderr)
             report['hostExitCode']=child.returncode
             report['controllerExited']=wait(controller,10000)==0;report['workerExited']=wait(worker,0)==0
-        report['hostResult']=json.loads((markers/'host-result.json').read_bytes())
+        report['hostResult']=report['opens'][-1] if application_reopen else json.loads((markers/'host-result.json').read_bytes())
         retirement=json.loads((session/'result.json').read_bytes());report['retirement']=retirement
         require(child.returncode==0 and report['hostResult']['successful'] is True,'ASIO release failed')
         if silent_duplex:
-            require(report['hostResult']['silentOutputOnly'] is True and report['hostResult']['callbacksCompleted']>=500 and report['hostResult']['durationMs']==3000,'Silent duplex progress contract failed')
+            require(all(result['successful'] is True and result['released'] is True and result['unloadable'] is True and
+                        result['silentOutputOnly'] is True and result['callbacksCompleted']>=500 and result['durationMs']==3000
+                        for result in report.get('opens',[report['hostResult']])), 'Silent duplex progress contract failed')
             report['audioStarted']=report['hostResult']['audioStarted'];report['buffersCreated']=report['hostResult']['buffersCreated']
         require(report['controllerExited'] and report['workerExited'],'Owned native processes did not retire')
         require(retirement['kind']=='native' and retirement['successful'] is True and retirement['nativeDeviceAcquired'] is True and
                 retirement['terminationRequested'] is False and retirement['lifetimeExpired'] is False and
                 all(retirement[k] is True for k in ('ioRetiredVerified','deviceReleasedVerified','processExited','jobEmpty')),'Native retirement not proved')
+        if application_reopen:
+            require(retirement['reason']=='application_exit' and retirement['applicationExitObserved'] is True,
+                    'Controller retirement must follow the exact host exit')
         require(sha(original)==readiness['ORIGINAL_ARCHIVE_SHA'] and not readiness['running_serato']()['running'],'Original application state changed')
         report['successful']=True
     except Exception as error:
         report['error']=str(error)
     finally:
         if child is not None and child.poll() is None:
-            if not (markers/'release').exists(): (markers/'release').write_bytes(b'observer cleanup\n')
+            if application_reopen:
+                (markers/'abort').write_bytes(b'observer cleanup\n')
+            elif not (markers/'release').exists():
+                (markers/'release').write_bytes(b'observer cleanup\n')
             try: stdout,stderr=child.communicate(timeout=10)
             except subprocess.TimeoutExpired:
                 child.kill();report['hostForcedTermination']=True;stdout,stderr=child.communicate(timeout=5)
@@ -147,7 +205,8 @@ def run(args, silent_duplex=False):
             stdout,stderr=child.communicate(timeout=5)
             (folder/'stdout.txt').write_bytes(stdout);(folder/'stderr.txt').write_bytes(stderr)
         if child is not None: report['hostExitCode']=child.returncode
-        fresh=(set(owners.iterdir()) if owners.exists() else set())-before
+        fresh={p for p in ((set(owners.iterdir()) if owners.exists() else set())-before)
+               if p.is_dir() and not p.is_symlink() and not p.is_junction()}
         report['observedNewSessions']=[str(p) for p in sorted(fresh)]
         report['nativeJournalSha256']={str(p):sha(p) for root in fresh for p in root.rglob('*') if p.is_file() and not p.is_symlink()}
         write(folder/'result.json',report)

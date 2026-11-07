@@ -1,8 +1,10 @@
 #requires -Version 7.5
-param()
+param([string]$BuildDirectory='artifacts/build/native-silent-duplex-host-20261106')
 $ErrorActionPreference='Stop'
 $diagnosticRoot=Split-Path -Parent $PSScriptRoot
-$diagnosticBuild=Join-Path $diagnosticRoot 'artifacts/build/native-silent-duplex-host-20261106'
+$diagnosticBuild=[IO.Path]::GetFullPath($BuildDirectory,$diagnosticRoot)
+$diagnosticBuildRoot=[IO.Path]::GetFullPath((Join-Path $diagnosticRoot 'artifacts/build'))+[IO.Path]::DirectorySeparatorChar
+if(-not $diagnosticBuild.StartsWith($diagnosticBuildRoot,[StringComparison]::OrdinalIgnoreCase)){throw 'Build directory must be below artifacts/build'}
 & cmake -S (Join-Path $diagnosticRoot 'diagnostics/asio-native-silent-duplex') -B $diagnosticBuild -G 'Visual Studio 16 2019' -A x64 '-DCMAKE_GENERATOR_INSTANCE=C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools' '-DCMAKE_SYSTEM_VERSION=10.0.19041.0'
 if($LASTEXITCODE -ne 0){throw 'Diagnostic configuration failed'}
 & cmake --build $diagnosticBuild --config Release
