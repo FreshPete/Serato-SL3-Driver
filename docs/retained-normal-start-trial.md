@@ -16,7 +16,7 @@ The setup scripts offer an explicit `--retained-broker` mode for the bounded 44.
 
 The next attended test needs a fresh SL3 recovery and temporary protected setup. Bring up the retained connection, then open the original Serato 5.0 executable normally and check whether it selects the SL3 and starts the rebuilt ASIO driver. Keep playback stopped for startup observation and close Serato before retiring the controller and restoring the installation. Normal Serato startup, automatic background startup and USB reacquisition after release remain open.
 
-Use the refreshed retained comparison described in the [package handoff](asio-on-demand-deployment.md#application-bound-candidate). Its setup manifest pins the current helper sources and the same locator bundle as this trial.
+The current retained comparison uses the client-observation build described below. Its private setup and broker input are in `analysis/sl3-on-demand-test-retained-client-observation-20261107`. The setup passed the read-only Plan and the controller parsed the matching 44.1 kHz/128-frame profile against the staged workspace images. The earlier locator bundle is the one used in the physical two-client proof above.
 
 ### Observe the normal launch
 
@@ -29,12 +29,26 @@ $app = Join-Path $env:ProgramFiles 'Serato\Serato DJ Pro\Serato DJ Pro.exe'
 $dll = Join-Path $env:ProgramFiles 'SL3 Rebuild\on-demand-diagnostic-v2\sl3_asio.dll'
 ./scripts/observe-asio-module-load.ps1 -Application $app -Module $dll `
   -ApplicationSha256 66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265 `
-  -ModuleSha256 38031e1750120deff2357db3a22623b2a6d3c7ab2b1f4501925056071d25bb36 `
+  -ModuleSha256 9d41ddcc0de481cd966d6786b15e656a3dcc6e4d71191815e6431a4009a9be55 `
   -TimeoutSeconds 45
 ```
 
 A populated `modulePathObserved` records the exact installed DLL path in the sampled Serato process. The observer checks process creation time around the module query and checks the application and DLL files against their reviewed hashes before and after the observation. This samples a path reported by Windows. It does not hash mapped memory, observe ASIO calls or establish callbacks. If the field is empty, the sampling could have missed a short-lived load. Pair the result with Serato's visible hardware status and the retained broker's records. If the DLL loads but the audio outcome is unclear, the [existing private control-call trace](asio-control-observation.md) can distinguish initialization and start in a separate launch.
 
+### Read the completed broker result
+
+After Serato closes and the same retained controller retires, compare `process.pid` and `process.creationFileTimeUtc` from the module observer with the rows under `clientObservations` in that controller's `result.json`. Keep creation time as a string and require both fields to match. A PID alone can be reused. A creation time of `"0"` means the broker could not read it and the row cannot identify the observed process.
+
+| Matching observation | What the broker verified |
+| --- | --- |
+| `admissionReplySent: true` | The exact process passed the pipe challenge and the broker sent its session reply after the worker's clock check. |
+| `streamStartReplies > 0` | The worker reported entering the requested stream and the broker completed the corresponding pipe write. |
+| `detachAcknowledged: true` | The client acknowledged its terminal detach reply. The controller separately verifies worker retirement and release. |
+
+A session reply can come from a short ASIO enumeration open. The count of stream-start replies distinguishes it from a request that starts the worker. These observations do not establish callbacks, audible output or DVS. The result holds up to 16 challenged connections, with an explicit truncation flag. An absent row or missing final result is inconclusive. The broker records no audio or account data and writes this evidence with its existing final report.
+
+The simulated controller tests compare the exact process identity and the sequence of three ASIO opens, with zero, two and two stream-start replies. They also check an interrupted application, where the completed stream-start reply survives and the final detach remains unacknowledged. The physically tested prior package predates these report fields. [Build and evidence](evidence/retained-client-observation-20261107.json)
+
 If Serato stays offline and the DLL is absent from the observation, the [USB dispatch analysis](serato-usb-subscription.md) identifies where to check next. The original arrival must reach the queue, the manager must be in the listener snapshot when the message is dispatched, and its handler must receive the message. Comparing arrival construction with subscription time alone cannot tell which step was missed.
 
-Five ordinary-user Windows checks passed. The observer detected a loaded system DLL in a new PowerShell fixture, distinguished the same DLL filename and bytes at a different path, ignored a pre-existing process, refused a wrong hash before arming, and sampled the actual Serato installation while Serato was closed. The read-only retained setup plan confirmed original Serato resources and absent temporary driver registration. The observer SHA-256 was `37112dd7dc325d4deb7be713fb83dcde9bf86b20dcb3856316c74a810ffb3a0b`. No normal Serato launch or new hardware test ran.
+Five earlier ordinary-user Windows checks passed. The observer detected a loaded system DLL in a new PowerShell fixture, distinguished the same DLL filename and bytes at a different path, ignored a pre-existing process, refused a wrong hash before arming, and sampled the actual Serato installation while Serato was closed. The observer SHA-256 was `37112dd7dc325d4deb7be713fb83dcde9bf86b20dcb3856316c74a810ffb3a0b`. The current comparison remains uninstalled and still needs an attended Serato launch and a physical acquisition.

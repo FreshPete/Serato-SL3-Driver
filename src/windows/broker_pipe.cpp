@@ -131,9 +131,11 @@ class BrokerConnection {
     HANDLE pipe_;RetainedBroker& owner_;Handle client_;std::uint64_t lease_=0;
     std::shared_ptr<const void> audio_reference_;
     bool accepted_=false;
-    std::string* diagnostic_;BrokerAccess access_;
+    std::string* diagnostic_;BrokerAccess access_;BrokerClientObservation* observation_;
 public:
-    BrokerConnection(BrokerListener& listener,RetainedBroker& owner,std::string* diagnostic,BrokerAccess access):pipe_(listener.state_->pipe.value),owner_(owner),diagnostic_(diagnostic),access_(access){}
+    BrokerConnection(BrokerListener& listener,RetainedBroker& owner,std::string* diagnostic,BrokerAccess access,
+                     BrokerClientObservation* observation):pipe_(listener.state_->pipe.value),owner_(owner),
+                     diagnostic_(diagnostic),access_(access),observation_(observation){}
     ~BrokerConnection(){if(accepted_)DisconnectNamedPipe(pipe_);}
     BrokerServeResult run(HANDLE stop,HANDLE application){
         Handle event;event.value=CreateEventW(nullptr,TRUE,FALSE,nullptr);if(!event.value)fail("Create broker accept event");
@@ -171,12 +173,19 @@ public:
             const auto proof=read(pipe_,5000,client_.value);if(!proof)throw std::runtime_error("Broker process proof deadline");request(*proof,2,Op::proof);
             if(WaitForSingleObject(challenge.value,0)!=WAIT_OBJECT_0 || WaitForSingleObject(client_.value,0)!=WAIT_TIMEOUT)
                 throw std::runtime_error("Broker process challenge not satisfied");
+            if(observation_){
+                observation_->pid=pid;
+                FILETIME creation{},exit{},kernel{},user{};
+                if(GetProcessTimes(client_.value,&creation,&exit,&kernel,&user))
+                    observation_->creation_filetime=(std::uint64_t(creation.dwHighDateTime)<<32)|creation.dwLowDateTime;
+            }
             lease_=owner_.attach(client_.value);if(!lease_)throw std::runtime_error("Client exited during broker admission");
             HANDLE worker=nullptr;if(!DuplicateHandle(GetCurrentProcess(),owner_.worker_process_handle(),client_.value,&worker,
                 SYNCHRONIZE|PROCESS_QUERY_LIMITED_INFORMATION,FALSE,0))fail("Grant worker wait reference");
             Frame admitted{2,unsigned(Op::proof),0,{}};put_handle(admitted.bytes,worker);
             const auto kind=device_session::encode_hello(owner_.kind());admitted.bytes.insert(admitted.bytes.end(),kind.begin(),kind.end());
             const auto snapshot=device_session::encode_snapshot(owner_.report().device);admitted.bytes.insert(admitted.bytes.end(),snapshot.begin(),snapshot.end());write(pipe_,admitted,client_.value);
+            if(observation_)observation_->admission_reply_sent=true;
             unsigned sequence=3;
             for(;;){
                 if(WaitForSingleObject(stop,0)!=WAIT_TIMEOUT){
@@ -205,12 +214,15 @@ public:
                     }else throw std::runtime_error("Unsupported broker operation");
                 }
                 write(pipe_,{frame->sequence,frame->opcode,0,device_session::encode_snapshot(result)},client_.value);
+                if(observation_ && frame->opcode==unsigned(Op::start))++observation_->stream_start_replies;
                 if(frame->opcode==unsigned(Op::detach)){
                     // DisconnectNamedPipe discards unread replies. Require the
                     // client's terminal acknowledgement, never an unbounded flush.
                     const auto ack=read(pipe_,5000,client_.value);
                     if(!ack)throw std::runtime_error("Broker detach acknowledgement deadline");
-                    request(*ack,sequence,Op::detach);return BrokerServeResult::detached;
+                    request(*ack,sequence,Op::detach);
+                    if(observation_)observation_->detach_acknowledged=true;
+                    return BrokerServeResult::detached;
                 }
             }
         }catch(...){
@@ -225,11 +237,13 @@ public:
         }
     }
 };
-BrokerServeResult serve_broker_client(BrokerListener& listener,RetainedBroker& owner,HANDLE stop,std::string* diagnostic,BrokerAccess access,HANDLE application){
+BrokerServeResult serve_broker_client(BrokerListener& listener,RetainedBroker& owner,HANDLE stop,std::string* diagnostic,
+                                     BrokerAccess access,HANDLE application,BrokerClientObservation* observation){
     if(diagnostic)diagnostic->clear();
+    if(observation)*observation={};
     if(!stop)throw std::invalid_argument("Explicit broker stop event required");
     if(WaitForSingleObject(stop,0)!=WAIT_TIMEOUT)return BrokerServeResult::stopped;
-    BrokerConnection connection(listener,owner,diagnostic,access);return connection.run(stop,application);
+    BrokerConnection connection(listener,owner,diagnostic,access,observation);return connection.run(stop,application);
 }
 
 struct BrokerClient::State {

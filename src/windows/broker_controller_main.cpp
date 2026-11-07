@@ -101,7 +101,14 @@ struct Timer {
     }){}
     ~Timer(){SetEvent(stop);thread.join();}
 };
-struct RunEvidence {bool acquired=false,published=false,application_exited=false;std::string error,reason="failure",connection_diagnostic;BrokerReport final;};
+struct RunEvidence {
+    bool acquired=false,published=false,application_exited=false;
+    std::string error,reason="failure",connection_diagnostic;
+    BrokerReport final;
+    std::array<BrokerClientObservation,16> clients{};
+    std::size_t client_count=0;
+    bool client_observations_truncated=false;
+};
 std::string result(const RunEvidence& e,bool expired){
     const auto& r=e.final;const bool retired=e.acquired && r.snapshot_valid && r.device.io_retired;
     const bool released=e.acquired && r.snapshot_valid && r.device.device_released;
@@ -116,6 +123,16 @@ std::string result(const RunEvidence& e,bool expired){
         <<",\"lastNativeError\":"<<r.device.native_error<<",\"lastObservedRateHz\":"<<r.device.rate_hz<<",\"lastDiagnostic\":"<<json_string(r.device.diagnostic)
         <<",\"ownerFailureCode\":"<<json_string(broker_failure_name(r.first_failure))<<",\"ownerFailurePhase\":"<<unsigned(r.first_failure_phase)
         <<",\"connectionDiagnostic\":"<<json_string(e.connection_diagnostic)
+        <<",\"clientObservationsTruncated\":"<<e.client_observations_truncated<<",\"clientObservations\":[";
+    for(std::size_t i=0;i<e.client_count;++i){
+        const auto& client=e.clients[i];
+        if(i)o<<',';
+        o<<"{\"pid\":"<<client.pid<<",\"creationFileTimeUtc\":\""<<client.creation_filetime
+            <<"\",\"admissionReplySent\":"<<client.admission_reply_sent
+            <<",\"streamStartReplies\":"<<client.stream_start_replies
+            <<",\"detachAcknowledged\":"<<client.detach_acknowledged<<'}';
+    }
+    o<<']'
         <<",\"nativeDeviceAcquired\":"<<(kind==session::Kind::native && e.acquired)<<",\"helperLoadedInController\":"<<helper_loaded()<<",\"usbReadyForNextAcquire\":false,\"rateRestorationVerified\":false}\n";return o.str();
 }
 int run(const std::filesystem::path& input,const std::filesystem::path& output,DWORD duration,bool keepalive,HANDLE application){
@@ -168,7 +185,12 @@ int run(const std::filesystem::path& input,const std::filesystem::path& output,D
         published.push_back(write_new(output/L"ready.json",ready.str()));evidence.published=true;journal.mark("serve_begin");
         while(WaitForSingleObject(stop.value,0)==WAIT_TIMEOUT){
             std::string connection_diagnostic;
-            const auto served=serve_broker_client(listener,owner,stop.value,&connection_diagnostic,BrokerAccess::audio,application);
+            BrokerClientObservation client;
+            const auto served=serve_broker_client(listener,owner,stop.value,&connection_diagnostic,BrokerAccess::audio,application,&client);
+            if(client.pid){
+                if(evidence.client_count<evidence.clients.size())evidence.clients[evidence.client_count++]=client;
+                else evidence.client_observations_truncated=true;
+            }
             if(served==BrokerServeResult::owner_failed || owner.report().failed){
                 evidence.reason="owner_failure";evidence.connection_diagnostic=connection_diagnostic.substr(0,512);break;
             }

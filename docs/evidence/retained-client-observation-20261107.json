@@ -1,0 +1,100 @@
+{
+  "schema": "sl3.retained-client-observation-evidence.v1",
+  "dateUtc": "2026-11-07",
+  "buildManifestSha256": "47f54e288e423e0413742cef62b1ecc1a782255a02b1bfd35a6f333afd79d3e1",
+  "ctestLogSha256": "f732f1f22b6be69eef0699dfaaa88e5839aac465767d687c507ddb57dd389643",
+  "nativeCTestTargetsPassed": 73,
+  "controllerCasesPassed": 12,
+  "controllerTestIndexSha256": "f03020a68a0280bfa8025449c086285e81588dd1e0476b816960ebf225882b46",
+  "controllerTestSourceSha256": "e9761ab727b54be1ea345a3d1fcdb3722d09a2027a783a54d02dbd7db465e043",
+  "observedSimulations": [
+    {
+      "case": "application-exits-after-reopens",
+      "resultSha256": "89543230476e32f1a41d2130ffe4228d43fa62c1095f969f8bb1f23d1d38ce07",
+      "admissionReplies": [
+        true,
+        true,
+        true
+      ],
+      "startReplies": [
+        0,
+        2,
+        2
+      ],
+      "detachAcknowledged": [
+        true,
+        true,
+        true
+      ],
+      "singleProcessIdentity": true,
+      "ownerFailed": false,
+      "simulatedWorkerReleased": true
+    },
+    {
+      "case": "application-exits-streaming",
+      "resultSha256": "7183ccdfa471d689c64fa260fb3880ce6de0f4ed4bd0cf2b0b6f00f0c0de2528",
+      "admissionReplies": [
+        true,
+        true
+      ],
+      "startReplies": [
+        0,
+        1
+      ],
+      "detachAcknowledged": [
+        true,
+        false
+      ],
+      "singleProcessIdentity": true,
+      "ownerFailed": true,
+      "simulatedWorkerReleased": true
+    },
+    {
+      "case": "ordinary-session",
+      "resultSha256": "19f42b34d07947f7263dbc02aed4e9b5cc7d0920fe937ee8c313020121ca2627",
+      "admissionReplies": [
+        true,
+        true,
+        true
+      ],
+      "startReplies": [
+        0,
+        2,
+        2
+      ],
+      "detachAcknowledged": [
+        true,
+        true,
+        true
+      ],
+      "singleProcessIdentity": true,
+      "ownerFailed": false,
+      "simulatedWorkerReleased": true
+    }
+  ],
+  "retainedBundleManifestSha256": "8bd9e9c70c4c04f1d7b8f52faa6712c752271e18922b931ba391478f067e70d1",
+  "retainedExperimentSha256": "923c58811a52cdfdf6b39cbda2d308a38ae861f092bb1fba964066ec1c83853d",
+  "retainedLaunchManifestSha256": "63819153bc5813d79077f905b55a37876fa9becbdcccd0efbd193ee3b5fbaa39",
+  "driverDllSha256": "9d41ddcc0de481cd966d6786b15e656a3dcc6e4d71191815e6431a4009a9be55",
+  "controllerExeSha256": "f35c53446c73c513359fe9ee740c6271b7cce0f0f2a16d80803a3580f5723d4d",
+  "workspaceInputInspection": {
+    "schema": "sl3.unmeasured-input-inspection.v1",
+    "kind": "native",
+    "rateHz": 44100,
+    "bufferFrames": 128,
+    "workerSha256": "64aa9c580438be28ec7db1f13ce248b5f5732290ed9d88ec464dcb1c59f4b894",
+    "latencyAvailable": false,
+    "deviceAccess": false,
+    "filesWritten": false
+  },
+  "hostCheck": {
+    "archive": "original",
+    "nativePackage": "absent",
+    "seratoRunning": false,
+    "actions": 0
+  },
+  "installed": false,
+  "nativeDeviceAccess": false,
+  "seratoLaunched": false,
+  "elevationRequested": false
+}

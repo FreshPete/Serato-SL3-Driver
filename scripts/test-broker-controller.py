@@ -213,6 +213,15 @@ def main():
                     f'Application exit matches scenario: {stdout} {stderr}')
             final = finish_case(output, controller, 1 if interrupted else 0)
             require(final['applicationExitObserved'] and not final['lifetimeExpired'], 'Exact app exit observed before lifetime cap')
+            observations = final['clientObservations']
+            expected_starts = [0, 1] if interrupted else [0, 2, 2]
+            require(final['clientObservationsTruncated'] is False and
+                    [row['streamStartReplies'] for row in observations] == expected_starts and
+                    all(row['pid'] == app.pid and row['creationFileTimeUtc'] == identity.split(':', 1)[1] and
+                        row['admissionReplySent'] is True for row in observations),
+                    'Exactly the authenticated host supplies the admitted enumeration and streaming objects')
+            require([row['detachAcknowledged'] for row in observations] ==
+                    ([True, False] if interrupted else [True, True, True]), 'Detach requires the actual terminal acknowledgement')
             audit = (output/'worker-audit.txt').read_text().splitlines()
             require(audit.count('acquire') == 1 and audit.count('release') == 1, 'One acquisition and release')
             if interrupted:
@@ -316,6 +325,13 @@ def main():
             require(audit.count('acquire') == 1 and audit.count('release') == 1, 'No controller reacquisition loop')
             if mode.startswith('ordinary'):
                 require(audit.count('rate') == 8 and audit.count('begin') == 4 and audit.count('end') == 4, 'Three ordinary COM objects/four SDK streams retain one worker')
+                observations = final['clientObservations']
+                require(final['clientObservationsTruncated'] is False and
+                        [row['streamStartReplies'] for row in observations] == [0, 2, 2] and
+                        len({(row['pid'], row['creationFileTimeUtc']) for row in observations}) == 1 and
+                        all(row['admissionReplySent'] is True and row['detachAcknowledged'] is True and
+                            int(row['creationFileTimeUtc']) > 0 for row in observations),
+                        'Unbound controller distinguishes enumeration from streaming by one proved process')
             require(call([native, '--stop', '--config', published], expected=1).returncode == 1, 'Stale process record refused after exit')
             if entry != published:
                 call([client, '--published', entry, library, mode], expected=1)  # Stale locator cannot reconnect.
