@@ -1,0 +1,24 @@
+{
+  "schema": "sl3.retained-release-identity-evidence.v1",
+  "dateUtc": "2026-11-07",
+  "desktopRunnerSha256": "30af84df31d70fc44bf6fde4637c8d396692a11de145230638c2a6c38de498fc",
+  "desktopTestsSha256": "245ef48fc293acb4e16a8dcbc256410853fbc34fd1101bfc75a42426928c33d5",
+  "retainedTestsPassed": 31,
+  "standaloneComparison": {
+    "bothObservedWithoutBroker": true,
+    "earlierCompleteSamples": 4,
+    "laterCompleteSamples": 10,
+    "laterRequestedSeconds": 15,
+    "laterContextClosedAndChildExited": true,
+    "comparison": "same_sampled_identity_set",
+    "targetVisibleInBoth": true,
+    "earlierObservationSha256": "72d4cf3c82d6a434fa924d69e487076450da8f0e73c1bdb4a1fcd02a6794b8bc",
+    "laterObservationSha256": "55c2f8132c8d1fad60beeb5678d453809e774184a56ef98c5c320bfb71f15057",
+    "laterSupervisorSha256": "c355e3c6cb389d52ae3b34d4908f26b2f3f7083afef79a8936b2c4600bccb22d"
+  },
+  "physicalReleaseObserved": false,
+  "nativeAcquisitionAttempted": false,
+  "usbReadyForNextAcquire": false,
+  "seratoLaunched": false,
+  "elevationRequested": false
+}

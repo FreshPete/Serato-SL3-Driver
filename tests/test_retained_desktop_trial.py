@@ -80,6 +80,54 @@ class StartupTests(unittest.TestCase):
         self.assertEqual(calls,['before','start','during','record','retire','restore'])
 
 
+class IdentityTests(unittest.TestCase):
+    @staticmethod
+    def sample(address, complete=True):
+        identities = [] if address is None else [dict(vendor=0x1cc5, product=1, revision=0, bus=3, address=address)]
+        return {'event':'sample','snapshot':{'complete':complete,'identities':identities}}
+
+    def test_full_identity_distinguishes_address_and_visibility(self):
+        original = DESKTOP['identity_samples']([self.sample(2),self.sample(2)])
+        redirected = DESKTOP['identity_samples']([self.sample(3)])
+        absent = DESKTOP['identity_samples']([self.sample(None)])
+        self.assertEqual(absent['identitySets'],[[]])
+        self.assertEqual(DESKTOP['compare_identity'](original,original),'same_sampled_identity_set')
+        for changed in (redirected,absent):
+            self.assertEqual(DESKTOP['compare_identity'](original,changed),'different_sampled_identity_set')
+
+    def test_incomplete_or_changing_phase_is_indeterminate(self):
+        original = DESKTOP['identity_samples']([self.sample(2)])
+        for samples in ([self.sample(2,False)],[self.sample(2),self.sample(2,False)],
+                        [self.sample(None),self.sample(2)]):
+            with self.subTest(samples=samples):
+                changed = DESKTOP['identity_samples'](samples)
+                self.assertEqual(DESKTOP['compare_identity'](original,changed),'indeterminate')
+
+    def test_release_observation_preserves_retirement_and_readiness_limits(self):
+        original = DESKTOP['identity_samples']([self.sample(2)])
+        held = DESKTOP['identity_samples']([self.sample(None)])
+        previous = {'before':original,'during':held}
+        result = {'outcome':'retired'}
+
+        def observe(phase, seconds):
+            self.assertEqual((phase,seconds),('after',15))
+            return original
+
+        DESKTOP['observe_release'](result,observe,previous)
+        self.assertEqual(result['beforeToAfter'],'same_sampled_identity_set')
+        self.assertEqual(result['duringToAfter'],'different_sampled_identity_set')
+        self.assertIs(result['usbReadyForNextAcquire'],False)
+
+        def fail(*_):
+            raise OSError('USB observer failed')
+
+        result = {'outcome':'retired'}
+        DESKTOP['observe_release'](result,fail,previous)
+        self.assertEqual(result['outcome'],'retired')
+        self.assertEqual(result['postReleaseObservationError'],'USB observer failed')
+        self.assertIs(result['usbReadyForNextAcquire'],False)
+
+
 @unittest.skipUnless(sys.platform=='win32','Windows process handles required')
 class WindowTests(unittest.TestCase):
     def test_exact_child_window_is_admitted_only_while_live(self):

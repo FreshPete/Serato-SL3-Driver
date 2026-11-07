@@ -2,6 +2,7 @@
 
 import argparse
 from contextlib import ExitStack, contextmanager
+from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
@@ -14,7 +15,9 @@ import time
 ROOT = Path(__file__).resolve().parents[1]
 BROKER_LIMIT_MS = 120000
 MINIMUM_BROKER_WINDOW_SECONDS = BROKER_LIMIT_MS // 1000 + 15
-USB_OBSERVER_TIMEOUT_SECONDS = 35
+IDENTITY_SECONDS = 5
+POST_RELEASE_SECONDS = 15
+USB_OBSERVER_TIMEOUT_SECONDS = IDENTITY_SECONDS + 30
 
 
 def require(condition, message):
@@ -31,6 +34,36 @@ def write_report(path, report):
     with path.open('x', encoding='utf-8') as stream:
         json.dump(report, stream, indent=2)
         stream.write('\n')
+
+
+def identity_samples(rows):
+    samples = [row['snapshot'] for row in rows if row['event']=='sample']
+    complete = [sample for sample in samples if sample['complete']]
+    keys = ('vendor','product','revision','bus','address')
+    sets = {tuple(sorted(tuple(item[key] for key in keys) for item in sample['identities']))
+            for sample in complete}
+    return {'completeSamples':len(complete),'incompleteSamples':len(samples)-len(complete),
+            'identitySets':[[dict(zip(keys,item)) for item in group] for group in sorted(sets)]}
+
+
+def compare_identity(first, second):
+    """Compare stable sampled identities, with no inference through gaps."""
+    a, b = first['identitySets'], second['identitySets']
+    if first['incompleteSamples'] or second['incompleteSamples'] or len(a)!=1 or len(b)!=1:
+        return 'indeterminate'
+    return 'same_sampled_identity_set' if a==b else 'different_sampled_identity_set'
+
+
+def observe_release(result, observe, previous):
+    """A USB observation failure cannot change the completed retirement result."""
+    result['usbReadyForNextAcquire'] = False
+    try:
+        after = observe('after', POST_RELEASE_SECONDS)
+        result['postReleaseIdentity'] = after
+        result['beforeToAfter'] = compare_identity(previous['before'], after)
+        result['duringToAfter'] = compare_identity(previous['during'], after)
+    except (Exception, KeyboardInterrupt) as error:
+        result['postReleaseObservationError'] = str(error) or type(error).__name__
 
 
 @contextmanager
@@ -133,6 +166,15 @@ def run(args):
             except FileExistsError:
                 pass
 
+        def observe(phase, seconds):
+            path = output/phase
+            command = [sys.executable,'-I','-B',str(ROOT/'scripts/supervise-usb-identity.py'),
+                       '--run','--seconds',str(seconds),'--result-directory',str(path)]
+            subprocess.run(command,capture_output=True,check=True,timeout=seconds+30)
+            checked = api['module']('supervise-usb-identity.py')['validate_supervised_run'](path)
+            rows = (json.loads(line) for line in (path/'observations.jsonl').read_text(encoding='utf-8').splitlines())
+            return {**identity_samples(rows),'startedUtc':checked['started_utc'],'closedUtc':checked['closed_utc']}
+
         if args.action=='finish':
             previous = json.loads((output/'startup.json').read_bytes())
             require(previous['schema']==result['schema'] and previous['action']=='start' and
@@ -140,8 +182,11 @@ def run(args):
             require_idle_serato()
             try:
                 result.update(outcome='retired', retirement=retire())
+                result['retirementObservedUtc'] = datetime.now(timezone.utc).isoformat()
             finally:
                 request_restore()
+            observe_release(result, observe, previous['usbIdentity'])
+            write_report(output/'finish.json',result)
             return result
 
         minimum_start = MINIMUM_BROKER_WINDOW_SECONDS + USB_OBSERVER_TIMEOUT_SECONDS
@@ -149,17 +194,12 @@ def run(args):
             require_idle_serato()
             check(minimum_start)
             output.mkdir()
-            supervisor = api['module']('supervise-usb-identity.py')
+            identities = {}
 
             def snapshot(phase):
-                path = output/phase
-                command = [sys.executable,'-I','-B',str(ROOT/'scripts/supervise-usb-identity.py'),
-                           '--run','--seconds','5','--result-directory',str(path)]
-                subprocess.run(command,capture_output=True,check=True,timeout=USB_OBSERVER_TIMEOUT_SECONDS)
-                supervisor['validate_supervised_run'](path)
-                rows = (json.loads(line) for line in (path/'observations.jsonl').read_text(encoding='utf-8').splitlines())
-                complete = [row['snapshot'] for row in rows if row['event']=='sample' and row['snapshot']['complete']]
-                return any(item['identities'] for item in complete) if complete else None
+                summary = observe(phase, IDENTITY_SECONDS)
+                identities[phase] = summary
+                return any(summary['identitySets']) if summary['completeSamples'] else None
 
             def start():
                 with broker['handoff_lock'](session):
@@ -175,11 +215,14 @@ def run(args):
                 with broker['process_handle'](pid) as process:
                     require(process and str(process[0])==owner['controllerCreatedFileTime'] and not process[1](0),
                             'The retained controller exited during the USB observation')
+                    ready.update(usbIdentity=identities,
+                                 beforeToDuring=compare_identity(identities['before'],identities['during']))
                     write_report(output/'startup.json',{**result,**ready})
 
             trial = start_trial(snapshot,start,retire,request_restore,record_ready)
             result.update(trial)
             if result['outcome']=='startup_failed':
+                result['usbIdentity'] = identities
                 write_report(output/'failure.json',result)
             return result
 
