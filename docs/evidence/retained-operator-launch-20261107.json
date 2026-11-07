@@ -1,0 +1,16 @@
+{
+  "schema": "sl3.retained-operator-launch-evidence.v1",
+  "dateUtc": "2026-11-07",
+  "launcherSha256": "e63cc05b1c1065dbd836e077a4220493fdacd7a971a2f3d7199f5db0f234dc84",
+  "handoffSha256": "3d36ee3a89ce9b87413330fa65541200ddc39969308cbdb530afa406afedb49b",
+  "experimentSha256": "0d842831f4c1b0a6dfa02ef8f0d07608132aec5128da42b29d8518666f45b538",
+  "ordinaryHostPlanSawOriginalSetup": true,
+  "localShortcutTargetAndArgumentsReadBack": true,
+  "simulatedWindowsCancellationReported": true,
+  "simulatedExitedProcessRefused": true,
+  "simulatedMatchingLiveWindowReported": true,
+  "actualAdministratorPromptOpened": false,
+  "protectedSetupChanged": false,
+  "seratoLaunched": false,
+  "nativeAcquisitionAttempted": false
+}

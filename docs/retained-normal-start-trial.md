@@ -22,6 +22,8 @@ The current retained comparison uses the client-observation build described belo
 
 ### One approval for the attended comparison
 
+The local **Approve temporary SL3 setup** shortcut starts the approval from the operator's own desktop. It calls `scripts/start-retained-setup.ps1 -Run`, which checks the pinned experiment, Python and handoff script before requesting one administrator launch. The default invocation is read-only. A canceled approval leaves setup untouched. A verified ready message means the exact launched process is still serving the temporary setup window. Leave Serato closed until the desktop runner and module observer are ready. [Launcher verification](evidence/retained-operator-launch-20261107.json)
+
 `scripts/retained-setup-handoff.py` uses the exact retained experiment and its reviewed SHA-256. With the prepared Python runtime, the default action verifies the restored host without creating an output directory. The explicit `run` action requires an already approved administrator process. It runs the existing guarded setup, waits for the desktop session and then runs the existing guarded restore in the same elevated process. The helper does not launch Serato or the USB broker.
 
 After a successful setup the handoff writes `attended-setup/window.json`. The window identifies the exact live handoff process, setup receipt and deadline. The handoff begins its idle check at the restore signal or after four minutes. It requires confirmation within two minutes that Serato and the broker have closed. It does not close either process. Verify the original setup in `restore-stdout.json` and the handoff's `result.json`.
