@@ -1,6 +1,17 @@
 # SL3 rebuild progress for the owner's return
 
-The [7 November Windows handoff](return-to-testing.md) has the current bench results, restored host state and one-approval normal-launch procedure. The checkpoints below retain the earlier engineering history.
+## 7 November Windows handoff
+
+**The next check is one install and two launches from the normal Serato shortcut.** The private installer is `artifacts/build/SL3-Portable-Setup-20261107-r2.zip`. Its 762 files matched the reviewed build. The native entry passed 40 checks, including first-run recovery and reuse of the same setup record. The portable window passed 20 checks. This is the Serato DJ Pro 5.0.0.1278 trial build with a ten-minute audio limit. [Installer and package hash](one-time-setup-window.md#portable-development-build)
+
+1. With the SL3 connected and Serato closed, extract the whole ZIP to a local folder. Open `SL3_Compatibility_Setup.exe`, choose **Check setup**, then **Install** and approve the Windows prompt.
+2. Close Setup and open Serato normally. If the SL3 connects and the decks appear, close Serato and reopen it the same way with the SL3 still connected. Leave **Download Driver** untouched if it appears. [Test steps and restoration](return-to-testing.md#next-attended-test)
+
+Both Phase Essential decks followed a shared platter in the installer-assisted Serato session on inputs 3/4 and 5/6, and both software output pairs carried audio. The startup traces showed the genuine SL3 selected and ASIO starting at 44.1 kHz with 128-frame buffers. A separate retained USB test streamed through two ASIO hosts on one connection. These results leave normal Serato selection and automatic USB startup together unverified. [Phase session](evidence/phase-two-deck-session-20261105.json) · [Serato startup traces](evidence/serato-startup-routes-20261107.json) · [Retained USB test](evidence/retained-normal-start-trial-20261107.json)
+
+The latest read-only check found the original Serato archive, absent replacement registration and files, Serato closed, and UsbDk running. Windows recorded Secure Boot enabled and the SL3's original driver binding at Code 39. A previous fresh USB acquisition stalled after stream shutdown, so reliable close and reopen also needs a live result. Physical Serato output, independent turntables, vinyl, longer sessions and another Windows PC remain later checks. macOS Tahoe stays deferred until Windows works. [Windows test handoff](return-to-testing.md) · [Release checks](installed-use-target.md#acceptance-checks)
+
+The checkpoints below retain the earlier engineering history.
 
 ## 6 November packaging checkpoint
 
