@@ -50,7 +50,9 @@ Add `--application-bound` to the preparation command to select `asio-init-applic
 
 Preparation runs the exact build's passive native configuration inspector on temporary records pointing at the workspace binaries. The inspector checks that the build can parse version 2 before the package is emitted. The package retains the 44.1 kHz, 128-frame, ten-minute diagnostic limit. Its controller [follows the application's lifetime](application-bound-broker.md#automatic-asio-activation) within that limit.
 
-The no-shim Serato setup checks for held controller and worker images in the application-bound installation before changing the setup. This is an idle check at the start of the action. Existing archive and uninstall checks still verify actual ownership and final cleanup. The diagnostic package is prepared locally and remains uninstalled.
+The no-shim Serato setup checks for held controller and worker images before changing either the application-bound or retained setup. The retained check still requires the locator and its pending file to be absent. A missing locator alone cannot establish that the controller and worker have exited, because startup can fail before publishing it.
+
+Windows allowed an exclusive read open of a running fixture image. The guard now requests read and write access to the existing files without writing any bytes. The same fixture running as either executable caused a sharing violation, and the guard admitted the image after the process exited. Both package modes passed the isolated setup and restore checks. This is a check at the start of an action, so close Serato and retire the broker before restoring. [Mapped-image and setup evidence](evidence/on-demand-idle-guard-20261107.json)
 
 All 22 package checks, 261 isolated installer and recovery checks, 20 paired setup and restoration checks, and 13 read-only preparation checks passed. The paired tests held each runtime image in turn and verified that the guard preserved the staged files and registration. The earlier per-session bundle still verifies. [Test counts, scope and exact manifest hashes](evidence/application-bound-deployment-20261107.json).
 

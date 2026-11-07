@@ -32,11 +32,11 @@ Sixteen actual checks cover clean/installed/partial/conflicting eligibility, the
 ## Current private candidate
 
 ```text
-artifacts/build/native-setup-window-application-claim-failure-20261107/build/Release/SL3_Compatibility_Setup.exe
-SHA256 c416cd29e2601ea3b9b517bea28ce8be06ae8d735358ea5f0444a564dad132e9
+artifacts/build/native-setup-window-application-idle-guard-20261107/build/Release/SL3_Compatibility_Setup.exe
+SHA256 4cdcbbb74ea55a85527ef93e90a74179808ec70a24e8eccbbc846624f39bd23e
 ```
 
-The setup-only kit is `artifacts/build/sl3-on-demand-kit-application-claim-failure-20261107`. It carries the revised driver that reports an incomplete first activation and refuses to start another controller in the same application process. The read-only host check found the original Serato archive, Serato stopped and no temporary native package. This build used the existing window code and had no new visual inspection or privileged actions. Normal Serato startup and physical use of this package still need an attended test. [Current build evidence](evidence/application-claim-failure-20261107.json) · [Earlier application-bound window verification](evidence/application-bound-setup-window-20261107.json)
+The setup-only kit is `artifacts/build/sl3-on-demand-kit-application-idle-guard-20261107`. It carries the same application-bound driver with the updated setup check for running controller and worker images. All 27 moved-kit checks and 18 window checks passed. The read-only host check found the original Serato archive, Serato stopped and no temporary native package. This build used the existing window code and had no new visual inspection or privileged actions. Normal Serato startup and physical use of this package still need an attended test. [Current build evidence](evidence/on-demand-idle-guard-20261107.json) · [Application-bound driver evidence](evidence/application-claim-failure-20261107.json)
 
 ### Earlier review build
 

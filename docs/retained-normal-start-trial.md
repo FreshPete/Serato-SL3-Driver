@@ -12,15 +12,17 @@ At the later retry, the owner confirmed a 30-second power cycle and the read-onl
 
 ## Next Serato check
 
-The setup scripts offer an explicit `--retained-broker` mode for the bounded 44.1 kHz, 128-frame diagnostic bundle. This mode requires the idle locator check before setup or restoration. It uses the existing external controller for the USB connection. The default setup path continues to require the on-demand bundle.
+The setup scripts offer an explicit `--retained-broker` mode for the bounded 44.1 kHz, 128-frame diagnostic bundle. This mode checks that the locator is absent and that neither staged runtime image is in use before setup or restoration. It uses the existing external controller for the USB connection. The default setup path continues to require the on-demand bundle.
 
 The next attended test needs a fresh SL3 recovery and temporary protected setup. Bring up the retained connection, then open the original Serato 5.0 executable normally and check whether it selects the SL3 and starts the rebuilt ASIO driver. Keep playback stopped for startup observation and close Serato before retiring the controller and restoring the installation. Normal Serato startup, automatic background startup and USB reacquisition after release remain open.
 
-The current retained comparison uses the client-observation build described below. Its private setup and broker input are in `analysis/sl3-on-demand-test-retained-client-observation-20261107`. The setup passed the read-only Plan and the controller parsed the matching 44.1 kHz/128-frame profile against the staged workspace images. The earlier locator bundle is the one used in the physical two-client proof above.
+The current retained comparison uses the client-observation build described below. Its refreshed private setup and broker input are in `analysis/sl3-on-demand-test-retained-idle-guard-20261107`. The setup passed the read-only Plan and the controller parsed the matching 44.1 kHz/128-frame profile against the workspace images. The earlier locator bundle is the one used in the physical two-client proof above. [Refreshed experiment identities](evidence/on-demand-idle-guard-20261107.json)
 
 ### Observe the normal launch
 
 Take a short [libusb identity snapshot](serato-usb-discovery.md#what-the-retained-usb-connection-exposes) before acquisition and again while the broker is ready. Use the existing ordinary-user `scripts/supervise-usb-identity.py --run --seconds 5 --result-directory <fresh-local-directory>` for each snapshot. This distinguishes successful USB ownership from whether Serato's library can still discover the SL3 in that state. Keep the broker in the same session for the manual launch.
+
+Once temporary setup has succeeded and the attended recovery check permits acquisition, use the prepared `retained-launch.json` with `scripts/asio-diagnostic-session.py start`. Its reviewed controller path and hash, input, session and pointer identify one bounded acquisition. After closing Serato normally, use `stop` with the same controller, hash, session and pointer, omitting the input. Verify the broker result and then run the separately approved restoration.
 
 With the reviewed retained package installed and the broker ready, start the [read-only module observer](../scripts/observe-asio-module-load.ps1) in 64-bit PowerShell under the ordinary desktop account. Open Serato from its usual shortcut after the observer reports that it is armed. The observer samples Windows process and module metadata without attaching to the desktop, launching Serato or setting trace environment variables.
 

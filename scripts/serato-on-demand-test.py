@@ -141,16 +141,18 @@ class Native:
             pointer = Path(self.plan['pointerPath'])
             require(self.s.absent(pointer) and self.s.absent(pointer.with_name(pointer.name + '.pending')),
                     'Stop the retained broker and withdraw its pointer before changing setup')
-        if self.plan.get('activationMode') == self.api['APPLICATION_ACTIVATION_MODE']:
+        if self.retained_broker or self.plan.get('activationMode') == self.api['APPLICATION_ACTIVATION_MODE']:
             with ExitStack() as held:
                 for name in ('sl3_broker_controller.exe', 'sl3_usbdk.exe'):
                     path = self.destination/name
                     if not self.s.absent(path):
                         try:
-                            handle = held.enter_context(self.s.open_file(path, share=0))
+                            # A mapped image can admit even an exclusive read open.
+                            # Request write access to check that the image has retired.
+                            handle = held.enter_context(self.s.open_file(path, access=0xc0000000, share=0))
                             self.s.information(handle, False)
                         except OSError as error:
-                            raise ValueError('Wait for the application-bound SL3 controller and worker to retire before changing setup') from error
+                            raise ValueError('Wait for the SL3 controller and worker to retire before changing setup') from error
 
     def observe(self):
         import winreg

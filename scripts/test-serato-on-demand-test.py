@@ -5,6 +5,7 @@ from ctypes import wintypes as W
 import json
 from pathlib import Path
 import runpy
+import shutil
 import subprocess
 import sys
 import uuid
@@ -18,11 +19,20 @@ BASE='Software\\SL3RebuildOnDemandPairTests'
 
 
 def main():
+    require(len(sys.argv) in (4,6),'Expected bundle, hash and PowerShell, with optional running fixture and hash')
     bundle=Path(sys.argv[1]).absolute();expected=sys.argv[2];pwsh=Path(sys.argv[3]).absolute()
+    image_fixture=None
+    if len(sys.argv)==6:
+        image_fixture=Path(sys.argv[4]).resolve()
+        require(image_fixture.name=='sl3_broker_activation_tests.exe' and
+                image_fixture.is_relative_to(ROOT/'artifacts/build') and sha(image_fixture)==sys.argv[5],
+                'Expected the reviewed native activation fixture')
     install=API['module']('asio-install.py');j=install['sibling']('asio-install-journal');s=j.stage_module();r=install['sibling']('asio-registry')
     require(not s.elevated(),'Ordinary user required for isolated tests')
     deployment=API['module']('prepare-asio-deployment.py');manifest,payload=deployment['capture_bundle'](bundle,expected);deployment['verify_payloads'](manifest,payload)
-    require(manifest['schema']=='sl3.deployment-bundle.v2','On-demand diagnostic package required')
+    retained=manifest['schema']=='sl3.deployment-bundle.v1'
+    require(not retained or manifest.get('timingMode')=='unmeasured-diagnostic-44100-128',
+            'Bounded retained diagnostic package required')
     plan=deployment['record'](payload['deployment-plan.json'])
     identity=uuid.uuid4().hex;namespace=BASE+'\\'+identity;folder=ROOT/'artifacts/build/on-demand-pair-tests'/identity;folder.mkdir(parents=True)
     sid=s.user_sid();policy=s.Policy(sid,(s.SYSTEM,s.ADMINS,sid));cases=[];details={}
@@ -128,8 +138,11 @@ switch($Action){
             before={p.name:sha(p) for p in f[3].parent.iterdir()}
             case('repeat-setup-does-not-reinstall',lambda:passed(run(f,'setup')))
             require(before=={p.name:sha(p) for p in f[3].parent.iterdir()} and f[2]['installs']==1,'No second installation/witness write')
-            if plan.get('activationMode') == deployment['APPLICATION_ACTIVATION_MODE']:
-                guard=API['Native'](bundle,expected);guard.destination=f[6]/'stage'
+            if retained or plan.get('activationMode') == deployment['APPLICATION_ACTIVATION_MODE']:
+                guard=API['Native'](bundle,expected,retained);guard.destination=f[6]/'stage'
+                if retained:
+                    guard.plan={**guard.plan,'pointerPath':str(f[6]/'private-pointer.txt')}
+                mode='retained' if retained else 'application'
                 def busy(name):
                     with s.open_file(guard.destination/name):
                         try:guard.require_idle()
@@ -138,9 +151,37 @@ switch($Action){
                         else:raise AssertionError('Live image lease was accepted')
                     require(before=={p.name:sha(p) for p in f[3].parent.iterdir()} and
                             f[1].observe()['state']=='installed','Busy-owner guard preserves archive and registration')
-                case('application-controller-in-use-refused',lambda:busy('sl3_broker_controller.exe'))
-                case('application-worker-in-use-refused',lambda:busy('sl3_usbdk.exe'))
-                case('released-application-images-admitted',guard.require_idle)
+                case(mode+'-controller-in-use-refused',lambda:busy('sl3_broker_controller.exe'))
+                case(mode+'-worker-in-use-refused',lambda:busy('sl3_usbdk.exe'))
+                case('released-'+mode+'-images-admitted',guard.require_idle)
+                if image_fixture:
+                    # Exercise a mapped image in a separate fixture directory. The
+                    # native staging fixture keeps its real package and receipts.
+                    guard.destination=f[6]/'running-images'
+                    guard.destination.mkdir()
+                    def mapped(name):
+                        image=guard.destination/name
+                        shutil.copyfile(image_fixture,image)
+                        marker=guard.destination/(name+'.delay')
+                        child=subprocess.Popen([str(image),'--run','--input','unused','--output',str(marker),
+                                                '--limit-ms','1000'],creationflags=subprocess.CREATE_NO_WINDOW)
+                        try:
+                            require(child.poll() is None,'Owned fixture must still be mapped')
+                            try:guard.require_idle()
+                            except ValueError as error:
+                                require(isinstance(error.__cause__,OSError) and error.__cause__.winerror==32 and
+                                        child.poll() is None,'Live image must give a sharing violation')
+                            else:raise AssertionError('Mapped image was accepted')
+                            require(child.wait(timeout=5)==0 and marker.with_name(marker.name+'.fixture-exited').is_file(),
+                                    'Owned fixture should exit normally')
+                        finally:
+                            if child.poll() is None:
+                                child.terminate()
+                                child.wait(timeout=5)
+                        guard.require_idle()
+                        require(sha(image)==sys.argv[5],'Image bytes must remain unchanged')
+                    case(mode+'-mapped-controller-refused',lambda:mapped('sl3_broker_controller.exe'))
+                    case(mode+'-mapped-worker-refused',lambda:mapped('sl3_usbdk.exe'))
             case('archive-then-native-restoration',lambda:passed(run(f,'restore')))
             require(f[1].observe()['state']=='absent' and len(list(f[3].parent.iterdir()))==1,'Original archive, no native stage or witnesses')
             case('repeat-restoration-is-idle',lambda:passed(run(f,'restore')))

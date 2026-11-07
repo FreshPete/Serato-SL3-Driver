@@ -1,0 +1,60 @@
+{
+  "schema": "sl3.on-demand-idle-guard-evidence.v1",
+  "dateUtc": "2026-11-07",
+  "setupSourceSha256": "810627607304fea47580dbbb6f9eff09f705ffb3fa865b5101c289c78242bafd",
+  "pairedTestSourceSha256": "16ebd5472f248e2e111f893f1169edbdd15325421bbfa59832f819f1ed914440",
+  "mappedImageObservation": {
+    "schema": "sl3.mapped-image-share-observation.v1",
+    "fixtureSha256": "d7ed18cf805fd43523b4794d270bb3dd5b5d4311ffb1e897f678dc82ff40a22b",
+    "exclusiveReadAcceptedWhileMapped": true,
+    "readWriteErrorWhileMapped": 32,
+    "readWriteAcceptedAfterExit": true,
+    "imageBytesUnchanged": true,
+    "physicalAccess": false
+  },
+  "mappedImageObservationSha256": "95031c288589089444ce6f483d0de557d324d7586eef89ae271183bfe38807ff",
+  "verifiedModes": {
+    "application": {
+      "mappedImagesRefused": [
+        "application-mapped-controller-refused",
+        "application-mapped-worker-refused"
+      ],
+      "pairCasesPassed": 22,
+      "pairReportSha256": "a455d4fa9e12c2e807c095512d267c696b9bea282c40c27c68930e089a15fb7b",
+      "preparationCasesPassed": 13,
+      "preparationReportSha256": "4afc631f71cdec7ef14bfb3ad459b3be6a04b764146d380f269599492a4c4f48",
+      "bundleManifestSha256": "6b34e53d9562fe23a493721e7936bbaab480d97d766fea9ba500b22c1a18dde8",
+      "refreshedExperimentSha256": "e2434f3040ec299a762831a3b288ddd710c57d537b8f7811d42f4f460ff2ea9e",
+      "hostOriginalArchiveObserved": true,
+      "temporaryNativePackageAbsent": true
+    },
+    "retained": {
+      "mappedImagesRefused": [
+        "retained-mapped-controller-refused",
+        "retained-mapped-worker-refused"
+      ],
+      "pairCasesPassed": 22,
+      "pairReportSha256": "34c7a7604067d54436968ac95a172706fdb3d039b40cb618148fdb3a243e5c90",
+      "preparationCasesPassed": 13,
+      "preparationReportSha256": "3d539d3458c0deeaafdcdcc0cb8b9caf9be1e279d04bb72dd423c820b4d223c9",
+      "bundleManifestSha256": "8bd9e9c70c4c04f1d7b8f52faa6712c752271e18922b931ba391478f067e70d1",
+      "refreshedExperimentSha256": "0d842831f4c1b0a6dfa02ef8f0d07608132aec5128da42b29d8518666f45b538",
+      "hostOriginalArchiveObserved": true,
+      "temporaryNativePackageAbsent": true
+    }
+  },
+  "retainedLaunchManifestSha256": "c2ca50acac0acd6296a85471d00e30249a92c4c2159f5564acadbffae8d1abf8",
+  "applicationKitManifestSha256": "0963f6b47a8c64adb86cfceec25cb2b55a35f64fbc8916519380335a90e8c2de",
+  "nativeEntryBuildManifestSha256": "9b19db68c859d0ae8492844ee0e4c1f41e1ccdf08d9e33fbcbcfe264277604f9",
+  "movedKitCasesPassed": 27,
+  "movedKitReportSha256": "acc19aab3ee7eb63096af97a5c378169fc83320b4aee41555bd8ddc5f445c9d0",
+  "windowBuildManifestSha256": "3c94ca187375855924be18fc2904169f7a8530809e856ec899a30a959458dab3",
+  "windowExecutableSha256": "4cdcbbb74ea55a85527ef93e90a74179808ec70a24e8eccbbc846624f39bd23e",
+  "windowCasesPassed": 18,
+  "nativePayloadsReused": true,
+  "elevatedSetupOrRestoreExecuted": false,
+  "seratoLaunched": false,
+  "nativeDeviceAccess": false,
+  "elevationRequested": false,
+  "visualInspectionPerformed": false
+}
