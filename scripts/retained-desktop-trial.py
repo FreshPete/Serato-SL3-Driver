@@ -54,6 +54,12 @@ def compare_identity(first, second):
     return 'same_sampled_identity_set' if a==b else 'different_sampled_identity_set'
 
 
+def stable_single_identity(summary):
+    sets = summary['identitySets']
+    return (summary['completeSamples']>=2 and summary['incompleteSamples']==0 and
+            len(sets)==1 and len(sets[0])==1)
+
+
 def observe_release(result, observe, previous):
     """A USB observation failure cannot change the completed retirement result."""
     result['usbReadyForNextAcquire'] = False
@@ -115,7 +121,7 @@ def start_trial(snapshot, start, retire, request_restore, record_ready):
     started = None
     try:
         before = snapshot('before')
-        require(before, 'No complete pre-acquisition snapshot contained the SL3')
+        require(before, 'Need two complete pre-acquisition snapshots of one unchanged SL3 and no incomplete samples')
         started = start()
         during = snapshot('during')
         result = {'outcome':'broker_ready','broker':started,'sl3VisibleBefore':before,'sl3VisibleDuring':during}
@@ -216,6 +222,8 @@ def run(args):
             def snapshot(phase):
                 summary = observe(phase, IDENTITY_SECONDS)
                 identities[phase] = summary
+                if phase=='before':
+                    return stable_single_identity(summary)
                 return any(summary['identitySets']) if summary['completeSamples'] else None
 
             def start():

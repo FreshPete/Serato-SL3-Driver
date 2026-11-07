@@ -142,7 +142,7 @@ try {
         $plan.experimentSha256 -ne $expected) { throw 'Unexpected setup plan result.' }
     if (-not ($Run -or $Trial)) { $preflight; return }
     if ($Trial) {
-        Hold-ReviewedFile (Join-Path $PSScriptRoot 'retained-desktop-trial.py') 'db0498983dba2a61d963685807bdfdaf89597c07244f220c2092aea4c10ac45d'
+        Hold-ReviewedFile (Join-Path $PSScriptRoot 'retained-desktop-trial.py') '7c91221f259b5affe7ad8a3b2b431083ce9c369df1d4869873bc4da5effcef99'
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'observe-asio-module-load.ps1') '97f15e24e861f8cd82c68ee0723c598382ecf6e41511790c7ea1c12a9147bf0d'
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'inspect-process.psm1') '6ffb8427f79ebd173fd31e9824442293eb66689107fe63307204f76a6db4a290'
         Hold-ReviewedFile (Join-Path $PSScriptRoot 'read-retained-start-result.py') 'd4b91ac3dd7fffa24a6f2ce25a5347d61dfcf1928ccb1f29f711a776e103f012'

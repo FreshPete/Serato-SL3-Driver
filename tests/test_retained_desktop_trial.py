@@ -103,6 +103,16 @@ class IdentityTests(unittest.TestCase):
                 changed = DESKTOP['identity_samples'](samples)
                 self.assertEqual(DESKTOP['compare_identity'](original,changed),'indeterminate')
 
+    def test_before_acquisition_requires_two_complete_unchanged_single_device_samples(self):
+        one, changed, absent, incomplete = self.sample(2), self.sample(3), self.sample(None), self.sample(2,False)
+        multiple = self.sample(2)
+        multiple['snapshot']['identities'] += changed['snapshot']['identities']
+        checks = (([one,one],True),([one],False),([absent,absent],False),([absent,one],False),
+                  ([one,changed],False),([one,one,incomplete],False),([multiple,multiple],False))
+        for samples,expected in checks:
+            with self.subTest(samples=samples):
+                self.assertIs(DESKTOP['stable_single_identity'](DESKTOP['identity_samples'](samples)),expected)
+
     def test_release_observation_preserves_retirement_and_readiness_limits(self):
         original = DESKTOP['identity_samples']([self.sample(2)])
         held = DESKTOP['identity_samples']([self.sample(None)])

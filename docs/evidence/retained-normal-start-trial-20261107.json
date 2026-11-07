@@ -46,6 +46,25 @@
     "libusbSupervisorSha256": "6f6d32bb153ef2d934254dfe2f8f853c547c8d7437464aa4a1d463d1f576d30f",
     "libusbObservationsSha256": "72d4cf3c82d6a434fa924d69e487076450da8f0e73c1bdb4a1fcd02a6794b8bc"
   },
+  "originalDriverRejectionComparison": {
+    "channel": "Microsoft-Windows-CodeIntegrity/Operational",
+    "eventId": 3077,
+    "image": "strmdrv.sys",
+    "status": "0xc0e90002",
+    "failedInstalledWorker": {
+      "eventRecordId": 89285,
+      "eventUtc": "2026-11-07T15:16:57.4690650Z",
+      "arrivalToBlockMs": 21.011,
+      "arrivalToWorkerSeconds": 7.417697
+    },
+    "successfulPrivateWorker": {
+      "eventRecordId": 89290,
+      "eventUtc": "2026-11-07T15:22:29.3144247Z",
+      "arrivalToBlockMs": 20.1657,
+      "arrivalToWorkerSeconds": 229.6648753
+    },
+    "blockEstablishesRedirectReadiness": false
+  },
   "privateProof": {
     "admittedUtc": "2026-11-07T15:26:17.5090906Z",
     "sampleRateHz": 44100,
