@@ -4,6 +4,7 @@
 *.ps1 text eol=lf
 *.psm1 text eol=lf
 *.json text eol=lf
+/docs/evidence/serato-legacy-sl3-descriptors.json text eol=crlf
 *.jsonl text eol=lf
 *.java text eol=lf
 *.docx -text
