@@ -27,12 +27,16 @@ int main(){
             const auto count=GetTextFaceW(dc,int(name.size()),name.data());SelectObject(dc,previous);ReleaseDC(live_window,dc);require(count>0,"Resolve actual own control font");return std::wstring(name.data());};
         const auto body_face=font_face(live.description),title_face=font_face(live.heading);
         std::cout<<"Resolved fonts: body="<<utf8(body_face)<<", title="<<utf8(title_face)<<'\n';
+        require(SendMessageW(live.brand_icon,STM_GETICON,0,0)!=0 &&
+                (GetWindowLongPtrW(live.links,GWL_STYLE)&WS_TABSTOP)!=0,"Setup branding and keyboard-accessible links are available");++cases;
         begin(live,check);require(live.busy && !IsWindowEnabled(live.check_button) && !IsWindowEnabled(live.start_button),"Busy state disables commands");++cases;
+        require((GetWindowLongPtrW(live.progress_bar,GWL_STYLE)&WS_VISIBLE)!=0,"Busy check displays the native progress bar");++cases;
         message(live_window,WM_CLOSE,0,0);require(IsWindow(live_window),"Closing cannot interrupt an active check");++cases;
         const auto finish_check=[](State& state,HWND window){
             const auto began=GetTickCount64();while(state.busy){message(window,WM_TIMER,0,0);require(GetTickCount64()-began<45000,"Setup check deadline");Sleep(10);}
         };
         finish_check(live,live_window);
+        require((GetWindowLongPtrW(live.progress_bar,GWL_STYLE)&WS_VISIBLE)==0,"Progress bar is hidden after completion");++cases;
         if(live.code)std::cerr<<live.output<<'\n';
         require(live.code==0 && live.allowed.clean && live.allowed.install && !live.allowed.restore && IsWindowEnabled(live.start_button),"Actual native read-only check produces install eligibility");++cases;
         {ActionResult observed;observed.code=1;observed.capture.authenticated=true;observed.capture.bytes="fixture failure report";

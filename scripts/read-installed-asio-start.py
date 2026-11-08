@@ -2,7 +2,7 @@
 import argparse
 import hashlib
 import json
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 import re
 import runpy
 
@@ -48,6 +48,25 @@ def configuration(path):
     return values,sha(raw)
 
 
+def diagnostic_profile(path, activation, activation_sha):
+    """Verify the diagnostic buffer through the activation/worker/timing hash chain."""
+    worker = read(path.with_name('sl3-worker.conf'))
+    timing = read(path.with_name('sl3-timing.conf'))
+    match = re.fullmatch(rb'SL3-ASIO-DIAGNOSTIC-TIMING-([12])\nworker_sha256=([0-9a-f]{64})\n'
+                         rb'helper_sha256=[0-9a-f]{64}\nrate_hz=44100\nbuffer_frames=(32|64|128)\n', timing)
+    require(match, 'Recognized 44.1 kHz diagnostic timing record required')
+    version, worker_sha, frames = match.groups()
+    install = PureWindowsPath(activation[2]).parent
+    require(install.is_absolute(), 'Absolute protected diagnostic destination required')
+    builder = runpy.run_path(str(ROOT/'prepare-asio-deployment.py'))
+    expected = builder['activation_records'](install, activation[1], worker_sha.decode('ascii'),
+        builder['APPLICATION_ACTIVATION_MODE'], playback_keepalive=version==b'2', buffer_frames=int(frames))
+    require(sha(expected['sl3-asio.conf'])==activation_sha and worker==expected['sl3-worker.conf'] and
+            timing==expected['sl3-timing.conf'], 'Diagnostic configuration or timing hash chain differs')
+    return {'configuredBufferFrames':int(frames),'rateHz':44100,'workerSha256':worker_sha.decode('ascii'),
+            'timingSha256':sha(timing),'playbackKeepalive':version==b'2'}
+
+
 def unpublished_result(folder, activation):
     intent_path, final_path = folder/'intent.json', folder/'result.json'
     if not intent_path.exists() or not final_path.exists():
@@ -72,7 +91,7 @@ def unpublished_result(folder, activation):
             'brokerKind':intent['kind'],'lastNativeError':native_error,'resultSha256':sha(raw)}
 
 
-def summarize(folder, activation):
+def summarize(folder, activation, profile=None):
     match = re.fullmatch(r'application-([1-9][0-9]{0,9})-([1-9][0-9]{0,19})',folder.name)
     require(match and not folder.is_symlink() and not folder.is_junction(),'Expected an application-bound session path')
     pid,created = identity({'pid':int(match[1]),'creationFileTimeUtc':match[2]})
@@ -82,13 +101,23 @@ def summarize(folder, activation):
     if len(claim)<len(prefix)+65 and claim[:len(prefix)]==prefix[:len(claim)]:
         return {**result,**unpublished_result(folder,activation)}
     require(claim.startswith(prefix) and len(claim)==len(prefix)+65,'Activation receipt differs from selected configuration')
-    config_hash = sha(read(folder/'sl3-asio.conf'))
+    config = read(folder/'sl3-asio.conf')
+    config_hash = sha(config)
     require(claim==prefix+config_hash.encode('ascii')+b'\n','Published configuration differs from activation receipt')
     ready = record(read(folder/'ready.json'))
     require(ready.get('schema')=='sl3.broker-controller-ready.v1' and ready.get('readyIsSnapshot') is True and
             ready.get('brokerSha256')==activation[1] and ready.get('configSha256')==config_hash and
             ready.get('limitMs')==int(activation[-1]) and ready.get('kind') in ('native','simulated'),
             'Readiness differs from activation receipt')
+    if profile is not None:
+        prefix, separator, _ = config.partition(b'\nbroker=')
+        header = b'SL3-ASIO-BROKER-CONFIG-1\n'
+        require(separator and prefix.startswith(header) and
+                sha(b'SL3-ASIO-CONFIG-1\n'+prefix[len(header):]+b'\n')==activation[3],
+                'Published worker configuration differs from the diagnostic profile')
+        require(ready.get('workerSha256')==profile['workerSha256'] and ready.get('rateHz')==profile['rateHz'],
+                'Readiness does not match the diagnostic worker and rate')
+        result['diagnosticProfileMatchedReadiness'] = True
     final_path = folder/'result.json'
     if not final_path.exists():
         return dict(result,outcome='completed_result_missing',brokerKind=ready['kind'])
@@ -112,6 +141,9 @@ def summarize(folder, activation):
     retirement = final.get('reason')=='application_exit' and all(final.get(name) is True for name in
         ('successful','applicationExitObserved','ioRetiredVerified','deviceReleasedVerified','processExited','jobEmpty')) and all(
         final.get(name) is False for name in ('failed','lifetimeExpired','terminationRequested'))
+    if profile is not None:
+        result['brokerOwnerFailureCode'] = final.get('ownerFailureCode')
+        result['workerStreamFault'] = final.get('lastStreamFault') if final.get('snapshotValid') is True else None
     return dict(result,outcome='stream_start_reported' if starts else 'no_stream_start_reported',brokerKind=ready['kind'],
                 nativeAcquisitionReported=native,streamStartReplies=starts,applicationExitRetirementReported=retirement,
                 observationsTruncated=final['clientObservationsTruncated'],resultSha256=sha(raw))
@@ -121,16 +153,22 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--activation',type=Path,required=True)
     parser.add_argument('--session',type=Path,action='append',required=True)
+    parser.add_argument('--diagnostic-timing',action='store_true',
+                        help='verify the sibling worker and timing records against activation and readiness')
     args = parser.parse_args()
     try:
         require(1<=len(args.session)<=2,'Supply one or two session paths')
         activation,digest = configuration(args.activation)
-        rows = [summarize(folder.absolute(),activation) for folder in args.session]
+        profile = diagnostic_profile(args.activation,activation,digest) if args.diagnostic_timing else None
+        rows = [summarize(folder.absolute(),activation,profile) for folder in args.session]
         require(len({(row['hostPid'],row['hostCreationFileTimeUtc']) for row in rows})==len(rows),'Expected distinct host processes')
     except (OSError,ValueError) as error:
         parser.error(str(error))
-    print(json.dumps({'schema':'sl3.installed-asio-start-readout.v1','activationSha256':digest,'sessions':rows,
-                      'hostImageVerified':False,'callbacksVerified':False},indent=2))
+    report = {'schema':'sl3.installed-asio-start-readout.v1','activationSha256':digest,'sessions':rows,
+              'hostImageVerified':False,'callbacksVerified':False}
+    if profile is not None:
+        report['diagnosticProfile'] = profile
+    print(json.dumps(report,indent=2))
 
 
 if __name__ == '__main__':

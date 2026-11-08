@@ -44,14 +44,18 @@ bool ContinuousStream::start(StreamConfig config) noexcept {
 }
 bool ContinuousStream::pack(unsigned slot,std::uint64_t now) noexcept {
     const auto& raw=input_[slot];
-    if(raw.packet_count!=config_.intervals)return false;
+    const auto reject=[&](unsigned index=InvalidInput::no_packet,PacketResult64 packet={}) noexcept {
+        invalid_input_={stats_.input_frames,config_.intervals,raw.packet_count,index,packet};
+        return false;
+    };
+    if(raw.packet_count!=config_.intervals)return reject();
     std::size_t total=0;
     for(unsigned i=0;i<raw.packet_count;++i){
         const auto& packet=raw.packets[i];
-        if(packet.status || !packet.length || packet.length>max_packet || packet.length%frame_bytes)return false;
+        if(packet.status || !packet.length || packet.length>max_packet || packet.length%frame_bytes)return reject(i,packet);
         total+=static_cast<std::size_t>(packet.length);
     }
-    if(stats_.input_frames>std::numeric_limits<std::uint64_t>::max()-total/frame_bytes)return false;
+    if(stats_.input_frames>std::numeric_limits<std::uint64_t>::max()-total/frame_bytes)return reject();
     held_={};held_.first_frame=stats_.input_frames;held_.host_observation_ns=now;
     held_.reported_rate_hz=config_.rate_hz;held_.packet_count=raw.packet_count;
     std::size_t offset=0;

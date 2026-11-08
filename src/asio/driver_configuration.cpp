@@ -106,11 +106,15 @@ DriverConfiguration load_driver_configuration(const std::filesystem::path& locat
     pin_hash(*files,timing_path,timing_hash,65536);
     const auto timing_text=locked_text(*files,timing_path);
     if(policy==TimingPolicy::unmeasured_diagnostic){
-        const auto timing=record(timing_text,{"SL3-ASIO-DIAGNOSTIC-TIMING-1","worker_sha256=","helper_sha256=","rate_hz=","buffer_frames="});
+        const bool keepalive=timing_text.rfind("SL3-ASIO-DIAGNOSTIC-TIMING-2",0)==0;
+        const auto timing=record(timing_text,{keepalive?"SL3-ASIO-DIAGNOSTIC-TIMING-2":"SL3-ASIO-DIAGNOSTIC-TIMING-1",
+            "worker_sha256=","helper_sha256=","rate_hz=","buffer_frames="});
+        const auto frames=number(timing[4]);
         if(!timing[0].empty() || hash(timing[1])!=result.worker.sha256 || hash(timing[2])!=reviewed_helper_sha256 ||
-           timing[3]!="44100" || timing[4]!="128")
-            throw std::invalid_argument("ASIO diagnostic requires the pinned 44.1 kHz, 128-frame mode");
-        result.latency={0,0,44100,128,false};
+           timing[3]!="44100" || (frames!=128 && !(keepalive && (frames==32 || frames==64))))
+            throw std::invalid_argument("ASIO diagnostic requires 44.1 kHz and 128 frames, or 32/64 frames with playback keepalive");
+        if(keepalive)result.keepalive_timing_sha256=timing_hash;
+        result.latency={0,0,44100,frames,false};
     }else{
         const bool keepalive=timing_text.rfind("SL3-ASIO-TIMING-2",0)==0;
         const auto timing=record(timing_text,{keepalive?"SL3-ASIO-TIMING-2":"SL3-ASIO-TIMING-1","review=","worker_sha256=","helper_sha256=","rate_hz=","buffer_frames=",

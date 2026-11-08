@@ -51,6 +51,11 @@ def package(build_path, expected, output):
                   'kit/kit-manifest.json':(kit_manifest,source['kitManifestSha256']),
                   'SL3_Compatibility_Setup.exe':(window,build['executableSha256']),
                   'SL3_Setup_Engineering.exe':(entry,source['nativeEntrySha256'])})
+    watcher = layout.get('watcherAssets')
+    if watcher is not None:
+        require(set(watcher)=={'setup-notice-startup.ps1','watch-notice-startup.ps1','sl3-notice-startup-early.dll'},
+                'Reviewed watcher inventory required')
+        files.update({'watcher/'+name:(Path(asset['path']),asset['sha256']) for name,asset in watcher.items()})
     require(output.parent.resolve()==(ROOT/'artifacts/build').resolve() and output.suffix=='.zip' and not output.exists(),
             'Fresh ZIP below artifacts/build required')
     with tempfile.TemporaryDirectory(prefix='setup-zip-',dir=output.parent) as scratch:

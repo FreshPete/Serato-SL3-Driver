@@ -105,6 +105,18 @@ static void diagnostic_timing(Fixture& f){
     wrong_rate.replace(wrong_rate.find("44100"),5,"48000");
     set_timing(wrong_rate);
     rejects([&]{load_driver_configuration(f.config,TimingPolicy::unmeasured_diagnostic);});
+    for(unsigned frames:{32u,64u}){
+        auto trial=text;
+        trial.replace(trial.find("buffer_frames=128"),17,"buffer_frames="+std::to_string(frames));
+        set_timing(trial);
+        rejects([&]{load_driver_configuration(f.config,TimingPolicy::unmeasured_diagnostic);});
+        trial.replace(trial.find("TIMING-1"),8,"TIMING-2");
+        set_timing(trial);
+        const auto result=load_driver_configuration(f.config,TimingPolicy::unmeasured_diagnostic);
+        require(result.latency.buffer_frames==frames && !result.latency.report_latency &&
+                result.keepalive_timing_sha256==digest(f.timing),
+                "Lower diagnostic bank pins the keepalive profile without claiming latency");
+    }
     f.reset();
 }
 static void production_abi(Fixture& fixture,const std::filesystem::path& source,bool activate_com=false){

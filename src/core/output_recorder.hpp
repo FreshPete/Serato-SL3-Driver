@@ -11,7 +11,8 @@ enum class OutputRecordFault {none,configuration,shape,rate,position};
 // bytes, disjoint from the source block. Call only after explicitly arming a
 // capture. The first block may start anywhere in the stream. Read the result
 // only after writer retirement or an external release/acquire publication.
-// This records dequeued software PCM, not USB completion or analog output.
+// Records software PCM from one stream direction. It does not verify output
+// completion or the analog path.
 class PackedOutputRecorder final {
 public:
     PackedOutputRecorder(std::uint8_t* storage,std::size_t capacity_frames,unsigned rate) noexcept

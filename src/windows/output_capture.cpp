@@ -4,6 +4,7 @@
 #include <bcrypt.h>
 #include <atomic>
 #include <filesystem>
+#include <optional>
 #include <vector>
 
 namespace sl3::worker {
@@ -46,15 +47,30 @@ void validate_destination(const std::filesystem::path& path){
 }
 struct SoftwareOutputCapture::State {
     std::filesystem::path directory;std::vector<std::uint8_t> pcm;
-    PackedOutputRecorder recorder;std::atomic<unsigned> phase{waiting};std::atomic<bool> stop{false};std::thread writer;
-    State(std::filesystem::path path,unsigned rate):directory(std::move(path)),pcm(std::size_t(rate)*5*18),recorder(pcm.data(),std::size_t(rate)*5,rate){
+    PackedOutputRecorder recorder;
+    std::vector<std::uint8_t> input_pcm;
+    std::optional<PackedOutputRecorder> input;
+    std::atomic<unsigned> phase{waiting};std::atomic<bool> stop{false};std::thread writer;
+    State(std::filesystem::path path,unsigned rate,bool loopback):directory(std::move(path)),
+        pcm(std::size_t(rate)*5*18),recorder(pcm.data(),std::size_t(rate)*5,rate){
         if(recorder.fault()!=OutputRecordFault::none)throw std::invalid_argument("Unsupported output capture rate");
+        if(loopback){
+            input_pcm.resize(pcm.size());
+            input.emplace(input_pcm.data(),std::size_t(rate)*5,rate);
+        }
         validate_destination(directory);
         if(!std::filesystem::create_directory(directory))throw std::invalid_argument("Output capture directory already exists");
-        text_new(directory/L"ready.json","{\"schema\":1,\"state\":\"awaiting-arm\",\"seconds\":5,\"source\":\"worker-dequeued-output-pcm\"}\n");
+        text_new(directory/L"ready.json",loopback?
+            "{\"schema\":1,\"state\":\"awaiting-arm\",\"seconds\":5,\"source\":\"worker-dequeued-output-pcm\",\"loopbackInput\":true}\n":
+            "{\"schema\":1,\"state\":\"awaiting-arm\",\"seconds\":5,\"source\":\"worker-dequeued-output-pcm\"}\n");
         writer=std::thread([this]{run();});
     }
     ~State(){stop.store(true,std::memory_order_release);if(writer.joinable())writer.join();}
+    void append(PackedOutputRecorder& destination,const AudioBlock& block) noexcept {
+        if(phase.load(std::memory_order_acquire)!=armed)return;
+        if(!destination.append(block))phase.store(failed,std::memory_order_release);
+        else if(recorder.complete() && (!input || input->complete()))phase.store(complete,std::memory_order_release);
+    }
     void run() noexcept {
         try{
             for(;;){
@@ -62,10 +78,16 @@ struct SoftwareOutputCapture::State {
                 if(value==complete){
                     const auto digest=hash_pcm(pcm);
                     write_new(directory/L"capture.pcm",pcm.data(),static_cast<DWORD>(pcm.size()));
-                    const auto text=std::string("{\"schema\":1,\"source\":\"worker-dequeued-output-pcm\",\"complete\":true,\"rateHz\":")+
+                    auto text=std::string("{\"schema\":1,\"source\":\"worker-dequeued-output-pcm\",\"complete\":true,\"rateHz\":")+
                         std::to_string(recorder.rate())+",\"frames\":"+std::to_string(recorder.frames())+
-                        ",\"firstFrame\":"+std::to_string(recorder.first_frame())+",\"pcmSha256\":\""+digest+"\"}\n";
-                    text_new(directory/L"capture.json",text);return; // Completion is published last.
+                        ",\"firstFrame\":"+std::to_string(recorder.first_frame())+",\"pcmSha256\":\""+digest+"\"";
+                    if(input){
+                        const auto input_digest=hash_pcm(input_pcm);
+                        write_new(directory/L"input.pcm",input_pcm.data(),static_cast<DWORD>(input_pcm.size()));
+                        text+=",\"input\":{\"source\":\"worker-published-input-pcm\",\"frames\":"+std::to_string(input->frames())+
+                            ",\"firstFrame\":"+std::to_string(input->first_frame())+",\"pcmSha256\":\""+input_digest+"\"}";
+                    }
+                    text_new(directory/L"capture.json",text+"}\n");return; // Completion is published last.
                 }
                 if(value==failed || value==retired || stop.load(std::memory_order_acquire)){
                     // The writer may have read 'armed' immediately before the
@@ -97,12 +119,16 @@ std::unique_ptr<SoftwareOutputCapture> SoftwareOutputCapture::from_environment(u
     if(size>32767)throw std::invalid_argument("Output capture path too long");
     std::vector<wchar_t> path(size);const auto copied=GetEnvironmentVariableW(L"SL3_OUTPUT_CAPTURE_DIRECTORY",path.data(),size);
     if(!copied || copied>=size)throw std::invalid_argument("Output capture environment changed");
-    return std::unique_ptr<SoftwareOutputCapture>(new SoftwareOutputCapture(std::make_unique<State>(std::filesystem::path(path.data()),rate)));
+    wchar_t input_flag[2]{};
+    const auto length=GetEnvironmentVariableW(L"SL3_LOOPBACK_CAPTURE",input_flag,2);
+    if(length && (length!=1 || input_flag[0]!=L'1'))throw std::invalid_argument("Loopback capture flag must be 1");
+    return std::unique_ptr<SoftwareOutputCapture>(new SoftwareOutputCapture(std::make_unique<State>(std::filesystem::path(path.data()),rate,length==1)));
 }
 void SoftwareOutputCapture::append(const AudioBlock& block) noexcept {
-    if(state_->phase.load(std::memory_order_acquire)!=armed)return;
-    if(!state_->recorder.append(block))state_->phase.store(failed,std::memory_order_release);
-    else if(state_->recorder.complete())state_->phase.store(complete,std::memory_order_release);
+    state_->append(state_->recorder,block);
+}
+void SoftwareOutputCapture::append_input(const AudioBlock& block) noexcept {
+    if(state_->input)state_->append(*state_->input,block);
 }
 bool SoftwareOutputCapture::is_armed() const noexcept{return state_->phase.load(std::memory_order_acquire)==armed;}
 void SoftwareOutputCapture::retire() noexcept {

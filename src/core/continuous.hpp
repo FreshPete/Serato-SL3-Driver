@@ -53,6 +53,12 @@ struct StreamStats {
     unsigned pending_mask=0,retained_mask=0,expected_outputs=0;
 };
 struct StartupDiscard {unsigned empty_packet=0,discarded_frames=0;};
+struct InvalidInput {
+    static constexpr unsigned no_packet=64;
+    std::uint64_t first_frame=0;
+    unsigned expected_packets=0,received_packets=0,packet_index=no_packet;
+    PacketResult64 packet{};
+};
 // One non-reentrant worker owner; virtual methods must not call back into it.
 // Construction/operation use fixed storage. Step only polls nonblocking APIs;
 // actual native call duration still needs an independent process watchdog. This
@@ -73,6 +79,9 @@ public:
     StreamFault fault() const noexcept {return fault_;}
     StreamStats stats() const noexcept;
     StartupDiscard startup_discard() const noexcept {return startup_discard_;}
+    const InvalidInput* invalid_input() const noexcept {
+        return fault_==StreamFault::invalid_input?&invalid_input_:nullptr;
+    }
 private:
     struct Slot {bool prepared=false,pending=false,complete=false;std::uint64_t since=0;};
     struct Schedule {
@@ -91,6 +100,7 @@ private:
     bool held_valid_=false,clock_lost_=false;
     bool allow_startup_empty_packet_;
     StartupDiscard startup_discard_{};
+    InvalidInput invalid_input_{};
     std::uint64_t last_time_=0,drain_since_=0;
     void fail(StreamFault,std::uint64_t now) noexcept;
     void begin_drain(std::uint64_t now) noexcept;

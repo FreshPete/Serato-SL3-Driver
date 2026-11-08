@@ -1,5 +1,6 @@
 #include "core/audio_bridge.hpp"
 #include <algorithm>
+#include <cstring>
 #include <limits>
 #include <stdexcept>
 
@@ -8,10 +9,6 @@ namespace {
 void pack(std::int32_t value, std::uint8_t* target) noexcept {
     const auto bits=static_cast<std::uint32_t>(value);
     for(unsigned byte=0;byte<sample_bytes;++byte) target[byte]=static_cast<std::uint8_t>(bits>>(byte*8));
-}
-std::int32_t unpack(const std::uint8_t* source) noexcept {
-    const std::uint32_t bits=source[0]|(std::uint32_t(source[1])<<8)|(std::uint32_t(source[2])<<16);
-    return bits&0x800000?static_cast<std::int32_t>(bits)-0x1000000:static_cast<std::int32_t>(bits);
 }
 void select(const std::vector<unsigned>& requested,std::array<bool,channels>& selected) {
     for(auto channel:requested){
@@ -22,8 +19,8 @@ void select(const std::vector<unsigned>& requested,std::array<bool,channels>& se
 }
 AudioBridge::AudioBridge(std::size_t block_frames,const std::vector<unsigned>& inputs,
                           const std::vector<unsigned>& outputs):block_frames_(block_frames) {
-    if(block_frames<64 || block_frames>1024 || (block_frames&(block_frames-1)) || (inputs.empty() && outputs.empty()))
-        throw std::runtime_error("Bridge needs a power-of-two block of 64..1024 frames and active channels");
+    if(block_frames<32 || block_frames>1024 || (block_frames&(block_frames-1)) || (inputs.empty() && outputs.empty()))
+        throw std::runtime_error("Bridge needs a power-of-two block of 32..1024 frames and active channels");
     select(inputs,active_input_);select(outputs,active_output_);
     for(unsigned bank=0;bank<2;++bank)for(unsigned channel=0;channel<channels;++channel){
         if(active_input_[channel])input_[bank][channel].resize(block_frames*sample_bytes);
@@ -37,8 +34,10 @@ std::uint8_t* AudioBridge::plane(Direction direction,unsigned channel,unsigned b
     return bytes.empty()?nullptr:bytes.data();
 }
 BridgeStats AudioBridge::stats() const noexcept {return {input_frames_,output_frames_,blocks_,queued_};}
-void AudioBridge::push(const Frame& frame) noexcept {
-    output_ring_[write_]=frame;write_=(write_+1)%output_ring_.size();++queued_;
+void AudioBridge::push(const PackedFrame& frame) noexcept {
+    output_ring_[write_]=frame;
+    if(++write_==output_ring_.size())write_=0;
+    ++queued_;
 }
 BridgeStatus AudioBridge::fail(BridgeStatus reason) noexcept {state_=BridgeState::faulted;fault_=reason;return reason;}
 BridgeStatus AudioBridge::start(unsigned rate,BlockCallbacks& callback) noexcept {
@@ -54,7 +53,7 @@ BridgeStatus AudioBridge::start(unsigned rate,BlockCallbacks& callback) noexcept
     // One priming block plus the initially empty other bank produce two
     // blocks of startup silence. Host output is consumed at the NEXT switch,
     // allowing the ASIO host its full one-block processing window.
-    for(std::size_t i=0;i<block_frames_;++i)push(Frame{});
+    for(std::size_t i=0;i<block_frames_;++i)push(PackedFrame{});
     state_=BridgeState::running;return BridgeStatus::ok;
 }
 BridgeStatus AudioBridge::stop() noexcept {
@@ -82,9 +81,10 @@ BridgeStatus AudioBridge::process(const Frame* frames,std::size_t count,
         if(fill_==block_frames_){
             const auto consumed_bank=bank_^1u;
             for(std::size_t frame=0;frame<block_frames_;++frame){
-                Frame values{};
+                PackedFrame values{};
                 for(unsigned channel=0;channel<channels;++channel)if(active_output_[channel])
-                    values[channel]=unpack(output_[consumed_bank][channel].data()+frame*sample_bytes);
+                    std::memcpy(values.data()+channel*sample_bytes,
+                                output_[consumed_bank][channel].data()+frame*sample_bytes,sample_bytes);
                 push(values);
             }
             // Never replay bytes from an earlier bank use if a host writes only
@@ -116,11 +116,14 @@ BridgeStatus AudioBridge::render(const std::uint32_t* lengths,std::size_t packet
     std::size_t offset=0;
     for(std::size_t packet=0;packet<packets;++packet){
         layout[packet]={static_cast<std::uint32_t>(offset),lengths[packet],0};
-        for(std::size_t i=0;i<lengths[packet]/frame_bytes;++i){
-            const auto& frame=output_ring_[read_];
-            for(unsigned channel=0;channel<channels;++channel)pack(frame[channel],pcm+offset+channel*sample_bytes);
-            offset+=frame_bytes;read_=(read_+1)%output_ring_.size();--queued_;++output_frames_;
-        }
+        const auto count=std::size_t(lengths[packet]/frame_bytes);
+        const auto contiguous=std::min(count,output_ring_.size()-read_);
+        std::memcpy(pcm+offset,output_ring_.data()+read_,contiguous*frame_bytes);
+        if(contiguous<count)
+            std::memcpy(pcm+offset+contiguous*frame_bytes,output_ring_.data(),(count-contiguous)*frame_bytes);
+        read_+=count;
+        if(read_>=output_ring_.size())read_-=output_ring_.size();
+        offset+=lengths[packet];queued_-=count;output_frames_+=count;
     }
     return BridgeStatus::ok;
 }

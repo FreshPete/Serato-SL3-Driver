@@ -1,0 +1,39 @@
+{
+  "schema": "sl3.original-asio-timing-observation.v1",
+  "artifact": {
+    "name": "RaneAsioSL3.dll",
+    "fileVersion": "1.3.5.302",
+    "machine": "amd64",
+    "sha256": "e3d88039547b70915b1a9bc9e3e3f7dba32aaa9bc3ce8fd51616565ea1734141"
+  },
+  "addressesAreImageRelative": true,
+  "asioVtableRva": "0x1b8ce8",
+  "asioVtableRttiLocatorRva": "0x212268",
+  "methods": {
+    "getLatencies": {"slot": 10, "rva": "0x10020", "inputBanks": 1, "outputBanks": 2},
+    "getBufferSize": {"slot": 11, "rva": "0x10080", "minimumMaximumPreferredAreEqual": true, "granularity": 1},
+    "createBuffers": {"slot": 19, "rva": "0x10e60", "storesSelectedBankRva": "0x1100c", "comparesRequestedBankRva": "0x11038"}
+  },
+  "bufferSetting": {
+    "readerRva": "0x13070",
+    "registryKey": "HKCU\\SOFTWARE\\Rane\\SL 3",
+    "registryValue": "BufferSizeMillisecs",
+    "defaultOnReadFailureMs": 8,
+    "clampedRangeMs": [1, 50],
+    "bankSelectionRva": "0xaf70",
+    "selectionModel": "Round down to a multiple of three milliseconds with a floor of three, then choose the nearest bank with the rate-specific coefficient and frame floor.",
+    "rates": [
+      {"rateHz": 44100, "minimumBankFrames": 45, "coefficientRva": "0x1b7c60", "coefficient": 0.068086},
+      {"rateHz": 48000, "minimumBankFrames": 48, "coefficientRva": "0x1b7c58", "coefficient": 0.062481}
+    ]
+  },
+  "calculatedExamples": [
+    {"settingMs": 1, "rateHz": 44100, "bankFrames": 45, "reportedInputFrames": 45, "reportedOutputFrames": 90},
+    {"settingMs": 8, "rateHz": 44100, "bankFrames": 88, "reportedInputFrames": 88, "reportedOutputFrames": 176},
+    {"settingMs": 1, "rateHz": 48000, "bankFrames": 48, "reportedInputFrames": 48, "reportedOutputFrames": 96},
+    {"settingMs": 8, "rateHz": 48000, "bankFrames": 96, "reportedInputFrames": 96, "reportedOutputFrames": 192}
+  ],
+  "driverLoaded": false,
+  "seratoLaunched": false,
+  "hardwareMeasured": false
+}

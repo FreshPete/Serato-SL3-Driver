@@ -35,7 +35,7 @@ std::shared_ptr<DriverOwner> DriverFacade::claim(std::shared_ptr<DriverOwner> ow
     const auto limit=unsigned(std::numeric_limits<long>::max())-2048u;
     if(latency.input_extra_frames>limit || latency.output_extra_frames>limit)throw std::invalid_argument("ASIO latency exceeds signed frame range");
     if((latency.rate_hz && latency.rate_hz!=44100 && latency.rate_hz!=48000) ||
-       (latency.buffer_frames && (latency.buffer_frames<64 || latency.buffer_frames>1024 || (latency.buffer_frames&(latency.buffer_frames-1)))))
+       (latency.buffer_frames && (latency.buffer_frames<32 || latency.buffer_frames>1024 || (latency.buffer_frames&(latency.buffer_frames-1)))))
         throw std::invalid_argument("Invalid timing profile mode");
     if(!owner)throw std::invalid_argument("Missing ASIO device owner");
     bool idle=false;
@@ -147,6 +147,7 @@ ASIOError DriverFacade::createBuffers(ASIOBufferInfo* info,long count,long frame
     if(session_.on_audio_thread())return fail(ASE_InvalidMode,"Buffer creation is not a callback operation.");
     if(!initialized_)return ASE_NotPresent;
     if(latency_.buffer_frames && frames!=long(latency_.buffer_frames))return ASE_InvalidMode;
+    if(!latency_.buffer_frames && frames<64)return ASE_InvalidMode;
     const auto result=session_.create_buffers(info,count,frames,callbacks);
     if(result==ASE_OK){unsigned selected=0;for(long i=0;i<count;++i)selected|=1u<<(unsigned(info[i].channelNum)+(info[i].isInput==ASIOTrue?0u:6u));
         active_=selected;frames_=unsigned(frames);}

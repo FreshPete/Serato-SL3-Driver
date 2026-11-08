@@ -92,16 +92,23 @@ static void stream(unsigned rate,bool partial,std::size_t block=64){
     require(bridge.start(rate,host)==BridgeStatus::ok,"Start failed");
     std::uint32_t phase=0;
     std::uint64_t received=0,rendered=0;
-    const auto groups=static_cast<unsigned>((block*6+43)/44);
+    // Run long enough to check packets spanning the wrap in the eight-bank ring.
+    const auto groups=static_cast<unsigned>((block*18+43)/44);
     for(unsigned group=0;group<groups;++group){
         std::array<std::uint32_t,8> lengths{};
+        std::array<sl3::Frame,56> batch{};
+        const auto batch_start=received;
         for(unsigned packet=0;packet<8;++packet){
             phase+=rate;const auto frames=phase/8000;phase%=8000;lengths[packet]=frames*18;
             std::array<sl3::Frame,7> input{};
             for(unsigned i=0;i<frames;++i)for(unsigned c=0;c<6;++c)input[i][c]=signal(received+i,c);
-            require(bridge.process(input.data(),frames,received,std::uint64_t(group*8+packet)*125000)==BridgeStatus::ok,"Stream input failed");
+            if(block==32)std::copy_n(input.begin(),frames,batch.begin()+(received-batch_start));
+            else require(bridge.process(input.data(),frames,received,std::uint64_t(group*8+packet)*125000)==BridgeStatus::ok,"Stream input failed");
             received+=frames;
         }
+        if(block==32)
+            require(bridge.process(batch.data(),static_cast<std::size_t>(received-batch_start),batch_start,
+                                   std::uint64_t(group)*1000000)==BridgeStatus::ok,"One USB batch may complete two 32-frame banks");
         std::array<std::uint8_t,1008> bytes{};std::array<sl3::Packet,8> layout{};
         require(bridge.render(lengths.data(),8,bytes.data(),bytes.size(),layout.data(),8)==BridgeStatus::ok,"Stream output failed");
         std::size_t offset=0;
@@ -135,6 +142,7 @@ static void stream(unsigned rate,bool partial,std::size_t block=64){
 int main(){
     try{
         for(auto block:{64u,128u,256u,512u,1024u}){stream(44100,false,block);stream(48000,false,block);}
+        stream(44100,false,32);
         stream(44100,true);deferred_host();
         rejects([]{sl3::AudioBridge b(0,{1},{0});});rejects([]{sl3::AudioBridge b(65,{1},{0});});
         rejects([]{sl3::AudioBridge b(2048,{1},{0});});rejects([]{sl3::AudioBridge b(64,{},{});});

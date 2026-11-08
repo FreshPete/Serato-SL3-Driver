@@ -12,7 +12,7 @@ ASIOError BufferSet::create(ASIOBufferInfo* info,long count,long frames,const AS
     if(!info || !callbacks || count<=0 || count>12)return ASE_InvalidParameter;
     // No time-info negotiation until sample-position/timestamp provenance is
     // established by a real session. Hosts must supply the legacy callback.
-    if(!callbacks->bufferSwitch || frames<64 || frames>1024 || (frames&(frames-1)))return ASE_InvalidMode;
+    if(!callbacks->bufferSwitch || frames<32 || frames>1024 || (frames&(frames-1)))return ASE_InvalidMode;
     try{
         std::array<unsigned,6> in{},out{};
         std::array<bool,6> in_selected{},out_selected{};

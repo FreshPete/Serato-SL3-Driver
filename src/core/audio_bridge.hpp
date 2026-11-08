@@ -49,10 +49,12 @@ public:
                         Packet* layout, std::size_t layout_capacity) noexcept;
 private:
     using Planes = std::array<std::vector<std::uint8_t>, channels>;
+    using PackedFrame = std::array<std::uint8_t,frame_bytes>;
+    static_assert(sizeof(PackedFrame)==frame_bytes,"Packed output frames must have no padding");
     const std::size_t block_frames_;
     std::array<bool,channels> active_input_{},active_output_{};
     std::array<Planes,2> input_,output_;
-    std::vector<Frame> output_ring_;
+    std::vector<PackedFrame> output_ring_;
     std::size_t read_{},write_{},queued_{},fill_{};
     unsigned bank_{};
     BridgeState state_=BridgeState::ready;
@@ -61,6 +63,6 @@ private:
     bool inside_=false,have_observation_=false;
     std::uint64_t input_frames_{},output_frames_{},blocks_{},last_observation_{};
     BridgeStatus fail(BridgeStatus) noexcept;
-    void push(const Frame&) noexcept;
+    void push(const PackedFrame&) noexcept;
 };
 }

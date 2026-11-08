@@ -34,11 +34,22 @@ class OutputExportTest(unittest.TestCase):
                 with wave.open(str(destination / item["file"]), "rb") as wav:
                     self.assertEqual((wav.getnchannels(), wav.getsampwidth(), wav.getframerate(), wav.getnframes()), (2, 3, 44100, 7))
                     self.assertEqual(wav.readframes(8), frame[index * 6:index * 6 + 6] * 7)
+                self.assertEqual(item["longestIdenticalStereoFrames"], 7)
+                self.assertEqual(item["longestDigitalSilenceFrames"], 0)
             self.assertFalse(result["analogOutputVerified"])
             self.assertFalse(result["usbCompletionVerified"])
             self.assertTrue((destination / "export.json").is_file())
             with self.assertRaises(FileExistsError):
                 MODULE["export"](capture, destination)
+
+    def test_silence_and_held_samples_are_distinguished(self):
+        silent = b"\0" * 6
+        left_only = b"\x01" + b"\0" * 5
+        right_only = b"\0" * 3 + b"\x01\0\0"
+        stereo = bytearray(silent * 2 + left_only * 4 + right_only + silent * 3)
+        self.assertEqual(MODULE["stereo_runs"](stereo), {
+            "longestDigitalSilenceFrames": 3, "longestIdenticalStereoFrames": 4,
+        })
 
     def test_unfinished_unbounded_wrong_rate_and_bad_hash_are_refused_before_writes(self):
         cases = ({"complete": False}, {"rateHz": 96000}, {"frames": 44100 * 5 + 1},

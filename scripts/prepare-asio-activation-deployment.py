@@ -10,7 +10,7 @@ CONFIG = runpy.run_path(str(ROOT/'scripts/prepare-asio-activation-config.py'))
 API = CONFIG['BASE']
 
 
-def prepare(bundle, expected, build, build_sha, output, application_bound=False):
+def prepare(bundle, expected, build, build_sha, output, application_bound=False, playback_keepalive=False, buffer_frames=128):
     bundle, build, output = (Path(p).absolute() for p in (bundle, build, output))
     output = API['inside'](output, ROOT/'artifacts/build/deployment-bundles')
     API['require'](not output.exists(), 'New deployment bundle directory required')
@@ -26,6 +26,9 @@ def prepare(bundle, expected, build, build_sha, output, application_bound=False)
                    API['digest'](payload['sl3_broker_controller.exe']) == native['unmeasuredAsioDiagnostic']['brokerSha256'].lower(),
                    'Exact tested native activation build required')
     mode = API['APPLICATION_ACTIVATION_MODE'] if application_bound else API['ACTIVATION_MODE']
+    API['require'](not playback_keepalive or application_bound, 'Playback keepalive requires application-bound activation')
+    API['require'](type(buffer_frames) is int and (buffer_frames == 128 or (buffer_frames in (32, 64) and playback_keepalive)),
+                   '32/64-frame diagnostic profile requires playback keepalive')
     controller_sha = API['digest'](payload['sl3_broker_controller.exe'])
     worker_sha = API['digest'](payload['sl3_usbdk.exe'])
     if application_bound:
@@ -35,29 +38,39 @@ def prepare(bundle, expected, build, build_sha, output, application_bound=False)
         checker_sha = native['asioComponent']['activationConfigurationInspectorSha256'].lower()
         with tempfile.TemporaryDirectory(prefix='sl3-app-activation-') as temporary:
             review = Path(temporary)
-            for name, data in API['activation_records'](review, controller_sha, worker_sha, mode, bundle).items():
+            for name, data in API['activation_records'](review, controller_sha, worker_sha, mode, bundle,
+                                                        playback_keepalive=playback_keepalive, buffer_frames=buffer_frames).items():
                 with (review/name).open('xb') as stream:
                     stream.write(data)
             CONFIG['inspect'](checker, checker_sha, review/'sl3-asio.conf')
     seed.update(activationMode=mode, activationToolSha256=API['digest'](API['read'](Path(__file__))),
                 activationContractSha256=API['digest'](API['read'](ROOT/'scripts/prepare-asio-deployment.py')),
                 activationOriginBundleSha256=expected)
+    if playback_keepalive:
+        seed['playbackKeepalive'] = True
+    if buffer_frames != 128:
+        seed['diagnosticBufferFrames'] = buffer_frames
     identity = API['digest'](API['encoded'](seed))
     installation = Path(seed['installationDirectory'])
     plan = API['record'](payload['deployment-plan.json'])
     plan.update(packageId=identity, registryEntries=API['registry_entries'](installation, identity),
                 activationMode=mode, activationTrigger='IASIO.init', maximumLifetimeMs=600000,
                 sessionPointerUsed=False, latencyAvailable=False, automaticStart=True, rateProfileIncluded=True)
+    if playback_keepalive:
+        plan['playbackKeepalive'] = True
+    if buffer_frames != 128:
+        plan['diagnosticBufferFrames'] = buffer_frames
     plan['requiredInstallChecks'] = [item for item in plan['requiredInstallChecks'] if item != 'separate user-owned session pointer'] + [
         'three exact protected activation records', 'no active audio owner during removal', 'explicit ten-minute unmeasured diagnostic limit']
     updated = dict(payload)
-    updated.update(API['activation_records'](installation, controller_sha, worker_sha, mode))
+    updated.update(API['activation_records'](installation, controller_sha, worker_sha, mode,
+                                             playback_keepalive=playback_keepalive, buffer_frames=buffer_frames))
     updated['provenance.json'] = API['encoded'](provenance)
     updated['deployment-plan.json'] = API['encoded'](plan)
     updated['README.txt'] = (
         'LOCAL ON-DEMAND DIAGNOSTIC PACKAGE - PREPARED, NOT INSTALLED OR A PUBLIC RELEASE.\n'
         'Initialization can start the native USB owner. Do not register this writable bundle.\n'
-        '44.1 kHz / 128 frames, unmeasured latency, maximum ten minutes per owner.\n'
+        f'44.1 kHz / {buffer_frames} frames, unmeasured latency, maximum ten minutes per owner.\n'
         + ('The controller is retained across ASIO opens until the application exits.\n' if application_bound else '') +
         'Configuration binds final protected installation paths; no session pointer is used at runtime.\n'
         'pointerPath is retained only as legacy installer metadata; it is not written or read by this audio mode.\n'
@@ -67,6 +80,10 @@ def prepare(bundle, expected, build, build_sha, output, application_bound=False)
     result = {**origin, 'schema': 'sl3.deployment-bundle.v2', 'packageId': identity,
               'activationMode': mode, 'files': {
                   name: {'bytes': len(data), 'sha256': API['digest'](data)} for name, data in updated.items()}}
+    if playback_keepalive:
+        result['playbackKeepalive'] = True
+    if buffer_frames != 128:
+        result['diagnosticBufferFrames'] = buffer_frames
     API['verify_payloads'](result, updated)
     output.mkdir(parents=True)
     for name, data in updated.items():
@@ -86,6 +103,9 @@ if __name__ == '__main__':
     for name in ('bundle', 'expected-bundle-sha256', 'native-build', 'expected-build-sha256', 'output'):
         parser.add_argument('--'+name, required=True)
     parser.add_argument('--application-bound', action='store_true')
+    parser.add_argument('--playback-keepalive', action='store_true')
+    parser.add_argument('--buffer-frames', type=int, choices=(32, 64, 128), default=128)
     args = parser.parse_args()
     print(json.dumps(prepare(args.bundle, args.expected_bundle_sha256, args.native_build,
-                             args.expected_build_sha256, args.output, args.application_bound), indent=2))
+                             args.expected_build_sha256, args.output, args.application_bound, args.playback_keepalive,
+                             args.buffer_frames), indent=2))

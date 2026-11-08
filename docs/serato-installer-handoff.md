@@ -68,14 +68,6 @@ The tested DLL SHA-256 is `a370ab23c5c1ed80a35b8b49046c92ec270f2bb5cb43d058f72c5
 
 The watcher was armed separately as part of the trial and exited after observing two launches. The next packaging step is for the installer to set up and start the watcher so it can handle subsequent launches and Windows sign-ins.
 
-For source review, copy the helper files to a scratch directory. From an x64 Visual Studio Native Tools command prompt in that directory, build the DLL:
-
-```cmd
-cl /nologo /std:c++17 /O2 /EHsc /W4 /WX /MT /guard:cf /LD notice-startup.cpp user32.lib /link /guard:cf /OUT:sl3-notice-startup-early.dll
-```
-
-The watcher pins both the Serato executable and the tested helper DLL. A local build may produce a different DLL hash. Review the build, update only the helper pin in the scratch copy, then run the watcher with `-CheckOnly` to verify its exports without attaching to Serato. This source snapshot is not a ready-to-run installer.
-
 ## Consequence for the simpler launcher
 
 Widening the shim's click token to the generic helper address is not a justified automatic-start change. It could mistake unrelated helper traffic for the user's install action and does not provide the missing descriptor lifetime or successful-install evidence.

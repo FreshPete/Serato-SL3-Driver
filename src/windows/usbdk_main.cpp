@@ -969,6 +969,20 @@ public:
         if(active_ || closed_)throw std::runtime_error("Held device is not available for activation");
         return std::make_unique<NativeHeldTarget>(device_,active_,keepalive_);
     }
+    void report_invalid_input(const sl3::InvalidInput& input) noexcept override{
+        char stage[144]{};
+        std::snprintf(stage,sizeof(stage),"invalid_input_f%llu_expected%u_received%u_p%u_len%llu_status%llu",
+            static_cast<unsigned long long>(input.first_frame),input.expected_packets,input.received_packets,input.packet_index,
+            static_cast<unsigned long long>(input.packet.length),static_cast<unsigned long long>(input.packet.status));
+        api_.mark(stage);
+    }
+    void report_failure(const sl3::device_session::Snapshot& snapshot) noexcept override{
+        char stage[128]{};
+        std::snprintf(stage,sizeof(stage),"stream_failed_reason%u_fault%u_native%lu_input%llu",
+            unsigned(snapshot.failure),unsigned(snapshot.stream_fault),static_cast<unsigned long>(snapshot.native_error),
+            static_cast<unsigned long long>(snapshot.stats.input_blocks));
+        api_.mark(stage);
+    }
     bool close() noexcept override{
         controls_.invalidate();
         if(closed_)return true;

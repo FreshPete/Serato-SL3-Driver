@@ -79,6 +79,7 @@ class Runtime {
         // The host closes it only after that thread exits; it is never reused.
         if(audio_ && snapshot_.failure!=session::Failure::none)audio_->close();
         audio_.reset();
+        if(snapshot_.failure!=session::Failure::none && device_)device_->report_failure(snapshot_);
         if(exit_ || snapshot_.failure!=session::Failure::none)release_device();
         snapshot_.phase=exit_?protocol::Phase::closed:snapshot_.failure!=session::Failure::none?protocol::Phase::failed:protocol::Phase::ready;
         heartbeat_.pulse(timeouts_.live_ms);
@@ -267,7 +268,12 @@ public:
                     begin_stop();
                 }
                 const auto state=stream_->step();capture();
-                if(stream_->fault()!=StreamFault::none){failure(session::Failure::stream,"Retained-device audio engine fault");begin_stop();}
+                if(stream_->fault()!=StreamFault::none){
+                    if(snapshot_.failure==session::Failure::none){
+                        if(const auto* input=stream_->invalid_input())device_->report_invalid_input(*input);
+                    }
+                    failure(session::Failure::stream,"Retained-device audio engine fault");begin_stop();
+                }
                 if(state==StreamState::stopped || state==StreamState::retained)finish();
             }
             if(exit_ && !stream_){release_device();return snapshot_.failure==session::Failure::none?0:1;}

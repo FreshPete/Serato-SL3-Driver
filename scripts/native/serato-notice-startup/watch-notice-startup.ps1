@@ -1,11 +1,23 @@
-param([switch]$CheckOnly)
+param([switch]$CheckOnly, [switch]$Installed)
 
 $ErrorActionPreference = 'Stop'
+$env:PSModulePath = Join-Path $PSHOME 'Modules'
+function Write-WatcherStatus([string]$Message) {
+    if ($Installed) {
+        $line = '{0:o} pid={1} {2}{3}' -f [DateTime]::UtcNow,$PID,$Message,[Environment]::NewLine
+        [IO.File]::AppendAllText((Join-Path $PSScriptRoot 'watcher-status.log'),$line)
+    }
+}
+trap {
+    try { Write-WatcherStatus ("failed: " + $_.Exception.Message) } catch {}
+    throw $_
+}
+Write-WatcherStatus 'starting'
 $app = 'C:\Program Files\Serato\Serato DJ Pro\Serato DJ Pro.exe'
 $helper = Join-Path $PSScriptRoot 'sl3-notice-startup-early.dll'
 $pins = @{
     $app = '66E7AF01DDFD151814F51BF44BD8472E5C94F54B3CE12119EF70B7CBAB433265'
-    $helper = 'A370AB23C5C1ED80A35B8B49046C92EC270F2BB5CB43D058F72C5EA67A3B8306'
+    $helper = '2550E2C4682A0599DC5903069DB6094F796A76F959A9073334931FC2E9199AD1'
 }
 foreach ($item in $pins.GetEnumerator()) {
     if ((Get-FileHash -LiteralPath $item.Key).Hash -ne $item.Value) {
@@ -111,6 +123,18 @@ function Start-EarlyObserver($process, [IntPtr]$module, [IntPtr]$early) {
 
 $lease = [IO.File]::Open($helper, 'Open', 'Read', 'Read')
 $module = [IntPtr]::Zero
+$mutex = $null
+$ownsMutex = $false
+$ready = Join-Path $PSScriptRoot 'watcher-ready.json'
+$runKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
+$runName = 'SL3CompatibilityWatcher'
+$powershell = Join-Path ([Environment]::SystemDirectory) 'WindowsPowerShell\v1.0\powershell.exe'
+$startupCommand = '"{0}" -NoProfile -NonInteractive -WindowStyle Hidden -File "{1}" -Installed' -f $powershell,$PSCommandPath
+$nativeConfig = 'C:/Program Files/SL3 Rebuild/on-demand-diagnostic-v1/sl3-asio.conf'
+function Test-Installed {
+    (Get-ItemPropertyValue -LiteralPath $runKey -Name $runName -ErrorAction SilentlyContinue) -ceq $startupCommand -and
+        (Test-Path -LiteralPath $nativeConfig)
+}
 try {
     if ((Get-FileHash -InputStream $lease).Hash -ne $pins[$helper]) { throw 'Helper changed before load' }
     $module = [Sl3NoticeTrial]::LoadLibrary($helper)
@@ -120,25 +144,56 @@ try {
     if ($callback -eq [IntPtr]::Zero -or $early -eq [IntPtr]::Zero) { throw 'The trial helper export is missing' }
     if ($CheckOnly) { 'helper_export_verified'; return }
 
-    if (Get-Process -Name 'Serato DJ Pro' -ErrorAction SilentlyContinue) { throw 'Close Serato before arming the watcher' }
-    if (!(Test-Path -LiteralPath 'C:/Program Files/SL3 Rebuild/on-demand-diagnostic-v1/sl3-asio.conf') -or
+    if ($Installed) {
+        $mutex = [Threading.Mutex]::new($false, 'Local\SL3CompatibilityWatcher-v1')
+        try { $ownsMutex = $mutex.WaitOne(0) } catch [Threading.AbandonedMutexException] { $ownsMutex = $true }
+        if (!$ownsMutex) { Write-WatcherStatus 'already running in this session'; return }
+        if (!(Test-Installed)) { Write-WatcherStatus 'installed configuration unavailable'; return }
+    } elseif (Get-Process -Name 'Serato DJ Pro' -ErrorAction SilentlyContinue) {
+        throw 'Close Serato before arming the watcher'
+    }
+    if (!(Test-Path -LiteralPath $nativeConfig) -or
         !(Test-Path -LiteralPath 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\ASIO\SL3 Rebuild Development')) {
         throw 'The trial package must be installed before arming the watcher'
     }
+    $watcher = Get-Process -Id $PID
+    $started = $watcher.StartTime.ToUniversalTime().ToFileTimeUtc()
+    if ($Installed) {
+        $pending = "$ready.$PID"
+        try {
+            @{pid=$PID; created=[string]$started; session=$watcher.SessionId} | ConvertTo-Json -Compress |
+                Set-Content -LiteralPath $pending -Encoding utf8
+            if ([IO.File]::Exists($ready)) { [IO.File]::Replace($pending, $ready, [NullString]::Value) }
+            else { [IO.File]::Move($pending, $ready) }
+        } finally {
+            Remove-Item -LiteralPath $pending -ErrorAction SilentlyContinue
+        }
+        Write-WatcherStatus 'ready'
+    }
     'notice_watcher_armed'
     $end = [DateTime]::UtcNow.AddMinutes(7)
-    $seen = [Collections.Generic.HashSet[string]]::new()
-    while ($seen.Count -lt 2 -and [DateTime]::UtcNow -lt $end) {
-        $processes = @(Get-Process -Name 'Serato DJ Pro' -ErrorAction SilentlyContinue)
-        if ($processes.Count -gt 1) { throw 'More than one Serato process' }
+    $seen = ''
+    $count = 0
+    while (($Installed -and (Test-Installed)) -or (!$Installed -and $count -lt 2 -and [DateTime]::UtcNow -lt $end)) {
+        $processes = @(Get-Process -Name 'Serato DJ Pro' -ErrorAction SilentlyContinue |
+            Where-Object SessionId -EQ $watcher.SessionId)
+        if ($processes.Count -gt 1) {
+            if (!$Installed) { throw 'More than one Serato process' }
+            Start-Sleep -Milliseconds 100
+            continue
+        }
         if ($processes.Count -eq 0) { Start-Sleep -Milliseconds 40; continue }
         $process = $processes[0]
         try {
-            if ($process.Path -ne $app -or $process.SessionId -ne (Get-Process -Id $PID).SessionId) {
+            if ($process.Path -ne $app) {
+                if ($Installed) { Start-Sleep -Milliseconds 200; continue }
                 throw 'Unexpected application path or Windows session'
             }
             $identity = "$($process.Id)-$($process.StartTime.ToUniversalTime().ToFileTimeUtc())"
-            if ($seen.Contains($identity)) { Start-Sleep -Milliseconds 100; continue }
+            if ($seen -ceq $identity -or ($Installed -and $process.StartTime.ToUniversalTime().ToFileTimeUtc() -lt $started)) {
+                Start-Sleep -Milliseconds 100
+                continue
+            }
             $main = @($process.Threads | Sort-Object StartTime)[0]
         } catch [System.ComponentModel.Win32Exception] {
             Start-Sleep -Milliseconds 40
@@ -146,18 +201,24 @@ try {
         }
         if (!$main) { Start-Sleep -Milliseconds 40; continue }
         $thread = [uint32]$main.Id
-        Start-EarlyObserver $process $module $early
+        $seen = $identity
+        $count++
+        try { Start-EarlyObserver $process $module $early } catch {
+            if (!$Installed) { throw }
+            Write-Warning ("SL3 observer failed for {0}: {1}" -f $identity,$_.Exception.Message)
+            continue
+        }
         "notice_watcher_observing=$identity"
         $hook = [Sl3NoticeTrial]::SetHook(3, $callback, $module, $thread)
         if ($hook -eq [IntPtr]::Zero) {
             $errorCode = [Runtime.InteropServices.Marshal]::GetLastWin32Error()
             if ($process.HasExited) { continue }
+            if ($Installed) { Write-Warning "Windows declined the Serato thread hook (error $errorCode)"; continue }
             throw "Windows declined the Serato thread hook (error $errorCode)"
         }
-        [void]$seen.Add($identity)
         "notice_watcher_hooked=$identity thread=$thread"
         try {
-            $log = Join-Path $PSScriptRoot "notice-hook-$($process.Id).log"
+            $log = Join-Path $PSScriptRoot "notice-hook-$identity.log"
             $until = [DateTime]::UtcNow.AddSeconds(20)
             while (!$process.HasExited -and [DateTime]::UtcNow -lt $until) {
                 [void][Sl3NoticeTrial]::PostThreadMessage($thread, 0, [UIntPtr]::Zero, [IntPtr]::Zero)
@@ -171,8 +232,13 @@ try {
             }
         }
     }
-    "notice_watcher_finished launches=$($seen.Count)"
+    "notice_watcher_finished launches=$count"
 } finally {
     if ($module -ne [IntPtr]::Zero) { [void][Sl3NoticeTrial]::FreeLibrary($module) }
     $lease.Dispose()
+    if ($ownsMutex) {
+        Remove-Item -LiteralPath $ready -ErrorAction SilentlyContinue
+        $mutex.ReleaseMutex()
+    }
+    if ($mutex) { $mutex.Dispose() }
 }

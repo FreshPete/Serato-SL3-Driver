@@ -53,8 +53,10 @@ def validate(folder,worker_sha,simulated=False,host_loopback=False):
         returns=result.get('markerReturnChannels',[3,4])
         require(type(returns) is list and [integer(channel) for channel in returns] == ([1,2] if outputs==[3,4] else [3,4]),
                 'Host loopback must use a separate marker return pair')
-    target=((rate*3+127)//128)*128
-    for name,value in [('nominalRequestedMilliseconds',3000),('bankFrames',128),('channels',6),('sampleBytes',3),('intervals',8),('targetFrames',target),('recordedFrames',target),('recordedCallbacks',target//128),('recorderFault',0),('startupFramesDiscarded',0),('hostFailure',0),('pcmBytes',target*18)]:
+    bank=integer(result.get('bankFrames'),1)
+    require(bank==128 or (host_loopback and bank in (32,64)),'Unsupported callback bank')
+    target=((rate*3+bank-1)//bank)*bank
+    for name,value in [('nominalRequestedMilliseconds',3000),('channels',6),('sampleBytes',3),('intervals',8),('targetFrames',target),('recordedFrames',target),('recordedCallbacks',target//bank),('recorderFault',0),('startupFramesDiscarded',0),('hostFailure',0),('pcmBytes',target*18)]:
         require(integer(result.get(name))==value,'Record geometry/status differs: '+name)
     for name in ['workerStarted','ioRetired','deviceReleased','audioThreadRetired','workerExited','workerJobEmpty','buffersDisposed','streamStarted','pcmSaved']:
         require(result.get(name) is True,'Missing successful retirement/recording evidence: '+name)
@@ -62,15 +64,15 @@ def validate(folder,worker_sha,simulated=False,host_loopback=False):
         require(result.get(name) is False,'Unsupported claim/activity: '+name)
     require(integer(result.get('workerInputFrames'))>=target and integer(result.get('outputSubmissions'),1)>0 and integer(result.get('outputCompletions'),1)>0 and
             result.get('audioOutputPayload')==payload,'Stream/output contract differs')
-    require(integer(result.get('totalCallbacks'))==target//128+integer(result.get('trailingCallbacksNotRecorded')),'Finite prefix/suffix callback coverage differs')
+    require(integer(result.get('totalCallbacks'))==target//bank+integer(result.get('trailingCallbacksNotRecorded')),'Finite prefix/suffix callback coverage differs')
     frequency=integer(result.get('counterFrequency'),1);require(integer(result.get('collectionElapsedMilliseconds'))<=6000,'Collection deadline exceeded')
     require(result['outputCompletions']<=result['outputSubmissions'],'Output completion/submission counters differ')
-    rows=result.get('rows');require(type(rows) is list and len(rows)==target//128,'Complete prefix observations required')
+    rows=result.get('rows');require(type(rows) is list and len(rows)==target//bank,'Complete prefix observations required')
     for n,row in enumerate(rows):
         require(type(row) is list and len(row)==4,'Malformed callback observation')
-        frame,publication,ticks,bank=[integer(v) for v in row]
-        require(frame==n*128 and ticks>0 and bank in (0,1),'Callback frame/bank origin differs')
-        if n:require(publication>=rows[n-1][1] and ticks>=rows[n-1][2] and bank!=rows[n-1][3],'Callback clock/bank sequence differs')
+        frame,publication,ticks,bank_index=[integer(v) for v in row]
+        require(frame==n*bank and ticks>0 and bank_index in (0,1),'Callback frame/bank origin differs')
+        if n:require(publication>=rows[n-1][1] and ticks>=rows[n-1][2] and bank_index!=rows[n-1][3],'Callback clock/bank sequence differs')
     pcm=read(folder/'input.pcm',8*1024*1024)
     require(len(pcm)==target*18 and sha(pcm)==result.get('pcmSha256'),'PCM length/hash differs')
     journals=list(folder.glob('worker-*.tsv'));native_journal=None

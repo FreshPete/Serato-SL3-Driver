@@ -25,6 +25,8 @@ public:
     virtual bool supports_rate_selection() const noexcept{return false;}
     virtual control::rate_wire::Reply select_rate(unsigned){throw std::logic_error("Rate selection unsupported");}
     virtual std::unique_ptr<SessionTarget> begin(StreamConfig)=0;
+    virtual void report_invalid_input(const InvalidInput&) noexcept {}
+    virtual void report_failure(const device_session::Snapshot&) noexcept {}
     virtual bool close() noexcept=0;
     virtual DWORD native_error() const noexcept=0;
 };

@@ -138,7 +138,10 @@ DWORD initializeObserver() {
     auto tail = std::wcsrchr(path, L'\\');
     if (!tail) return 2;
     const auto remaining = MAX_PATH - static_cast<size_t>(tail + 1 - path);
-    if (swprintf_s(tail + 1, remaining, L"notice-hook-%lu.log", GetCurrentProcessId()) < 0) return 2;
+    FILETIME creation{}, exit{}, kernel{}, user{};
+    if (!GetProcessTimes(GetCurrentProcess(), &creation, &exit, &kernel, &user)) return 2;
+    const auto created = (static_cast<unsigned long long>(creation.dwHighDateTime) << 32) | creation.dwLowDateTime;
+    if (swprintf_s(tail + 1, remaining, L"notice-hook-%lu-%llu.log", GetCurrentProcessId(), created) < 0) return 2;
     journal = CreateFileW(path, FILE_APPEND_DATA, FILE_SHARE_READ, nullptr, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, nullptr);
     if (journal == INVALID_HANDLE_VALUE) return 2;
     base = reinterpret_cast<Address>(GetModuleHandleW(nullptr));

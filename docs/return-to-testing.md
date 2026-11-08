@@ -1,6 +1,19 @@
-# SL3 Windows handoff, 7 November 2026
+# SL3 Windows handoff, 8 November 2026
 
-The rebuilt Windows driver has carried Phase Essential tracking in Serato DJ Pro 5.0.0.1278 through the temporary installer-assisted setup. A separately armed watcher then enabled [two consecutive starts from the usual shortcut](serato-installer-handoff.md#two-shortcut-launches-with-the-windows-helper) under one trial install. The next attended check is to repeat those two starts after the installer sets up the watcher and the user signs back in to Windows. Playback can stay stopped.
+The original Serato setup is restored and Serato is closed after the comparison. The 64-frame build passed the two-minute loop in Serato DJ Pro 5.0.0.1278. The 32-frame build stopped on an empty USB input packet. Use 64 frames for the next longer playback or reopen test. [Current results and remaining work](RETURN-REPORT.md#8-november-windows-handoff)
+
+Before the comparison, the exact worker shared by both builds listed one high-speed SL3 through the reviewed UsbDk helper and matched its configuration descriptor. The listing used an ordinary Windows account without redirecting the device.
+
+## Next attended test
+
+1. With the SL3 connected and Serato closed, open the **64-frame** setup window. If using the ZIP, extract the whole archive and run `SL3_Compatibility_Setup.exe` from that folder. Choose **Check setup**, then **Install** and accept the Windows administrator prompt. Keep that folder for restoration. [Setup identities](one-time-setup-window.md#serato-playback-comparison)
+2. Launch the existing Serato shortcut. Load the local latency test track on Deck 1 in INT and loop it. Confirm the playhead wraps before arming the capture. Keep the track looping for two minutes and close Serato normally. Save the app log, capture and worker result.
+3. Use **Restore original setup** in the 64-frame window. After restoration, install the **32-frame** build and repeat with the same Serato settings and track. A failed start or early stream stop is a test result. Keep `worker-startup.tsv` and `result.json` before a retry.
+4. Compare reported buffer, clip continuity and normal retirement. The optional RCA return test also needs verified output and separate LINE return wiring. [Paired capture](two-deck-output-capture.md#paired-rca-loopback-capture)
+
+## 7 November checkpoint
+
+The rebuilt Windows driver carried Phase Essential tracking in Serato DJ Pro 5.0.0.1278 through the temporary installer-assisted setup. The first one-time install succeeded, but both launches from the usual shortcut stayed on offline audio. The follow-up trace found that Serato processed the SL3 arrival with zero listeners. The later sign-in watcher and playback trials are recorded separately. [Startup trace](serato-usb-subscription.md#live-result-after-the-one-time-install) · [Later trials](one-time-setup-window.md#windows-sign-in-watcher)
 
 ## Verified on the bench
 
@@ -48,4 +61,4 @@ The earlier attended trial completed setup and kept the same SL3 identity visibl
 
 ## Remaining for an install-once release
 
-The Windows target still needs normal Serato selection and automatic broker activation together, followed by physical deck output, independent two-platter control and a timecode-vinyl run. Phase RCA and vinyl use the same driver channels with source-appropriate input settings. Reliable close/reopen after playback, unplug/replug, long sessions, installation and uninstall on another Windows account or PC also need verification. macOS Tahoe remains deferred until Windows works. [Full acceptance checks](installed-use-target.md#acceptance-checks)
+The one-time install has already selected the SL3 and activated the driver from the usual shortcut. Remaining live checks cover 64/32-frame playback, physical deck output, independent two-platter control and timecode vinyl, as well as close and reopen after playback, unplug/replug, long sessions and setup on another Windows account or PC. macOS Tahoe remains deferred until the Windows playback and recovery gates pass. [Full acceptance checks](installed-use-target.md#acceptance-checks)

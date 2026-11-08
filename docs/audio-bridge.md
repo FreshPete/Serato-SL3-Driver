@@ -14,6 +14,12 @@ One queued priming block and the initially empty other bank produce two blocks o
 
 The output ring has fixed capacity of eight host blocks. Storage allocates during construction; start, processing, rendering and stop do not grow it. Tests count C++ `new`/`new[]` allocations around successful streaming/callback/restart paths and observe zero. This is not a measurement of real transport/host latency or of an arbitrary application's own allocation behaviour.
 
+Output stays in packed 24-bit form from the ASIO banks through the interleaved ring. Rendering copies each packet directly, splitting the copy if it crosses the end of the ring. The bridge tests check exact samples and packet boundaries across that wrap at 32 and 64 frames. Output bank ownership and the two-block delay are the same as above.
+
+In a local MSVC Release benchmark at 44.1 kHz with six input and six output channels, the median processing and rendering time per USB-shaped batch fell from 1.07 to 0.90 µs at 32 frames and from 1.04 to 0.84 µs at 64 frames. Each median used seven trials of 140,000 batches. This measures bridge CPU work with a synthetic callback. End-to-end latency and Serato playback stability require a live run. All 73 Windows software tests passed for the separate development build.
+
+The local benchmark record is `artifacts/build/packed-output-bench-20261108/benchmark.json`, SHA-256 `37d61bfc337c3476d6ff4ad2a3a63e32bc38bd9182b8c8708683d2022ee5d2e4`. The native build record is `artifacts/build/native-packed-output-20261108/native-build-Release.json`, SHA-256 `a19ee39dca27e08cd16b4bdbdf1359ee6c42a521aecc948d5da8ee45920a7101`.
+
 ## Position, faults and threading
 
 Input frame positions must be contiguous from session position zero. Host observation times must not regress. Each callback receives the input block's first logical frame position and the completing batch's supplied observation time. The latter is **not a measured first-sample timestamp**, USB frame number or proven hardware clock. A future ASIO time-info implementation must account for this distinction.

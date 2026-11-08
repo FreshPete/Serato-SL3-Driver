@@ -1,0 +1,83 @@
+{
+  "schema": "sl3.serato-32-empty-input-recovery-run.v1",
+  "applicationVersion": "5.0.0.1278",
+  "configuredBufferFrames": 32,
+  "applicationBufferFrames": 96,
+  "rateHz": 44100,
+  "seratoReportedLatencyMs": 0.725624,
+  "setupBundleSha256": "ddfc8014903cccd89f60685c697c5b2129a002fdc1e02ff6608a88561e2c0700",
+  "workerSha256": "9f8e008047a69199a6cf1d7dafdf661251bc3fb2ce6b2f84af739e2fbb068dca",
+  "hostPid": 6064,
+  "hostCreationFileTimeUtc": "134386439005818589",
+  "workerPid": 34060,
+  "trackPcmSha256": "5d0ed4c7a40e714933dabce8f3d0472d6373eaab16f5a714106f401a85a9a4e7",
+  "operatorConfirmedLoopBars": 8,
+  "deck": 1,
+  "deckMode": "INT",
+  "plannedPlaybackObservationSeconds": 300,
+  "endedEarlyFor": "Serato main thread unresponsive",
+  "mainThreadHangReportedBeforeSl3Start": true,
+  "applicationForceClosed": true,
+  "workerAliveAfterOutputCapture": true,
+  "softwareOutputCapture": {
+    "rateHz": 44100,
+    "frames": 220500,
+    "firstFrame": 6581014,
+    "pcmSha256": "a532fa3764d07557aafeac521978f37753c67b3fbb4540a77a641e7a65ffdd7d",
+    "captureReceiptSha256": "7710cca1ee5f41909ee53f4b7e82e4d86ba0382d829122530843dc360c9dcec3",
+    "pairs": [
+      {
+        "logicalChannels": [
+          1,
+          2
+        ],
+        "peakCode": [
+          0,
+          0
+        ],
+        "zeroFrames": 220500,
+        "longestDigitalSilenceFrames": 220500,
+        "longestIdenticalStereoFrames": 220500
+      },
+      {
+        "logicalChannels": [
+          3,
+          4
+        ],
+        "peakCode": [
+          4118280,
+          4223472
+        ],
+        "zeroFrames": 0,
+        "longestDigitalSilenceFrames": 0,
+        "longestIdenticalStereoFrames": 1
+      },
+      {
+        "logicalChannels": [
+          5,
+          6
+        ],
+        "peakCode": [
+          0,
+          0
+        ],
+        "zeroFrames": 220500,
+        "longestDigitalSilenceFrames": 220500,
+        "longestIdenticalStereoFrames": 220500
+      }
+    ]
+  },
+  "physicalReturnMeasured": false,
+  "emptyInputRecoveryMarkerPresent": false,
+  "invalidInputMarkerPresent": false,
+  "workerFailure": "output_starved",
+  "workerStreamFaultFromJournal": 11,
+  "workerExitCode": 1,
+  "workerInputBlocksAtFailure": 183165,
+  "applicationExitRetirementReported": false,
+  "deviceReleasedVerifiedByBroker": false,
+  "redirectCloseReturnedInJournal": true,
+  "applicationLogSha256": "920002505f44dbe58d2b4998ff73eb40ce2e2610ef6f8699a27561e452ba9b31",
+  "workerJournalSha256": "2279032579859108b49a77b4e66e46d732fddb8d3b38f9a66e73bed8001365cc",
+  "brokerResultSha256": "405256ede552a327a7b45a1c13e4448ec06c076558193b8d53646bf0f906dcc2"
+}

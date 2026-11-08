@@ -180,6 +180,7 @@ static void startup_empty_packet(){
         Peer peer;peer.input_batch_offset=1;ContinuousStream stream(backend,peer,true);
         require(stream.start({}) && stream.step()==StreamState::running && !peer.batches && !backend.out,
             "Discard the first defective batch without publishing PCM or submitting output");
+        require(!stream.invalid_input(),"An allowed startup discard does not expose a stream fault");
         const auto discard=stream.startup_discard();
         require(discard.empty_packet==1 && discard.discarded_frames==42 && backend.in==5,
             "Record empty index and actual discarded frames and rearm the original slot");
@@ -189,6 +190,9 @@ static void startup_empty_packet(){
         backend.bad_input=3;
         require(stream.step()==StreamState::stopped && stream.fault()==StreamFault::invalid_input && !backend.bad,
             "Empty packets after valid input still fail");
+        const auto* invalid=stream.invalid_input();
+        require(invalid && invalid->first_frame==peer.position && invalid->first_frame>0 && invalid->packet_index==0 &&
+                invalid->packet.length==0 && invalid->packet.status==0,"Midstream packet fault preserves its position and geometry");
     }
     for(unsigned scenario=0;scenario<3;++scenario){
         Backend backend;backend.startup_empty_batches=scenario==0?2:1;
@@ -204,6 +208,12 @@ static void faults(){
         Backend backend;backend.bad_input=bad;Peer peer;ContinuousStream stream(backend,peer);require(stream.start({}),"Start bad input case");
         require(stream.step()==StreamState::stopped && stream.fault()==StreamFault::invalid_input && !peer.batches && !backend.out &&
                 !backend.live() && !backend.bad,"Reject full-width bad packet metadata before publication/OUT submission");
+        const auto* invalid=stream.invalid_input();
+        require(invalid && invalid->first_frame==0 && invalid->expected_packets==8 &&
+                invalid->received_packets==(bad==1?65u:8u) && invalid->packet_index==(bad==1?InvalidInput::no_packet:0u),
+                "Retain the first rejected packet or mismatched count after draining");
+        if(bad==2)require(invalid->packet.status==(std::uint64_t(1)<<32),"Retain full-width packet status");
+        if(bad==6)require(invalid->packet.length==(std::uint64_t(1)<<32)+18,"Retain full-width packet length");
     }
     for(unsigned bad=1;bad<=5;++bad){
         Backend backend;Peer peer;peer.wrong_output=bad;ContinuousStream stream(backend,peer);require(stream.start({}),"Start bad output case");

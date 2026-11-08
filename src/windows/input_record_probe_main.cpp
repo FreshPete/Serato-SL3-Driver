@@ -17,7 +17,7 @@ constexpr auto kind=sl3::session::Kind::simulated;
 #else
 constexpr auto kind=sl3::session::Kind::native;
 #endif
-constexpr unsigned bank_frames=128;
+constexpr unsigned default_bank_frames=128;
 constexpr unsigned marker_start=8192;
 constexpr std::array<unsigned,2> marker_hz{997,1301};
 using Marker=std::array<std::vector<std::uint8_t>,2>;
@@ -62,13 +62,16 @@ struct Capture {
     std::uint64_t frequency=0;long previous_bank=-1;
     Marker marker;
     unsigned first_marker_output=0;
-    explicit Capture(std::size_t frames):pcm(frames*18),recorder(pcm.data(),frames),rows(frames/bank_frames){
+    const unsigned bank_frames;
+    explicit Capture(std::size_t frames,unsigned bank_size)
+        :pcm(frames*18),recorder(pcm.data(),frames),rows(frames/bank_size),bank_frames(bank_size){
         for(long c=0;c<6;++c){planes[std::size_t(c)]={ASIOTrue,c,{}};planes[std::size_t(c+6)]={ASIOFalse,c,{}};}
     }
 };
 Capture* current=nullptr;
 void callback(long bank,ASIOBool direct) noexcept {
     auto& c=*current;
+    const auto bank_frames=c.bank_frames;
     if(bank<0 || bank>1 || direct!=ASIOTrue){c.bad=true;return;}
     std::array<const std::uint8_t*,6> inputs{};
     for(unsigned channel=0;channel<6;++channel){
@@ -98,12 +101,12 @@ void callback(long bank,ASIOBool direct) noexcept {
     }
     if(c.recorder.complete())c.done.store(true,std::memory_order_release);
 }
-int run(WorkerSpec spec,const std::filesystem::path& folder,unsigned expected,bool loopback,unsigned first_marker_output){
+int run(WorkerSpec spec,const std::filesystem::path& folder,unsigned expected,bool loopback,unsigned first_marker_output,unsigned bank_frames){
     ordinary();local(folder);local(spec.executable);local(spec.helper);
     require(!std::filesystem::exists(folder),"Fresh recording directory required");Pin parent(folder.parent_path(),true);
     require(CreateDirectoryW(folder.c_str(),nullptr)!=FALSE,"Create recording directory");Pin directory(folder,true);
-    const auto target=((std::size_t(expected)*3+127)/128)*128;
-    Capture capture(target);LARGE_INTEGER frequency{};require(QueryPerformanceFrequency(&frequency) && frequency.QuadPart>0,"Read QPC frequency");capture.frequency=std::uint64_t(frequency.QuadPart);
+    const auto target=((std::size_t(expected)*3+bank_frames-1)/bank_frames)*bank_frames;
+    Capture capture(target,bank_frames);LARGE_INTEGER frequency{};require(QueryPerformanceFrequency(&frequency) && frequency.QuadPart>0,"Read QPC frequency");capture.frequency=std::uint64_t(frequency.QuadPart);
     if(loopback){capture.marker=make_marker(expected);capture.first_marker_output=first_marker_output;}
     const auto payload=quote(loopback?"bounded stereo markers":"zero PCM only");
     sl3::diagnostic::Watchdog watchdog;current=&capture;HostSession session(spec);capture.session=&session;
@@ -169,7 +172,7 @@ int run(WorkerSpec spec,const std::filesystem::path& folder,unsigned expected,bo
     std::ostringstream text;text<<std::boolalpha;
     text<<"{\"schema\":"<<quote(loopback?"sl3.host-loopback-probe.v1":"sl3.input-record-probe.v1")<<",\"simulated\":"<<(kind==sl3::session::Kind::simulated)<<",\"successful\":"<<successful
         <<",\"error\":"<<quote(error)<<",\"expectedRateHz\":"<<expected<<",\"observedRateHz\":"<<state.observed_rate_hz
-        <<",\"nominalRequestedMilliseconds\":3000,\"collectionElapsedMilliseconds\":"<<elapsed<<",\"bankFrames\":128,\"channels\":6,\"sampleBytes\":3,\"intervals\":8"
+        <<",\"nominalRequestedMilliseconds\":3000,\"collectionElapsedMilliseconds\":"<<elapsed<<",\"bankFrames\":"<<bank_frames<<",\"channels\":6,\"sampleBytes\":3,\"intervals\":8"
         <<",\"targetFrames\":"<<target<<",\"recordedFrames\":"<<capture.recorder.frames()<<",\"recordedCallbacks\":"<<capture.recorder.recorded_callbacks()
         <<",\"trailingCallbacksNotRecorded\":"<<capture.recorder.trailing_callbacks()<<",\"totalCallbacks\":"<<capture.recorder.callbacks()<<",\"recorderFault\":"<<unsigned(capture.recorder.fault())
         <<",\"counterFrequency\":"<<capture.frequency<<",\"pcmSaved\":"<<!pcm_hash.empty()<<",\"pcmSha256\":"<<quote(pcm_hash)<<",\"pcmBytes\":"<<(pcm_hash.empty()?0:capture.recorder.frames()*18)
@@ -199,7 +202,7 @@ int wmain(int argc,wchar_t** argv){try{
         if constexpr(kind!=sl3::session::Kind::native)return 2;
         std::cout<<"{\"planOnly\":true,\"deviceAccess\":false,\"expectedRateHz\":44100,"
                    "\"markerHz\":["<<marker_hz[0]<<','<<marker_hz[1]<<"],\"markerFirstFrame\":"<<marker_start
-                 <<",\"markerDurationMilliseconds\":650,\"bankFrames\":"<<bank_frames
+                 <<",\"markerDurationMilliseconds\":650,\"bankFrames\":"<<default_bank_frames
                  <<",\"markerOutputChannels\":["<<first_marker_output+1<<','<<first_marker_output+2<<']'
                  <<",\"markerReturnChannels\":"<<(deck1?"[1,2]":"[3,4]")<<"}\n";
         return 0;
@@ -209,12 +212,19 @@ int wmain(int argc,wchar_t** argv){try{
     const bool loopback=mode==L"--run-loopback" || mode==L"--run-loopback-deck1";
     if((argc!=12 && argc!=14) || (mode!=L"--run" && !loopback))return 2;
     if(loopback && kind!=sl3::session::Kind::native)return 2;
-    if constexpr(kind==sl3::session::Kind::native){if(argc!=12)return 2;}
+    if constexpr(kind==sl3::session::Kind::native){if(argc!=12 && !loopback)return 2;}
     std::map<std::wstring,std::wstring> args;
     for(int at=2;at<argc;at+=2)if(!args.emplace(argv[at],argv[at+1]).second)return 2;
     if((args.size()!=5 && args.size()!=6) || !args.count(L"--worker") || !args.count(L"--worker-sha256") || !args.count(L"--helper") || !args.count(L"--output") || !args.count(L"--expected-rate"))return 2;
     const auto rate=args.at(L"--expected-rate");if(rate!=L"44100" && rate!=L"48000")return 2;
     if(loopback && rate!=L"44100")return 2;
+    unsigned bank_frames=default_bank_frames;
+    if(loopback && args.size()==6){
+        const auto bank=args.find(L"--bank-frames");
+        if(bank==args.end() || (bank->second!=L"32" && bank->second!=L"64" && bank->second!=L"128"))return 2;
+        if(bank->second==L"32")bank_frames=32;
+        else if(bank->second==L"64")bank_frames=64;
+    }
     WorkerSpec spec;spec.executable=args.at(L"--worker");spec.helper=args.at(L"--helper");spec.sha256=ascii(args.at(L"--worker-sha256"));spec.kind=kind;
     if(!hash(spec.sha256))return 2;
     std::unique_ptr<Pin> fixture_clock;
@@ -229,5 +239,5 @@ int wmain(int argc,wchar_t** argv){try{
         spec.lifetime=DeviceLifetime::retained;
         spec.diagnostic_playback_keepalive=true;
     }
-    return run(spec,output,rate==L"44100"?44100u:48000u,loopback,first_marker_output);
+    return run(spec,output,rate==L"44100"?44100u:48000u,loopback,first_marker_output,bank_frames);
 }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}}

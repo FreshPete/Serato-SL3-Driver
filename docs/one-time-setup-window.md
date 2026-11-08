@@ -52,6 +52,116 @@ The private archive `artifacts/build/SL3-Portable-Setup-20261107.zip` contains 7
 
 The interruption recovery build is `artifacts/build/SL3-Portable-Setup-20261107-r2.zip`, SHA-256 `66596c2a92471e62dd3c8d99e10cfb6614ff786999638b03801e29344436b999`. The relocated native entry passed 40 cases, including refusal while the selection lock was held, preparation after a simulated interruption, and reuse of the exact committed record. The window passed 20 checks and the ZIP packager verified all 762 files. These checks left the original Serato setup in place.
 
+### Windows sign-in watcher
+
+The portable setup accepts a reviewed watcher DLL through `prepare-setup-window.py --watcher-dll`. Its archive includes the watcher, DLL and setup helper, and the window pins all three before running the helper. Install first stages the driver and Serato resources using the existing administrator action. The window then copies the reviewed watcher files into the current user's local application data, registers one entry under that user's Windows Run key, and verifies that the watcher is running in the current session. Restore removes the owned entry and watcher files. Diagnostic logs are retained locally.
+
+The initial integrated trial installed the driver but inherited a module path that prevented Windows PowerShell from loading `Get-FileHash` during watcher setup. After restoration, the corrected bundle passed the 20 setup window checks, verified all 765 ZIP members, and installed cleanly. The watcher reported ready in the same Windows session that ran setup, and its sign-in entry was present.
+
+Serato started the SL3 from the desktop shortcut in that installation session. The next Windows session did not have a ready watcher. Its first observation still held the previous session's status file. A Windows PowerShell 5.1 reproduction showed that `File.Replace` rejected the original null argument when replacing that file. The final bundle uses the explicit .NET null string and records start, readiness and failure markers so a Windows sign-in can be checked independently of the installer. Its 20 setup checks and all 765 ZIP member checks passed. The original setup was restored before opening the final bundle for the clean retest.
+
+The final private test archive is `artifacts/build/SL3-Portable-Setup-20261107-signin-final.zip`, SHA-256 `a75c37ded09aa1b03c5f43d59036b1cf34812a49e84232e6fd228b62fabcf526`. After one clean install, the operator signed out and back in. Windows Explorer started a new watcher in the new session about 14 seconds after Explorer started. The watcher replaced the previous status receipt and reported ready before Serato opened.
+
+Two launches from the original desktop shortcut both matched the SL3 notice, requested selection once, loaded `sl3_asio.dll` and logged SL3 audio start at 44.1 kHz with a 192-frame application buffer. The same watcher handled both launches without an installer click, reinstall or SL3 power cycle. Playback stayed stopped. Both Serato windows closed through the normal window close path. The final setup and watcher remain installed.
+
+Each broker acquired the SL3 and acknowledged one stream start. Each then reported `worker_exited` with exit code 1 and unverified USB release about five seconds after acquisition, while Serato was still open. The broker result hashes are `7d7b31dab339ccb74494df38fa8cda9619065d3ba67554339d3bcb43f586d06a` and `40d71d814226b6ac529d987f967584392f153573436a1afca3541cb0753f9bf4`. The same symptom was present on the earlier launch before sign-out. Startup and reopen are verified for device selection and ASIO start. Sustained audio through this install remains open.
+
+### Playback keepalive retest
+
+The two sign-in trial journals put the redirect close 125 ms and 328 ms after the broker reported the device ready. Both controllers began their cleanup 5,078 ms after worker entry. In the retained worker, a stream fault can release the USB device immediately. The worker then has no device or stream, so its five-second idle deadline, measured from entry, accounts for the later process exit. The old journals did not preserve the original stream fault code.
+
+The installed diagnostic profile had disabled the existing playback keepalive mode and the bounded startup packet handling that accompanies it. The new private package selects both through `SL3-ASIO-DIAGNOSTIC-TIMING-2` and journals a stream fault before releasing the redirect. All 73 native tests, three setup entry checks, 20 window cases and 765 package member checks passed. The private archive is `artifacts/build/SL3-Portable-Setup-20261107-playback-keepalive.zip`, SHA-256 `b034463e824d7a057ebd29d9b8d97dd955cb384f002db74400ff92ab505ffd3e`.
+
+Serato DJ Pro 5.0.0.1278 opened from the usual desktop shortcut and loaded the rebuilt SL3 driver with the new profile. The same worker stayed active for the entire 120.61-second Deck 1 loop observation. A five-second sample at the end verified 220,500 frames of nonzero software output on each of channels 3 and 4. The operator reported clean sound and a responsive interface. The clip remains private. Its PCM SHA-256 is `a58026bc98776f959bd38ead77cc545a15356a32623e125231c843ef020cc78d`.
+
+The keepalive loop ran for approximately 342 seconds from ASIO stream start through the end of playback. On normal Serato close, the broker verified I/O retirement, USB release and worker exit with code 0. The broker result SHA-256 is `8cdae342340262d02769c324a8e72ab45694725cc339410cb6901bd2e995c80c`. The package remains installed. This test exercised internal playback on one deck.
+
+A separate 128-frame startup on 8 November reached ASIO start with the same keepalive worker. The worker later reported `invalid_input` after publishing 4,473 one-millisecond input blocks. The redirect-close call returned in the journal. The broker saw worker exit code 1 and did not receive a valid final snapshot to verify retirement or release. The journal does not distinguish an invalid packet length, packet status or batch count. The worker now records the first rejected input position and the observed packet count, index, length and status before closing the stream. Packet index 64 means the rejection was at batch level. The stream still stops on invalid input. [Bound records](evidence/serato-128-input-fault-20261108.json)
+
+### Lower buffer measurement
+
+#### Original-driver reference
+
+Serato lists DJ Pro **2.5.5** as the last supported SL3 version and identifies **2.5.6** as the start of the cutoff. Rane's original SL3 manual gives **1.8 ms at 44.1 kHz** and **1.6 ms at 48 kHz** for the device itself. The manual adds driver buffering for a Windows ASIO round trip and describes reliable operation below 8 ms on suitable PCs. [Serato SL3 support](https://serato.com/dj/hardware/rane-sl3) · [Serato cutoff notice](https://the-drop.serato.com/announcements/important-information-about-discontinued-hardware/) · [Rane SL3 owner’s manual](https://www.ranecommercial.com/legacy/pdf/sl3_manual_dj.pdf)
+
+The original Windows x64 ASIO DLL version 1.3.5.302 falls back to an 8 ms setting when reading `BufferSizeMillisecs` fails. Its buffer selector rounds that setting down to a 6 ms target, selects an 88-frame bank at 44.1 kHz and advertises that bank as the minimum, maximum and preferred size. The latency method reports one selected bank for input and two for output. At that default this is 88 input and 176 output frames, about **5.99 ms combined as reported to the host**. With a 1 ms setting the same path selects the 45-frame floor, about **3.06 ms combined as reported**. These values come from static inspection of the driver. A direct performance comparison needs the same physical loopback on the original supported setup and the rebuild. [Binary observations and calculated examples](evidence/rane-original-asio-timing-20261108.json)
+
+#### Rebuilt-driver loopback
+
+The physical RCA loopback used SL3 OUT 1/2 to IN 3/4 set to LINE. Two independent short callback tests used the same installed UsbDk worker, keepalive mode, 44.1 kHz clock and eight-interval USB requests. Serato was closed for these measurements.
+
+| ASIO buffer | Left return | Right return | Callback count |
+| --- | --- | --- | --- |
+| 128 frames | 592 frames, 13.42 ms | 594 frames, 13.47 ms | 1,034 |
+| 64 frames | 466 frames, 10.57 ms | 468 frames, 10.61 ms | 2,068 |
+
+Both tests verified the returned stereo markers, callback sequence and native release without a pump or stream fault. The measured reduction was 126 frames, or 2.86 ms, on both channels. At 64 frames, the number of host callbacks doubled. The short loopback measures the driver and analogue path together. Serato's own processing and a sustained dropout check at 64 frames remain to be tested.
+
+The separate 64-frame driver bundle passed all 73 native tests, the passive native configuration check, and package verification. Its exact worker repeated the physical loopback at 464 and 466 frames, or 10.52 and 10.57 ms, with 2,068 callbacks, no pump or stream fault, and verified device release. The bundle is `artifacts/build/deployment-bundles/latency-64-20261108` with manifest SHA-256 `8b955355d67378dd9e83cf766d8b160091d311ab11113dc882b2ba913a62c787`. The tested 128-frame setup remains installed and Serato is closed.
+
+The follow-up used the same RCA wiring, 44.1 kHz worker and one-millisecond USB requests. A separate synchronous probe read each output bank after its own callback completed. It could do that because it owned the callback and filled every output before returning.
+
+| ASIO buffer and output handling | Left return | Right return | Maximum callbacks per USB batch |
+| --- | --- | --- | --- |
+| 32 frames, standard | 400 frames, 9.07 ms | 402 frames, 9.12 ms | 2 |
+| 64 frames, synchronous probe | 402 frames, 9.12 ms | 404 frames, 9.16 ms | 1 |
+| 32 frames, synchronous probe | 370 frames, 8.39 ms | 372 frames, 8.44 ms | 2 |
+
+All three short runs verified both markers and released the SL3 without a pump or stream fault. A separate 60-second standard 32-frame run completed 82,660 callbacks and 59,979 USB output completions, with zero pump or stream faults and verified device release. The probe used its own callbacks and did not run Serato. The 64-frame synchronous result is close to standard 32 frames while avoiding the paired callbacks within a USB batch.
+
+The pinned Serato DJ Pro 5.0.0.1278 executable queries the ASIO `outputReady` wrapper at `0x142217141` and saves whether it returned zero. In its audio callback it conditionally calls the same wrapper at `0x142216281` after the output routine. The wrapper at `0x142222120` dispatches to IASIO slot `+0xb8`. This identifies the code path for an attended early-output test. The deployed driver still uses standard bank ownership. It needs a positive completion signal from the host before it can read a bank early.
+
+The separate standard 32-frame bundle passed all 73 native tests, the passive native configuration check and package verification. The bridge test covers two callbacks completing in one USB batch and verifies output order and exact sample values. The bundle's worker repeated the physical loopback at 402 and 404 frames, or 9.12 and 9.16 ms, with 4,135 recorded callbacks, zero pump or stream faults and verified device release. The bundle is `artifacts/build/deployment-bundles/latency-32-20261108` with manifest SHA-256 `3d8e7f3dbddfa25e5cda236c5ca5d1c98c47fe54142fbe79d3fae87a18ba99e3`. The 128-frame setup remains installed. The first attended comparison should check standard 32-frame playback against 64 frames from the same Serato shortcut, including actual playback, the selected host buffer and the shutdown report.
+
+### Serato playback comparison
+
+The 128-frame setup was subsequently removed through **Restore original setup**. The original Serato resource hash matched and the protected driver stage was absent. The private comparison installers below use identical ASIO DLL, broker and USB worker binaries, with different buffer records. This build includes the rejected-input packet journal and optional paired capture for an RCA return. It passed all 73 Windows native tests. Each installer passed its three entry checks and 20 setup window cases against the original installation. These checks exercised setup eligibility, without elevation, Serato playback or USB streaming. The earlier physical loopback figures refer to the earlier bundles above. [Paired capture procedure](two-deck-output-capture.md#paired-rca-loopback-capture)
+
+| ASIO buffer | Local setup build under `artifacts/build` | Setup executable SHA-256 |
+| --- | --- | --- |
+| 64 frames | `native-setup-window-worker-loopback-64-20261108` | `2dc103e71e5038af139b2cee718d3356bd1deecdda084486f0868eb822841f3d` |
+| 32 frames | `native-setup-window-worker-loopback-32-20261108` | `497db229c2ae2b9ef0af668d9099fdd4b48326ab13b37a5c84feab9cd1e9e400` |
+
+The same builds are available as local private archives under `artifacts/build`. All 765 members in each archive were verified against their source hashes. The extracted kits also passed a read-only check from a path with spaces and Unicode, using their bundled runtime. They require the pinned Serato 5.0.0.1278 installation and a running UsbDk service. The archives contain setup and recovery tools, with the compatibility resources generated locally at setup time.
+
+| ASIO buffer | Private archive | Archive SHA-256 |
+| --- | --- | --- |
+| 64 frames | `SL3-Private-Serato5-64-Frame-20261108.zip` | `02e9eecdf3cc91515b19b0d09509b5cc159408545e26571c696b3479c09011a0` |
+| 32 frames | `SL3-Private-Serato5-32-Frame-20261108.zip` | `a0bfa98d82faa061c41d3a5df6e11c1e8b5e2ae802ab88c4660d70349373a8e7` |
+
+1. Use `build/Release/SL3_Compatibility_Setup.exe` in the 64-frame build. With Serato closed, check setup, install and approve the Windows prompt. Read `sl3-timing.conf` in the protected driver folder and verify that it says `buffer_frames=64`.
+2. Launch the usual Serato shortcut with a fresh, process-scoped `SL3_OUTPUT_CAPTURE_DIRECTORY`. Load `artifacts/audio/SL3 Latency Loop Test.wav` on Deck 1 in INT, keep playback level low and use the same Serato Audio settings for both trials. Enable the loop and watch playback cross its wrap point before creating `arm.txt`. The earlier one-minute WAV ended before its capture began and that clip contains silence on all channels. If the test track has no usable beat grid, set the loop start and end manually.
+3. Let the loop play for two minutes. Save the Serato audio-start record, the verified Deck 1 capture and the broker result after normal close. The Serato log's application buffer and the ASIO buffer configured by the package are separate values. Record any audible gaps if the deck output is monitored. The exported clip reports the longest digital-silence and identical-sample runs on each stereo pair. A clean five-second clip covers dequeued software samples during that window.
+4. Restore through the 64-frame setup window and verify the original state. Install the 32-frame package and repeat with a fresh capture directory, `buffer_frames=32`, the same track and the same settings. Compare startup, software gaps, any audible gaps and normal worker retirement alongside the earlier physical loopback figures. If a worker stops early, retain `worker-startup.tsv` as well as `result.json`. The worker journal can preserve the rejected-packet record even when the broker misses the final snapshot.
+
+The comparison track has continuous quiet stereo tones under a half-second beat envelope. Its SHA-256 is `0c454d41d2de59953fba038efe1049d265ca265e874629faedaf326ce699284c`. The two Serato playback trials still need an administrator at the PC to switch packages. [Capture contract](two-deck-output-capture.md#recording-contract)
+
+After closing Serato, run `python scripts/read-installed-asio-start.py --diagnostic-timing --activation BUNDLE/sl3-asio.conf --session SESSION_DIRECTORY`. Use the selected private bundle and its exact `application-<PID>-<creation FILETIME>` session under `%LOCALAPPDATA%/SL3RebuildActivated`. The readout binds the configured buffer to the session's published worker configuration and readiness receipt. It reports the broker's stream-start and retirement evidence separately. Read the Serato log and saved output clip alongside that report for the application buffer and sample continuity.
+
+On 8 November, the 64-frame build started from the usual shortcut. Serato used a 128-frame application buffer. The operator confirmed an eight-bar INT loop on Deck 1, and the worker stayed active for the 120-second observation. A late five-second capture contained continuous signal on software channels 3/4, with zero silent stereo frames and no repeated stereo frames. Serato reported zero callback dropouts at SL3 disconnect. On normal exit the broker verified I/O retirement, device release and worker exit code zero. [Run evidence](evidence/serato-500-looped-buffer-comparison-20261108.json)
+
+The matching 32-frame build also started from the usual shortcut, using a 96-frame application buffer. The worker stopped about 72 seconds into the confirmed loop observation. The first packet of an eight-packet USB input batch reported success with zero bytes at stream frame 4,739,000. The worker rejected the batch and exited before the capture was armed. Its journal records the redirect-close return, and the broker lacked a valid final snapshot to verify device release. Serato still reported zero callback dropouts at disconnect, so that counter alone would miss this interruption. **64 frames is the lowest setting that passed this comparison.** The two runs establish different outcomes without isolating buffer size as the cause of the empty packet. [Run evidence](evidence/serato-500-looped-buffer-comparison-20261108.json)
+
+### Isolated empty-packet recovery at 32 frames
+
+The 32-frame diagnostic worker can conceal one successful zero-byte input packet at 44.1 kHz. It checks the seven other packets and the previous nine batches for the expected five- or six-frame packet sizes. It uses the nominal 441-frame total over those 80 USB intervals to estimate the missing packet length, and accepts only an estimate of five or six frames. It inserts silence for the missing input interval and keeps the other PCM in order. The estimated length can differ from the device's actual cadence. Recoveries must be at least ten seconds apart, and a transfer error, multiple empty packets in the same batch or insufficient cadence evidence still stops the stream.
+
+The worker records the recovery count, last affected block frame, packet index and estimated frames in `worker-startup.tsv` at stream retirement. A looped run from the regular Serato shortcut should check uninterrupted worker life, software output, UI responsiveness and clean retirement. The recovery record shows whether a live run exercised the fix.
+
+The private `SL3-Private-Serato5-32-Recovery-20261108.zip` passed 73 native tests, three setup entry checks, the 20-case setup window check and the ZIP inventory check. Archive SHA-256 is `7f18c424e33fe01787485ba1cd59fc3479a816e6354bbf5ad6e1fea0d80580ed`.
+
+The 8 November retest started the SL3 from the usual shortcut with the 32-frame driver and a 96-frame Serato buffer. The operator confirmed the 8-bar loop, but reported severe lag. The session was force-closed before the planned five-minute observation. The worker stayed active long enough to capture five seconds of continuous Deck 1 software output, starting about 149 seconds into the stream. Serato reported main-thread hangs before the SL3 audio start and during playback. Around the forced exit, the worker reported output starvation. The journal contains no empty-packet recovery or invalid-input event, so this run did not verify recovery on physical hardware. **64 frames remains the verified fallback.** [Retest evidence](evidence/serato-500-32-empty-input-recovery-20261108.json)
+
+### Serato lag with the SL3 disconnected
+
+With the original setup restored and the SL3 physically unplugged, Serato 5.0 opened from the usual shortcut. Its first main-thread hang warning arrived 5.1 seconds after launch, before the offline audio connection started at 6.4 seconds. Windows later reported the window unresponsive and Serato logged stalls up to 11 seconds. The operator could not start the test loop and had to force-close Serato. This establishes that the lag can occur independently of SL3 audio. Serato also logged an automatic library import during the offline run. Its contribution to the stalls has not been isolated.
+
+In the earlier hardware runs, the first main-thread hang warning preceded SL3 audio start by 6.4 seconds at 64 frames and 7.3 seconds at 32 frames. The new matched 64-frame run also reported its first warning about 5.1 seconds after launch, before SL3 audio started at 16.6 seconds. The operator could not load the WAV. After Windows responsiveness polling was stopped, Serato still reported a 15.4-second main-thread stall. Serato reported zero callback dropouts at disconnect, and the broker verified normal I/O retirement and device release. The matched 64- and 32-frame packages share the same ASIO, worker and broker binaries. [Lag comparison evidence](evidence/serato-500-lag-comparison-20261108.json)
+
+The exact earlier 64-frame package reproduced the same problem when monitored only through Serato's log. The first main-thread warning arrived 5.1 seconds after launch. SL3 audio started at 12.6 seconds. The operator still could not load the WAV and the longest recorded stall was 12.2 seconds. Serato reported zero callback dropouts when it disconnected, and the broker verified normal USB release again.
+
+At 32 frames, the first main-thread hang warning also arrived 5.1 seconds after launch, before SL3 audio started at 12.4 seconds. The operator still could not load the WAV. Serato reported a 22.8-second stall while the worker was active. The worker later reported output starvation around shutdown and its journal records the redirect-close return. The broker did not verify I/O retirement or USB release, and the journal contains no invalid-input or empty-packet recovery marker. The original Serato files were verified after restore. The stalls prevented an equal-loop comparison, so these runs establish when the lag starts without ranking the buffer sizes for playback responsiveness.
+
 ### Earlier install-once build
 
 ```text

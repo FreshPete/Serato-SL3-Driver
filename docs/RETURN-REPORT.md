@@ -1,5 +1,21 @@
 # SL3 rebuild progress for the owner's return
 
+## 8 November Windows handoff
+
+The attended **64-frame and 32-frame playback comparison in Serato DJ Pro 5.0.0.1278** found that 64 frames passed and 32 frames stopped on an empty USB input packet. The two private installers use the same ASIO DLL, broker and USB worker. Both carry the rejected-packet journal and optional RCA return capture. The Release build passed all 73 Windows software tests. Each installer passed its three entry checks and 20 window checks. [Installer identities and results](one-time-setup-window.md#serato-playback-comparison)
+
+| Area | Verified result | Remaining proof |
+| --- | --- | --- |
+| USB, clock and samples | The signed UsbDk transport ran bounded capture and silent duplex with the physical SL3. A separate historical test changed the clock to 48 kHz and verified readback. The installed Serato trials used 44.1 kHz. | Current-build continuity and recovery across longer streams. The trial uses the observed clock. [Physical transport tests](first-physical-usbdk-tests.md) |
+| Normal Serato launch | One setup and Windows sign-in enabled two launches from the existing shortcut with SL3 selection and ASIO start. The later 128-frame keepalive build ran a two-minute internal playback loop and retired cleanly. A separate 128-frame launch stopped on an invalid USB input batch. | A repeatable stream start and clean reopen after sustained playback. The new journal can identify the rejected packet if the fault recurs. [Sign-in and playback trials](one-time-setup-window.md#windows-sign-in-watcher) · [Input fault](evidence/serato-128-input-fault-20261108.json) |
+| Low latency | The live 64-frame Serato run passed two minutes and the late software capture was continuous. The 32-frame run stopped about 72 seconds into observation. Standalone physical loopback on earlier builds measured 10.52–10.57 ms at 64 and 9.12–9.16 ms at 32. | Reproduce and diagnose the empty USB input packet before relying on 32 frames. The paired recorder can compare a separately wired RCA return in Serato. [Live comparison](evidence/serato-500-looped-buffer-comparison-20261108.json) · [Paired capture](two-deck-output-capture.md#paired-rca-loopback-capture) |
+| Phase and vinyl | Both Phase remotes controlled their respective REL decks on one platter, and both logical output pairs carried recorded audio. | Physical Serato deck output, two independent platters and timecode vinyl with the source-appropriate settings. [Two-deck evidence](evidence/phase-two-deck-session-20261105.json) |
+| Setup, recovery and wider release | The original Serato executable, resources and shortcut match the known hashes. The temporary driver files, COM/ASIO entries and sign-in watcher are absent. Serato is closed. Secure Boot is enabled, UsbDk is running and the SL3 is visible under its original failed-load binding. | Install, restore and reopen under the latest package, then verify long sessions, unplug/replug and a second Windows account or PC. The diagnostic owner still has a ten-minute cap. [Release acceptance checks](installed-use-target.md#acceptance-checks) |
+
+Use the 64-frame build for the next longer playback or recovery trial. For a repeat of the comparison, arm the capture after observing a loop wrap and retain the application log, output capture and broker result. Keep the worker journal even if the stream ends before the capture. [Attended steps](return-to-testing.md#next-attended-test)
+
+macOS Tahoe work remains deferred while the Windows playback and recovery gates are open.
+
 ## 7 November Windows handoff
 
 **The next check is one install and two launches from the normal Serato shortcut.** The private installer is `artifacts/build/SL3-Portable-Setup-20261107-r2.zip`. Its 762 files matched the reviewed build. The native entry passed 40 checks, including first-run recovery and reuse of the same setup record. The portable window passed 20 checks. This is the Serato DJ Pro 5.0.0.1278 trial build with a ten-minute audio limit. [Installer and package hash](one-time-setup-window.md#portable-development-build)

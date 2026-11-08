@@ -1,0 +1,392 @@
+{
+  "schema": "sl3.serato-500-lag-comparison.v1",
+  "applicationVersion": "5.0.0.1278",
+  "launch": "usual Serato DJ Pro shortcut",
+  "offlineBaseline": {
+    "hostPid": 30368,
+    "sl3PhysicallyDisconnected": true,
+    "originalSetupRestored": true,
+    "operatorConfirmedLoop": false,
+    "operatorObservation": "Serato froze before the test loop could be started in Practice mode",
+    "applicationClose": "forced",
+    "summary": {
+      "firstMinute": {
+        "windows": {
+          "samples": 19,
+          "notResponding": 11,
+          "workerEverObserved": false,
+          "workerSeenInEverySample": false,
+          "observedCpuSeconds": 47.937,
+          "sampleSpanSeconds": 47.431
+        },
+        "mainThreadHangReports": 22,
+        "mainThreadMaxReportedHangMs": 9200
+      },
+      "audioStarts": [
+        {
+          "secondsAfterLaunch": 6.408,
+          "device": "Offline Device",
+          "latencyMs": 10,
+          "frames": 480,
+          "rateHz": 48000
+        }
+      ],
+      "mainThreadHangReports": {
+        "during_startup_and_load_attempt": 37
+      },
+      "mainThreadMaxReportedHangMs": {
+        "during_startup_and_load_attempt": 11024
+      },
+      "firstMainThreadHangReportSeconds": 5.058,
+      "firstNotRespondingSampleSeconds": 21.974,
+      "samples": {
+        "during_startup_and_load_attempt": {
+          "samples": 73,
+          "notResponding": 21,
+          "workerEverObserved": false,
+          "workerSeenInEverySample": false,
+          "observedCpuSeconds": 95.469,
+          "sampleSpanSeconds": 144.441
+        },
+        "loop": {
+          "samples": 0,
+          "notResponding": 0,
+          "workerEverObserved": false,
+          "workerSeenInEverySample": null,
+          "observedCpuSeconds": null,
+          "sampleSpanSeconds": null
+        },
+        "after_observation": {
+          "samples": 15,
+          "notResponding": 3,
+          "workerEverObserved": false,
+          "workerSeenInEverySample": false,
+          "observedCpuSeconds": 12.343,
+          "sampleSpanSeconds": 26.263
+        }
+      },
+      "confirmedLoopSeconds": null,
+      "callbackDropoutReports": [],
+      "logSha256": "3c8c7729c43e89b9e50f136ac7bbe6f369f0916995a82eaf331520903c6f4239",
+      "sampleSha256": "4b2e410c5c6485cb439a26a9b1cde1a94a05b5ddf54351e3b6874c4797029ba1"
+    }
+  },
+  "priorHardwareLogs": [
+    {
+      "configuredBufferFrames": 64,
+      "firstMainThreadHangReportRelativeToSl3AudioStartSeconds": -6.395,
+      "maxMainThreadHangReportedMs": 12228,
+      "mainThreadHangReportsFirstMinuteAfterSl3Start": 0,
+      "source": "serato-500-looped-buffer-comparison-20261108.json"
+    },
+    {
+      "configuredBufferFrames": 32,
+      "firstMainThreadHangReportRelativeToSl3AudioStartSeconds": -7.265,
+      "maxMainThreadHangReportedMs": 12710,
+      "mainThreadHangReportsFirstMinuteAfterSl3Start": 0,
+      "source": "serato-500-32-empty-input-recovery-20261108.json"
+    }
+  ],
+  "matchedHardwareRerun": {
+    "status": "Both launches completed; UI stalls blocked the requested loops",
+    "bundleSha256ByBufferFrames": {
+      "32": "ddfc8014903cccd89f60685c697c5b2129a002fdc1e02ff6608a88561e2c0700",
+      "64": "9d38e29f3d54e130dfdac2080e6149c3e7b312e3e5aa94b09db68386061b4a76"
+    },
+    "sharedAsioSha256": "e2b84cf4dc47a8a6c8a0b40e657d4fb748204e840f5c134515f20bd556b5c067",
+    "sharedWorkerSha256": "9f8e008047a69199a6cf1d7dafdf661251bc3fb2ce6b2f84af739e2fbb068dca",
+    "sharedControllerSha256": "2b78cc3e1416b0b9e7c8f211edcf1982c12e4e8e5aebcbfbab0f2015a4e3d3b2",
+    "runs": [
+      {
+        "configuredBufferFrames": 64,
+        "hostPid": 27248,
+        "operatorConfirmedLoop": false,
+        "operatorObservation": "Could not drag the test track onto the deck even after the Windows responsiveness sampler was stopped",
+        "applicationClose": "closed slowly",
+        "responsivenessSamplerStoppedUtc": "2026-11-08T21:27:46.3450429Z",
+        "mainThreadHangReportedAfterSamplerStoppedMs": 15417,
+        "summary": {
+          "firstMinute": {
+            "windows": {
+              "samples": 28,
+              "notResponding": 11,
+              "workerEverObserved": true,
+              "workerSeenInEverySample": false,
+              "observedCpuSeconds": 54.36,
+              "sampleSpanSeconds": 58.478
+            },
+            "mainThreadHangReports": 19,
+            "mainThreadMaxReportedHangMs": 13338
+          },
+          "audioStarts": [
+            {
+              "secondsAfterLaunch": 7.989,
+              "device": "Offline Device",
+              "latencyMs": 10,
+              "frames": 480,
+              "rateHz": 48000
+            },
+            {
+              "secondsAfterLaunch": 16.579,
+              "device": "Rane SL3",
+              "latencyMs": 1.45125,
+              "frames": 128,
+              "rateHz": 44100
+            }
+          ],
+          "mainThreadHangReports": {
+            "during_startup_and_load_attempt": 77,
+            "after_observation": 1
+          },
+          "mainThreadMaxReportedHangMs": {
+            "during_startup_and_load_attempt": 15417,
+            "after_observation": 12382
+          },
+          "firstMainThreadHangReportSeconds": 5.067,
+          "firstNotRespondingSampleSeconds": 30.66,
+          "samples": {
+            "during_startup_and_load_attempt": {
+              "samples": 59,
+              "notResponding": 30,
+              "workerEverObserved": true,
+              "workerSeenInEverySample": false,
+              "observedCpuSeconds": 126.235,
+              "sampleSpanSeconds": 125.632
+            },
+            "loop": {
+              "samples": 0,
+              "notResponding": 0,
+              "workerEverObserved": false,
+              "workerSeenInEverySample": null,
+              "observedCpuSeconds": null,
+              "sampleSpanSeconds": null
+            },
+            "after_observation": {
+              "samples": 0,
+              "notResponding": 0,
+              "workerEverObserved": false,
+              "workerSeenInEverySample": null,
+              "observedCpuSeconds": null,
+              "sampleSpanSeconds": null
+            }
+          },
+          "confirmedLoopSeconds": null,
+          "callbackDropoutReports": [
+            {
+              "secondsAfterLaunch": 16.11,
+              "count": 0
+            },
+            {
+              "secondsAfterLaunch": 200.899,
+              "count": 0
+            }
+          ],
+          "logSha256": "58b6cb0fa86df66235ed69a411bbf364faf914c2e59e1b5eb73ad048bcf55e50",
+          "sampleSha256": "1ba9851bb7a4337c4bf5ca33b2df244a957f685a6f978a40ea2fdd5f1a9e1fb6"
+        },
+        "broker": {
+          "successful": true,
+          "applicationExitObserved": true,
+          "ioRetiredVerified": true,
+          "deviceReleasedVerified": true,
+          "processExitCode": 0,
+          "sha256": "9740205f7a719d051cf47d137f7bcefb23111fa418542baac979c09d5148a4bb"
+        }
+      },
+      {
+        "configuredBufferFrames": 32,
+        "hostPid": 15012,
+        "operatorConfirmedLoop": false,
+        "operatorObservation": "Could not load the test WAV at 32 frames with log-only monitoring",
+        "monitoring": "Serato log only, no debugger or responsiveness polling",
+        "summary": {
+          "firstMinute": {
+            "windows": {
+              "samples": 0,
+              "notResponding": 0,
+              "workerEverObserved": false,
+              "workerSeenInEverySample": null,
+              "observedCpuSeconds": null,
+              "sampleSpanSeconds": null
+            },
+            "mainThreadHangReports": 15,
+            "mainThreadMaxReportedHangMs": 10691
+          },
+          "audioStarts": [
+            {
+              "secondsAfterLaunch": 5.732,
+              "device": "Offline Device",
+              "latencyMs": 10,
+              "frames": 480,
+              "rateHz": 48000
+            },
+            {
+              "secondsAfterLaunch": 12.418,
+              "device": "Rane SL3",
+              "latencyMs": 0.725624,
+              "frames": 96,
+              "rateHz": 44100
+            }
+          ],
+          "mainThreadHangReports": {
+            "during_startup_and_load_attempt": 31,
+            "after_observation": 30
+          },
+          "mainThreadMaxReportedHangMs": {
+            "after_observation": 11074,
+            "during_startup_and_load_attempt": 22849
+          },
+          "firstMainThreadHangReportSeconds": 5.063,
+          "firstNotRespondingSampleSeconds": null,
+          "samples": {
+            "during_startup_and_load_attempt": {
+              "samples": 0,
+              "notResponding": 0,
+              "workerEverObserved": false,
+              "workerSeenInEverySample": null,
+              "observedCpuSeconds": null,
+              "sampleSpanSeconds": null
+            },
+            "loop": {
+              "samples": 0,
+              "notResponding": 0,
+              "workerEverObserved": false,
+              "workerSeenInEverySample": null,
+              "observedCpuSeconds": null,
+              "sampleSpanSeconds": null
+            },
+            "after_observation": {
+              "samples": 0,
+              "notResponding": 0,
+              "workerEverObserved": false,
+              "workerSeenInEverySample": null,
+              "observedCpuSeconds": null,
+              "sampleSpanSeconds": null
+            }
+          },
+          "confirmedLoopSeconds": null,
+          "callbackDropoutReports": [
+            {
+              "secondsAfterLaunch": 11.956,
+              "count": 0
+            }
+          ],
+          "logSha256": "c6a30a50a9fb0773039dcad98f2095b91b0118e9e7addbef13d377d163322b56",
+          "sampleSha256": null
+        },
+        "broker": {
+          "successful": false,
+          "applicationExitObserved": false,
+          "ioRetiredVerified": false,
+          "deviceReleasedVerified": false,
+          "processExitCode": 1,
+          "ownerFailureCode": "worker_exited",
+          "sha256": "b5fa819f7e141fdc57022e56898ab2cdc6e41a8c1264670d2a9f4a426d14d064",
+          "workerJournalSha256": "bda11aa7d5e5a74a5ffd467af0f552770bbda5588d65319a478b9c932eb59c32",
+          "emptyInputRecoveryMarkerPresent": false,
+          "invalidInputMarkerPresent": false
+        },
+        "workerFaultAtEnd": "output_starved",
+        "workerFaultAtEndCode": 11,
+        "redirectCloseReturned": true
+      }
+    ]
+  },
+  "exact64Control": {
+    "configuredBufferFrames": 64,
+    "setupBundleSha256": "141eed009b4bd0db4eeb98e53e182f78dd652d8ac8919305b0a2256ba127d733",
+    "hostPid": 23052,
+    "operatorConfirmedLoop": false,
+    "operatorObservation": "Could not load the test WAV using the exact earlier 64-frame package, with log-only monitoring",
+    "monitoring": "Serato log only, no debugger or responsiveness polling",
+    "summary": {
+      "firstMinute": {
+        "windows": {
+          "samples": 0,
+          "notResponding": 0,
+          "workerEverObserved": false,
+          "workerSeenInEverySample": null,
+          "observedCpuSeconds": null,
+          "sampleSpanSeconds": null
+        },
+        "mainThreadHangReports": 15,
+        "mainThreadMaxReportedHangMs": 10970
+      },
+      "audioStarts": [
+        {
+          "secondsAfterLaunch": 5.934,
+          "device": "Offline Device",
+          "latencyMs": 10,
+          "frames": 480,
+          "rateHz": 48000
+        },
+        {
+          "secondsAfterLaunch": 12.609,
+          "device": "Rane SL3",
+          "latencyMs": 1.45125,
+          "frames": 128,
+          "rateHz": 44100
+        }
+      ],
+      "mainThreadHangReports": {
+        "during_startup_and_load_attempt": 68,
+        "after_observation": 15
+      },
+      "mainThreadMaxReportedHangMs": {
+        "after_observation": 10630,
+        "during_startup_and_load_attempt": 12211
+      },
+      "firstMainThreadHangReportSeconds": 5.07,
+      "firstNotRespondingSampleSeconds": null,
+      "samples": {
+        "during_startup_and_load_attempt": {
+          "samples": 0,
+          "notResponding": 0,
+          "workerEverObserved": false,
+          "workerSeenInEverySample": null,
+          "observedCpuSeconds": null,
+          "sampleSpanSeconds": null
+        },
+        "loop": {
+          "samples": 0,
+          "notResponding": 0,
+          "workerEverObserved": false,
+          "workerSeenInEverySample": null,
+          "observedCpuSeconds": null,
+          "sampleSpanSeconds": null
+        },
+        "after_observation": {
+          "samples": 0,
+          "notResponding": 0,
+          "workerEverObserved": false,
+          "workerSeenInEverySample": null,
+          "observedCpuSeconds": null,
+          "sampleSpanSeconds": null
+        }
+      },
+      "confirmedLoopSeconds": null,
+      "callbackDropoutReports": [
+        {
+          "secondsAfterLaunch": 12.141,
+          "count": 0
+        },
+        {
+          "secondsAfterLaunch": 193.336,
+          "count": 0
+        }
+      ],
+      "logSha256": "657ba2a4be29536102f8affa938c3798116d48f67265e15f00a829dbdba91332",
+      "sampleSha256": null
+    },
+    "broker": {
+      "successful": true,
+      "applicationExitObserved": true,
+      "ioRetiredVerified": true,
+      "deviceReleasedVerified": true,
+      "processExitCode": 0,
+      "ownerFailureCode": "none",
+      "sha256": "fcab78ea717edaea1e98ae644816b2d91e6144db398214d55ae9ea5840f51619"
+    }
+  },
+  "originalSetupRestoredAndVerified": true
+}

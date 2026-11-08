@@ -3,13 +3,15 @@
 #include "SessionWindow.cpp"
 #include "SetupResultPipe.hpp"
 #include "SetupUsbPrerequisite.hpp"
+#include <commctrl.h>
 #include <shlobj.h>
 #include <memory>
 
 namespace sl3::setup_window {
 using namespace sl3::launcher;
 namespace config=session_window_config;
-enum Action {check=101,install=102,restore=104,details=105};
+enum Action {check=101,install=102,restore=104,details=105,project_links=106};
+constexpr int application_icon=101;
 struct Eligibility {bool install=false,restore=false,clean=false,installed=false;};
 Eligibility eligibility(const std::wstring& archive,const std::wstring& native,bool running=false,bool usb_ready=true){
     const bool known_archive=archive==L"original" || archive==L"installed" || archive==L"restored" || archive==L"install-staged" || archive==L"rollback-staged";
@@ -28,10 +30,37 @@ bool serato_running(const std::string& raw){
     boolean running=false;checked(after->GetNamedBoolean(Microsoft::WRL::Wrappers::HStringReference(L"seratoRunning").Get(),&running),"Typed running-state result required");return running!=false;
 }
 struct State:sl3::window::State {
-    Eligibility allowed{};bool running=false,usb_ready=false;
+    Eligibility allowed{},native_allowed{};bool running=false,usb_ready=false;
+    HWND brand_icon=nullptr,progress_bar=nullptr,links=nullptr;
     std::wstring launcher=config::launcher,kit=config::kit_root,application=config::application,plan=config::plan,plan_sha=config::plan_sha;
 };
+std::string watcher_action(State& s,const wchar_t* action){
+    const auto assets=local_path(s.launcher).parent_path()/L"watcher";
+    const auto script=assets/L"setup-notice-startup.ps1";
+    std::vector<Handle> leases;
+    pin(leases,script,config::watcher_setup_sha,65536);
+    pin(leases,assets/L"watch-notice-startup.ps1",config::watcher_sha,65536);
+    pin(leases,assets/L"sl3-notice-startup-early.dll",config::watcher_helper_sha,1024*1024);
+    std::wstring system(MAX_PATH,L'\0');
+    const auto count=GetSystemDirectoryW(system.data(),UINT(system.size()));
+    require(count && count<system.size(),"Locate Windows PowerShell");system.resize(count);
+    const auto shell=local_path(system)/L"WindowsPowerShell/v1.0/powershell.exe";
+    sl3::window::State result;
+    const auto code=sl3::window::execute_child(result,shell,{L"-NoProfile",L"-NonInteractive",
+        L"-File",script.native(),L"-Action",action,L"-WatcherSha256",config::watcher_sha,
+        L"-HelperSha256",config::watcher_helper_sha},std::wstring(action)==L"Check");
+    const auto report=std::string("\nWindows sign-in watcher: ")+result.output;
+    s.append(report.data(),report.size());
+    require(!code,"Windows sign-in watcher action failed");
+    const auto end=result.output.find_last_not_of("\r\n");
+    require(end!=std::string::npos,"Windows sign-in watcher status required");
+    return result.output.substr(0,end+1);
+}
 void text(HWND item,const wchar_t* value){SetWindowTextW(item,value);}
+void show_progress(State& s,bool busy){
+    ShowWindow(s.progress_bar,busy?SW_SHOWNA:SW_HIDE);
+    SendMessageW(s.progress_bar,PBM_SETMARQUEE,busy,35);
+}
 void enable(State& s){
     EnableWindow(s.check_button,!s.preview && !s.busy);
     EnableWindow(s.start_button,!s.preview && !s.busy && s.allowed.install);
@@ -63,7 +92,7 @@ int select_setup(State& s){
 int inspect(State& s,bool retain_prior=false){
     std::string prior;
     {std::lock_guard<std::mutex> lock(s.mutex);if(retain_prior)prior=s.output;s.output.clear();++s.log_revision;}
-    s.allowed={};s.running=false;int code=1;
+    s.allowed={};s.native_allowed={};s.running=false;int code=1;
     try{
         if(s.plan.empty()){
             code=select_setup(s);if(code)return code;
@@ -80,7 +109,19 @@ int inspect(State& s,bool retain_prior=false){
     if(!code){
         const JsonObject result(raw);require(result.text(L"schema")==L"sl3.on-demand-test-action.v1","Typed setup observation required");
         const auto after=result.object(L"after");s.running=serato_running(raw);s.usb_ready=sl3::setup_usb::driver_running();
-        s.allowed=eligibility(after.text(L"archive"),after.object(L"native").text(L"state"),s.running,s.usb_ready);}
+        s.native_allowed=eligibility(after.text(L"archive"),after.object(L"native").text(L"state"),s.running,s.usb_ready);
+        s.allowed=s.native_allowed;
+        if(!config::watcher_setup_sha.empty()){
+            const auto watcher=watcher_action(s,L"Check");
+            require(watcher=="absent" || watcher=="stopped" || watcher=="ready","Unexpected watcher status");
+            s.allowed.clean=s.native_allowed.clean && watcher=="absent";
+            s.allowed.installed=s.native_allowed.installed && watcher=="ready";
+            if(!s.running){
+                if(s.native_allowed.installed && s.usb_ready && watcher!="ready")s.allowed.install=true;
+                if(s.native_allowed.clean && watcher!="absent")s.allowed.restore=true;
+            }
+        }
+    }
     return code;
 }
 struct ActionResult {int code=1;sl3::setup_result::Capture capture;std::string transfer_error;};
@@ -111,40 +152,67 @@ fs::path preserve_result(const State& s,const std::string& result){
     require(file.value!=INVALID_HANDLE_VALUE,"Create new local diagnostic result");DWORD written=0;
     require(result.size()<=1024*1024 && WriteFile(file.value,result.data(),DWORD(result.size()),&written,nullptr) && written==result.size() && FlushFileBuffers(file.value),"Preserve complete local diagnostic result");return path;
 }
-int apply(State& s,int action){
-    auto code=inspect(s);if(code)return code;
-    require(action==install?s.allowed.install:s.allowed.restore,"Current setup state does not admit this action");
+int apply_native(State& s,int action){
     std::vector<Handle> leases;pin(leases,local_path(s.launcher),config::launcher_sha);pin(leases,local_path(s.plan),s.plan_sha,65536);
     const auto operation=elevated_action(s,arguments(s,action==install?L"--apply-experiment":L"--restore-experiment"));
     const auto report=result_text(s,operation);std::string persistence_error;
     {std::lock_guard<std::mutex> lock(s.mutex);s.output.clear();++s.log_revision;}s.append(report.data(),report.size());
     try{const auto saved=std::string("\nFull administrator result saved: ")+utf8(preserve_result(s,report).native())+"\n";s.append(saved.data(),saved.size());}
     catch(const std::exception& error){persistence_error=error.what();s.append(persistence_error.data(),persistence_error.size());}
-    code=inspect(s,true);if(operation.code)return operation.code;if(code)return code;
+    const auto code=inspect(s,true);if(operation.code)return operation.code;if(code)return code;
     require(operation.capture.authenticated && !operation.capture.over_limit && !operation.capture.error && operation.transfer_error.empty() && persistence_error.empty(),"Administrator result was not completely received and preserved; retain the observed state");
     const JsonObject actual(operation.capture.bytes);require(actual.text(L"schema")==L"sl3.on-demand-test-action.v1" && actual.text(L"action")==std::wstring(action==install?L"setup":L"restore"),"Matching administrator result required");
-    require(action==install?s.allowed.installed:s.allowed.clean,"Command finished but observed setup state differs");return 0;
+    require(action==install?s.native_allowed.installed:s.native_allowed.clean,"Command finished but observed setup state differs");return 0;
+}
+int apply(State& s,int action){
+    Handle lock(CreateMutexW(nullptr,FALSE,L"Local\\SL3CompatibilitySetupTransaction-v1"));
+    require(lock.value!=nullptr,"Create setup action lock");
+    const auto wait=WaitForSingleObject(lock.value,0);
+    require(wait==WAIT_OBJECT_0 || wait==WAIT_ABANDONED,"Another setup action is in progress");
+    struct Unlock {HANDLE value;~Unlock(){ReleaseMutex(value);}} unlock{lock.value};
+    auto code=inspect(s);if(code)return code;
+    require(action==install?s.allowed.install:s.allowed.restore,"Current setup state does not admit this action");
+    if(action==install?s.native_allowed.install:s.native_allowed.restore){
+        code=apply_native(s,action);if(code)return code;
+    }
+    if(!config::watcher_setup_sha.empty()){
+        require(!s.running,"Close Serato before changing the Windows sign-in watcher");
+        const auto status=watcher_action(s,action==install?L"Install":L"Restore");
+        require(status==(action==install?"ready":"absent"),"Windows sign-in watcher did not reach the requested state");
+        code=inspect(s,true);if(code)return code;
+    }
+    require(action==install?s.allowed.installed:s.allowed.clean,"Observed setup state differs from the requested action");
+    return 0;
 }
 void begin(State& s,int action){
     if(s.preview || s.busy || (action==install && !s.allowed.install) || (action==restore && !s.allowed.restore))return;
     if(s.worker.joinable())s.worker.join();s.allowed={};s.busy=true;s.action=action;s.finished=false;s.code=1;
     text(s.progress,action==check?L"Checking your setup…":action==install?L"Installing the compatibility build…":L"Restoring the original setup…");
     text(s.description,action==check?L"This check can prepare local setup files. It does not change Serato or open the SL3.":L"Windows may ask for administrator approval. Keep this window open until the action finishes.");enable(s);
+    show_progress(s,true);
     try{s.worker=std::thread([&s,action]{
         bool initialized=false;
         try{checked(RoInitialize(RO_INIT_SINGLETHREADED),"Initialize setup result parser");initialized=true;s.code=action==check?inspect(s):apply(s,action);}
         catch(const WinError& error){s.append(error.what(),std::strlen(error.what()));s.code=int(error.code?error.code:1);}
         catch(const std::exception& error){s.append(error.what(),std::strlen(error.what()));s.code=1;}
         if(initialized)RoUninitialize();s.finished.store(true,std::memory_order_release);
-    });}catch(...){s.busy=false;enable(s);throw;}
+    });}catch(...){s.busy=false;show_progress(s,false);enable(s);throw;}
 }
 void layout(State& s){
     RECT box{};GetClientRect(s.window,&box);const auto dpi=int(GetDpiForWindow(s.window));auto px=[dpi](int n){return MulDiv(n,dpi,96);};
     const auto margin=px(28),width=int(box.right)-2*margin;
-    auto place=[&](HWND item,int x,int y,int w,int h){MoveWindow(item,margin+px(x),px(y),w?px(w):width,px(h),TRUE);};
-    place(s.heading,0,24,0,38);place(s.progress,0,78,0,28);place(s.description,0,116,0,56);place(s.instructions,0,188,0,56);
+    auto place=[&](HWND item,int x,int y,int w,int h){MoveWindow(item,margin+px(x),px(y),w?px(w):width-px(x),px(h),TRUE);};
+    place(s.brand_icon,0,27,32,32);place(s.heading,46,24,0,38);place(s.progress,0,78,0,28);
+    place(s.progress_bar,0,106,0,8);place(s.description,0,126,0,52);place(s.instructions,0,192,0,56);
     place(s.check_button,0,264,154,38);place(s.start_button,166,264,154,38);place(s.recover_button,0,318,224,36);place(s.detail_button,0,372,0,30);
-    MoveWindow(s.log,margin,px(414),width,std::max(px(70),int(box.bottom)-px(440)),TRUE);ShowWindow(s.log,s.expanded?SW_SHOW:SW_HIDE);
+    place(s.links,0,410,0,26);
+    MoveWindow(s.log,margin,px(448),width,std::max(px(70),int(box.bottom)-px(474)),TRUE);ShowWindow(s.log,s.expanded?SW_SHOW:SW_HIDE);
+}
+void set_brand_icon(State& s,HINSTANCE instance){
+    const auto size=MulDiv(32,int(GetDpiForWindow(s.window)),96);
+    const auto icon=LoadImageW(instance,MAKEINTRESOURCEW(application_icon),IMAGE_ICON,size,size,LR_SHARED);
+    require(icon!=nullptr,"Load the setup icon");
+    SendMessageW(s.brand_icon,STM_SETICON,WPARAM(icon),0);
 }
 LRESULT message(HWND window,UINT message,WPARAM wparam,LPARAM lparam){
     auto* s=reinterpret_cast<State*>(GetWindowLongPtrW(window,GWLP_USERDATA));
@@ -153,14 +221,19 @@ LRESULT message(HWND window,UINT message,WPARAM wparam,LPARAM lparam){
     switch(message){
     case WM_CREATE:{
         sl3::window::fonts(*s);auto control=[&](const wchar_t* kind,const wchar_t* label,DWORD style,int id=0){return sl3::window::control(*s,kind,label,style,id);};
+        s->brand_icon=control(L"STATIC",L"",SS_ICON|SS_REALSIZEIMAGE);
+        set_brand_icon(*s,reinterpret_cast<HINSTANCE>(GetWindowLongPtrW(window,GWLP_HINSTANCE)));
         s->heading=control(L"STATIC",L"Set up your SL3",0);SendMessageW(s->heading,WM_SETFONT,WPARAM(s->title),TRUE);
         s->progress=control(L"STATIC",s->preview?L"Preview — actions are disabled":L"Check this setup to begin",0);
+        s->progress_bar=control(PROGRESS_CLASSW,L"Setup progress",PBS_MARQUEE);
+        show_progress(*s,false);
         s->description=control(L"STATIC",L"Install this compatibility build once, then open Serato normally.\r\nClose Serato before installing or restoring.",0);
-        s->instructions=control(L"STATIC",L"Phase and timecode vinyl share the SL3 driver.\r\nDiagnostic audio sessions have a 10-minute limit.\r\nNormal Serato 5.0 startup still needs a live test.",0);
+        s->instructions=control(L"STATIC",L"Windows 11 x64 · Serato DJ Pro 5.0.0.1278\r\nThis build limits audio sessions to 10 minutes.",0);
         s->check_button=control(L"BUTTON",L"&Check setup",BS_DEFPUSHBUTTON|WS_TABSTOP,check);
         s->start_button=control(L"BUTTON",L"&Install",WS_TABSTOP,install);
         s->recover_button=control(L"BUTTON",L"&Restore original setup",WS_TABSTOP,restore);
         s->detail_button=control(L"BUTTON",L"Show diagnostic &details",BS_AUTOCHECKBOX|WS_TABSTOP,details);
+        s->links=control(WC_LINK,L"<a>Project on GitHub</a>     <a>peterfrench.dev</a>",WS_TABSTOP,project_links);
         s->log=control(L"EDIT",L"",ES_MULTILINE|ES_READONLY|ES_AUTOVSCROLL|WS_VSCROLL|WS_TABSTOP);SendMessageW(s->log,EM_SETLIMITTEXT,65536,0);
         enable(*s);SetTimer(window,1,200,nullptr);layout(*s);return 0;
     }
@@ -170,29 +243,45 @@ LRESULT message(HWND window,UINT message,WPARAM wparam,LPARAM lparam){
                 const auto addition=MulDiv(220,int(GetDpiForWindow(window)),96);SetWindowPos(window,nullptr,0,0,bounds.right-bounds.left,bounds.bottom-bounds.top+(s->expanded?addition:-addition),SWP_NOMOVE|SWP_NOZORDER);layout(*s);}
             else if(action==check || action==install || action==restore)begin(*s,action);}
         return 0;
+    case WM_NOTIFY:{
+        const auto* item=reinterpret_cast<const NMLINK*>(lparam);
+        if(item->hdr.idFrom!=project_links || (item->hdr.code!=NM_CLICK && item->hdr.code!=NM_RETURN))break;
+        const wchar_t* url=nullptr;
+        if(item->item.iLink==0)url=L"https://github.com/FreshPete/Serato-SL3-Driver";
+        if(item->item.iLink==1)url=L"https://peterfrench.dev/";
+        if(url && reinterpret_cast<INT_PTR>(ShellExecuteW(window,L"open",url,nullptr,nullptr,SW_SHOWNORMAL))<=32)
+            text(s->description,L"Windows could not open the link in your browser.");
+        return 0;
+    }
     case WM_TIMER:
         if(s->expanded){std::lock_guard<std::mutex> lock(s->mutex);if(s->displayed_revision!=s->log_revision){
             const auto count=MultiByteToWideChar(CP_UTF8,0,s->output.data(),int(s->output.size()),nullptr,0);std::wstring shown(std::size_t(count),L'\0');
             if(count)MultiByteToWideChar(CP_UTF8,0,s->output.data(),int(s->output.size()),shown.data(),count);text(s->log,shown.c_str());s->displayed_revision=s->log_revision;}}
         if(s->busy && s->finished.load(std::memory_order_acquire)){
-            s->worker.join();s->busy=false;
+            s->worker.join();s->busy=false;show_progress(*s,false);
             if(s->code){text(s->progress,s->code==ERROR_CANCELLED?L"Action cancelled":L"Setup needs attention");text(s->description,L"Open diagnostic details for the result. No further action will start automatically.");}
             else if(s->running){text(s->progress,L"Close Serato before continuing");text(s->description,L"Close Serato normally, then choose Check setup again.\r\nInstall and restore are disabled while it is running.");}
             else if(s->action==restore && s->allowed.clean){text(s->progress,L"Original setup restored");text(s->description,L"The compatibility files and temporary driver registration have been removed.");}
             else if(!s->usb_ready){text(s->progress,L"UsbDk is unavailable");text(s->description,L"The UsbDk USB driver must be installed and running.\r\nChoose Check setup again when UsbDk is ready.");}
             else if(s->allowed.installed){text(s->progress,L"Installed — ready for a Serato startup test");text(s->description,L"Open Serato normally to test the SL3.\r\nThis window does not start or control Serato.");}
-            else{text(s->progress,s->allowed.install?L"Ready to install this development build":L"Setup needs review");text(s->description,s->allowed.install?
+            else{text(s->progress,s->allowed.install?L"Ready to install":L"Setup needs review");text(s->description,s->allowed.install?
                 L"Install will ask Windows for administrator approval.\r\nYou will not need this window for normal Serato use after validation.":L"Open diagnostic details. Keep the prepared records for reviewed recovery.");}
             enable(*s);
         }return 0;
     case WM_SIZE:layout(*s);return 0;
     case WM_GETMINMAXINFO:{auto* limits=reinterpret_cast<MINMAXINFO*>(lparam);const auto dpi=int(GetDpiForWindow(window));limits->ptMinTrackSize={MulDiv(660,dpi,96),MulDiv(s->expanded?720:500,dpi,96)};return 0;}
-    case WM_DPICHANGED:{const auto* bounds=reinterpret_cast<RECT*>(lparam);SetWindowPos(window,nullptr,bounds->left,bounds->top,bounds->right-bounds->left,bounds->bottom-bounds->top,SWP_NOZORDER|SWP_NOACTIVATE);sl3::window::fonts(*s);return 0;}
+    case WM_DPICHANGED:{
+        const auto* bounds=reinterpret_cast<RECT*>(lparam);
+        SetWindowPos(window,nullptr,bounds->left,bounds->top,bounds->right-bounds->left,bounds->bottom-bounds->top,SWP_NOZORDER|SWP_NOACTIVATE);
+        sl3::window::fonts(*s);SendMessageW(s->links,WM_SETFONT,WPARAM(s->body),TRUE);
+        set_brand_icon(*s,reinterpret_cast<HINSTANCE>(GetWindowLongPtrW(window,GWLP_HINSTANCE)));layout(*s);return 0;
+    }
     case WM_CTLCOLORSTATIC:{const auto dc=reinterpret_cast<HDC>(wparam);SetBkColor(dc,GetSysColor(COLOR_WINDOW));SetTextColor(dc,GetSysColor(COLOR_WINDOWTEXT));return reinterpret_cast<LRESULT>(GetSysColorBrush(COLOR_WINDOW));}
     case WM_CLOSE:if(s->busy){text(s->description,L"An action is running. Wait for its result before closing; setup will not be interrupted.");return 0;}DestroyWindow(window);return 0;
     case WM_DESTROY:KillTimer(window,1);PostQuitMessage(0);return 0;
     default:return DefWindowProcW(window,message,wparam,lparam);
     }
+    return DefWindowProcW(window,message,wparam,lparam);
 }
 LRESULT CALLBACK procedure(HWND window,UINT code,WPARAM wparam,LPARAM lparam) noexcept {
     try{return message(window,code,wparam,lparam);}catch(...){if(code==WM_CREATE)return -1;
@@ -200,8 +289,13 @@ LRESULT CALLBACK procedure(HWND window,UINT code,WPARAM wparam,LPARAM lparam) no
         if(state && state->progress)text(state->progress,L"The window could not complete that action. Keep the prepared records.");return 0;}
 }
 HWND create(State& state,HINSTANCE instance){
-    WNDCLASSW kind{};kind.lpfnWndProc=procedure;kind.hInstance=instance;kind.lpszClassName=L"SL3OneTimeSetupWindow";kind.hCursor=LoadCursorW(nullptr,IDC_ARROW);kind.hbrBackground=GetSysColorBrush(COLOR_WINDOW);
-    require(RegisterClassW(&kind)!=0 || GetLastError()==ERROR_CLASS_ALREADY_EXISTS,"Register setup window");
+    INITCOMMONCONTROLSEX controls{sizeof(controls),ICC_PROGRESS_CLASS|ICC_LINK_CLASS};
+    require(InitCommonControlsEx(&controls)!=FALSE,"Initialize setup controls");
+    WNDCLASSEXW kind{};kind.cbSize=sizeof(kind);kind.lpfnWndProc=procedure;kind.hInstance=instance;kind.lpszClassName=L"SL3OneTimeSetupWindow";kind.hCursor=LoadCursorW(nullptr,IDC_ARROW);kind.hbrBackground=GetSysColorBrush(COLOR_WINDOW);
+    kind.hIcon=LoadIconW(instance,MAKEINTRESOURCEW(application_icon));
+    kind.hIconSm=reinterpret_cast<HICON>(LoadImageW(instance,MAKEINTRESOURCEW(application_icon),IMAGE_ICON,GetSystemMetrics(SM_CXSMICON),GetSystemMetrics(SM_CYSMICON),LR_SHARED));
+    require(kind.hIcon && kind.hIconSm,"Load setup window icons");
+    require(RegisterClassExW(&kind)!=0 || GetLastError()==ERROR_CLASS_ALREADY_EXISTS,"Register setup window");
     const auto window=CreateWindowExW(WS_EX_CONTROLPARENT,kind.lpszClassName,L"SL3 compatibility setup",WS_OVERLAPPEDWINDOW,CW_USEDEFAULT,CW_USEDEFAULT,780,530,nullptr,nullptr,instance,&state);
     require(window!=nullptr,"Create setup window");return window;
 }

@@ -43,7 +43,8 @@ def rebind(bundle, expected, output=None, installation=None, pointer=None):
     if manifest['schema'] == 'sl3.deployment-bundle.v2':
         updated.update(api['activation_records'](installation,
             api['digest'](payload['sl3_broker_controller.exe']), api['digest'](payload['sl3_usbdk.exe']),
-            manifest['activationMode']))
+            manifest['activationMode'], playback_keepalive=manifest.get('playbackKeepalive', False),
+            buffer_frames=manifest.get('diagnosticBufferFrames', 128)))
     else:
         updated['sl3-asio.conf'] = api['locator_text'](installation, pointer,
             api['digest'](payload['sl3_broker_controller.exe']), api['digest'](payload['sl3_usbdk.exe']))

@@ -1,0 +1,109 @@
+{
+  "schema": "sl3.serato-looped-buffer-comparison.v1",
+  "applicationVersion": "5.0.0.1278",
+  "sampleRateHz": 44100,
+  "trackPcmSha256": "5d0ed4c7a40e714933dabce8f3d0472d6373eaab16f5a714106f401a85a9a4e7",
+  "deck": 1,
+  "deckMode": "INT",
+  "runs": [
+    {
+      "configuredBufferFrames": 64,
+      "applicationBufferFrames": 128,
+      "seratoReportedLatencyMs": 1.45125,
+      "setupBundleSha256": "141eed009b4bd0db4eeb98e53e182f78dd652d8ac8919305b0a2256ba127d733",
+      "hostPid": 36916,
+      "hostCreationFileTimeUtc": "134386386302048847",
+      "workerSha256": "086d4c38df2fe2edb0601a4e411a28ffb18c473efd3a3a7c758b12809b2eff1b",
+      "operatorConfirmedLoopBars": 8,
+      "observationSeconds": 120.32,
+      "workerAliveAtObservationEnd": true,
+      "seratoCallbackDropoutsAtSl3Disconnect": 0,
+      "workerStreamFault": 0,
+      "applicationExitRetirementReported": true,
+      "applicationLogSha256": "dbbc991eeebeea222531f231f7174fd955479aab650f30c59d47e986c408bbcf",
+      "brokerResultSha256": "ac68bf8324a7f00f58babacfbe1fe23b9e2f878d404641c77064aa28c288bafb",
+      "softwareOutputCapture": {
+        "rateHz": 44100,
+        "frames": 220500,
+        "firstFrame": 9362468,
+        "pcmSha256": "091c3f59a1167c81263114976afaabb15df8d9fab5b62f186f369076994a13de",
+        "captureReceiptSha256": "d7589c1ab5b4fcc6c36000f998d25f542c3f2e1c9f38c3cb9d521a55e73eda33",
+        "pairs": [
+          {
+            "logicalChannels": [
+              1,
+              2
+            ],
+            "peakCode": [
+              0,
+              0
+            ],
+            "zeroFrames": 220500,
+            "longestDigitalSilenceFrames": 220500,
+            "longestIdenticalStereoFrames": 220500
+          },
+          {
+            "logicalChannels": [
+              3,
+              4
+            ],
+            "peakCode": [
+              327321,
+              335019
+            ],
+            "zeroFrames": 0,
+            "longestDigitalSilenceFrames": 0,
+            "longestIdenticalStereoFrames": 1
+          },
+          {
+            "logicalChannels": [
+              5,
+              6
+            ],
+            "peakCode": [
+              0,
+              0
+            ],
+            "zeroFrames": 220500,
+            "longestDigitalSilenceFrames": 220500,
+            "longestIdenticalStereoFrames": 220500
+          }
+        ]
+      },
+      "physicalReturnMeasured": false
+    },
+    {
+      "configuredBufferFrames": 32,
+      "applicationBufferFrames": 96,
+      "seratoReportedLatencyMs": 0.725624,
+      "setupBundleSha256": "c4e50895b1a354a62cb01b7418f2b979bbbf459dbc5ef4497b938254ec92c0e5",
+      "hostPid": 23648,
+      "hostCreationFileTimeUtc": "134386427517269373",
+      "workerSha256": "086d4c38df2fe2edb0601a4e411a28ffb18c473efd3a3a7c758b12809b2eff1b",
+      "operatorConfirmedLoopBars": 8,
+      "observationSeconds": 71.96,
+      "workerAliveAtObservationEnd": false,
+      "seratoCallbackDropoutsAtSl3Disconnect": 0,
+      "workerExitCode": 1,
+      "workerStreamFaultFromJournal": 7,
+      "rejectedUsbInput": {
+        "firstFrame": 4739000,
+        "expectedPackets": 8,
+        "receivedPackets": 8,
+        "packetIndex": 0,
+        "packetBytes": 0,
+        "packetStatus": 0
+      },
+      "applicationExitRetirementReported": false,
+      "redirectCloseReturnedInJournal": true,
+      "deviceReleasedVerifiedByBroker": false,
+      "applicationLogSha256": "58e2f0978bffd9338d93e7a2c694951e9620a70f85a8f7ae43d24d72ed05f3df",
+      "brokerResultSha256": "ebe659ff6481e52c7873c05da2e11c44bbf18848e0aa9a810400e339bca423dc",
+      "workerJournalSha256": "abb45c5a1b42cdfde1f8509c47c16c549b2c3a90a3b95860fc72e2d393a7093c",
+      "captureArmed": false,
+      "softwareOutputCapture": null,
+      "captureErrorReceiptSha256": "9c4a812452b55e130174762bf1d16909705a1101312c890b00f9796eb351a324",
+      "physicalReturnMeasured": false
+    }
+  ]
+}

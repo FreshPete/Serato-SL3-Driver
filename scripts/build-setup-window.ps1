@@ -25,6 +25,14 @@ if($windowSource.portableLayout){
             Copy-Item -LiteralPath $_.FullName -Destination $kit -Recurse
         }
     }
+    if($windowSource.portableLayout.watcherAssets){
+        $watcher = Join-Path $release 'watcher'
+        New-Item -ItemType Directory -Path $watcher -Force | Out-Null
+        foreach($asset in $windowSource.portableLayout.watcherAssets.PSObject.Properties){
+            if((Get-FileHash -LiteralPath $asset.Value.path).Hash.ToLowerInvariant() -ne $asset.Value.sha256){throw 'Watcher setup input differs'}
+            Copy-Item -LiteralPath $asset.Value.path -Destination (Join-Path $watcher $asset.Name)
+        }
+    }
 }
 & ctest --test-dir (Join-Path $windowDirectory 'build') -C Release --output-on-failure -V
 if($LASTEXITCODE -ne 0){throw 'Window contract checks failed'}

@@ -2,13 +2,15 @@
 
 Restore the physical Rane SL3 for current Serato DJ Pro and two-deck DVS. Windows 11 x64 is first; macOS 26 Tahoe is second. Driver loading, independent audio, Serato recognition and working DVS are separate milestones.
 
-## Latest status — 7 November 2026
+## Latest status — 8 November 2026
 
-**Serato DJ Pro 5.0.0.1278 opened the rebuilt Rane SL3 driver twice from the regular Windows 11 shortcut.** Both launches selected the SL3 and started ASIO at 44.1 kHz with a 192-frame application buffer, without a debugger or a Download Driver click. The trial setup stayed installed and the same separately armed watcher handled both starts. Serato closed normally each time with playback stopped. [Startup evidence and helper source](docs/serato-installer-handoff.md#two-shortcut-launches-with-the-windows-helper)
+**Windows beta.** The first beta uses the 64-frame build with a 10-minute audio limit. [Release and download](https://github.com/FreshPete/Serato-SL3-Driver/releases/tag/v0.1.0-beta.1) · [Setup and restore instructions](docs/beta-setup.md)
 
-In a separate installer-assisted trial, **both Phase Essential decks tracked in REL**. Phase A used inputs 3/4 and Phase B used 5/6, with both remotes on one platter. Both deck pairs carried audio in the five-second software output capture. [Two-deck result](docs/evidence/phase-two-deck-session-20261105.json) · [Video and screenshots](docs/demo-20261105.md)
+The rebuilt SL3 driver carried **two-deck Phase Essential tracking in Serato DJ Pro 5.0.0.1278 on Windows 11** during a temporary installer-assisted session. The owner confirmed that both decks followed the platter in the REL test. Phase A used inputs 3/4 and Phase B used 5/6, with both remotes on one platter. Both deck pairs carried audio in the five-second software output capture. [Two-deck result](docs/evidence/phase-two-deck-session-20261105.json) · [Video and screenshots](docs/demo-20261105.md)
 
-The developer preview contains source and findings. The next milestone is for the one-time installer to start the watcher at Windows sign-in, then repeat the two shortcut launches. The trial driver has a ten-minute audio limit. Timecode vinyl, independent two-platter control and lower latency still need live testing. [Installed-use acceptance checks](docs/installed-use-target.md#acceptance-checks)
+The one-time setup and sign-in watcher enabled two launches from the usual Serato shortcut. In the later buffer comparison, **64 frames passed two minutes of looped playback** with zero callback dropouts and a clean shutdown. The 32-frame run stopped on an empty USB input packet. The private diagnostic builds have a ten-minute audio limit. [Current evidence and test steps](docs/RETURN-REPORT.md#8-november-windows-handoff)
+
+The product target remains **install once, then open Serato normally**. Physical Serato output, independent two-platter control, timecode vinyl, reliable reopen and longer sessions remain release checks. [Installed-use acceptance checks](docs/installed-use-target.md#acceptance-checks)
 
 ### Engineering checkpoints
 

@@ -1,0 +1,40 @@
+{
+  "schema": "sl3.serato-input-fault-observation.v1",
+  "observedAtUtc": "2026-11-08T16:23:47Z",
+  "application": {
+    "version": "5.0.0.1278",
+    "pid": 24256,
+    "audioDevice": "Rane SL3",
+    "audioStartSucceeded": true,
+    "rateHz": 44100,
+    "seratoBufferFrames": 192,
+    "driverBufferFrames": 128,
+    "seratoReportedLatencyMs": 2.90249
+  },
+  "worker": {
+    "sha256": "2da625746e2897409bbe64a568a14d88d10f40a2a14c44e6a07dda04321e4727",
+    "playbackKeepaliveEnabled": true,
+    "inputBlocksPublished": 4473,
+    "failureCode": 2,
+    "streamFaultCode": 7,
+    "streamFault": "invalid_input",
+    "nativeError": 0,
+    "rejectedPacketMetadataAvailable": false,
+    "redirectCloseReturnedInJournal": true
+  },
+  "broker": {
+    "successful": false,
+    "ownerFailureCode": "worker_exited",
+    "workerExitCode": 1,
+    "jobEmpty": true,
+    "finalSnapshotValid": false,
+    "ioRetiredVerified": false,
+    "deviceReleasedVerified": false
+  },
+  "recordSha256": {
+    "seratoLog": "d75ccc871eee8f06046df7d5a4677ee2fd28f3f745e23bd35d975701e9d31c02",
+    "workerJournal": "2c2871cef9d627f9c1745fc91de3ba4fd2aa1b68c27dee14c49d86976cae69ca",
+    "brokerReady": "c7e3c9042d4a86205146ad82d027a711982a04ad3c1f7311b26a96d7275bad25",
+    "brokerResult": "4d62cb963bf13205559732d47c9e6c7c45080a9f3939833693c9072355e4f23a"
+  }
+}
