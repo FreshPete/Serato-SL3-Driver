@@ -1,14 +1,49 @@
-# Windows SL3 beta
+# Rane SL3 Windows beta installation guide
 
-The beta targets a Rane SL3 on Windows 11 x64 and Serato DJ Pro **5.0.0.1278** installed in its default Program Files location. It requires the signed x64 UsbDk 1.0.22 filter, installed separately. [UsbDk release](https://github.com/daynix/UsbDk/releases/tag/v1.00-22)
+Use this guide for **v0.1.0-beta.1**, a community beta for the Rane SL3 on Windows 11 x64. Install it once, then open Serato from your usual shortcut.
 
-1. Close Serato and connect the SL3 directly to the PC.
-2. Extract the whole beta ZIP into a writable local folder. Keep its files and folders together.
-3. Open `SL3_Compatibility_Setup.exe` and select **Check setup**.
-4. Select **Install** when it becomes available and review the Windows administrator prompt. Keep the setup window open while it works.
-5. When setup reports that installation is ready, open Serato from its regular shortcut.
+## 1. Check prerequisites and download the beta
 
-Setup registers the rebuilt ASIO driver, stages a version-specific change to Serato's local device resource and adds a Windows sign-in watcher. To remove it, close Serato, open setup again and choose **Check setup → Restore original setup**. Keep the extracted folder until the original setup has been restored.
+- **Serato DJ Pro 5.0.0.1278 for Windows** must already be installed at `C:\Program Files\Serato\Serato DJ Pro`. The beta checks the exact executable and resource file. [Serato DJ Pro 5.0.0 download page](https://serato.com/dj/pro/downloads/5.0.0)
+- **UsbDk 1.0.22 x64** is installed separately. Under **Assets**, choose `UsbDk_1.0.22_x64.msi`. Run it if UsbDk 1.0.22 x64 is missing, then restart Windows if the installer asks. [Official UsbDk release](https://github.com/daynix/UsbDk/releases/tag/v1.00-22)
+- **The SL3 beta ZIP** contains the setup app and the files it needs. Download `SL3-Compatibility-Setup-v0.1.0-beta.1-win-x64.zip`. [Download the setup ZIP](https://github.com/FreshPete/Serato-SL3-Driver/releases/download/v0.1.0-beta.1/SL3-Compatibility-Setup-v0.1.0-beta.1-win-x64.zip)
+
+## 2. Install SL3 support
+
+1. Close Serato. Connect the SL3 directly to a USB port on the PC.
+2. In File Explorer, right-click the beta ZIP and choose **Extract All**. Use a short, writable local folder, such as `Downloads\SL3-Beta`. Keep the full extracted folder together, including the `kit` and `watcher` folders.
+3. In the extracted folder, open `SL3_Compatibility_Setup.exe`. It has a green PF icon.
+4. Click **Check setup**. Wait for **Ready to install**.
+5. Click **Install** and approve the Windows administrator prompt. Leave the setup window open while the progress bar is moving.
+6. When you see **Installed — ready for a Serato startup test**, close the setup window and launch Serato normally.
+
+Setup registers the rebuilt ASIO driver, applies a version-specific change to Serato’s local device resource and adds a Windows sign-in watcher for the account that runs setup. Keep the extracted folder so you can restore the original setup later.
+
+## 3. Check audio before trying DVS
+
+1. Keep the SL3 connected when you launch Serato.
+2. Load a local track on one deck, select **INT** and press Play. If you’re monitoring through an external mixer, connect the corresponding SL3 RCA output to a **LINE** input and start with the volume low. [Serato’s INT mode guide](https://support.serato.com/hc/en-us/articles/234760888-Internal-Mode)
+3. If you use Phase over RCA, the tested two-deck setup had Phase A on SL3 inputs 3/4 and Phase B on 5/6, both set to **LINE**, with both decks in **REL**. [Phase demo and test setup](demo-20261105.md)
+
+## Restore the original setup
+
+1. Close Serato completely.
+2. Reopen `SL3_Compatibility_Setup.exe` from the same extracted folder.
+3. Click **Check setup**, then **Restore original setup**. Approve the Windows administrator prompt and wait for **Original setup restored**.
+
+Use Restore before updating Serato or switching to another SL3 beta package.
+
+## If setup or audio gets stuck
+
+| What you see | What to try |
+| --- | --- |
+| **UsbDk is unavailable** | Confirm the x64 UsbDk prerequisite is installed, finish any requested restart and run **Check setup** again. |
+| **Close Serato before continuing** | Exit Serato completely, then run **Check setup** again. |
+| **Setup needs review** or **Setup needs attention** | Open **Show diagnostic details**. Check the exact Serato build and install location. If they match, include the status and relevant details in a beta issue. |
+| Serato opens in offline mode with the SL3 connected | Close Serato, confirm the SL3 is plugged directly into the PC, and check that setup still reports the package installed. Reopen Serato from its usual shortcut. If it still opens offline, report it. |
+| Serato’s controls freeze before SL3 audio connects | Try turning off **Setup → Library + Display → Show Streaming Services** and restart Serato. That stopped repeated stalls on the test PC, although some control and waveform lag remained. [Serato’s settings guide](https://support.serato.com/hc/en-us/articles/223364427-Library-Display) |
+
+For a report, include the beta version, Windows build, Serato version, the exact message you saw and whether the problem happened during setup, startup or playback. If you were playing, mention **INT**, Phase or timecode vinyl. [Report a beta issue](https://github.com/FreshPete/Serato-SL3-Driver/issues)
 
 ## What has been tested
 
@@ -17,8 +52,6 @@ Setup registers the rebuilt ASIO driver, stages a version-specific change to Ser
 - The setup window has a PF icon, a Windows progress bar while an action is running, and links to the repository and Peter French's site. [Icon source](https://peterfrench.dev/)
 
 The beta removes the earlier ten-minute test cutoff. Closing Serato ends the audio session. We are working to lower latency as far as we can while keeping playback reliable. 32 frames remains experimental. Timecode vinyl, independent two-platter control and longer sessions need further testing. [Report a beta issue](https://github.com/FreshPete/Serato-SL3-Driver/issues)
-
-If the Serato interface freezes before the SL3 connects, try **Setup → Library + Display → Show Streaming Services** off and restart Serato. On the test PC that stopped repeated post-startup stalls, although some control and waveform lag remained. [Serato setting](https://support.serato.com/hc/en-us/articles/223364427-Library-Display)
 
 ## Source and build inputs
 
