@@ -4,7 +4,7 @@ Restore the physical Rane SL3 for current Serato DJ Pro and two-deck DVS. Window
 
 ## Latest status — 8 November 2026
 
-**Windows beta.** The first beta uses the 64-frame build with a 10-minute audio limit. [Release and download](https://github.com/FreshPete/Serato-SL3-Driver/releases/tag/v0.1.0-beta.1) · [Setup and restore instructions](docs/beta-setup.md)
+**Windows beta.** The first beta uses the 64-frame driver and keeps the audio process active until Serato closes. [Release and download](https://github.com/FreshPete/Serato-SL3-Driver/releases/tag/v0.1.0-beta.1) · [Setup and restore instructions](docs/beta-setup.md)
 
 The rebuilt SL3 driver carried **two-deck Phase Essential tracking in Serato DJ Pro 5.0.0.1278 on Windows 11** during a temporary installer-assisted session. The owner confirmed that both decks followed the platter in the REL test. Phase A used inputs 3/4 and Phase B used 5/6, with both remotes on one platter. Both deck pairs carried audio in the five-second software output capture. [Two-deck result](docs/evidence/phase-two-deck-session-20261105.json) · [Video and screenshots](docs/demo-20261105.md)
 

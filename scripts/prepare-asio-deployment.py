@@ -153,13 +153,15 @@ def locator_text(installation, pointer, controller_sha, worker_sha):
             '\nbroker_sha256='+controller_sha+'\nworker_sha256='+worker_sha+'\n').encode('utf-8')
 
 
-def activation_records(installation, controller_sha, worker_sha, mode=ACTIVATION_MODE, binaries=None, *, playback_keepalive=False, buffer_frames=128):
+def activation_records(installation, controller_sha, worker_sha, mode=ACTIVATION_MODE, binaries=None, *, playback_keepalive=False, buffer_frames=128, application_lifetime=False):
     """Records bind final protected destinations, without a session pointer."""
     require(mode in tuple(ACTIVATION_HEADERS), 'Unknown activation record mode')
     binaries = installation if binaries is None else binaries
     require(not playback_keepalive or mode == APPLICATION_ACTIVATION_MODE, 'Playback keepalive requires application-bound activation')
     require(type(buffer_frames) is int and (buffer_frames == 128 or (playback_keepalive and buffer_frames in (32, 64))),
             '32/64-frame diagnostic profile requires playback keepalive')
+    require(not application_lifetime or (mode == APPLICATION_ACTIVATION_MODE and playback_keepalive and buffer_frames == 64),
+            'Application lifetime requires application-bound 64-frame playback')
     timing_version = 2 if playback_keepalive else 1
     timing = (f'SL3-ASIO-DIAGNOSTIC-TIMING-{timing_version}\nworker_sha256=' + worker_sha + '\nhelper_sha256=' + HELPER_SHA +
               f'\nrate_hz=44100\nbuffer_frames={buffer_frames}\n').encode('utf-8')
@@ -168,7 +170,8 @@ def activation_records(installation, controller_sha, worker_sha, mode=ACTIVATION
               '\ntiming_record_sha256=' + digest(timing) + '\n').encode('utf-8')
     entry = (ACTIVATION_HEADERS[mode] + '\ncontroller=' + str(binaries/'sl3_broker_controller.exe') +
              '\ncontroller_sha256=' + controller_sha + '\ninput=' + str(installation/'sl3-worker.conf') +
-             '\ninput_sha256=' + digest(worker) + '\nstartup_timeout_ms=15000\nstartup_failure_grace_ms=5000\nlifetime_ms=600000\n').encode('utf-8')
+             '\ninput_sha256=' + digest(worker) + '\nstartup_timeout_ms=15000\nstartup_failure_grace_ms=5000\n' +
+             f'lifetime_ms={0 if application_lifetime else 600000}\n').encode('utf-8')
     return {'sl3-asio.conf': entry, 'sl3-worker.conf': worker, 'sl3-timing.conf': timing}
 
 
@@ -334,6 +337,11 @@ def inspect_portable_payloads(manifest, payload):
     require(type(frames) is int and (frames == 128 or (activation and keepalive and frames in (32, 64))) and
             all(type(item.get('diagnosticBufferFrames', 128)) is int and item.get('diagnosticBufferFrames', 128) == frames
                 for item in (manifest, plan)), 'Diagnostic buffer mode mismatch')
+    application_lifetime = seed.get('applicationLifetime', False)
+    require(type(application_lifetime) is bool and
+            all(item.get('applicationLifetime', False) is application_lifetime for item in (manifest, plan)) and
+            (not application_lifetime or (activation and manifest['activationMode'] == APPLICATION_ACTIVATION_MODE and keepalive and frames == 64)),
+            'Application lifetime mode mismatch')
     if activation:
         sha_value(seed['activationToolSha256']); sha_value(seed['activationOriginBundleSha256']); sha_value(seed['activationContractSha256'])
     installation = Path(seed['installationDirectory'])
@@ -347,7 +355,7 @@ def inspect_portable_payloads(manifest, payload):
     if activation:
         expected_records = activation_records(installation, digest(payload['sl3_broker_controller.exe']),
                                               digest(payload['sl3_usbdk.exe']), manifest['activationMode'],
-                                              playback_keepalive=keepalive, buffer_frames=frames)
+                                              playback_keepalive=keepalive, buffer_frames=frames, application_lifetime=application_lifetime)
         require(all(payload[name] == data for name, data in expected_records.items()), 'Activation records do not bind protected destinations/binaries/timing')
     else:
         require(payload['sl3-asio.conf'] == locator_text(installation, pointer, digest(payload['sl3_broker_controller.exe']), digest(payload['sl3_usbdk.exe'])), 'Locator does not bind planned binaries/pointer')
@@ -359,9 +367,9 @@ def inspect_portable_payloads(manifest, payload):
             plan['serviceCreated'] is False and plan['automaticStart'] is activation and
             plan['rateProfileIncluded'] is activation, 'Unsafe installation policy proposed')
     if activation:
-        require(plan.get('activationTrigger') == 'IASIO.init' and plan.get('maximumLifetimeMs') == 600000 and
+        require(plan.get('activationTrigger') == 'IASIO.init' and plan.get('maximumLifetimeMs') == (0 if application_lifetime else 600000) and
                 plan.get('sessionPointerUsed') is False and plan.get('latencyAvailable') is False,
-                'Explicit bounded diagnostic activation policy required')
+                'Explicit diagnostic activation lifetime policy required')
     return {'portableContractVerified': True, 'installationDirectory': str(installation), 'pointerPath': str(pointer),
             'productionDestinationsAdmitted': False, 'binaryExecuted': False}
 

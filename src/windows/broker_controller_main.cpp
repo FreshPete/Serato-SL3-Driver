@@ -65,7 +65,7 @@ std::string json_string(const std::string& s){std::string r="\"";constexpr char 
 std::filesystem::path self(){std::vector<wchar_t> name(32768);const auto n=GetModuleFileNameW(nullptr,name.data(),DWORD(name.size()));require(n && n<name.size(),"Read controller image path");return std::filesystem::path(std::wstring(name.data(),n));}
 std::wstring stop_name(const std::wstring& endpoint){require(endpoint.size()>=32,"Invalid bound controller endpoint");return L"Local\\SL3BrokerStop-"+endpoint.substr(endpoint.size()-32);}
 bool helper_loaded(){return GetModuleHandleW(L"UsbDkHelper.dll") || GetModuleHandleW(L"UsbDkHelper.dll10");}
-DWORD limit(const std::wstring& s){require(!s.empty() && s[0]!=L'0',"Noncanonical controller lifetime");std::string ascii;for(auto c:s){require(c>=L'0' && c<=L'9',"Invalid controller lifetime");ascii+=char(c);}DWORD n=0;
+DWORD limit(const std::wstring& s){if(s==L"0")return 0;require(!s.empty() && s[0]!=L'0',"Noncanonical controller lifetime");std::string ascii;for(auto c:s){require(c>=L'0' && c<=L'9',"Invalid controller lifetime");ascii+=char(c);}DWORD n=0;
     const auto parsed=std::from_chars(ascii.data(),ascii.data()+ascii.size(),n);require(parsed.ec==std::errc{} && parsed.ptr==ascii.data()+ascii.size() && n>=1000 && n<=43200000,"Controller lifetime must be 1000..43200000 ms");return n;}
 template<class T> T process_number(const std::wstring& text){
     require(!text.empty() && text.size()<=20 && text.front()!=L'0',"Invalid application process identity");
@@ -95,7 +95,7 @@ struct Timer {
     HANDLE stop;std::atomic<bool> expired{false};std::thread thread;
     Timer(HANDLE event,DWORD duration,HANDLE application):stop(event),thread([this,duration,application]{
         const HANDLE waits[]={stop,application};
-        const auto wait=WaitForMultipleObjects(application?2:1,waits,FALSE,duration);
+        const auto wait=WaitForMultipleObjects(application?2:1,waits,FALSE,duration?duration:INFINITE);
         if(wait==WAIT_TIMEOUT)expired=true;
         if(wait!=WAIT_OBJECT_0)SetEvent(stop);
     }){}
@@ -141,6 +141,9 @@ int run(const std::filesystem::path& input,const std::filesystem::path& output,D
         require(duration<=600000,"Unmeasured diagnostic lifetime must not exceed ten minutes");
     auto config=asio::load_driver_configuration(input,timing_policy);require(!config.broker,"Controller input must be private-worker format");
     require(keepalive==!config.keepalive_timing_sha256.empty(),"Controller playback mode differs from reviewed timing profile");
+    require(duration || (application && keepalive && config.latency.buffer_frames==64 &&
+            timing_policy==asio::TimingPolicy::unmeasured_diagnostic),
+            "Application lifetime requires a bound application and the 64-frame playback profile");
     ReadFileLease source(input);const auto source_text=source.text();const auto image=self();auto image_pin=std::make_shared<ReadFileLease>(image,256*1024*1024);const auto image_hash=Process::executable_sha256(image);
     BrokerListener listener; // Requires an ordinary user before files/device access.
     local(output);require(!std::filesystem::exists(output),"Controller output directory must be new");

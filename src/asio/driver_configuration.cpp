@@ -151,11 +151,15 @@ DriverConfiguration load_driver_entry_configuration(const std::filesystem::path&
         spec->input=path(values[3]);spec->input_sha256=hash(values[4]);spec->startup_timeout_ms=number(values[5]);
         spec->startup_failure_grace_ms=number(values[6]);spec->lifetime_ms=number(values[7]);spec->timing=policy;
         if(spec->startup_timeout_ms<100 || spec->startup_timeout_ms>30000 || spec->startup_failure_grace_ms>15000 ||
-           spec->lifetime_ms<1000 || spec->lifetime_ms>43200000 || (policy==TimingPolicy::unmeasured_diagnostic && spec->lifetime_ms>600000))
+           (spec->lifetime_ms && (spec->lifetime_ms<1000 || spec->lifetime_ms>43200000 ||
+            (policy==TimingPolicy::unmeasured_diagnostic && spec->lifetime_ms>600000))))
             throw std::invalid_argument("Invalid ASIO activation deadlines");
         pin_hash(*files,spec->controller,spec->controller_sha256,256*1024*1024);pin_hash(*files,spec->input,spec->input_sha256,65536);
         auto input=load_driver_configuration(spec->input,policy);
         if(input.broker)throw std::invalid_argument("ASIO activation cannot wrap another broker");
+        if(!spec->lifetime_ms && (!application_bound || policy!=TimingPolicy::unmeasured_diagnostic ||
+           input.latency.buffer_frames!=64 || input.keepalive_timing_sha256.empty()))
+            throw std::invalid_argument("Application lifetime requires the 64-frame playback profile");
         files->external.push_back(input.files);input.files=files;input.activation=std::move(spec);return input;
     }
     const std::string prefix="SL3-ASIO-LOCATOR-";

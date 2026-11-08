@@ -201,9 +201,14 @@ def verify(path, expected, held):
     require(record['schema'] == 'sl3.on-demand-normal-start-test.v1' and record['applicationSha256'] == APP_SHA and
             record['originalArchiveSha256'] == ORIGINAL_SHA and record['candidateArchiveSha256'] == CANDIDATE_SHA,
             'Pinned normal-start experiment required')
-    require(record['maximumOwnerLifetimeMs'] == 600000 and all(record[name] is False for name in
+    lifetime = record['maximumOwnerLifetimeMs']
+    require(type(lifetime) is int and lifetime in (0, 600000) and all(record[name] is False for name in
             ('applicationLaunched','startupShimUsed','installed','nativeDeviceAccess','combinedAtomicTransaction')),
             'Bounded unexecuted no-shim experiment required')
+    api = module('prepare-asio-deployment.py')
+    bundle, payload = api['capture_bundle'](Path(record['bundle']['directory']), record['bundle']['sha256'])
+    api['verify_payloads'](bundle, payload)
+    require(lifetime == (0 if bundle.get('applicationLifetime', False) else 600000), 'Experiment and package lifetimes differ')
     require(record['projectRoot'] == str(ROOT) and set(record['sources']) == set(source_names()) and
             set(record['assets']) == ASSETS, 'Exact source/asset inventory required')
     for name, expected_sha in record['sources'].items():

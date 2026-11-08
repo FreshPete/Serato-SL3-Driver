@@ -1,4 +1,4 @@
-"""Convert a reviewed native diagnostic bundle into a bounded on-demand package; no installation or execution."""
+"""Convert a reviewed native diagnostic bundle into an on-demand package."""
 import argparse
 import json
 from pathlib import Path
@@ -10,7 +10,7 @@ CONFIG = runpy.run_path(str(ROOT/'scripts/prepare-asio-activation-config.py'))
 API = CONFIG['BASE']
 
 
-def prepare(bundle, expected, build, build_sha, output, application_bound=False, playback_keepalive=False, buffer_frames=128):
+def prepare(bundle, expected, build, build_sha, output, application_bound=False, playback_keepalive=False, buffer_frames=128, application_lifetime=False):
     bundle, build, output = (Path(p).absolute() for p in (bundle, build, output))
     output = API['inside'](output, ROOT/'artifacts/build/deployment-bundles')
     API['require'](not output.exists(), 'New deployment bundle directory required')
@@ -39,7 +39,8 @@ def prepare(bundle, expected, build, build_sha, output, application_bound=False,
         with tempfile.TemporaryDirectory(prefix='sl3-app-activation-') as temporary:
             review = Path(temporary)
             for name, data in API['activation_records'](review, controller_sha, worker_sha, mode, bundle,
-                                                        playback_keepalive=playback_keepalive, buffer_frames=buffer_frames).items():
+                                                        playback_keepalive=playback_keepalive, buffer_frames=buffer_frames,
+                                                        application_lifetime=application_lifetime).items():
                 with (review/name).open('xb') as stream:
                     stream.write(data)
             CONFIG['inspect'](checker, checker_sha, review/'sl3-asio.conf')
@@ -50,27 +51,34 @@ def prepare(bundle, expected, build, build_sha, output, application_bound=False,
         seed['playbackKeepalive'] = True
     if buffer_frames != 128:
         seed['diagnosticBufferFrames'] = buffer_frames
+    if application_lifetime:
+        seed['applicationLifetime'] = True
     identity = API['digest'](API['encoded'](seed))
     installation = Path(seed['installationDirectory'])
     plan = API['record'](payload['deployment-plan.json'])
     plan.update(packageId=identity, registryEntries=API['registry_entries'](installation, identity),
-                activationMode=mode, activationTrigger='IASIO.init', maximumLifetimeMs=600000,
+                activationMode=mode, activationTrigger='IASIO.init', maximumLifetimeMs=0 if application_lifetime else 600000,
                 sessionPointerUsed=False, latencyAvailable=False, automaticStart=True, rateProfileIncluded=True)
     if playback_keepalive:
         plan['playbackKeepalive'] = True
     if buffer_frames != 128:
         plan['diagnosticBufferFrames'] = buffer_frames
+    if application_lifetime:
+        plan['applicationLifetime'] = True
     plan['requiredInstallChecks'] = [item for item in plan['requiredInstallChecks'] if item != 'separate user-owned session pointer'] + [
-        'three exact protected activation records', 'no active audio owner during removal', 'explicit ten-minute unmeasured diagnostic limit']
+        'three exact protected activation records', 'no active audio owner during removal',
+        'application exit ends the audio owner' if application_lifetime else 'explicit ten-minute unmeasured diagnostic limit']
     updated = dict(payload)
     updated.update(API['activation_records'](installation, controller_sha, worker_sha, mode,
-                                             playback_keepalive=playback_keepalive, buffer_frames=buffer_frames))
+                                             playback_keepalive=playback_keepalive, buffer_frames=buffer_frames,
+                                             application_lifetime=application_lifetime))
     updated['provenance.json'] = API['encoded'](provenance)
     updated['deployment-plan.json'] = API['encoded'](plan)
     updated['README.txt'] = (
-        'LOCAL ON-DEMAND DIAGNOSTIC PACKAGE - PREPARED, NOT INSTALLED OR A PUBLIC RELEASE.\n'
+        'ON-DEMAND SL3 PACKAGE - PREPARED, NOT INSTALLED.\n'
         'Initialization can start the native USB owner. Do not register this writable bundle.\n'
-        f'44.1 kHz / {buffer_frames} frames, unmeasured latency, maximum ten minutes per owner.\n'
+        f'44.1 kHz / {buffer_frames} frames, unmeasured latency.\n'
+        + ('The audio owner stops when the application exits.\n' if application_lifetime else 'Maximum ten minutes per owner.\n')
         + ('The controller is retained across ASIO opens until the application exits.\n' if application_bound else '') +
         'Configuration binds final protected installation paths; no session pointer is used at runtime.\n'
         'pointerPath is retained only as legacy installer metadata; it is not written or read by this audio mode.\n'
@@ -84,6 +92,8 @@ def prepare(bundle, expected, build, build_sha, output, application_bound=False,
         result['playbackKeepalive'] = True
     if buffer_frames != 128:
         result['diagnosticBufferFrames'] = buffer_frames
+    if application_lifetime:
+        result['applicationLifetime'] = True
     API['verify_payloads'](result, updated)
     output.mkdir(parents=True)
     for name, data in updated.items():
@@ -105,7 +115,8 @@ if __name__ == '__main__':
     parser.add_argument('--application-bound', action='store_true')
     parser.add_argument('--playback-keepalive', action='store_true')
     parser.add_argument('--buffer-frames', type=int, choices=(32, 64, 128), default=128)
+    parser.add_argument('--until-application-exit', action='store_true')
     args = parser.parse_args()
     print(json.dumps(prepare(args.bundle, args.expected_bundle_sha256, args.native_build,
                              args.expected_build_sha256, args.output, args.application_bound, args.playback_keepalive,
-                             args.buffer_frames), indent=2))
+                             args.buffer_frames, args.until_application_exit), indent=2))

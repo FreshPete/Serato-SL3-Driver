@@ -201,13 +201,16 @@ void BrokerActivation::launch(const BrokerActivationSpec& spec){
     output_root_lease_=spec.output_root_lease;
     require(spec.startup_timeout_ms>=100 && spec.startup_timeout_ms<=30000,"Bounded activation startup deadline required");
     require(spec.startup_failure_grace_ms<=15000,"Bounded activation failure cleanup required");
-    require(spec.lifetime_ms>=1000 && spec.lifetime_ms<=43200000 &&
-            (spec.timing!=TimingPolicy::unmeasured_diagnostic || spec.lifetime_ms<=600000),"Activation lifetime exceeds its timing policy");
+    require(!spec.lifetime_ms || (spec.lifetime_ms>=1000 && spec.lifetime_ms<=43200000 &&
+            (spec.timing!=TimingPolicy::unmeasured_diagnostic || spec.lifetime_ms<=600000)),"Activation lifetime exceeds its timing policy");
     require(spec.kind==session::Kind::native || spec.kind==session::Kind::simulated,"Known activation worker kind required");
     require(spec.output.is_absolute() && std::filesystem::is_directory(spec.output.parent_path()) && !present(spec.output),
             "Fresh absolute activation output directory required");
     input_=load_driver_configuration(spec.input,spec.timing);
     require(!input_->broker,"Activation requires private-worker input, not another broker");
+    require(spec.lifetime_ms || (spec.application_bound && spec.kind==session::Kind::native &&
+            spec.timing==TimingPolicy::unmeasured_diagnostic && input_->latency.buffer_frames==64 &&
+            !input_->keepalive_timing_sha256.empty()),"Application lifetime requires the native 64-frame playback profile");
     // The loader already holds input and transitive dependency bytes read-only.
     require(worker::Process::executable_sha256(spec.input)==spec.input_sha256,"Activation input identity differs");
     report_.attempted=true;

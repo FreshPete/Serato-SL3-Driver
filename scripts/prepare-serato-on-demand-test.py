@@ -42,7 +42,8 @@ def prepare(application,bundle,bundle_sha,powershell,powershell_sha,python_sha,o
         'applicationSha256':API['APP_SHA'],'originalArchiveSha256':API['ORIGINAL_SHA'],'candidateArchiveSha256':API['CANDIDATE_SHA'],
         'bundle':{'directory':str(bundle),'sha256':bundle_sha},'powershell':{'directory':str(powershell),'manifestSha256':powershell_sha},
         'python':{'path':str(Path(sys.executable).absolute()),'sha256':sha(Path(sys.executable)),'manifestSha256':python_sha},'sources':pins,
-        'assets':{name:API['hashlib'].sha256(raw).hexdigest() for name,raw in files.items()},'maximumOwnerLifetimeMs':600000,
+        'assets':{name:API['hashlib'].sha256(raw).hexdigest() for name,raw in files.items()},
+        'maximumOwnerLifetimeMs':0 if native.manifest.get('applicationLifetime', False) else 600000,
         'applicationLaunched':False,'startupShimUsed':False,'installed':False,'nativeDeviceAccess':False,'combinedAtomicTransaction':False}
     if retained_broker:
         record['retainedBroker'] = True

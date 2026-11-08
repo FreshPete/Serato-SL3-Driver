@@ -18,7 +18,8 @@ static std::string digest(const std::filesystem::path& path){return sl3::worker:
 struct Fixture {
     std::filesystem::path folder=std::filesystem::temp_directory_path()/(L"SL3Config-"+std::to_wstring(GetCurrentProcessId())+L"-"+std::to_wstring(GetTickCount64()));
     std::filesystem::path config=folder/L"sl3-asio.conf",timing=folder/L"timing.txt",measurement=folder/L"measurement-\u6d4b\u91cf.txt",dll=folder/L"sl3-native-provider-test.dll",session=folder/L"broker-session.txt",audit=folder/L"broker-audit.txt";
-    std::filesystem::path target=folder/L"live-session.conf",pointer=folder/L"current-session.txt",image_copy=folder/L"other-broker.exe";
+    std::filesystem::path target=folder/L"live-session.conf",pointer=folder/L"current-session.txt",image_copy=folder/L"other-broker.exe",
+        application_entry=folder/L"application-lifetime.conf";
     std::string worker_hash,worker_path,helper_path,timing_text,config_text;
     Fixture(const std::filesystem::path& worker,const std::filesystem::path& helper){
         require(std::filesystem::create_directory(folder),"Create unique temporary configuration folder");
@@ -33,7 +34,7 @@ struct Fixture {
         "\ntiming_record="+timing.u8string()+"\ntiming_record_sha256="+digest(timing)+"\n";write(config,config_text);}
     void replace_timing(const std::string& from,const std::string& to){auto value=timing_text;const auto at=value.find(from);require(at!=std::string::npos,"Test mutation field exists");value.replace(at,from.size(),to);write(timing,value);
         auto config_value=config_text;config_value.replace(config_value.find("timing_record_sha256=")+21,64,digest(timing));write(config,config_value);}
-    ~Fixture(){for(const auto& item:{dll,config,timing,measurement,session,audit,target,pointer,image_copy}){std::error_code error;std::filesystem::remove(item,error);}std::error_code error;std::filesystem::remove(folder,error);}
+    ~Fixture(){for(const auto& item:{dll,config,timing,measurement,session,audit,target,pointer,image_copy,application_entry}){std::error_code error;std::filesystem::remove(item,error);}std::error_code error;std::filesystem::remove(folder,error);}
 };
 static bool locked(const std::filesystem::path& path){
     const auto handle=CreateFileW(path.c_str(),GENERIC_WRITE,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);
@@ -116,6 +117,18 @@ static void diagnostic_timing(Fixture& f){
         require(result.latency.buffer_frames==frames && !result.latency.report_latency &&
                 result.keepalive_timing_sha256==digest(f.timing),
                 "Lower diagnostic bank pins the keepalive profile without claiming latency");
+        const auto& entry=f.application_entry;
+        const auto body="\ncontroller="+f.worker_path+"\ncontroller_sha256="+f.worker_hash+
+            "\ninput="+f.config.u8string()+"\ninput_sha256="+digest(f.config)+
+            "\nstartup_timeout_ms=15000\nstartup_failure_grace_ms=5000\nlifetime_ms=0\n";
+        write(entry,"SL3-ASIO-ACTIVATION-2"+body);
+        if(frames==64){
+            const auto app=load_driver_entry_configuration(entry,TimingPolicy::unmeasured_diagnostic);
+            require(app.activation && app.activation->application_bound && !app.activation->lifetime_ms,
+                    "The beta owner is bound to the application without a time limit");
+        }else rejects([&]{load_driver_entry_configuration(entry,TimingPolicy::unmeasured_diagnostic);});
+        write(entry,"SL3-ASIO-ACTIVATION-1"+body);
+        rejects([&]{load_driver_entry_configuration(entry,TimingPolicy::unmeasured_diagnostic);});
     }
     f.reset();
 }

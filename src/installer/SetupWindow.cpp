@@ -228,7 +228,7 @@ LRESULT message(HWND window,UINT message,WPARAM wparam,LPARAM lparam){
         s->progress_bar=control(PROGRESS_CLASSW,L"Setup progress",PBS_MARQUEE);
         show_progress(*s,false);
         s->description=control(L"STATIC",L"Install this compatibility build once, then open Serato normally.\r\nClose Serato before installing or restoring.",0);
-        s->instructions=control(L"STATIC",L"Windows 11 x64 · Serato DJ Pro 5.0.0.1278\r\nThis build limits audio sessions to 10 minutes.",0);
+        s->instructions=control(L"STATIC",L"Windows 11 x64 · Serato DJ Pro 5.0.0.1278",0);
         s->check_button=control(L"BUTTON",L"&Check setup",BS_DEFPUSHBUTTON|WS_TABSTOP,check);
         s->start_button=control(L"BUTTON",L"&Install",WS_TABSTOP,install);
         s->recover_button=control(L"BUTTON",L"&Restore original setup",WS_TABSTOP,restore);
