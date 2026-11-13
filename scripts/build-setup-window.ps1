@@ -16,8 +16,10 @@ if($windowSource.portableLayout){
     $release=Join-Path $windowDirectory 'build/Release'
     $kit=Join-Path $release 'kit'
     $entry=Join-Path $release 'SL3_Setup_Engineering.exe'
+    $manifestName=$windowSource.portableLayout.manifestName ?? 'kit-manifest.json'
+    if($manifestName -notin @('kit-manifest.json','watcher-payload.json')){throw 'Unknown portable setup inventory'}
     if((Get-FileHash -LiteralPath $windowSource.portableLayout.entry).Hash.ToLowerInvariant() -ne $windowSource.nativeEntrySha256 -or
-       (Get-FileHash -LiteralPath (Join-Path $windowSource.portableLayout.kit 'kit-manifest.json')).Hash.ToLowerInvariant() -ne $windowSource.kitManifestSha256){throw 'Portable setup inputs differ'}
+       (Get-FileHash -LiteralPath (Join-Path $windowSource.portableLayout.kit $manifestName)).Hash.ToLowerInvariant() -ne $windowSource.kitManifestSha256){throw 'Portable setup inputs differ'}
     if(-not (Test-Path -LiteralPath $entry)){Copy-Item -LiteralPath $windowSource.portableLayout.entry -Destination $entry}
     if(-not (Test-Path -LiteralPath $kit)){
         New-Item -ItemType Directory -Path $kit | Out-Null

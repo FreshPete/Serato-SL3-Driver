@@ -183,6 +183,14 @@ class Native:
              winreg.OpenKey(winreg.HKEY_CURRENT_USER,'',0,self.r.READ) as overlay:
             return observe_owned_native(self.s,self.r,self.plan,self.destination,self.expected,self.s.PRODUCTION,root,overlay)
 
+    def check_action_dependencies(self):
+        # Import the lazy setup/restore helpers before offering an elevated action.
+        runtime = self.install_api['sibling']('asio-runtime-check')
+        base = self.install_api['sibling']('asio-install-base')
+        removal = module('asio-uninstall.py')
+        require(all(callable(helper) for helper in (runtime.check, base.prepared_base, removal['uninstall_production'])),
+                'Native driver setup and restore helpers required')
+
     def install(self):
         return self.install_api['install_production'](self.bundle, self.expected)
 
@@ -201,14 +209,9 @@ def verify(path, expected, held):
     require(record['schema'] == 'sl3.on-demand-normal-start-test.v1' and record['applicationSha256'] == APP_SHA and
             record['originalArchiveSha256'] == ORIGINAL_SHA and record['candidateArchiveSha256'] == CANDIDATE_SHA,
             'Pinned normal-start experiment required')
-    lifetime = record['maximumOwnerLifetimeMs']
-    require(type(lifetime) is int and lifetime in (0, 600000) and all(record[name] is False for name in
+    require(record['maximumOwnerLifetimeMs'] == 600000 and all(record[name] is False for name in
             ('applicationLaunched','startupShimUsed','installed','nativeDeviceAccess','combinedAtomicTransaction')),
             'Bounded unexecuted no-shim experiment required')
-    api = module('prepare-asio-deployment.py')
-    bundle, payload = api['capture_bundle'](Path(record['bundle']['directory']), record['bundle']['sha256'])
-    api['verify_payloads'](bundle, payload)
-    require(lifetime == (0 if bundle.get('applicationLifetime', False) else 600000), 'Experiment and package lifetimes differ')
     require(record['projectRoot'] == str(ROOT) and set(record['sources']) == set(source_names()) and
             set(record['assets']) == ASSETS, 'Exact source/asset inventory required')
     for name, expected_sha in record['sources'].items():

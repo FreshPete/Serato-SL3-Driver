@@ -236,15 +236,16 @@ class HardDeadline:
 
 
 class WindowsProcess:
-    """Frida-spawned process and retained Win32 handles; never kills by PID lookup."""
+    """Suspended process and retained Win32 handles; never kills by PID lookup."""
     def __init__(self, application, frida, expected_application_sha=APP_SHA, launcher_context=None, asio_private_trace=False,
-                 close_grace_seconds=CLOSE_GRACE_SECONDS):
+                 close_grace_seconds=CLOSE_GRACE_SECONDS, loopback_capture_directory=None):
         import ctypes as c
         from ctypes import wintypes as w
         self.c, self.w, self.application = c, w, application
         self.expected_application_sha = expected_application_sha
         require(type(asio_private_trace) is bool, 'ASIO private tracing requires an explicit Boolean')
         self.asio_private_trace = asio_private_trace
+        self.loopback_capture_directory = loopback_capture_directory
         require(type(close_grace_seconds) is int and 1 <= close_grace_seconds <= CLOSE_GRACE_SECONDS,
                 'Close grace must be a bounded integer from 1 to 20 seconds')
         self.close_grace_seconds = close_grace_seconds
@@ -253,17 +254,19 @@ class WindowsProcess:
                 'Unexpected launcher environment fields')
         # This host owns its instrumentation lifetime. Do not retain a global
         # device manager throughout the detached manual-playback window.
-        self.manager = frida.DeviceManager()
-        self.manager_closed = False
-        try:
-            self.device = self.manager.get_local_device()
-        except BaseException as error:
+        self.manager = frida.DeviceManager() if frida is not None else None
+        self.manager_closed = self.manager is None
+        self.device = None
+        if self.manager is not None:
             try:
-                self.manager.close(); self.manager_closed = True
-            except Exception as cleanup_error:
-                error.add_note('Device manager cleanup failed: ' + str(cleanup_error)[:256])
-            raise
-        self.handle = self.job = self.session = self.script = self.pid = None
+                self.device = self.manager.get_local_device()
+            except BaseException as error:
+                try:
+                    self.manager.close(); self.manager_closed = True
+                except Exception as cleanup_error:
+                    error.add_note('Device manager cleanup failed: ' + str(cleanup_error)[:256])
+                raise
+        self.handle = self.job = self.session = self.script = self.pid = self.primary_thread = None
         self.k = k = c.WinDLL('kernel32', use_last_error=True)
         for name, args, result in (
             ('OpenProcess', [w.DWORD, w.BOOL, w.DWORD], w.HANDLE),
@@ -273,6 +276,7 @@ class WindowsProcess:
             ('QueryInformationJobObject',[w.HANDLE,w.DWORD,c.c_void_p,w.DWORD,c.c_void_p],w.BOOL),
             ('WaitForSingleObject',[w.HANDLE,w.DWORD],w.DWORD),
             ('TerminateProcess',[w.HANDLE,w.UINT],w.BOOL),
+            ('ResumeThread',[w.HANDLE],w.DWORD),
             ('GetExitCodeProcess',[w.HANDLE,c.POINTER(w.DWORD)],w.BOOL),
             ('GetProcessTimes',[w.HANDLE]+[c.POINTER(w.FILETIME)]*4,w.BOOL),
             ('CloseHandle',[w.HANDLE],w.BOOL)):
@@ -283,9 +287,8 @@ class WindowsProcess:
             raise self.c.WinError(self.c.get_last_error())
         return result
 
-    def start(self, script, callback):
+    def create_job(self):
         c, w, k = self.c, self.w, self.k
-        require(digest(self.application) == self.expected_application_sha, 'Application changed before process creation')
         class Basic(c.Structure):
             _fields_ = [('times', c.c_int64*2), ('flags', w.DWORD), ('minimum', c.c_size_t),
                         ('maximum', c.c_size_t), ('active', w.DWORD), ('affinity', c.c_size_t),
@@ -295,12 +298,83 @@ class WindowsProcess:
         limits = Extended(); limits.basic.flags = 0x2000 | 0x1000
         self.job = self.checked(k.CreateJobObjectW(None, None))
         self.checked(k.SetInformationJobObject(self.job, 9, c.byref(limits), c.sizeof(limits)))
+
+    def start_shortcut(self, shortcut, expected_shortcut_sha):
+        c, w, k = self.c, self.w, self.k
+        require(digest(self.application) == self.expected_application_sha, 'Application changed before shortcut launch')
+        self.create_job()
+
+        class ShellExecuteInfo(c.Structure):
+            _fields_ = [('size', w.DWORD), ('mask', w.DWORD), ('window', w.HWND), ('verb', w.LPCWSTR),
+                        ('file', w.LPCWSTR), ('parameters', w.LPCWSTR), ('directory', w.LPCWSTR),
+                        ('show', c.c_int), ('instance', w.HINSTANCE), ('idList', c.c_void_p),
+                        ('className', w.LPCWSTR), ('classKey', w.HKEY), ('hotKey', w.DWORD),
+                        ('iconOrMonitor', w.HANDLE), ('process', w.HANDLE)]
+
+        shell = c.WinDLL('shell32', use_last_error=True).ShellExecuteExW
+        shell.argtypes, shell.restype = [c.POINTER(ShellExecuteInfo)], w.BOOL
+        ole = c.OleDLL('ole32')
+        ole.CoInitializeEx.argtypes = [c.c_void_p, w.DWORD]
+        ole.CoInitializeEx(None, 2)  # COINIT_APARTMENTTHREADED
+        info = ShellExecuteInfo()
+        info.size, info.mask = c.sizeof(info), 0x40 | 0x100 | 0x400  # NOCLOSEPROCESS, NOASYNC, FLAG_NO_UI
+        info.verb, info.file, info.show = 'open', str(shortcut), 1
+        try:
+            require(digest(shortcut) == expected_shortcut_sha, 'Desktop shortcut changed before shell execution')
+            launched_after = time.time_ns() // 100 + 116444736000000000
+            self.checked(shell(c.byref(info)))
+            require(info.process, 'The shortcut did not return a new process handle')
+            query = k.QueryFullProcessImageNameW
+            query.argtypes, query.restype = [w.HANDLE, w.DWORD, w.LPWSTR, c.POINTER(w.DWORD)], w.BOOL
+            image = c.create_unicode_buffer(32768)
+            size = w.DWORD(len(image))
+            self.checked(query(info.process, 0, image, c.byref(size)))
+            times = [w.FILETIME() for _ in range(4)]
+            self.checked(k.GetProcessTimes(info.process, *(c.byref(value) for value in times)))
+            creation = (times[0].dwHighDateTime << 32) | times[0].dwLowDateTime
+            require(Path(image.value) == self.application and creation >= launched_after - 1_000_000,
+                    'Shortcut process handle does not identify a fresh Serato launch')
+            k.GetProcessId.argtypes, k.GetProcessId.restype = [w.HANDLE], w.DWORD
+            self.pid = self.checked(k.GetProcessId(info.process))
+            self.handle, info.process = info.process, None
+            self.checked(k.AssignProcessToJobObject(self.job, self.handle))
+        finally:
+            if info.process:
+                k.CloseHandle(info.process)
+            ole.CoUninitialize()
+
+    def start(self, script, callback, deferred_attach=False):
+        c, w, k = self.c, self.w, self.k
+        require(digest(self.application) == self.expected_application_sha, 'Application changed before process creation')
+        self.create_job()
         environment = {'SL3_ASIO_PRIVATE_TRACE':'1' if self.asio_private_trace else '0',
                        'SL3_SESSION_CAPSULE':'','SL3_SESSION_CAPSULE_SHA256':''}
+        if self.loopback_capture_directory is not None:
+            environment.update(SL3_OUTPUT_CAPTURE_DIRECTORY=str(self.loopback_capture_directory), SL3_LOOPBACK_CAPTURE='1')
         environment.update(self.launcher_context)
+        if self.manager is None or deferred_attach:
+            import _winapi
+            from subprocess import STARTUPINFO, list2cmdline
+
+            create_suspended = 0x4
+            require(script is None and callback is None and (not deferred_attach or self.manager is not None),
+                    'Native launch takes no startup script')
+            self.handle, self.primary_thread, self.pid, _ = _winapi.CreateProcess(
+                str(self.application), list2cmdline([str(self.application)]), None, None, False,
+                create_suspended, {**os.environ, **environment}, str(self.application.parent), STARTUPINFO())
+            if not k.AssignProcessToJobObject(self.job, self.handle):
+                error = c.WinError(c.get_last_error())
+                self.checked(k.TerminateProcess(self.handle, 1))
+                raise error
+            return
         self.pid = self.device.spawn([str(self.application)], cwd=str(self.application.parent), stdio='pipe', env=environment)
         self.handle = self.checked(k.OpenProcess(0x101101, False, self.pid))
         self.checked(k.AssignProcessToJobObject(self.job, self.handle))
+        self.attach(script, callback)
+
+    def attach(self, script, callback):
+        require(self.handle and self.device is not None and self.session is None and not self.wait(0),
+                'Instrumentation requires a live owned process')
         self.session = self.device.attach(self.pid)
         require(not self.wait(0), 'Owned process exited before script load')
         self.script = self.session.create_script(script)
@@ -309,7 +383,11 @@ class WindowsProcess:
 
     def resume(self):
         require(not self.wait(0), 'Owned process exited before resume')
-        self.device.resume(self.pid)
+        if self.primary_thread:
+            require(self.k.ResumeThread(self.primary_thread) == 1, 'Unexpected native process suspend count')
+            self.k.CloseHandle(self.primary_thread); self.primary_thread = None
+        else:
+            self.device.resume(self.pid)
 
     def wait(self, seconds):
         value = self.k.WaitForSingleObject(self.handle, int(seconds*1000))
@@ -430,6 +508,8 @@ class WindowsProcess:
                     time.sleep(.01)
                 result['jobEmpty'] = accounting.active == 0 and not result.get('ownershipUnproven',False)
         finally:
+            if self.primary_thread:
+                k.CloseHandle(self.primary_thread); self.primary_thread = None
             if self.handle:
                 k.CloseHandle(self.handle); self.handle = None
             if self.job:

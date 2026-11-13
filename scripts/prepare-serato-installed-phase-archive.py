@@ -11,8 +11,6 @@ import tempfile
 from types import SimpleNamespace
 import xml.etree.ElementTree as ET
 
-import pefile
-
 ROOT = Path(__file__).resolve().parents[1]
 PHASE_SHA = 'd135e6f1c03601cc44b3e5f623eed36af81bbff585332a3fdc8d5d533b2cb66a'
 XML_SHA = 'ad522345d4f5fa4a429d1a5e4f737ddf523bb360ed409bd32346a2a680236a86'
@@ -37,7 +35,11 @@ def module(name):
 
 def phase_descriptor(candidate, history, schema):
     require(digest(schema) == candidate.SCHEMA_SHA, 'Reviewed current schema required')
-    base = candidate.candidate_bytes(history, candidate.schema_device_order(schema))
+    return serialize_phase_descriptor(candidate, history, candidate.schema_device_order(schema))
+
+
+def serialize_phase_descriptor(candidate, history, order):
+    base = candidate.candidate_bytes(history, order)
     # Reproduce the earlier experiment's serialization, including its discarded
     # comment and whitespace. Exact output hashes below prevent recipe drift.
     xml = ET.tostring(ET.fromstring(base), encoding='utf-8', xml_declaration=True)
@@ -77,6 +79,8 @@ def validate(xml, schema, powershell):
 
 
 def prepare(application, powershell, runtime_sha, output=None):
+    import pefile
+
     archive = module('prepare-serato-sl3-archive.py')
     candidate = archive['c']
     reader = SimpleNamespace(**module('inspect-serato-resource-archive.py'))

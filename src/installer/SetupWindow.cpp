@@ -4,6 +4,7 @@
 #include "SetupResultPipe.hpp"
 #include "SetupUsbPrerequisite.hpp"
 #include <commctrl.h>
+#include <exception>
 #include <shlobj.h>
 #include <memory>
 
@@ -20,21 +21,31 @@ Eligibility eligibility(const std::wstring& archive,const std::wstring& native,b
     return {usb_ready && !running && known_archive && (archive==L"original" || archive==L"install-staged") && (native==L"absent" || native==L"installed"),
             !running && known_archive && known_native && !clean,clean,installed};
 }
-bool serato_running(const std::string& raw){
+bool setup_flag(const std::string& raw,const wchar_t* field,bool in_after=false){
     Microsoft::WRL::ComPtr<ABI::Windows::Data::Json::IJsonObjectStatics> factory;
     Microsoft::WRL::Wrappers::HStringReference type(L"Windows.Data.Json.JsonObject");
     checked(RoGetActivationFactory(type.Get(),__uuidof(ABI::Windows::Data::Json::IJsonObjectStatics),reinterpret_cast<void**>(factory.GetAddressOf())),"Activate typed setup parser");
     Microsoft::WRL::Wrappers::HString input;const auto decoded=utf16(raw);checked(input.Set(decoded.c_str(),UINT32(decoded.size())),"Read setup result text");
     Microsoft::WRL::ComPtr<ABI::Windows::Data::Json::IJsonObject> object,after;checked(factory->Parse(input.Get(),object.GetAddressOf()),"Parse setup result");
-    checked(object->GetNamedObject(Microsoft::WRL::Wrappers::HStringReference(L"after").Get(),after.GetAddressOf()),"Read observed setup state");
-    boolean running=false;checked(after->GetNamedBoolean(Microsoft::WRL::Wrappers::HStringReference(L"seratoRunning").Get(),&running),"Typed running-state result required");return running!=false;
+    if(in_after)checked(object->GetNamedObject(Microsoft::WRL::Wrappers::HStringReference(L"after").Get(),after.GetAddressOf()),"Read observed setup state");
+    boolean value=false;checked((in_after?after:object)->GetNamedBoolean(Microsoft::WRL::Wrappers::HStringReference(field).Get(),&value),"Typed setup flag required");return value!=false;
 }
+bool serato_running(const std::string& raw){return setup_flag(raw,L"seratoRunning",true);}
+bool driver_only(){return !config::native_watcher_payload_sha.empty();}
 struct State:sl3::window::State {
-    Eligibility allowed{},native_allowed{};bool running=false,usb_ready=false;
+    Eligibility allowed{},native_allowed{};bool running=false,usb_ready=false,sl3_present=false,watcher_recovery_required=false,serato_reviewed=false;
     HWND brand_icon=nullptr,progress_bar=nullptr,links=nullptr;
     std::wstring launcher=config::launcher,kit=config::kit_root,application=config::application,plan=config::plan,plan_sha=config::plan_sha;
 };
 std::string watcher_action(State& s,const wchar_t* action){
+    sl3::window::State result;
+    const std::wstring operation=action;
+    int code=1;
+    if(driver_only()){
+        std::vector<Handle> leases;pin(leases,local_path(s.launcher),config::launcher_sha);
+        const auto command=operation==L"Install"?L"--install-watcher":operation==L"Restore"?L"--restore-watcher":L"--check-watcher";
+        code=sl3::window::execute_child(result,local_path(s.launcher),{command,L"--kit",s.kit,L"--app",s.application},operation==L"Check");
+    }else{
     const auto assets=local_path(s.launcher).parent_path()/L"watcher";
     const auto script=assets/L"setup-notice-startup.ps1";
     std::vector<Handle> leases;
@@ -45,10 +56,10 @@ std::string watcher_action(State& s,const wchar_t* action){
     const auto count=GetSystemDirectoryW(system.data(),UINT(system.size()));
     require(count && count<system.size(),"Locate Windows PowerShell");system.resize(count);
     const auto shell=local_path(system)/L"WindowsPowerShell/v1.0/powershell.exe";
-    sl3::window::State result;
-    const auto code=sl3::window::execute_child(result,shell,{L"-NoProfile",L"-NonInteractive",
+    code=sl3::window::execute_child(result,shell,{L"-NoProfile",L"-NonInteractive",
         L"-File",script.native(),L"-Action",action,L"-WatcherSha256",config::watcher_sha,
-        L"-HelperSha256",config::watcher_helper_sha},std::wstring(action)==L"Check");
+        L"-HelperSha256",config::watcher_helper_sha},operation==L"Check");
+    }
     const auto report=std::string("\nWindows sign-in watcher: ")+result.output;
     s.append(report.data(),report.size());
     require(!code,"Windows sign-in watcher action failed");
@@ -66,8 +77,10 @@ void enable(State& s){
     EnableWindow(s.start_button,!s.preview && !s.busy && s.allowed.install);
     EnableWindow(s.recover_button,!s.preview && !s.busy && s.allowed.restore);
 }
-std::vector<std::wstring> arguments(const State& s,const wchar_t* action){return {action,L"--kit",s.kit,L"--app",s.application,
-    L"--experiment",s.plan,L"--expected-experiment-sha256",s.plan_sha};}
+std::vector<std::wstring> arguments(const State& s,const wchar_t* action){
+    if(driver_only())return {action,L"--kit",s.kit,L"--app",s.application};
+    return {action,L"--kit",s.kit,L"--app",s.application,L"--experiment",s.plan,L"--expected-experiment-sha256",s.plan_sha};
+}
 int select_setup(State& s){
     std::wstring image(32768,L'\0');const auto count=GetModuleFileNameW(nullptr,image.data(),DWORD(image.size()));
     require(count && count<image.size(),"Locate the setup executable");image.resize(count);
@@ -77,6 +90,10 @@ int select_setup(State& s){
     PWSTR known=nullptr;checked(SHGetKnownFolderPath(program_files,0,nullptr,&known),"Locate Program Files");
     const std::unique_ptr<wchar_t,decltype(&CoTaskMemFree)> folder(known,CoTaskMemFree);
     s.application=(fs::path(folder.get())/L"Serato/Serato DJ Pro/Serato DJ Pro.exe").native();
+    if(driver_only()){
+        s.plan=(local_path(s.kit)/L"watcher-payload.json").native();s.plan_sha=config::native_watcher_payload_sha;
+        return 0;
+    }
     std::vector<Handle> leases;pin(leases,local_path(s.launcher),config::launcher_sha);
     const auto code=sl3::window::execute_child(s,local_path(s.launcher),{L"--select-setup",L"--kit",s.kit,L"--app",s.application},true);
     if(code)return code;
@@ -92,14 +109,14 @@ int select_setup(State& s){
 int inspect(State& s,bool retain_prior=false){
     std::string prior;
     {std::lock_guard<std::mutex> lock(s.mutex);if(retain_prior)prior=s.output;s.output.clear();++s.log_revision;}
-    s.allowed={};s.native_allowed={};s.running=false;int code=1;
+    s.allowed={};s.native_allowed={};s.running=false;s.sl3_present=false;s.watcher_recovery_required=false;s.serato_reviewed=false;int code=1;
     try{
         if(s.plan.empty()){
             code=select_setup(s);if(code)return code;
         }
         std::vector<Handle> leases;pin(leases,local_path(s.launcher),config::launcher_sha);
         pin(leases,local_path(s.plan),s.plan_sha,65536);
-        code=sl3::window::execute_child(s,local_path(s.launcher),arguments(s,L"--check-experiment"),true);
+        code=sl3::window::execute_child(s,local_path(s.launcher),arguments(s,driver_only()?L"--check-driver":L"--check-experiment"),true);
     }
     catch(...){if(retain_prior){std::string failed;{std::lock_guard<std::mutex> lock(s.mutex);failed=s.output;s.output=prior;}
         const auto combined=std::string("\nPost-action observation failed:\n")+failed;s.append(combined.data(),combined.size());}throw;}
@@ -107,6 +124,22 @@ int inspect(State& s,bool retain_prior=false){
     if(retain_prior){std::lock_guard<std::mutex> lock(s.mutex);s.output=prior;}
     if(retain_prior){const auto combined=std::string("\nPost-action observation:\n")+raw;s.append(combined.data(),combined.size());}
     if(!code){
+        if(driver_only()){
+            const JsonObject result(raw);require(result.text(L"schema")==L"sl3.native-watcher-driver-stage.v1" &&
+                result.text(L"action")==L"plan" && setup_flag(raw,L"actionDependenciesVerified"),"Typed driver-only setup observation required");
+            const bool app_reviewed=setup_flag(raw,L"applicationReviewed"),archive_original=setup_flag(raw,L"archiveOriginal");
+            s.serato_reviewed=app_reviewed && archive_original;
+            const auto native=result.object(L"after").text(L"state");const auto watcher=watcher_action(s,L"Check");
+            require(watcher=="absent" || watcher=="stopped" || watcher=="ready" || watcher=="recovery-required","Unexpected watcher status");
+            s.watcher_recovery_required=watcher=="recovery-required";
+            s.usb_ready=sl3::setup_usb::driver_running();s.sl3_present=setup_flag(raw,L"sl3Present");
+            const bool absent=native==L"absent",installed=native==L"installed";
+            s.native_allowed={s.serato_reviewed && absent && s.usb_ready && s.sl3_present,installed || native==L"unregistered",absent,installed};
+            s.allowed={s.serato_reviewed && ((s.native_allowed.install && watcher=="absent") ||
+                (installed && s.usb_ready && (watcher=="absent" || watcher=="stopped"))),
+                s.native_allowed.restore || (absent && watcher!="absent"),absent && watcher=="absent",s.serato_reviewed && installed && watcher=="ready"};
+            return 0;
+        }
         const JsonObject result(raw);require(result.text(L"schema")==L"sl3.on-demand-test-action.v1","Typed setup observation required");
         const auto after=result.object(L"after");s.running=serato_running(raw);s.usb_ready=sl3::setup_usb::driver_running();
         s.native_allowed=eligibility(after.text(L"archive"),after.object(L"native").text(L"state"),s.running,s.usb_ready);
@@ -145,7 +178,14 @@ std::string result_text(const State& s,const ActionResult& result){
         "\ntransfer_error="+result.transfer_error+"\n\nAdministrator output:\n"+result.capture.bytes;
 }
 fs::path preserve_result(const State& s,const std::string& result){
-    const auto directory=local_path(s.plan).parent_path()/(L"ui-action-"+sl3::setup_result::token());
+    const auto root=driver_only()?local_path(s.kit)/L"analysis":local_path(s.plan).parent_path();
+    if(driver_only()){
+        if(!CreateDirectoryW(root.c_str(),nullptr) && GetLastError()!=ERROR_ALREADY_EXISTS)throw WinError("Create setup report directory");
+        const auto attributes=GetFileAttributesW(root.c_str());
+        require(attributes!=INVALID_FILE_ATTRIBUTES && (attributes&FILE_ATTRIBUTE_DIRECTORY) &&
+            !(attributes&FILE_ATTRIBUTE_REPARSE_POINT),"Ordinary setup report directory required");
+    }
+    const auto directory=root/(L"ui-action-"+sl3::setup_result::token());
     require(CreateDirectoryW(directory.c_str(),nullptr)!=FALSE,"Create fresh local diagnostic directory");
     const auto path=directory/L"administrator-result.txt";
     Handle file(CreateFileW(path.c_str(),GENERIC_WRITE,0,nullptr,CREATE_NEW,FILE_FLAG_OPEN_REPARSE_POINT,nullptr));
@@ -154,14 +194,19 @@ fs::path preserve_result(const State& s,const std::string& result){
 }
 int apply_native(State& s,int action){
     std::vector<Handle> leases;pin(leases,local_path(s.launcher),config::launcher_sha);pin(leases,local_path(s.plan),s.plan_sha,65536);
-    const auto operation=elevated_action(s,arguments(s,action==install?L"--apply-experiment":L"--restore-experiment"));
+    const auto command=driver_only()?(action==install?L"--apply-driver":L"--restore-driver"):
+        (action==install?L"--apply-experiment":L"--restore-experiment");
+    const auto operation=elevated_action(s,arguments(s,command));
     const auto report=result_text(s,operation);std::string persistence_error;
     {std::lock_guard<std::mutex> lock(s.mutex);s.output.clear();++s.log_revision;}s.append(report.data(),report.size());
     try{const auto saved=std::string("\nFull administrator result saved: ")+utf8(preserve_result(s,report).native())+"\n";s.append(saved.data(),saved.size());}
     catch(const std::exception& error){persistence_error=error.what();s.append(persistence_error.data(),persistence_error.size());}
     const auto code=inspect(s,true);if(operation.code)return operation.code;if(code)return code;
     require(operation.capture.authenticated && !operation.capture.over_limit && !operation.capture.error && operation.transfer_error.empty() && persistence_error.empty(),"Administrator result was not completely received and preserved; retain the observed state");
-    const JsonObject actual(operation.capture.bytes);require(actual.text(L"schema")==L"sl3.on-demand-test-action.v1" && actual.text(L"action")==std::wstring(action==install?L"setup":L"restore"),"Matching administrator result required");
+    const JsonObject actual(operation.capture.bytes);
+    const auto schema=driver_only()?L"sl3.native-watcher-driver-stage.v1":L"sl3.on-demand-test-action.v1";
+    const auto operation_name=action==restore?L"restore":driver_only()?L"install":L"setup";
+    require(actual.text(L"schema")==schema && actual.text(L"action")==operation_name,"Matching administrator result required");
     require(action==install?s.native_allowed.installed:s.native_allowed.clean,"Command finished but observed setup state differs");return 0;
 }
 int apply(State& s,int action){
@@ -172,16 +217,30 @@ int apply(State& s,int action){
     struct Unlock {HANDLE value;~Unlock(){ReleaseMutex(value);}} unlock{lock.value};
     auto code=inspect(s);if(code)return code;
     require(action==install?s.allowed.install:s.allowed.restore,"Current setup state does not admit this action");
-    if(action==install?s.native_allowed.install:s.native_allowed.restore){
-        code=apply_native(s,action);if(code)return code;
+    try{
+        if(driver_only() && action==restore)require(watcher_action(s,L"Restore")=="absent","Windows sign-in watcher did not stop");
+        if(action==install?s.native_allowed.install:s.native_allowed.restore){
+            code=apply_native(s,action);if(code)return code;
+        }
+        if(driver_only() || !config::watcher_setup_sha.empty()){
+            require(!s.running,"Close Serato before changing the Windows sign-in watcher");
+            if(!driver_only() || action==install){
+                const auto status=watcher_action(s,action==install?L"Install":L"Restore");
+                require(status==(action==install?"ready":"absent"),"Windows sign-in watcher did not reach the requested state");
+            }
+            code=inspect(s,true);if(code)return code;
+        }
+        require(action==install?s.allowed.installed:s.allowed.clean,"Observed setup state differs from the requested action");
+    }catch(...){
+        if(driver_only()){
+            try{(void)inspect(s,true);}
+            catch(const std::exception& error){
+                const std::string message=std::string("\nCould not refresh setup state after the action stopped: ")+error.what();
+                s.append(message.data(),message.size());
+            }
+        }
+        throw;
     }
-    if(!config::watcher_setup_sha.empty()){
-        require(!s.running,"Close Serato before changing the Windows sign-in watcher");
-        const auto status=watcher_action(s,action==install?L"Install":L"Restore");
-        require(status==(action==install?"ready":"absent"),"Windows sign-in watcher did not reach the requested state");
-        code=inspect(s,true);if(code)return code;
-    }
-    require(action==install?s.allowed.installed:s.allowed.clean,"Observed setup state differs from the requested action");
     return 0;
 }
 void begin(State& s,int action){
@@ -228,7 +287,14 @@ LRESULT message(HWND window,UINT message,WPARAM wparam,LPARAM lparam){
         s->progress_bar=control(PROGRESS_CLASSW,L"Setup progress",PBS_MARQUEE);
         show_progress(*s,false);
         s->description=control(L"STATIC",L"Install this compatibility build once, then open Serato normally.\r\nClose Serato before installing or restoring.",0);
-        s->instructions=control(L"STATIC",L"Windows 11 x64 · Serato DJ Pro 5.0.0.1278",0);
+        const std::wstring instructions=!config::native_watcher_output_ready_trial.empty()?
+            L"Windows 11 x64 · Serato DJ Pro 5.0.0.1278\r\nPrivate synchronous 64-frame trial · 10-minute session limit.":
+            !config::native_watcher_diagnostic_frames.empty()?
+            L"Windows 11 x64 · Serato DJ Pro 5.0.0.1278\r\nPrivate "+config::native_watcher_diagnostic_frames+L"-frame diagnostic · 10-minute session limit.":
+            config::native_watcher_application_lifetime.empty()?
+            L"Windows 11 x64 · Serato DJ Pro 5.0.0.1278\r\nThis build limits audio sessions to 10 minutes.":
+            L"Windows 11 x64 · Serato DJ Pro 5.0.0.1278\r\nThe audio session ends when Serato closes.";
+        s->instructions=control(L"STATIC",instructions.c_str(),0);
         s->check_button=control(L"BUTTON",L"&Check setup",BS_DEFPUSHBUTTON|WS_TABSTOP,check);
         s->start_button=control(L"BUTTON",L"&Install",WS_TABSTOP,install);
         s->recover_button=control(L"BUTTON",L"&Restore original setup",WS_TABSTOP,restore);
@@ -261,9 +327,17 @@ LRESULT message(HWND window,UINT message,WPARAM wparam,LPARAM lparam){
             s->worker.join();s->busy=false;show_progress(*s,false);
             if(s->code){text(s->progress,s->code==ERROR_CANCELLED?L"Action cancelled":L"Setup needs attention");text(s->description,L"Open diagnostic details for the result. No further action will start automatically.");}
             else if(s->running){text(s->progress,L"Close Serato before continuing");text(s->description,L"Close Serato normally, then choose Check setup again.\r\nInstall and restore are disabled while it is running.");}
-            else if(s->action==restore && s->allowed.clean){text(s->progress,L"Original setup restored");text(s->description,L"The compatibility files and temporary driver registration have been removed.");}
+            else if(s->action==restore && s->allowed.clean){text(s->progress,L"Original setup restored");text(s->description,driver_only()?
+                L"The driver and Windows sign-in entry have been removed. Local diagnostic files are still available.":
+                L"The compatibility files and temporary driver registration have been removed.");}
+            else if(s->watcher_recovery_required && s->allowed.restore){text(s->progress,L"Watcher recovery required");
+                text(s->description,L"Choose Restore original setup before installing again.\r\nLocal diagnostic files will be kept.");}
+            else if(driver_only() && !s->serato_reviewed){text(s->progress,L"Serato installation differs");
+                text(s->description,s->allowed.restore?L"Restore original setup can remove this compatibility setup.\r\nInstall requires the reviewed Serato DJ Pro 5.0.0.1278 files.":
+                    L"Install requires the reviewed Serato DJ Pro 5.0.0.1278 files.");}
             else if(!s->usb_ready){text(s->progress,L"UsbDk is unavailable");text(s->description,L"The UsbDk USB driver must be installed and running.\r\nChoose Check setup again when UsbDk is ready.");}
             else if(s->allowed.installed){text(s->progress,L"Installed — ready for a Serato startup test");text(s->description,L"Open Serato normally to test the SL3.\r\nThis window does not start or control Serato.");}
+            else if(driver_only() && s->allowed.clean && !s->sl3_present){text(s->progress,L"Connect the SL3 to continue");text(s->description,L"Connect the SL3 by USB, then choose Check setup again.");}
             else{text(s->progress,s->allowed.install?L"Ready to install":L"Setup needs review");text(s->description,s->allowed.install?
                 L"Install will ask Windows for administrator approval.\r\nYou will not need this window for normal Serato use after validation.":L"Open diagnostic details. Keep the prepared records for reviewed recovery.");}
             enable(*s);

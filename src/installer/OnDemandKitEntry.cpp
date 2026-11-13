@@ -20,7 +20,7 @@ void pin_directory(std::vector<Handle>& leases,std::set<fs::path>& seen,const fs
     auto current=directory.root_path();
     for(const auto& part:directory.relative_path()){
         current/=part;if(!seen.insert(current).second)continue;
-        Handle handle(CreateFileW(current.c_str(),FILE_READ_ATTRIBUTES,FILE_SHARE_READ|FILE_SHARE_WRITE,nullptr,OPEN_EXISTING,
+        Handle handle(CreateFileW(current.c_str(),FILE_LIST_DIRECTORY|FILE_READ_ATTRIBUTES,FILE_SHARE_READ|FILE_SHARE_WRITE,nullptr,OPEN_EXISTING,
                                   FILE_FLAG_BACKUP_SEMANTICS|FILE_FLAG_OPEN_REPARSE_POINT,nullptr));
         require(handle.value!=INVALID_HANDLE_VALUE,"Retain setup input directory");BY_HANDLE_FILE_INFORMATION info{};
         require(GetFileInformationByHandle(handle.value,&info)!=FALSE && (info.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY) &&
@@ -49,14 +49,18 @@ int dispatch(int argc,wchar_t** argv){
     if(argc==1 || (argc==2 && std::wstring(argv[1])==L"--help")){
         std::cout<<"SL3 setup engineering entry: --verify|--plan|--prepare|--resume|--select-setup --kit ABSOLUTE_DIRECTORY --app ABSOLUTE_SERATO_EXE\n"
                  <<"Prepared actions: --check-experiment|--apply-experiment|--restore-experiment with --experiment PATH --expected-experiment-sha256 SHA256.\n"
+                 <<"Native watcher actions: --check-driver|--apply-driver|--restore-driver with --kit and --app.\n"
                  <<"Apply/restore require an already elevated process. No automatic approval prompt or Serato launch.\n";return 0;
     }
     const std::wstring action=argv[1];const bool experiment=action==L"--check-experiment" || action==L"--apply-experiment" || action==L"--restore-experiment";
+    const bool driver=action==L"--check-driver" || action==L"--apply-driver" || action==L"--restore-driver";
+    const bool watcher=action==L"--check-watcher" || action==L"--install-watcher" || action==L"--restore-watcher";
     require((argc==(experiment?10:6)) && std::wstring(argv[2])==L"--kit" && std::wstring(argv[4])==L"--app" &&
             (!experiment || (std::wstring(argv[6])==L"--experiment" && std::wstring(argv[8])==L"--expected-experiment-sha256")),"Exact reviewed setup arguments required");
-    require(experiment || action==L"--verify" || action==L"--plan" || action==L"--prepare" || action==L"--resume" || action==L"--select-setup","Known setup entry action required");
-    token_requirement(action==L"--apply-experiment" || action==L"--restore-experiment");
-    if(action==L"--apply-experiment")
+    const bool legacy=experiment || action==L"--plan" || action==L"--prepare" || action==L"--resume" || action==L"--select-setup";
+    require(action==L"--verify" || (release::native_watcher_payload ? (driver || watcher) : legacy),"Known setup action for the compiled payload required");
+    token_requirement(action==L"--apply-experiment" || action==L"--restore-experiment" || action==L"--apply-driver" || action==L"--restore-driver");
+    if(action==L"--apply-experiment" || action==L"--apply-driver")
         require(sl3::setup_usb::driver_running(),"The UsbDk USB driver must be running before installation");
     const auto root=local_path(argv[3]).lexically_normal(),application=local_path(argv[5]).lexically_normal();
     require(root.native().find(L';')==std::wstring::npos && GetDriveTypeW(root.root_path().c_str())==DRIVE_FIXED,"Local fixed-drive kit without semicolons required");
@@ -75,13 +79,27 @@ int dispatch(int argc,wchar_t** argv){
         if(attributes&FILE_ATTRIBUTE_DIRECTORY)pin_directory(leases,directories,it->path());else observed.insert(name);
     }
     require(observed==expected,"Unexpected setup payload before helper execution");
-    Handle app(CreateFileW(application.c_str(),GENERIC_READ,FILE_SHARE_READ,nullptr,OPEN_EXISTING,FILE_FLAG_OPEN_REPARSE_POINT,nullptr));
-    require(app.value!=INVALID_HANDLE_VALUE,"Original Serato executable required");BY_HANDLE_FILE_INFORMATION info{};
-    require(GetFileInformationByHandle(app.value,&info)!=FALSE && !(info.dwFileAttributes&(FILE_ATTRIBUTE_DIRECTORY|FILE_ATTRIBUTE_REPARSE_POINT)) &&
-            hash_file(app.value)==release::application_sha,"Reviewed Serato executable required before helper execution");leases.push_back(std::move(app));
+    const bool recovery_or_check=release::native_watcher_payload &&
+        (action==L"--check-driver" || action==L"--restore-driver" || action==L"--check-watcher" || action==L"--restore-watcher");
+    if(!recovery_or_check){
+        Handle app(CreateFileW(application.c_str(),GENERIC_READ,FILE_SHARE_READ,nullptr,OPEN_EXISTING,FILE_FLAG_OPEN_REPARSE_POINT,nullptr));
+        require(app.value!=INVALID_HANDLE_VALUE,"Original Serato executable required");BY_HANDLE_FILE_INFORMATION info{};
+        require(GetFileInformationByHandle(app.value,&info)!=FALSE && !(info.dwFileAttributes&(FILE_ATTRIBUTE_DIRECTORY|FILE_ATTRIBUTE_REPARSE_POINT)) &&
+                hash_file(app.value)==release::application_sha,"Reviewed Serato executable required before helper execution");leases.push_back(std::move(app));
+    }
     if(action==L"--verify"){
         std::cout<<"{\"schema\":\"sl3.native-setup-entry-verification.v1\",\"inputsVerified\":true,\"filesPinned\":"<<release::files.size()
                  <<",\"pythonStarted\":false,\"installed\":false,\"seratoLaunched\":false,\"nativeDeviceAccess\":false}\n";return 0;
+    }
+    if(driver){
+        const auto operation=action==L"--apply-driver"?L"install":action==L"--restore-driver"?L"restore":L"plan";
+        return run_process(root/L"runtime/python/python.exe",{L"-I",L"-B",(root/L"scripts/run-serato-memory-descriptor-probe.py").native(),
+            L"--driver-stage",operation},root,false);
+    }
+    if(watcher){
+        const auto operation=action==L"--install-watcher"?L"Install":action==L"--restore-watcher"?L"Restore":L"Check";
+        return run_process(root/L"runtime/python/python.exe",{L"-I",L"-B",(root/L"scripts/setup-serato-native-watcher.py").native(),
+            operation,L"--expected-payload-sha256",release::kit_manifest_sha},root,false);
     }
     if(experiment){
         const auto selected=local_path(argv[7]).lexically_normal();const std::wstring identity=argv[9];
@@ -127,11 +145,13 @@ int dispatch(int argc,wchar_t** argv){
 }
 int wmain(int argc,wchar_t** argv){
     try{
-        if(argc==14 && std::wstring(argv[10])==L"--result-pipe" && std::wstring(argv[12])==L"--result-server-pid"){
-            const std::wstring action=argv[1];sl3::launcher::require(action==L"--apply-experiment" || action==L"--restore-experiment","Result channel applies only to setup/restore");
+        const int arguments=argc-4;
+        if((arguments==6 || arguments==10) && std::wstring(argv[arguments])==L"--result-pipe" && std::wstring(argv[arguments+2])==L"--result-server-pid"){
+            const std::wstring action=argv[1];sl3::launcher::require(action==L"--apply-experiment" || action==L"--restore-experiment" ||
+                action==L"--apply-driver" || action==L"--restore-driver","Result channel applies only to setup/restore");
             sl3::setup::token_requirement(true);
-            sl3::setup_result::Client result(argv[11],sl3::setup_result::process_id(argv[13]));result.redirect();
-            try{return sl3::setup::dispatch(10,argv);}
+            sl3::setup_result::Client result(argv[arguments+1],sl3::setup_result::process_id(argv[arguments+3]));result.redirect();
+            try{return sl3::setup::dispatch(arguments,argv);}
             catch(const std::exception& error){result.write(std::string("SL3 setup entry refused: ")+error.what()+"\n");return 1;}
         }
         return sl3::setup::dispatch(argc,argv);

@@ -11,15 +11,23 @@ def require(v,t):
     if not v:raise ValueError(t)
 
 
-def prepare(kit,expected,output):
-    kit=Path(kit).absolute();manifest=kit/'kit-manifest.json';require(sha(manifest)==expected,'Reviewed kit manifest required')
-    meta=json.loads(manifest.read_bytes());inventory=kit/'kit-inventory.json';require(sha(inventory)==meta['inventorySha256'],'Reviewed kit inventory required')
-    files=json.loads(inventory.read_bytes())['files'];require(all(sha(kit/n)==x['sha256'] for n,x in files.items()),'Reviewed kit input changed')
-    # The selected helper is executed only after its declared bytes have matched
-    # the externally reviewed manifest/inventory above.
-    runpy.run_path(str(kit/'scripts/prepare-on-demand-kit.py'))['verify'](manifest,expected)
-    files={**files,'kit-manifest.json':{'sha256':expected,'bytes':manifest.stat().st_size},
-        'kit-inventory.json':{'sha256':meta['inventorySha256'],'bytes':inventory.stat().st_size}}
+def prepare(kit,expected,output,watcher_payload=False):
+    kit=Path(kit).absolute()
+    if watcher_payload:
+        manifest=kit/'watcher-payload.json'
+        runpy.run_path(str(ROOT/'scripts/setup-serato-native-watcher.py'))['read_payload'](kit,expected)
+        payload=json.loads(manifest.read_bytes());files=dict(payload['files'])
+        files[manifest.name]={'sha256':expected,'bytes':manifest.stat().st_size}
+        meta={'pythonExecutableSha256':files['runtime/python/python.exe']['sha256'],
+              'pythonManifestSha256':payload['runtimeManifestSha256'],'powershellManifestSha256':''}
+    else:
+        manifest=kit/'kit-manifest.json';require(sha(manifest)==expected,'Reviewed kit manifest required')
+        meta=json.loads(manifest.read_bytes());inventory=kit/'kit-inventory.json';require(sha(inventory)==meta['inventorySha256'],'Reviewed kit inventory required')
+        files=json.loads(inventory.read_bytes())['files'];require(all(sha(kit/n)==x['sha256'] for n,x in files.items()),'Reviewed kit input changed')
+        # Verify the selected helper against the externally reviewed inventory before executing it.
+        runpy.run_path(str(kit/'scripts/prepare-on-demand-kit.py'))['verify'](manifest,expected)
+        files={**files,'kit-manifest.json':{'sha256':expected,'bytes':manifest.stat().st_size},
+            'kit-inventory.json':{'sha256':meta['inventorySha256'],'bytes':inventory.stat().st_size}}
     source_names=['src/installer/OnDemandKitEntry.cpp','src/installer/NativeSessionLauncher.cpp','scripts/prepare-on-demand-entry.py','scripts/build-on-demand-entry.ps1',
         'src/installer/SetupResultPipe.hpp','src/installer/SetupUsbPrerequisite.hpp','tests/native/setup_result_pipe_tests.cpp']
     pins={n:sha(ROOT/n) for n in source_names}
@@ -28,6 +36,7 @@ def prepare(kit,expected,output):
         'inline const std::wstring application_sha=L"66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265";\n'
         'inline const std::vector<std::pair<std::wstring,std::wstring>> source_pins={},runtime_pins={},powershell_pins={};\n}\n')
     setup=('#pragma once\nnamespace sl3::setup::release {\nstruct File {std::wstring name,sha;unsigned long long bytes;};\n'
+        'inline constexpr bool native_watcher_payload='+str(watcher_payload).lower()+';\n'
         'inline const std::wstring kit_manifest_sha=L'+json.dumps(expected)+';\ninline const std::wstring application_sha=sl3::launcher::release::application_sha;\n'
         'inline const std::wstring python_manifest_sha=L'+json.dumps(meta['pythonManifestSha256'])+';\n'
         'inline const std::wstring powershell_manifest_sha=L'+json.dumps(meta['powershellManifestSha256'])+';\n'
@@ -54,11 +63,13 @@ def prepare(kit,expected,output):
     values={'launcher_config.hpp':header,'setup_config.hpp':setup,'CMakeLists.txt':cmake}
     for name,text in values.items():(output/name).write_text(text,encoding='utf-8')
     record={'schema':'sl3.native-setup-entry-source.v1','kitManifestSha256':expected,'sourcePins':pins,
+        'nativeWatcherPayload':watcher_payload,
         'generatedPins':{n:sha(output/n) for n in values},'compiledPayloadFiles':len(files),'mutableActionsExposed':True,'mutableActionsRequireAlreadyElevatedProcess':True,
         'elevationRequested':False,'seratoLaunched':False,'nativeDeviceAccess':False}
     (output/'entry-source.json').write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8');return {'prepared':True,'directory':str(output),'sourceManifestSha256':sha(output/'entry-source.json')}
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--kit',type=Path,required=True);p.add_argument('--expected-kit-manifest-sha256',required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
-    print(json.dumps(prepare(a.kit,a.expected_kit_manifest_sha256,a.output),indent=2))
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--kit',type=Path,required=True);p.add_argument('--expected-kit-manifest-sha256',required=True);p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--watcher-payload',action='store_true');a=p.parse_args()
+    print(json.dumps(prepare(a.kit,a.expected_kit_manifest_sha256,a.output,a.watcher_payload),indent=2))

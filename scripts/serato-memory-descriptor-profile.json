@@ -1,0 +1,69 @@
+{
+  "executableSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "registrationRva": "0x503a40",
+  "folderHelperRva": "0x5037d0",
+  "folderCall": {"returnRva": "0x503b20"},
+  "classificationRead": {"returnRva": "0x5c73a9"},
+  "fullParseRead": {"returnRva": "0x5c805b"},
+  "nativeString": {
+    "makeRva": "0x4a33f0",
+    "destroyRva": "0x4a6a10",
+    "bytes": 32,
+    "lengthOffset": 16,
+    "capacityOffset": 24,
+    "inlineCapacity": 15
+  },
+  "nativeTextResult": {
+    "checkRva": "0x177211a",
+    "returnAddressStackOffset": "0x98",
+    "identifierRegister": "rbp",
+    "outputRegister": "rdi"
+  },
+  "resourceIdentifier": {
+    "makeIdentifierRva": "0x20f31c0",
+    "destroyIdentifierRva": "0x20f3990",
+    "appendRva": "0x502de0",
+    "identifierBytes": 232,
+    "pathOffset": 96
+  },
+  "descriptor": {
+    "vtableRva": "0x281caa8",
+    "vidOffset": 168,
+    "pidOffset": 170,
+    "revisionOffset": 172,
+    "asioNameOffset": 928
+  },
+  "primaryRegistry": {
+    "managerVtableRva": "0x2808488",
+    "vectorOffset": 216,
+    "entryBytes": 16
+  },
+  "aggregationRegistry": {
+    "constructorRva": "0x213be40",
+    "vtableRva": "0x31d4560",
+    "managerSlotOffset": 432,
+    "vectorOffset": 72,
+    "entryBytes": 16,
+    "entryInterfaceOffset": 16
+  },
+  "notice": {
+    "arrivalRva": "0x185ee90",
+    "arrivalMessage": 724,
+    "handlerRva": "0x213f740",
+    "commonVtableRva": "0x281cbe8",
+    "commonOffset": 1848
+  },
+  "lateFactory": {
+    "singletonRva": "0x3ebebc0",
+    "factoryRva": "0x5ce9d0",
+    "copyPairToVectorRva": "0x4cb230",
+    "releasePairsRva": "0x4b0270",
+    "freeVectorRva": "0x5d18d0",
+    "optionsOffset": 200,
+    "optionsFlags": 257
+  },
+  "entryReader": {
+    "entryReaderRva": "0x1772090",
+    "entryReaderBytes": "48895c24205556574881ec8000000048"
+  }
+}

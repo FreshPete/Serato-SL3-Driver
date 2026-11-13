@@ -36,20 +36,26 @@ def package(build_path, expected, output):
     require(all(sha(ROOT/name)==digest for name,digest in source['sourcePins'].items()) and
             all(sha(source_path.parent/name)==digest for name,digest in source['generatedPins'].items()),'Window source changed')
     kit,entry = Path(layout['kit']),Path(layout['entry'])
-    kit_manifest = kit/'kit-manifest.json'
+    manifest_name = layout.get('manifestName', 'kit-manifest.json')
+    require(manifest_name in ('kit-manifest.json','watcher-payload.json'),'Unknown portable setup inventory')
+    kit_manifest = kit/manifest_name
     require(sha(kit_manifest)==source['kitManifestSha256'],'Reviewed setup kit required')
     manifest = json.loads(kit_manifest.read_bytes())
-    inventory = kit/'kit-inventory.json'
-    require(sha(inventory)==manifest['inventorySha256'],'Reviewed kit inventory required')
-    entries = json.loads(inventory.read_bytes())['files']
-    helper = 'scripts/prepare-on-demand-kit.py'
-    require(sha(kit/helper)==entries[helper]['sha256'],'Reviewed kit verifier required')
-    runpy.run_path(str(kit/helper))['verify'](kit_manifest,source['kitManifestSha256'])
-    files = {'kit/'+name:(kit/name,row['sha256']) for name,row in entries.items()}
+    files = {'kit/'+manifest_name:(kit_manifest,source['kitManifestSha256'])}
+    if manifest_name == 'watcher-payload.json':
+        runpy.run_path(str(ROOT/'scripts/setup-serato-native-watcher.py'))['read_payload'](kit,source['kitManifestSha256'])
+        entries = manifest['files']
+    else:
+        inventory = kit/'kit-inventory.json'
+        require(sha(inventory)==manifest['inventorySha256'],'Reviewed kit inventory required')
+        entries = json.loads(inventory.read_bytes())['files']
+        helper = 'scripts/prepare-on-demand-kit.py'
+        require(sha(kit/helper)==entries[helper]['sha256'],'Reviewed kit verifier required')
+        runpy.run_path(str(kit/helper))['verify'](kit_manifest,source['kitManifestSha256'])
+        files['kit/kit-inventory.json'] = (inventory,manifest['inventorySha256'])
+    files.update({'kit/'+name:(kit/name,row['sha256']) for name,row in entries.items()})
     window = build_path.parent/'build/Release/SL3_Compatibility_Setup.exe'
-    files.update({'kit/kit-inventory.json':(inventory,manifest['inventorySha256']),
-                  'kit/kit-manifest.json':(kit_manifest,source['kitManifestSha256']),
-                  'SL3_Compatibility_Setup.exe':(window,build['executableSha256']),
+    files.update({'SL3_Compatibility_Setup.exe':(window,build['executableSha256']),
                   'SL3_Setup_Engineering.exe':(entry,source['nativeEntrySha256'])})
     watcher = layout.get('watcherAssets')
     if watcher is not None:

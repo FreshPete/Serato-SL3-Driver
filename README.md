@@ -1,5 +1,7 @@
 # Rane SL3 compatibility restoration
 
+[Windows beta 2 download and setup guide](docs/beta2-setup.md) covers the tested r7 sign-in watcher for Serato DJ Pro 5.0.0.1278.
+
 Restore the physical Rane SL3 for current Serato DJ Pro and two-deck DVS. Windows 11 x64 is first; macOS 26 Tahoe is second. Driver loading, independent audio, Serato recognition and working DVS are separate milestones.
 
 ## Latest status — 8 November 2026

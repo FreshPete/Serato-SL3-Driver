@@ -1,0 +1,21 @@
+{
+  "schema": "sl3.native-descriptor-startup-plan.v1",
+  "profileSha256": "a76d22478a173c13fdba339106461271e94fb1c7479d262b3f852799c951574e",
+  "applicationSha256": "66e7af01ddfd151814f51bf44bd8472e5c94f54b3ce12119ef70b7cbab433265",
+  "archiveSha256": "872fc4fdad2eab2ddd34387d2d3c04dd9731c84798d9fdc7bd05ca54e1567db8",
+  "librarySha256": "e813aa1d102ff02176057051414d6c100daba38c4a69ed79f5b862aa0c5636e0",
+  "noticeLibrarySha256": "eb4dfc407a8e9b26ccd2a575e2776ce40c99652b38702932c14dede3514e3a45",
+  "transfer": {
+    "primaryVectorGetterRva": "0x505470",
+    "primaryVectorGetterCallRva": "0x213c62c",
+    "primaryManagerGlobalRva": "0x3eac1d0"
+  },
+  "noticeCallbackSlotRva": "0x31c3f60",
+  "hookExports": {
+    "Sl3ArmDescriptorHooks": 55840,
+    "Sl3RetireDescriptorHooks": 56544,
+    "Sl3DescriptorHookPhase": 427072
+  },
+  "noticeArmRva": 8320,
+  "descriptorXml": "<?xml version='1.0' encoding='utf-8'?>\n<root creation_date=\"2026-11-02\">\n  \n  <supported_apps>\n    <app value=\"Serato DJ\" />\n  </supported_apps>\n  <native_pro_device name=\"Rane SL3\">\n    <vendor_id value=\"0x1CC5\" />\n    <product_id value=\"0x0001\" />\n    <requires_usb value=\"true\" />\n    <handshake_type value=\"HANDSHAKE_TYPE_NONE\" />\n    <secret_key value=\"\" />\n    <output_calibration_gain value=\"-1.5\" />\n    <braking_type value=\"BRAKING_TYPE_SOFTWARE_START_SOFTWARE_STOP\" />\n    <use_legacy_portaudio value=\"true\" />\n    <win_audio_api value=\"ASIO\" />\n    <mac_audio_api value=\"CoreAudio\" />\n    <win_audio_device_name value=\"SL3 Rebuild Development\" />\n    <mac_audio_device_name value=\"SL 3\" />\n    <sample_rate value=\"HZ44100\" />\n    <buffer_alignments sample_rate=\"HZ48000\">\n      <buffer_alignment value=\"48\" />\n    </buffer_alignments>\n    <driver>\n      <installer><win_x86 name=\"\" /><win_x64 name=\"SL3_Rebuild_Development_x64.exe\" /></installer><driver_detection>\n        <osx name=\"\" />\n        <win_x86 name=\"\" />\n        <win_x64 name=\"SOFTWARE\\ASIO\\SL3 Rebuild Development\" />\n      </driver_detection>\n    </driver>\n    <num_decks value=\"3\" />\n    <dvs_device value=\"DVS_DEVICE_YES\" />\n    <hardware_mixer value=\"true\" />\n    <output_endpoints>\n      <mixer_out value=\"Deck3Out\" />\n      <mixer_out value=\"Deck1Out\" />\n      <mixer_out value=\"Deck2Out\" />\n    </output_endpoints>\n    <input_endpoint>\n      <mixer_in value=\"Deck3In\" />\n      <mixer_in value=\"Deck1In\" />\n      <mixer_in value=\"Deck2In\" />\n    </input_endpoint>\n    <record_sources>\n      <map rec_src=\"RECORD_SOURCE_CH1\" endpoint=\"Deck1In\" />\n      <map rec_src=\"RECORD_SOURCE_CH2\" endpoint=\"Deck2In\" />\n      <map rec_src=\"RECORD_SOURCE_CH3\" endpoint=\"Deck3In\" />\n      <map rec_src=\"RECORD_SOURCE_VIDEO_MIX\" endpoint=\"Deck3In\" />\n    </record_sources>\n    <software_mic_gain value=\"SOFTWARE_MIXER_STATE_DISABLE\" />\n    <software_cue_gain value=\"SOFTWARE_MIXER_STATE_DISABLE\" />\n    <software_cf_curve value=\"SOFTWARE_MIXER_STATE_DISABLE\" />\n    <software_uf_curve value=\"SOFTWARE_MIXER_STATE_DISABLE\" />\n    <software_cue_mix value=\"SOFTWARE_MIXER_STATE_DISABLE\" />\n    <cue_crossfader_type value=\"PER_CHANNEL_CUE\" />\n    <software_master_cue value=\"SOFTWARE_MIXER_STATE_DISABLE\" />\n    <software_split_cue value=\"SOFTWARE_MIXER_STATE_DISABLE\" />\n    <software_crossfader_reverse value=\"SOFTWARE_MIXER_STATE_DISABLE\" />\n    <connect_on_finish_install value=\"true\" /><provides_talk_over value=\"false\" />\n    <midi_direction value=\"none\" />\n    <has_hid value=\"false\" />\n  </native_pro_device>\n</root>"
+}

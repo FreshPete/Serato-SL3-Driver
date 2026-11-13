@@ -38,7 +38,9 @@ int main(){
         finish_check(live,live_window);
         require((GetWindowLongPtrW(live.progress_bar,GWL_STYLE)&WS_VISIBLE)==0,"Progress bar is hidden after completion");++cases;
         if(live.code)std::cerr<<live.output<<'\n';
-        require(live.code==0 && live.allowed.clean && live.allowed.install && !live.allowed.restore && IsWindowEnabled(live.start_button),"Actual native read-only check produces install eligibility");++cases;
+        const bool install_expected=!driver_only() || live.sl3_present;
+        require(live.code==0 && live.allowed.clean && live.allowed.install==install_expected && !live.allowed.restore &&
+                (IsWindowEnabled(live.start_button)!=FALSE)==install_expected,"Actual native read-only check produces install eligibility");++cases;
         {ActionResult observed;observed.code=1;observed.capture.authenticated=true;observed.capture.bytes="fixture failure report";
             const auto report=result_text(live,observed);const auto saved=preserve_result(live,report);std::vector<Handle> leases;
             Handle read(CreateFileW(saved.c_str(),GENERIC_READ,FILE_SHARE_READ,nullptr,OPEN_EXISTING,0,nullptr));require(read.value!=INVALID_HANDLE_VALUE,"Read owned diagnostic result");
@@ -52,7 +54,7 @@ int main(){
             require(reopened.plan.empty() && !reopened.busy,"Opening a portable setup window leaves selection idle");
             begin(reopened,check);finish_check(reopened,window_again);
             if(reopened.code)std::cerr<<reopened.output<<'\n';
-            require(reopened.code==0 && reopened.plan==live.plan && reopened.plan_sha==live.plan_sha && reopened.allowed.install,
+            require(reopened.code==0 && reopened.plan==live.plan && reopened.plan_sha==live.plan_sha && reopened.allowed.install==install_expected,
                     "A fresh portable window must resume the same verified record");++cases;
             message(window_again,WM_CLOSE,0,0);
         }

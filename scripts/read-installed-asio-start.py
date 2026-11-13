@@ -11,6 +11,15 @@ ROOT = Path(__file__).resolve().parent
 identity = runpy.run_path(str(ROOT/'read-retained-start-result.py'))['identity']
 FIELDS = ('controller','controller_sha256','input','input_sha256',
           'startup_timeout_ms','startup_failure_grace_ms','lifetime_ms')
+RECOVERY = re.compile(r'input_empty_recovery_count([0-9]{1,20})_last_block_f([0-9]{1,20})_p([0-7])_frames([56])')
+RECOVERY_CONTEXT = re.compile(r'input_empty_recovery_context_f([0-9]{1,20})_observed_([056](?:,[056]){7})'
+                              r'_preceding_([0-9]{2}(?:,[0-9]{2}){8})')
+INVALID_INPUT = re.compile(r'invalid_input_f([0-9]{1,20})_expected([0-9]{1,2})_received([0-9]{1,2})'
+                           r'_p([0-9]{1,10})_len([0-9]{1,20})_status([0-9]{1,20})')
+STREAM_FAILURE = re.compile(r'stream_failed_reason([0-9]{1,10})_fault([0-9]{1,10})_native([0-9]{1,10})'
+                            r'_input([0-9]{1,20})')
+OUTPUT_DEADLINE = re.compile(r'output_deadline_f([0-9]{1,20})_age_ns([0-9]{1,20})_gap_ns([0-9]{1,20})'
+                             r'_expected([0-9]{1,2})_usb_mask([0-9]{1,2})_queued(-1|[0-8])')
 
 
 def require(value, message):
@@ -36,6 +45,81 @@ def record(raw):
     return value
 
 
+def worker_journal(path, worker_pid):
+    if not path.exists() and not path.is_symlink():
+        return {'outcome':'absent'}
+    try:
+        require(type(worker_pid) is int and 0 < worker_pid <= 0xffffffff, 'Readiness worker PID required')
+        raw = read(path)
+        require(raw.endswith(b'\n'), 'Worker journal has no complete final row')
+        recoveries, invalid_inputs, failures, deadlines = [], [], [], []
+        keepalive = []
+        keepalive_start = None
+        previous_stage = ''
+        previous_tick = 0
+        for line in raw.decode('ascii').splitlines():
+            row = re.fullmatch(r'([0-9]{1,20})\t([0-9]{1,10})\t([a-zA-Z0-9_.,-]+)', line)
+            require(row and int(row[2]) == worker_pid and int(row[1]) >= previous_tick,
+                    'Worker journal PID, timestamp or row format differs')
+            previous_tick, stage = int(row[1]), row[3]
+            if stage == 'playback_keepalive.enter':
+                require(keepalive_start is None, 'Overlapping playback keepalive markers')
+                keepalive_start = previous_tick
+            elif stage in ('playback_keepalive.return', 'playback_keepalive.failed'):
+                require(keepalive_start is not None, 'Playback keepalive ended without a start marker')
+                keepalive.append({'startTickMs':keepalive_start, 'endTickMs':previous_tick,
+                                  'elapsedMs':previous_tick-keepalive_start,
+                                  'outcome':'failed' if stage.endswith('.failed') else 'returned'})
+                keepalive_start = None
+            elif stage.startswith('input_empty_recovery_count'):
+                match = RECOVERY.fullmatch(stage)
+                require(match and int(match[1]) > 0, 'Invalid empty input recovery marker')
+                count, frame, index, estimate = map(int, match.groups())
+                recoveries.append({'count':count,'lastBlockFirstFrame':frame,'packetIndex':index,
+                                   'estimatedFrames':estimate,'context':None})
+            elif stage.startswith('input_empty_recovery_context'):
+                match = RECOVERY_CONTEXT.fullmatch(stage)
+                require(match and RECOVERY.fullmatch(previous_stage), 'Recovery context lacks a paired marker')
+                recovery = recoveries[-1]
+                observed = list(map(int, match[2].split(',')))
+                preceding = list(map(int, match[3].split(',')))
+                require(int(match[1]) == recovery['lastBlockFirstFrame'] and observed.count(0) == 1 and
+                        observed[recovery['packetIndex']] == 0 and all(40 <= value <= 48 for value in preceding) and
+                        sum(observed) + sum(preceding) + recovery['estimatedFrames'] == 441,
+                        'Recovery context differs from the estimate or packet position')
+                recovery['context'] = {'observedPacketFrames':observed,'precedingBatchFrames':preceding}
+            elif stage.startswith('invalid_input_'):
+                match = INVALID_INPUT.fullmatch(stage)
+                require(match, 'Invalid input fault marker')
+                frame, expected, received, index, length, status = map(int, match.groups())
+                invalid_inputs.append({'blockFirstFrame':frame,'expectedPackets':expected,'receivedPackets':received,
+                                       'packetIndex':index,'lengthBytes':length,'status':status,
+                                       'successfulEmptyPacket':expected == received and index < received and
+                                       length == 0 and status == 0})
+            elif stage.startswith('stream_failed_'):
+                match = STREAM_FAILURE.fullmatch(stage)
+                require(match, 'Invalid stream failure marker')
+                reason, fault, error, blocks = map(int, match.groups())
+                failures.append({'reasonCode':reason,'streamFaultCode':fault,'nativeError':error,'inputBlocks':blocks})
+            elif stage.startswith('output_deadline_'):
+                match = OUTPUT_DEADLINE.fullmatch(stage)
+                require(match, 'Invalid output deadline marker')
+                frame, age, gap, expected, mask, queued = map(int, match.groups())
+                require(age >= max(1_000_000, gap) and 1 <= expected <= 16 and 0 <= mask <= 15,
+                        'Output deadline context is out of range')
+                deadlines.append({'blockFirstFrame':frame,'ageNs':age,'workerStepGapNs':gap,'expectedBlocks':expected,
+                                  'pendingUsbOutputMask':mask,'queuedOutputBlocks':None if queued == -1 else queued})
+            previous_stage = stage
+        if keepalive_start is not None:
+            keepalive.append({'startTickMs':keepalive_start, 'endTickMs':None, 'elapsedMs':None,
+                              'outcome':'end_unobserved'})
+    except (OSError, ValueError) as error:
+        return {'outcome':'unavailable','error':str(error)[:256]}
+    return {'outcome':'parsed','workerPid':worker_pid,'sha256':sha(raw),
+            'emptyInputRecoveries':recoveries,'invalidInputs':invalid_inputs,'streamFailures':failures,
+            'outputDeadlines':deadlines,'playbackKeepaliveWindows':keepalive}
+
+
 def configuration(path):
     raw = read(path)
     header, *rows = raw.decode('utf-8').splitlines()
@@ -59,12 +143,14 @@ def diagnostic_profile(path, activation, activation_sha):
     install = PureWindowsPath(activation[2]).parent
     require(install.is_absolute(), 'Absolute protected diagnostic destination required')
     builder = runpy.run_path(str(ROOT/'prepare-asio-deployment.py'))
+    application_lifetime = activation[-1] == '0'
     expected = builder['activation_records'](install, activation[1], worker_sha.decode('ascii'),
-        builder['APPLICATION_ACTIVATION_MODE'], playback_keepalive=version==b'2', buffer_frames=int(frames))
+        builder['APPLICATION_ACTIVATION_MODE'], playback_keepalive=version==b'2', buffer_frames=int(frames),
+        application_lifetime=application_lifetime)
     require(sha(expected['sl3-asio.conf'])==activation_sha and worker==expected['sl3-worker.conf'] and
             timing==expected['sl3-timing.conf'], 'Diagnostic configuration or timing hash chain differs')
     return {'configuredBufferFrames':int(frames),'rateHz':44100,'workerSha256':worker_sha.decode('ascii'),
-            'timingSha256':sha(timing),'playbackKeepalive':version==b'2'}
+            'timingSha256':sha(timing),'playbackKeepalive':version==b'2','applicationLifetime':application_lifetime}
 
 
 def unpublished_result(folder, activation):
@@ -118,6 +204,7 @@ def summarize(folder, activation, profile=None):
         require(ready.get('workerSha256')==profile['workerSha256'] and ready.get('rateHz')==profile['rateHz'],
                 'Readiness does not match the diagnostic worker and rate')
         result['diagnosticProfileMatchedReadiness'] = True
+    result['readinessVerified'] = True
     final_path = folder/'result.json'
     if not final_path.exists():
         return dict(result,outcome='completed_result_missing',brokerKind=ready['kind'])
@@ -144,6 +231,8 @@ def summarize(folder, activation, profile=None):
     if profile is not None:
         result['brokerOwnerFailureCode'] = final.get('ownerFailureCode')
         result['workerStreamFault'] = final.get('lastStreamFault') if final.get('snapshotValid') is True else None
+        if ready['kind']=='native':
+            result['workerJournal'] = worker_journal(folder/'worker-startup.tsv', ready.get('workerPid'))
     return dict(result,outcome='stream_start_reported' if starts else 'no_stream_start_reported',brokerKind=ready['kind'],
                 nativeAcquisitionReported=native,streamStartReplies=starts,applicationExitRetirementReported=retirement,
                 observationsTruncated=final['clientObservationsTruncated'],resultSha256=sha(raw))

@@ -21,7 +21,13 @@ def prepare(build_path,expected,kit,experiment,experiment_sha,output,watcher_dll
     require(source['mutableActionsRequireAlreadyElevatedProcess'] and 'src/installer/SetupResultPipe.hpp' in source['sourcePins'] and all(sha(ROOT/n)==v for n,v in source['sourcePins'].items()),'Current result-channel native entry source required')
     require(all(sha(source_path.parent/n)==v for n,v in source['generatedPins'].items()),'Generated native entry source changed')
     entry=build_path.parent/'build/Release/SL3_Setup_Engineering.exe';require(sha(entry)==build['executableSha256'],'Native entry image changed')
-    require(sha(kit/'kit-manifest.json')==source['kitManifestSha256'],'Selected native entry kit differs')
+    native_watcher=source.get('nativeWatcherPayload') is True
+    require(not native_watcher or (experiment is None and watcher_dll is None),'Driver-only watcher setup requires a portable window')
+    manifest_name='watcher-payload.json' if native_watcher else 'kit-manifest.json'
+    require(sha(kit/manifest_name)==source['kitManifestSha256'],'Selected native entry kit differs')
+    watcher_profile = json.loads((kit/manifest_name).read_bytes()) if native_watcher else {}
+    application_lifetime = watcher_profile.get('applicationLifetime') is True
+    buffer_frames = watcher_profile.get('diagnosticBufferFrames')
     application=''
     if experiment is not None:
         experiment=Path(experiment).absolute()
@@ -36,7 +42,12 @@ def prepare(build_path,expected,kit,experiment,experiment_sha,output,watcher_dll
         'plan':str(experiment) if experiment else '', 'plan_sha':experiment_sha or '', 'kit_root':str(kit) if experiment else '',
         'kit':str(kit/'kit-manifest.json') if experiment else '', 'kit_sha':source['kitManifestSha256'],
         'application':application,'powershell':str(kit/'runtime/powershell') if experiment else '',
-        'watcher_setup_sha':'','watcher_sha':'','watcher_helper_sha':''}
+        'watcher_setup_sha':'','watcher_sha':'','watcher_helper_sha':'',
+        'native_watcher_payload_sha':source['kitManifestSha256'] if native_watcher else '',
+        'native_watcher_application_lifetime':'1' if application_lifetime else '',
+        'native_watcher_output_ready_trial':'1' if watcher_profile.get('outputReadyTrial') is True else '',
+        'native_watcher_diagnostic_frames':str(buffer_frames) if buffer_frames == 32 or
+            (buffer_frames == 64 and watcher_profile.get('outputDeadlineTrial') is True) else ''}
     watcher_assets={}
     if watcher_dll is not None:
         require(experiment is None,'Watcher bundling requires a portable window')
@@ -69,7 +80,7 @@ def prepare(build_path,expected,kit,experiment,experiment_sha,output,watcher_dll
     manifest={'schema':'sl3.setup-window-source.v1','sourcePins':pins,'generatedPins':{n:sha(output/n) for n in ('session_window_config.hpp','launcher_config.hpp','CMakeLists.txt')},
         'entryBuildSha256':expected,'nativeEntrySha256':build['executableSha256'],'experimentSha256':experiment_sha,'kitManifestSha256':source['kitManifestSha256'],
         'automaticActionsOnOpen':False,'elevationRequested':False,'seratoLaunched':False,'nativeDeviceAccess':False}
-    if experiment is None:manifest['portableLayout']={'entry':str(entry),'kit':str(kit)}
+    if experiment is None:manifest['portableLayout']={'entry':str(entry),'kit':str(kit),'manifestName':manifest_name}
     if watcher_assets:manifest['portableLayout']['watcherAssets']=watcher_assets
     (output/'window-source.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8');return {'prepared':True,'directory':str(output),'sourceManifestSha256':sha(output/'window-source.json')}
 

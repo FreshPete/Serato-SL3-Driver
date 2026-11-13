@@ -16,6 +16,8 @@ constexpr Address commonOffset = 0x738;
 constexpr Address noticeRva = 0x213f740;
 constexpr Address publishRva = 0x4db170;
 constexpr Address slotRva = 0x31c3f60;
+constexpr WPARAM ownedWakeTag = 0x534c3301;
+constexpr DWORD selectionWindowMs = 45000;
 
 HMODULE self = nullptr;
 HANDLE journal = INVALID_HANDLE_VALUE;
@@ -76,15 +78,22 @@ bool registered(Address manager, Address descriptor) {
     return false;
 }
 
-bool replaceSlot(Address expected, Address value) {
+bool replaceSlot(Address expected, Address value, bool installing = false) {
     auto slot = reinterpret_cast<void* volatile*>(base + slotRva);
     DWORD protection = 0, ignored = 0;
     if (!VirtualProtect(const_cast<void**>(slot), sizeof(void*), PAGE_READWRITE, &protection)) return false;
-    const auto before = InterlockedCompareExchangePointer(
-        slot, reinterpret_cast<void*>(value), reinterpret_cast<void*>(expected));
+    const auto prior = reinterpret_cast<void*>(expected);
+    const auto replacement = reinterpret_cast<void*>(value);
+    const bool exchanged = InterlockedCompareExchangePointer(slot, replacement, prior) == prior;
+    if (VirtualProtect(const_cast<void**>(slot), sizeof(void*), protection, &ignored)) return exchanged;
+
+    report("notice_page_protection_restore_failed\n");
+    // Undo a failed installation, but leave the original callback in place
+    // when retirement already restored it. Preserve any intervening owner.
+    if (installing && exchanged) InterlockedCompareExchangePointer(slot, prior, replacement);
     if (!VirtualProtect(const_cast<void**>(slot), sizeof(void*), protection, &ignored))
-        report("notice_page_protection_restore_failed\n");
-    return before == reinterpret_cast<void*>(expected);
+        report("notice_page_protection_recovery_failed\n");
+    return false;
 }
 
 void observeNotice(void* receiver, const void* holder) {
@@ -97,20 +106,20 @@ void observeNotice(void* receiver, const void* holder) {
     }
 }
 
-bool retire() {
-    armed.store(false);
-    KillTimer(nullptr, timer);
+bool retire(bool expired = false) {
+    if (!armed.exchange(false)) return false;
+    if (expired) report("selection_window_expired\n");
+    if (timer) KillTimer(nullptr, timer);
     timer = 0;
     const bool restored = replaceSlot(reinterpret_cast<Address>(&observeNotice), base + noticeRva);
     report(restored ? "notice_observer_retired\n" : "notice_observer_restore_failed\n");
     return restored;
 }
 
-void CALLBACK poll(HWND, UINT, UINT_PTR, DWORD) {
+void pollSelection(Publish publish) {
     if (!armed.load()) return;
     if (GetTickCount64() >= deadline) {
-        report("selection_window_expired\n");
-        retire();
+        retire(true);
         return;
     }
     const auto common = observed.load();
@@ -126,9 +135,12 @@ void CALLBACK poll(HWND, UINT, UINT_PTR, DWORD) {
         return;
     if (!retire()) return;
     report("selection_requested\n");
-    reinterpret_cast<Publish>(base + publishRva)(
-        reinterpret_cast<void*>(bus), 0x2ca, reinterpret_cast<void*>(descriptor), 0, 7, 0, 0);
+    publish(reinterpret_cast<void*>(bus), 0x2ca, reinterpret_cast<void*>(descriptor), 0, 7, 0, 0);
     report("selection_publisher_returned\n");
+}
+
+void CALLBACK poll(HWND, UINT, UINT_PTR, DWORD) {
+    pollSelection(reinterpret_cast<Publish>(base + publishRva));
 }
 
 DWORD initializeObserver() {
@@ -158,9 +170,9 @@ DWORD initializeObserver() {
         report("notice_observer_pin_failed\n");
         return 2;
     }
-    deadline = GetTickCount64() + 45000;
+    deadline = GetTickCount64() + selectionWindowMs;
     armed.store(true);
-    if (!replaceSlot(base + noticeRva, reinterpret_cast<Address>(&observeNotice))) {
+    if (!replaceSlot(base + noticeRva, reinterpret_cast<Address>(&observeNotice), true)) {
         armed.store(false);
         report("notice_observer_install_failed\n");
         return 2;
@@ -168,10 +180,34 @@ DWORD initializeObserver() {
     report("notice_observer_armed\n");
     return 0;
 }
+
+void CALLBACK retireWithoutMessagePump(PTP_CALLBACK_INSTANCE, void*, PTP_TIMER cleanupTimer) {
+    retire(true);
+    CloseThreadpoolTimer(cleanupTimer);
+}
+
+void scheduleRetirement(PTP_TIMER cleanupTimer, DWORD timeoutMs) {
+    LARGE_INTEGER due{};
+    due.QuadPart = -static_cast<LONGLONG>(timeoutMs) * 10000;
+    FILETIME expiry{due.LowPart, static_cast<DWORD>(due.HighPart)};
+    SetThreadpoolTimer(cleanupTimer, &expiry, 0, 0);
+}
 }
 
 extern "C" __declspec(dllexport) DWORD WINAPI Sl3ObserveEarly(void*) {
     return initializeObserver();
+}
+
+extern "C" __declspec(dllexport) DWORD WINAPI Sl3ObserveWithRetirement(void*) {
+    const auto cleanupTimer = CreateThreadpoolTimer(&retireWithoutMessagePump, nullptr, nullptr);
+    if (!cleanupTimer) return 2;
+    const auto result = initializeObserver();
+    if (result != 0) {
+        CloseThreadpoolTimer(cleanupTimer);
+        return result;
+    }
+    scheduleRetirement(cleanupTimer, selectionWindowMs);
+    return 0;
 }
 
 extern "C" __declspec(dllexport) LRESULT CALLBACK Sl3GetMessage(int code, WPARAM wparam, LPARAM lparam) {
@@ -182,6 +218,22 @@ extern "C" __declspec(dllexport) LRESULT CALLBACK Sl3GetMessage(int code, WPARAM
         else {
             report("selection_timer_failed\n");
             retire();
+        }
+    }
+    return CallNextHookEx(nullptr, code, wparam, lparam);
+}
+
+// The owned-process diagnostic posts a tagged WM_NULL to one verified GUI
+// thread. Use that thread's message hook to poll instead of creating a timer.
+extern "C" __declspec(dllexport) LRESULT CALLBACK Sl3PollOwnedMessage(int code, WPARAM wparam, LPARAM lparam) {
+    if (code == HC_ACTION && wparam == PM_REMOVE && armed.load() && lparam) {
+        const auto& message = *reinterpret_cast<const MSG*>(lparam);
+        if (!message.hwnd && message.message == WM_NULL && message.wParam == ownedWakeTag && !message.lParam) {
+            if (!timerInitialized) {
+                timerInitialized = true;
+                report("selection_ui_poll_armed\n");
+            }
+            poll(nullptr, 0, 0, 0);
         }
     }
     return CallNextHookEx(nullptr, code, wparam, lparam);
